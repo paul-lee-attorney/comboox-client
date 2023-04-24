@@ -19,30 +19,23 @@ import {
 
 export function CreateComp() {
 
-  type LogOfCreateComp = {
+  const [primeKeyOfKeeper, setPrimeKeyOfKeeper] = useState(AddrZero);
+
+  type Log = {
     versionOfGK: string
     seqOfGK: string
     creator: string
     addrOfGK: string
   }
 
-  const [primeKeyOfKeeper, setPrimeKeyOfKeeper] = useState(AddrZero);
-
   const [log, setLog] = useState<{[key: string]: any}>({});
-
-  // const [versionOfGK, setVersionOfGK] = useState(SeqZero);
-  // const [seqOfGK, setSeqOfGK] = useState(SeqZero);
-  // const [creator, setCreator] = useState(AcctZero);
-  // const [addrOfGK, setAddrOfGK] = useState(AddrZero);
-
-  // const { address: owner } = useAccount();
 
   useRegCenterCreateCompEvent({
     address: AddrOfRegCenter,
     listener( versionOfGK, seqOfGK, creator, addrOfGK) {
       console.log(versionOfGK, seqOfGK, creator, addrOfGK);
 
-      let log : LogOfCreateComp  = {
+      let log : Log  = {
         versionOfGK : versionOfGK.toHexString(),
         seqOfGK : seqOfGK.toHexString(),
         creator : creator.toHexString(),

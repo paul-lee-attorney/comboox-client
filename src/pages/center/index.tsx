@@ -1,6 +1,7 @@
 // import { useAccount } from "wagmi";
 import { 
-  Connect, 
+  Connect,
+  DocFinder,
   GetMyUserNo, 
   GetMyUserInfo,
   RegUser,
@@ -13,28 +14,13 @@ function RegCenterPage() {
   return (
     <>
       <h1>Registration Center</h1>
+      <hr />
+
+      <CreateComp />
+      <hr />
+
+      <DocFinder />
       <hr/>
-
-      <Connect />
-
-        <>
-          <hr />
-            <GetMyUserNo />
-          <hr />
-
-          <hr />
-            {/* <GetMyUserInfo /> */}
-          <hr />
-
-          <hr />
-            <RegUser />
-          <hr />
-          
-          <hr />
-            {/* <CreateComp /> */}
-          <hr />
-
-        </>
     </>    
   )
 }

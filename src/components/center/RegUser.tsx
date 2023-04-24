@@ -39,7 +39,7 @@ export function RegUser() {
         </div>
       )}
       {(isPrepareError || isError) && (
-        <div>Error: {(prepareError || error)?.data?.data?.reason}</div>
+        <div>Error: {(prepareError || error)?.message}</div>
       )}
     </div>
   )

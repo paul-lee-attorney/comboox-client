@@ -18,7 +18,7 @@ export function GetMyUserNo() {
   const handleClick = async () => {
     const res = await rc?.getMyUserNo();
     res && setUserNo(res.toString());
-    // console.log(res);
+    console.log(res);
   }
 
   return (
@@ -31,6 +31,12 @@ export function GetMyUserNo() {
           {userNo && (
             <div>
               {userNo}
+            </div>
+          )}
+          {!userNo && (
+            <div>
+              You are not registered yet. <br/>
+              Welcome to regist user with us!
             </div>
           )}
         </div>
