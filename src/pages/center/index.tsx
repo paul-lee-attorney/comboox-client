@@ -1,4 +1,3 @@
-// import { useAccount } from "wagmi";
 import { 
   Connect,
   DocFinder,
@@ -9,7 +8,6 @@ import {
 } from '../../components'
 
 function RegCenterPage() {
-  // const { isConnected } = useAccount()
 
   return (
     <>

@@ -1,4 +1,4 @@
-export const AddrOfRegCenter:`0x${string}` = "0xb9bEECD1A582768711dE1EE7B0A1d582D9d72a6C";
+export const AddrOfRegCenter:`0x${string}` = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
@@ -10,3 +10,6 @@ export const DateZero:string = '0'.padEnd(12,'0');
 export const DataZero:string = '0'.padEnd(16,'0');
 export const AddrZero:`0x${string}` = `0x${'0'.padEnd(40,'0')}`;
 
+export type ContractProps = {
+  addr: `0x${string}`
+}

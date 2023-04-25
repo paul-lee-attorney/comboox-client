@@ -9,3 +9,7 @@ export { RegUser } from './center/RegUser'
 export { CreateComp } from './center/CreateComp'
 export { DocFinder } from './center/DocFinder'
 
+export {
+  DataList
+} from './common'
+

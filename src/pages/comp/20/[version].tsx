@@ -8,21 +8,22 @@ import { readContract } from '@wagmi/core';
 import { 
   generalKeeperABI
 } from '../../../generated';
-import { GetCompGenInfo } from '../../../components/comp/GetCompGenInfo';
+
+import { GeneralInfo } from '../../../components/comp/GeneralInfo';
 
 
 async function getKeepers(addrOfGK: `0x${string}`) {
   let keepers = [];
 
   for (let i = 0; i<10; i++) {
-    keepers[i] = await readContract({
+    let temp = await readContract({
       address: addrOfGK,
       abi: generalKeeperABI,
       functionName: 'getKeeper',
       args: [BigNumber.from(i+1)],
     });
+    keepers[i] = temp.substring(2);
   }
-  // console.log('keepers: ', keepers);
   return keepers;
 } 
 
@@ -30,17 +31,14 @@ async function getBooks(addrOfGK: `0x${string}`) {
   let books = [];
 
   for (let i = 0; i<9; i++) {
-    books[i] = await readContract({
+    let temp = await readContract({
       address: addrOfGK,
       abi: generalKeeperABI,
       functionName: 'getBook',
       args: [BigNumber.from(i+1)],
     });
-    // books[i] = books[i].substring(2);
+    books[i] = temp.substring(2);
   }
-
-  // console.log('books: ', books);
-
   return books;
 } 
 
@@ -63,11 +61,12 @@ function GeneralKeeperPage() {
     <>
       <h1>General Keeper</h1>
       <hr />
-        {books &&  
-          <GetCompGenInfo 
+        {books && ( 
+          <GeneralInfo 
             gk={ addrOfGK.substring(2) } 
             books={ books } 
-        /> }
+          /> 
+        )}
       <hr/>
     </>    
   )
