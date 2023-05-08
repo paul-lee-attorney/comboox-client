@@ -1,11 +1,8 @@
-import { useRouter } from 'next/router';
-
 import { 
   useState, 
   useEffect, 
   ChangeEvent,
   MouseEvent,
-  useContext,
 } from 'react';
 
 import { 
@@ -38,8 +35,8 @@ import { AccountCircle, ChevronLeft, Inbox, Mail }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { DialogPrimeKey } from './DialogPrimeKey';
-import { DialogMyUserNo } from './DialogMyUserNo';
+import { DialogPrimeKey } from '../common/DialogPrimeKey';
+import { DialogMyUserNo } from '../common/DialogMyUserNo';
 
 import { useConnect, useDisconnect } from 'wagmi';
 
@@ -49,6 +46,8 @@ import { BigNumber } from 'ethers';
 
 import { AddrZero, GKInfo, HexType } from '../../interfaces';
 import { useComBooxContext } from '../../scripts/ComBooxContext';
+
+import { CompSymbol, CompAddr } from '../comp/gk/CompBrief';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -120,13 +119,12 @@ type ComBooxAppBarType = {
 }
 
 export function ComBooxAppBar({ children }: ComBooxAppBarType) {
-  const [boox, setBoox] = useState<HexType[]>([AddrZero]);
-  const { gk, setGK } = useComBooxContext();
+  const { gk, boox, setBoox } = useComBooxContext();
   
   useEffect(() => {
     if (gk != AddrZero)
       getBoox(gk).then((boox) => setBoox(boox));
-  }, [gk]);
+  });
 
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -193,7 +191,13 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           </Typography>
 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { gk !== AddrZero ? gk : ''} 
+            { gk !== AddrZero && (
+              <>
+                <CompSymbol addr={ gk } /> 
+                <> : </>
+                <CompAddr addr={ gk } />
+              </>
+            )} 
           </Typography>
 
           <FormGroup sx={{
@@ -243,9 +247,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                   onClose={handleClose}
                 >
                   <MenuItem onClick={handleAcctOpen}>PrimeKey</MenuItem>
-                  <DialogPrimeKey flag={acctOpen} closeDialog={handleAcctClose} />
+                    <DialogPrimeKey flag={acctOpen} closeDialog={handleAcctClose} />
                   <MenuItem onClick={handleMyUserNoOpen}>UserNo</MenuItem>
-                  <DialogMyUserNo flag={myUserNoOpen} closeDialog={handleMyUserNoClose} />
+                    <DialogMyUserNo flag={myUserNoOpen} closeDialog={handleMyUserNoClose} />
                 </Menu>
               </div>
             )}

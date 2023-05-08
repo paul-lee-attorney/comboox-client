@@ -3,7 +3,7 @@ export const AddrOfRegCenter:HexType = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb3233
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
-export const Bytes32Zero:string = '0'.padEnd(64,'0');
+export const Bytes32Zero:HexType = `0x${'0'.padEnd(64,'0')}`;
 
 export const SeqZero:string = '0'.padEnd(4,'0');
 export const AcctZero:string = '0'.padEnd(10,'0');

@@ -16,7 +16,7 @@ type GetMembersOfClassProps = ContractProps & {
 export function GetMembersOfClass({ addr, args }:GetMembersOfClassProps ) {
   const [membersList, setMembersList] = useState<string[]>();
 
-  const {isSuccess, refetch} = useRegisterOfMembersGetMembersOfClass({
+  useRegisterOfMembersGetMembersOfClass({
     address: addr,
     args: args,
     onSuccess(data) {

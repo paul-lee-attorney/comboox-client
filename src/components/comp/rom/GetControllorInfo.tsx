@@ -1,14 +1,6 @@
 import { useState } from 'react';
 
-import { 
-  Card, 
-  CardActions, 
-  CardContent, 
-  Button, 
-  Typography 
-} from '@mui/material';
-
-
+import { TextField } from '@mui/material';
 
 import {
   useRegisterOfMembersVotesOfController,
@@ -17,46 +9,59 @@ import {
 
 import { ContractProps } from '../../../interfaces';
 
-export function GetControllorInfo({ addr }:ContractProps ) {
+export function Controllor({ addr }:ContractProps ) {
   const [controllor, setControllor] = useState('');
-  const [votesOfController, setVotesOfController] = useState('');
 
-  const {isSuccess: isControllorSuccess} = useRegisterOfMembersControllor({
+  const {isSuccess} = useRegisterOfMembersControllor({
     address: addr,
     onSuccess(data) {
       setControllor(data.toString(16));
     }
   })
 
-  const {isSuccess: isVoteSuccess} = useRegisterOfMembersVotesOfController({
+  return (
+    <>
+      {isSuccess && (
+        <TextField 
+          value={controllor} 
+          variant='filled' 
+          label="ActualControllor" 
+          inputProps={{readOnly: true}}
+          sx={{
+            m: 1,
+          }}
+          fullWidth
+        />
+      )}
+    </>
+  )
+}
+
+
+export function VotesOfController({ addr }:ContractProps ) {
+  const [votesOfController, setVotesOfController] = useState('');
+
+  const {isSuccess} = useRegisterOfMembersVotesOfController({
     address: addr,
     onSuccess(data) {
-      setControllor(data.toNumber().toString());
+      setVotesOfController(data.toString());
     }
   })
 
   return (
     <>
-        <Card sx={{ minWidth: 120, width: 300 }} variant='outlined'>
-          <CardContent>
-
-            <Typography variant="h6" component="div" >
-              Actual Controllor
-            </Typography>
-            <Typography variant="body1" component="div" >
-              UserNo: {controllor}
-            </Typography>
-            <Typography variant="body1" component="div" >
-              VotesInHand: {votesOfController}
-            </Typography>
-
-          </CardContent>
-          
-          <CardActions>
-            <Button size="small" >Refresh</Button>
-          </CardActions>
-        
-        </Card>
+      {isSuccess && (
+        <TextField 
+          value={votesOfController} 
+          variant='filled' 
+          label="VotesOfController" 
+          inputProps={{readOnly: true}}
+          sx={{
+            m: 1,
+          }} 
+          fullWidth
+        />
+      )}
     </>
   )
 }

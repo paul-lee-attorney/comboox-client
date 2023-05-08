@@ -1,16 +1,20 @@
-export { Account } from './Account'
-export { Connect } from './Connect'
-export { MintNFT } from './MintNFT'
-export { NetworkSwitcher } from './NetworkSwitcher'
+export { Account } from './common/Account'
+export { Connect } from './common/Connect'
+export { MintNFT } from './common/MintNFT'
+export { NetworkSwitcher } from './common/NetworkSwitcher'
+export { DataList } from './common/DataList'
+export { Layout } from './common/Layout'
 
 export { GetMyUserNo } from './center/GetMyUserNo'
 export { GetMyUserInfo } from './center/GetMyUserInfo'
 export { RegUser } from './center/RegUser'
 export { CreateComp } from './center/CreateComp'
 export { DocFinder } from './center/DocFinder'
-
-export { DataList } from './common'
-
-export { ComBooxAppBar } from './common/ComBooxAppBar'
-export { Layout } from './common/Layout'
+export { ComBooxAppBar } from './center/ComBooxAppBar'
 export { GetDoc } from './center/GetDoc'
+
+export { RegisteredCapital, PaidInCapital } from './comp/rom/OwnersEquity'
+export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'
+export { MembersList, MembersEquityList } from './comp/rom/MembersList'
+
+export { RegNumHash, CompName, CompSymbol, CompAddrTf, CompSymbolTf } from './comp/gk/CompBrief'

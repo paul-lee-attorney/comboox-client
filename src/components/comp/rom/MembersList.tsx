@@ -1,12 +1,20 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { BigNumber } from 'ethers';
+
+import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, Paper, Toolbar } from '@mui/material';
+
+import { readContract } from '@wagmi/core';
 
 import { DataList } from '../../';
 
 import {
-  useRegisterOfMembersMembersList
+  registerOfMembersABI,
+  useRegisterOfMembersMembersList,
 } from '../../../generated';
 
-import { ContractProps } from '../../../interfaces';
+import { ContractProps, HexType } from '../../../interfaces';
+import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 
 export function MembersList({ addr }:ContractProps ) {
@@ -15,8 +23,8 @@ export function MembersList({ addr }:ContractProps ) {
   const {isSuccess, refetch} = useRegisterOfMembersMembersList({
     address: addr,
     onSuccess(data) {
-      let temp!:string[];
-      data?.map(v => temp.push(v.toNumber().toString()));
+      let temp:string[] = [];
+      data.map(v => temp.push(v.toNumber().toString()));
 
       setMembersList(temp);
     }
@@ -28,4 +36,94 @@ export function MembersList({ addr }:ContractProps ) {
     </>
   )
 }
+
+type ShareClipType = {
+  timestamp: number,
+  paid: BigNumber,
+  par: BigNumber,
+  cleanPaid: BigNumber,
+}
+
+type MemberShareClipType = {
+  acct: string,
+  clip: ShareClipType,
+}
+
+async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promise<MemberShareClipType[]> {
+
+  let list: MemberShareClipType[] = [];
+  let len: number = members.length;
+  let i=0;
+
+  while(i < len) {
+
+    let item: ShareClipType = await readContract({
+      address: rom,
+      abi: registerOfMembersABI,
+      functionName: 'sharesClipOfMember',
+      args: [members[i]],
+    });
+
+    list[i] = {
+      acct: members[i].toNumber().toString(),
+      clip: item,
+    };
+
+    i++;
+
+  }
+
+  return list;
+}
+
+export function MembersEquityList({ addr }:ContractProps ) {
+  const {boox} = useComBooxContext();
+  const [equityList, setEquityList] = useState<MemberShareClipType[]>();
+
+  const {data, refetch} = useRegisterOfMembersMembersList({
+    address: addr
+  })
+
+  useEffect(() => {
+    if (data) {
+      getEquityList(boox[8], data).then(list => setEquityList(list));
+    }
+  });
+
+  return (
+    <TableContainer component={Paper}>
+      <Toolbar>
+        <h3>Members List</h3>
+      </Toolbar>
+      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+        <TableHead>
+          <TableRow>
+            <TableCell >User No. </TableCell>
+            <TableCell align="right">Update Date</TableCell>
+            <TableCell align="right">Subscribed Contribution</TableCell>
+            <TableCell align="right">Paid-In Contribution</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {equityList && (
+            equityList.map((v) => (
+            <TableRow
+              key={v.acct}
+              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+            >
+              <TableCell component="th" scope="row">
+                {v.acct}
+              </TableCell>
+              <TableCell align="right">{v.clip.timestamp.toString()}</TableCell>
+              <TableCell align="right">{v.clip.par.toNumber().toString()}</TableCell>
+              <TableCell align="right">{v.clip.paid.toNumber().toString()}</TableCell>
+            </TableRow>
+          )))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  )
+}
+
+
 
