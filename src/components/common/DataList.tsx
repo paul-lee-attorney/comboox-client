@@ -1,6 +1,6 @@
 type DataListType = {
   isOrdered: boolean,
-  data: string[],
+  data: readonly string[],
 }
 
 export function DataList({isOrdered, data}: DataListType) {

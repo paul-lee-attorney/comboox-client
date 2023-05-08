@@ -16,6 +16,8 @@ import {
 
 import { ContractProps } from '../../../interfaces';
 
+
+
 export function GetCompId({ addr }:ContractProps ) {
   const [regNumHash, setRegNumHash] = useState<`0x${string}`>();
   const [nameOfComp, setNameOfComp] = useState<string>();

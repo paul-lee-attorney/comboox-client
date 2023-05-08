@@ -5,11 +5,14 @@ import { useState, useEffect } from 'react';
 
 import { readContract } from '@wagmi/core';
 
+import Link from '../../../scripts/Link';
+
 import { 
   generalKeeperABI
 } from '../../../generated';
 
 import { GeneralInfo } from '../../../components/comp/GeneralInfo';
+import { HexType } from '../../../interfaces';
 
 
 async function getKeepers(addrOfGK: `0x${string}`) {
@@ -48,7 +51,9 @@ function GeneralKeeperPage() {
 
   const { query } = useRouter();
 
-  const addrOfGK : `0x${string}` = `0x${query?.body}`;
+  const addrOfGK : HexType = `0x${query?.body}`;
+
+  console.log("GK: ", addrOfGK);
 
   useEffect(() => {
     if (addrOfGK) {
@@ -61,13 +66,30 @@ function GeneralKeeperPage() {
     <>
       <h1>General Keeper</h1>
       <hr />
-        {books && ( 
+        {/* {books && ( 
           <GeneralInfo 
             gk={ addrOfGK.substring(2) } 
             books={ books } 
           /> 
-        )}
+        )} */}
       <hr/>
+      {books && (<Link
+        href={{
+          pathname: './setMaxQtyOfMembers',
+          query: {
+            body: books[7],
+          }
+        }}
+
+        as = './setMaxQtyOfMembers'
+        
+        variant='h5'
+
+        underline='hover'
+      >
+        SetMaxQtyOfMembers
+      </Link>)}
+
     </>    
   )
 }

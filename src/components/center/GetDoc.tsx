@@ -1,17 +1,20 @@
 import { useRegCenterGetDoc } from '../../generated';
-import { AddrOfRegCenter } from '../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
+import { useComBooxContext } from '../../scripts/ComBooxContext';
 
-type propsOfSN = {
-  sn: string
+type GetDocType = {
+  sn: HexType
 }
 
-export function GetDoc( { sn } : propsOfSN) {
+export function GetDoc( { sn } : GetDocType) {
+
+  const {gk, setGK} = useComBooxContext();
 
   const {data, error, isError, isLoading, isSuccess} = useRegCenterGetDoc({
     address: AddrOfRegCenter,
-    args: [`0x${sn}`]
+    args: [ sn ]
   });
   
   return (
@@ -21,7 +24,7 @@ export function GetDoc( { sn } : propsOfSN) {
           <Link
             
             href={{
-              pathname: `/comp/${data?.head.typeOfDoc.toString()}/[version]`,
+              pathname: `/comp/mainPage`,
               query: {
                 typeOfDoc: data?.head.typeOfDoc.toString(),
                 version: data?.head.version.toString(),
@@ -31,24 +34,21 @@ export function GetDoc( { sn } : propsOfSN) {
                 createDate: data?.head.createDate.toString(),
               }
             }}
-            
-            as={`/comp/${
-              data?.head.typeOfDoc.toString()
-            }/${
-              data?.head.version.toString()
-            }/${
-              data?.head.seqOfDoc.toNumber().toString(16)
-            }`}
+           
+            onClick={() => {
+              if (data?.body) setGK(data?.body);            
+            }}
+
+            as={`/comp/mainPage`}
 
             variant='h5'
 
             underline='hover'
           >
             SN: { '0x' +
-                  data?.head.typeOfDoc.toString(16).padStart(4, '0') +
                   data?.head.version.toString(16).padStart(4, '0') +
-                  data?.head.seqOfDoc.toNumber().toString(16).padStart(16, '0')
-                } <br />
+                  data?.head.seqOfDoc.toHexString().substring(2).padStart(16, '0')
+                }
           </Link>
         </li>
       )}

@@ -29,10 +29,11 @@ export function GeneralInfo( { gk, books } : GeneralInfoProps ) {
     <>
       <hr />
         <h2 >Company General Info</h2>
+        <h4> Address: { `0x${addrOfGK}` }</h4>
       <hr />
 
       <Stack direction="row" spacing={1} >
-        <GetCompId addr={ addrOfGK } />
+        <GetCompId addr={ `0x${addrOfGK}` } />
         <GetControllorInfo addr={ `0x${books[7]}` } />
       </Stack>
 

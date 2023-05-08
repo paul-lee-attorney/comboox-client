@@ -5,14 +5,9 @@ import { WagmiConfig } from 'wagmi'
 
 import { client } from '../wagmi'
 
-import { Connect } from '../components'
+import { Layout } from '../components'
 
-// import '@fontsource/roboto/300.css';
-// import '@fontsource/roboto/400.css';
-// import '@fontsource/roboto/500.css';
-// import '@fontsource/roboto/700.css';
-
-
+import { ComBooxWrapper } from '../scripts/ComBooxContext'
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = React.useState(false)
@@ -22,17 +17,14 @@ function App({ Component, pageProps }: AppProps) {
       <NextHead>
         <title>ComBoox</title>
       </NextHead>
-
-      <h1>ComBoox-A Blockchain-Based Company Statutory Books Keeping System</h1>
-      <hr/>
-
-
+       
       {mounted && (
         <>
-          <Connect />
-          <hr />
-
-          <Component {...pageProps} />
+          <ComBooxWrapper>
+            <Layout>
+              <Component {...pageProps} />
+            </Layout>
+          </ComBooxWrapper>
         </>
       )}
     </WagmiConfig>

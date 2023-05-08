@@ -9,7 +9,8 @@ export { RegUser } from './center/RegUser'
 export { CreateComp } from './center/CreateComp'
 export { DocFinder } from './center/DocFinder'
 
-export {
-  DataList
-} from './common'
+export { DataList } from './common'
 
+export { ComBooxAppBar } from './common/ComBooxAppBar'
+export { Layout } from './common/Layout'
+export { GetDoc } from './center/GetDoc'

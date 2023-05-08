@@ -1,95 +1,95 @@
-import { useState } from 'react';
+import { useEffect } from 'react';
 
-import { useAccount } from 'wagmi';
+import { Button, Box, Icon } from '@mui/material';
+import { Create, Send } from '@mui/icons-material';
+import Link from '../../scripts/Link';
+
+
+import { waitForTransaction } from '@wagmi/core'
 
 import { 
   usePrepareRegCenterCreateComp, 
   useRegCenterCreateComp,
-  useRegCenterCreateCompEvent
 } from '../../generated';
 
 import { 
-  AddrOfRegCenter, 
-  SeqZero,
-  AcctZero,
-  DateZero,
-  DataZero,
-  AddrZero
+  AddrOfRegCenter,
+  AddrZero,
+  HexType
 } from '../../interfaces';
 
-export function CreateComp() {
+import { useComBooxContext } from '../../scripts/ComBooxContext';
 
-  const [primeKeyOfKeeper, setPrimeKeyOfKeeper] = useState(AddrZero);
-
-  type Log = {
-    versionOfGK: string
-    seqOfGK: string
-    creator: string
-    addrOfGK: string
-  }
-
-  const [log, setLog] = useState<{[key: string]: any}>({});
-
-  useRegCenterCreateCompEvent({
-    address: AddrOfRegCenter,
-    listener( versionOfGK, seqOfGK, creator, addrOfGK) {
-      console.log(versionOfGK, seqOfGK, creator, addrOfGK);
-
-      let log : Log  = {
-        versionOfGK : versionOfGK.toHexString(),
-        seqOfGK : seqOfGK.toHexString(),
-        creator : creator.toHexString(),
-        addrOfGK : addrOfGK
-      };
-
-      setLog(log);
-    }
+async function getReceipt(hash: HexType): Promise<HexType> {
+  const receipt = await waitForTransaction({
+    hash: hash
   });
+
+  return `0x${receipt.logs[0].topics[2].substring(26)}`; 
+}
+
+export function CreateComp() {
+  const { gk, setGK } = useComBooxContext();
 
   const {
     config,
-    error: prepareError,
-    isError: isPrepareError,
   } = usePrepareRegCenterCreateComp({
-    address: AddrOfRegCenter,
-    args: [ AddrZero ],
-  })  
+    address: AddrOfRegCenter
+  });  
 
-  const { 
-    error, 
-    isError, 
+  const {
+    data, 
     isLoading, 
-    isSuccess, 
     write 
-  } = useRegCenterCreateComp(config)
+  } = useRegCenterCreateComp(config);
+
+  useEffect(() => {
+    if (data) {
+      getReceipt(data.hash).then((addrOfGK)=>setGK(addrOfGK));
+    }
+  });
 
   return (
     <div>
-      <input disabled={ isLoading }
-        onChange={(e) => setPrimeKeyOfKeeper(`0x${e.target.value}`)}
-        // onBlur={(e) => setPrimeKeyOfKeeper(`0x${e.target.value}`)}
-        placeholder={ AddrZero }
-        value={ primeKeyOfKeeper.substring(2) }
-        size={50}
-      />
 
-      <br/>
+      {gk === AddrZero 
+        ? ( <Button 
+              sx={{ m: 1, minWidth: 415, height: 40 }} 
+              variant="outlined" 
+              disabled={ !write || isLoading }
+              endIcon={ <Create /> }
+              size='small'
+              onClick={() => write?.()}
+            >
+              {isLoading ? 'Loading...' : 'Register My Company'}
+            </Button> ) 
 
-      <button disabled={ !write || isLoading} onClick={() => write?.()}>
-        {isLoading ? 'Loading...' : 'CreateComp'}
-      </button>
-      {isSuccess && log && (
-        <div>
-          Successfully created new Company ! <br/>
-          VersionOfGK : { log.versionOfGK } <br/>
-          SeqOfGK : { log.seqOfGK } <br/>
-          Creator : { log.creator } <br/>
-          AddressOfGK : { log.addrOfGK } 
-        </div>
-      )}
-      {(isPrepareError || isError) && (
-        <div>Error: {(prepareError || error)?.message}</div>
-      )}
+        : ( <Box sx={{
+                color: 'blue',
+                border: 1,
+                borderRadius: 1,
+                width: 320,
+                height: 40,
+                m: 1,
+                p: 1,
+                
+              }} 
+            >
+              <Link
+                href='/comp/initSys/setCompId'
+    
+                as = '/comp/initSys/setCompId'
+                
+                variant='button'
+        
+                underline='hover'
+              >
+                Init My System Setting
+              </Link>
+
+            </Box> )
+      }
+
     </div>
   )
 }

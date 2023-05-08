@@ -1,11 +1,9 @@
 import { 
-  Connect,
   DocFinder,
-  GetMyUserNo, 
-  GetMyUserInfo,
-  RegUser,
   CreateComp 
 } from '../../components'
+
+import Link from '../../scripts/Link'
 
 function RegCenterPage() {
 
@@ -14,7 +12,14 @@ function RegCenterPage() {
       <h1>Registration Center</h1>
       <hr />
 
-      <CreateComp />
+      <Link
+        href='/comp/initSys/createComp'
+        as='/comp/initSys/createComp'
+        variant='h5'
+        underline='hover'
+      >
+        Register My Company
+      </Link>
       <hr />
 
       <DocFinder />

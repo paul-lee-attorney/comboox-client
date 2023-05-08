@@ -7,7 +7,6 @@ import TextField from '@mui/material/TextField';
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-// import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
@@ -20,7 +19,6 @@ export function DocFinder() {
   const {isConnected} = useAccount();
 
   const [typeOfDoc, setTypeOfDoc] = useState('');
-  const [nameOfDoc, setNameOfDoc] = useState('');
   const [version, setVersion] = useState('');
   const [seqOfDoc, setSeqOfDoc] = useState('');
 
@@ -38,11 +36,6 @@ export function DocFinder() {
     console.log(sn); 
     setSnOfDoc(sn);
   };
-
-
-
-  // const [compSn, setCompSn] = useState<string>();
-  // const [snOfDoc, setSnOfDoc] = useState<string>();
 
   return (
     <>
@@ -137,29 +130,6 @@ export function DocFinder() {
 
         </div>
 
-
-
-
-
-
-
-
-        // <div>
-        //   <input
-        //     size={80}
-        //     onChange={(e) => setCompSn(e.target.value)}
-        //     placeholder="Company SN (80-bits HexNumber, e.g. '0x123456789abcdef12345')"
-        //     value={compSn}
-        //   />          
-        //   <button onClick={handleClick}>
-        //     query
-        //   </button>
-
-        //   {snOfDoc && (
-        //     <GetDoc sn={snOfDoc} />
-        //   )}
-
-        // </div>
       )}
     </>
   )

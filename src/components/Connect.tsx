@@ -11,7 +11,7 @@ export function Connect() {
       <div>
         {isConnected && (
           <>
-            <div> connected Acct: {address?.toString()} </div>
+            {/* <div> connected Acct: {address?.toString()} </div> */}
             <button onClick={() => disconnect()}>
               Disconnect from {connector?.name}
             </button>
