@@ -13,7 +13,7 @@ type SharesInHandProps = ContractProps & {
   args: readonly [BigNumber]
 }
 
-export function SharesList({ addr, args }:SharesInHandProps ) {
+export function SharesInHand({ addr, args }:SharesInHandProps ) {
   const [sharesList, setSharesList] = useState<string[]>();
 
   const {isSuccess, refetch} = useRegisterOfMembersSharesInHand({

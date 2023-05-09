@@ -46,7 +46,9 @@ type ShareClipType = {
 
 type MemberShareClipType = {
   acct: string,
-  clip: ShareClipType,
+  date: string,
+  paid: string,
+  par: string,
 }
 
 async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promise<MemberShareClipType[]> {
@@ -64,9 +66,16 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
       args: [members[i]],
     });
 
+    let strDate = item.timestamp * 1000;
+
+    let date1 = new Date(strDate);
+    let date2 = date1.toLocaleDateString().replace(/\//g, "-") + ' ' + date1.toTimeString().substring(0,8);
+
     list[i] = {
       acct: members[i].toNumber().toString(),
-      clip: item,
+      date: date2,
+      paid: item.paid.toNumber().toString(),
+      par: item.par.toNumber().toString(),
     };
 
     i++;
@@ -114,9 +123,9 @@ export function MembersEquityList({ addr }:ContractProps ) {
               <TableCell component="th" scope="row">
                 {v.acct}
               </TableCell>
-              <TableCell align="right">{v.clip.timestamp.toString()}</TableCell>
-              <TableCell align="right">{v.clip.par.toNumber().toString()}</TableCell>
-              <TableCell align="right">{v.clip.paid.toNumber().toString()}</TableCell>
+              <TableCell align="right">{v.date}</TableCell>
+              <TableCell align="right">{v.par}</TableCell>
+              <TableCell align="right">{v.paid}</TableCell>
             </TableRow>
           )))}
         </TableBody>

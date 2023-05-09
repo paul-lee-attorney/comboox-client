@@ -16,5 +16,6 @@ export { GetDoc } from './center/GetDoc'
 export { RegisteredCapital, PaidInCapital } from './comp/rom/OwnersEquity'
 export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'
 export { MembersList, MembersEquityList } from './comp/rom/MembersList'
+export { SharesInHand } from './comp/rom/SharesInHand'
 
 export { RegNumHash, CompName, CompSymbol, CompAddrTf, CompSymbolTf } from './comp/gk/CompBrief'

@@ -177,6 +177,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
       <AppBar position="fixed" open={ appBarOpen }>
         <Toolbar>
           <IconButton
+            disabled={ gk === AddrZero }
             color="inherit"
             aria-label="open drawer"
             onClick={ handleDrawerOpen }
