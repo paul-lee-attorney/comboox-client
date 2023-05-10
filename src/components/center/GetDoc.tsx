@@ -41,7 +41,7 @@ export function GetDoc( { sn } : GetDocType) {
 
             as={`/comp/mainPage`}
 
-            variant='h5'
+            variant='h6'
 
             underline='hover'
           >

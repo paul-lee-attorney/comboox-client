@@ -27,11 +27,13 @@ import {
   ListItemText,
 } from '@mui/material';
 
+import Link from '../../scripts/Link';
+
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 240;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail }  from '@mui/icons-material';
+import { AccountCircle, ChevronLeft, Inbox, Mail, Home }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -280,6 +282,32 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         <Divider />
 
         <List>
+          <ListItem >
+            <ListItemButton 
+              LinkComponent={Link}
+              href='/comp/mainPage'
+            >
+              <ListItemIcon>
+                < Home />
+              </ListItemIcon>
+              <ListItemText primary="HomePage" />
+            </ListItemButton>
+          </ListItem>
+
+
+          <ListItem >
+            <ListItemButton 
+              LinkComponent={Link}
+              href='/comp/boh/bookOfSHA'
+            >
+              <ListItemIcon>
+                <Mail />
+              </ListItemIcon>
+              <ListItemText primary="BookOfSHA" />
+            </ListItemButton>
+          </ListItem>
+
+
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>

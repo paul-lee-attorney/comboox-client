@@ -13,6 +13,10 @@ export { DocFinder } from './center/DocFinder'
 export { ComBooxAppBar } from './center/ComBooxAppBar'
 export { GetDoc } from './center/GetDoc'
 
+export { DialogSha } from './comp/boh/DialogSha'
+export { RulesList } from './comp/boh/rules/RulesList' 
+
+
 export { RegisteredCapital, PaidInCapital } from './comp/rom/OwnersEquity'
 export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'
 export { MembersList, MembersEquityList } from './comp/rom/MembersList'

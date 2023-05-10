@@ -15,7 +15,7 @@ export const AddrZero:HexType = `0x${'0'.padEnd(40,'0')}`;
 export type HexType = `0x${string}`;
 
 export type ContractProps = {
-  addr?: HexType | undefined
+  addr: HexType
 }
 
 export type GKInfo = {
