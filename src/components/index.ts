@@ -4,6 +4,7 @@ export { MintNFT } from './common/MintNFT'
 export { NetworkSwitcher } from './common/NetworkSwitcher'
 export { DataList } from './common/DataList'
 export { Layout } from './common/Layout'
+export { SetGeneralCounsel } from './common/accessControl/SetGeneralCounsel'
 
 export { GetMyUserNo } from './center/GetMyUserNo'
 export { GetMyUserInfo } from './center/GetMyUserInfo'
@@ -15,7 +16,8 @@ export { GetDoc } from './center/GetDoc'
 
 export { DialogSha } from './comp/boh/DialogSha'
 export { RulesList } from './comp/boh/rules/RulesList' 
-
+export { ShaNavi } from './comp/boh/sha/ShaNavi'
+export { FilesListWithInfo, FilesList } from './comp/boh/FilesList'
 
 export { RegisteredCapital, PaidInCapital } from './comp/rom/OwnersEquity'
 export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'

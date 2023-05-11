@@ -16,6 +16,7 @@ import {
 import { ContractProps, HexType } from '../../../interfaces';
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
+import { dateParser } from '../../../scripts/toolsKit';
 
 export function MembersList({ addr }:ContractProps ) {
   const [membersList, setMembersList] = useState<string[]>();
@@ -66,14 +67,9 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
       args: [members[i]],
     });
 
-    let strDate = item.timestamp * 1000;
-
-    let date1 = new Date(strDate);
-    let date2 = date1.toLocaleDateString().replace(/\//g, "-") + ' ' + date1.toTimeString().substring(0,8);
-
     list[i] = {
       acct: members[i].toNumber().toString(),
-      date: date2,
+      date: dateParser(item.timestamp),
       paid: item.paid.toNumber().toString(),
       par: item.par.toNumber().toString(),
     };
@@ -97,7 +93,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
     if (data) {
       getEquityList(boox[8], data).then(list => setEquityList(list));
     }
-  });
+  }, [data, boox]);
 
   return (
     <TableContainer component={Paper}>

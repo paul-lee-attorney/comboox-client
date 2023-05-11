@@ -1,4 +1,3 @@
-// import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
 import { 
@@ -8,13 +7,11 @@ import {
   Button,
 } from '@mui/material';
 
-
 import { Send }  from '@mui/icons-material';
 
 import Link from '../../../scripts/Link';
 
 import {
-  useGeneralKeeperGetBook,
   useGeneralKeeperGetKeeper,
   useRegisterOfMembersSharesList,
   usePrepareBookOfSharesIssueShare,
@@ -27,7 +24,7 @@ import {
 
 import { BigNumber } from 'ethers';
 
-import { GKInfo, HexType } from '../../../interfaces';
+import { HexType } from '../../../interfaces';
 
 import { DataList } from '../../../components';
 
@@ -45,33 +42,11 @@ type ShareArgsType = {
 }
 
 function InitBosPage() {
-  // const [gk, setGK] = useState<GKInfo>();
-
-  const {gk, setGK} = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   const [sharesList, setSharesList] = useState<readonly HexType[]>();
 
   const [shareArgs, setShareArgs] = useState<ShareArgsType>();
-
-  // const { query, push } = useRouter();
-
-  // useEffect(() => {
-  //   if (query.addrOfGK) {
-  //     const logOfQuery:GKInfo = {
-  //       sn: query.sn?.toString(),
-  //       creator: query.creator?.toString(),
-  //       addrOfGK: `0x${query.addrOfGK?.toString().substring(2)}`,
-  //     };
-  //     setGK(logOfQuery);
-  //   }
-  // }, [query]);
-
-  const {
-    data: rom
-  } = useGeneralKeeperGetBook({
-    address: gk,
-    args: [BigNumber.from(8)],
-  })
 
   const {
     data: romKeeper
@@ -83,18 +58,11 @@ function InitBosPage() {
   const {
     refetch: refetchSharesList
   } = useRegisterOfMembersSharesList({
-    address: rom,
+    address: boox[8],
     onSuccess(ls) {
       setSharesList(ls);
     }
   });
-
-  const {
-    data: bos
-  } = useGeneralKeeperGetBook({
-    address: gk,
-    args: [BigNumber.from(7)],
-  })
 
   const {
     data: bosKeeper
@@ -107,7 +75,7 @@ function InitBosPage() {
     config,
     isLoading
   } = usePrepareBookOfSharesIssueShare({
-    address: bos,
+    address: boox[7],
     args: shareArgs?.class &&
       shareArgs?.issueDate &&
       shareArgs?.shareholder && 
@@ -145,7 +113,7 @@ function InitBosPage() {
     config: romSetDKConfig,
     isLoading: romSetDKIsLoading
   } = usePrepareRegisterOfMembersSetDirectKeeper({
-    address: rom,
+    address: boox[8],
     args: romKeeper ? [ romKeeper ] : undefined,
   });
 
@@ -157,7 +125,7 @@ function InitBosPage() {
     config: bosSetDKConfig,
     isLoading: bosSetDKIsLoading
   } = usePrepareBookOfSharesSetDirectKeeper({
-    address: bos,
+    address: boox[7],
     args: bosKeeper ? [ bosKeeper ] : undefined,
   });
 
@@ -453,11 +421,6 @@ function InitBosPage() {
       >
         Finish
       </Link>
-
-      {'        '}
-
-
-
 
     </>    
   )

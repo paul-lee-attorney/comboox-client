@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 
 import { Button, Box, Icon } from '@mui/material';
-import { Create, Send } from '@mui/icons-material';
+import { Create, ReadMoreOutlined, Send } from '@mui/icons-material';
 import Link from '../../scripts/Link';
 
 
@@ -64,30 +64,29 @@ export function CreateComp() {
               {isLoading ? 'Loading...' : 'Register My Company'}
             </Button> ) 
 
-        : ( <Box sx={{
-                color: 'blue',
-                border: 1,
-                borderRadius: 1,
-                width: 320,
-                height: 40,
-                m: 1,
-                p: 1,
-                
-              }} 
+        : ( <Link
+              href='/comp/initSys/setCompId'
+  
+              as = '/comp/initSys/setCompId'
+              
+              variant='button'
+      
+              underline='hover'
             >
-              <Link
-                href='/comp/initSys/setCompId'
-    
-                as = '/comp/initSys/setCompId'
-                
-                variant='button'
-        
-                underline='hover'
+
+              <Button
+                variant='outlined'
+                sx={{
+                  m: 1,
+                  height: 40,
+                  width: 415,
+                }}
+                endIcon={ <ReadMoreOutlined/> }
               >
                 Init My System Setting
-              </Link>
+              </Button>
 
-            </Box> )
+            </Link>)
       }
 
     </div>
