@@ -18,6 +18,19 @@ export type ContractProps = {
   addr: HexType
 }
 
+
+export interface ShaRuleInputProps{
+  sha: HexType,
+  seqList: number[],
+}
+
+export interface SetShaRuleProps {
+  sha: HexType,
+  qty: number,
+  seq: number,
+}
+
+
 export type GKInfo = {
   sn?: string | undefined,
   creator?: string | undefined,

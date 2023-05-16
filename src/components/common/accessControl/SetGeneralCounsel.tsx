@@ -72,12 +72,11 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
     write?.();
   }
 
-  useEffect(() => {
-    if (data) 
-      getGC(addr).then(gc => {
-        setNewGC(gc);
-        setOpen(true);
-      });
+  useEffect(() => { 
+    getGC(addr).then(gc => {
+      setNewGC(gc);
+      setOpen(true);
+    });
   }, [data, addr]);
 
   return (

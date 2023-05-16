@@ -1,6 +1,20 @@
 import { useEffect, useState } from 'react';
 
-import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, Paper, Toolbar } from '@mui/material';
+import { 
+  Table, 
+  TableBody, 
+  TableContainer, 
+  TableHead, 
+  TableRow, 
+  TableCell, 
+  Paper, 
+  Toolbar, 
+  Box
+} from '@mui/material';
+
+import{ Send } from '@mui/icons-material';
+
+import { LoadingButton } from '@mui/lab'
 
 import Link from '../../../scripts/Link';
 
@@ -105,6 +119,8 @@ async function getFilesListWithInfo(folder: HexType, files: readonly HexType[]):
 
 export function FilesListWithInfo({ addr }:ContractProps ) {
   const [fileInfoList, setFileInfoList] = useState<InfoOfFile[]>();
+  const [ loading, setLoading ] = useState<boolean>();
+
 
   const {data, refetch} = useFilesFolderGetFilesList({
     address: addr
@@ -112,12 +128,16 @@ export function FilesListWithInfo({ addr }:ContractProps ) {
 
   useEffect(() => {
     if (data) {
-      getFilesListWithInfo(addr, data).then(list => setFileInfoList(list));
+      setLoading(true);
+      getFilesListWithInfo(addr, data).then(list => {
+        setLoading(false);
+        setFileInfoList(list);
+      });
     }
   }, [data, addr]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
       <Toolbar>
         <h3>Files List</h3>
       </Toolbar>
@@ -166,6 +186,16 @@ export function FilesListWithInfo({ addr }:ContractProps ) {
               <TableCell align="right">{v.head.state}</TableCell>
             </TableRow>
           )))}
+          {loading && (
+            <LoadingButton 
+              loading={ loading } 
+              loadingPosition='end' 
+              endIcon={<Send/>} 
+              sx={{p:1, m:1}} 
+            >
+              <span>Loading</span>
+            </LoadingButton>
+          )}
         </TableBody>
       </Table>
     </TableContainer>

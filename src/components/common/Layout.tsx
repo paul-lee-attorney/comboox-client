@@ -1,6 +1,10 @@
 import { ComBooxAppBar } from "../center/ComBooxAppBar";
 
-export function Layout({ children }) {
+interface LayoutProps {
+  children: any,
+}
+
+export function Layout({ children }: LayoutProps) {
   return (
     <>
       <ComBooxAppBar>

@@ -71,7 +71,7 @@ function BookOfSHA() {
 
   return (
     <>
-      <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1 }} >
+      <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Toolbar>
           <h3>BOH - Book Of ShareholdersAgreements</h3>
         </Toolbar>

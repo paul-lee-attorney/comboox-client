@@ -16,6 +16,21 @@ export { GetDoc } from './center/GetDoc'
 
 export { DialogSha } from './comp/boh/DialogSha'
 export { RulesList } from './comp/boh/rules/RulesList' 
+export { SetGovernanceRule } from './comp/boh/rules/SetGovernanceRule'
+export { SetVotingRule } from './comp/boh/rules/SetVotingRule'
+export { VotingRules } from './comp/boh/rules/VotingRules'
+export { SetPositionAllocateRule } from './comp/boh/rules/SetPositionAllocateRule'
+export { PositionAllocateRules } from './comp/boh/rules/PositionAllocateRules'
+export { SetFirstRefusalRule } from './comp/boh/rules/SetFirstRefusalRule'
+export { FirstRefusalRules } from './comp/boh/rules/FirstRefusalRules'
+export { SetGroupUpdateOrder } from './comp/boh/rules/SetGroupUpdateOrder'
+export { GroupUpdateOrders } from './comp/boh/rules/GroupUpdateOrders'
+export { SetLinkRule } from './comp/boh/rules/SetLinkRule'
+export { LinkRules } from './comp/boh/rules/LinkRules'
+
+export { AddRule } from './comp/boh/rules/AddRule'
+
+
 export { ShaNavi } from './comp/boh/sha/ShaNavi'
 export { FilesListWithInfo, FilesList } from './comp/boh/FilesList'
 

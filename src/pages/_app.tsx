@@ -19,13 +19,11 @@ function App({ Component, pageProps }: AppProps) {
       </NextHead>
        
       {mounted && (
-        <>
-          <ComBooxWrapper>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </ComBooxWrapper>
-        </>
+        <ComBooxWrapper>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ComBooxWrapper>
       )}
     </WagmiConfig>
   )

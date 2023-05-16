@@ -40,6 +40,7 @@ export function ShaNavi(props: ShaNaviProps) {
         {tabs.map((v, i) => (
           <>
             <Link 
+              key={ i }
               href={{
                 pathname: v.path,
                 query: {

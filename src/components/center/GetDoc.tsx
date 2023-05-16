@@ -10,7 +10,7 @@ type GetDocType = {
 
 export function GetDoc( { sn } : GetDocType) {
 
-  const {gk, setGK} = useComBooxContext();
+  const { setGK } = useComBooxContext();
 
   const {data, error, isError, isLoading, isSuccess} = useRegCenterGetDoc({
     address: AddrOfRegCenter,
