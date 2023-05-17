@@ -21,7 +21,7 @@ import { dateParser } from '../../../scripts/toolsKit';
 export function MembersList({ addr }:ContractProps ) {
   const [membersList, setMembersList] = useState<string[]>();
 
-  const {isSuccess, refetch} = useRegisterOfMembersMembersList({
+  const {data, refetch} = useRegisterOfMembersMembersList({
     address: addr,
     onSuccess(data) {
       let temp:string[] = [];
@@ -30,6 +30,11 @@ export function MembersList({ addr }:ContractProps ) {
       setMembersList(temp);
     }
   })
+
+  useEffect(()=>{
+    if (data) 
+      refetch();
+  }, [data, refetch]);
 
   return (
     <>
@@ -96,7 +101,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
   }, [data, boox]);
 
   return (
-    <TableContainer component={Paper}>
+    <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider' }}>
       <Toolbar>
         <h3>Members List</h3>
       </Toolbar>

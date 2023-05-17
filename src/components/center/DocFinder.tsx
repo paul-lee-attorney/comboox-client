@@ -13,6 +13,8 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 import Button from '@mui/material/Button';
 import SearchIcon from '@mui/icons-material/Search';
 
+import { HexType } from '../../interfaces';
+
 
 
 export function DocFinder() {
@@ -22,7 +24,7 @@ export function DocFinder() {
   const [version, setVersion] = useState('');
   const [seqOfDoc, setSeqOfDoc] = useState('');
 
-  const [snOfDoc, setSnOfDoc] = useState('');
+  const [snOfDoc, setSnOfDoc] = useState<HexType>();
 
   const handleTypeChange = (e: SelectChangeEvent) => {
     setTypeOfDoc(e.target.value);
@@ -30,9 +32,10 @@ export function DocFinder() {
   };
 
   const handleClick = () => {
-    const sn = parseInt(typeOfDoc).toString(16).padStart(4, '0') +
+    const sn: HexType = `0x${parseInt(typeOfDoc).toString(16).padStart(4, '0') +
       parseInt(version).toString(16).padStart(4, '0') +
-      parseInt(seqOfDoc).toString(16).padStart(16, '0') + '0'.padEnd(40, '0');
+      parseInt(seqOfDoc).toString(16).padStart(16, '0') + 
+      '0'.padEnd(40, '0')}`;
     console.log(sn); 
     setSnOfDoc(sn);
   };

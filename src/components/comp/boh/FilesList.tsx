@@ -46,7 +46,7 @@ export function FilesList({ addr }:ContractProps ) {
 
   return (
     <>
-      {filesList && (<DataList isOrdered={true} data={filesList} />)}
+      {filesList && filesList.length > 0 && (<DataList isOrdered={true} data={filesList} />)}
     </>
   )
 }

@@ -33,7 +33,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 240;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail, Home }  from '@mui/icons-material';
+import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -282,6 +282,22 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         <Divider />
 
         <List>
+
+          <ListItem >
+            <ListItemButton 
+              LinkComponent={Link}
+              href='/'
+            >
+              <ListItemIcon>
+                < AssuredWorkload />
+              </ListItemIcon>
+              <ListItemText primary="RegCenter" />
+            </ListItemButton>
+          </ListItem>
+
+
+        <Divider />
+
           <ListItem >
             <ListItemButton 
               LinkComponent={Link}
@@ -301,7 +317,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
               href='/comp/boh/bookOfSHA'
             >
               <ListItemIcon>
-                <Mail />
+                <ListAlt />
               </ListItemIcon>
               <ListItemText primary="BookOfSHA" />
             </ListItemButton>

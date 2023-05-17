@@ -12,6 +12,8 @@ import {
 
 import { AddrZero, HexType } from "../../../../interfaces";
 
+import { readContract } from "@wagmi/core";
+
 import { 
   SetGovernanceRule, 
   ShaNavi, 
@@ -22,7 +24,26 @@ import {
   LinkRules,
 } from '../../../../components';
 
-import { useShareholdersAgreementRules } from "../../../../generated";
+import { 
+  useShareholdersAgreementRules, 
+  useShareholdersAgreementTitles,
+  shareholdersAgreementABI,
+} from "../../../../generated";
+import { AntiDilution } from "../../../../components/comp/boh/terms/antiDilution/AntiDilution";
+
+async function getTerm(addr: HexType, title: number): Promise<HexType> {
+
+  let addrOfTerm = await readContract({
+    address: addr,
+    abi: shareholdersAgreementABI,
+    functionName: 'getTerm',
+    args: [BigNumber.from(title)],
+  });
+
+  return addrOfTerm;
+}
+
+
 
 function BodyTerms() {
   const { query } = useRouter();
@@ -41,14 +62,12 @@ function BodyTerms() {
     onSuccess(data) {
       let arrRules = [1, 256, 512, 768, 1024];
 
-      if (data.length > 0) {
-        data.map(v => {
-          let seq = v.toNumber();
-          if (seq % 256 > 0 && seq != 1) {
-            arrRules.push(seq);
-          }
-        });
-      } 
+      data.map(v => {
+        let seq = v.toNumber();
+        if (seq % 256 > 0 && seq != 1) {
+          arrRules.push(seq);
+        }
+      });
       
       setRules(arrRules);
     }
@@ -119,6 +138,37 @@ function BodyTerms() {
     } 
   }, [data, rules]);
 
+  const [ titles, setTitles ] = useState<number[]>();
+
+  const [ ad, setAD ] = useState<HexType>();
+
+  const { 
+    data: bnTitles, 
+    refetch: refetchTitles 
+  } = useShareholdersAgreementTitles({
+    address: sha,
+    onSuccess(data) {
+      let arrTitles: number[] = [];
+      data.map(v => {
+        let title = v.toNumber();
+        arrTitles.push(title);
+      });
+      setTitles(arrTitles);
+    }
+  });
+
+  useEffect(() => {
+    if (titles) {
+      titles.map(async v => {
+        switch (v) {
+          case 23:
+            setAD( await getTerm(sha, v));
+            break;
+        }
+      });      
+    }
+  }, [sha, titles, setAD]);
+
   return (
     <Stack direction={'column'} sx={{ width: '100%' }}>
 
@@ -135,6 +185,8 @@ function BodyTerms() {
       {guoLs && (<GroupUpdateOrders sha={ sha } seqList={ guoLs } />)}
 
       {lrLs && (<LinkRules sha={ sha } seqList={ lrLs } />)}
+
+      {ad && (<AntiDilution sha={ sha } term={ ad } setTerm={ setAD } />)}
 
     </Stack>    
   );

@@ -13,7 +13,7 @@ import {
 } from '@mui/material';
 
 
-import { Update, Send }  from '@mui/icons-material';
+import { Update, ArrowForward, Send }  from '@mui/icons-material';
 
 import Link from '../../../scripts/Link';
 
@@ -84,14 +84,17 @@ function SetCompIdPage() {
   });
 
   const {
-    write 
+    data,
+    write, 
    } = useGeneralKeeperSetCompInfo(config);
 
   useEffect(() => {
-    refetchRegNumHash();
-    refetchNameOfComp();
-    refetchSymbolOfComp();
-  });
+    if (data) {
+      refetchRegNumHash();
+      refetchNameOfComp();
+      refetchSymbolOfComp();
+    }
+  }, [data, refetchNameOfComp, refetchRegNumHash, refetchSymbolOfComp]);
 
   return (
     <>
@@ -202,29 +205,24 @@ function SetCompIdPage() {
         </Grid>
 
         <Grid item direction={'row'} sx={{alignContent:'center', justifyContent:'center', }} >
-          
-            <Box sx={{
-              color: 'blue',
-              border: 1,
-              borderRadius: 1,
-              height: 40,
-              width: 100,
-              m: 1,
-              p: 1 }} 
-            >
-              <Link
-                href='/comp/initSys/setMaxQtyOfMembers'
-    
-                as = '/comp/initSys/setMaxQtyOfMembers'
-                
-                variant='button'
-        
-                underline='hover'
-              >
-                Next Step
-              </Link>
 
-            </Box>
+          <hr/>
+          <Link
+            href='/comp/initSys/setMaxQtyOfMembers'
+            as = '/comp/initSys/setMaxQtyOfMembers'            
+            variant='button'
+            underline='hover'
+          >
+            <Button
+              variant="contained"
+              sx={{
+                height: 40,
+              }}
+              endIcon={ <ArrowForward /> }
+            >
+              Next
+            </Button>
+          </Link>
 
         </Grid>
         

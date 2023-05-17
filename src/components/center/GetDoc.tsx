@@ -3,6 +3,7 @@ import { AddrOfRegCenter, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
+import { useEffect } from 'react';
 
 type GetDocType = {
   sn: HexType
@@ -12,11 +13,16 @@ export function GetDoc( { sn } : GetDocType) {
 
   const { setGK } = useComBooxContext();
 
-  const {data, error, isError, isLoading, isSuccess} = useRegCenterGetDoc({
+  const {data, error, isError, isLoading, isSuccess, refetch} = useRegCenterGetDoc({
     address: AddrOfRegCenter,
     args: [ sn ]
   });
   
+  useEffect(() => {
+    if (data)
+      refetch();
+  }, [sn, data, refetch]);
+
   return (
     <>
       {isSuccess && (

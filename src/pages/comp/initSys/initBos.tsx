@@ -7,7 +7,7 @@ import {
   Button,
 } from '@mui/material';
 
-import { Send }  from '@mui/icons-material';
+import { ArrowBack, ArrowForward, Send }  from '@mui/icons-material';
 
 import Link from '../../../scripts/Link';
 
@@ -101,13 +101,14 @@ function InitBosPage() {
   });
 
   const {
+    data: issueShareReceipt,
     isSuccess,
     write
   } = useBookOfSharesIssueShare(config);
 
   useEffect(() => {
-    if (isSuccess) refetchSharesList();
-  });
+    if (issueShareReceipt) refetchSharesList();
+  }, [issueShareReceipt, refetchSharesList]);
 
   const {
     config: romSetDKConfig,
@@ -350,6 +351,34 @@ function InitBosPage() {
         alignItems='flex-end'
         spacing={1}
       >
+        <Grid item>
+          <Link
+            href={{
+              pathname: './setMaxQtyOfMembers',
+            }}
+
+            as = './setMaxQtyOfMembers'
+            
+            variant='button'
+
+            underline='hover'
+          >
+
+            <Button
+              variant="contained"
+              sx={{
+                height: 40,
+                m: 1,
+                mr: 10,
+              }}
+              endIcon={ <ArrowBack /> }
+            >
+              Prev
+            </Button>
+
+          </Link>          
+
+        </Grid>
 
         <Grid item >
           <Button 
@@ -387,40 +416,43 @@ function InitBosPage() {
           </Button>
         </Grid>
 
+        <Grid item >
+
+          <Link
+            href={{
+              pathname: '../mainPage',
+            }}
+
+            as = '../mainPage'
+            
+            variant='button'
+
+            underline='hover'
+          >
+
+            <Button
+              variant="contained"
+              sx={{
+                height: 40,
+                m: 1,
+                ml: 10,
+              }}
+              endIcon={ <ArrowForward /> }
+            >
+              Finish
+            </Button>
+
+          </Link>
+
+        </Grid>
+
       </Grid>
 
       <br />
-
-
-      <Link
-        href={{
-          pathname: './setMaxQtyOfMembers',
-        }}
-
-        as = './setMaxQtyOfMembers'
-        
-        variant='button'
-
-        underline='hover'
-      >
-        Prev
-      </Link>          
+      
 
       {`        `}
 
-      <Link
-        href={{
-          pathname: '../mainPage',
-        }}
-
-        as = '../mainPage'
-        
-        variant='button'
-
-        underline='hover'
-      >
-        Finish
-      </Link>
 
     </>    
   )

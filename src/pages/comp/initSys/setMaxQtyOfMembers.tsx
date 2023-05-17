@@ -10,7 +10,7 @@ import {
   Grid,
 } from '@mui/material';
 
-import { Update }  from '@mui/icons-material';
+import { ArrowBack, ArrowForward, Update }  from '@mui/icons-material';
 
 import Link from '../../../scripts/Link';
 
@@ -69,6 +69,11 @@ function SetMaxQtyOfMembersPage() {
 
   return (
     <>
+      <br />
+      <br />
+      <br />
+      <br />
+
       <Grid
         container
         spacing={2}
@@ -134,7 +139,7 @@ function SetMaxQtyOfMembersPage() {
         </Grid>
 
 
-        <Grid item sx={{alignContent:'center', justifyContent:'center', }} >
+        <Grid item sx={{alignContent:'center'}} >
 
           <hr />
           <Link
@@ -148,7 +153,17 @@ function SetMaxQtyOfMembersPage() {
 
             underline='hover'
           >
-            Prev
+            <Button
+              variant="contained"
+              sx={{
+                height: 40,
+                mr: 10,
+              }}
+              startIcon={ <ArrowBack /> }
+            >
+              Prev
+            </Button>
+
           </Link>          
 
           {`        `}
@@ -157,14 +172,22 @@ function SetMaxQtyOfMembersPage() {
             href={{
               pathname: './initBos',
             }}
-
             as = './initBos'
-            
             variant='button'
-
             underline='hover'
           >
-            Next
+
+            <Button
+              variant="contained"
+              sx={{
+                height: 40,
+                ml: 10,
+              }}
+              endIcon={ <ArrowForward /> }
+            >
+              Next
+            </Button>
+
           </Link>
         </Grid>
 
