@@ -28,7 +28,7 @@ export { GroupUpdateOrders } from './comp/boh/rules/GroupUpdateOrders'
 export { SetLinkRule } from './comp/boh/rules/SetLinkRule'
 export { LinkRules } from './comp/boh/rules/LinkRules'
 
-export { GetBenchmark } from './comp/boh/terms/antiDilution/GetBenchmark'
+export { Benchmark } from './comp/boh/terms/antiDilution/Benchmark'
 
 export { AddRule } from './comp/boh/rules/AddRule'
 

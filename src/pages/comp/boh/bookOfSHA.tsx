@@ -50,7 +50,7 @@ async function getReceipt(hash: HexType): Promise<HexType> {
 function BookOfSHA() {
   const { gk, boox } = useComBooxContext();
 
-  const [sha, setSha] = useState<HexType>(AddrZero);
+  const [sha, setSha] = useState<HexType>();
 
   const [ version, setVersion ] = useState<string>();
 
@@ -58,15 +58,22 @@ function BookOfSHA() {
     address: gk,
     args: version ? [BigNumber.from(version)] : undefined,
   });
-  const {data, isLoading, write} = useGeneralKeeperCreateSha(config);
-
-  useEffect(() => {
-    if ( data ) {
-      getReceipt(data.hash).then( 
+  const {isLoading, write} = useGeneralKeeperCreateSha({
+    ...config,
+    onSuccess(data) {
+      getReceipt(data.hash).then(
         addrOfSha => setSha(addrOfSha)
       );
     }
   });
+
+  // useEffect(() => {
+  //   if ( data ) {
+  //     getReceipt(data.hash).then( 
+  //       addrOfSha => setSha(addrOfSha)
+  //     );
+  //   }
+  // });
 
 
   return (
@@ -99,7 +106,7 @@ function BookOfSHA() {
                       size='small'
                     />
 
-                    {sha === AddrZero ? (
+                    {!sha ? (
                       <Button 
                         disabled={!write || isLoading}
                         sx={{ m: 1, minWidth: 120, height: 40 }} 

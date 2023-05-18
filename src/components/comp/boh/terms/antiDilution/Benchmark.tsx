@@ -2,19 +2,21 @@ import {
   Stack,
   TextField,
   Paper,
+  Chip,
 } from '@mui/material';
 
 interface BenchmarkType {
   classOfShare: string,
   floorPrice: string,
-  obligors: string[],
+  obligors: string,
 }
 
-export function Benchmarks({ classOfShare, floorPrice, obligors }: BenchmarkType) {
+export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType) {
 
   return (
     <>
-      <Paper sx={{
+      <Paper 
+        sx={{
         alignContent:'center', 
         justifyContent:'center', 
         p:1, m:1,
@@ -23,6 +25,8 @@ export function Benchmarks({ classOfShare, floorPrice, obligors }: BenchmarkType
         }} 
       >
         <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+          <Chip label="M" color='primary' sx={{m:1}} />
 
           <TextField 
             variant='filled'

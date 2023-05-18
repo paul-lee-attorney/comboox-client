@@ -41,11 +41,7 @@ import {
 
 import { BigNumber } from "ethers";
 
-import {
-  GetBenchmark
-} from '../../../../../components'
-
-import { Benchmarks } from "./Benchmarks";
+import { Benchmark } from "./Benchmark";
 
 
 async function getReceipt(hash: HexType): Promise<HexType> {
@@ -59,7 +55,7 @@ async function getReceipt(hash: HexType): Promise<HexType> {
 interface BenchmarkType {
   classOfShare: string,
   floorPrice: string,
-  obligors: string[],
+  obligors: string,
 }
 
 interface SetShaTermProps {
@@ -90,13 +86,22 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
       args: [BigNumber.from(classOfShare)],
     });
     
+    let strObligors = '';
+
+    obligors.map(v => {
+      strObligors += v + `\n`;
+    });
+
     let item: BenchmarkType = {
       classOfShare: classOfShare.toString(),
       floorPrice: floorPrice.toString(),
-      obligors: obligors.map(v => v.toString()),
+      obligors: strObligors,
     }
 
     output.push(item);
+    console.log('item: ', item);
+
+    len--;
   }
 
   return output;
@@ -120,12 +125,12 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     data: createAdReceipt,
     isLoading: createAdIsLoading,
     write: createAd,
-  } = useShareholdersAgreementCreateTerm(createAdConfig);
-
-  useEffect(()=>{
-    if (createAdReceipt)
-      getReceipt(createAdReceipt.hash).
-        then(addrOfAd => setTerm(addrOfAd));
+  } = useShareholdersAgreementCreateTerm({
+    ...createAdConfig,
+    onSuccess(data) {
+      getReceipt(data.hash).
+        then(addrOfAd => setTerm(addrOfAd));      
+    }
   });
 
   const {
@@ -136,28 +141,39 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
   });
 
   const {
-    data: removeAdReceipt,
-    isSuccess: removeAdIsSuccess,
     isLoading: removeAdIsLoading,
     write: removeAd,
-  } = useShareholdersAgreementRemoveTerm(removeAdConfig);
-
-  useEffect(()=>{
-    if (removeAdReceipt && removeAdIsSuccess)
+  } = useShareholdersAgreementRemoveTerm({
+    ...removeAdConfig,
+    onSuccess() {
       setTerm();
-  }, [removeAdReceipt, removeAdIsSuccess, setTerm]);
-
-  const [ newClasses, setNewClasses ] = useState<number[]>();
+    }
+  });
 
   const [ newMarks, setNewMarks ] = useState<BenchmarkType[]>();
 
   const { refetch } = useAntiDilutionGetClasses({
     address: term,
     onSuccess(data) {
-      let output = data.map(v => v.toNumber());
-      setNewClasses(output);
+      let ls: number[] = [];
+      data.map(v => {
+        ls.push(v.toNumber())
+      })
+      if (term)
+        getBenchmarks(term, ls).
+          then(marks => setNewMarks(marks));  
     }
   });
+
+  // useEffect(()=>{
+  //   if (dataOfNewClasses) {
+  //     let ls: number[] = [];
+  //     dataOfNewClasses.map(v => {
+  //       ls.push(v.toNumber())
+  //     })
+  //     setNewClasses(ls);
+  //   }
+  // }, [dataOfNewClasses]);
 
   const [ classOfShare, setClassOfShare ] = useState<string>();
   const [ price, setPrice ] = useState<string>();
@@ -176,7 +192,12 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     data: addMarkReceipt,
     isLoading: addMarkIsLoading,
     write: addMark 
-  } = useAntiDilutionAddBenchmark(addMarkConfig);
+  } = useAntiDilutionAddBenchmark({
+    ...addMarkConfig,
+    onSuccess() {
+      refetch();
+    }
+  });
 
   const { 
     config: removeMarkConfig 
@@ -191,7 +212,12 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     data: removeMarkReceipt,
     isLoading: removeMarkIsLoading, 
     write: removeMark 
-  } = useAntiDilutionRemoveBenchmark(removeMarkConfig);
+  } = useAntiDilutionRemoveBenchmark({
+    ...removeMarkConfig,
+    onSuccess() {
+      refetch();
+    }
+  });
 
   const [ obligor, setObligor ] = useState<string>();
 
@@ -210,7 +236,12 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     data: addObligorReceipt,
     isLoading: addObligorIsLoading, 
     write: addObligor 
-  } = useAntiDilutionAddObligor(addObligorConfig);
+  } = useAntiDilutionAddObligor({
+    ...addObligorConfig,
+    onSuccess() {
+      refetch();
+    }
+  });
 
   const { 
     config: removeObligorConfig 
@@ -227,26 +258,25 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     data: removeObligorReceipt,
     isLoading: removeObligorIsLoading, 
     write: removeObligor 
-  } = useAntiDilutionRemoveObligor(removeObligorConfig);
+  } = useAntiDilutionRemoveObligor({
+    ...removeObligorConfig,
+    onSuccess() {
+      refetch();
+    }
+  });
 
-  useEffect(()=>{
-    if (createAdReceipt ||
-      addMarkReceipt || 
-      removeMarkReceipt ||
-      addObligorReceipt ||
-      removeObligorReceipt)
-
-      if (newClasses && term) {
-        getBenchmarks(term, newClasses).
-          then(marks => setNewMarks(marks));  
-      };
-  }, [ createAdReceipt, 
-      addMarkReceipt, 
-      removeMarkReceipt, 
-      addObligorReceipt, 
-      removeObligorReceipt,
-      newClasses, term ]
-  );
+  // useEffect(()=>{
+  //   if (newClasses && term) {
+  //     getBenchmarks(term, newClasses).
+  //       then(marks => setNewMarks(marks));  
+  //   };
+  // }, [ createAdReceipt, 
+  //     addMarkReceipt, 
+  //     removeMarkReceipt, 
+  //     addObligorReceipt, 
+  //     removeObligorReceipt,
+  //     newClasses, term ]
+  // );
 
   return (
     <Paper sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
@@ -305,20 +335,18 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
         <Stack direction={'row'} sx={{ alignItems:'center' }}>      
 
           <Tooltip
-            title='Add Price Benchmark'
-            placement="left"
+            title='Add Benchmark'
+            placement="top-start"
             arrow
           >
-            <span>
-              <IconButton 
-                disabled={ !addMark || addMarkIsLoading }
-                sx={{width: 20, height: 20, m: 1, ml: 5,}} 
-                onClick={ () => addMark?.() }
-                color="primary"
-              >
-                <AddCircle/>
-              </IconButton>
-            </span>
+            <IconButton 
+              disabled={ !addMark || addMarkIsLoading }
+              sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+              onClick={ () => addMark?.() }
+              color="primary"
+            >
+              <AddCircle/>
+            </IconButton>
           </Tooltip>
 
           <TextField 
@@ -344,39 +372,33 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
           />
 
           <Tooltip
-            title='Remove Price Benchmark'
-            placement="right"
+            title='Remove Benchmark'
+            placement="top-end"
             arrow
-          >
-            <span>
-           
-              <IconButton
-                disabled={ !removeMark || removeMarkIsLoading } 
-                sx={{width: 20, height: 20, m: 1, mr: 10}} 
-                onClick={ () => removeMark?.() }
-                color="primary"
-              >
-                <RemoveCircle/>
-              </IconButton>
-          
-            </span>
+          >           
+            <IconButton
+              disabled={ !removeMark || removeMarkIsLoading } 
+              sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+              onClick={ () => removeMark?.() }
+              color="primary"
+            >
+              <RemoveCircle/>
+            </IconButton>
           </Tooltip>
 
           <Tooltip
             title='Add Obligor'
-            placement="left"
+            placement="top-start"
             arrow
           >
-            <span>
-              <IconButton 
-                disabled={ !addObligor || addObligorIsLoading }
-                sx={{width: 20, height: 20, m: 1, ml: 10,}} 
-                onClick={ () => addObligor?.() }
-                color="primary"
-              >
-                <AddCircle/>
-              </IconButton>
-            </span>
+            <IconButton 
+              disabled={ !addObligor || addObligorIsLoading }
+              sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+              onClick={ () => addObligor?.() }
+              color="primary"
+            >
+              <AddCircle/>
+            </IconButton>
 
           </Tooltip>
 
@@ -393,32 +415,30 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
 
           <Tooltip
             title='Remove Obligor'
-            placement="right"
+            placement="top-end"
             arrow
           >
-            <span>
 
-              <IconButton
-                disabled={ !removeObligor || removeObligorIsLoading } 
-                sx={{width: 20, height: 20, m: 1}} 
-                onClick={ () => removeObligor?.() }
-                color="primary"
-              >
-                <RemoveCircle/>
-              </IconButton>
+            <IconButton
+              disabled={ !removeObligor || removeObligorIsLoading } 
+              sx={{width: 20, height: 20, m: 1, mr: 10}} 
+              onClick={ () => removeObligor?.() }
+              color="primary"
+            >
+              <RemoveCircle/>
+            </IconButton>
           
-            </span>
           </Tooltip>
 
         </Stack>
       )}
       
-      {newMarks && newMarks.map((v) => (
-        <Benchmarks 
-          key={ v.classOfShare }
-          classOfShare={ v.classOfShare } 
-          floorPrice={ v.floorPrice } 
-          obligors={ v.obligors } 
+      {term && newMarks?.map((v) => (
+        <Benchmark 
+          key={v.classOfShare} 
+          classOfShare={v.classOfShare}
+          floorPrice={v.floorPrice}
+          obligors={v.obligors} 
         />
       ))}
 

@@ -55,12 +55,11 @@ function BodyTerms() {
   const [ prLs, setPrLs ] = useState<number[]>();
   const [ frLs, setFrLs ] = useState<number[]>();
   const [ guoLs, setGuoLs ] = useState<number[]>();
-  const [ lrLs, setLrLs ] = useState<number[]>();
 
   const {data, refetch } = useShareholdersAgreementRules({
     address: sha,
     onSuccess(data) {
-      let arrRules = [1, 256, 512, 768, 1024];
+      let arrRules = [1, 256, 512, 768];
 
       data.map(v => {
         let seq = v.toNumber();
@@ -122,17 +121,6 @@ function BodyTerms() {
                 }
               });
               break;
-            case 4:
-              setLrLs(l => {
-                if (l) {
-                  let arr = [...l];
-                  arr.push(v);
-                  return arr;
-                } else {
-                  return [v];
-                }
-              });
-              break;
           };
       });
     } 
@@ -184,9 +172,7 @@ function BodyTerms() {
 
       {guoLs && (<GroupUpdateOrders sha={ sha } seqList={ guoLs } />)}
 
-      {lrLs && (<LinkRules sha={ sha } seqList={ lrLs } />)}
-
-      {ad && (<AntiDilution sha={ sha } term={ ad } setTerm={ setAD } />)}
+      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } />
 
     </Stack>    
   );

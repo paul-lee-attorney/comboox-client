@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { TextField } from '@mui/material';
 
@@ -10,20 +10,22 @@ import {
 import { ContractProps } from '../../../interfaces';
 
 export function Controllor({ addr }:ContractProps ) {
-  const [controllor, setControllor] = useState('');
+  const [controllor, setControllor] = useState<string>();
 
-  const {isSuccess} = useRegisterOfMembersControllor({
+  const { data } = useRegisterOfMembersControllor({
     address: addr,
-    onSuccess(data) {
-      setControllor(data.toString(16));
-    }
   })
+
+  useEffect(() => {
+    if ( data ) 
+      setControllor(data.toString());
+  }, [ data ]);
 
   return (
     <>
-      {isSuccess && (
+      {controllor && (
         <TextField 
-          value={controllor} 
+          value={ controllor } 
           variant='filled' 
           label="ActualControllor" 
           inputProps={{readOnly: true}}
@@ -39,18 +41,20 @@ export function Controllor({ addr }:ContractProps ) {
 
 
 export function VotesOfController({ addr }:ContractProps ) {
-  const [votesOfController, setVotesOfController] = useState('');
+  const [votesOfController, setVotesOfController] = useState<string>();
 
-  const {isSuccess} = useRegisterOfMembersVotesOfController({
+  const {data} = useRegisterOfMembersVotesOfController({
     address: addr,
-    onSuccess(data) {
-      setVotesOfController(data.toString());
-    }
   })
+
+  useEffect(() => {
+    if (data)
+      setVotesOfController(data.toString());
+  }, [data]);
 
   return (
     <>
-      {isSuccess && (
+      {votesOfController && (
         <TextField 
           value={votesOfController} 
           variant='filled' 

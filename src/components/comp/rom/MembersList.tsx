@@ -23,18 +23,15 @@ export function MembersList({ addr }:ContractProps ) {
 
   const {data, refetch} = useRegisterOfMembersMembersList({
     address: addr,
-    onSuccess(data) {
-      let temp:string[] = [];
-      data.map(v => temp.push(v.toNumber().toString()));
-
-      setMembersList(temp);
-    }
   })
 
   useEffect(()=>{
-    if (data) 
-      refetch();
-  }, [data, refetch]);
+    if (data) {
+      let list: string[] = [];
+      data.map(v => list.push(v.toString()));
+      setMembersList(list);
+    }
+  }, [data]);
 
   return (
     <>

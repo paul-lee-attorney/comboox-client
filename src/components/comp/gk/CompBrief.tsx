@@ -21,12 +21,14 @@ import { Bytes32Zero, ContractProps, HexType } from '../../../interfaces';
 export function CompSymbol({ addr }:ContractProps) {
   const [symbol, setSymbol] = useState('');
 
-  useGeneralKeeperSymbolOfCompany({
+  const { data } = useGeneralKeeperSymbolOfCompany({
     address: addr,
-    onSuccess(data) {
-      setSymbol(data);
-    }
   });
+
+  useEffect(() => {
+    if (data)
+      setSymbol(data);
+  }, [data]);
 
   return (
     <>
@@ -41,14 +43,16 @@ export function CompSymbol({ addr }:ContractProps) {
 }
 
 export function CompSymbolTf({ addr }:ContractProps) {
-  const [symbol, setSymbol] = useState('');
+  const [ symbol, setSymbol ] = useState<string>();
 
-  useGeneralKeeperSymbolOfCompany({
+  const { data } = useGeneralKeeperSymbolOfCompany({
     address: addr,
-    onSuccess(data) {
-      setSymbol(data);
-    }
   });
+
+  useEffect(() => {
+    if ( data ) 
+      setSymbol(data);
+  }, [ data ]);
 
   return (
     <>
@@ -103,12 +107,14 @@ export function CompAddrTf({ addr }:ContractProps) {
 export function CompName({ addr }:ContractProps ) {
   const [nameOfComp, setNameOfComp] = useState<string>();
 
-  useGeneralKeeperNameOfCompany({
-    address: addr,
-    onSuccess(data) {
-      setNameOfComp(data);
-    }
+  const { data } = useGeneralKeeperNameOfCompany({
+    address: addr
   });
+
+  useEffect(() => {
+    if ( data ) 
+      setNameOfComp(data);
+  }, [data]);
 
   return (
     <>
@@ -131,12 +137,14 @@ export function CompName({ addr }:ContractProps ) {
 export function RegNumHash({ addr }:ContractProps ) {
   const [regNumHash, setRegNumHash] = useState<HexType>();
 
-  useGeneralKeeperRegNumHash({
+  const { data } = useGeneralKeeperRegNumHash({
     address: addr,
-    onSuccess(data) {
-      setRegNumHash(data);
-    }
   });
+
+  useEffect(() => {
+    if (data)
+      setRegNumHash(data);
+  }, [data]);
 
   return (
     <>
@@ -162,26 +170,32 @@ export function CompId({ addr }:ContractProps ) {
   const [nameOfComp, setNameOfComp] = useState<string>();
   const [symbolOfComp, setSymbolOfComp] = useState<string>();
 
-  useGeneralKeeperRegNumHash({
+  const { data:dataOfRegNumHash } = useGeneralKeeperRegNumHash({
     address: addr,
-    onSuccess(data) {
-      setRegNumHash(data);
-    }
   });
 
-  useGeneralKeeperNameOfCompany({
+  useEffect(() => {
+    if (dataOfRegNumHash)
+      setRegNumHash(dataOfRegNumHash);
+  }, [dataOfRegNumHash]);
+
+  const { data: dataOfNameOfComp } =  useGeneralKeeperNameOfCompany({
     address: addr,
-    onSuccess(data) {
-      setNameOfComp(data);
-    }
   });
 
-  useGeneralKeeperSymbolOfCompany({
+  useEffect(() => {
+    if ( dataOfNameOfComp )
+      setNameOfComp(dataOfNameOfComp);
+  }, [dataOfNameOfComp]);
+
+  const { data: dataOfSymbolOfCompany } = useGeneralKeeperSymbolOfCompany({
     address: addr,
-    onSuccess(data) {
-      setSymbolOfComp(data);
-    }
   });
+
+  useEffect(() => {
+    if (dataOfSymbolOfCompany) 
+      setSymbolOfComp(dataOfSymbolOfCompany);
+  }, [ dataOfSymbolOfCompany ]);
 
   return (
     <>

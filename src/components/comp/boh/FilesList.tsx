@@ -122,19 +122,18 @@ export function FilesListWithInfo({ addr }:ContractProps ) {
   const [ loading, setLoading ] = useState<boolean>();
 
 
-  const {data, refetch} = useFilesFolderGetFilesList({
-    address: addr
-  })
-
-  useEffect(() => {
-    if (data) {
-      setLoading(true);
-      getFilesListWithInfo(addr, data).then(list => {
-        setLoading(false);
-        setFileInfoList(list);
-      });
+  useFilesFolderGetFilesList({
+    address: addr,
+    onSuccess(data) {
+      if (data.length > 0) {
+        setLoading(true);
+        getFilesListWithInfo(addr, data).then(list => {
+          setLoading(false);
+          setFileInfoList(list);
+        });
+      }
     }
-  }, [data, addr]);
+  })
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
@@ -152,8 +151,7 @@ export function FilesListWithInfo({ addr }:ContractProps ) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {fileInfoList && (
-            fileInfoList.map((v) => (
+          {fileInfoList?.map((v) => (
             <TableRow
               key={v.sn}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -185,7 +183,7 @@ export function FilesListWithInfo({ addr }:ContractProps ) {
               <TableCell align="right">{v.addr}</TableCell>
               <TableCell align="right">{v.head.state}</TableCell>
             </TableRow>
-          )))}
+          ))}
           {loading && (
             <LoadingButton 
               loading={ loading } 

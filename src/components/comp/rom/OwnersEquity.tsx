@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   useRegisterOfMembersOwnersEquity
@@ -8,18 +8,20 @@ import { ContractProps } from '../../../interfaces';
 import { TextField } from '@mui/material';
 
 export function RegisteredCapital({ addr }:ContractProps ) {
-  const [par, setPar] = useState('');
+  const [ par, setPar ] = useState<string>();
 
-  const {isSuccess} = useRegisterOfMembersOwnersEquity({
+  const { data } = useRegisterOfMembersOwnersEquity({
     address: addr,
-    onSuccess(data) {
-      setPar(data.par.toString());
-    }
   })
+
+  useEffect(()=>{
+    if (data)
+      setPar(data.par.toString());
+  }, [data])
 
   return (
     <>
-      {isSuccess && (
+      {par && (
         <TextField 
           value={par} 
           variant='filled' 
@@ -36,18 +38,20 @@ export function RegisteredCapital({ addr }:ContractProps ) {
 }
 
 export function PaidInCapital({ addr }:ContractProps ) {
-  const [paid, setPaid] = useState('');
+  const [paid, setPaid] = useState<string>();
 
-  const {isSuccess} = useRegisterOfMembersOwnersEquity({
+  const {data} = useRegisterOfMembersOwnersEquity({
     address: addr,
-    onSuccess(data) {
-      setPaid(data.paid.toString());
-    }
   })
+
+  useEffect(()=>{
+    if (data)
+      setPaid(data.paid.toString());
+  }, [data]);
 
   return (
     <>
-      {isSuccess && (
+      {paid && (
         <TextField 
           value={paid} 
           variant='filled' 

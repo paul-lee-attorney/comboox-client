@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   TextField
@@ -11,18 +11,20 @@ import {
 import { ContractProps } from '../../../interfaces';
 
 export function BasedOnPar({ addr }:ContractProps ) {
-  const [basedOnPar, setBasedOnPar] = useState('');
+  const [basedOnPar, setBasedOnPar] = useState<string>();
 
-  const {isSuccess, refetch} = useRegisterOfMembersBasedOnPar({
+  const {data, refetch} = useRegisterOfMembersBasedOnPar({
     address: addr,
-    onSuccess(data) {
-      setBasedOnPar(data ? 'On-Par' : 'On-Paid');
-    }
   })
+
+  useEffect(() => {
+    if (data)
+      setBasedOnPar(data ? 'On-Par' : 'On-Paid');
+  }, [data]);
 
   return (
     <>
-      {isSuccess && (
+      {basedOnPar && (
         <TextField value={basedOnPar} variant='outlined' label="VoteBase" />
       )}
     </>
