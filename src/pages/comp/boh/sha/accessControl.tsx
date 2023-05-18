@@ -6,7 +6,11 @@ import {
 
 import { HexType } from "../../../../interfaces";
 
-import { ShaNavi, SetGeneralCounsel } from '../../../../components';
+import { ShaNavi, SetGeneralCounsel, AppointAttorney } from '../../../../components';
+import { SetOwner } from "../../../../components/common/accessControl/SetOwner";
+import { LockContents } from "../../../../components/common/accessControl/LockContents";
+import { RemoveAttorney } from "../../../../components/common/accessControl/RemoveAttorney";
+import { QuitAttorney } from "../../../../components/common/accessControl/QuitAttorney";
 
 function AccessControl() {
 
@@ -14,13 +18,26 @@ function AccessControl() {
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   return (
-    <Box sx={{ width: '100%', alignItems: 'center' }} >
+    <Stack sx={{ width: '100%'}} direction={'column'} >
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./accessControl' />
 
-      <Stack direction={'column'} >
-        <SetGeneralCounsel addr={ sha } />
+      <Stack direction={'row'} >
+
+        <Stack direction={'column'} sx={{ width: '50%' }} >
+          <SetOwner addr={ sha } />
+          <SetGeneralCounsel addr={ sha } />
+          <LockContents addr={ sha } />
+        </Stack>
+
+        <Stack direction={'column'} sx={{ width: '50%'}} >
+          <AppointAttorney addr={ sha } />
+          <RemoveAttorney addr={ sha } />
+          <QuitAttorney addr={ sha } />
+        </Stack>
+
       </Stack>
-    </Box>
+
+    </Stack>
   );
 } 
 

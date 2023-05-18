@@ -12,99 +12,88 @@ import {
   OutlinedInput,
 } from '@mui/material';
 
-import { Approval, Close, EditNote }  from '@mui/icons-material';
+import { Approval, Close, EditNote, PersonRemove }  from '@mui/icons-material';
 
 import { readContract } from '@wagmi/core';
 
 import { 
   accessControlABI,
-  usePrepareAccessControlSetGeneralCounsel,
-  useAccessControlSetGeneralCounsel,
+  usePrepareAccessControlRevokeRole,
+  useAccessControlRevokeRole,
 } from '../../../generated';
 
-import { waitForTransaction } from '@wagmi/core';
 import { ContractProps, HexType } from '../../../interfaces';
 import { BigNumber } from 'ethers';
 
-async function getGC(addr: HexType): Promise<number> {
-  let gc = await readContract({
+const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
+
+async function isAttorney(addr: HexType, acct: string): Promise<boolean> {
+  let flag = await readContract({
     address: addr,
     abi: accessControlABI,
-    functionName: 'getGeneralCounsel',
+    functionName: 'hasRole',
+    args: [ATTORNEYS, BigNumber.from(acct)],
   });
 
-  return gc;
+  return flag;
 }
 
-async function getReceipt(hash: HexType): Promise<string> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
+export function RemoveAttorney({ addr }: ContractProps) {
 
-  let gc = '';
+  const [acct, setAcct] = useState<string>();
 
-  if (receipt) {
-    gc = parseInt(receipt.logs[0].topics[1], 16).toString();
-  }
-
-  return gc;
-}
-
-export function SetGeneralCounsel({ addr }: ContractProps) {
-  const [gc, setGC] = useState<string>();
-
-  const { config } = usePrepareAccessControlSetGeneralCounsel({
+  const { config } = usePrepareAccessControlRevokeRole({
     address: addr,
-    args: gc ? [BigNumber.from(gc)] : undefined,
+    args: acct ? [ATTORNEYS, BigNumber.from(acct)] : undefined,
   });
 
   const {
     data,
-    isSuccess,
     isLoading,
     write,
-  } = useAccessControlSetGeneralCounsel(config);
+  } = useAccessControlRevokeRole(config);
 
-  const [ newGC, setNewGC ] = useState<number>();
+  const [ flag, setFlag ] = useState<boolean>();
   const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
     write?.();
   }
 
-  useEffect(() => { 
-    getGC(addr).then(gc => {
-      setNewGC(gc);
-      setOpen(true);
-    });
-  }, [data, addr]);
+  useEffect(() => {
+    if (acct) 
+      isAttorney(addr, acct).then(flag => {
+        setFlag(flag);
+        setOpen(true);
+      });
+  }, [data, addr, acct]);
 
   return (
     <>
-      <Stack direction={'row'} >
+      <Stack direction={'row'}  sx={{ width: '100%' }} >
 
         <FormControl sx={{ m: 1, width: 250 }} variant="outlined">
-          <InputLabel htmlFor="setGC-input">SetGeneralCounsel</InputLabel>
+          <InputLabel htmlFor="setAcct-input">RemoveAttorney</InputLabel>
           <OutlinedInput
-            id="setGC-input"
+            id="setAcct-input"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ !write || isLoading }
                   color='primary'
+                  disabled={ !write || isLoading }
                   onClick={ handleClick }
                   edge="end"
                 >
-                  <Approval />
+                  <PersonRemove />
                 </IconButton>
               </InputAdornment>
             }
-            label='SetGeneralCounsel'
-            onChange={(e) => setGC(e.target.value)}
+            label='RemoveAttorney'
+            onChange={(e) => setAcct(e.target.value)}
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:'35%'}} >        
+        <Collapse in={open} sx={{width:'35%'}}>        
           <Alert 
             action={
               <IconButton
@@ -121,9 +110,9 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
 
             variant='outlined' 
             severity='info' 
-            sx={{ height: 55,  m: 1 }} 
+            sx={{ height: 55,  m: 1, }} 
           >
-            General Counsel: { newGC } 
+            { flag ? 'Is Attorney' : 'Not' } 
           </Alert>
         </Collapse>
 

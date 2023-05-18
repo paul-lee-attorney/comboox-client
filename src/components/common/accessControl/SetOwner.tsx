@@ -18,54 +18,38 @@ import { readContract } from '@wagmi/core';
 
 import { 
   accessControlABI,
-  usePrepareAccessControlSetGeneralCounsel,
-  useAccessControlSetGeneralCounsel,
+  usePrepareAccessControlSetOwner,
+  useAccessControlSetOwner,
 } from '../../../generated';
 
-import { waitForTransaction } from '@wagmi/core';
 import { ContractProps, HexType } from '../../../interfaces';
 import { BigNumber } from 'ethers';
 
-async function getGC(addr: HexType): Promise<number> {
-  let gc = await readContract({
+async function getOwner(addr: HexType): Promise<number> {
+  let owner = await readContract({
     address: addr,
     abi: accessControlABI,
-    functionName: 'getGeneralCounsel',
+    functionName: 'getOwner',
   });
 
-  return gc;
+  return owner;
 }
 
-async function getReceipt(hash: HexType): Promise<string> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
+export function SetOwner({ addr }: ContractProps) {
+  const [owner, setOwner] = useState<string>();
 
-  let gc = '';
-
-  if (receipt) {
-    gc = parseInt(receipt.logs[0].topics[1], 16).toString();
-  }
-
-  return gc;
-}
-
-export function SetGeneralCounsel({ addr }: ContractProps) {
-  const [gc, setGC] = useState<string>();
-
-  const { config } = usePrepareAccessControlSetGeneralCounsel({
+  const { config } = usePrepareAccessControlSetOwner({
     address: addr,
-    args: gc ? [BigNumber.from(gc)] : undefined,
+    args: owner ? [BigNumber.from(owner)] : undefined,
   });
 
   const {
     data,
-    isSuccess,
     isLoading,
     write,
-  } = useAccessControlSetGeneralCounsel(config);
+  } = useAccessControlSetOwner(config);
 
-  const [ newGC, setNewGC ] = useState<number>();
+  const [ newOwner, setNewOwner ] = useState<number>();
   const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
@@ -73,25 +57,25 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
   }
 
   useEffect(() => { 
-    getGC(addr).then(gc => {
-      setNewGC(gc);
+    getOwner(addr).then(owner => {
+      setNewOwner(owner);
       setOpen(true);
     });
   }, [data, addr]);
 
   return (
     <>
-      <Stack direction={'row'} >
+      <Stack direction={'row'}  sx={{ width: '100%' }} >
 
         <FormControl sx={{ m: 1, width: 250 }} variant="outlined">
-          <InputLabel htmlFor="setGC-input">SetGeneralCounsel</InputLabel>
+          <InputLabel htmlFor="setOwner-input">SetOwner</InputLabel>
           <OutlinedInput
-            id="setGC-input"
+            id="setOwner-input"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ !write || isLoading }
-                  color='primary'
+                  color="primary"
+                  disabled={ !write || isLoading}
                   onClick={ handleClick }
                   edge="end"
                 >
@@ -99,17 +83,16 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
                 </IconButton>
               </InputAdornment>
             }
-            label='SetGeneralCounsel'
-            onChange={(e) => setGC(e.target.value)}
+            label='SetOwner'
+            onChange={(e) => setOwner(e.target.value)}
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:'35%'}} >        
+        <Collapse in={open} sx={{width:'35%'}}>        
           <Alert 
             action={
               <IconButton
                 aria-label="close"
-                color="inherit"
                 size="small"
                 onClick={() => {
                   setOpen(false);
@@ -121,9 +104,9 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
 
             variant='outlined' 
             severity='info' 
-            sx={{ height: 55,  m: 1 }} 
+            sx={{ height: 55,  m: 1, }} 
           >
-            General Counsel: { newGC } 
+            Owner : { newOwner } 
           </Alert>
         </Collapse>
 

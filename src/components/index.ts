@@ -4,7 +4,13 @@ export { MintNFT } from './common/MintNFT'
 export { NetworkSwitcher } from './common/NetworkSwitcher'
 export { DataList } from './common/DataList'
 export { Layout } from './common/Layout'
+
 export { SetGeneralCounsel } from './common/accessControl/SetGeneralCounsel'
+export { SetOwner } from './common/accessControl/SetOwner'
+export { LockContents } from './common/accessControl/LockContents'
+export { AppointAttorney } from './common/accessControl/AppointAttorney'
+export { RemoveAttorney } from './common/accessControl/RemoveAttorney'
+export { QuitAttorney } from './common/accessControl/QuitAttorney'
 
 export { GetMyUserNo } from './center/GetMyUserNo'
 export { GetMyUserInfo } from './center/GetMyUserInfo'
