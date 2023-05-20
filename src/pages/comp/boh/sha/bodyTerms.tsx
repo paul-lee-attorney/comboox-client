@@ -158,7 +158,7 @@ function BodyTerms() {
   }, [sha, titles, setAD]);
 
   return (
-    <Stack direction={'column'} sx={{ width: '100%' }}>
+    <Stack direction={'column'} sx={{ width: '100%', alignItems: 'center' }}>
 
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./bodyTerms' />
 

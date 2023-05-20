@@ -1,19 +1,15 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { 
   Stack,
   Alert,
   Collapse,
   IconButton,
-  InputLabel,
-  InputAdornment,
-  FormControl,
-  OutlinedInput,
   Button,
 } from '@mui/material';
 
-import { Close, DoneOutline, EditNote }  from '@mui/icons-material';
+import { Close, DoneOutline }  from '@mui/icons-material';
 
 import { readContract } from '@wagmi/core';
 
@@ -24,7 +20,6 @@ import {
 } from '../../../generated';
 
 import { ContractProps, HexType } from '../../../interfaces';
-import { BigNumber } from 'ethers';
 
 async function finalized(addr: HexType): Promise<boolean> {
   let flag = await readContract({
@@ -42,30 +37,32 @@ export function LockContents({ addr }: ContractProps) {
     address: addr,
   });
 
-  const {
-    data,
-    write,
-  } = useAccessControlLockContents(config);
-
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);
+
+  const {
+    isLoading,
+    write,
+  } = useAccessControlLockContents({
+    ...config,
+    onSuccess() {
+      finalized(addr).then((flag) => {
+        setFlag(flag);
+        setOpen(true);
+      });      
+    }
+  });
 
   const handleClick = () => {
     write?.();
   }
-
-  useEffect(() => { 
-    finalized(addr).then((flag) => {
-      setFlag(flag);
-      setOpen(true);
-    });
-  }, [data, addr]);
 
   return (
     <>
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
         <Button
+          disabled={ !write || isLoading }
           sx={{m:1, width: 250, height:55}}
           variant='outlined'
           endIcon={<DoneOutline />}
@@ -74,7 +71,7 @@ export function LockContents({ addr }: ContractProps) {
           Lock Contents
         </Button>
 
-        <Collapse in={open} sx={{width:'35%'}}>        
+        <Collapse in={open} sx={{width:280 }}>        
           <Alert 
             action={
               <IconButton

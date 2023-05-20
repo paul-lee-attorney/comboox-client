@@ -34,7 +34,7 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
             inputProps={{readOnly: true}}
             sx={{
               m:1,
-              minWidth: 240,
+              minWidth: 218,
             }}
             value={ classOfShare }
           />
@@ -45,7 +45,7 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
             inputProps={{readOnly: true}}
             sx={{
               m:1,
-              minWidth: 240,
+              minWidth: 218,
             }}
             value={ floorPrice }
           />
@@ -56,7 +56,7 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
             inputProps={{readOnly: true}}
             sx={{
               m:1,
-              minWidth: 240,
+              minWidth: 218,
             }}
             multiline
             rows={1}

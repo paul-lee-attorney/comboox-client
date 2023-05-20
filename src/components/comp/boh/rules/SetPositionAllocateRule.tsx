@@ -115,7 +115,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newPR.seqOfRule.toString() }
               />
@@ -128,7 +128,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newPR.qtyOfSubRule.toString() }
               />
@@ -141,7 +141,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newPR.seqOfSubRule.toString() }
               />
@@ -154,7 +154,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newPR.removePos ? 'True' : 'False'}
               />
@@ -167,7 +167,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newPR.seqOfPos.toString() }
               />
@@ -184,7 +184,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='SeqOfRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,
@@ -198,7 +198,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='QtyOfSubRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,
@@ -212,7 +212,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='SeqOfSubRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,
@@ -221,7 +221,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 value={ objPR?.seqOfSubRule }              
               />
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
+              <Box sx={{ minWidth: 218, m: 1 }} >
                 <FormControlLabel 
                   label='RemovePos'
                   control={
@@ -245,7 +245,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='SeqOfPos'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,
@@ -266,7 +266,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ titleOfPositions[newPR.titleOfPos] }
               />
@@ -279,7 +279,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newPR.nominator.toString()}
               />
@@ -292,7 +292,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newPR.titleOfNominator.toString()}
               />
@@ -305,7 +305,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newPR.seqOfVR.toString()}
               />
@@ -318,7 +318,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ dateParser(newPR.endDate) }
               />
@@ -329,7 +329,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
           <Collapse in={ editable } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 240 }}>
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
                 <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
                 <Select
                   labelId="titleOfPos-label"
@@ -354,7 +354,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='Nominator'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,
@@ -364,7 +364,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
               />
 
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 240 }}>
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
                 <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
                 <Select
                   labelId="titleOfNominator-label"
@@ -389,7 +389,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='seqOfVR'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,
@@ -403,7 +403,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
                 label='EndDate'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjPR((v) => ({
                   ...v,

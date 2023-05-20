@@ -104,7 +104,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.seqOfRule.toString() }
               />
@@ -117,7 +117,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.qtyOfSubRule.toString() }
               />
@@ -130,7 +130,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.seqOfSubRule.toString() }
               />
@@ -143,7 +143,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.addMember ? 'True' : 'False' }
               />
@@ -156,7 +156,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.groupRep.toString() }
               />
@@ -173,7 +173,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='SeqOfRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -187,7 +187,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='QtyOfSubRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -201,7 +201,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='SeqOfSubRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -210,7 +210,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 value={ objGuo?.seqOfSubRule }
               />
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
+              <Box sx={{ minWidth: 218, m: 1 }} >
                 <FormControlLabel 
                   label='AddMember'
                   control={
@@ -234,7 +234,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='GroupRep'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -255,7 +255,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.members1.toString() }
               />
@@ -268,7 +268,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.members2.toString() }
               />
@@ -281,7 +281,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.members3.toString() }
               />
@@ -294,7 +294,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newGuo.members4.toString() }
               />
@@ -310,7 +310,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='Members_1'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -324,7 +324,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='Members_2'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -338,7 +338,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='Members_3'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,
@@ -352,7 +352,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
                 label='Members_4'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjGuo((v) => ({
                   ...v,

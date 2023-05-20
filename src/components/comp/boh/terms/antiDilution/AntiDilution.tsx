@@ -8,6 +8,7 @@ import {
   TextField,
   Button,
   Tooltip,
+  Box,
 } from "@mui/material";
 
 import { HexType } from "../../../../../interfaces";
@@ -165,16 +166,6 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     }
   });
 
-  // useEffect(()=>{
-  //   if (dataOfNewClasses) {
-  //     let ls: number[] = [];
-  //     dataOfNewClasses.map(v => {
-  //       ls.push(v.toNumber())
-  //     })
-  //     setNewClasses(ls);
-  //   }
-  // }, [dataOfNewClasses]);
-
   const [ classOfShare, setClassOfShare ] = useState<string>();
   const [ price, setPrice ] = useState<string>();
 
@@ -265,183 +256,173 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
     }
   });
 
-  // useEffect(()=>{
-  //   if (newClasses && term) {
-  //     getBenchmarks(term, newClasses).
-  //       then(marks => setNewMarks(marks));  
-  //   };
-  // }, [ createAdReceipt, 
-  //     addMarkReceipt, 
-  //     removeMarkReceipt, 
-  //     addObligorReceipt, 
-  //     removeObligorReceipt,
-  //     newClasses, term ]
-  // );
-
   return (
     <Paper sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-      <Stack direction={'row'} sx={{ alignItems:'center' }}>
-        <Toolbar>
-          <h4>AntiDilution</h4>
-        </Toolbar>
+      <Box sx={{ width:1440 }}>
 
-        {term == undefined && (
-          <>
-            <TextField 
-              variant='filled'
-              label='Version'
-              sx={{
-                m:1,
-                ml:3,
-                minWidth: 240,
-              }}
-              onChange={(e) => setVersion(e.target.value)}
-              value={ version }              
-            />
+        <Stack direction={'row'} sx={{ alignItems:'center' }}>
+          <Toolbar>
+            <h4>AntiDilution</h4>
+          </Toolbar>
 
-            <Button
-              disabled={ !createAd || createAdIsLoading }
-              variant="contained"
-              sx={{
-                height: 40,
-              }}
-              endIcon={ <PlaylistAdd /> }
-              onClick={() => createAd?.()}
-            >
-              Create
-            </Button>
+          {term == undefined && (
+            <>
+              <TextField 
+                variant='filled'
+                label='Version'
+                sx={{
+                  m:1,
+                  ml:3,
+                  minWidth: 218,
+                }}
+                onChange={(e) => setVersion(e.target.value)}
+                value={ version }              
+              />
 
-          </>
-        )}
+              <Button
+                disabled={ !createAd || createAdIsLoading }
+                variant="contained"
+                sx={{
+                  height: 40,
+                }}
+                endIcon={ <PlaylistAdd /> }
+                onClick={() => createAd?.()}
+              >
+                Create
+              </Button>
 
-        {term && (
-            <Button
-              disabled={ !removeAd || removeAdIsLoading }
-              variant="contained"
-              sx={{
-                height: 40,
-                mr: 5,
-              }}
-              endIcon={ <Delete /> }
-              onClick={() => removeAd?.()}
-            >
-              Remove
-            </Button>
-        )}
+            </>
+          )}
 
-      </Stack>
-
-      {term && (
-        <Stack direction={'row'} sx={{ alignItems:'center' }}>      
-
-          <Tooltip
-            title='Add Benchmark'
-            placement="top-start"
-            arrow
-          >
-            <IconButton 
-              disabled={ !addMark || addMarkIsLoading }
-              sx={{width: 20, height: 20, m: 1, ml: 5 }} 
-              onClick={ () => addMark?.() }
-              color="primary"
-            >
-              <AddCircle/>
-            </IconButton>
-          </Tooltip>
-
-          <TextField 
-            variant='filled'
-            label='ClassOfShare'
-            sx={{
-              m:1,
-              minWidth: 240,
-            }}
-            onChange={(e) => setClassOfShare(e.target.value)}
-            value={ classOfShare }              
-          />
-
-          <TextField 
-            variant='filled'
-            label='Price'
-            sx={{
-              m:1,
-              minWidth: 240,
-            }}
-            onChange={(e) => setPrice(e.target.value)}
-            value={ price }
-          />
-
-          <Tooltip
-            title='Remove Benchmark'
-            placement="top-end"
-            arrow
-          >           
-            <IconButton
-              disabled={ !removeMark || removeMarkIsLoading } 
-              sx={{width: 20, height: 20, m: 1, mr: 10, }} 
-              onClick={ () => removeMark?.() }
-              color="primary"
-            >
-              <RemoveCircle/>
-            </IconButton>
-          </Tooltip>
-
-          <Tooltip
-            title='Add Obligor'
-            placement="top-start"
-            arrow
-          >
-            <IconButton 
-              disabled={ !addObligor || addObligorIsLoading }
-              sx={{width: 20, height: 20, m: 1, ml: 10,}} 
-              onClick={ () => addObligor?.() }
-              color="primary"
-            >
-              <AddCircle/>
-            </IconButton>
-
-          </Tooltip>
-
-          <TextField 
-            variant='filled'
-            label='Obligor'
-            sx={{
-              m:1,
-              minWidth: 240,
-            }}
-            onChange={(e) => setObligor(e.target.value)}
-            value={ obligor }              
-          />
-
-          <Tooltip
-            title='Remove Obligor'
-            placement="top-end"
-            arrow
-          >
-
-            <IconButton
-              disabled={ !removeObligor || removeObligorIsLoading } 
-              sx={{width: 20, height: 20, m: 1, mr: 10}} 
-              onClick={ () => removeObligor?.() }
-              color="primary"
-            >
-              <RemoveCircle/>
-            </IconButton>
-          
-          </Tooltip>
+          {term && (
+              <Button
+                disabled={ !removeAd || removeAdIsLoading }
+                variant="contained"
+                sx={{
+                  height: 40,
+                  mr: 5,
+                }}
+                endIcon={ <Delete /> }
+                onClick={() => removeAd?.()}
+              >
+                Remove
+              </Button>
+          )}
 
         </Stack>
-      )}
-      
-      {term && newMarks?.map((v) => (
-        <Benchmark 
-          key={v.classOfShare} 
-          classOfShare={v.classOfShare}
-          floorPrice={v.floorPrice}
-          obligors={v.obligors} 
-        />
-      ))}
 
+        {term && (
+          <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+
+            <Tooltip
+              title='Add Benchmark'
+              placement="top-start"
+              arrow
+            >
+              <IconButton 
+                disabled={ !addMark || addMarkIsLoading }
+                sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                onClick={ () => addMark?.() }
+                color="primary"
+              >
+                <AddCircle/>
+              </IconButton>
+            </Tooltip>
+
+            <TextField 
+              variant='filled'
+              label='ClassOfShare'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setClassOfShare(e.target.value)}
+              value={ classOfShare }              
+            />
+
+            <TextField 
+              variant='filled'
+              label='Price'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setPrice(e.target.value)}
+              value={ price }
+            />
+
+            <Tooltip
+              title='Remove Benchmark'
+              placement="top-end"
+              arrow
+            >           
+              <IconButton
+                disabled={ !removeMark || removeMarkIsLoading } 
+                sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                onClick={ () => removeMark?.() }
+                color="primary"
+              >
+                <RemoveCircle/>
+              </IconButton>
+            </Tooltip>
+
+            <Tooltip
+              title='Add Obligor'
+              placement="top-start"
+              arrow
+            >
+              <IconButton 
+                disabled={ !addObligor || addObligorIsLoading }
+                sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                onClick={ () => addObligor?.() }
+                color="primary"
+              >
+                <AddCircle/>
+              </IconButton>
+
+            </Tooltip>
+
+            <TextField 
+              variant='filled'
+              label='Obligor'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setObligor(e.target.value)}
+              value={ obligor }              
+            />
+
+            <Tooltip
+              title='Remove Obligor'
+              placement="top-end"
+              arrow
+            >
+
+              <IconButton
+                disabled={ !removeObligor || removeObligorIsLoading } 
+                sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                onClick={ () => removeObligor?.() }
+                color="primary"
+              >
+                <RemoveCircle/>
+              </IconButton>
+            
+            </Tooltip>
+
+          </Stack>
+        )}
+        
+        {term && newMarks?.map((v) => (
+          <Benchmark 
+            key={v.classOfShare} 
+            classOfShare={v.classOfShare}
+            floorPrice={v.floorPrice}
+            obligors={v.obligors} 
+          />
+        ))}
+
+      </Box>
     </Paper>
   );
 } 

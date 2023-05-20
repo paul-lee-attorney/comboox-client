@@ -66,7 +66,7 @@ export function QuitAttorney({ addr }: ContractProps) {
           Quit Attorney
         </Button>
 
-        <Collapse in={open} sx={{width:'35%'}}>        
+        <Collapse in={open} sx={{width:280}}>        
           <Alert 
             action={
               <IconButton
@@ -82,10 +82,10 @@ export function QuitAttorney({ addr }: ContractProps) {
             }
 
             variant='outlined' 
-            severity='info' 
+            severity={ flag ? "warning" : "success" } 
             sx={{ height: 55,  m: 1, }} 
           >
-            { flag ? 'Quit' : 'Failed' } 
+            { flag ? 'Not Attorney' : 'Is Attorney' } 
           </Alert>
         </Collapse>
 

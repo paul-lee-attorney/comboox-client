@@ -12,6 +12,9 @@ export { AppointAttorney } from './common/accessControl/AppointAttorney'
 export { RemoveAttorney } from './common/accessControl/RemoveAttorney'
 export { QuitAttorney } from './common/accessControl/QuitAttorney'
 
+
+
+
 export { GetMyUserNo } from './center/GetMyUserNo'
 export { GetMyUserInfo } from './center/GetMyUserInfo'
 export { RegUser } from './center/RegUser'
@@ -40,6 +43,9 @@ export { AddRule } from './comp/boh/rules/AddRule'
 
 
 export { ShaNavi } from './comp/boh/sha/ShaNavi'
+export { Signatures } from './comp/boh/sha/Signatures'
+export { SignSha } from './comp/boh/sha/SignSha'
+
 export { FilesListWithInfo, FilesList } from './comp/boh/FilesList'
 
 export { RegisteredCapital, PaidInCapital } from './comp/rom/OwnersEquity'

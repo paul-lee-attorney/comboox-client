@@ -1,5 +1,7 @@
 
-export const AddrOfRegCenter:HexType = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
+import { BigNumber } from "ethers";
+
+export const AddrOfRegCenter:HexType = "0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
@@ -18,6 +20,10 @@ export type ContractProps = {
   addr: HexType
 }
 
+export interface SigPageProps {
+  addr: HexType,
+  initPage: boolean,
+}
 
 export interface ShaRuleInputProps{
   sha: HexType,

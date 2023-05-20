@@ -93,7 +93,7 @@ export function RemoveAttorney({ addr }: ContractProps) {
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:'35%'}}>        
+        <Collapse in={open} sx={{width:280}}>        
           <Alert 
             action={
               <IconButton
@@ -108,11 +108,11 @@ export function RemoveAttorney({ addr }: ContractProps) {
               </IconButton>
             }
 
+            severity={ flag ? "success" : "warning" }
             variant='outlined' 
-            severity='info' 
             sx={{ height: 55,  m: 1, }} 
           >
-            { flag ? 'Is Attorney' : 'Not' } 
+            { flag ? 'Is Attorney' : 'Not Attorney' } 
           </Alert>
         </Collapse>
 

@@ -90,6 +90,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
         borderColor:'divider' 
         }} 
       >
+        
         <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
           <Toolbar>
             <h4>Rule No. { seq.toString() } </h4>
@@ -118,7 +119,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.seqOfRule.toString() }
               />
@@ -131,7 +132,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.qtyOfSubRule.toString() }
               />
@@ -144,7 +145,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.seqOfSubRule.toString() }
               />
@@ -157,7 +158,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.typeOfDeal.toString() }
               />
@@ -171,7 +172,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newFR.membersEqual ? 'True' : 'False'}
               />
@@ -184,7 +185,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newFR.proRata ? 'True' : 'False'}
               />
@@ -201,7 +202,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='SeqOfRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -215,7 +216,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='QtyOfSubRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -229,7 +230,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='SeqOfSubRule'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -243,7 +244,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='TypeOfDeal'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -252,7 +253,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 value={ objFR?.typeOfDeal }              
               />
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
+              <Box sx={{ minWidth: 218, m: 1 }} >
                 <FormControlLabel 
                   label='MembersEqual'
                   control={
@@ -271,7 +272,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 />
               </Box>
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
+              <Box sx={{ minWidth: 218, m: 1 }} >
                 <FormControlLabel 
                   label='ProRata'
                   control={
@@ -302,7 +303,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={newFR.basedOnPar ? 'True' : 'False'}
               />
@@ -315,7 +316,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.rightholder1.toString() }
               />
@@ -328,7 +329,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.rightholder2.toString() }
               />
@@ -341,7 +342,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.rightholder3.toString() }
               />
@@ -354,7 +355,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 value={ newFR.rightholder4.toString() }
               />
@@ -365,7 +366,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
           <Collapse in={ editable } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
+              <Box sx={{ minWidth: 218, m: 1 }} >
                 <FormControlLabel 
                   label='BasedOnPar'
                   control={
@@ -389,7 +390,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='Rightholder_1'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -403,7 +404,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='Rightholder_2'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -417,7 +418,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='Rightholder_3'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -431,7 +432,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
                 label='Rightholder_4'
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
                 onChange={(e) => setObjFR((v) => ({
                   ...v,
@@ -444,6 +445,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
           </Collapse>
 
         </Stack>
+
       </Paper>
     </> 
   )

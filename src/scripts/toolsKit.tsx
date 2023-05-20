@@ -13,6 +13,9 @@ export function toBasePoint(percent: string): number {
 }
 
 export function dateParser(timestamp: number): string {
+
+  if (timestamp === 0) return '0';
+
   let numDate = timestamp * 1000;
   let date1 = new Date(numDate);
   let date2 = date1.toLocaleDateString().replace(/\//g, "-") + ' ' + date1.toTimeString().substring(0,8);

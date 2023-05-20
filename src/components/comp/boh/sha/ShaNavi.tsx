@@ -26,13 +26,14 @@ export function ShaNavi(props: ShaNaviProps) {
     {path: './bodyTerms', name: 'Body Terms'},
     {path: './accessControl', name: 'Access Control'},
     {path: './sigPage', name: 'Sig Page'},
-    {path: './subSigPage', name: 'Sub Sig Page'}
+    {path: './subSigPage', name: 'Sub Sig Page'},
+    {path: './approvals', name: 'Approvals'}
   ]
 
   return (
     <>
-      <Toolbar>
-        <h3>{contractName} (address: {addr})</h3>
+      <Toolbar  >
+        <h3>{contractName} <br /> (address: {addr})</h3>
       </Toolbar>      
       <Stack
         direction={'row'}
@@ -61,6 +62,7 @@ export function ShaNavi(props: ShaNaviProps) {
                 variant="contained"
                 sx={{
                   height: 40,
+                  width: 218,
                   borderCollor: 'divider',
                   borderRadius: 0,              
                 }}

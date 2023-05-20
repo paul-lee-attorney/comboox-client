@@ -104,7 +104,7 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:'35%'}} >        
+        <Collapse in={open} sx={{ width:280 }} >        
           <Alert 
             action={
               <IconButton

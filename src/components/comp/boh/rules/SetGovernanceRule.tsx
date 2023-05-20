@@ -78,385 +78,387 @@ export function SetGovernanceRule({ addr }: ContractProps) {
   return (
     <>
       <Paper sx={{ m:1, p:1, border:1, borderColor:'divider'}} >
-        <Stack direction={'row'} sx={{ alignItems:'center' }}>
-          <Toolbar>
-            <h4>Governance Rule</h4>
-          </Toolbar>
-        </Stack>
-        <Paper sx={{
-          alignContent:'center', 
-          justifyContent:'center', 
-          p:1, m:1, 
-          border: 1, 
-          borderColor:'divider' 
-          }} 
-        >
-
-          <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
+        <Box sx={{ width:1440 }}>
+          <Stack direction={'row'} sx={{ alignItems:'center' }}>
             <Toolbar>
-              <h4>Rule No. 0 </h4>
+              <h4>Governance Rule</h4>
             </Toolbar>
-
-            <AddRule 
-              sha={ addr }
-              rule={ hexGR }
-              setUpdatedRule={ setNewHexGR }
-              editable={ editable }
-              setEditable={ setEditable }
-            />
-            
           </Stack>
-
-          <Stack 
-            direction={'column'} 
-            spacing={1} 
+          <Paper sx={{
+            alignContent:'center', 
+            justifyContent:'center', 
+            p:1, m:1, 
+            border: 1, 
+            borderColor:'divider' 
+            }} 
           >
 
-            <Stack direction={'row'} sx={{ alignItems: 'center', }} >
-              {/* <h6>System Record</h6> */}
-              <TextField 
-                variant='filled'
-                label='BasedOnPar'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={ newGR?.basedOnPar ? 'True' : 'False' }
+            <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
+              <Toolbar>
+                <h4>Rule No. 0 </h4>
+              </Toolbar>
+
+              <AddRule 
+                sha={ addr }
+                rule={ hexGR }
+                setUpdatedRule={ setNewHexGR }
+                editable={ editable }
+                setEditable={ setEditable }
               />
-
-              <TextField 
-                variant='filled'
-                label='ProposeWeightRatioOfGM'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={toPercent(newGR?.proposeWeightRatioOfGM ?? 0)}
-              />
-
-              <TextField 
-                variant='filled'
-                label='ProposeHeadRatioOfMembers'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={toPercent(newGR?.proposeHeadRatioOfMembers ?? 0)}
-              />
-
-              {newGR?.proposeHeadNumOfDirectors != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='ProposeHeadNumOfDirectors'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.proposeHeadNumOfDirectors.toString()}
-                />
-              )}
-
-              {newGR?.maxQtyOfMembers != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='MaxQtyOfMembers'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.maxQtyOfMembers.toString()}
-                />
-              )}
-
-              {newGR?.quorumOfGM != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='QuorumOfGM'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={ toPercent(newGR.quorumOfGM)}
-                />
-              )}
+              
             </Stack>
 
-            <Collapse in={ editable }>
-              <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-                {/* <Collapse in={ false } >   */}            
+            <Stack 
+              direction={'column'} 
+              spacing={1} 
+            >
 
-                  {/* <h6>Update Info</h6> */}
-                  
-                  <Box sx={{ minWidth: 240, m: 1 }} >
-                    <FormControlLabel 
-                      label='BasedOnPar'
-                      control={
-                        <Checkbox 
-                          sx={{
-                            m: 1,
-                            height: 64,
-                          }}
-                          onChange={e => setObjGR(v => ({
-                            ...v,
-                            basedOnPar: e.target.checked,
-                          }))}
-                          checked={ objGR?.basedOnPar }
-                        />
-                      }
-                    />
-                  </Box>
-                
+              <Stack direction={'row'} sx={{ alignItems: 'center', }} >
+                {/* <h6>System Record</h6> */}
+                <TextField 
+                  variant='filled'
+                  label='BasedOnPar'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newGR?.basedOnPar ? 'True' : 'False' }
+                />
 
-                  <TextField 
-                    variant='filled'
-                    label='ProposeWeightRatioOfGM'
-                    sx={{
-                      m:1,
-                      minWidth: 240,
-                    }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      proposeWeightRatioOfGM: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.proposeWeightRatioOfGM }              
-                  />
+                <TextField 
+                  variant='filled'
+                  label='ProposeWeightRatioOfGM'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={toPercent(newGR?.proposeWeightRatioOfGM ?? 0)}
+                />
 
-                  <TextField 
-                    variant='filled'
-                    label='ProposeHeadRatioOfMembers'
-                    sx={{
-                      m:1,
-                      minWidth: 240,
-                    }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      proposeHeadRatioOfMembers: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.proposeHeadRatioOfMembers }                                      
-                  />
+                <TextField 
+                  variant='filled'
+                  label='ProposeHeadRatioOfMembers'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={toPercent(newGR?.proposeHeadRatioOfMembers ?? 0)}
+                />
 
+                {newGR?.proposeHeadNumOfDirectors != undefined && (
                   <TextField 
                     variant='filled'
                     label='ProposeHeadNumOfDirectors'
+                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
-                      minWidth: 240,
+                      minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      proposeHeadNumOfDirectors: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.proposeHeadNumOfDirectors }                          
+                    value={newGR.proposeHeadNumOfDirectors.toString()}
                   />
+                )}
 
+                {newGR?.maxQtyOfMembers != undefined && (
                   <TextField 
                     variant='filled'
                     label='MaxQtyOfMembers'
+                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
-                      minWidth: 240,
+                      minWidth: 218,
+                    }}
+                    value={newGR.maxQtyOfMembers.toString()}
+                  />
+                )}
+
+                {newGR?.quorumOfGM != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='QuorumOfGM'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ toPercent(newGR.quorumOfGM)}
+                  />
+                )}
+              </Stack>
+
+              <Collapse in={ editable }>
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                  {/* <Collapse in={ false } >   */}            
+
+                    {/* <h6>Update Info</h6> */}
+                    
+                    <Box sx={{ minWidth: 218, m: 1 }} >
+                      <FormControlLabel 
+                        label='BasedOnPar'
+                        control={
+                          <Checkbox 
+                            sx={{
+                              m: 1,
+                              height: 64,
+                            }}
+                            onChange={e => setObjGR(v => ({
+                              ...v,
+                              basedOnPar: e.target.checked,
+                            }))}
+                            checked={ objGR?.basedOnPar }
+                          />
+                        }
+                      />
+                    </Box>
+                  
+
+                    <TextField 
+                      variant='filled'
+                      label='ProposeWeightRatioOfGM'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeWeightRatioOfGM: parseInt(e.target.value),
+                      }))}
+                      value={ objGR?.proposeWeightRatioOfGM }              
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='ProposeHeadRatioOfMembers'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeHeadRatioOfMembers: parseInt(e.target.value),
+                      }))}
+                      value={ objGR?.proposeHeadRatioOfMembers }                                      
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='ProposeHeadNumOfDirectors'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeHeadNumOfDirectors: parseInt(e.target.value),
+                      }))}
+                      value={ objGR?.proposeHeadNumOfDirectors }                          
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='MaxQtyOfMembers'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        maxQtyOfMembers: parseInt(e.target.value),
+                      }))}
+                      value={ objGR?.maxQtyOfMembers?.toString() }                          
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='QuorumOfGM'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        quorumOfGM: parseInt(e.target.value),
+                      }))}
+                      value={ objGR?.quorumOfGM }                          
+                    />
+
+                  {/* </Collapse> */}
+                </Stack>
+              </Collapse>
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                {newGR?.maxNumOfDirectors != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='MaxNumOfDirectors'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.maxNumOfDirectors.toString()}
+                  />
+                )}
+
+                {newGR?.tenureMonOfBoard != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='TenureMonOfBoard'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.tenureMonOfBoard.toString()}
+                  />
+                )}
+
+                {newGR?.quorumOfBoardMeeting != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='QuorumOfBoardMeeting'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.quorumOfBoardMeeting.toString()}
+                  />
+                )}
+
+                {newGR?.establishedDate != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='EstablishedDate'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={dateParser(newGR.establishedDate)}
+                  />
+                )}
+
+                {newGR?.businessTermInYears != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='BusinessTermInYears'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.businessTermInYears.toString()}
+                  />
+                )}
+
+                {newGR?.typeOfComp != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='TypeOfComp'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.typeOfComp.toString()}
+                  />
+                )}
+              </Stack>
+
+              <Collapse in={ editable }>
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                  <TextField 
+                    variant='filled'
+                    label='MaxNumOfDirectors'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
                     }}
                     onChange={(e) => setObjGR((v) => ({
                       ...v,
-                      maxQtyOfMembers: parseInt(e.target.value),
+                      maxNumOfDirectors: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.maxQtyOfMembers?.toString() }                          
+                    value={ objGR?.maxNumOfDirectors}                                        
                   />
 
                   <TextField 
                     variant='filled'
-                    label='QuorumOfGM'
+                    label='TenureMonOfBoard'
                     sx={{
                       m:1,
-                      minWidth: 240,
+                      minWidth: 218,
                     }}
                     onChange={(e) => setObjGR((v) => ({
                       ...v,
-                      quorumOfGM: parseInt(e.target.value),
+                      tenureMonOfBoard: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.quorumOfGM }                          
+                    value={ objGR?.tenureMonOfBoard }                                                      
                   />
 
-                {/* </Collapse> */}
-              </Stack>
-            </Collapse>
+                  <TextField 
+                    variant='filled'
+                    label='QuorumOfBoardMeeting'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      quorumOfBoardMeeting: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.quorumOfBoardMeeting }                                                      
+                  />
 
-            <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-              {newGR?.maxNumOfDirectors != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='MaxNumOfDirectors'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.maxNumOfDirectors.toString()}
-                />
-              )}
+                  <TextField 
+                    variant='filled'
+                    label='EstablishedDate'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      establishedDate: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.establishedDate }                                                                  
+                  />
 
-              {newGR?.tenureMonOfBoard != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='TenureMonOfBoard'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.tenureMonOfBoard.toString()}
-                />
-              )}
+                  <TextField 
+                    variant='filled'
+                    label='BusinessTermInYears'
+                    sx={{
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      businessTermInYears: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.businessTermInYears }
+                  />
 
-              {newGR?.quorumOfBoardMeeting != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='QuorumOfBoardMeeting'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.quorumOfBoardMeeting.toString()}
-                />
-              )}
+                  <TextField 
+                    variant='filled'
+                    label='TypeOfComp'
+                    sx={{
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      typeOfComp: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.typeOfComp }                                                                  
+                  />
+                </Stack>
+              </Collapse>
 
-              {newGR?.establishedDate != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='EstablishedDate'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={dateParser(newGR.establishedDate)}
-                />
-              )}
-
-              {newGR?.businessTermInYears != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='BusinessTermInYears'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.businessTermInYears.toString()}
-                />
-              )}
-
-              {newGR?.typeOfComp != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='TypeOfComp'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  value={newGR.typeOfComp.toString()}
-                />
-              )}
             </Stack>
-
-            <Collapse in={ editable }>
-              <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-                <TextField 
-                  variant='filled'
-                  label='MaxNumOfDirectors'
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  onChange={(e) => setObjGR((v) => ({
-                    ...v,
-                    maxNumOfDirectors: parseInt(e.target.value),
-                  }))}
-                  value={ objGR?.maxNumOfDirectors}                                        
-                />
-
-                <TextField 
-                  variant='filled'
-                  label='TenureMonOfBoard'
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  onChange={(e) => setObjGR((v) => ({
-                    ...v,
-                    tenureMonOfBoard: parseInt(e.target.value),
-                  }))}
-                  value={ objGR?.tenureMonOfBoard }                                                      
-                />
-
-                <TextField 
-                  variant='filled'
-                  label='QuorumOfBoardMeeting'
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  onChange={(e) => setObjGR((v) => ({
-                    ...v,
-                    quorumOfBoardMeeting: parseInt(e.target.value),
-                  }))}
-                  value={ objGR?.quorumOfBoardMeeting }                                                      
-                />
-
-                <TextField 
-                  variant='filled'
-                  label='EstablishedDate'
-                  sx={{
-                    m:1,
-                    minWidth: 240,
-                  }}
-                  onChange={(e) => setObjGR((v) => ({
-                    ...v,
-                    establishedDate: parseInt(e.target.value),
-                  }))}
-                  value={ objGR?.establishedDate }                                                                  
-                />
-
-                <TextField 
-                  variant='filled'
-                  label='BusinessTermInYears'
-                  sx={{
-                    m:1,
-                    minWidth:240,
-                  }}
-                  onChange={(e) => setObjGR((v) => ({
-                    ...v,
-                    businessTermInYears: parseInt(e.target.value),
-                  }))}
-                  value={ objGR?.businessTermInYears }
-                />
-
-                <TextField 
-                  variant='filled'
-                  label='TypeOfComp'
-                  sx={{
-                    m:1,
-                    minWidth:240,
-                  }}
-                  onChange={(e) => setObjGR((v) => ({
-                    ...v,
-                    typeOfComp: parseInt(e.target.value),
-                  }))}
-                  value={ objGR?.typeOfComp }                                                                  
-                />
-              </Stack>
-            </Collapse>
-
-          </Stack>
-        </Paper>
+          </Paper>
+        </Box>
       </Paper>
     </> 
   )

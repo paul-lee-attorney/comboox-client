@@ -1,7 +1,7 @@
 import { useRouter } from "next/router";
 
 import { 
-  Box, Stack,
+  Box, Paper, Stack,
 } from "@mui/material";
 
 import { HexType } from "../../../../interfaces";
@@ -18,21 +18,25 @@ function AccessControl() {
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   return (
-    <Stack sx={{ width: '100%'}} direction={'column'} >
+    <Stack sx={{ width: '100%', alignItems: 'center'}} direction={'column'} >
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./accessControl' />
 
       <Stack direction={'row'} >
 
-        <Stack direction={'column'} sx={{ width: '50%' }} >
-          <SetOwner addr={ sha } />
-          <SetGeneralCounsel addr={ sha } />
-          <LockContents addr={ sha } />
+        <Stack direction={'column'}  >
+          <Paper sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+            <SetOwner addr={ sha } />
+            <SetGeneralCounsel addr={ sha } />
+            <LockContents addr={ sha } />
+          </Paper>
         </Stack>
 
-        <Stack direction={'column'} sx={{ width: '50%'}} >
-          <AppointAttorney addr={ sha } />
-          <RemoveAttorney addr={ sha } />
-          <QuitAttorney addr={ sha } />
+        <Stack direction={'column'} >
+          <Paper sx={{m:1, p:1, border:1, borderColor:'divider'}} >
+            <AppointAttorney addr={ sha } />
+            <RemoveAttorney addr={ sha } />
+            <QuitAttorney addr={ sha } />
+          </Paper>
         </Stack>
 
       </Stack>

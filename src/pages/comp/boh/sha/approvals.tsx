@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 
 import { 
-  Box,
   Stack,
 } from "@mui/material";
 
@@ -12,19 +11,17 @@ import {
   Signatures 
 } from '../../../../components';
 
-function SigPage() {
+function Approvals() {
 
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
-      <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./sigPage' />
-
-      <Signatures addr={ sha } initPage={ true } />
+      <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./approvals' />
 
     </Stack>    
   );
 } 
 
-export default SigPage;
+export default Approvals;

@@ -118,568 +118,571 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
         borderColor:'divider' 
         }} 
       >
+        <Box sx={{ width:1440 }}>
 
-        <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
-          <Toolbar>
-            <h4>Rule No. { seq.toString() } </h4>
-          </Toolbar>
-
-
-          <AddRule 
-            sha={ sha } 
-            rule={ hexVR } 
-            setUpdatedRule={setNewHexVR} 
-            editable={editable} 
-            setEditable={setEditable} 
-          />
-          
-        </Stack>
-        <Stack 
-          direction={'column'} 
-          spacing={1} 
-        >
-
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            {/* <h6>System Record</h6> */}
-            {newVR?.seqOfRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='SeqOfRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={ newVR.seqOfRule.toString() }
-              />
-            )}
-
-            {newVR?.qtyOfSubRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='QtyOfSubRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={ newVR.qtyOfSubRule.toString() }
-              />
-            )}
-
-            {newVR?.seqOfSubRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='SeqOfSubRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={ newVR.seqOfSubRule.toString() }
-              />
-            )}
-
-            {newVR?.authority != undefined && (
-              <TextField 
-                variant='filled'
-                label='Authority'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={ authorities[newVR.authority] }
-              />
-            )}
+          <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
+            <Toolbar>
+              <h4>Rule No. { seq.toString() } </h4>
+            </Toolbar>
 
 
-            <TextField 
-              variant='filled'
-              label='HeadRatio'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 240,
-              }}
-              value={toPercent(newVR?.headRatio ?? 0)}
+            <AddRule 
+              sha={ sha } 
+              rule={ hexVR } 
+              setUpdatedRule={setNewHexVR} 
+              editable={editable} 
+              setEditable={setEditable} 
             />
-
-            <TextField 
-              variant='filled'
-              label='AmountRatio'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 240,
-              }}
-              value={toPercent(newVR?.amountRatio ?? 0)}
-            />
-
+            
           </Stack>
+          <Stack 
+            direction={'column'} 
+            spacing={1} 
+          >
 
-          <Collapse in={ editable } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-              {/* <Collapse in={ false } >   */}            
+            <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              {/* <h6>System Record</h6> */}
+              {newVR?.seqOfRule != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='SeqOfRule'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newVR.seqOfRule.toString() }
+                />
+              )}
 
-              <TextField 
-                variant='filled'
-                label='SeqOfRule'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  seqOfRule: parseInt(e.target.value),
-                }))}
-                value={ objVR?.seqOfRule }              
-              />
+              {newVR?.qtyOfSubRule != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='QtyOfSubRule'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newVR.qtyOfSubRule.toString() }
+                />
+              )}
 
-              <TextField 
-                variant='filled'
-                label='QtyOfSubRule'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  qtyOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objVR?.qtyOfSubRule }              
-              />
+              {newVR?.seqOfSubRule != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='SeqOfSubRule'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newVR.seqOfSubRule.toString() }
+                />
+              )}
 
-              <TextField 
-                variant='filled'
-                label='SeqOfSubRule'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  seqOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objVR?.seqOfSubRule }              
-              />
+              {newVR?.authority != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='Authority'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ authorities[newVR.authority] }
+                />
+              )}
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 240 }}>
-                <InputLabel id="authority-label">Authority</InputLabel>
-                <Select
-                  labelId="authority-label"
-                  id="authority-select"
-                  value={ objVR?.authority == undefined ? '' : objVR?.authority }
-                  onChange={(e) => setObjVR((v) => ({
-                    ...v,
-                    authority: parseInt(e.target.value.toString()),
-                  }))}
-
-                  label="Authority"
-                >
-                  <MenuItem value={1}>GeneralMeeting</MenuItem>
-                  <MenuItem value={2}>Board</MenuItem>
-                  <MenuItem value={3}>Board & GeneralMeeting</MenuItem>
-                </Select>
-              </FormControl>
 
               <TextField 
                 variant='filled'
-                label='HeadRaio'
+                label='HeadRatio'
+                inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  headRatio: parseInt(e.target.value),
-                }))}
-                value={ objVR?.headRatio }              
+                value={toPercent(newVR?.headRatio ?? 0)}
               />
 
               <TextField 
                 variant='filled'
                 label='AmountRatio'
+                inputProps={{readOnly: true}}
                 sx={{
                   m:1,
-                  minWidth: 240,
+                  minWidth: 218,
                 }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  amountRatio: parseInt(e.target.value),
-                }))}
-                value={ objVR?.amountRatio }              
+                value={toPercent(newVR?.amountRatio ?? 0)}
               />
 
-              {/* </Collapse> */}
             </Stack>
-          </Collapse>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            {newVR?.onlyAttendance != undefined && (
-              <TextField 
-                variant='filled'
-                label='OnlyAttendance'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.onlyAttendance ? 'True' : 'False'}
-              />
-            )}
+            <Collapse in={ editable } >
+              <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                {/* <Collapse in={ false } >   */}            
 
-            {newVR?.impliedConsent != undefined && (
-              <TextField 
-                variant='filled'
-                label='ImpliedConsent'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.impliedConsent ? 'True' : 'False'}
-              />
-            )}
+                <TextField 
+                  variant='filled'
+                  label='SeqOfRule'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    seqOfRule: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.seqOfRule }              
+                />
 
-            {newVR?.partyAsConsent != undefined && (
-              <TextField 
-                variant='filled'
-                label='PartyAsConsent'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.partyAsConsent ? 'True' : 'False'}
-              />
-            )}
+                <TextField 
+                  variant='filled'
+                  label='QtyOfSubRule'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    qtyOfSubRule: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.qtyOfSubRule }              
+                />
 
-            {newVR?.againstShallBuy != undefined && (
-              <TextField 
-                variant='filled'
-                label='AgainstShallBuy'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.againstShallBuy ? 'True' : 'False'}
-              />
-            )}
+                <TextField 
+                  variant='filled'
+                  label='SeqOfSubRule'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    seqOfSubRule: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.seqOfSubRule }              
+                />
 
-            {newVR?.vetoers1 != undefined && (
-              <TextField 
-                variant='filled'
-                label='Vetoer_1'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.vetoers1.toString()}
-              />
-            )}
+                <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="authority-label">Authority</InputLabel>
+                  <Select
+                    labelId="authority-label"
+                    id="authority-select"
+                    value={ objVR?.authority == undefined ? '' : objVR?.authority }
+                    onChange={(e) => setObjVR((v) => ({
+                      ...v,
+                      authority: parseInt(e.target.value.toString()),
+                    }))}
 
-            {newVR?.vetoers2 != undefined && (
-              <TextField 
-                variant='filled'
-                label='Vetoer_2'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.vetoers2.toString()}
-              />
-            )}
+                    label="Authority"
+                  >
+                    <MenuItem value={1}>GeneralMeeting</MenuItem>
+                    <MenuItem value={2}>Board</MenuItem>
+                    <MenuItem value={3}>Board & GeneralMeeting</MenuItem>
+                  </Select>
+                </FormControl>
 
-          </Stack>
+                <TextField 
+                  variant='filled'
+                  label='HeadRaio'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    headRatio: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.headRatio }              
+                />
 
-          <Collapse in={ editable } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                <TextField 
+                  variant='filled'
+                  label='AmountRatio'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    amountRatio: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.amountRatio }              
+                />
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
-                <FormControlLabel 
+                {/* </Collapse> */}
+              </Stack>
+            </Collapse>
+
+            <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              {newVR?.onlyAttendance != undefined && (
+                <TextField 
+                  variant='filled'
                   label='OnlyAttendance'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjVR(v => ({
-                        ...v,
-                        onlyAttendance: e.target.checked,
-                      }))}
-                      checked={ objVR?.onlyAttendance }
-                    />
-                  }
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.onlyAttendance ? 'True' : 'False'}
                 />
-              </Box>
+              )}
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
-                <FormControlLabel 
+              {newVR?.impliedConsent != undefined && (
+                <TextField 
+                  variant='filled'
                   label='ImpliedConsent'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjVR(v => ({
-                        ...v,
-                        impliedConsent: e.target.checked,
-                      }))}
-                      checked={ objVR?.impliedConsent }
-                    />
-                  }
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.impliedConsent ? 'True' : 'False'}
                 />
-              </Box>
+              )}
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
-                <FormControlLabel 
+              {newVR?.partyAsConsent != undefined && (
+                <TextField 
+                  variant='filled'
                   label='PartyAsConsent'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjVR(v => ({
-                        ...v,
-                        partyAsConsent: e.target.checked,
-                      }))}
-                      checked={ objVR?.partyAsConsent }
-                    />
-                  }
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.partyAsConsent ? 'True' : 'False'}
                 />
-              </Box>
+              )}
 
-              <Box sx={{ minWidth: 240, m: 1 }} >
-                <FormControlLabel 
+              {newVR?.againstShallBuy != undefined && (
+                <TextField 
+                  variant='filled'
                   label='AgainstShallBuy'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjVR(v => ({
-                        ...v,
-                        againstShallBuy: e.target.checked,
-                      }))}
-                      checked={ objVR?.againstShallBuy }
-                    />
-                  }
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.againstShallBuy ? 'True' : 'False'}
                 />
-              </Box>
+              )}
 
-              <TextField 
-                variant='filled'
-                label='Vetoer_1'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  vetoers1: parseInt(e.target.value),
-                }))}
-                value={ objVR?.vetoers1}                                        
-              />
+              {newVR?.vetoers1 != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='Vetoer_1'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.vetoers1.toString()}
+                />
+              )}
 
-              <TextField 
-                variant='filled'
-                label='Vetoer_2'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  vetoers2: parseInt(e.target.value),
-                }))}
-                value={ objVR?.vetoers2}                                        
-              />
+              {newVR?.vetoers2 != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='Vetoer_2'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.vetoers2.toString()}
+                />
+              )}
 
             </Stack>
-          </Collapse>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+            <Collapse in={ editable } >
+              <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-            {newVR?.shaExecDays != undefined && (
-              <TextField 
-                variant='filled'
-                label='ShaExecDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.shaExecDays.toString()}
-              />
-            )}
+                <Box sx={{ minWidth: 218, m: 1 }} >
+                  <FormControlLabel 
+                    label='OnlyAttendance'
+                    control={
+                      <Checkbox 
+                        sx={{
+                          m: 1,
+                          height: 64,
+                        }}
+                        onChange={e => setObjVR(v => ({
+                          ...v,
+                          onlyAttendance: e.target.checked,
+                        }))}
+                        checked={ objVR?.onlyAttendance }
+                      />
+                    }
+                  />
+                </Box>
 
-            {newVR?.reviewDays != undefined && (
-              <TextField 
-                variant='filled'
-                label='ReviewDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.reviewDays.toString()}
-              />
-            )}
+                <Box sx={{ minWidth: 218, m: 1 }} >
+                  <FormControlLabel 
+                    label='ImpliedConsent'
+                    control={
+                      <Checkbox 
+                        sx={{
+                          m: 1,
+                          height: 64,
+                        }}
+                        onChange={e => setObjVR(v => ({
+                          ...v,
+                          impliedConsent: e.target.checked,
+                        }))}
+                        checked={ objVR?.impliedConsent }
+                      />
+                    }
+                  />
+                </Box>
 
-            {newVR?.reconsiderDays != undefined && (
-              <TextField 
-                variant='filled'
-                label='ReconsiderDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.reconsiderDays.toString()}
-              />
-            )}
+                <Box sx={{ minWidth: 218, m: 1 }} >
+                  <FormControlLabel 
+                    label='PartyAsConsent'
+                    control={
+                      <Checkbox 
+                        sx={{
+                          m: 1,
+                          height: 64,
+                        }}
+                        onChange={e => setObjVR(v => ({
+                          ...v,
+                          partyAsConsent: e.target.checked,
+                        }))}
+                        checked={ objVR?.partyAsConsent }
+                      />
+                    }
+                  />
+                </Box>
 
-            {newVR?.votePrepareDays != undefined && (
-              <TextField 
-                variant='filled'
-                label='VotePrepareDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.votePrepareDays.toString()}
-              />
-            )}
+                <Box sx={{ minWidth: 218, m: 1 }} >
+                  <FormControlLabel 
+                    label='AgainstShallBuy'
+                    control={
+                      <Checkbox 
+                        sx={{
+                          m: 1,
+                          height: 64,
+                        }}
+                        onChange={e => setObjVR(v => ({
+                          ...v,
+                          againstShallBuy: e.target.checked,
+                        }))}
+                        checked={ objVR?.againstShallBuy }
+                      />
+                    }
+                  />
+                </Box>
 
-            {newVR?.votingDays != undefined && (
-              <TextField 
-                variant='filled'
-                label='VotingDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.votingDays.toString()}
-              />
-            )}
+                <TextField 
+                  variant='filled'
+                  label='Vetoer_1'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    vetoers1: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.vetoers1}                                        
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='Vetoer_2'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    vetoers2: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.vetoers2}                                        
+                />
+
+              </Stack>
+            </Collapse>
+
+            <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+              {newVR?.shaExecDays != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='ShaExecDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.shaExecDays.toString()}
+                />
+              )}
+
+              {newVR?.reviewDays != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='ReviewDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.reviewDays.toString()}
+                />
+              )}
+
+              {newVR?.reconsiderDays != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='ReconsiderDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.reconsiderDays.toString()}
+                />
+              )}
+
+              {newVR?.votePrepareDays != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='VotePrepareDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.votePrepareDays.toString()}
+                />
+              )}
+
+              {newVR?.votingDays != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='VotingDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.votingDays.toString()}
+                />
+              )}
 
 
-            {newVR?.execDaysForPutOpt != undefined && (
-              <TextField 
-                variant='filled'
-                label='ExecDaysForPutOpt'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                value={newVR.execDaysForPutOpt.toString()}
-              />
-            )}
+              {newVR?.execDaysForPutOpt != undefined && (
+                <TextField 
+                  variant='filled'
+                  label='ExecDaysForPutOpt'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newVR.execDaysForPutOpt.toString()}
+                />
+              )}
+
+            </Stack>
+
+            <Collapse in={ editable } >
+              <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                <TextField 
+                  variant='filled'
+                  label='ShaExecDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    shaExecDays: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.shaExecDays}                                        
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='ReviewDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    reviewDays: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.reviewDays}                                        
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='ReconsiderDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    reconsiderDays: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.reconsiderDays}                                        
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='VotePrepareDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    votePrepareDays: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.votePrepareDays}                                        
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='VotingDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    votingDays: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.votingDays}                                        
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='ExecDaysForPutOpt'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjVR((v) => ({
+                    ...v,
+                    execDaysForPutOpt: parseInt(e.target.value),
+                  }))}
+                  value={ objVR?.execDaysForPutOpt}                                        
+                />
+
+              </Stack>
+            </Collapse>
 
           </Stack>
-
-          <Collapse in={ editable } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <TextField 
-                variant='filled'
-                label='ShaExecDays'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  shaExecDays: parseInt(e.target.value),
-                }))}
-                value={ objVR?.shaExecDays}                                        
-              />
-
-              <TextField 
-                variant='filled'
-                label='ReviewDays'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  reviewDays: parseInt(e.target.value),
-                }))}
-                value={ objVR?.reviewDays}                                        
-              />
-
-              <TextField 
-                variant='filled'
-                label='ReconsiderDays'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  reconsiderDays: parseInt(e.target.value),
-                }))}
-                value={ objVR?.reconsiderDays}                                        
-              />
-
-              <TextField 
-                variant='filled'
-                label='VotePrepareDays'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  votePrepareDays: parseInt(e.target.value),
-                }))}
-                value={ objVR?.votePrepareDays}                                        
-              />
-
-              <TextField 
-                variant='filled'
-                label='VotingDays'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  votingDays: parseInt(e.target.value),
-                }))}
-                value={ objVR?.votingDays}                                        
-              />
-
-              <TextField 
-                variant='filled'
-                label='ExecDaysForPutOpt'
-                sx={{
-                  m:1,
-                  minWidth: 240,
-                }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  execDaysForPutOpt: parseInt(e.target.value),
-                }))}
-                value={ objVR?.execDaysForPutOpt}                                        
-              />
-
-            </Stack>
-          </Collapse>
-
-        </Stack>
+      
+        </Box>
       </Paper>
     </> 
   )
