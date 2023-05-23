@@ -1,0 +1,311 @@
+import { useEffect, useState } from "react";
+
+import { useRouter } from "next/router";
+
+import { 
+  Stack,
+  Paper,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Typography,
+} from "@mui/material";
+
+import { AddrZero, Bytes32Zero, HexType } from "../../../../interfaces";
+
+import { 
+  ShaNavi, 
+  CirculateSha,
+  FinalizeSha,
+  ProposeSha,
+  SignSha,
+  VoteForSha,
+  VoteCounting,
+  ActivateSha,
+} from '../../../../components';
+
+import { 
+  accessControlABI,
+  meetingMinutesABI,
+  useAccessControl, 
+  useAccessControlFinalized, 
+  useFilesFolderGetHeadOfFile, 
+  useMeetingMinutes, 
+  useMeetingMinutesVoteEnded 
+} from "../../../../generated";
+
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { BigNumber } from "ethers";
+import { readContract } from "@wagmi/core";
+
+async function finalized(sha: HexType): Promise<boolean> {
+  let flag = await readContract({
+    address: sha,
+    abi: accessControlABI,
+    functionName: 'finalized',
+  })
+
+  return flag;
+}
+
+async function voteEnded(bog: HexType, sha: HexType): Promise<boolean> {
+  let flag = await readContract({
+    address: bog,
+    abi: meetingMinutesABI,
+    functionName: 'voteEnded',
+    args: [BigNumber.from(sha)],
+  })
+
+  return flag;
+}
+
+function Lifecycle() {
+
+  const { boox } = useComBooxContext();
+
+  const [ sha, setSha ] = useState<HexType>(AddrZero);
+
+  const {query} = useRouter();
+  // const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  // console.log('sha: ', sha);
+
+
+  const [ activeStep, setActiveStep ] = useState<number>();
+
+  const [ finalized, setFinalized ] = useState(false);
+
+  const {
+    refetch: refetchFinalized
+  } = useAccessControlFinalized({
+    address: sha,
+    onSuccess(flag) {
+      setFinalized(flag);
+    }
+  });
+
+  const [ voteEnded, setVoteEnded ] = useState(false);
+  
+  const {
+    refetch: refetchVoteEnded
+  } = useMeetingMinutesVoteEnded({
+    address: boox[3],
+    args: [BigNumber.from(sha)],
+    onSuccess(flag) {
+      setVoteEnded(flag);
+    }
+  })
+
+  // const [ fileState, setFileState ] = useState(0);
+
+  const {
+    data: headOfFile,
+    refetch: refetchFileState
+  } = useFilesFolderGetHeadOfFile({
+    address: boox[4],
+    args: [sha],
+    onSuccess(data) {
+      switch (data.state) {
+        case 1: 
+          refetchFinalized().then(
+            () => setActiveStep(finalized ? 1: 0)
+          );
+          break;
+        case 2: 
+          setActiveStep(data.state);
+          break;
+        case 3: 
+          setActiveStep(3);
+          break;
+        case 4: 
+          refetchVoteEnded().then(
+            () => setActiveStep( voteEnded ? 5 : 4)
+          );
+          break;
+        case 5: 
+          setActiveStep(6);
+          break;
+        case 6: 
+          setActiveStep(8);
+          break;
+        case 7: 
+          setActiveStep(7);
+          break;
+      }
+    }
+  })
+  
+  useEffect(() => {
+    // console.log('sha: ', sha);
+    if (query.addr){
+      setSha(`0x${query.addr.toString().substring(2)}`);
+      // refetchFileState(); 
+    }
+  }, [query.addr])
+
+  // useEffect(()=>{
+  //   refetchFileState();
+  // });
+
+  return (
+    <>
+    {sha && (
+      <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
+        <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./lifecycle' />
+        
+        <Paper
+          sx={{
+            m:1, p:1,
+            border:1,
+            borderColor:'divider'
+          }} 
+        >
+          {activeStep && (
+            <Box sx={{ width:1440 }} >
+              <Stepper sx={{ pl:5 }} activeStep={ activeStep } orientation="vertical" >
+
+                <Step index={0} >
+                  
+                  <StepLabel>
+                    <h3>Finalize SHA</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Finalize terms & conditions of SHA.
+                    </Typography>
+                    <FinalizeSha addr={ sha } setActiveStep={ setActiveStep } />
+                  </StepContent>
+
+                </Step>
+
+
+                <Step index={1} >
+
+                  <StepLabel>
+                    <h3>Circulate SHA</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Circulate SHA to parties for execution.
+                    </Typography>
+                    <CirculateSha addr={ sha } setActiveStep={ setActiveStep } />
+                  </StepContent>
+
+                </Step>
+
+                <Step index={2} >
+
+                  <StepLabel>
+                    <h3>Sign SHA</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Sign SHA to accept its terms.
+                    </Typography>
+                    <SignSha addr={ sha } setActiveStep={ setActiveStep } />
+                  </StepContent>
+
+                </Step>
+
+                <Step index={3} >
+
+                  <StepLabel>
+                    <h3>Propose SHA</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Propose SHA to General Meeting for approval.
+                    </Typography>
+                    <ProposeSha addr={ sha } setActiveStep={ setActiveStep } />
+                  </StepContent>
+
+                </Step>
+
+                <Step index={4} >
+
+                  <StepLabel>
+                    <h3>Vote for SHA</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Cast vote in General Meeting to approve SHA.
+                    </Typography>
+
+                    <VoteForSha addr={ sha } setActiveStep={ setActiveStep } />
+                  </StepContent>
+
+                </Step>
+
+                <Step index={5} >
+
+                  <StepLabel>
+                    <h3>Count Vote</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Count vote result of SHA review.
+                    </Typography>
+                    <VoteCounting addr={ sha } setActiveStep={ setActiveStep } />
+                  </StepContent>
+
+                </Step>
+
+                <Step index={6} >
+
+                  <StepLabel>
+                    <h3>Activate SHA</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    <Typography>
+                      Activate SHA into leagal forces.
+                    </Typography>
+                    <ActivateSha addr={ sha } setActiveStep={ setActiveStep } />
+                    
+                  </StepContent>
+
+                </Step>
+
+                <Step index={7} >
+
+                  <StepLabel>
+                    <h3>Be In Force</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    
+                    <Typography>
+                      SHA currently is in force.
+                    </Typography>
+
+                  </StepContent>
+
+                </Step>
+
+                <Step index={8} >
+
+                  <StepLabel>
+                    <h3>Be Revoked</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    
+                    <Typography>
+                      SHA currently is revoked.
+                    </Typography>
+
+                  </StepContent>
+
+                </Step>
+
+              </Stepper>
+            </Box>
+          )}
+
+        </Paper>
+
+      </Stack>    
+    )}
+    </>
+  );
+} 
+
+export default Lifecycle;

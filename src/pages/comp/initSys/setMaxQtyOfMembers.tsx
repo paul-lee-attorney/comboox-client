@@ -50,7 +50,6 @@ function SetMaxQtyOfMembersPage() {
 
   const {
     config,
-    isLoading
   } = usePrepareRegisterOfMembersSetMaxQtyOfMembers({
     address: rom,
     args: inputMax ? 
@@ -59,12 +58,13 @@ function SetMaxQtyOfMembersPage() {
   });
 
   const {
-    isSuccess,
-    write 
-  } = useRegisterOfMembersSetMaxQtyOfMembers(config);
-
-  useEffect(() => {
-    if (isSuccess) refetchMax();
+    isLoading,
+    write, 
+  } = useRegisterOfMembersSetMaxQtyOfMembers({
+    ...config,
+    onSuccess() {
+      refetchMax();
+    },
   });
 
   return (

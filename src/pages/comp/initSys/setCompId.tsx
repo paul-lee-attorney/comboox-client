@@ -9,53 +9,49 @@ import {
   Card, 
   CardContent, 
   Typography,
-  Grid,  
+  Grid,
+  CardActions,  
 } from '@mui/material';
 
 
-import { Update, ArrowForward, Send }  from '@mui/icons-material';
+import { Update, ArrowForward, Send, Create, Handyman }  from '@mui/icons-material';
 
 import Link from '../../../scripts/Link';
+
+import { waitForTransaction } from '@wagmi/core';
 
 import { 
   usePrepareGeneralKeeperSetCompInfo,
   useGeneralKeeperSetCompInfo,
-  useGeneralKeeperRegNumHash,
+  useGeneralKeeperRegNumOfCompany,
   useGeneralKeeperNameOfCompany,
   useGeneralKeeperSymbolOfCompany,
+  useGeneralKeeperCreateCorpSeal,
+  usePrepareGeneralKeeperCreateCorpSeal,
 } from '../../../generated';
 
 import { HexType, GKInfo, AddrZero } from '../../../interfaces';
 
-type CompIdType = {
-  regNumHash?: HexType | undefined,
-  nameOfComp?: string | undefined,
+interface CompIdType {
+  regNumOfComp?: string | undefined,
   symbolOfComp?: string | undefined,
+  nameOfComp?: string | undefined,
 }
 
 function SetCompIdPage() {
   const [inputCompId, setInputCompId] = useState<CompIdType>();
+  
   const [compId, setCompId] = useState<CompIdType>();
 
   const { gk, setGK } = useComBooxContext();
-  
-  const {refetch: refetchRegNumHash} = useGeneralKeeperRegNumHash({
-    address: gk,
-    onSuccess(regNumHash) {
-      setCompId(v => ({
-        ...v,
-        regNumHash: regNumHash,
-      }))
-    }
-  })
 
-  const {refetch: refetchNameOfComp} = useGeneralKeeperNameOfCompany({
+  const {refetch: refetchRegNumOfComp} = useGeneralKeeperRegNumOfCompany({
     address: gk,
-    onSuccess(nameOfComp) {
+    onSuccess(regNumOfComp) {
       setCompId(v => ({
         ...v,
-        nameOfComp: nameOfComp,
-      }))
+        regNumOfComp: regNumOfComp.toNumber().toString(),
+      }));
     }
   })
 
@@ -68,33 +64,54 @@ function SetCompIdPage() {
       }));
     }
   })
+  
+  const {refetch: refetchNameOfComp} = useGeneralKeeperNameOfCompany({
+    address: gk,
+    onSuccess(nameOfComp) {
+      setCompId(v => ({
+        ...v,
+        nameOfComp: nameOfComp,
+      }))
+    }
+  })
 
   const {
-    config, 
-    isLoading
+    config 
   } = usePrepareGeneralKeeperSetCompInfo({
     address: gk,
-    args: inputCompId?.regNumHash && 
-          inputCompId?.nameOfComp &&
+    args:  inputCompId?.nameOfComp &&
           inputCompId?.symbolOfComp  
-          ? [ inputCompId.regNumHash, 
-              inputCompId.nameOfComp,
-              inputCompId.symbolOfComp ] : 
-          undefined,
+          ? [ inputCompId.nameOfComp,
+              inputCompId.symbolOfComp ] 
+          : undefined,
   });
 
   const {
-    data,
+    isLoading,
     write, 
-   } = useGeneralKeeperSetCompInfo(config);
-
-  useEffect(() => {
-    if (data) {
-      refetchRegNumHash();
-      refetchNameOfComp();
+   } = useGeneralKeeperSetCompInfo({
+    ...config,
+    onSuccess() {
       refetchSymbolOfComp();
+      refetchNameOfComp();
     }
-  }, [data, refetchNameOfComp, refetchRegNumHash, refetchSymbolOfComp]);
+  });
+
+  const { 
+    config: configCreateSeal, 
+  } = usePrepareGeneralKeeperCreateCorpSeal({
+    address: gk
+  }); 
+
+  const {
+    isLoading: isLoadingCreateSeal,
+    write: createSeal,
+  } = useGeneralKeeperCreateCorpSeal({
+    ...configCreateSeal,
+    onSuccess() {
+      refetchRegNumOfComp();
+    }
+  })
 
   return (
     <>
@@ -110,24 +127,34 @@ function SetCompIdPage() {
       >
 
         <Grid item sx={{alignContent:'center', justifyContent:'center', }} >
-          <Card sx={{ minWidth: 120, width: 300, }} variant='outlined'>
+          <Card sx={{ minWidth: 120, width: 500, }} variant='outlined'>
               <CardContent>
 
-                <Typography variant="h6" component="div" >
+                <Typography variant="h4" component="div" sx={{ color:'blueviolet', mb:3 }} >
                   Company ID
                 </Typography>
-                <Typography variant="body1" component="div" >
-                  Name: {compId?.nameOfComp}
+                <Typography variant="body1" component="div" sx={{ m:1 }} >
+                  RegNum: { compId?.regNumOfComp }
                 </Typography>
-                <Typography variant="body1" component="div" >
-                  Symbol: {compId?.symbolOfComp}
+                <Typography variant="body1" component="div" sx={{ m:1 }} >
+                  Name: { compId?.nameOfComp }
                 </Typography>
-                <Typography variant="body2" component="div" >
-                  RegNumHash: {compId?.regNumHash?.substring(0,6) + 
-                    '...' + compId?.regNumHash?.substring(62)}
+                <Typography variant="body1" component="div" sx={{ m:1 }} >
+                  Symbol: { compId?.symbolOfComp }
                 </Typography>
 
-              </CardContent>        
+              </CardContent>
+              <CardActions>
+                <Button
+                  disabled={ !createSeal || isLoadingCreateSeal }
+                  variant='outlined'
+                  sx={{ m:1, p:1 }}
+                  endIcon={ <Handyman /> }
+                  onClick={ ()=>createSeal?.() }
+                >
+                  Create Seal
+                </Button>
+              </CardActions>        
           </Card>
         </Grid>
 
@@ -136,23 +163,6 @@ function SetCompIdPage() {
         <Grid item sx={{alignContent:'center', justifyContent:'center', }} >
 
           <Box >
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfRegNumHash" 
-              label="RegNumHash" 
-              variant="outlined"
-              helperText="Bytes32 (e.g. '0xa38...0f3b')"
-              onChange={(e) => {
-                setInputCompId(v=>({
-                  ...v,
-                  regNumHash: `0x${e.target.value.substring(2)}`,
-                }));
-              }}
-
-              value = {inputCompId?.regNumHash}
-              size='small'
-            />
 
             <TextField 
               sx={{ m: 1, minWidth: 120 }} 

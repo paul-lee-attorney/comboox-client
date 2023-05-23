@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import { AddrZero, HexType } from "../interfaces";
 
-type ContextType = {
+interface ContextType {
   gk: HexType,
   setGK: Dispatch<SetStateAction<HexType>>,
   boox: HexType[],
@@ -24,7 +24,7 @@ export function ComBooxWrapper({ children }: WrapperType) {
   const [boox, setBoox] = useState<HexType[]>([]);
 
   return (
-    <ComBooxContext.Provider value={{gk, setGK, boox, setBoox}} >
+    <ComBooxContext.Provider value={{ gk, setGK, boox, setBoox}} >
       { children }
     </ComBooxContext.Provider >
   );

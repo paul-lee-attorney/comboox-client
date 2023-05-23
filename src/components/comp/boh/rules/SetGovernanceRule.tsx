@@ -36,19 +36,19 @@ export function SetGovernanceRule({ addr }: ContractProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRuleType>();
 
   let hexGR: HexType = `0x${
-    '0000' + '00' + '00' +
+    '0000' + '01' + '01' +
     (objGR?.basedOnPar ? '01' : '00') +
-    (objGR?.proposeWeightRatioOfGM?.toString(16).padStart(4, '0') ?? '0000') +
+    (objGR?.proposeWeightRatioOfGM?.toString(16).padStart(4, '0') ?? '03e8') +
     (objGR?.proposeHeadRatioOfMembers?.toString(16).padStart(4, '0') ?? '0000') + 
-    (objGR?.proposeHeadNumOfDirectors?.toString(16).padStart(4, '0') ?? '0000') + 
-    (objGR?.maxQtyOfMembers?.toString(16).padStart(4, '0') ?? '0000') +       
-    (objGR?.quorumOfGM?.toString(16).padStart(4, '0') ?? '0000') +       
-    (objGR?.maxNumOfDirectors?.toString(16).padStart(4, '0') ?? '0000') +       
-    (objGR?.tenureMonOfBoard?.toString(16).padStart(4, '0') ?? '0000') +       
-    (objGR?.quorumOfBoardMeeting?.toString(16).padStart(4, '0') ?? '0000') +       
-    (objGR?.establishedDate?.toString(16).padStart(12, '0') ?? '0'.padStart(12, '0')) +       
-    (objGR?.businessTermInYears?.toString(16).padStart(4, '0') ?? '0000') +                 
-    (objGR?.typeOfComp?.toString(16).padStart(2, '0') ?? '00') +                 
+    (objGR?.proposeHeadNumOfDirectors?.toString(16).padStart(4, '0') ?? '0001') + 
+    (objGR?.maxQtyOfMembers?.toString(16).padStart(4, '0') ?? '0032') +       
+    (objGR?.quorumOfGM?.toString(16).padStart(4, '0') ?? '1388') +       
+    (objGR?.maxNumOfDirectors?.toString(16).padStart(4, '0') ?? '0007') +       
+    (objGR?.tenureMonOfBoard?.toString(16).padStart(4, '0') ?? '0024') +       
+    (objGR?.quorumOfBoardMeeting?.toString(16).padStart(4, '0') ?? '1388') +       
+    (objGR?.establishedDate?.toString(16).padStart(12, '0') ?? '00005d751e78') +       
+    (objGR?.businessTermInYears?.toString(16).padStart(4, '0') ?? '0014') +                 
+    (objGR?.typeOfComp?.toString(16).padStart(2, '0') ?? '01') +                 
     '0000'
   }`;
 
@@ -57,18 +57,18 @@ export function SetGovernanceRule({ addr }: ContractProps) {
   const [ newHexGR, setNewHexGR ] = useState<HexType>(Bytes32Zero);
 
   let newGR: GovernanceRuleType = {
-    basedOnPar: newHexGR.substring(10, 12) === '01',
-    proposeWeightRatioOfGM: parseInt(newHexGR.substring(12,16), 16),
-    proposeHeadRatioOfMembers: parseInt(newHexGR.substring(16, 20), 16),
-    proposeHeadNumOfDirectors: parseInt(newHexGR.substring(20, 24), 16),
-    maxQtyOfMembers: parseInt(newHexGR.substring(24, 28), 16),
-    quorumOfGM: parseInt(newHexGR.substring(28, 32), 16),
-    maxNumOfDirectors: parseInt(newHexGR.substring(32, 36), 16),
-    tenureMonOfBoard: parseInt(newHexGR.substring(36, 40), 16),
-    quorumOfBoardMeeting: parseInt(newHexGR.substring(40, 44), 16),
-    establishedDate: parseInt(newHexGR.substring(44, 56), 16),
-    businessTermInYears: parseInt(newHexGR.substring(56, 60), 16),
-    typeOfComp: parseInt(newHexGR.substring(60, 62), 16),
+    basedOnPar: newHexGR?.substring(10, 12) === '01',
+    proposeWeightRatioOfGM: parseInt(newHexGR?.substring(12,16), 16),
+    proposeHeadRatioOfMembers: parseInt(newHexGR?.substring(16, 20), 16),
+    proposeHeadNumOfDirectors: parseInt(newHexGR?.substring(20, 24), 16),
+    maxQtyOfMembers: parseInt(newHexGR?.substring(24, 28), 16),
+    quorumOfGM: parseInt(newHexGR?.substring(28, 32), 16),
+    maxNumOfDirectors: parseInt(newHexGR?.substring(32, 36), 16),
+    tenureMonOfBoard: parseInt(newHexGR?.substring(36, 40), 16),
+    quorumOfBoardMeeting: parseInt(newHexGR?.substring(40, 44), 16),
+    establishedDate: parseInt(newHexGR?.substring(44, 56), 16),
+    businessTermInYears: parseInt(newHexGR?.substring(56, 60), 16),
+    typeOfComp: parseInt(newHexGR?.substring(60, 62), 16),
   } 
 
   console.log('newGR: ', newGR);
@@ -208,6 +208,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                               basedOnPar: e.target.checked,
                             }))}
                             checked={ objGR?.basedOnPar }
+                            defaultChecked={ false }
                           />
                         }
                       />
@@ -226,6 +227,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                         proposeWeightRatioOfGM: parseInt(e.target.value),
                       }))}
                       value={ objGR?.proposeWeightRatioOfGM }              
+                      defaultValue='1000'
                     />
 
                     <TextField 
@@ -239,7 +241,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                         ...v,
                         proposeHeadRatioOfMembers: parseInt(e.target.value),
                       }))}
-                      value={ objGR?.proposeHeadRatioOfMembers }                                      
+                      value={ objGR?.proposeHeadRatioOfMembers }
+                      defaultValue='0'                                      
                     />
 
                     <TextField 
@@ -253,7 +256,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                         ...v,
                         proposeHeadNumOfDirectors: parseInt(e.target.value),
                       }))}
-                      value={ objGR?.proposeHeadNumOfDirectors }                          
+                      value={ objGR?.proposeHeadNumOfDirectors }
+                      defaultValue='1'                          
                     />
 
                     <TextField 
@@ -267,7 +271,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                         ...v,
                         maxQtyOfMembers: parseInt(e.target.value),
                       }))}
-                      value={ objGR?.maxQtyOfMembers?.toString() }                          
+                      value={ objGR?.maxQtyOfMembers?.toString() } 
+                      defaultValue='50'                        
                     />
 
                     <TextField 
@@ -281,7 +286,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                         ...v,
                         quorumOfGM: parseInt(e.target.value),
                       }))}
-                      value={ objGR?.quorumOfGM }                          
+                      value={ objGR?.quorumOfGM }
+                      defaultValue='5000'                          
                     />
 
                   {/* </Collapse> */}
@@ -381,7 +387,9 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                       ...v,
                       maxNumOfDirectors: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.maxNumOfDirectors}                                        
+                    value={ objGR?.maxNumOfDirectors }
+                    defaultValue='7'
+
                   />
 
                   <TextField 
@@ -395,7 +403,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                       ...v,
                       tenureMonOfBoard: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.tenureMonOfBoard }                                                      
+                    value={ objGR?.tenureMonOfBoard } 
+                    defaultValue='36'                                                     
                   />
 
                   <TextField 
@@ -409,7 +418,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                       ...v,
                       quorumOfBoardMeeting: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.quorumOfBoardMeeting }                                                      
+                    value={ objGR?.quorumOfBoardMeeting }   
+                    defaultValue='5000'                                                   
                   />
 
                   <TextField 
@@ -423,7 +433,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                       ...v,
                       establishedDate: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.establishedDate }                                                                  
+                    value={ objGR?.establishedDate }
+                    defaultValue={ Number(new Date('2019-09-08 23:30:00.000')) / 1000 }                                                                  
                   />
 
                   <TextField 
@@ -438,6 +449,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                       businessTermInYears: parseInt(e.target.value),
                     }))}
                     value={ objGR?.businessTermInYears }
+                    defaultValue='20'
                   />
 
                   <TextField 
@@ -451,7 +463,8 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                       ...v,
                       typeOfComp: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.typeOfComp }                                                                  
+                    value={ objGR?.typeOfComp }
+                    defaultValue='1'                                                      
                   />
                 </Stack>
               </Collapse>

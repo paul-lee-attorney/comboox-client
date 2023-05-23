@@ -8,18 +8,27 @@ import {
 
 import { AddrOfRegCenter } from '../../interfaces';
 
-export function RegUser() {
+interface RegUserProps {
+  closeDialog: () => void,
+}
+
+export function RegUser({ closeDialog }:RegUserProps) {
   
-  const { config, isLoading } = usePrepareRegCenterRegUser({
+  const { config } = usePrepareRegCenterRegUser({
     address: AddrOfRegCenter
   })  
 
-  const { write: regUser } = useRegCenterRegUser(config)
+  const { isLoading, write: regUser } = useRegCenterRegUser({
+    ...config,
+    onSuccess() {
+      closeDialog();
+    }
+  })
 
   return (
     <div>
       <Button 
-        disabled={ !regUser } 
+        disabled={ !regUser || isLoading } 
         onClick={() => {
           regUser?.()
         }}

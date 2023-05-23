@@ -1,7 +1,7 @@
 
 import { BigNumber } from "ethers";
 
-export const AddrOfRegCenter:HexType = "0x367761085BF3C12e5DA2Df99AC6E1a824612b8fb";
+export const AddrOfRegCenter:HexType = "0xe1Fd27F4390DcBE165f4D60DBF821e4B9Bb02dEd";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
@@ -28,6 +28,34 @@ export interface SigPageProps {
 export interface ShaRuleInputProps{
   sha: HexType,
   seqList: number[],
+}
+
+export interface FileHistoryProps {
+  addr: HexType,
+  setActiveStep: (nextStep:number ) => void,
+}
+
+
+
+export interface VotingRuleType {
+  seqOfRule: number;
+  qtyOfSubRule: number;
+  seqOfSubRule: number;
+  authority: number;
+  headRatio: number;
+  amountRatio: number;
+  onlyAttendance: boolean;
+  impliedConsent: boolean;
+  partyAsConsent: boolean;
+  againstShallBuy: boolean;
+  shaExecDays: number;
+  reviewDays: number;
+  reconsiderDays: number;
+  votePrepareDays: number;
+  votingDays: number;
+  execDaysForPutOpt: number;
+  vetoers1: number;
+  vetoers2: number;
 }
 
 export interface SetShaRuleProps {

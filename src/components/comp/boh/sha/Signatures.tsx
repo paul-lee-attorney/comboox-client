@@ -451,13 +451,7 @@ export function Signatures({ addr, initPage }: SigPageProps) {
               </Tooltip>
 
             </Stack>
-
-            <SignSha 
-              addr={ addr } 
-              refreshSellers={ refetchGetSellers } 
-              refreshBuyers={ refetchGetBuyers } 
-            />
-
+            
           </Stack>
 
           <Divider />

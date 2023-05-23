@@ -16,64 +16,42 @@ import {
   Select,
   MenuItem,
   Collapse,
-  ToolBar,
 } from '@mui/material';
 
 import { AddRule } from './AddRule';
 
-import { Bytes32Zero, HexType } from '../../../../interfaces';
+import { Bytes32Zero, HexType, VotingRuleType } from '../../../../interfaces';
 import { BigNumber } from 'ethers';
 import { dateParser, toBasePoint, toPercent } from '../../../../scripts/toolsKit';
 
-interface VotingRuleType {
-  seqOfRule?: number | undefined;
-  qtyOfSubRule?: number | undefined;
-  seqOfSubRule?: number | undefined;
-  authority?: number | undefined;
-  headRatio?: number | undefined;
-  amountRatio?: number | undefined;
-  onlyAttendance?: boolean | undefined;
-  impliedConsent?: boolean | undefined;
-  partyAsConsent?: boolean | undefined;
-  againstShallBuy?: boolean | undefined;
-  shaExecDays?: number | undefined;
-  reviewDays?: number | undefined;
-  reconsiderDays?: number | undefined;
-  votePrepareDays?: number | undefined;
-  votingDays?: number | undefined;
-  execDaysForPutOpt?: number | undefined;
-  vetoers1?: number | undefined;
-  vetoers2?: number | undefined;
-}
-
 interface SetVotingRuleProps {
   sha: HexType,
-  qty: number,
+  defaultRule: VotingRuleType,
   seq: number,
 }
 
-export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
-  const [ objVR, setObjVR ] = useState<VotingRuleType>(); 
+export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
+  const [ objVR, setObjVR ] = useState<VotingRuleType>(defaultRule); 
 
   let hexVR: HexType = `0x${
-    (objVR?.seqOfRule?.toString(16).padStart(4, '0') ?? seq.toString(16).padStart(4, '0')) +
-    (objVR?.qtyOfSubRule?.toString(16).padStart(2, '0') ?? qty.toString(16).padStart(2, '0')) +
-    (objVR?.seqOfSubRule?.toString(16).padStart(2, '0') ?? seq.toString(16).padStart(2, '0')) +
-    (objVR?.authority?.toString(16).padStart(4, '0') ?? '0000') +
-    (objVR?.headRatio?.toString(16).padStart(4, '0') ?? '0000') +
-    (objVR?.amountRatio?.toString(16).padStart(4, '0') ?? '0000') +
-    (objVR?.onlyAttendance ? '01' : '00') +
-    (objVR?.impliedConsent ? '01' : '00') +
-    (objVR?.partyAsConsent ? '01' : '00') +
-    (objVR?.againstShallBuy ? '01' : '00') +
-    (objVR?.shaExecDays?.toString(16).padStart(2, '0') ?? '00') +
-    (objVR?.reviewDays?.toString(16).padStart(2, '0') ?? '00') +
-    (objVR?.reconsiderDays?.toString(16).padStart(2, '0') ?? '00') +
-    (objVR?.votePrepareDays?.toString(16).padStart(2, '0') ?? '00') +
-    (objVR?.votingDays?.toString(16).padStart(2, '0') ?? '00') +
-    (objVR?.execDaysForPutOpt?.toString(16).padStart(2, '0') ?? '00') +
-    (objVR?.vetoers1?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objVR?.vetoers2?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
+    (objVR?.seqOfRule.toString(16).padStart(4, '0') ?? defaultRule.seqOfRule.toString(16).padStart(4, '0')) +
+    (objVR?.qtyOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.qtyOfSubRule.toString(16).padStart(2, '0')) +
+    (objVR?.seqOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.seqOfSubRule.toString(16).padStart(2, '0')) +
+    (objVR?.authority.toString(16).padStart(4, '0') ?? defaultRule.authority.toString(16).padStart(4, '0')) +
+    (objVR?.headRatio.toString(16).padStart(4, '0') ?? defaultRule.headRatio.toString(16).padStart(4, '0')) +
+    (objVR?.amountRatio.toString(16).padStart(4, '0') ?? defaultRule.amountRatio.toString(16).padStart(4, '0')) +
+    (objVR?.onlyAttendance != undefined ? objVR.onlyAttendance ? '01' : '00' : defaultRule.onlyAttendance ? '01' : '00') +
+    (objVR?.impliedConsent != undefined ? objVR.impliedConsent ? '01' : '00' : defaultRule.impliedConsent ? '01' : '00') +
+    (objVR?.partyAsConsent != undefined ? objVR.partyAsConsent ? '01' : '00' : defaultRule.partyAsConsent ? '01' : '00') +
+    (objVR?.againstShallBuy != undefined ? objVR.againstShallBuy ? '01' : '00' : defaultRule.againstShallBuy ? '01' : '00') +
+    (objVR?.shaExecDays.toString(16).padStart(2, '0') ?? defaultRule.shaExecDays.toString(16).padStart(2, '0')) +
+    (objVR?.reviewDays.toString(16).padStart(2, '0') ?? defaultRule.reviewDays.toString(16).padStart(2, '0')) +
+    (objVR?.reconsiderDays.toString(16).padStart(2, '0') ?? defaultRule.reconsiderDays.toString(16).padStart(2, '0')) +
+    (objVR?.votePrepareDays.toString(16).padStart(2, '0') ?? defaultRule.votePrepareDays.toString(16).padStart(2, '0')) +
+    (objVR?.votingDays.toString(16).padStart(2, '0') ?? defaultRule.votingDays.toString(16).padStart(2, '0')) +
+    (objVR?.execDaysForPutOpt.toString(16).padStart(2, '0') ?? defaultRule.execDaysForPutOpt.toString(16).padStart(2, '0')) +
+    (objVR?.vetoers1.toString(16).padStart(10, '0') ?? defaultRule.vetoers1.toString(16).padStart(10, '0')) +
+    (objVR?.vetoers2.toString(16).padStart(10, '0') ?? defaultRule.vetoers2.toString(16).padStart(10, '0')) +
     '0000'                  
   }`;
 
@@ -233,8 +211,12 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                   onChange={(e) => setObjVR((v) => ({
                     ...v,
                     seqOfRule: parseInt(e.target.value),
-                  }))}
-                  value={ objVR?.seqOfRule }              
+                    }))
+                  }
+                  
+                  value={ objVR?.seqOfRule }
+
+                  defaultValue={ defaultRule.seqOfRule }              
                 />
 
                 <TextField 
@@ -248,7 +230,8 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                     ...v,
                     qtyOfSubRule: parseInt(e.target.value),
                   }))}
-                  value={ objVR?.qtyOfSubRule }              
+                  value={ objVR?.qtyOfSubRule } 
+                  defaultValue={ defaultRule.qtyOfSubRule }             
                 />
 
                 <TextField 
@@ -262,7 +245,8 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                     ...v,
                     seqOfSubRule: parseInt(e.target.value),
                   }))}
-                  value={ objVR?.seqOfSubRule }              
+                  value={ objVR?.seqOfSubRule }
+                  defaultValue={ defaultRule.seqOfSubRule }              
                 />
 
                 <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
@@ -270,11 +254,13 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                   <Select
                     labelId="authority-label"
                     id="authority-select"
-                    value={ objVR?.authority == undefined ? '' : objVR?.authority }
+                    value={ objVR?.authority }
                     onChange={(e) => setObjVR((v) => ({
                       ...v,
                       authority: parseInt(e.target.value.toString()),
                     }))}
+
+                    defaultValue={ defaultRule.authority }
 
                     label="Authority"
                   >
@@ -296,6 +282,7 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                     headRatio: parseInt(e.target.value),
                   }))}
                   value={ objVR?.headRatio }              
+                  defaultValue={ defaultRule.headRatio }
                 />
 
                 <TextField 
@@ -309,7 +296,8 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                     ...v,
                     amountRatio: parseInt(e.target.value),
                   }))}
-                  value={ objVR?.amountRatio }              
+                  value={ objVR?.amountRatio }
+                  defaultValue={ defaultRule.amountRatio }              
                 />
 
                 {/* </Collapse> */}
@@ -414,6 +402,7 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                           onlyAttendance: e.target.checked,
                         }))}
                         checked={ objVR?.onlyAttendance }
+                        defaultChecked={ defaultRule.onlyAttendance }
                       />
                     }
                   />
@@ -433,6 +422,7 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                           impliedConsent: e.target.checked,
                         }))}
                         checked={ objVR?.impliedConsent }
+                        defaultChecked={ defaultRule.impliedConsent }
                       />
                     }
                   />
@@ -452,6 +442,7 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                           partyAsConsent: e.target.checked,
                         }))}
                         checked={ objVR?.partyAsConsent }
+                        defaultChecked={ defaultRule.partyAsConsent }
                       />
                     }
                   />
@@ -471,6 +462,7 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                           againstShallBuy: e.target.checked,
                         }))}
                         checked={ objVR?.againstShallBuy }
+                        defaultChecked={ defaultRule.againstShallBuy }
                       />
                     }
                   />
@@ -487,7 +479,8 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                     ...v,
                     vetoers1: parseInt(e.target.value),
                   }))}
-                  value={ objVR?.vetoers1}                                        
+                  value={ objVR?.vetoers1}   
+                  defaultValue={ defaultRule.vetoers1 }                                     
                 />
 
                 <TextField 
@@ -501,7 +494,8 @@ export function SetVotingRule({ sha, qty, seq }: SetVotingRuleProps) {
                     ...v,
                     vetoers2: parseInt(e.target.value),
                   }))}
-                  value={ objVR?.vetoers2}                                        
+                  value={ objVR?.vetoers2}
+                  defaultValue={ defaultRule.vetoers2 }                                        
                 />
 
               </Stack>

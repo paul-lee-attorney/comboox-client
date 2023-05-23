@@ -27,7 +27,7 @@ export function ShaNavi(props: ShaNaviProps) {
     {path: './accessControl', name: 'Access Control'},
     {path: './sigPage', name: 'Sig Page'},
     {path: './subSigPage', name: 'Sub Sig Page'},
-    {path: './approvals', name: 'Approvals'}
+    {path: './lifecycle', name: 'Lifecycle'}
   ]
 
   return (

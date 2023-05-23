@@ -30,6 +30,8 @@ import {
   shareholdersAgreementABI,
 } from "../../../../generated";
 import { AntiDilution } from "../../../../components/comp/boh/terms/antiDilution/AntiDilution";
+import { LoadingButton } from "@mui/lab";
+import { Send } from "@mui/icons-material";
 
 async function getTerm(addr: HexType, title: number): Promise<HexType> {
 
@@ -59,11 +61,11 @@ function BodyTerms() {
   const {data, refetch } = useShareholdersAgreementRules({
     address: sha,
     onSuccess(data) {
-      let arrRules = [1, 256, 512, 768];
+      let arrRules = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 256, 512, 768];
 
       data.map(v => {
         let seq = v.toNumber();
-        if (seq % 256 > 0 && seq != 1) {
+        if ( !arrRules.includes(seq) ) {
           arrRules.push(seq);
         }
       });
@@ -161,6 +163,18 @@ function BodyTerms() {
     <Stack direction={'column'} sx={{ width: '100%', alignItems: 'center' }}>
 
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./bodyTerms' />
+
+      {(!vrLs || !prLs || !frLs || !guoLs) && (
+            <LoadingButton 
+              loading={true} 
+              loadingPosition='end' 
+              endIcon={<Send/>} 
+              sx={{p:1, m:1}} 
+            >
+              <span>Loading</span>
+            </LoadingButton>
+          )}
+
 
       {vrLs && (<SetGovernanceRule addr={ sha } />)}
 

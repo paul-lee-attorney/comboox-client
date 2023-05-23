@@ -1,18 +1,45 @@
-import { Button, Tooltip } from "@mui/material";
-import { useGeneralKeeperSignSha, usePrepareGeneralKeeperSignSha } from "../../../../generated";
-import { Bytes32Zero, ContractProps, HexType } from "../../../../interfaces";
+import { Alert, Box, Button, Stack, Tooltip } from "@mui/material";
+import { useGeneralKeeperSignSha, usePrepareGeneralKeeperSignSha, useSigPageGetParasOfPage } from "../../../../generated";
+import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { Fingerprint } from "@mui/icons-material";
+import { DriveFileRenameOutline, Fingerprint } from "@mui/icons-material";
+import { useState } from "react";
 
-
-
-interface SignShaProps {
-  addr: HexType,
-  refreshSellers: () => void,
-  refreshBuyers: () => void,
+interface StrParasOfSigPageType {
+  circulateDate: number,
+  established: boolean,
+  counterOfBlanks: string,
+  counterOfSigs: string,
+  signingDays: string,
+  closingDays: string,
 }
 
-export function SignSha({ addr, refreshSellers, refreshBuyers }: SignShaProps) {
+function parseParasOfPage(data: any): StrParasOfSigPageType {
+  let output: StrParasOfSigPageType = {
+    circulateDate: data.sigDate,
+    established: data.flag,
+    counterOfBlanks: data.para.toString(),
+    counterOfSigs: data.arg.toString(),
+    signingDays: data.seq.toString(),
+    closingDays: data.attr.toString(),
+  }
+  return output;
+}
+
+export function SignSha({ addr, setActiveStep }: FileHistoryProps) {
+  const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
+
+  const {
+    refetch: refetchParasOfPage
+  } = useSigPageGetParasOfPage({
+    address: addr,
+    args: [true],
+    onSuccess(data) {
+      setParasOfPage(parseParasOfPage(data));
+      if (data.flag)
+        setActiveStep(3);
+    }
+  })
 
   const { gk } = useComBooxContext();
 
@@ -29,28 +56,36 @@ export function SignSha({ addr, refreshSellers, refreshBuyers }: SignShaProps) {
   } = useGeneralKeeperSignSha({
     ...config,
     onSuccess() {
-      refreshSellers();
-      refreshBuyers();
+      refetchParasOfPage();
     }
   });
 
   return (
-    <Tooltip
-      title='Sign Doc'
-      placement="top"
-      arrow
-    >          
+    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
       <Button
         disabled={!write || isLoading}
         variant="contained"
-        endIcon={<Fingerprint />}
-        sx={{ m:1, mr:6 }}
+        endIcon={<DriveFileRenameOutline />}
+        sx={{ m:1, minWidth:218 }}
         onClick={()=>write?.()}
       >
         Sign Sha
       </Button>
 
-    </Tooltip>
+      {parasOfPage && (
+        <Box sx={{ width:280 }} >        
+          <Alert 
+            variant='outlined' 
+            severity='info' 
+            sx={{ height: 55,  m: 1 }} 
+          >
+            Sigers / Parties: { parasOfPage?.counterOfSigs +'/'+ parasOfPage?.counterOfBlanks } 
+          </Alert>
+        </Box>  
+      )}
+
+
+    </Stack>
   )
 
 }

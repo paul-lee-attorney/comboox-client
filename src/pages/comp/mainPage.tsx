@@ -1,10 +1,10 @@
-import { Paper, Toolbar } from "@mui/material";
+import { Paper, Toolbar, TextField } from "@mui/material";
 
 import { useComBooxContext } from "../../scripts/ComBooxContext";
 import { 
   RegisteredCapital,
   PaidInCapital,
-  RegNumHash,
+  RegNum,
   CompName,
   Controllor,
   VotesOfController,
@@ -15,7 +15,7 @@ import {
 
 
 function MainPage() {
-  const { gk, boox } = useComBooxContext();
+  const { boox } = useComBooxContext();
 
   return (
     <>
@@ -26,10 +26,22 @@ function MainPage() {
 
         <table width={1500} >
           <thead>
+
             <tr>        
-              <td colSpan={2}>
+              <td colSpan={4}>
+                <CompName addr={ boox[0] } />
+              </td>
+            </tr>
+
+            <tr>        
+              <td >
+                <RegNum addr={ boox[0] } />
+              </td>
+
+              <td >
                 <CompSymbolTf addr={ boox[0] } />
               </td>
+
               <td colSpan={2} >
                 <CompAddrTf addr={ boox[0] } />
               </td>
@@ -38,14 +50,6 @@ function MainPage() {
           
           <tbody>
 
-            <tr>        
-              <td colSpan={2}>
-                <CompName addr={ boox[0] } />
-              </td>
-              <td colSpan={2} >
-                <RegNumHash addr={ boox[0] } />
-              </td>
-            </tr>
 
             <tr>
               <td>

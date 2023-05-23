@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 
 import {
-  useGeneralKeeperRegNumHash,
+  useGeneralKeeperRegNumOfCompany,
   useGeneralKeeperNameOfCompany,
   useGeneralKeeperSymbolOfCompany,
 } from '../../../generated';
@@ -134,25 +134,23 @@ export function CompName({ addr }:ContractProps ) {
   )
 }
 
-export function RegNumHash({ addr }:ContractProps ) {
-  const [regNumHash, setRegNumHash] = useState<HexType>();
+export function RegNum({ addr }:ContractProps ) {
+  const [regNum, setRegNum] = useState<string>();
 
-  const { data } = useGeneralKeeperRegNumHash({
+  const { refetch: refetchRegNumOfComp } = useGeneralKeeperRegNumOfCompany({
     address: addr,
+    onSuccess(data) {
+      setRegNum(data.toNumber().toString());
+    }
   });
-
-  useEffect(() => {
-    if (data)
-      setRegNumHash(data);
-  }, [data]);
 
   return (
     <>
-      {regNumHash && (
+      {regNum && (
         <TextField 
-          value={regNumHash} 
+          value={regNum} 
           variant='filled' 
-          label="RegNumberHash" 
+          label="RegNum" 
           inputProps={{readOnly: true}}
           sx={{
             minWidth: 120,
@@ -166,18 +164,18 @@ export function RegNumHash({ addr }:ContractProps ) {
 }
 
 export function CompId({ addr }:ContractProps ) {
-  const [regNumHash, setRegNumHash] = useState<`0x${string}`>();
+  const [regNum, setRegNum] = useState<string>();
   const [nameOfComp, setNameOfComp] = useState<string>();
   const [symbolOfComp, setSymbolOfComp] = useState<string>();
 
-  const { data:dataOfRegNumHash } = useGeneralKeeperRegNumHash({
+  const { data:dataOfRegNum } = useGeneralKeeperRegNumOfCompany({
     address: addr,
   });
 
   useEffect(() => {
-    if (dataOfRegNumHash)
-      setRegNumHash(dataOfRegNumHash);
-  }, [dataOfRegNumHash]);
+    if (dataOfRegNum)
+      setRegNum(dataOfRegNum.toNumber().toString());
+  }, [dataOfRegNum]);
 
   const { data: dataOfNameOfComp } =  useGeneralKeeperNameOfCompany({
     address: addr,
@@ -205,15 +203,14 @@ export function CompId({ addr }:ContractProps ) {
             <Typography variant="h6" component="div" >
               Company ID
             </Typography>
+            <Typography variant="body2" component="div" >
+              RegNum: { regNum }
+            </Typography>
             <Typography variant="body1" component="div" >
               Name: {nameOfComp}
             </Typography>
             <Typography variant="body1" component="div" >
               Symbol: {symbolOfComp}
-            </Typography>
-            <Typography variant="body2" component="div" >
-              RegNumHash: {regNumHash?.substring(0,6) + 
-                '...' + regNumHash?.substring(62)}
             </Typography>
 
           </CardContent>

@@ -17,11 +17,9 @@ import { AddrOfRegCenter } from '../../interfaces';
 
 import { RegUser } from './RegUser';
 
-type CloseDialogFuncType = () => void; 
-
 type DialogType = {
   flag: boolean,
-  closeDialog: CloseDialogFuncType,
+  closeDialog: () => void,
 }
 
 export function DialogMyUserNo({flag, closeDialog}: DialogType) {
@@ -33,15 +31,11 @@ export function DialogMyUserNo({flag, closeDialog}: DialogType) {
     abi: regCenterABI,
   });
 
-  // const { config } = usePrepareRegCenterRegUser({
-  //   address: AddrOfRegCenter,
-  // });
-  // const { write: regUser } = useRegCenterRegUser(config); 
-
   useEffect(() => {
     if (signer && rc) {
       let temp = rc.connect(signer);
-      temp.getMyUserNo().then(num => setUserNo(num.toString(16).padStart(10, '0')))
+      temp.getMyUserNo().
+        then(num => setUserNo(num.toString(16).padStart(10, '0')))
     }
   });
 

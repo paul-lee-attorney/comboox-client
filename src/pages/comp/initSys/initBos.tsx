@@ -72,8 +72,7 @@ function InitBosPage() {
   })
 
   const {
-    config,
-    isLoading
+    config
   } = usePrepareBookOfSharesIssueShare({
     address: boox[7],
     args: shareArgs?.class &&
@@ -101,38 +100,39 @@ function InitBosPage() {
   });
 
   const {
-    data: issueShareReceipt,
-    isSuccess,
+    isLoading,
     write
-  } = useBookOfSharesIssueShare(config);
-
-  useEffect(() => {
-    if (issueShareReceipt) refetchSharesList();
-  }, [issueShareReceipt, refetchSharesList]);
+  } = useBookOfSharesIssueShare({
+    ...config,
+    onSuccess() {
+      refetchSharesList();
+    }
+  });
 
   const {
     config: romSetDKConfig,
-    isLoading: romSetDKIsLoading
   } = usePrepareRegisterOfMembersSetDirectKeeper({
     address: boox[8],
     args: romKeeper ? [ romKeeper ] : undefined,
   });
 
   const {
-    write: setRomDK
+    isLoading: romSetDKIsLoading,
+    write: setRomDK,
   } = useRegisterOfMembersSetDirectKeeper(romSetDKConfig);
 
   const {
     config: bosSetDKConfig,
-    isLoading: bosSetDKIsLoading
   } = usePrepareBookOfSharesSetDirectKeeper({
     address: boox[7],
     args: bosKeeper ? [ bosKeeper ] : undefined,
   });
 
   const {
+    isLoading: bosSetDKIsLoading,
     write: setBosDK
   } = useBookOfSharesSetDirectKeeper(bosSetDKConfig);
+
 
   return (
     <>
@@ -371,7 +371,7 @@ function InitBosPage() {
                 m: 1,
                 mr: 10,
               }}
-              endIcon={ <ArrowBack /> }
+              startIcon={ <ArrowBack /> }
             >
               Prev
             </Button>

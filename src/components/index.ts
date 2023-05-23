@@ -5,14 +5,14 @@ export { NetworkSwitcher } from './common/NetworkSwitcher'
 export { DataList } from './common/DataList'
 export { Layout } from './common/Layout'
 
+
+
 export { SetGeneralCounsel } from './common/accessControl/SetGeneralCounsel'
 export { SetOwner } from './common/accessControl/SetOwner'
 export { LockContents } from './common/accessControl/LockContents'
 export { AppointAttorney } from './common/accessControl/AppointAttorney'
 export { RemoveAttorney } from './common/accessControl/RemoveAttorney'
 export { QuitAttorney } from './common/accessControl/QuitAttorney'
-
-
 
 
 export { GetMyUserNo } from './center/GetMyUserNo'
@@ -23,7 +23,6 @@ export { DocFinder } from './center/DocFinder'
 export { ComBooxAppBar } from './center/ComBooxAppBar'
 export { GetDoc } from './center/GetDoc'
 
-export { DialogSha } from './comp/boh/DialogSha'
 export { RulesList } from './comp/boh/rules/RulesList' 
 export { SetGovernanceRule } from './comp/boh/rules/SetGovernanceRule'
 export { SetVotingRule } from './comp/boh/rules/SetVotingRule'
@@ -45,6 +44,13 @@ export { AddRule } from './comp/boh/rules/AddRule'
 export { ShaNavi } from './comp/boh/sha/ShaNavi'
 export { Signatures } from './comp/boh/sha/Signatures'
 export { SignSha } from './comp/boh/sha/SignSha'
+export { CirculateSha } from './comp/boh/sha/CirculateSha'
+export { FinalizeSha } from './comp/boh/sha/FinalizeSha'
+export { ProposeSha } from './comp/boh/sha/ProposeSha'
+export { VoteForSha } from './comp/boh/sha/VoteForSha'
+export { VoteCounting } from './comp/boh/sha/VoteCounting'
+export { ActivateSha } from './comp/boh/sha/ActivateSha'
+
 
 export { FilesListWithInfo, FilesList } from './comp/boh/FilesList'
 
@@ -53,4 +59,4 @@ export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'
 export { MembersList, MembersEquityList } from './comp/rom/MembersList'
 export { SharesInHand } from './comp/rom/SharesInHand'
 
-export { RegNumHash, CompName, CompSymbol, CompAddrTf, CompSymbolTf } from './comp/gk/CompBrief'
+export { RegNum, CompName, CompSymbol, CompAddrTf, CompSymbolTf } from './comp/gk/CompBrief'
