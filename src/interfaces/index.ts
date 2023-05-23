@@ -1,7 +1,7 @@
 
 import { BigNumber } from "ethers";
 
-export const AddrOfRegCenter:HexType = "0xA4899D35897033b927acFCf422bc745916139776";
+export const AddrOfRegCenter:HexType = "0xA56F946D6398Dd7d9D4D9B337Cf9E0F68982ca5B";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
@@ -32,7 +32,7 @@ export interface ShaRuleInputProps{
 
 export interface FileHistoryProps {
   addr: HexType,
-  setActiveStep: (nextStep:number ) => void,
+  setNextStep: (nextStep:number ) => void,
 }
 
 

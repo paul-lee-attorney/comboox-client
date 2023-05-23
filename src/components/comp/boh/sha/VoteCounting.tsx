@@ -29,7 +29,7 @@ async function isPassed(hash: HexType): Promise<boolean> {
 }
 
 
-export function VoteCounting({ addr, setActiveStep }: FileHistoryProps) {
+export function VoteCounting({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -47,7 +47,7 @@ export function VoteCounting({ addr, setActiveStep }: FileHistoryProps) {
     ...config,
     onSuccess(data) {
       isPassed(data.hash).then(
-        flag => setActiveStep(flag ? 5: 6)
+        flag => setNextStep(flag ? 5: 6)
       )
     },
   });

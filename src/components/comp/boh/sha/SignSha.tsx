@@ -26,7 +26,7 @@ function parseParasOfPage(data: any): StrParasOfSigPageType {
   return output;
 }
 
-export function SignSha({ addr, setActiveStep }: FileHistoryProps) {
+export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
 
   const {
@@ -37,7 +37,7 @@ export function SignSha({ addr, setActiveStep }: FileHistoryProps) {
     onSuccess(data) {
       setParasOfPage(parseParasOfPage(data));
       if (data.flag)
-        setActiveStep(3);
+        setNextStep(3);
     }
   })
 

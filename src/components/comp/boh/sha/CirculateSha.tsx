@@ -4,7 +4,7 @@ import { Bytes32Zero, FileHistoryProps, } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Outbox, Recycling, Share } from "@mui/icons-material";
 
-export function CirculateSha({ addr, setActiveStep }: FileHistoryProps) {
+export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
 
@@ -21,7 +21,7 @@ export function CirculateSha({ addr, setActiveStep }: FileHistoryProps) {
   } = useGeneralKeeperCirculateSha({
     ...config,
     onSuccess() {
-      setActiveStep(2);
+      setNextStep(2);
     }
   });
 

@@ -77,7 +77,7 @@ interface VoteCaseType {
 //   return output;
 // }
 
-export function VoteForSha({ addr, setActiveStep }: FileHistoryProps) {
+export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
 
   const [ voteResult, setVoteResult ] = useState<VoteCaseType[]>([]);
   const { gk, boox } = useComBooxContext();

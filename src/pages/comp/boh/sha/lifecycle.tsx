@@ -28,6 +28,7 @@ import {
 
 import { 
   accessControlABI,
+  filesFolderABI,
   meetingMinutesABI,
   useAccessControl, 
   useAccessControlFinalized, 
@@ -50,12 +51,23 @@ async function finalized(sha: HexType): Promise<boolean> {
   return flag;
 }
 
-async function voteEnded(bog: HexType, sha: HexType): Promise<boolean> {
+async function getSeqOfMotion(boh: HexType, sha: HexType): Promise<BigNumber>{
+  let head = await readContract({
+    address: boh,
+    abi: filesFolderABI,
+    functionName: 'getHeadOfFile',
+    args: [ sha ],
+  });
+
+  return head.seqOfMotion;
+}
+
+async function voteEnded(bog: HexType, seqOfMotion: BigNumber): Promise<boolean> {
   let flag = await readContract({
     address: bog,
     abi: meetingMinutesABI,
     functionName: 'voteEnded',
-    args: [BigNumber.from(sha)],
+    args: [ seqOfMotion ],
   })
 
   return flag;
@@ -121,8 +133,11 @@ function Lifecycle() {
         setActiveStep(fileState); 
         break;
       case 4: // Vote for Sha
-        voteEnded(boox[4], sha).then(
-          (flag) => setActiveStep( flag ? 5 : 4)
+        getSeqOfMotion(boox[4], sha).then(
+          seqOfMotion => voteEnded(boox[3], seqOfMotion).
+            then(flag => setActiveStep(
+              flag ? 5: 4
+            ))
         );
         break;
       case 5: 
@@ -173,7 +188,7 @@ function Lifecycle() {
                     <Typography>
                       Finalize terms & conditions of SHA (only for Owner of SHA).
                     </Typography>
-                    <FinalizeSha addr={ sha } setActiveStep={ setActiveStep } />
+                    <FinalizeSha addr={ sha } setNextStep={ setActiveStep } />
                   </StepContent>
 
                 </Step>
@@ -188,7 +203,7 @@ function Lifecycle() {
                     <Typography>
                       Circulate SHA to parties for execution (only for Parties of SHA).
                     </Typography>
-                    <CirculateSha addr={ sha } setActiveStep={ setFileState } />
+                    <CirculateSha addr={ sha } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -202,7 +217,7 @@ function Lifecycle() {
                     <Typography>
                       Sign SHA to accept its terms (only for Parties of SHA).
                     </Typography>
-                    <SignSha addr={ sha } setActiveStep={ setFileState } />
+                    <SignSha addr={ sha } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -216,7 +231,7 @@ function Lifecycle() {
                     <Typography>
                       Propose SHA to General Meeting for approval (only for Parties & Members).
                     </Typography>
-                    <ProposeSha addr={ sha } setActiveStep={ setFileState } />
+                    <ProposeSha addr={ sha } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -231,7 +246,7 @@ function Lifecycle() {
                       Cast vote in General Meeting to approve SHA.
                     </Typography>
 
-                    <VoteForSha addr={ sha } setActiveStep={ setActiveStep } />
+                    <VoteForSha addr={ sha } setNextStep={ setActiveStep } />
                   </StepContent>
 
                 </Step>
@@ -245,7 +260,7 @@ function Lifecycle() {
                     <Typography>
                       Count vote result of SHA review (only for Members).
                     </Typography>
-                    <VoteCounting addr={ sha } setActiveStep={ setFileState } />
+                    <VoteCounting addr={ sha } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -259,7 +274,7 @@ function Lifecycle() {
                     <Typography>
                       Activate SHA into leagal forces (only for Parties of SHA).
                     </Typography>
-                    <ActivateSha addr={ sha } setActiveStep={ setFileState } />
+                    <ActivateSha addr={ sha } setNextStep={ setFileState } />
                     
                   </StepContent>
 

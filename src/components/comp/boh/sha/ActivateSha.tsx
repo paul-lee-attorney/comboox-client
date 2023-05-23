@@ -10,7 +10,7 @@ import { FileHistoryProps, } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { LightMode } from "@mui/icons-material";
 
-export function ActivateSha({ addr, setActiveStep }: FileHistoryProps) {
+export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
 
@@ -27,7 +27,7 @@ export function ActivateSha({ addr, setActiveStep }: FileHistoryProps) {
   } = useGeneralKeeperActivateSha({
     ...config,
     onSuccess() {
-      setActiveStep(7);
+      setNextStep(7);
     }
   });
 

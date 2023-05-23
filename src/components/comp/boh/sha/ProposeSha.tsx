@@ -7,7 +7,7 @@ import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { BackHand, EmojiPeople, Outbox } from "@mui/icons-material";
 import { BigNumber } from "ethers";
 
-export function ProposeSha({ addr, setActiveStep }: FileHistoryProps) {
+export function ProposeSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
 
@@ -24,7 +24,7 @@ export function ProposeSha({ addr, setActiveStep }: FileHistoryProps) {
   } = useGeneralKeeperProposeDocOfGm({
     ...config,
     onSuccess() {
-      setActiveStep(4);
+      setNextStep(4);
     }
   });
 

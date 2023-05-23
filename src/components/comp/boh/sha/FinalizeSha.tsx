@@ -14,7 +14,7 @@ import {
 import { FileHistoryProps } from '../../../../interfaces';
 
 
-export function FinalizeSha({ addr, setActiveStep }: FileHistoryProps) {
+export function FinalizeSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { config } = usePrepareAccessControlLockContents({
     address: addr,
@@ -26,7 +26,7 @@ export function FinalizeSha({ addr, setActiveStep }: FileHistoryProps) {
   } = useAccessControlLockContents({
     ...config,
     onSuccess() {
-      setActiveStep(1);
+      setNextStep(1);
     }
   });
 
