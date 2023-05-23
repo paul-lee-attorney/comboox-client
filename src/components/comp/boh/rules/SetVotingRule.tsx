@@ -55,7 +55,7 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
     '0000'                  
   }`;
 
-  console.log('objVR: ', objVR);
+  // console.log('objVR: ', objVR);
 
   const authorities:string[] = ['Null', 'GeneralMeeting', 'Board', 'Board & GeneralMeeting'];
 
@@ -82,7 +82,7 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
     vetoers2: parseInt(newHexVR.substring(52, 62), 16),
   } 
 
-  console.log('newVR: ', newVR);
+  // console.log('newVR: ', newVR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 

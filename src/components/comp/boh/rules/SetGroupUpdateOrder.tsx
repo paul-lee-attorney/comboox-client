@@ -45,7 +45,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
     '0'.padStart(4, '0')
   }`;
 
-  console.log('objGuo: ', objGuo);
+  // console.log('objGuo: ', objGuo);
 
   const [ newHexGuo, setNewHexGuo ] = useState<HexType>(Bytes32Zero);
 
@@ -61,7 +61,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
     members4: parseInt(newHexGuo.substring(52, 62), 16),
   };
 
-  console.log('newGuo: ', newGuo);
+  // console.log('newGuo: ', newGuo);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 

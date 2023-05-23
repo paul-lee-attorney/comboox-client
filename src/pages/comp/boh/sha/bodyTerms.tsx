@@ -61,7 +61,7 @@ function BodyTerms() {
   const {data, refetch } = useShareholdersAgreementRules({
     address: sha,
     onSuccess(data) {
-      let arrRules = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 256, 512, 768];
+      let arrRules = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 256, 512, 513, 768];
 
       data.map(v => {
         let seq = v.toNumber();

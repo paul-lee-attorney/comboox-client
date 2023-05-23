@@ -24,7 +24,7 @@ export function ProposeSha({ addr, setActiveStep }: FileHistoryProps) {
   } = useGeneralKeeperProposeDocOfGm({
     ...config,
     onSuccess() {
-      setActiveStep(2);
+      setActiveStep(4);
     }
   });
 

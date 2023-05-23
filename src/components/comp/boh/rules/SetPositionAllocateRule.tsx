@@ -56,7 +56,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
     '0'.padStart(16, '0')
   }`;
 
-  console.log('objPR: ', objPR);
+  // console.log('objPR: ', objPR);
 
   const [ newHexPR, setNewHexPr ] = useState<HexType>(Bytes32Zero);
 
@@ -73,7 +73,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
     endDate: parseInt(newHexPR.substring(38, 50), 16),
   } 
 
-  console.log('newPR: ', newPR);
+  // console.log('newPR: ', newPR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 

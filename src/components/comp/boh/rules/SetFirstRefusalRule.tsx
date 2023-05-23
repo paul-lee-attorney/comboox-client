@@ -16,49 +16,35 @@ import {
 
 import { AddRule } from './AddRule'
 
-import { Bytes32Zero, HexType } from '../../../../interfaces';
+import { Bytes32Zero, FirstRefusalRuleType, HexType } from '../../../../interfaces';
 import { BigNumber } from 'ethers';
 import { dateParser, toPercent } from '../../../../scripts/toolsKit';
 
-interface FirstRefusalRuleType {
-  seqOfRule?: number | undefined;
-  qtyOfSubRule?: number | undefined;
-  seqOfSubRule?: number | undefined;
-  typeOfDeal?: number | undefined;
-  membersEqual?: boolean | undefined;
-  proRata?: boolean | undefined;
-  basedOnPar?: boolean | undefined;
-  rightholder1?: number | undefined;
-  rightholder2?: number | undefined;
-  rightholder3?: number | undefined;
-  rightholder4?: number | undefined;
-}
-
 interface SetFirstRefusalRuleProps {
   sha: HexType,
-  qty: number,
+  defaultRule: FirstRefusalRuleType,
   seq: number,
 }
 
-export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps) {
-  const [ objFR, setObjFR ] = useState<FirstRefusalRuleType>(); 
+export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRuleProps) {
+  const [ objFR, setObjFR ] = useState<FirstRefusalRuleType>(defaultRule); 
 
   let hexFR: HexType = `0x${
-    (objFR?.seqOfRule?.toString(16).padStart(4, '0') ?? seq.toString(16).padStart(4, '0')) +
-    (objFR?.qtyOfSubRule?.toString(16).padStart(2, '0') ?? qty.toString(16).padStart(2, '0')) +
-    (objFR?.seqOfSubRule?.toString(16).padStart(2, '0') ?? (seq - 511).toString(16).padStart(2, '0')) +
-    (objFR?.typeOfDeal?.toString(16).padStart(2, '0') ?? '00') +
-    (objFR?.membersEqual ? '01' : '00') +
-    (objFR?.proRata ? '01' : '00') +
-    (objFR?.basedOnPar ? '01' : '00') +
-    (objFR?.rightholder1?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objFR?.rightholder2?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objFR?.rightholder3?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objFR?.rightholder4?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
+    (objFR?.seqOfRule.toString(16).padStart(4, '0') ?? defaultRule.seqOfRule.toString(16).padStart(4, '0')) +
+    (objFR?.qtyOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.qtyOfSubRule.toString(16).padStart(2, '0')) +
+    (objFR?.seqOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.seqOfSubRule.toString(16).padStart(2, '0')) +
+    (objFR?.typeOfDeal.toString(16).padStart(2, '0') ?? defaultRule.typeOfDeal.toString(16).padStart(2, '0')) +
+    (objFR?.membersEqual != undefined ? objFR.membersEqual ? '01' : '00' : defaultRule.membersEqual ? '01': '00') +
+    (objFR?.proRata != undefined ? objFR.proRata ? '01' : '00' : defaultRule.proRata ? '01': '00') +
+    (objFR?.basedOnPar != undefined ? objFR.basedOnPar ? '01' : '00' : defaultRule.basedOnPar ? '01':'00') +
+    (objFR?.rightholder1.toString(16).padStart(10, '0') ?? defaultRule.rightholder1.toString(16).padStart(10, '0')) +
+    (objFR?.rightholder2.toString(16).padStart(10, '0') ?? defaultRule.rightholder2.toString(16).padStart(10, '0')) +
+    (objFR?.rightholder3.toString(16).padStart(10, '0') ?? defaultRule.rightholder3.toString(16).padStart(10, '0')) +
+    (objFR?.rightholder4.toString(16).padStart(10, '0') ?? defaultRule.rightholder4.toString(16).padStart(10, '0')) +
     '0'.padStart(8, '0')
   }`;
 
-  console.log('objFR: ', objFR);
+  // console.log('objFR: ', objFR);
 
   const [ newHexFR, setNewHexFR ] = useState<HexType>(Bytes32Zero);
 
@@ -76,7 +62,7 @@ export function SetFirstRefusalRule({ sha, qty, seq }: SetFirstRefusalRuleProps)
     rightholder4: parseInt(newHexFR.substring(48, 58), 16),
   }; 
 
-  console.log('newFR: ', newFR);
+  // console.log('newFR: ', newFR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 

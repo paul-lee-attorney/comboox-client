@@ -40,7 +40,7 @@ async function getRule(sha: HexType, seq: number): Promise<HexType> {
     args: [BigNumber.from(seq)],
   });
 
-  console.log('Rule in Hex: ', rule);
+  // console.log('Rule in Hex: ', rule);
 
   return rule;
 }

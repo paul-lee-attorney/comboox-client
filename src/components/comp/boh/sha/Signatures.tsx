@@ -395,10 +395,11 @@ export function Signatures({ addr, initPage }: SigPageProps) {
             <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
               <Tooltip
-                title='Add Blank'
+                title='Add Party'
                 placement="top-start"
                 arrow
               >
+                <span>
                 <IconButton 
                   disabled={ !addBlank || addBlankIsLoading }
                   sx={{width: 20, height: 20, m: 1 }} 
@@ -407,6 +408,7 @@ export function Signatures({ addr, initPage }: SigPageProps) {
                 >
                   < PersonAdd />
                 </IconButton>
+                </span>
               </Tooltip>
 
               <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
@@ -436,10 +438,11 @@ export function Signatures({ addr, initPage }: SigPageProps) {
               />
 
               <Tooltip
-                title='Remove Blank'
+                title='Remove Party'
                 placement="top-end"
                 arrow
               >           
+                <span>
                 <IconButton
                   disabled={ !removeBlank || removeBlankIsLoading } 
                   sx={{width: 20, height: 20, m: 1, mr:2 }} 
@@ -448,6 +451,8 @@ export function Signatures({ addr, initPage }: SigPageProps) {
                 >
                   <PersonRemove/>
                 </IconButton>
+                </span>
+
               </Tooltip>
 
             </Stack>

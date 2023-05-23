@@ -40,7 +40,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
     (objGR?.basedOnPar ? '01' : '00') +
     (objGR?.proposeWeightRatioOfGM?.toString(16).padStart(4, '0') ?? '03e8') +
     (objGR?.proposeHeadRatioOfMembers?.toString(16).padStart(4, '0') ?? '0000') + 
-    (objGR?.proposeHeadNumOfDirectors?.toString(16).padStart(4, '0') ?? '0001') + 
+    (objGR?.proposeHeadNumOfDirectors?.toString(16).padStart(4, '0') ?? '0d05') + 
     (objGR?.maxQtyOfMembers?.toString(16).padStart(4, '0') ?? '0032') +       
     (objGR?.quorumOfGM?.toString(16).padStart(4, '0') ?? '1388') +       
     (objGR?.maxNumOfDirectors?.toString(16).padStart(4, '0') ?? '0007') +       
@@ -52,7 +52,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
     '0000'
   }`;
 
-  console.log('objGR: ', objGR);
+  // console.log('objGR: ', objGR);
 
   const [ newHexGR, setNewHexGR ] = useState<HexType>(Bytes32Zero);
 
@@ -71,7 +71,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
     typeOfComp: parseInt(newHexGR?.substring(60, 62), 16),
   } 
 
-  console.log('newGR: ', newGR);
+  // console.log('newGR: ', newGR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 

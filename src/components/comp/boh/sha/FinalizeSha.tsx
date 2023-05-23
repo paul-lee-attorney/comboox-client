@@ -34,11 +34,11 @@ export function FinalizeSha({ addr, setActiveStep }: FileHistoryProps) {
     <Button
       disabled={ !write || isLoading }
       sx={{m:1, minWidth:218}}
-      variant='outlined'
+      variant='contained'
       endIcon={<Lock />}
       onClick={()=>write?.() }
     >
-      Finalize
+      Finalize SHA
     </Button>
   )
 }

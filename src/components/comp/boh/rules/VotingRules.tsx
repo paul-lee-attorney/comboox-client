@@ -51,7 +51,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
       impliedConsent: false,
       partyAsConsent: true,
       againstShallBuy: false,
-      shaExecDays: 0,
+      shaExecDays: 15,
       reviewDays: 15,
       reconsiderDays: 0,
       votePrepareDays: 0,
@@ -72,7 +72,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
       impliedConsent: true,
       partyAsConsent: false,
       againstShallBuy: true,
-      shaExecDays: 0,
+      shaExecDays: 15,
       reviewDays: 15,
       reconsiderDays: 0,
       votePrepareDays: 0,
@@ -114,7 +114,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
       impliedConsent: false,
       partyAsConsent: true,
       againstShallBuy: false,
-      shaExecDays: 0,
+      shaExecDays: 15,
       reviewDays: 15,
       reconsiderDays: 0,
       votePrepareDays: 0,
@@ -135,7 +135,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
       impliedConsent: true,
       partyAsConsent: false,
       againstShallBuy: true,
-      shaExecDays: 0,
+      shaExecDays: 15,
       reviewDays: 15,
       reconsiderDays: 0,
       votePrepareDays: 0,
@@ -156,7 +156,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
       impliedConsent: false,
       partyAsConsent: true,
       againstShallBuy: false,
-      shaExecDays: 0,
+      shaExecDays: 15,
       reviewDays: 15,
       reconsiderDays: 0,
       votePrepareDays: 0,
@@ -177,7 +177,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
       impliedConsent: false,
       partyAsConsent: true,
       againstShallBuy: false,
-      shaExecDays: 0,
+      shaExecDays: 15,
       reviewDays: 15,
       reconsiderDays: 0,
       votePrepareDays: 0,
@@ -251,7 +251,6 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
     },    
   }
 
-
   return (
     <Paper sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
       <Box sx={{ width:1440 }}>
@@ -275,7 +274,7 @@ export function VotingRules({sha, seqList}: ShaRuleInputProps) {
           </IconButton>
         </Stack>
 
-        {cp.map((v, _, arr)=> (
+        {cp.map((v)=> (
           <SetVotingRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } />
         ))}
 

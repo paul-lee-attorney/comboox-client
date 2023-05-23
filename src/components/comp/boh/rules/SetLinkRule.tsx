@@ -47,7 +47,7 @@ export function SetLinkRule({ sha, qty, seq }: SetShaRuleProps) {
     '0'.padStart(12, '0')
   }`;
 
-  console.log('objLr: ', objLr);
+  // console.log('objLr: ', objLr);
 
   const [ newHexLr, setNewHexLr ] = useState<HexType>(Bytes32Zero);
 
@@ -64,7 +64,7 @@ export function SetLinkRule({ sha, qty, seq }: SetShaRuleProps) {
     roe: parseInt(newHexLr.substring(46, 54), 16),
   };
 
-  console.log('newLinkRule: ', newLr);
+  // console.log('newLinkRule: ', newLr);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 

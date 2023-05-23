@@ -65,39 +65,35 @@ function Lifecycle() {
 
   const { boox } = useComBooxContext();
 
-  const [ sha, setSha ] = useState<HexType>(AddrZero);
-
   const {query} = useRouter();
-  // const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
-  // console.log('sha: ', sha);
-
+  const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   const [ activeStep, setActiveStep ] = useState<number>();
 
-  const [ finalized, setFinalized ] = useState(false);
+  // const [ finalized, setFinalized ] = useState(false);
 
-  const {
-    refetch: refetchFinalized
-  } = useAccessControlFinalized({
-    address: sha,
-    onSuccess(flag) {
-      setFinalized(flag);
-    }
-  });
+  // const {
+  //   refetch: refetchFinalized
+  // } = useAccessControlFinalized({
+  //   address: sha,
+  //   onSuccess(flag) {
+  //     setFinalized(flag);
+  //   }
+  // });
 
-  const [ voteEnded, setVoteEnded ] = useState(false);
+  // const [ voteEnded, setVoteEnded ] = useState(false);
   
-  const {
-    refetch: refetchVoteEnded
-  } = useMeetingMinutesVoteEnded({
-    address: boox[3],
-    args: [BigNumber.from(sha)],
-    onSuccess(flag) {
-      setVoteEnded(flag);
-    }
-  })
+  // const {
+  //   refetch: refetchVoteEnded
+  // } = useMeetingMinutesVoteEnded({
+  //   address: boox[3],
+  //   args: [BigNumber.from(sha)],
+  //   onSuccess(flag) {
+  //     setVoteEnded(flag);
+  //   }
+  // })
 
-  // const [ fileState, setFileState ] = useState(0);
+  const [ fileState, setFileState ] = useState<number>();
 
   const {
     data: headOfFile,
@@ -106,43 +102,47 @@ function Lifecycle() {
     address: boox[4],
     args: [sha],
     onSuccess(data) {
-      switch (data.state) {
-        case 1: 
-          refetchFinalized().then(
-            () => setActiveStep(finalized ? 1: 0)
-          );
-          break;
-        case 2: 
-          setActiveStep(data.state);
-          break;
-        case 3: 
-          setActiveStep(3);
-          break;
-        case 4: 
-          refetchVoteEnded().then(
-            () => setActiveStep( voteEnded ? 5 : 4)
-          );
-          break;
-        case 5: 
-          setActiveStep(6);
-          break;
-        case 6: 
-          setActiveStep(8);
-          break;
-        case 7: 
-          setActiveStep(7);
-          break;
-      }
+      setFileState(data.state);
     }
   })
-  
-  useEffect(() => {
-    // console.log('sha: ', sha);
-    if (query.addr){
-      setSha(`0x${query.addr.toString().substring(2)}`);
-      // refetchFileState(); 
+
+  useEffect(()=> {
+    if (fileState)
+    switch (fileState) {
+      case 1: 
+        finalized(sha).then(
+          (flag) => setActiveStep(flag ? 1: 0)
+        );
+        break;
+      case 2: 
+        setActiveStep(fileState);
+        break;
+      case 3: // Propose Sha
+        setActiveStep(fileState); 
+        break;
+      case 4: // Vote for Sha
+        voteEnded(boox[4], sha).then(
+          (flag) => setActiveStep( flag ? 5 : 4)
+        );
+        break;
+      case 5: 
+        setActiveStep(6);
+        break;
+      case 6: 
+        setActiveStep(8);
+        break;
+      case 7: 
+        setActiveStep(7);
+        break;
     }
-  }, [query.addr])
+  }, [sha, fileState, boox])
+
+  // useEffect(() => {
+  //   console.log('sha: ', sha);
+  //   if (query.addr)
+  //     setSha(`0x${query.addr.toString().substring(2)}`);
+  //   console.log('sha: ', sha);
+  // }, [query.addr, sha])
 
   // useEffect(()=>{
   //   refetchFileState();
@@ -150,7 +150,6 @@ function Lifecycle() {
 
   return (
     <>
-    {sha && (
       <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
         <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./lifecycle' />
         
@@ -161,7 +160,7 @@ function Lifecycle() {
             borderColor:'divider'
           }} 
         >
-          {activeStep && (
+          {activeStep != undefined && (
             <Box sx={{ width:1440 }} >
               <Stepper sx={{ pl:5 }} activeStep={ activeStep } orientation="vertical" >
 
@@ -172,7 +171,7 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Finalize terms & conditions of SHA.
+                      Finalize terms & conditions of SHA (only for Owner of SHA).
                     </Typography>
                     <FinalizeSha addr={ sha } setActiveStep={ setActiveStep } />
                   </StepContent>
@@ -187,9 +186,9 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Circulate SHA to parties for execution.
+                      Circulate SHA to parties for execution (only for Parties of SHA).
                     </Typography>
-                    <CirculateSha addr={ sha } setActiveStep={ setActiveStep } />
+                    <CirculateSha addr={ sha } setActiveStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -201,9 +200,9 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Sign SHA to accept its terms.
+                      Sign SHA to accept its terms (only for Parties of SHA).
                     </Typography>
-                    <SignSha addr={ sha } setActiveStep={ setActiveStep } />
+                    <SignSha addr={ sha } setActiveStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -215,9 +214,9 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Propose SHA to General Meeting for approval.
+                      Propose SHA to General Meeting for approval (only for Parties & Members).
                     </Typography>
-                    <ProposeSha addr={ sha } setActiveStep={ setActiveStep } />
+                    <ProposeSha addr={ sha } setActiveStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -244,9 +243,9 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Count vote result of SHA review.
+                      Count vote result of SHA review (only for Members).
                     </Typography>
-                    <VoteCounting addr={ sha } setActiveStep={ setActiveStep } />
+                    <VoteCounting addr={ sha } setActiveStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -258,9 +257,9 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Activate SHA into leagal forces.
+                      Activate SHA into leagal forces (only for Parties of SHA).
                     </Typography>
-                    <ActivateSha addr={ sha } setActiveStep={ setActiveStep } />
+                    <ActivateSha addr={ sha } setActiveStep={ setFileState } />
                     
                   </StepContent>
 
@@ -273,8 +272,8 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     
-                    <Typography>
-                      SHA currently is in force.
+                    <Typography color={'HighlightText'}>
+                      The SHA currently is In Force.
                     </Typography>
 
                   </StepContent>
@@ -288,7 +287,7 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     
-                    <Typography>
+                    <Typography color={'HighlightText'}>
                       SHA currently is revoked.
                     </Typography>
 
@@ -303,7 +302,7 @@ function Lifecycle() {
         </Paper>
 
       </Stack>    
-    )}
+    
     </>
   );
 } 

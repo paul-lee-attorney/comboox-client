@@ -1,7 +1,7 @@
 
 import { BigNumber } from "ethers";
 
-export const AddrOfRegCenter:HexType = "0xe1Fd27F4390DcBE165f4D60DBF821e4B9Bb02dEd";
+export const AddrOfRegCenter:HexType = "0xA4899D35897033b927acFCf422bc745916139776";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
@@ -56,6 +56,20 @@ export interface VotingRuleType {
   execDaysForPutOpt: number;
   vetoers1: number;
   vetoers2: number;
+}
+
+export interface FirstRefusalRuleType {
+  seqOfRule: number;
+  qtyOfSubRule: number;
+  seqOfSubRule: number;
+  typeOfDeal: number;
+  membersEqual: boolean;
+  proRata: boolean;
+  basedOnPar: boolean;
+  rightholder1: number;
+  rightholder2: number;
+  rightholder3: number;
+  rightholder4: number;
 }
 
 export interface SetShaRuleProps {

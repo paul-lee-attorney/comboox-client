@@ -157,20 +157,21 @@ export function VoteForSha({ addr, setActiveStep }: FileHistoryProps) {
     config
   } =  usePrepareGeneralKeeperCastVoteOfGm ({
     address: gk,
-    args: [BigNumber.from(addr), BigNumber.from(attitude), Bytes32Zero ],
+    args: [ BigNumber.from(addr), BigNumber.from(attitude), Bytes32Zero ],
   });
 
   const {
     data,
     isLoading,
     write
-  } = useGeneralKeeperCastVoteOfGm(config);
-
-  useEffect(()=>{
-    refetchAll();
-    refetchSupport();
-    refetchAgainst();
-    refetchAbstain();
+  } = useGeneralKeeperCastVoteOfGm({
+    ...config,
+    onSuccess() {
+      refetchAll();
+      refetchSupport();
+      refetchAgainst();
+      refetchAbstain();
+    }
   });
 
   return (
@@ -202,7 +203,6 @@ export function VoteForSha({ addr, setActiveStep }: FileHistoryProps) {
         Cast Vote
       </Button>
 
-      {/* {voteResult.length == 4 && (
         <Box sx={{ minWidth:880 }} >        
           <Alert 
             variant='outlined' 
@@ -222,7 +222,6 @@ export function VoteForSha({ addr, setActiveStep }: FileHistoryProps) {
 
           </Alert>
         </Box>  
-      )} */}
 
     </Stack>
   )

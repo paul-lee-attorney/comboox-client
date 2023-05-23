@@ -47,7 +47,7 @@ export function VoteCounting({ addr, setActiveStep }: FileHistoryProps) {
     ...config,
     onSuccess(data) {
       isPassed(data.hash).then(
-        flag => setActiveStep(flag ? 6: 7)
+        flag => setActiveStep(flag ? 5: 6)
       )
     },
   });

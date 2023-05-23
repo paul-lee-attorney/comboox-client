@@ -7,7 +7,7 @@ import {
   Toolbar,
 } from "@mui/material";
 
-import { ShaRuleInputProps } from "../../../../interfaces";
+import { FirstRefusalRuleType, ShaRuleInputProps } from "../../../../interfaces";
 
 import {
   AddCircle,
@@ -38,6 +38,35 @@ export function FirstRefusalRules({sha, seqList}: ShaRuleInputProps) {
     })
   }
 
+let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
+    512 : {
+      seqOfRule: 512, 
+      qtyOfSubRule: 2, 
+      seqOfSubRule: 1,
+      typeOfDeal: 1,
+      membersEqual: true,
+      proRata: true,
+      basedOnPar: false,
+      rightholder1: 0,
+      rightholder2: 0,
+      rightholder3: 0,
+      rightholder4: 0
+    },
+    513 : {
+      seqOfRule: 513, 
+      qtyOfSubRule: 2, 
+      seqOfSubRule: 2,
+      typeOfDeal: 1,
+      membersEqual: true,
+      proRata: true,
+      basedOnPar: false,
+      rightholder1: 0,
+      rightholder2: 0,
+      rightholder3: 0,
+      rightholder4: 0
+    },
+  }
+
   return (
     <Paper sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
       <Stack direction={'row'} sx={{ alignItems:'center' }}>
@@ -59,8 +88,8 @@ export function FirstRefusalRules({sha, seqList}: ShaRuleInputProps) {
         </IconButton>
       </Stack>
 
-      {cp.map((v, _, arr)=> (
-         <SetFirstRefusalRule key={ v } sha={ sha } qty={ arr.length } seq={ v } />
+      {cp.map((v)=> (
+         <SetFirstRefusalRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } />
       ))}
 
     </Paper>
