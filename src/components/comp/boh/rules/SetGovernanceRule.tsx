@@ -14,7 +14,7 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { Bytes32Zero, ContractProps, HexType } from '../../../../interfaces';
+import { Bytes32Zero, ContractEditProps, ContractProps, HexType } from '../../../../interfaces';
 import { dateParser, toPercent } from '../../../../scripts/toolsKit';
 
 interface GovernanceRuleType {
@@ -32,7 +32,7 @@ interface GovernanceRuleType {
   typeOfComp?: number | undefined; 
 }
 
-export function SetGovernanceRule({ addr }: ContractProps) {
+export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRuleType>();
 
   let hexGR: HexType = `0x${
@@ -93,10 +93,12 @@ export function SetGovernanceRule({ addr }: ContractProps) {
             }} 
           >
 
-            <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
-              <Toolbar>
-                <h4>Rule No. 0 </h4>
-              </Toolbar>
+            <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+              <Box sx={{ minWidth:600 }} >
+                <Toolbar>
+                  <h4>Rule No. 0 </h4>
+                </Toolbar>
+              </Box>
 
               <AddRule 
                 sha={ addr }
@@ -104,6 +106,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                 setUpdatedRule={ setNewHexGR }
                 editable={ editable }
                 setEditable={ setEditable }
+                finalized={ finalized }
               />
               
             </Stack>
@@ -114,7 +117,6 @@ export function SetGovernanceRule({ addr }: ContractProps) {
             >
 
               <Stack direction={'row'} sx={{ alignItems: 'center', }} >
-                {/* <h6>System Record</h6> */}
                 <TextField 
                   variant='filled'
                   label='BasedOnPar'
@@ -188,7 +190,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                 )}
               </Stack>
 
-              <Collapse in={ editable }>
+              <Collapse in={ editable && !finalized }>
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
                   {/* <Collapse in={ false } >   */}            
 
@@ -374,7 +376,7 @@ export function SetGovernanceRule({ addr }: ContractProps) {
                 )}
               </Stack>
 
-              <Collapse in={ editable }>
+              <Collapse in={ editable && !finalized }>
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
                   <TextField 
                     variant='filled'

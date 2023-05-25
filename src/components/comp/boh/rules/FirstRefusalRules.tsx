@@ -18,7 +18,7 @@ import {
   SetFirstRefusalRule, 
 } from '../../..';
 
-export function FirstRefusalRules({sha, seqList}: ShaRuleInputProps) {
+export function FirstRefusalRules({sha, seqList, finalized}: ShaRuleInputProps) {
 
   const [ cp, setCp ] = useState(seqList);
 
@@ -73,23 +73,28 @@ let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
         <Toolbar>
           <h4>First Refusal Rules</h4>
         </Toolbar>
-        <IconButton 
-          sx={{width: 20, height: 20, m: 1, p: 1}} 
-          onClick={ addCp }
-          color="primary"
-        >
-          <AddCircle/>
-        </IconButton>
-        <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
-          onClick={ removeCp }
-          color="primary"
-        >
-          <RemoveCircle/>
-        </IconButton>
+        {!finalized && (
+          <>
+            <IconButton 
+              sx={{width: 20, height: 20, m: 1, p: 1}} 
+              onClick={ addCp }
+              color="primary"
+            >
+              <AddCircle/>
+            </IconButton>
+            <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+              onClick={ removeCp }
+              color="primary"
+            >
+              <RemoveCircle/>
+            </IconButton>
+          </>
+        )}
+
       </Stack>
 
       {cp.map((v)=> (
-         <SetFirstRefusalRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } />
+         <SetFirstRefusalRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } finalized={ finalized } />
       ))}
 
     </Paper>

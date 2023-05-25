@@ -11,8 +11,11 @@ import {
   ShaNavi, 
   Signatures 
 } from '../../../../components';
+import { useState } from "react";
+import { Finalized } from "../../../../components";
 
 function SigPage() {
+  const [finalized, setFinalized] = useState(false);
 
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
@@ -21,7 +24,9 @@ function SigPage() {
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./sigPage' />
 
-      <Signatures addr={ sha } initPage={ true } />
+      {sha && (<Finalized addr={sha} setFinalized={setFinalized} />)}
+
+      <Signatures addr={ sha } initPage={ true } finalized={finalized} />
 
     </Stack>    
   );

@@ -19,7 +19,7 @@ import {
   SetFirstRefusalRule, SetGroupUpdateOrder, 
 } from '../../..';
 
-export function GroupUpdateOrders({sha, seqList}: ShaRuleInputProps) {
+export function GroupUpdateOrders({sha, seqList, finalized}: ShaRuleInputProps) {
 
   const [ cp, setCp ] = useState(seqList);
 
@@ -47,23 +47,28 @@ export function GroupUpdateOrders({sha, seqList}: ShaRuleInputProps) {
           <Toolbar>
             <h4>Group Update Orders</h4>
           </Toolbar>
-          <IconButton 
-            sx={{width: 20, height: 20, m: 1, p: 1}} 
-            onClick={ addCp }
-            color="primary"
-          >
-            <AddCircle/>
-          </IconButton>
-          <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
-            onClick={ removeCp }
-            color="primary"
-          >
-            <RemoveCircle/>
-          </IconButton>
+          {!finalized && (
+            <>
+              <IconButton 
+                sx={{width: 20, height: 20, m: 1, p: 1}} 
+                onClick={ addCp }
+                color="primary"
+              >
+                <AddCircle/>
+              </IconButton>
+              <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+                onClick={ removeCp }
+                color="primary"
+              >
+                <RemoveCircle/>
+              </IconButton>      
+            </>
+          )}
+
         </Stack>
 
         {cp.map((v, _, arr)=> (
-          <SetGroupUpdateOrder key={ v } sha={ sha } qty={ arr.length } seq={ v } />
+          <SetGroupUpdateOrder key={ v } sha={ sha } qty={ arr.length } seq={ v } finalized={finalized} />
         ))}
       
       </Box>

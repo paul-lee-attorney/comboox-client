@@ -19,7 +19,7 @@ import {
   SetPositionAllocateRule, 
 } from '../../..';
 
-export function PositionAllocateRules({sha, seqList}: ShaRuleInputProps) {
+export function PositionAllocateRules({sha, seqList, finalized}: ShaRuleInputProps) {
 
   const [ cp, setCp ] = useState(seqList);
 
@@ -47,23 +47,29 @@ export function PositionAllocateRules({sha, seqList}: ShaRuleInputProps) {
           <Toolbar>
             <h4>Position Allocate Rules</h4>
           </Toolbar>
-          <IconButton 
-            sx={{width: 20, height: 20, m: 1, p: 1}} 
-            onClick={ addCp }
-            color="primary"
-          >
-            <AddCircle/>
-          </IconButton>
-          <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
-            onClick={ removeCp }
-            color="primary"
-          >
-            <RemoveCircle/>
-          </IconButton>
+
+          {!finalized && (
+            <>
+              <IconButton 
+                sx={{width: 20, height: 20, m: 1, p: 1}} 
+                onClick={ addCp }
+                color="primary"
+              >
+                <AddCircle/>
+              </IconButton>
+              <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+                onClick={ removeCp }
+                color="primary"
+              >
+                <RemoveCircle/>
+              </IconButton>            
+            </>
+          )}
+
         </Stack>
 
         {cp.map((v, _, arr)=> (
-          <SetPositionAllocateRule key={ v } sha={ sha } qty={ arr.length } seq={ v } />
+          <SetPositionAllocateRule key={ v } sha={ sha } qty={ arr.length } seq={ v } finalized={ finalized } />
         ))}
 
       </Box>

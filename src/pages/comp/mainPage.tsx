@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../scripts/ComBooxContext";
 import { 
   RegisteredCapital,
   PaidInCapital,
-  RegNum,
+  RegNumTF,
   CompName,
   Controllor,
   VotesOfController,
@@ -19,12 +19,19 @@ function MainPage() {
 
   return (
     <>
-      <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1 }} >
+      <Paper 
+        sx={{
+          alignContent:'center', 
+          justifyContent:'center', 
+          p:1, m:1, border:1, 
+          borderColor:'divider' 
+        }} 
+      >
         <Toolbar>
           <h3>General Info</h3>
         </Toolbar>
 
-        <table width={1500} >
+        <table width={1680} >
           <thead>
 
             <tr>        
@@ -35,7 +42,7 @@ function MainPage() {
 
             <tr>        
               <td >
-                <RegNum addr={ boox[0] } />
+                <RegNumTF addr={ boox[0] } />
               </td>
 
               <td >

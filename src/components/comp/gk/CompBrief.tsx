@@ -137,10 +137,34 @@ export function CompName({ addr }:ContractProps ) {
 export function RegNum({ addr }:ContractProps ) {
   const [regNum, setRegNum] = useState<string>();
 
+  const { data } = useGeneralKeeperRegNumOfCompany({
+    address: addr,
+  });
+
+  useEffect(()=>{
+    if (data) 
+      setRegNum(data.toHexString().substring(2).padStart(10, '0'));
+  }, [data])
+
+  return (
+    <>
+      {addr && (
+        <>
+          ({regNum})
+        </>
+      )}
+    </>
+  )
+}
+
+
+export function RegNumTF({ addr }:ContractProps ) {
+  const [regNum, setRegNum] = useState<string>();
+
   const { refetch: refetchRegNumOfComp } = useGeneralKeeperRegNumOfCompany({
     address: addr,
     onSuccess(data) {
-      setRegNum(data.toNumber().toString());
+      setRegNum(data.toHexString().substring(2).padStart(10, '0'));
     }
   });
 

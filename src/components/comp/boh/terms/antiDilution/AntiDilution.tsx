@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   Stack,
@@ -109,7 +109,7 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
 }
 
 
-export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
+export function AntiDilution({ sha, term, setTerm, finalized }: SetShaTermProps) {
 
   const [ version, setVersion ] = useState<string>();
 
@@ -265,7 +265,7 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
             <h4>AntiDilution</h4>
           </Toolbar>
 
-          {term == undefined && (
+          {term == undefined && !finalized && (
             <>
               <TextField 
                 variant='filled'
@@ -294,7 +294,7 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
             </>
           )}
 
-          {term && (
+          {term && !finalized && (
               <Button
                 disabled={ !removeAd || removeAdIsLoading }
                 variant="contained"
@@ -311,7 +311,7 @@ export function AntiDilution({ sha, term, setTerm }: SetShaTermProps) {
 
         </Stack>
 
-        {term && (
+        {term && !finalized && (
           <Stack direction={'row'} sx={{ alignItems:'center' }}>      
 
             <Tooltip

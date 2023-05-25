@@ -1,7 +1,7 @@
 
 import { BigNumber } from "ethers";
 
-export const AddrOfRegCenter:HexType = "0xA56F946D6398Dd7d9D4D9B337Cf9E0F68982ca5B";
+export const AddrOfRegCenter:HexType = "0xAe120F0df055428E45b264E7794A18c54a2a3fAF";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 
@@ -20,6 +20,11 @@ export type ContractProps = {
   addr: HexType
 }
 
+export interface ContractEditProps {
+  addr: HexType,
+  finalized: boolean,
+}
+
 export interface SigPageProps {
   addr: HexType,
   initPage: boolean,
@@ -28,6 +33,7 @@ export interface SigPageProps {
 export interface ShaRuleInputProps{
   sha: HexType,
   seqList: number[],
+  finalized: boolean,
 }
 
 export interface FileHistoryProps {
@@ -35,9 +41,8 @@ export interface FileHistoryProps {
   setNextStep: (nextStep:number ) => void,
 }
 
-
-
 export interface VotingRuleType {
+  subTitle: string;
   seqOfRule: number;
   qtyOfSubRule: number;
   seqOfSubRule: number;
@@ -76,6 +81,7 @@ export interface SetShaRuleProps {
   sha: HexType,
   qty: number,
   seq: number,
+  finalized: boolean,
 }
 
 

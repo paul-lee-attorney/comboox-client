@@ -70,7 +70,7 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
     });
 
     list[i] = {
-      acct: members[i].toNumber().toString(),
+      acct: members[i].toHexString().substring(2).padStart(10,'0'),
       date: dateParser(item.timestamp),
       paid: item.paid.toNumber().toString(),
       par: item.par.toNumber().toString(),

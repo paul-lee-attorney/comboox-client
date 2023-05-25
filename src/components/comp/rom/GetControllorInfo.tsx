@@ -8,6 +8,7 @@ import {
 } from '../../../generated';
 
 import { ContractProps } from '../../../interfaces';
+import { userNoParser } from '../../../scripts/toolsKit';
 
 export function Controllor({ addr }:ContractProps ) {
   const [controllor, setControllor] = useState<string>();
@@ -18,7 +19,7 @@ export function Controllor({ addr }:ContractProps ) {
 
   useEffect(() => {
     if ( data ) 
-      setControllor(data.toString());
+      setControllor(data.toString(16).padStart(10, '0'));
   }, [ data ]);
 
   return (

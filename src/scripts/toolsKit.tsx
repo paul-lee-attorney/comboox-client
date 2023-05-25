@@ -1,3 +1,4 @@
+import { BigNumber } from "ethers";
 
 export function toPercent(num: number): string {
   let percent = Number(num / 100).toFixed(2) + '%';
@@ -21,6 +22,10 @@ export function dateParser(timestamp: number): string {
   let date2 = date1.toLocaleDateString().replace(/\//g, "-") + ' ' + date1.toTimeString().substring(0,8);
 
   return date2;
+}
+
+export function userNoParser(data: BigNumber): string {
+  return data.toHexString().substring(2).padStart(10, '0');
 }
 
 

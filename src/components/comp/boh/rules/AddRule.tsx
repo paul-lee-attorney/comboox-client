@@ -1,20 +1,11 @@
 
-import { useState, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { 
   Stack,
-  TextField,
-  Paper,
-  Toolbar,
   Checkbox,
   FormControlLabel,
   Button,
-  Box,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Collapse,
 } from '@mui/material';
 
 import { EditNote }  from '@mui/icons-material';
@@ -29,8 +20,6 @@ import {
 
 import { HexType } from '../../../../interfaces';
 import { BigNumber } from 'ethers';
-import { dateParser, toPercent } from '../../../../scripts/toolsKit';
-
 
 async function getRule(sha: HexType, seq: number): Promise<HexType> {
   let rule = await readContract({
@@ -39,8 +28,6 @@ async function getRule(sha: HexType, seq: number): Promise<HexType> {
     functionName: 'getRule',
     args: [BigNumber.from(seq)],
   });
-
-  // console.log('Rule in Hex: ', rule);
 
   return rule;
 }
@@ -51,9 +38,10 @@ interface AddRuleProps {
   setUpdatedRule: (rule: HexType) => void,
   editable: boolean,
   setEditable: (flag: boolean) => void,
+  finalized: boolean,
 }
 
-export function AddRule({ sha, rule, setUpdatedRule, editable, setEditable }: AddRuleProps) {
+export function AddRule({ sha, rule, setUpdatedRule, editable, setEditable, finalized }: AddRuleProps) {
 
   const { config } = usePrepareShareholdersAgreementAddRule({
     address: sha,
@@ -80,34 +68,40 @@ export function AddRule({ sha, rule, setUpdatedRule, editable, setEditable }: Ad
 
   return (
     <>
-      <Button 
-        disabled = {!write || isLoading}
+      {!finalized && (
+        <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
+          
+          <Button 
+            disabled = {!write || isLoading}
 
-        sx={{ m: 1, ml:120, minWidth: 120, height: 40 }} 
-        variant="contained" 
-        endIcon={<EditNote />}
-        onClick={()=> write?.()}
-        size='small'
-      >
-        Update
-      </Button>
+            sx={{ m: 1, minWidth: 120, height: 40 }} 
+            variant="contained" 
+            endIcon={<EditNote />}
+            onClick={()=> write?.()}
+            size='small'
+          >
+            Update
+          </Button>
 
-      <FormControlLabel 
-        label='Editable'
-        sx={{
-          ml: 1,
-        }}
-        control={
-          <Checkbox 
+          <FormControlLabel 
+            label='Edit'
             sx={{
-              m: 1,
-              height: 64,
+              ml: 1,
             }}
-            onChange={e => setEditable(e.target.checked)}
-            checked={ editable }
+            control={
+              <Checkbox 
+                sx={{
+                  m: 1,
+                  height: 64,
+                }}
+                onChange={e => setEditable(e.target.checked)}
+                checked={ editable }
+              />
+            }
           />
-        }
-      />
+
+        </Stack>
+      )}
     </>
   )
 }

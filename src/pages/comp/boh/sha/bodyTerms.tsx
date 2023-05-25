@@ -21,7 +21,6 @@ import {
   FirstRefusalRules,
   VotingRules,
   GroupUpdateOrders,
-  LinkRules,
 } from '../../../../components';
 
 import { 
@@ -32,6 +31,7 @@ import {
 import { AntiDilution } from "../../../../components/comp/boh/terms/antiDilution/AntiDilution";
 import { LoadingButton } from "@mui/lab";
 import { Send } from "@mui/icons-material";
+import { Finalized } from "../../../../components/common/accessControl/Finalized";
 
 async function getTerm(addr: HexType, title: number): Promise<HexType> {
 
@@ -46,10 +46,11 @@ async function getTerm(addr: HexType, title: number): Promise<HexType> {
 }
 
 
-
 function BodyTerms() {
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+
+  const [ finalized, setFinalized ] = useState(false);
 
   const [rules, setRules] = useState<number[]>();
 
@@ -61,7 +62,7 @@ function BodyTerms() {
   const {data, refetch } = useShareholdersAgreementRules({
     address: sha,
     onSuccess(data) {
-      let arrRules = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 256, 512, 513, 768];
+      let arrRules = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 256, 512, 513, 768];
 
       data.map(v => {
         let seq = v.toNumber();
@@ -164,29 +165,33 @@ function BodyTerms() {
 
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./bodyTerms' />
 
+      {sha && (
+        <Finalized addr={ sha } setFinalized={ setFinalized } />
+      )}
+
       {(!vrLs || !prLs || !frLs || !guoLs) && (
-            <LoadingButton 
-              loading={true} 
-              loadingPosition='end' 
-              endIcon={<Send/>} 
-              sx={{p:1, m:1}} 
-            >
-              <span>Loading</span>
-            </LoadingButton>
-          )}
+        <LoadingButton 
+          loading={true} 
+          loadingPosition='end' 
+          endIcon={<Send/>} 
+          sx={{p:1, m:1}} 
+        >
+          <span>Loading</span>
+        </LoadingButton>
+      )}
 
 
-      {vrLs && (<SetGovernanceRule addr={ sha } />)}
+      {vrLs && (<SetGovernanceRule addr={ sha } finalized={ finalized } />)}
 
-      {vrLs && (<VotingRules sha={ sha } seqList={ vrLs } />)}
+      {vrLs && (<VotingRules sha={ sha } seqList={ vrLs } finalized={ finalized } />)}
 
-      {prLs && (<PositionAllocateRules sha={ sha } seqList={ prLs } />)}
+      {prLs && (<PositionAllocateRules sha={ sha } seqList={ prLs } finalized={ finalized } />)}
 
-      {frLs && (<FirstRefusalRules sha={ sha } seqList={ frLs } />)}
+      {frLs && (<FirstRefusalRules sha={ sha } seqList={ frLs } finalized={ finalized } />)}
 
-      {guoLs && (<GroupUpdateOrders sha={ sha } seqList={ guoLs } />)}
+      {guoLs && (<GroupUpdateOrders sha={ sha } seqList={ guoLs } finalized={finalized} />)}
 
-      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } />
+      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } finalized={finalized} />
 
     </Stack>    
   );

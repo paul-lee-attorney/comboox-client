@@ -77,7 +77,12 @@ interface VoteCaseType {
 //   return output;
 // }
 
-export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
+interface VoteForShaProps {
+  seqOfMotion: BigNumber | undefined ;
+  setNextStep: (next: number) => void;
+}
+
+export function VoteForSha({ seqOfMotion, setNextStep }: VoteForShaProps) {
 
   const [ voteResult, setVoteResult ] = useState<VoteCaseType[]>([]);
   const { gk, boox } = useComBooxContext();
@@ -87,7 +92,7 @@ export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
     refetch: refetchAll
   } = useMeetingMinutesGetCaseOfAttitude({
     address: boox[3],
-    args: [BigNumber.from(addr), BigNumber.from('0')],
+    args: seqOfMotion ? [seqOfMotion, BigNumber.from('0')] : undefined,
     onSuccess(data) {
       setVoteResult(v => {
         let arr = [...v];
@@ -104,7 +109,7 @@ export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
     refetch: refetchSupport
   } = useMeetingMinutesGetCaseOfAttitude({
     address: boox[3],
-    args: [BigNumber.from(addr), BigNumber.from('1')],
+    args: [seqOfMotion, BigNumber.from('1')],
     onSuccess(data) {
       setVoteResult(v => {
         let arr = [...v];
@@ -121,7 +126,7 @@ export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
     refetch: refetchAgainst
   } = useMeetingMinutesGetCaseOfAttitude({
     address: boox[3],
-    args: [BigNumber.from(addr), BigNumber.from('2')],
+    args: [seqOfMotion, BigNumber.from('2')],
     onSuccess(data) {
       setVoteResult(v => {
         let arr = [...v];
@@ -138,7 +143,7 @@ export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
     refetch: refetchAbstain
   } = useMeetingMinutesGetCaseOfAttitude({
     address: boox[3],
-    args: [BigNumber.from(addr), BigNumber.from('3')],
+    args: [seqOfMotion, BigNumber.from('3')],
     onSuccess(data) {
       setVoteResult(v => {
         let arr = [...v];
@@ -157,7 +162,7 @@ export function VoteForSha({ addr, setNextStep }: FileHistoryProps) {
     config
   } =  usePrepareGeneralKeeperCastVoteOfGm ({
     address: gk,
-    args: [ BigNumber.from(addr), BigNumber.from(attitude), Bytes32Zero ],
+    args: [ seqOfMotion, BigNumber.from(attitude), Bytes32Zero ],
   });
 
   const {

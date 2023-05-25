@@ -24,9 +24,10 @@ interface SetFirstRefusalRuleProps {
   sha: HexType,
   defaultRule: FirstRefusalRuleType,
   seq: number,
+  finalized: boolean,
 }
 
-export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRuleProps) {
+export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFirstRefusalRuleProps) {
   const [ objFR, setObjFR ] = useState<FirstRefusalRuleType>(defaultRule); 
 
   let hexFR: HexType = `0x${
@@ -77,10 +78,12 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRu
         }} 
       >
         
-        <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
-          <Toolbar>
-            <h4>Rule No. { seq.toString() } </h4>
-          </Toolbar>
+        <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+          <Box sx={{ minWidth:600 }} >
+            <Toolbar>
+              <h4>Rule No. { seq.toString() } </h4>
+            </Toolbar>
+          </Box>
 
           <AddRule 
             sha={ sha }
@@ -88,6 +91,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRu
             setUpdatedRule={ setNewHexFR }
             editable = { editable }
             setEditable={ setEditable }
+            finalized={finalized}
           />
         </Stack>
 
@@ -97,7 +101,6 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRu
         >
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            {/* <h6>System Record</h6> */}
             {newFR?.seqOfRule != undefined && (
               <TextField 
                 variant='filled'
@@ -179,7 +182,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRu
 
           </Stack>
 
-          <Collapse in={ editable } >
+          <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
               {/* <Collapse in={ false } >   */}            
 
@@ -349,7 +352,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq }: SetFirstRefusalRu
 
           </Stack>
 
-          <Collapse in={ editable } >
+          <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <Box sx={{ minWidth: 218, m: 1 }} >

@@ -39,7 +39,7 @@ const titleOfPositions: string[] = ['ZeroPoint', 'Chairman', 'ViceChairman', 'Ma
 
 const titleOfNominator: string[] = ['ZeroPoint', 'Shareholder', 'Chairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager']
 
-export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
+export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRuleProps) {
   const [ objPR, setObjPR ] = useState<PosAllocateRuleType>(); 
 
   let hexPR: HexType = `0x${
@@ -87,10 +87,13 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
         borderColor:'divider' 
         }} 
       >
-        <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
-          <Toolbar>
-            <h4>Rule No. { seq.toString() } </h4>
-          </Toolbar>
+        <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+
+          <Box sx={{ minWidth:600 }} >
+            <Toolbar>
+              <h4>Rule No. { seq.toString() } </h4>
+            </Toolbar>
+          </Box>
 
           <AddRule 
             sha={ sha } 
@@ -98,6 +101,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
             setUpdatedRule={setNewHexPr} 
             editable={editable} 
             setEditable={setEditable} 
+            finalized={finalized}
           />
         </Stack>
 
@@ -107,7 +111,6 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
         >
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            {/* <h6>System Record</h6> */}
             {newPR?.seqOfRule != undefined && (
               <TextField 
                 variant='filled'
@@ -175,9 +178,8 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
 
           </Stack>
 
-          <Collapse in={ editable } >
+          <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-              {/* <Collapse in={ false } >   */}            
 
               <TextField 
                 variant='filled'
@@ -326,7 +328,7 @@ export function SetPositionAllocateRule({ sha, qty, seq }: SetShaRuleProps) {
 
           </Stack>
 
-          <Collapse in={ editable } >
+          <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>

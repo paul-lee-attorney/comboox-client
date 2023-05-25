@@ -107,6 +107,8 @@ function Lifecycle() {
 
   const [ fileState, setFileState ] = useState<number>();
 
+  const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
+
   const {
     data: headOfFile,
     refetch: refetchFileState
@@ -132,18 +134,21 @@ function Lifecycle() {
       case 3: // Propose Sha
         setActiveStep(fileState); 
         break;
-      case 4: // Vote for Sha
+      case 4: // Proposed
         getSeqOfMotion(boox[4], sha).then(
-          seqOfMotion => voteEnded(boox[3], seqOfMotion).
-            then(flag => setActiveStep(
-              flag ? 5: 4
-            ))
+          seq => {
+            setSeqOfMotion(seq);
+            voteEnded(boox[3], seq).
+              then(flag => setActiveStep(
+                flag ? 5 : 4
+              ));
+          }
         );
         break;
-      case 5: 
+      case 5: // Approved
         setActiveStep(6);
         break;
-      case 6: 
+      case 6: // Rejected
         setActiveStep(8);
         break;
       case 7: 
@@ -246,7 +251,7 @@ function Lifecycle() {
                       Cast vote in General Meeting to approve SHA.
                     </Typography>
 
-                    <VoteForSha addr={ sha } setNextStep={ setActiveStep } />
+                    <VoteForSha seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
                   </StepContent>
 
                 </Step>
@@ -260,7 +265,7 @@ function Lifecycle() {
                     <Typography>
                       Count vote result of SHA review (only for Members).
                     </Typography>
-                    <VoteCounting addr={ sha } setNextStep={ setFileState } />
+                    <VoteCounting seqOfMotion={ seqOfMotion } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>

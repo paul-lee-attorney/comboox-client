@@ -28,8 +28,13 @@ async function isPassed(hash: HexType): Promise<boolean> {
   return flag;
 }
 
+interface VoteCountingProps {
+  seqOfMotion: BigNumber | undefined,
+  setNextStep: (next: number) => void,
+}
 
-export function VoteCounting({ addr, setNextStep }: FileHistoryProps) {
+
+export function VoteCounting({ seqOfMotion, setNextStep }: VoteCountingProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -37,7 +42,7 @@ export function VoteCounting({ addr, setNextStep }: FileHistoryProps) {
     config
   } =  usePrepareGeneralKeeperVoteCountingOfGm({
     address: gk,
-    args: [BigNumber.from(addr)],
+    args: seqOfMotion ? [ seqOfMotion ] : undefined,
   });
 
   const {
@@ -53,9 +58,9 @@ export function VoteCounting({ addr, setNextStep }: FileHistoryProps) {
   });
 
   return (
-    <Stack sx={{ alignItems:'center' }} direction={'row'} >
+    <Stack sx={{ alignItems:'center' }} direction={ 'row' } >
       <Button
-        disabled={!write || isLoading}
+        disabled={ !write || isLoading}
         variant="contained"
         endIcon={<Calculate />}
         sx={{ m:1, mr:6 }}

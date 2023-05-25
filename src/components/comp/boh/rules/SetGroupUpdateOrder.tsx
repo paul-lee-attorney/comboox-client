@@ -29,7 +29,7 @@ interface GroupUpdateOrderType {
   members4?: number | undefined;
 }
 
-export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
+export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProps) {
   const [ objGuo, setObjGuo ] = useState<GroupUpdateOrderType>(); 
 
   let hexGuo: HexType = `0x${
@@ -75,10 +75,12 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
         borderColor:'divider' 
         }} 
       >
-        <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
-          <Toolbar>
-            <h4>Rule No. { seq.toString() } </h4>
-          </Toolbar>
+        <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+          <Box sx={{ minWidth:600 }} >
+            <Toolbar>
+              <h4>Rule No. { seq.toString() } </h4>
+            </Toolbar>
+          </Box>
 
           <AddRule 
             sha={ sha }
@@ -86,6 +88,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
             setUpdatedRule={ setNewHexGuo }
             editable={ editable }
             setEditable={ setEditable }
+            finalized={finalized}
           />
         </Stack>
 
@@ -96,7 +99,6 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
         >
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            {/* <h6>System Record</h6> */}
             {newGuo?.seqOfRule != undefined && (
               <TextField 
                 variant='filled'
@@ -164,7 +166,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
 
           </Stack>
 
-          <Collapse in={ editable } >
+          <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
               {/* <Collapse in={ false } >   */}            
 
@@ -302,7 +304,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq }: SetShaRuleProps) {
 
           </Stack>
 
-          <Collapse in={ editable } >
+          <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <TextField 

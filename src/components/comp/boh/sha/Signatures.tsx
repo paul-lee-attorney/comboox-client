@@ -96,7 +96,7 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
     });
 
     output.push({
-      signer: parties[len-1].toString(),
+      signer: parties[len-1].toHexString().substring(2).padStart(10, '0'),
       sigDate: item.sig.sigDate,
       blocknumber: item.sig.blocknumber.toString(),
     });
@@ -110,10 +110,11 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
 interface SigPageProps {
   addr: HexType,
   initPage: boolean,
+  finalized: boolean,
 }
 
 
-export function Signatures({ addr, initPage }: SigPageProps) {
+export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
 
   const {
@@ -251,47 +252,52 @@ export function Signatures({ addr, initPage }: SigPageProps) {
               <h4>Props of SigPage</h4>
             </Toolbar>
 
-            <TextField 
-              variant='filled'
-              label='SigningDays'
-              sx={{
-                m:1,
-                ml: 10,
-                minWidth: 218,
-              }}
-              onChange={(e) => setTiming((v) => ({
-                ...v,
-                signingDays: e.target.value,
-              }))}
-              value={ timing?.signingDays }              
-            />
+            {!finalized && (
+              <>
+                <TextField 
+                  variant='filled'
+                  label='SigningDays'
+                  sx={{
+                    m:1,
+                    ml: 10,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setTiming((v) => ({
+                    ...v,
+                    signingDays: e.target.value,
+                  }))}
+                  value={ timing?.signingDays }              
+                />
 
-            <TextField 
-              variant='filled'
-              label='ClosingDays'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => setTiming((v) => ({
-                ...v,
-                closingDays: e.target.value,
-              }))}
-              value={ timing?.closingDays }                                      
-            />
+                <TextField 
+                  variant='filled'
+                  label='ClosingDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setTiming((v) => ({
+                    ...v,
+                    closingDays: e.target.value,
+                  }))}
+                  value={ timing?.closingDays }                                      
+                />
 
-            <Button
-              disabled={ !writeSetTiming || setTimingIsLoading }
-              variant="contained"
-              sx={{
-                height: 40,
-                m: 1,
-              }}
-              endIcon={ <Update /> }
-              onClick={() => writeSetTiming?.()}
-            >
-              Update
-            </Button>
+                <Button
+                  disabled={ !writeSetTiming || setTimingIsLoading }
+                  variant="contained"
+                  sx={{
+                    height: 40,
+                    m: 1,
+                  }}
+                  endIcon={ <Update /> }
+                  onClick={() => writeSetTiming?.()}
+                >
+                  Update
+                </Button>
+              
+              </>
+            )}
 
 
           </Stack>
@@ -392,71 +398,73 @@ export function Signatures({ addr, initPage }: SigPageProps) {
               <h4>Signatures of Doc</h4>
             </Toolbar>
 
-            <Stack direction={'row'} sx={{ alignItems:'center' }} >
+            {!finalized && (
+              <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
-              <Tooltip
-                title='Add Party'
-                placement="top-start"
-                arrow
-              >
-                <span>
-                <IconButton 
-                  disabled={ !addBlank || addBlankIsLoading }
-                  sx={{width: 20, height: 20, m: 1 }} 
-                  onClick={ () => addBlank?.() }
-                  color="primary"
+                <Tooltip
+                  title='Add Party'
+                  placement="top-start"
+                  arrow
                 >
-                  < PersonAdd />
-                </IconButton>
-                </span>
-              </Tooltip>
+                  <span>
+                  <IconButton 
+                    disabled={ !addBlank || addBlankIsLoading }
+                    sx={{width: 20, height: 20, m: 1 }} 
+                    onClick={ () => addBlank?.() }
+                    color="primary"
+                  >
+                    < PersonAdd />
+                  </IconButton>
+                  </span>
+                </Tooltip>
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="isBuyer-label">Role</InputLabel>
-                <Select
-                  labelId="isBuyer-label"
-                  id="isBuyer-select"
-                  value={ isBuyer ? 'true' : 'false' }
-                  onChange={(e) => setIsBuyer(e.target.value == 'true')}
+                <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="isBuyer-label">Role</InputLabel>
+                  <Select
+                    labelId="isBuyer-label"
+                    id="isBuyer-select"
+                    value={ isBuyer ? 'true' : 'false' }
+                    onChange={(e) => setIsBuyer(e.target.value == 'true')}
 
-                  label="Role"
-                >
-                  <MenuItem value={'true'}>Buyer</MenuItem>
-                  <MenuItem value={'false'}>Seller</MenuItem>
-                </Select>
-              </FormControl>
+                    label="Role"
+                  >
+                    <MenuItem value={'true'}>Investor</MenuItem>
+                    <MenuItem value={'false'}>Orignal Shareholders</MenuItem>
+                  </Select>
+                </FormControl>
 
-              <TextField
-                variant='filled'
-                label='UserNo.'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setAcct(e.target.value)}
-                value={ acct }                                      
-              />
+                <TextField
+                  variant='filled'
+                  label='UserNo.'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setAcct(e.target.value)}
+                  value={ acct }                                      
+                />
 
-              <Tooltip
-                title='Remove Party'
-                placement="top-end"
-                arrow
-              >           
-                <span>
-                <IconButton
-                  disabled={ !removeBlank || removeBlankIsLoading } 
-                  sx={{width: 20, height: 20, m: 1, mr:2 }} 
-                  onClick={ () => removeBlank?.() }
-                  color="primary"
-                >
-                  <PersonRemove/>
-                </IconButton>
-                </span>
+                <Tooltip
+                  title='Remove Party'
+                  placement="top-end"
+                  arrow
+                >           
+                  <span>
+                  <IconButton
+                    disabled={ !removeBlank || removeBlankIsLoading } 
+                    sx={{width: 20, height: 20, m: 1, mr:2 }} 
+                    onClick={ () => removeBlank?.() }
+                    color="primary"
+                  >
+                    <PersonRemove/>
+                  </IconButton>
+                  </span>
 
-              </Tooltip>
+                </Tooltip>
 
-            </Stack>
-            
+              </Stack>
+            )}
+
           </Stack>
 
           <Divider />
@@ -467,7 +475,7 @@ export function Signatures({ addr, initPage }: SigPageProps) {
               
               <Chip
                 sx={{ minWidth:80, m:1 }}
-                label="Seller" 
+                label="Original Shareholders" 
                 color="primary" 
               />
 
@@ -516,7 +524,7 @@ export function Signatures({ addr, initPage }: SigPageProps) {
               
               <Chip
                 sx={{ minWidth:80, m:1 }}
-                label="Buyer" 
+                label="Investors" 
                 color="success" 
               />
 

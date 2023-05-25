@@ -49,7 +49,7 @@ import { BigNumber } from 'ethers';
 import { AddrZero, GKInfo, HexType } from '../../interfaces';
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 
-import { CompSymbol, CompAddr } from '../comp/gk/CompBrief';
+import { CompSymbol, CompAddr, RegNum } from '../comp/gk/CompBrief';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -197,7 +197,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             { gk !== AddrZero && (
               <>
                 <CompSymbol addr={ gk } /> 
-                <> : </>
+                {' '}
+                <RegNum addr={ gk } />
+                {' : '}
                 <CompAddr addr={ gk } />
               </>
             )} 

@@ -41,13 +41,14 @@ export function CreateComp() {
     data, 
     isLoading, 
     write 
-  } = useRegCenterCreateComp(config);
-
-  useEffect(() => {
-    if (data) {
-      getReceipt(data.hash).then((addrOfGK)=>setGK(addrOfGK));
+  } = useRegCenterCreateComp({
+    ...config,
+    onSuccess(data) {
+      getReceipt(data.hash).then(
+        addrOfGK => setGK(addrOfGK)
+      )
     }
-  });
+  })
 
   return (
     <div>
@@ -65,12 +66,9 @@ export function CreateComp() {
             </Button> ) 
 
         : ( <Link
-              href='/comp/initSys/setCompId'
-  
+              href='/comp/initSys/setCompId'  
               as = '/comp/initSys/setCompId'
-              
               variant='button'
-      
               underline='hover'
             >
 
@@ -83,7 +81,7 @@ export function CreateComp() {
                 }}
                 endIcon={ <ReadMoreOutlined/> }
               >
-                Init My System Setting
+                Init System Setting
               </Button>
 
             </Link>)

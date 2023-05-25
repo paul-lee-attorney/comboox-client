@@ -13,6 +13,7 @@ export { LockContents } from './common/accessControl/LockContents'
 export { AppointAttorney } from './common/accessControl/AppointAttorney'
 export { RemoveAttorney } from './common/accessControl/RemoveAttorney'
 export { QuitAttorney } from './common/accessControl/QuitAttorney'
+export { Finalized } from './common/accessControl/Finalized'
 
 
 export { GetMyUserNo } from './center/GetMyUserNo'
@@ -22,6 +23,7 @@ export { CreateComp } from './center/CreateComp'
 export { DocFinder } from './center/DocFinder'
 export { ComBooxAppBar } from './center/ComBooxAppBar'
 export { GetDoc } from './center/GetDoc'
+export { GetComp } from './center/GetComp'
 
 export { RulesList } from './comp/boh/rules/RulesList' 
 export { SetGovernanceRule } from './comp/boh/rules/SetGovernanceRule'
@@ -59,4 +61,11 @@ export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'
 export { MembersList, MembersEquityList } from './comp/rom/MembersList'
 export { SharesInHand } from './comp/rom/SharesInHand'
 
-export { RegNum, CompName, CompSymbol, CompAddrTf, CompSymbolTf } from './comp/gk/CompBrief'
+export { 
+  RegNum,
+  RegNumTF, 
+  CompName, 
+  CompSymbol, 
+  CompAddrTf, 
+  CompSymbolTf 
+} from './comp/gk/CompBrief'

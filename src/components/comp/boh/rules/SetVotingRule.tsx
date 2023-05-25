@@ -28,9 +28,10 @@ interface SetVotingRuleProps {
   sha: HexType,
   defaultRule: VotingRuleType,
   seq: number,
+  finalized: boolean,
 }
 
-export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
+export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRuleProps) {
   const [ objVR, setObjVR ] = useState<VotingRuleType>(defaultRule); 
 
   let hexVR: HexType = `0x${
@@ -62,6 +63,7 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
   const [ newHexVR, setNewHexVR ] = useState<HexType>(Bytes32Zero);
 
   let newVR: VotingRuleType = {
+    subTitle: defaultRule.subTitle,
     seqOfRule: parseInt(newHexVR.substring(2, 6), 16), 
     qtyOfSubRule: parseInt(newHexVR.substring(6, 8), 16),
     seqOfSubRule: parseInt(newHexVR.substring(8, 10), 16),
@@ -98,18 +100,20 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
       >
         <Box sx={{ width:1440 }}>
 
-          <Stack direction={'row'} sx={{ justifyContent: 'flex-start', alignItems: 'center' }} >        
-            <Toolbar>
-              <h4>Rule No. { seq.toString() } </h4>
-            </Toolbar>
-
+          <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+            <Box sx={{ minWidth:600 }} >
+              <Toolbar>
+                <h4>Rule No. { seq.toString() }  { defaultRule.subTitle } </h4>
+              </Toolbar>
+            </Box>
 
             <AddRule 
               sha={ sha } 
               rule={ hexVR } 
-              setUpdatedRule={setNewHexVR} 
-              editable={editable} 
-              setEditable={setEditable} 
+              setUpdatedRule={ setNewHexVR } 
+              editable={ editable } 
+              setEditable={ setEditable } 
+              finalized={ finalized }
             />
             
           </Stack>
@@ -119,7 +123,6 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
           >
 
             <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-              {/* <h6>System Record</h6> */}
               {newVR?.seqOfRule != undefined && (
                 <TextField 
                   variant='filled'
@@ -197,7 +200,7 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
 
             </Stack>
 
-            <Collapse in={ editable } >
+            <Collapse in={ editable && !finalized } >
               <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
                 {/* <Collapse in={ false } >   */}            
 
@@ -385,7 +388,7 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
 
             </Stack>
 
-            <Collapse in={ editable } >
+            <Collapse in={ editable && !finalized } >
               <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                 <Box sx={{ minWidth: 218, m: 1 }} >
@@ -584,7 +587,7 @@ export function SetVotingRule({ sha, defaultRule, seq }: SetVotingRuleProps) {
 
             </Stack>
 
-            <Collapse in={ editable } >
+            <Collapse in={ editable && !finalized } >
               <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                 <TextField 

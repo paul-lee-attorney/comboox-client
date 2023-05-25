@@ -20,7 +20,7 @@ interface TabPanelProps {
 }
 
 export function ShaNavi(props: ShaNaviProps) {
-  const { contractName, addr, thisPath } = props;
+  const { contractName, addr, thisPath, } = props;
 
   const tabs:TabPanelProps[] = [
     {path: './bodyTerms', name: 'Body Terms'},
