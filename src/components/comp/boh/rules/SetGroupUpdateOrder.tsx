@@ -223,7 +223,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                       }}
                       onChange={e => setObjGuo(v => ({
                         ...v,
-                        membersEqual: e.target.checked,
+                        addMember: e.target.checked,
                       }))}
                       checked={ objGuo?.addMember }
                     />

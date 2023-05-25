@@ -151,9 +151,13 @@ function Lifecycle() {
       case 6: // Rejected
         setActiveStep(8);
         break;
-      case 7: 
+      case 7: // Executed
         setActiveStep(7);
         break;
+      case 8: // Revoked
+        setActiveStep(8);
+      break;
+
     }
   }, [sha, fileState, boox])
 
@@ -265,7 +269,9 @@ function Lifecycle() {
                     <Typography>
                       Count vote result of SHA review (only for Members).
                     </Typography>
-                    <VoteCounting seqOfMotion={ seqOfMotion } setNextStep={ setFileState } />
+                    {sha != '0x' && (
+                      <VoteCounting seqOfMotion={ seqOfMotion } sha={ sha } setNextStep={ setFileState } />
+                    )}
                   </StepContent>
 
                 </Step>

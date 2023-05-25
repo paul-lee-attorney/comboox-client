@@ -64,6 +64,7 @@ export interface VotingRuleType {
 }
 
 export interface FirstRefusalRuleType {
+  subTitle: string,
   seqOfRule: number;
   qtyOfSubRule: number;
   seqOfSubRule: number;

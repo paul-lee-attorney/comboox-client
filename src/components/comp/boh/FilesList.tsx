@@ -140,7 +140,7 @@ export function FilesListWithInfo({ addr }:ContractProps ) {
       <Toolbar>
         <h3>Files List</h3>
       </Toolbar>
-      <Table sx={{ minWidth: 1250 }} size="small" aria-label="a dense table">
+      <Table sx={{ minWidth: 1680 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell >Sn</TableCell>

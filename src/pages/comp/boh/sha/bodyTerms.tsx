@@ -165,7 +165,7 @@ function BodyTerms() {
 
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./bodyTerms' />
 
-      {sha && (
+      {sha != '0x' && (
         <Finalized addr={ sha } setFinalized={ setFinalized } />
       )}
 

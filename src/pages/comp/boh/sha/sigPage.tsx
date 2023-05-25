@@ -24,9 +24,13 @@ function SigPage() {
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
       <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./sigPage' />
 
-      {sha && (<Finalized addr={sha} setFinalized={setFinalized} />)}
+      {sha != '0x' && (
+        <>
+          <Finalized addr={sha} setFinalized={setFinalized} />
+          <Signatures addr={ sha } initPage={ true } finalized={finalized} />      
+        </>
+      )}
 
-      <Signatures addr={ sha } initPage={ true } finalized={finalized} />
 
     </Stack>    
   );

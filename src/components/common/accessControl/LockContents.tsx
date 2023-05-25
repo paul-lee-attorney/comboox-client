@@ -21,15 +21,6 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 
-async function finalized(addr: HexType): Promise<boolean> {
-  let flag = await readContract({
-    address: addr,
-    abi: accessControlABI,
-    functionName: 'finalized',
-  });
-
-  return flag;
-}
 
 export function LockContents({ addr }: ContractProps) {
 
@@ -37,8 +28,7 @@ export function LockContents({ addr }: ContractProps) {
     address: addr,
   });
 
-  const [ flag, setFlag ] = useState(false);
-  const [ open, setOpen ] = useState(false);
+  const [ open, setOpen ] = useState(true);
 
   const {
     isLoading,
@@ -46,10 +36,7 @@ export function LockContents({ addr }: ContractProps) {
   } = useAccessControlLockContents({
     ...config,
     onSuccess() {
-      finalized(addr).then((flag) => {
-        setFlag(flag);
-        setOpen(true);
-      });      
+      setOpen(false);      
     }
   });
 
@@ -90,7 +77,7 @@ export function LockContents({ addr }: ContractProps) {
             severity='info' 
             sx={{ height: 55,  m: 1, }} 
           >
-            { flag ? 'Finalized' : 'Pending' } 
+            Drafting
           </Alert>
         </Collapse>
 

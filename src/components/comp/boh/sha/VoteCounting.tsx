@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import { Button, Stack, TextField } from "@mui/material";
 import { 
+  filesFolderABI,
   useGeneralKeeperProposeDocOfGm, 
   useGeneralKeeperVoteCountingOfGm, 
   usePrepareGeneralKeeperProposeDocOfGm, 
@@ -12,29 +13,28 @@ import { FileHistoryProps, HexType } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Calculate, Outbox } from "@mui/icons-material";
 import { BigNumber } from "ethers";
-import { waitForTransaction } from "@wagmi/core";
+import { readContract } from "@wagmi/core";
 
-async function isPassed(hash: HexType): Promise<boolean> {
+async function isPassed(boh: HexType, sha: HexType): Promise<number> {
 
-  let receipt = await waitForTransaction({
-    hash: hash,
+  let res = await readContract({
+    address: boh,
+    abi: filesFolderABI,
+    functionName: 'getHeadOfFile',
+    args: [sha],
   })
-  
-  let flag = false;
 
-  if (receipt)
-    flag = parseInt(receipt.logs[0].topics[2], 16) == 5;
-
-  return flag;
+  return res.state;
 }
 
 interface VoteCountingProps {
   seqOfMotion: BigNumber | undefined,
+  sha: HexType,
   setNextStep: (next: number) => void,
 }
 
 
-export function VoteCounting({ seqOfMotion, setNextStep }: VoteCountingProps) {
+export function VoteCounting({ seqOfMotion, sha, setNextStep }: VoteCountingProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -51,8 +51,8 @@ export function VoteCounting({ seqOfMotion, setNextStep }: VoteCountingProps) {
   } = useGeneralKeeperVoteCountingOfGm({
     ...config,
     onSuccess(data) {
-      isPassed(data.hash).then(
-        flag => setNextStep(flag ? 5: 6)
+      isPassed(boox[4], sha).then(
+        fileState => setNextStep( fileState )
       )
     },
   });

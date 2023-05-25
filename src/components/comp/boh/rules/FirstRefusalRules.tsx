@@ -40,6 +40,7 @@ export function FirstRefusalRules({sha, seqList, finalized}: ShaRuleInputProps) 
 
 let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
     512 : {
+      subTitle: '- For Capital Increase ',
       seqOfRule: 512, 
       qtyOfSubRule: 2, 
       seqOfSubRule: 1,
@@ -53,6 +54,7 @@ let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
       rightholder4: 0
     },
     513 : {
+      subTitle: '- For External Transfer ',
       seqOfRule: 513, 
       qtyOfSubRule: 2, 
       seqOfSubRule: 2,

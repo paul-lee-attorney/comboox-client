@@ -50,6 +50,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
   const [ newHexFR, setNewHexFR ] = useState<HexType>(Bytes32Zero);
 
   let newFR: FirstRefusalRuleType = {
+    subTitle: defaultRule.subTitle,
     seqOfRule: parseInt(newHexFR.substring(2, 6), 16), 
     qtyOfSubRule: parseInt(newHexFR.substring(6, 8), 16),
     seqOfSubRule: parseInt(newHexFR.substring(8, 10), 16),
@@ -81,7 +82,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
         <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
           <Box sx={{ minWidth:600 }} >
             <Toolbar>
-              <h4>Rule No. { seq.toString() } </h4>
+              <h4>Rule No. { seq.toString() } { defaultRule.subTitle } </h4>
             </Toolbar>
           </Box>
 

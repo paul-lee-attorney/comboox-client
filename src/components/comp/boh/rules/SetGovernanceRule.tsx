@@ -21,7 +21,7 @@ interface GovernanceRuleType {
   basedOnPar?: boolean | undefined;
   proposeWeightRatioOfGM?: number | undefined;
   proposeHeadRatioOfMembers?: number | undefined;
-  proposeHeadNumOfDirectors?: number | undefined;
+  proposeHeadRatioOfDirectors?: number | undefined;
   maxQtyOfMembers?: number | undefined;
   quorumOfGM?: number | undefined;
   maxNumOfDirectors?: number | undefined;
@@ -40,7 +40,7 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
     (objGR?.basedOnPar ? '01' : '00') +
     (objGR?.proposeWeightRatioOfGM?.toString(16).padStart(4, '0') ?? '03e8') +
     (objGR?.proposeHeadRatioOfMembers?.toString(16).padStart(4, '0') ?? '0000') + 
-    (objGR?.proposeHeadNumOfDirectors?.toString(16).padStart(4, '0') ?? '0d05') + 
+    (objGR?.proposeHeadRatioOfDirectors?.toString(16).padStart(4, '0') ?? '0d05') + 
     (objGR?.maxQtyOfMembers?.toString(16).padStart(4, '0') ?? '0032') +       
     (objGR?.quorumOfGM?.toString(16).padStart(4, '0') ?? '1388') +       
     (objGR?.maxNumOfDirectors?.toString(16).padStart(4, '0') ?? '0007') +       
@@ -60,7 +60,7 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
     basedOnPar: newHexGR?.substring(10, 12) === '01',
     proposeWeightRatioOfGM: parseInt(newHexGR?.substring(12,16), 16),
     proposeHeadRatioOfMembers: parseInt(newHexGR?.substring(16, 20), 16),
-    proposeHeadNumOfDirectors: parseInt(newHexGR?.substring(20, 24), 16),
+    proposeHeadRatioOfDirectors: parseInt(newHexGR?.substring(20, 24), 16),
     maxQtyOfMembers: parseInt(newHexGR?.substring(24, 28), 16),
     quorumOfGM: parseInt(newHexGR?.substring(28, 32), 16),
     maxNumOfDirectors: parseInt(newHexGR?.substring(32, 36), 16),
@@ -150,16 +150,16 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                   value={toPercent(newGR?.proposeHeadRatioOfMembers ?? 0)}
                 />
 
-                {newGR?.proposeHeadNumOfDirectors != undefined && (
+                {newGR?.proposeHeadRatioOfDirectors != undefined && (
                   <TextField 
                     variant='filled'
-                    label='ProposeHeadNumOfDirectors'
+                    label='ProposeHeadRatioOfDirectors'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newGR.proposeHeadNumOfDirectors.toString()}
+                    value={toPercent(newGR.proposeHeadRatioOfDirectors ?? 0)}
                   />
                 )}
 
@@ -256,9 +256,9 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       }}
                       onChange={(e) => setObjGR((v) => ({
                         ...v,
-                        proposeHeadNumOfDirectors: parseInt(e.target.value),
+                        proposeHeadRatioOfDirectors: parseInt(e.target.value),
                       }))}
-                      value={ objGR?.proposeHeadNumOfDirectors }
+                      value={ objGR?.proposeHeadRatioOfDirectors }
                       defaultValue='1'                          
                     />
 
