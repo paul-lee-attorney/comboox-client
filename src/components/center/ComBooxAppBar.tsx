@@ -33,7 +33,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 240;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt }  from '@mui/icons-material';
+import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -325,6 +325,17 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             </ListItemButton>
           </ListItem>
 
+          <ListItem >
+            <ListItemButton 
+              LinkComponent={Link}
+              href='/comp/boa/bookOfIA'
+            >
+              <ListItemIcon>
+                <Difference />
+              </ListItemIcon>
+              <ListItemText primary="BookOfIA" />
+            </ListItemButton>
+          </ListItem>
 
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem key={text} disablePadding>

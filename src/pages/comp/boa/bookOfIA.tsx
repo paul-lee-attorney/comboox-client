@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { 
-  Box,
+import {
   Button, 
   Paper, 
   Toolbar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Stack,
 } from "@mui/material";
@@ -16,19 +11,16 @@ import {
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import Link from "../../../scripts/Link"
 
-import { DialerSip, Create, Send, ReadMoreOutlined } from "@mui/icons-material";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../../interfaces";
+import { Create, ReadMoreOutlined } from "@mui/icons-material";
+import { AddrZero, HexType } from "../../../interfaces";
 
 import { waitForTransaction } from "@wagmi/core";
 
 
 
 import { 
-  useGeneralKeeper, 
-  useGeneralKeeperCreateSha,
-  usePrepareGeneralKeeperCreateSha,
-  useRegCenterCounterOfDocs,
-  useRegCenterCounterOfVersions, 
+  useGeneralKeeperCreateIa, 
+  usePrepareGeneralKeeperCreateIa,
 } from "../../../generated";
 import { BigNumber } from "ethers";
 import { FilesListWithInfo, GetFilesList } from "../../../components";
@@ -38,49 +30,40 @@ async function getReceipt(hash: HexType): Promise<HexType> {
     hash: hash
   });
 
-  let addrOfSha: HexType = AddrZero;
+  let addrOfIa: HexType = AddrZero;
 
   if (receipt) {
-    addrOfSha = `0x${receipt.logs[0].topics[2].substring(26)}`;
+    addrOfIa = `0x${receipt.logs[0].topics[2].substring(26)}`;
   }
 
-  return addrOfSha;  
+  return addrOfIa;  
 }
 
-function BookOfSHA() {
+function BookOfIA() {
   const { gk, boox } = useComBooxContext();
 
-  const [sha, setSha] = useState<HexType>();
+  const [ia, setIa] = useState<HexType>();
 
   const [ version, setVersion ] = useState<string>();
 
-  const { config } = usePrepareGeneralKeeperCreateSha({
+  const { config } = usePrepareGeneralKeeperCreateIa({
     address: gk,
     args: version ? [BigNumber.from(version)] : undefined,
   });
-  const {isLoading, write} = useGeneralKeeperCreateSha({
+  const {isLoading, write} = useGeneralKeeperCreateIa({
     ...config,
     onSuccess(data) {
       getReceipt(data.hash).then(
-        addrOfSha => setSha(addrOfSha)
+        addrOfIa => setIa(addrOfIa)
       );
     }
   });
-
-  // useEffect(() => {
-  //   if ( data ) {
-  //     getReceipt(data.hash).then( 
-  //       addrOfSha => setSha(addrOfSha)
-  //     );
-  //   }
-  // });
-
 
   return (
     <>
       <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Toolbar>
-          <h3>BOH - Book Of ShareholdersAgreements</h3>
+          <h3>BOA - Book Of InvestmentAgreement</h3>
         </Toolbar>
 
         <table width={1500} >
@@ -106,7 +89,7 @@ function BookOfSHA() {
                       size='small'
                     />
 
-                    {!sha ? (
+                    {!ia ? (
                       <Button 
                         disabled={!write || isLoading}
                         sx={{ m: 1, minWidth: 120, height: 40 }} 
@@ -115,20 +98,20 @@ function BookOfSHA() {
                         onClick={() => write?.() }
                         size='small'
                       >
-                        Create_SHA
+                        Create_IA
                       </Button>
 
                     ) : (
 
                       <Link 
                         href={{
-                          pathname: './sha/bodyTerms',
+                          pathname: './ia/bodyTerms',
                           query: {
-                            addr: sha,
+                            addr: ia,
                           }
                         }}
                         
-                        as={'./sha'}
+                        as={'./ia'}
 
                         sx={{
                           mb: 4,
@@ -146,7 +129,7 @@ function BookOfSHA() {
                           }}
                           endIcon={ <ReadMoreOutlined /> }
                         >
-                          OPEN SHA
+                          OPEN IA
                         </Button>
                           
                       </Link>
@@ -161,10 +144,10 @@ function BookOfSHA() {
             <tr>
               <td colSpan={4}>
                 <GetFilesList 
-                  addr={boox[4]} 
-                  title="SHA List" 
-                  pathName="/comp/boh/sha/bodyTerms" 
-                  pathAs="/comp/boh/sha" 
+                  addr={ boox[4] } 
+                  title="Investment Agreements List" 
+                  pathName="/comp/boa/ia/bodyTerms" 
+                  pathAs="/comp/boa/ia" 
                 />
               </td>
             </tr>
@@ -177,4 +160,4 @@ function BookOfSHA() {
   );
 } 
 
-export default BookOfSHA;
+export default BookOfIA;

@@ -5,6 +5,7 @@ export { NetworkSwitcher } from './common/NetworkSwitcher'
 export { DataList } from './common/DataList'
 export { Layout } from './common/Layout'
 
+export { GetFilesList } from './common/fileFolder/GetFilesList'
 
 
 export { SetGeneralCounsel } from './common/accessControl/SetGeneralCounsel'
