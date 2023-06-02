@@ -5,6 +5,7 @@ import {
   IconButton,
   Paper,
   Toolbar,
+  Box,
 } from "@mui/material";
 
 import { FirstRefusalRuleType, ShaRuleInputProps } from "../../../../interfaces";
@@ -58,7 +59,7 @@ let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
       seqOfRule: 513, 
       qtyOfSubRule: 2, 
       seqOfSubRule: 2,
-      typeOfDeal: 1,
+      typeOfDeal: 2,
       membersEqual: true,
       proRata: true,
       basedOnPar: false,
@@ -71,33 +72,38 @@ let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
 
   return (
     <Paper sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
-      <Stack direction={'row'} sx={{ alignItems:'center' }}>
-        <Toolbar>
-          <h4>First Refusal Rules</h4>
-        </Toolbar>
-        {!finalized && (
-          <>
-            <IconButton 
-              sx={{width: 20, height: 20, m: 1, p: 1}} 
-              onClick={ addCp }
-              color="primary"
-            >
-              <AddCircle/>
-            </IconButton>
-            <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
-              onClick={ removeCp }
-              color="primary"
-            >
-              <RemoveCircle/>
-            </IconButton>
-          </>
-        )}
 
-      </Stack>
+      <Box sx={{ width:1680 }}>
 
-      {cp.map((v)=> (
-         <SetFirstRefusalRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } finalized={ finalized } />
-      ))}
+        <Stack direction={'row'} sx={{ alignItems:'center' }}>
+          <Toolbar>
+            <h4>First Refusal Rules</h4>
+          </Toolbar>
+          {!finalized && (
+            <>
+              <IconButton 
+                sx={{width: 20, height: 20, m: 1, p: 1}} 
+                onClick={ addCp }
+                color="primary"
+              >
+                <AddCircle/>
+              </IconButton>
+              <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+                onClick={ removeCp }
+                color="primary"
+              >
+                <RemoveCircle/>
+              </IconButton>
+            </>
+          )}
+
+        </Stack>
+
+        {cp.map((v)=> (
+          <SetFirstRefusalRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } finalized={ finalized } />
+        ))}
+
+      </Box>
 
     </Paper>
   );

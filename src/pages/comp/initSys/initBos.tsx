@@ -29,16 +29,30 @@ import { HexType } from '../../../interfaces';
 import { DataList } from '../../../components';
 
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { DateTimeField } from '@mui/x-date-pickers';
+import dayjs, { Dayjs } from 'dayjs';
 
-type ShareArgsType = {
-  class?: string | undefined,
-  issueDate?: string | undefined,
-  shareholder?: string | undefined,
-  priceOfPaid?: string | undefined,
-  priceOfPar?: string | undefined,  
-  payInDeadline?: string | undefined,
-  paid?: string | undefined,
-  par?: string | undefined,  
+
+export interface ShareArgs {
+  class: number,
+  issueDate: number,
+  shareholder: number,
+  priceOfPaid: number,
+  priceOfPar: number,
+  payInDeadline: number,
+  paid: string,
+  par: string,
+}
+
+const defaultShareArgs: ShareArgs = {
+  class: 1,
+  issueDate: 0,
+  shareholder: 0,
+  priceOfPaid: 100,
+  priceOfPar: 100,
+  payInDeadline: 0,
+  paid: '0',
+  par: '0',
 }
 
 function InitBosPage() {
@@ -46,7 +60,7 @@ function InitBosPage() {
 
   const [sharesList, setSharesList] = useState<readonly HexType[]>();
 
-  const [shareArgs, setShareArgs] = useState<ShareArgsType>();
+  const [shareArgs, setShareArgs] = useState<ShareArgs>(defaultShareArgs);
 
   const {
     data: romKeeper
@@ -85,11 +99,11 @@ function InitBosPage() {
       shareArgs?.par ? 
         [
           `0x${'0'.padEnd(16, '0') + 
-            parseInt(shareArgs.class).toString(16).padStart(4, '0') + 
-            BigNumber.from(shareArgs.issueDate).toHexString().substring(2).padStart(12, '0') + 
-            BigNumber.from(shareArgs.shareholder).toHexString().substring(2).padStart(10, '0') + 
-            BigNumber.from(shareArgs.priceOfPaid).toHexString().substring(2).padStart(8, '0') + 
-            BigNumber.from(shareArgs.priceOfPar).toHexString().substring(2).padStart(8, '0') +
+            shareArgs.class.toString(16).padStart(4, '0') + 
+            shareArgs.issueDate.toString(16).padStart(12, '0') + 
+            shareArgs.shareholder.toString(16).padStart(10, '0') + 
+            shareArgs.priceOfPaid.toString(16).padStart(8, '0') + 
+            shareArgs.priceOfPar.toString(16).padStart(8, '0') +
             '0'.padEnd(6, '0')
           }`,
           BigNumber.from(shareArgs.payInDeadline),
@@ -168,7 +182,7 @@ function InitBosPage() {
               onChange={(e) => {
                 setShareArgs(v => ({
                   ...v,
-                  class: e.target.value,
+                  class: parseInt(e.target.value),
                 }));
               }}
 
@@ -185,7 +199,7 @@ function InitBosPage() {
               onChange={(e) => {
                 setShareArgs(v => ({
                   ...v,
-                  shareholder: e.target.value,
+                  shareholder: parseInt(e.target.value),
                 }));
               }}
 
@@ -195,37 +209,27 @@ function InitBosPage() {
 
             <br />
 
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfIssueDate" 
-              label="IssueDateOfShare" 
-              variant="outlined"
-              helperText="Timestamp (in 's')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  issueDate: e.target.value,
-                }));
-              }}
-
-              value = {shareArgs?.issueDate}
+            <DateTimeField
+              label='IssueDateOfShare'
+              sx={{m:1}}
+              value={ dayjs.unix(shareArgs?.issueDate) }
+              onChange={(date) => setShareArgs((v) => ({
+                ...v,
+                issueDate: date ? date.unix() : 0,
+              }))}
+              format='YYYY-MM-DD HH:mm:ss'
               size='small'
             />
 
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfPayInDeadline" 
-              label="PayInDeadline" 
-              variant="outlined"
-              helperText="Timestamp (in 's')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  payInDeadline: e.target.value,
-                }));
-              }}
-
-              value = {shareArgs?.payInDeadline}
+            <DateTimeField
+              label='PayInDeadline'
+              sx={{m:1}}
+              value={ dayjs.unix(shareArgs?.payInDeadline) }
+              onChange={(date) => setShareArgs((v) => ({
+                ...v,
+                payInDeadline: date ? date.unix() : 0,
+              }))}
+              format='YYYY-MM-DD HH:mm:ss'
               size='small'
             />
 
@@ -240,7 +244,7 @@ function InitBosPage() {
               onChange={(e) => {
                 setShareArgs(v => ({
                   ...v,
-                  priceOfPaid: e.target.value,
+                  priceOfPaid: parseInt(e.target.value),
                 }));
               }}
 
@@ -257,7 +261,7 @@ function InitBosPage() {
               onChange={(e) => {
                 setShareArgs(v => ({
                   ...v,
-                  priceOfPar: e.target.value,
+                  priceOfPar: parseInt(e.target.value),
                 }));
               }}
 
@@ -324,7 +328,7 @@ function InitBosPage() {
             boxShadow: 2,
             borderRadius: 1,
             p: 1,
-            minHeight: 486,            
+            minHeight: 462,            
           }}>
             {sharesList && (
               <div>

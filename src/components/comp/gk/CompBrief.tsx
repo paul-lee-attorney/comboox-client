@@ -161,12 +161,14 @@ export function RegNum({ addr }:ContractProps ) {
 export function RegNumTF({ addr }:ContractProps ) {
   const [regNum, setRegNum] = useState<string>();
 
-  const { refetch: refetchRegNumOfComp } = useGeneralKeeperRegNumOfCompany({
+  const { data, refetch: refetchRegNumOfComp } = useGeneralKeeperRegNumOfCompany({
     address: addr,
-    onSuccess(data) {
-      setRegNum(data.toHexString().substring(2).padStart(10, '0'));
-    }
   });
+
+  useEffect(()=>{
+    if (data)
+      setRegNum(data.toHexString().substring(2).padStart(10, '0'));
+  }, [data])
 
   return (
     <>

@@ -1,89 +1,130 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
-  Box,
   Button, 
   Paper, 
   Toolbar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
   TextField,
   Stack,
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import Link from "../../../scripts/Link"
 
-import { DialerSip, Create, Send, ReadMoreOutlined } from "@mui/icons-material";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../../interfaces";
+import { Create, Send } from "@mui/icons-material";
+import { HexType } from "../../../interfaces";
 
-import { waitForTransaction } from "@wagmi/core";
-
-
+import { readContract } from "@wagmi/core";
 
 import { 
-  useGeneralKeeper, 
+  filesFolderABI,
+  useFilesFolderGetFilesList,
   useGeneralKeeperCreateSha,
   usePrepareGeneralKeeperCreateSha,
-  useRegCenterCounterOfDocs,
-  useRegCenterCounterOfVersions, 
 } from "../../../generated";
 import { BigNumber } from "ethers";
-import { FilesListWithInfo, GetFilesList } from "../../../components";
+import { GetFilesList } from "../../../components";
+import { LoadingButton } from "@mui/lab";
 
-async function getReceipt(hash: HexType): Promise<HexType> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
+export interface HeadOfFile {
+  circulateDate: number;
+  signingDays: number;
+  closingDays: number;
+  seqOfVR: number;
+  shaExecDays: number;
+  reviewDays: number;
+  proposeDate: number;
+  reconsiderDays: number;
+  votePrepareDays: number;
+  votingDays: number;
+  execDaysForPutOpt: number;
+  seqOfMotion: BigNumber;
+  state: number;
+}
 
-  let addrOfSha: HexType = AddrZero;
+export interface RefOfFile {
+  docUrl: HexType;
+  docHash: HexType;
+}
 
-  if (receipt) {
-    addrOfSha = `0x${receipt.logs[0].topics[2].substring(26)}`;
+export interface InfoOfFile {
+  addr: HexType;
+  sn: HexType;
+  head: HeadOfFile;
+  ref: RefOfFile;
+}
+
+export async function getFilesListWithInfo(folder: HexType, files: readonly HexType[]): Promise<InfoOfFile[]> {
+
+  let list: InfoOfFile[] = [];
+  let len: number = files.length;
+  let i = len > 20 ? len-20 : 0;
+
+  while(i < len) {
+  
+    let file = await readContract({
+      address: folder,
+      abi: filesFolderABI,
+      functionName: 'getFile',
+      args: [files[i]],
+    });
+
+    list[len - i] = {
+      addr: files[i],
+      sn: file.snOfDoc,
+      head: file.head,
+      ref: file.ref,
+    };
+
+    i++;
+
   }
 
-  return addrOfSha;  
+  return list;
 }
 
 function BookOfSHA() {
   const { gk, boox } = useComBooxContext();
 
-  const [sha, setSha] = useState<HexType>();
+  const [ loading, setLoading ] = useState<boolean>();
+  const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
+  const {
+    refetch: getFilesList,
+  } = useFilesFolderGetFilesList({
+    address: boox[4],
+    onSuccess(data) {
+      if (data.length > 0) {
+        setLoading(true);
+        getFilesListWithInfo(boox[4], data).then(list => {
+          setLoading(false);
+          setFilesInfoList(list);
+        });
+      }
+    }
+  })
 
   const [ version, setVersion ] = useState<string>();
-
   const { config } = usePrepareGeneralKeeperCreateSha({
     address: gk,
     args: version ? [BigNumber.from(version)] : undefined,
   });
-  const {isLoading, write} = useGeneralKeeperCreateSha({
+  const {
+    isLoading: createShaLoading, 
+    write: createSha,
+  } = useGeneralKeeperCreateSha({
     ...config,
-    onSuccess(data) {
-      getReceipt(data.hash).then(
-        addrOfSha => setSha(addrOfSha)
-      );
+    onSuccess() {
+      getFilesList();
     }
   });
-
-  // useEffect(() => {
-  //   if ( data ) {
-  //     getReceipt(data.hash).then( 
-  //       addrOfSha => setSha(addrOfSha)
-  //     );
-  //   }
-  // });
-
 
   return (
     <>
       <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Toolbar>
-          <h3>BOH - Book Of ShareholdersAgreements</h3>
+          <h3>BOH - Book Of Shareholders Agreements</h3>
         </Toolbar>
 
-        <table width={1500} >
+        <table width={1680} >
           <thead />
           
           <tbody>
@@ -106,50 +147,26 @@ function BookOfSHA() {
                       size='small'
                     />
 
-                    {!sha ? (
-                      <Button 
-                        disabled={!write || isLoading}
-                        sx={{ m: 1, minWidth: 120, height: 40 }} 
-                        variant="contained" 
-                        endIcon={ <Create /> }
-                        onClick={() => write?.() }
-                        size='small'
+                    <Button 
+                      disabled={ !createSha || createShaLoading }
+                      sx={{ m: 1, minWidth: 120, height: 40 }} 
+                      variant="contained" 
+                      endIcon={ <Create /> }
+                      onClick={() => createSha?.() }
+                      size='small'
+                    >
+                      Create_SHA
+                    </Button>
+
+                    {loading && (
+                      <LoadingButton 
+                        loading={ loading } 
+                        loadingPosition='end' 
+                        endIcon={<Send/>} 
+                        sx={{p:1, m:1, ml:5}} 
                       >
-                        Create_SHA
-                      </Button>
-
-                    ) : (
-
-                      <Link 
-                        href={{
-                          pathname: './sha/bodyTerms',
-                          query: {
-                            addr: sha,
-                          }
-                        }}
-                        
-                        as={'./sha'}
-
-                        sx={{
-                          mb: 4,
-                          mt: 1,
-                          alignItems: 'center'
-                        }}
-
-                        variant='button'
-                        underline='hover'                
-                      >
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            height: 40,
-                          }}
-                          endIcon={ <ReadMoreOutlined /> }
-                        >
-                          OPEN SHA
-                        </Button>
-                          
-                      </Link>
+                        <span>Loading</span>
+                      </LoadingButton>
                     )}
 
                 </Stack>
@@ -160,12 +177,16 @@ function BookOfSHA() {
 
             <tr>
               <td colSpan={4}>
-                <GetFilesList 
-                  addr={boox[4]} 
-                  title="SHA List" 
-                  pathName="/comp/boh/sha/bodyTerms" 
-                  pathAs="/comp/boh/sha" 
-                />
+
+                {filesInfoList && (
+                  <GetFilesList 
+                    list={ filesInfoList } 
+                    title="SHA List" 
+                    pathName="/comp/boh/sha/bodyTerms" 
+                    pathAs="/comp/boh/sha" 
+                  />
+                )}
+
               </td>
             </tr>
           </tbody>

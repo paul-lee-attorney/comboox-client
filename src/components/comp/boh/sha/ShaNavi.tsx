@@ -11,6 +11,7 @@ import { HexType } from '../../../../interfaces';
 interface ShaNaviProps {
   contractName: string,
   addr: HexType,
+  snOfDoc: string,
   thisPath: string,
 }
 
@@ -20,7 +21,7 @@ interface TabPanelProps {
 }
 
 export function ShaNavi(props: ShaNaviProps) {
-  const { contractName, addr, thisPath, } = props;
+  const { contractName, addr, snOfDoc, thisPath, } = props;
 
   const tabs:TabPanelProps[] = [
     {path: './bodyTerms', name: 'Body Terms'},
@@ -33,19 +34,20 @@ export function ShaNavi(props: ShaNaviProps) {
   return (
     <>
       <Toolbar  >
-        <h3>{contractName} <br /> (address: {addr})</h3>
+        <h3>{contractName} <br /> (snOfDoc: {snOfDoc}) <br /> (address: {addr})</h3>
       </Toolbar>      
       <Stack
         direction={'row'}
       >
         {tabs.map((v, i) => (
-          <>
+          
             <Link 
               key={ i }
               href={{
                 pathname: v.path,
                 query: {
                   addr: addr,
+                  snOfDoc: snOfDoc,
                 }
               }}
               
@@ -71,7 +73,7 @@ export function ShaNavi(props: ShaNaviProps) {
               </Button>
                 
             </Link>
-          </>
+          
         ))}
       </Stack>   
     </>

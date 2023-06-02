@@ -26,6 +26,8 @@ export { ComBooxAppBar } from './center/ComBooxAppBar'
 export { GetDoc } from './center/GetDoc'
 export { GetComp } from './center/GetComp'
 
+export { CirculateIa } from './comp/boa/ia/CirculateIa'
+
 export { RulesList } from './comp/boh/rules/RulesList' 
 export { SetGovernanceRule } from './comp/boh/rules/SetGovernanceRule'
 export { SetVotingRule } from './comp/boh/rules/SetVotingRule'
@@ -43,19 +45,15 @@ export { Benchmark } from './comp/boh/terms/antiDilution/Benchmark'
 
 export { AddRule } from './comp/boh/rules/AddRule'
 
+export { ProposeDocOfGm } from './comp/bog/ProposeDocOfGm'
+export { VoteForDocOfGm } from './comp/bog/VoteForDocOfGm'
 
 export { ShaNavi } from './comp/boh/sha/ShaNavi'
-export { Signatures } from './comp/boh/sha/Signatures'
+export { Signatures } from './common/sigPage/Signatures'
 export { SignSha } from './comp/boh/sha/SignSha'
 export { CirculateSha } from './comp/boh/sha/CirculateSha'
-export { FinalizeSha } from './comp/boh/sha/FinalizeSha'
-export { ProposeSha } from './comp/boh/sha/ProposeSha'
-export { VoteForSha } from './comp/boh/sha/VoteForSha'
 export { VoteCounting } from './comp/boh/sha/VoteCounting'
 export { ActivateSha } from './comp/boh/sha/ActivateSha'
-
-
-export { FilesListWithInfo, FilesList } from './comp/boh/FilesList'
 
 export { RegisteredCapital, PaidInCapital } from './comp/rom/OwnersEquity'
 export { Controllor, VotesOfController } from './comp/rom/GetControllorInfo'

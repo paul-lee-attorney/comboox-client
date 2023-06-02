@@ -49,6 +49,7 @@ async function getTerm(addr: HexType, title: number): Promise<HexType> {
 function BodyTerms() {
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const snOfDoc:string | undefined = query.snOfDoc ? query.snOfDoc?.toString() : undefined;
 
   const [ finalized, setFinalized ] = useState(false);
 
@@ -163,7 +164,9 @@ function BodyTerms() {
   return (
     <Stack direction={'column'} sx={{ width: '100%', alignItems: 'center' }}>
 
-      <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./bodyTerms' />
+      {sha != '0x' && snOfDoc && (
+        <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } snOfDoc={ snOfDoc } thisPath='./bodyTerms' />
+      )}
 
       {sha != '0x' && (
         <Finalized addr={ sha } setFinalized={ setFinalized } />
@@ -191,7 +194,7 @@ function BodyTerms() {
 
       {guoLs && (<GroupUpdateOrders sha={ sha } seqList={ guoLs } finalized={finalized} />)}
 
-      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } finalized={finalized} />
+      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } />
 
     </Stack>    
   );

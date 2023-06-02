@@ -1,7 +1,6 @@
-import { useEffect } from 'react';
 
-import { Button, Box, Icon } from '@mui/material';
-import { Create, ReadMoreOutlined, Send } from '@mui/icons-material';
+import { Button } from '@mui/material';
+import { Create, ReadMoreOutlined } from '@mui/icons-material';
 import Link from '../../scripts/Link';
 
 

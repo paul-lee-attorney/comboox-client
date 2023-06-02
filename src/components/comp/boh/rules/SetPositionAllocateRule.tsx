@@ -1,6 +1,9 @@
 
 import { useState } from 'react';
 
+import dayjs, { Dayjs } from 'dayjs';
+import { DateTimeField } from '@mui/x-date-pickers';
+
 import { 
   Stack,
   TextField,
@@ -16,23 +19,35 @@ import {
   Toolbar,
 } from '@mui/material';
 
-
 import { AddRule } from './AddRule';
 
 import { Bytes32Zero, HexType, SetShaRuleProps } from '../../../../interfaces';
 import { dateParser } from '../../../../scripts/toolsKit';
 
-interface PosAllocateRuleType {
-  seqOfRule?: number | undefined;
-  qtyOfSubRule?: number | undefined;
-  seqOfSubRule?: number | undefined;
-  removePos?: boolean | undefined;
-  seqOfPos?: number | undefined;
-  titleOfPos?: number | undefined;
-  nominator?: number | undefined;
-  titleOfNominator?: number | undefined;
-  seqOfVR?: number | undefined;
-  endDate?: number | undefined;
+export interface PosAllocateRule {
+  seqOfRule: number ;
+  qtyOfSubRule: number ;
+  seqOfSubRule: number ;
+  removePos: boolean ;
+  seqOfPos: number ;
+  titleOfPos: number ;
+  nominator: number ;
+  titleOfNominator: number ;
+  seqOfVR: number ;
+  endDate: Dayjs | null;
+}
+
+const defaultRule: PosAllocateRule = {
+  seqOfRule: 256, 
+  qtyOfSubRule: 0,
+  seqOfSubRule: 0,
+  removePos: false,
+  seqOfPos: 0,
+  titleOfPos: 0,
+  nominator: 0,
+  titleOfNominator: 0,
+  seqOfVR: 0,
+  endDate: dayjs('2019-09-09T07:30:00Z'),
 }
 
 const titleOfPositions: string[] = ['ZeroPoint', 'Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
@@ -40,19 +55,19 @@ const titleOfPositions: string[] = ['ZeroPoint', 'Chairman', 'ViceChairman', 'Ma
 const titleOfNominator: string[] = ['ZeroPoint', 'Shareholder', 'Chairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager']
 
 export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRuleProps) {
-  const [ objPR, setObjPR ] = useState<PosAllocateRuleType>(); 
+  const [ objPR, setObjPR ] = useState<PosAllocateRule>(defaultRule); 
 
   let hexPR: HexType = `0x${
-    (objPR?.seqOfRule?.toString(16).padStart(4, '0') ?? seq.toString(16).padStart(4, '0')) +
-    (objPR?.qtyOfSubRule?.toString(16).padStart(2, '0') ?? qty.toString(16).padStart(2, '0')) +
-    (objPR?.seqOfSubRule?.toString(16).padStart(2, '0') ?? (seq - 255).toString(16).padStart(2, '0')) +
-    (objPR?.removePos ? '01' : '00') +
-    (objPR?.seqOfPos?.toString(16).padStart(4, '0') ?? '0000') +
-    (objPR?.titleOfPos?.toString(16).padStart(4, '0') ?? '0000') +
-    (objPR?.nominator?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objPR?.titleOfNominator?.toString(16).padStart(4, '0') ?? '0000') +                  
-    (objPR?.seqOfVR?.toString(16).padStart(4, '0') ?? '0000') +
-    (objPR?.endDate?.toString(16).padStart(12, '0') ?? '0'.padStart(12,'0')) +
+    (objPR?.seqOfRule.toString(16).padStart(4, '0') ?? defaultRule.seqOfRule.toString(16).padStart(4, '0')) +
+    (objPR?.qtyOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.qtyOfSubRule.toString(16).padStart(2, '0') ) +
+    (objPR?.seqOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.seqOfSubRule.toString(16).padStart(2, '0') ) +
+    (objPR?.removePos != undefined ? objPR.removePos ? '01' : '00' : defaultRule.removePos ? '01' : '00') +
+    (objPR?.seqOfPos.toString(16).padStart(4, '0') ?? defaultRule.seqOfPos.toString(16).padStart(4, '0')) +
+    (objPR?.titleOfPos.toString(16).padStart(4, '0') ?? defaultRule.titleOfPos.toString(16).padStart(4, '0') ) +
+    (objPR?.nominator.toString(16).padStart(10, '0') ?? defaultRule.nominator.toString(16).padStart(10, '0') ) +
+    (objPR?.titleOfNominator.toString(16).padStart(4, '0') ?? defaultRule.titleOfNominator.toString(16).padStart(4, '0') ) +                  
+    (objPR?.seqOfVR.toString(16).padStart(4, '0') ?? defaultRule.seqOfVR.toString(16).padStart(4, '0')) +
+    (objPR?.endDate?.unix().toString(16).padStart(12, '0') ?? defaultRule.endDate?.unix().toString(16).padStart(12, '0')) +
     '0'.padStart(16, '0')
   }`;
 
@@ -60,7 +75,7 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
 
   const [ newHexPR, setNewHexPr ] = useState<HexType>(Bytes32Zero);
 
-  let newPR: PosAllocateRuleType = {
+  let newPR: PosAllocateRule = {
     seqOfRule: parseInt(newHexPR.substring(2, 6), 16), 
     qtyOfSubRule: parseInt(newHexPR.substring(6, 8), 16),
     seqOfSubRule: parseInt(newHexPR.substring(8, 10), 16),
@@ -70,7 +85,7 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
     nominator: parseInt(newHexPR.substring(20, 30), 16),
     titleOfNominator: parseInt(newHexPR.substring(30, 34), 16),
     seqOfVR: parseInt(newHexPR.substring(34, 38), 16),
-    endDate: parseInt(newHexPR.substring(38, 50), 16),
+    endDate: dayjs.unix(parseInt(newHexPR.substring(38, 50), 16)),
   } 
 
   // console.log('newPR: ', newPR);
@@ -137,7 +152,7 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
               />
             )}
 
-            {newPR?.seqOfSubRule != undefined && (
+            {/* {newPR?.seqOfSubRule != undefined && (
               <TextField 
                 variant='filled'
                 label='SeqOfSubRule'
@@ -148,12 +163,12 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                 }}
                 value={ newPR.seqOfSubRule.toString() }
               />
-            )}
+            )} */}
 
             {newPR?.removePos != undefined && (
               <TextField 
                 variant='filled'
-                label='RemovePos'
+                label='RemovePos ?'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
@@ -173,6 +188,32 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                   minWidth: 218,
                 }}
                 value={ newPR.seqOfPos.toString() }
+              />
+            )}
+
+            {newPR?.titleOfPos != undefined && (
+              <TextField 
+                variant='filled'
+                label='TitleOfPos'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ titleOfPositions[newPR.titleOfPos] }
+              />
+            )}
+
+            {newPR?.endDate != undefined && (
+              <TextField 
+                variant='filled'
+                label='EndDate'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ newPR.endDate.format('YYYY-MM-DD HH:mm:ss') }
               />
             )}
 
@@ -209,7 +250,7 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                 value={ objPR?.qtyOfSubRule }              
               />
 
-              <TextField 
+              {/* <TextField 
                 variant='filled'
                 label='SeqOfSubRule'
                 sx={{
@@ -221,9 +262,9 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                   seqOfSubRule: parseInt(e.target.value),
                 }))}
                 value={ objPR?.seqOfSubRule }              
-              />
+              /> */}
 
-              <Box sx={{ minWidth: 218, m: 1 }} >
+              {/* <Box sx={{ minWidth: 218, m: 1 }} >
                 <FormControlLabel 
                   label='RemovePos'
                   control={
@@ -240,7 +281,25 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                     />
                   }
                 />
-              </Box>
+              </Box> */}
+
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="removePos-label">RemovePos ?</InputLabel>
+                <Select
+                  labelId="removePos-label"
+                  id="removePos-select"
+                  value={ objPR?.removePos ? '1' : '0' }
+                  onChange={(e) => setObjPR((v) => ({
+                    ...v,
+                    removePos: e.target.value == '1',
+                  }))}
+
+                  label="RemovePos ?"
+                >
+                  <MenuItem value={ '1' } > True </MenuItem>
+                  <MenuItem value={ '0' } > False </MenuItem>
+                </Select>
+              </FormControl>
 
               <TextField 
                 variant='filled'
@@ -256,23 +315,58 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                 value={ objPR?.seqOfPos }              
               />
 
-            </Stack>
-          </Collapse>
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
+                <Select
+                  labelId="titleOfPos-label"
+                  id="titleOfPos-select"
+                  value={ objPR?.titleOfPos == undefined ? '' : objPR?.titleOfPos }
+                  onChange={(e) => setObjPR((v) => ({
+                    ...v,
+                    titleOfPos: parseInt(e.target.value.toString()),
+                  }))}
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                  label="TitleOfPos"
+                >
+                  { titleOfPositions.map( (v, i) => (
+                    <MenuItem key={v} value={i}> { v } </MenuItem>
+                  ))}
 
-            {newPR?.titleOfPos != undefined && (
-              <TextField 
+                </Select>
+              </FormControl>
+
+              {/* <TextField 
                 variant='filled'
-                label='TitleOfPos'
-                inputProps={{readOnly: true}}
+                label='EndDate'
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                value={ titleOfPositions[newPR.titleOfPos] }
+                onChange={(e) => setObjPR((v) => ({
+                  ...v,
+                  endDate: parseInt(e.target.value),
+                }))}
+                value={ objPR?.endDate}                                        
+              /> */}
+
+              <DateTimeField
+                label='EndDate'
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }} 
+                value={ objPR?.endDate }
+                onChange={(date) => setObjPR((v) => ({
+                  ...v,
+                  endDate: date,
+                }))}
+                format='YYYY-MM-DD HH:mm:ss'
               />
-            )}
+
+            </Stack>
+          </Collapse>
+
+          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
             {newPR?.nominator != undefined && (
               <TextField 
@@ -296,7 +390,7 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                   m:1,
                   minWidth: 218,
                 }}
-                value={newPR.titleOfNominator.toString()}
+                value={ titleOfNominator[newPR.titleOfNominator]}
               />
             )}
 
@@ -313,43 +407,11 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
               />
             )}
 
-            {newPR?.endDate != undefined && (
-              <TextField 
-                variant='filled'
-                label='EndDate'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ dateParser(newPR.endDate) }
-              />
-            )}
 
           </Stack>
 
           <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
-                <Select
-                  labelId="titleOfPos-label"
-                  id="titleOfPos-select"
-                  value={ objPR?.titleOfPos == undefined ? '' : objPR?.titleOfPos }
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    titleOfPos: parseInt(e.target.value.toString()),
-                  }))}
-
-                  label="TitleOfPos"
-                >
-                  { titleOfPositions.map( (v, i) => (
-                    <MenuItem key={v} value={i}> { v } </MenuItem>
-                  ))}
-
-                </Select>
-              </FormControl>
 
               <TextField 
                 variant='filled'
@@ -364,7 +426,6 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                 }))}
                 value={ objPR?.nominator}                                        
               />
-
 
               <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
                 <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
@@ -398,20 +459,6 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
                   seqOfVR: parseInt(e.target.value),
                 }))}
                 value={ objPR?.seqOfVR}                                        
-              />
-
-              <TextField 
-                variant='filled'
-                label='EndDate'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjPR((v) => ({
-                  ...v,
-                  endDate: parseInt(e.target.value),
-                }))}
-                value={ objPR?.endDate}                                        
               />
 
             </Stack>

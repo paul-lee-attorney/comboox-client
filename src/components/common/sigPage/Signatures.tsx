@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   Stack,
@@ -8,8 +8,6 @@ import {
   TextField,
   Button,
   Tooltip,
-  Card,
-  CardContent,
   Box,
   FormControl,
   InputLabel,
@@ -21,13 +19,12 @@ import {
 
 import { 
   HexType,
-} from "../../../../interfaces";
+} from "../../../interfaces";
 
 import {
   Update,
   PersonAdd,
   PersonRemove,
-  Fingerprint,
 } from "@mui/icons-material"
 
 import { 
@@ -45,13 +42,11 @@ import {
   useSigPageRemoveBlank,
   useSigPageGetBuyers,
   useSigPageGetSellers, 
-} from "../../../../generated";
+} from "../../../generated";
 
 import { BigNumber } from "ethers";
 
-import { SignSha } from "./SignSha";
-
-import { dateParser } from "../../../../scripts/toolsKit";
+import { dateParser } from "../../../scripts/toolsKit";
 
 export interface StrSigType {
   signer: string,
@@ -118,7 +113,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
 
   const {
-    refetch: refetchParasOfPage
+    refetch: getParasOfPage
   } = useSigPageGetParasOfPage({
     address: addr,
     args: [initPage],
@@ -153,7 +148,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   } = useSigPageSetTiming({
     ...setTimingConfig,
     onSuccess() {
-      refetchParasOfPage();
+      getParasOfPage();
     }
   });
 
@@ -212,7 +207,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   } = useSigPageAddBlank({
     ...addBlankConfig,
     onSuccess() {
-      refetchParasOfPage();
+      getParasOfPage();
       refetchGetSellers();
       refetchGetBuyers();
     }
@@ -236,7 +231,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   } = useSigPageRemoveBlank({
     ...removeBlankConfig,
     onSuccess() {
-      refetchParasOfPage();
+      getParasOfPage();
       refetchGetSellers();
       refetchGetBuyers();
     }

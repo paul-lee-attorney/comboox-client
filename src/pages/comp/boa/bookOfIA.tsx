@@ -9,53 +9,51 @@ import {
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import Link from "../../../scripts/Link"
 
-import { Create, ReadMoreOutlined } from "@mui/icons-material";
-import { AddrZero, HexType } from "../../../interfaces";
-
-import { waitForTransaction } from "@wagmi/core";
-
-
+import { Create, ReadMoreOutlined, Send } from "@mui/icons-material";
 
 import { 
+  useFilesFolderGetFilesList,
   useGeneralKeeperCreateIa, 
   usePrepareGeneralKeeperCreateIa,
 } from "../../../generated";
 import { BigNumber } from "ethers";
-import { FilesListWithInfo, GetFilesList } from "../../../components";
-
-async function getReceipt(hash: HexType): Promise<HexType> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
-
-  let addrOfIa: HexType = AddrZero;
-
-  if (receipt) {
-    addrOfIa = `0x${receipt.logs[0].topics[2].substring(26)}`;
-  }
-
-  return addrOfIa;  
-}
+import { GetFilesList } from "../../../components";
+import { InfoOfFile, getFilesListWithInfo } from "../boh/bookOfSHA";
+import { LoadingButton } from "@mui/lab";
 
 function BookOfIA() {
   const { gk, boox } = useComBooxContext();
 
-  const [ia, setIa] = useState<HexType>();
+  const [ loading, setLoading ] = useState<boolean>();
+  const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
+  const {
+    refetch: getFilesList,
+  } = useFilesFolderGetFilesList({
+    address: boox[1],
+    onSuccess(data) {
+      if (data.length > 0) {
+        setLoading(true);
+        getFilesListWithInfo(boox[1], data).then(list => {
+          setLoading(false);
+          setFilesInfoList(list);
+        });
+      }
+    }
+  })
 
   const [ version, setVersion ] = useState<string>();
-
   const { config } = usePrepareGeneralKeeperCreateIa({
     address: gk,
     args: version ? [BigNumber.from(version)] : undefined,
   });
-  const {isLoading, write} = useGeneralKeeperCreateIa({
+  const {
+    isLoading: createIaLoading, 
+    write: createIa,
+  } = useGeneralKeeperCreateIa({
     ...config,
     onSuccess(data) {
-      getReceipt(data.hash).then(
-        addrOfIa => setIa(addrOfIa)
-      );
+      getFilesList();
     }
   });
 
@@ -63,10 +61,10 @@ function BookOfIA() {
     <>
       <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Toolbar>
-          <h3>BOA - Book Of InvestmentAgreement</h3>
+          <h3>BOA - Book Of Investment Agreements</h3>
         </Toolbar>
 
-        <table width={1500} >
+        <table width={1680} >
           <thead />
           
           <tbody>
@@ -89,66 +87,46 @@ function BookOfIA() {
                       size='small'
                     />
 
-                    {!ia ? (
-                      <Button 
-                        disabled={!write || isLoading}
-                        sx={{ m: 1, minWidth: 120, height: 40 }} 
-                        variant="contained" 
-                        endIcon={ <Create /> }
-                        onClick={() => write?.() }
-                        size='small'
+                    <Button 
+                      disabled={!createIa || createIaLoading}
+                      sx={{ m: 1, minWidth: 120, height: 40 }} 
+                      variant="contained" 
+                      endIcon={ <Create /> }
+                      onClick={() => createIa?.() }
+                      size='small'
+                    >
+                      Create_IA
+                    </Button>
+
+                    {loading &&  (
+                      <LoadingButton 
+                        loading={ loading } 
+                        loadingPosition='end' 
+                        endIcon={<Send/>} 
+                        sx={{p:1, m:1, ml:5}} 
                       >
-                        Create_IA
-                      </Button>
-
-                    ) : (
-
-                      <Link 
-                        href={{
-                          pathname: './ia/bodyTerms',
-                          query: {
-                            addr: ia,
-                          }
-                        }}
-                        
-                        as={'./ia'}
-
-                        sx={{
-                          mb: 4,
-                          mt: 1,
-                          alignItems: 'center'
-                        }}
-
-                        variant='button'
-                        underline='hover'                
-                      >
-                        <Button
-                          variant="outlined"
-                          sx={{
-                            height: 40,
-                          }}
-                          endIcon={ <ReadMoreOutlined /> }
-                        >
-                          OPEN IA
-                        </Button>
-                          
-                      </Link>
+                        <span>Loading</span>
+                      </LoadingButton>
                     )}
 
                 </Stack>
               </td>
               <td colSpan={2} >
+  
               </td>
             </tr>
 
             <tr>
               <td colSpan={4}>
-                <GetFilesList 
-                  addr={ boox[4] } 
-                  title="Investment Agreements List" 
-                  pathName="/comp/boa/ia/bodyTerms" 
-                  pathAs="/comp/boa/ia" 
-                />
+                {filesInfoList && (
+                  <GetFilesList 
+                    list={ filesInfoList } 
+                    title="Investment Agreements List" 
+                    pathName="/comp/boa/ia/bodyTerms" 
+                    pathAs="/comp/boa/ia" 
+                  />
+                )}
+                                
               </td>
             </tr>
           </tbody>

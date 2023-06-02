@@ -18,10 +18,14 @@ function AccessControl() {
 
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const snOfDoc: string = query?.snOfDoc?.toString() ?? '';
 
   return (
     <Stack sx={{ width: '100%', alignItems: 'center'}} direction={'column'} >
-      <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } thisPath='./accessControl' />
+
+      {sha != '0x' && snOfDoc && (
+        <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } snOfDoc={ snOfDoc } thisPath='./accessControl' />
+      )}
 
       {sha!='0x' && (
         <Finalized addr={sha} setFinalized={ setFinalized } />
@@ -35,7 +39,6 @@ function AccessControl() {
             <Paper sx={{m:1, p:1, border:1, borderColor:'divider'}}>
               <SetOwner addr={ sha } />
               <SetGeneralCounsel addr={ sha } />              
-              <LockContents addr={ sha } />
             </Paper>
           </Stack>
 

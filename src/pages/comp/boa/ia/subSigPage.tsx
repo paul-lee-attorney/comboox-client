@@ -12,13 +12,13 @@ import { ShaNavi } from '../../../../components';
 function SubSigPage() {
 
   const { query } = useRouter();
-  const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
-  const snOfDoc:string = query?.snOfDoc?.toString() ?? '';
+  const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const snOfDoc: string = query?.snOfDoc?.toString() ?? '';
 
   return (
     <Stack sx={{ width: '100%', alignItems: 'center' }}>
-      {sha != '0x' && snOfDoc && (
-        <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } snOfDoc={ snOfDoc } thisPath='./subSigPage' />
+      {ia != '0x' && snOfDoc && (
+        <ShaNavi contractName={'Investment Agreement'} addr={ ia } snOfDoc={ snOfDoc } thisPath='./subSigPage' />
       )}
     </Stack>    
   );

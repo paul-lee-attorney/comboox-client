@@ -1,25 +1,17 @@
 import { useState } from "react";
+import { HexType } from "../../../../interfaces";
+import { Box, IconButton, Paper, Stack, Toolbar } from "@mui/material";
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import { SetDeal } from "./SetDeal";
+import { SetTypeOfIa } from "./SetTypeOfIa";
 
-import { 
-  Stack,
-  IconButton,
-  Paper,
-  Toolbar,
-  Box,
-} from "@mui/material";
+interface DealsProps{
+  ia: HexType,
+  seqList: number[],
+  finalized: boolean,
+}
 
-import { ShaRuleInputProps } from "../../../../interfaces";
-
-import {
-  AddCircle,
-  RemoveCircle,
-} from "@mui/icons-material"
-
-import { 
-  SetFirstRefusalRule, SetGroupUpdateOrder, 
-} from '../../..';
-
-export function GroupUpdateOrders({sha, seqList, finalized}: ShaRuleInputProps) {
+export function Deals({ia, seqList, finalized}: DealsProps) {
 
   const [ cp, setCp ] = useState(seqList);
 
@@ -39,14 +31,15 @@ export function GroupUpdateOrders({sha, seqList, finalized}: ShaRuleInputProps) 
     })
   }
 
-  return (
-    <Paper sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
+  return(
+    <Paper sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
       <Box sx={{ width:1680 }}>
 
         <Stack direction={'row'} sx={{ alignItems:'center' }}>
           <Toolbar>
-            <h4>Group Update Orders</h4>
+            <h4>Deals</h4>
           </Toolbar>
+
           {!finalized && (
             <>
               <IconButton 
@@ -56,23 +49,25 @@ export function GroupUpdateOrders({sha, seqList, finalized}: ShaRuleInputProps) 
               >
                 <AddCircle/>
               </IconButton>
-              <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+              <IconButton sx={{width: 20, height: 20, m: 1, mr:40, p: 1, }} 
                 onClick={ removeCp }
                 color="primary"
               >
                 <RemoveCircle/>
-              </IconButton>      
+              </IconButton>
+
+              <SetTypeOfIa  ia={ia} finalized={ finalized } />
             </>
           )}
 
         </Stack>
 
-        {cp.map((v, _, arr)=> (
-          <SetGroupUpdateOrder key={ v } sha={ sha } qty={ arr.length } seq={ v } finalized={finalized} />
+        {cp.map((v)=> (
+          <SetDeal key={ v } ia={ ia } seq={ v } finalized={ finalized } />
         ))}
-      
+
       </Box>
     </Paper>
   );
-} 
 
+}

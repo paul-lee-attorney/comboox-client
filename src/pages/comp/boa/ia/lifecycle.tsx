@@ -13,15 +13,20 @@ import {
   Typography,
 } from "@mui/material";
 
-import { HexType } from "../../../../interfaces";
+import { AddrZero, Bytes32Zero, HexType } from "../../../../interfaces";
 
 import { 
   ShaNavi, 
   CirculateSha,
+  FinalizeSha,
+  ProposeSha,
   SignSha,
+  VoteForSha,
+  VoteCounting,
   ActivateSha,
   LockContents,
   ProposeDocOfGm,
+  CirculateIa,
   VoteForDocOfGm,
 } from '../../../../components';
 
@@ -29,17 +34,22 @@ import {
   accessControlABI,
   filesFolderABI,
   meetingMinutesABI,
+  useAccessControl, 
+  useAccessControlFinalized, 
   useFilesFolderGetHeadOfFile, 
+  useMeetingMinutes, 
+  useMeetingMinutesVoteEnded 
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { readContract } from "@wagmi/core";
+import { SignIa } from "../../../../components/comp/boa/ia/SignIa";
 import { VoteCountingForDocOfGm } from "../../../../components/comp/bog/VoteCountingForDocOfGm";
 
-async function finalized(sha: HexType): Promise<boolean> {
+async function finalized(ia: HexType): Promise<boolean> {
   let flag = await readContract({
-    address: sha,
+    address: ia,
     abi: accessControlABI,
     functionName: 'finalized',
   })
@@ -47,12 +57,12 @@ async function finalized(sha: HexType): Promise<boolean> {
   return flag;
 }
 
-async function getSeqOfMotion(boh: HexType, sha: HexType): Promise<BigNumber>{
+async function getSeqOfMotion(boa: HexType, ia: HexType): Promise<BigNumber>{
   let head = await readContract({
-    address: boh,
+    address: boa,
     abi: filesFolderABI,
     functionName: 'getHeadOfFile',
-    args: [ sha ],
+    args: [ ia ],
   });
 
   return head.seqOfMotion;
@@ -74,7 +84,7 @@ function Lifecycle() {
   const { boox } = useComBooxContext();
 
   const {query} = useRouter();
-  const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
   const snOfDoc: string = query?.snOfDoc?.toString() ?? '';
 
   const [ activeStep, setActiveStep ] = useState<number>();
@@ -87,8 +97,8 @@ function Lifecycle() {
     data: headOfFile,
     refetch: refetchFileState
   } = useFilesFolderGetHeadOfFile({
-    address: boox[4],
-    args: [sha],
+    address: boox[1],
+    args: [ia],
     onSuccess(data) {
       setFileState(data.state);
     }
@@ -97,19 +107,19 @@ function Lifecycle() {
   useEffect(()=> {
     if (fileState)
     switch (fileState) {
-      case 1: 
-        finalized(sha).then(
+      case 1: // created
+        finalized(ia).then(
           (flag) => setActiveStep(flag ? 1: 0)
         );
         break;
-      case 2: 
+      case 2: // circulated
         setActiveStep(fileState);
         break;
-      case 3: // Propose Sha
+      case 3: // established
         setActiveStep(fileState); 
         break;
       case 4: // Proposed
-        getSeqOfMotion(boox[4], sha).then(
+        getSeqOfMotion(boox[1], ia).then(
           seq => {
             setSeqOfMotion(seq);
             voteEnded(boox[3], seq).
@@ -123,25 +133,26 @@ function Lifecycle() {
         setActiveStep(6);
         break;
       case 6: // Rejected
-        setActiveStep(8);
-        break;
-      case 7: // Executed
         setActiveStep(7);
         break;
-      case 8: // Revoked
+      case 7: // Executed
         setActiveStep(8);
+        break;
+      case 8: // Revoked
+        setActiveStep(9);
       break;
 
     }
-  }, [sha, fileState, boox])
+  }, [ia, fileState, boox])
 
   return (
     <>
       <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
-        {sha != '0x' && snOfDoc && (
-          <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } snOfDoc={ snOfDoc } thisPath='./lifecycle' />
-        )}
         
+        {ia != '0x' && snOfDoc && (
+          <ShaNavi contractName={'Investment Agreement'} addr={ ia } snOfDoc={ snOfDoc } thisPath='./lifecycle' />
+        )}
+                
         <Paper
           sx={{
             m:1, p:1,
@@ -156,13 +167,13 @@ function Lifecycle() {
                 <Step index={0} >
                   
                   <StepLabel>
-                    <h3>Finalize SHA</h3>
+                    <h3>Finalize IA</h3>
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Finalize terms & conditions of SHA (only for Owner of SHA).
+                      Finalize terms & conditions of IA (only for Owner of IA).
                     </Typography>
-                    <LockContents addr={ sha } setNextStep={ setActiveStep } />
+                    <LockContents addr={ ia } setNextStep={ setActiveStep } />
                   </StepContent>
 
                 </Step>
@@ -171,13 +182,13 @@ function Lifecycle() {
                 <Step index={1} >
 
                   <StepLabel>
-                    <h3>Circulate SHA</h3>
+                    <h3>Circulate IA</h3>
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Circulate SHA to parties for execution (only for Parties of SHA).
+                      Circulate IA to parties for execution (only for Parties of IA).
                     </Typography>
-                    <CirculateSha addr={ sha } setNextStep={ setFileState } />
+                    <CirculateIa addr={ ia } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -185,13 +196,13 @@ function Lifecycle() {
                 <Step index={2} >
 
                   <StepLabel>
-                    <h3>Sign SHA</h3>
+                    <h3>Sign IA</h3>
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Sign SHA to accept its terms (only for Parties of SHA).
+                      Sign IA to accept its terms (only for Parties of IA).
                     </Typography>
-                    <SignSha addr={ sha } setNextStep={ setFileState } />
+                    <SignIa addr={ ia } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -199,13 +210,13 @@ function Lifecycle() {
                 <Step index={3} >
 
                   <StepLabel>
-                    <h3>Propose SHA</h3>
+                    <h3>Propose IA</h3>
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Propose SHA to General Meeting for approval (only for Parties & Members).
+                      Propose IA to General Meeting for approval (only for Parties & Members).
                     </Typography>
-                    <ProposeDocOfGm addr={ sha } setNextStep={ setFileState } />
+                    <ProposeDocOfGm addr={ ia } setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>
@@ -213,11 +224,11 @@ function Lifecycle() {
                 <Step index={4} >
 
                   <StepLabel>
-                    <h3>Vote for SHA</h3>
+                    <h3>Vote for IA</h3>
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Cast vote in General Meeting to approve SHA.
+                      Cast vote in General Meeting to approve IA.
                     </Typography>
 
                     {seqOfMotion && (
@@ -234,10 +245,10 @@ function Lifecycle() {
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Count vote result of SHA (only for Members).
+                      Count vote result of IA (only for Members).
                     </Typography>
-                    {seqOfMotion && (
-                      <VoteCountingForDocOfGm seqOfMotion={ seqOfMotion } addrOfFile={ sha } seqOfBoox={4} setNextStep={ setFileState } />
+                    {ia != '0x' && seqOfMotion && (
+                      <VoteCountingForDocOfGm seqOfMotion={ seqOfMotion } addrOfFile={ ia } seqOfBoox={1} setNextStep={ setFileState } />
                     )}
                   </StepContent>
 
@@ -246,13 +257,12 @@ function Lifecycle() {
                 <Step index={6} >
 
                   <StepLabel>
-                    <h3>Activate SHA</h3>
+                    <h3>Approved</h3>
                   </StepLabel>
                   <StepContent  >
                     <Typography>
-                      Activate SHA into leagal forces (only for Parties of SHA).
+                      IA is Approved.
                     </Typography>
-                    <ActivateSha addr={ sha } setNextStep={ setFileState } />
                     
                   </StepContent>
 
@@ -261,12 +271,12 @@ function Lifecycle() {
                 <Step index={7} >
 
                   <StepLabel>
-                    <h3>In Force</h3>
+                    <h3>Rejected</h3>
                   </StepLabel>
                   <StepContent  >
                     
                     <Typography color={'HighlightText'}>
-                      The SHA currently is In Force.
+                      IA is Rejected.
                     </Typography>
 
                   </StepContent>
@@ -276,17 +286,33 @@ function Lifecycle() {
                 <Step index={8} >
 
                   <StepLabel>
-                    <h3>Revoked</h3>
+                    <h3>Executed</h3>
                   </StepLabel>
                   <StepContent  >
                     
                     <Typography color={'HighlightText'}>
-                      SHA currently is revoked.
+                      IA is executed.
                     </Typography>
 
                   </StepContent>
 
                 </Step>
+
+                <Step index={ 9 } >
+
+                  <StepLabel>
+                    <h3>Revoked</h3>
+                  </StepLabel>
+                  <StepContent  >
+                    
+                    <Typography color={'HighlightText'}>
+                      IA is revoked.
+                    </Typography>
+
+                  </StepContent>
+
+                </Step>
+
 
               </Stepper>
             </Box>

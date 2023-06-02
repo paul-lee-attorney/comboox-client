@@ -41,7 +41,7 @@ export function PositionAllocateRules({sha, seqList, finalized}: ShaRuleInputPro
 
   return (
     <Paper sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
-      <Box sx={{ width:1440 }}>
+      <Box sx={{ width:1680 }}>
 
         <Stack direction={'row'} sx={{ alignItems:'center' }}>
           <Toolbar>

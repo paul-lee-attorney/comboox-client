@@ -124,7 +124,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const { gk, boox, setBoox } = useComBooxContext();
   
   useEffect(() => {
-    if (gk != AddrZero)
+    if (gk != undefined && gk != AddrZero)
       getBoox(gk).then((boox) => setBoox(boox));
   });
 
@@ -285,7 +285,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
         <List>
 
-          <ListItem >
+          <ListItem disablePadding >
             <ListItemButton 
               LinkComponent={Link}
               href='/'
@@ -297,10 +297,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             </ListItemButton>
           </ListItem>
 
-
         <Divider />
 
-          <ListItem >
+          <ListItem disablePadding >
             <ListItemButton 
               LinkComponent={Link}
               href='/comp/mainPage'
@@ -312,8 +311,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             </ListItemButton>
           </ListItem>
 
-
-          <ListItem >
+          <ListItem disablePadding >
             <ListItemButton 
               LinkComponent={Link}
               href='/comp/boh/bookOfSHA'
@@ -325,7 +323,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             </ListItemButton>
           </ListItem>
 
-          <ListItem >
+          <ListItem disablePadding >
             <ListItemButton 
               LinkComponent={Link}
               href='/comp/boa/bookOfIA'
@@ -337,16 +335,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             </ListItemButton>
           </ListItem>
 
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <Inbox /> : <Mail />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
         </List>
 
         <Divider />

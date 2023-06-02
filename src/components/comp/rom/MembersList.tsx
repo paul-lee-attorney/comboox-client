@@ -52,6 +52,7 @@ type MemberShareClipType = {
   date: string,
   paid: string,
   par: string,
+  clean: string,
 }
 
 async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promise<MemberShareClipType[]> {
@@ -72,8 +73,9 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
     list[i] = {
       acct: members[i].toHexString().substring(2).padStart(10,'0'),
       date: dateParser(item.timestamp),
-      paid: item.paid.toNumber().toString(),
-      par: item.par.toNumber().toString(),
+      paid: item.paid.toString(),
+      par: item.par.toString(),
+      clean: item.cleanPaid.toString()
     };
 
     i++;
@@ -109,6 +111,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
             <TableCell align="right">Update Date</TableCell>
             <TableCell align="right">Subscribed Contribution</TableCell>
             <TableCell align="right">Paid-In Contribution</TableCell>
+            <TableCell align="right">Clean Paid Contribution</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -124,6 +127,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
               <TableCell align="right">{v.date}</TableCell>
               <TableCell align="right">{v.par}</TableCell>
               <TableCell align="right">{v.paid}</TableCell>
+              <TableCell align="right">{v.clean}</TableCell>
             </TableRow>
           )))}
         </TableBody>

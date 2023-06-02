@@ -8,17 +8,17 @@ import {
   Toolbar,
   Checkbox,
   FormControlLabel,
-  Button,
   Box,
   Collapse,
-  ToolBar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 
 import { AddRule } from './AddRule'
 
 import { Bytes32Zero, FirstRefusalRuleType, HexType } from '../../../../interfaces';
-import { BigNumber } from 'ethers';
-import { dateParser, toPercent } from '../../../../scripts/toolsKit';
 
 interface SetFirstRefusalRuleProps {
   sha: HexType,
@@ -102,6 +102,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
         >
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
             {newFR?.seqOfRule != undefined && (
               <TextField 
                 variant='filled'
@@ -128,19 +129,6 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
               />
             )}
 
-            {newFR?.seqOfSubRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='SeqOfSubRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.seqOfSubRule.toString() }
-              />
-            )}
-
             {newFR?.typeOfDeal != undefined && (
               <TextField 
                 variant='filled'
@@ -154,11 +142,10 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
               />
             )}
 
-
             {newFR?.membersEqual != undefined && (
               <TextField 
                 variant='filled'
-                label='MembersEqual'
+                label='MembersEqual ?'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
@@ -171,7 +158,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
             {newFR?.proRata != undefined && (
               <TextField 
                 variant='filled'
-                label='ProRata'
+                label='ProRata ?'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
@@ -181,11 +168,23 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
               />
             )}
 
+            {newFR?.basedOnPar != undefined && (
+              <TextField 
+                variant='filled'
+                label='BasedOnPar ?'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={newFR.basedOnPar ? 'True' : 'False'}
+              />
+            )}
+
           </Stack>
 
           <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-              {/* <Collapse in={ false } >   */}            
 
               <TextField 
                 variant='filled'
@@ -217,20 +216,6 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
 
               <TextField 
                 variant='filled'
-                label='SeqOfSubRule'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  seqOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objFR?.seqOfSubRule }              
-              />
-
-              <TextField 
-                variant='filled'
                 label='TypeOfDeal'
                 sx={{
                   m:1,
@@ -243,61 +228,66 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                 value={ objFR?.typeOfDeal }              
               />
 
-              <Box sx={{ minWidth: 218, m: 1 }} >
-                <FormControlLabel 
-                  label='MembersEqual'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjFR(v => ({
-                        ...v,
-                        membersEqual: e.target.checked,
-                      }))}
-                      checked={ objFR?.membersEqual }
-                    />
-                  }
-                />
-              </Box>
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="membersEqual-label">MembersEqual ?</InputLabel>
+                <Select
+                  labelId="membersEqual-label"
+                  id="membersEqual-select"
+                  value={ objFR?.membersEqual ? '1' : '0' }
+                  onChange={(e) => setObjFR((v) => ({
+                    ...v,
+                    membersEqual: e.target.value == '01',
+                  }))}
 
-              <Box sx={{ minWidth: 218, m: 1 }} >
-                <FormControlLabel 
-                  label='ProRata'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjFR(v => ({
-                        ...v,
-                        proRata: e.target.checked,
-                      }))}
-                      checked={ objFR?.proRata }
-                    />
-                  }
-                />
-              </Box>
+                  label="MembersEqual ?"
+                >
+                  <MenuItem value={'1'}>True</MenuItem>
+                  <MenuItem value={'0'}>False</MenuItem>
+                </Select>
+              </FormControl>
+
+
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="proRata-label">ProRata ?</InputLabel>
+                <Select
+                  labelId="proRata-label"
+                  id="proRata-select"
+                  value={ objFR?.proRata ? '1' : '0' }
+                  onChange={(e) => setObjFR((v) => ({
+                    ...v,
+                    proRata: e.target.value == '01',
+                  }))}
+
+                  label="ProRata ?"
+                >
+                  <MenuItem value={'1'}>True</MenuItem>
+                  <MenuItem value={'0'}>False</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
+                <Select
+                  labelId="basedOnPar-label"
+                  id="basedOnPar-select"
+                  value={ objFR?.basedOnPar ? '1' : '0' }
+                  onChange={(e) => setObjFR((v) => ({
+                    ...v,
+                    basedOnPar: e.target.value == '01',
+                  }))}
+
+                  label="BasedOnPar ?"
+                >
+                  <MenuItem value={'1'}>True</MenuItem>
+                  <MenuItem value={'0'}>False</MenuItem>
+                </Select>
+              </FormControl>
+
 
             </Stack>
           </Collapse>
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-            {newFR?.basedOnPar != undefined && (
-              <TextField 
-                variant='filled'
-                label='BasedOnPar'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={newFR.basedOnPar ? 'True' : 'False'}
-              />
-            )}
 
             {newFR?.rightholder1 != undefined && (
               <TextField 
@@ -355,25 +345,6 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
 
           <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <Box sx={{ minWidth: 218, m: 1 }} >
-                <FormControlLabel 
-                  label='BasedOnPar'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjFR(v => ({
-                        ...v,
-                        basedOnPar: e.target.checked,
-                      }))}
-                      checked={ objFR?.basedOnPar }
-                    />
-                  }
-                />
-              </Box>
 
               <TextField 
                 variant='filled'

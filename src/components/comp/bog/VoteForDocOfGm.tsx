@@ -8,15 +8,15 @@ import {
   usePrepareGeneralKeeperCastVoteOfGm, 
   usePrepareGeneralKeeperSignSha, 
   useSigPageGetParasOfPage 
-} from "../../../../generated";
+} from "../../../generated";
 
-import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../interfaces";
+import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline, Fingerprint, HowToVote } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { BigNumber } from "ethers";
 import { readContract } from "@wagmi/core";
-import { toPercent } from "../../../../scripts/toolsKit";
+import { toPercent } from "../../../scripts/toolsKit";
 
 interface StrParasOfSigPageType {
   circulateDate: number,
@@ -44,55 +44,21 @@ interface VoteCaseType {
   weight: BigNumber,  
 }
 
-// async function getVoteCase(addrOfBog: HexType, seqOfMotion: BigNumber, attitude: BigNumber): Promise<VoteCaseType> {
-//   let voteCase = await readContract({
-//     address: addrOfBog,
-//     abi: meetingMinutesABI,
-//     functionName: 'getCaseOfAttitude',
-//     args: [seqOfMotion, attitude],
-//   });
-
-//   let output:VoteCaseType = {
-//     head: voteCase.sumOfHead,
-//     weight: voteCase.sumOfWeight,
-//   }
-
-//   return output;
-// }
-
-// async function getVoteResult( addrOfBog: HexType, addrOfSha: HexType ): Promise<VoteCaseType[]> {
-//   let len = 4;
-//   let output:VoteCaseType[] = [];
-
-//   while (len > 0) {
-//     let item = await getVoteCase(
-//       addrOfBog, 
-//       BigNumber.from(addrOfSha), 
-//       BigNumber.from(len-1)
-//     );
-//     output.push(item);
-//     len--;
-//   }
-
-//   return output;
-// }
-
 interface VoteForShaProps {
-  seqOfMotion: BigNumber | undefined ;
+  seqOfMotion: BigNumber ;
   setNextStep: (next: number) => void;
 }
 
-export function VoteForSha({ seqOfMotion, setNextStep }: VoteForShaProps) {
+export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForShaProps) {
 
   const [ voteResult, setVoteResult ] = useState<VoteCaseType[]>([]);
   const { gk, boox } = useComBooxContext();
-
 
   const {
     refetch: refetchAll
   } = useMeetingMinutesGetCaseOfAttitude({
     address: boox[3],
-    args: seqOfMotion ? [seqOfMotion, BigNumber.from('0')] : undefined,
+    args: [seqOfMotion, BigNumber.from('0')],
     onSuccess(data) {
       setVoteResult(v => {
         let arr = [...v];

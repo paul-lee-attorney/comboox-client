@@ -18,19 +18,20 @@ function SigPage() {
   const [finalized, setFinalized] = useState(false);
 
   const { query } = useRouter();
-  const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
   const snOfDoc:string = query?.snOfDoc?.toString() ?? '';
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
-      {sha != '0x' && snOfDoc && (
-        <ShaNavi contractName={'Shareholders Agreement'} addr={ sha } snOfDoc={ snOfDoc } thisPath='./sigPage' />
+
+      {ia != '0x' && snOfDoc && (
+        <ShaNavi contractName={'Investment Agreement'} addr={ ia } snOfDoc={ snOfDoc } thisPath='./sigPage' />
       )}
 
-      {sha != '0x' && (
+      {ia != '0x' && (
         <>
-          <Finalized addr={sha} setFinalized={setFinalized} />
-          <Signatures addr={ sha } initPage={ true } finalized={finalized} />      
+          <Finalized addr={ ia } setFinalized={ setFinalized } />
+          <Signatures addr={ ia } initPage={ true } finalized={ finalized } />
         </>
       )}
 

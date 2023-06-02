@@ -1,5 +1,5 @@
 import { regCenterABI, useRegCenterGetDocByUserNo } from '../../generated';
-import { AddrOfRegCenter } from '../../interfaces';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
@@ -13,9 +13,26 @@ type GetCompType = {
   regNum: string
 }
 
-async function getDocByUserNo(regNum: string): Promise<any>{
+export interface Head {
+  typeOfDoc: number,
+  version: number,
+  seqOfDoc: BigNumber,
+  creator: number,
+  createDate: number,
+  para: number,
+  argu: number,
+  data: number,
+  state: number,
+}
 
-  let data = await readContract({
+export interface Doc {
+  head: Head,
+  body: HexType,
+}
+
+async function getDocByUserNo(regNum: string): Promise<Doc>{
+
+  let data:Doc = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDocByUserNo',
@@ -32,28 +49,17 @@ export function GetComp() {
 
   const [ regNum, setRegNum ] = useState<string>();
 
-  const [ doc, setDoc ] = useState<any>();
-
+  const [ doc, setDoc ] = useState<Doc>();
 
   const handleClick = async () => {
     if (regNum) {
-      let data = await getDocByUserNo(regNum);
-      setGK(data.body);
-      setDoc(data);
+      let doc = await getDocByUserNo(regNum);
+      if (doc.body != AddrZero) {
+        setGK(doc.body);
+        setDoc(doc);
+      }
     }
   }
-
-  // const {
-  //   data, 
-  //   isLoading, 
-  //   refetch,
-  // } = useRegCenterGetDocByUserNo({
-  //   address: AddrOfRegCenter,
-  //   args: regNo ? [ BigNumber.from(regNo) ] : undefined,
-  //   onSuccess(doc) {
-  //     setGK(doc.body);
-  //   }
-  // });
 
   return (
     <Stack direction={'column'} sx={{ width:'100%', alignItems:'center' }} >

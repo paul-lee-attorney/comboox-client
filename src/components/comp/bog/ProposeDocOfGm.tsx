@@ -1,13 +1,12 @@
-import { useState } from "react";
 
-import { Button, Stack, TextField } from "@mui/material";
-import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../../generated";
-import { FileHistoryProps, } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { BackHand, EmojiPeople, Outbox } from "@mui/icons-material";
+import { Button } from "@mui/material";
+import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../generated";
+import { FileHistoryProps, } from "../../../interfaces";
+import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { EmojiPeople } from "@mui/icons-material";
 import { BigNumber } from "ethers";
 
-export function ProposeSha({ addr, setNextStep }: FileHistoryProps) {
+export function ProposeDocOfGm({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
 
