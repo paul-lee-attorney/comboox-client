@@ -49,7 +49,9 @@ export function Deals({ia, seqList, finalized}: DealsProps) {
               >
                 <AddCircle/>
               </IconButton>
-              <IconButton sx={{width: 20, height: 20, m: 1, mr:40, p: 1, }} 
+              <IconButton
+                disabled={ cp.length <2 } 
+                sx={{width: 20, height: 20, m: 1, mr:40, p: 1, }} 
                 onClick={ removeCp }
                 color="primary"
               >

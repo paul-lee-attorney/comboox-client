@@ -535,22 +535,8 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                   value={ objSn?.priceOfPar }
                 />
 
-                {/* <TextField 
-                  variant='filled'
-                  label='ClosingDate'
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  onChange={(e) => setObjSn((v) => ({
-                    ...v,
-                    closingDate: parseInt(e.target.value),
-                  }))}
-                  value={ objSn?.closingDate }
-                /> */}
-
                 <DateTimeField
-                  label='closingDate'
+                  label='ClosingDate'
                   sx={{
                     m:1,
                     minWidth: 218,

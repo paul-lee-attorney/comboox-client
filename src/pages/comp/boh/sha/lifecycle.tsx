@@ -205,7 +205,7 @@ function Lifecycle() {
                     <Typography>
                       Propose SHA to General Meeting for approval (only for Parties & Members).
                     </Typography>
-                    <ProposeDocOfGm addr={ sha } setNextStep={ setFileState } />
+                    <ProposeDocOfGm addr={ sha } seqOfVR={8} setNextStep={ setFileState } />
                   </StepContent>
 
                 </Step>

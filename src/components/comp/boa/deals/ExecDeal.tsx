@@ -3,14 +3,14 @@ import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { readContract, waitForTransaction } from "@wagmi/core";
 import { investmentAgreementABI, useGeneralKeeperCloseDeal, useGeneralKeeperIssueNewShare, useGeneralKeeperPushToCoffer, useGeneralKeeperRevokeDeal, useGeneralKeeperTerminateDeal, useGeneralKeeperTransferTargetShare, useInvestmentAgreementCreateDeal, usePrepareGeneralKeeperCloseDeal, usePrepareGeneralKeeperIssueNewShare, usePrepareGeneralKeeperPushToCoffer, usePrepareGeneralKeeperRevokeDeal, usePrepareGeneralKeeperTerminateDeal, usePrepareGeneralKeeperTransferPledge, usePrepareGeneralKeeperTransferTargetShare, usePrepareInvestmentAgreementCreateDeal } from "../../../../generated";
 import { useEffect, useState } from "react";
-import { dealSnParser } from "../../../../pages/comp/boa/ia/bodyTerms";
-import { Box, Button, Checkbox, Collapse, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar } from "@mui/material";
+import { Box, Button, Checkbox, Collapse, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import { Cancel, CurrencyBitcoin, CurrencyExchange, DirectionsRun, EditNote, HighlightOff, LockClock, LockOpen, RemoveShoppingCart, RemoveShoppingCartOutlined, RocketLaunch } from "@mui/icons-material";
 import { dateParser } from "../../../../scripts/toolsKit";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { getHash } from "next/dist/server/image-optimizer";
 
 import dayjs, {Dayjs} from "dayjs";
+import { DateTimeField } from "@mui/x-date-pickers";
 
 interface ExecDealProps{
   ia: HexType,
@@ -22,12 +22,14 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   const {gk} = useComBooxContext();
 
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
-  const [ closingDate, setClosingDate ] = useState<number>(0);
+  const [ closingDate, setClosingDate ] = useState<Dayjs | null>(dayjs('2019-09-09T00:00:00Z'));
   const [ hashKey, setHashKey ] = useState<string>('Input your key string here');
 
   const {config} = usePrepareGeneralKeeperPushToCoffer({
     address: gk,
-    args: [ia, BigNumber.from(seq), hashLock, BigNumber.from(closingDate)],
+    args: closingDate?.unix() ? 
+      [ia, BigNumber.from(seq), hashLock, BigNumber.from(closingDate.unix()) ] :
+      undefined,
   })
 
   const {
@@ -35,8 +37,9 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
     write: pushToCoffer,
   } = useGeneralKeeperPushToCoffer({
     ...config,
-    onSuccess(){
-      setLock(hashLock)
+    onSuccess() {
+      console.log('closingDate: ', closingDate);
+      setLock(hashLock);
     }
   })
 
@@ -128,18 +131,20 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
             </Toolbar>
           </Box>
 
-          <FormControlLabel
-          control={
-            <Switch 
-              color="primary" 
-              onChange={(e) => setUseLock( e.target.checked )} 
-              checked={ useLock } 
-            />
-          }
-          label={useLock ? 'Via Hash Locker' : 'Direct Transfer'}
-          labelPlacement="end"
+          <Typography>
+            Direct Transfer  
+          </Typography>
+
+          <Switch 
+            color="primary" 
+            onChange={(e) => setUseLock( e.target.checked )} 
+            checked={ useLock } 
           />
 
+          <Typography>
+            Via Hash Locker
+          </Typography>
+  
         </Stack>
 
         <Collapse in={ useLock } >
@@ -164,19 +169,19 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
                 m:1,
                 minWidth: 680,
               }}
-              onChange={(e) => setHashLock(`0x${e.target.value}`)}              
+              onChange={(e) => setHashLock(`0x${e.target.value}`)}
               value={ hashLock.substring(2) }
             />
 
-            <TextField 
-              variant='filled'
+            <DateTimeField
               label='ClosingDate'
-              inputProps={{readOnly: true}}
               sx={{
                 m:1,
                 minWidth: 218,
-              }}
-              value={ dayjs.unix(closingDate).format('YYYY-MM-DD HH:mm:ss') }
+              }} 
+              value={ closingDate }
+              onChange={(date) => setClosingDate(date)}
+              format='YYYY-MM-DD HH:mm:ss'
             />
 
           </Stack>

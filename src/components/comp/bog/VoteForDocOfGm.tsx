@@ -1,13 +1,8 @@
 import { Alert, Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, Stack, Tooltip, Typography } from "@mui/material";
 import { 
-  meetingMinutesABI,
   useGeneralKeeperCastVoteOfGm,
-  useGeneralKeeperSignSha, 
-  useMeetingMinutes, 
   useMeetingMinutesGetCaseOfAttitude, 
   usePrepareGeneralKeeperCastVoteOfGm, 
-  usePrepareGeneralKeeperSignSha, 
-  useSigPageGetParasOfPage 
 } from "../../../generated";
 
 import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../interfaces";
@@ -186,7 +181,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForShaProps) {
               Abstain: { voteResult[3]?.weight.toString() } by { voteResult[3]?.head.toString() } member(s)
 
               {voteResult[0]?.weight.toNumber() > 0 ?
-                ' | Support Ratio:' + toPercent(voteResult[1]?.weight.mul(10000).div(voteResult[0]?.weight).toNumber()/10000) :
+                ' | Support Ratio:' + toPercent(voteResult[1]?.weight.mul(10000).div(voteResult[0]?.weight).toNumber()) :
                 ''
               }
             </Typography>

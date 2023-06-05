@@ -1,4 +1,4 @@
-import { regCenterABI, useRegCenterGetDocByUserNo } from '../../generated';
+import { useRegCenterGetDocByUserNo } from '../../generated';
 import { AddrOfRegCenter, AddrZero, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
@@ -30,34 +30,46 @@ export interface Doc {
   body: HexType,
 }
 
-async function getDocByUserNo(regNum: string): Promise<Doc>{
+// async function getDocByUserNo(regNum: string): Promise<Doc>{
 
-  let data:Doc = await readContract({
-    address: AddrOfRegCenter,
-    abi: regCenterABI,
-    functionName: 'getDocByUserNo',
-    args: [BigNumber.from(regNum)],
-  })
+//   let data:Doc = await readContract({
+//     address: AddrOfRegCenter,
+//     abi: regCenterABI,
+//     functionName: 'getDocByUserNo',
+//     args: [BigNumber.from(regNum)],
+//   })
 
-  return data;
-}
+//   return data;
+// }
 
 
 export function GetComp() {
 
   const { setGK } = useComBooxContext();
 
-  const [ regNum, setRegNum ] = useState<string>();
+  const [ regNum, setRegNum ] = useState<number>();
 
   const [ doc, setDoc ] = useState<Doc>();
 
-  const handleClick = async () => {
-    if (regNum) {
-      let doc = await getDocByUserNo(regNum);
+  const [ bnRegNum, setBnRegNum ] = useState<BigNumber>();
+
+  const {
+    refetch: getDocByUserNo
+  } = useRegCenterGetDocByUserNo({
+    address: AddrOfRegCenter,
+    args: bnRegNum ? [bnRegNum] : undefined,
+    onSuccess(doc){
       if (doc.body != AddrZero) {
         setGK(doc.body);
         setDoc(doc);
       }
+    }
+  })
+
+  const handleClick = async () => {
+    if ( regNum ) {
+      setBnRegNum(BigNumber.from(regNum));
+      getDocByUserNo();
     }
   }
 
@@ -70,8 +82,8 @@ export function GetComp() {
           id="txRegNumOfComp" 
           label="RegNumOfComp" 
           variant="outlined"
-          helperText="Integer < 2^40 "
-          onChange={(e) => setRegNum(e.target.value)}
+          helperText=" Integer < 2^40 "
+          onChange={(e) => setRegNum(parseInt(e.target.value))}
           value = { regNum }
           size='small'
         />

@@ -321,7 +321,9 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
               >
                 <AddCircle/>
               </IconButton>
-              <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+              <IconButton 
+                disabled={ cp.length < 13 }
+                sx={{width: 20, height: 20, m: 1, p: 1, }} 
                 onClick={ removeCp }
                 color="primary"
               >

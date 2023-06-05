@@ -57,7 +57,9 @@ export function PositionAllocateRules({sha, seqList, finalized}: ShaRuleInputPro
               >
                 <AddCircle/>
               </IconButton>
-              <IconButton sx={{width: 20, height: 20, m: 1, p: 1, }} 
+              <IconButton
+                disabled={ cp.length < 2 } 
+                sx={{width: 20, height: 20, m: 1, p: 1, }} 
                 onClick={ removeCp }
                 color="primary"
               >

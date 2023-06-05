@@ -17,13 +17,6 @@ import { AddrZero, Bytes32Zero, HexType } from "../../../../interfaces";
 
 import { 
   ShaNavi, 
-  CirculateSha,
-  FinalizeSha,
-  ProposeSha,
-  SignSha,
-  VoteForSha,
-  VoteCounting,
-  ActivateSha,
   LockContents,
   ProposeDocOfGm,
   CirculateIa,
@@ -34,10 +27,8 @@ import {
   accessControlABI,
   filesFolderABI,
   meetingMinutesABI,
-  useAccessControl, 
-  useAccessControlFinalized, 
   useFilesFolderGetHeadOfFile, 
-  useMeetingMinutes, 
+  useInvestmentAgreementGetTypeOfIa, 
   useMeetingMinutesVoteEnded 
 } from "../../../../generated";
 
@@ -87,6 +78,17 @@ function Lifecycle() {
   const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
   const snOfDoc: string = query?.snOfDoc?.toString() ?? '';
 
+  const [ typeOfIa, setTypeOfIa ] = useState<number>();
+
+  const {
+    refetch: getTypeOfIa
+  } = useInvestmentAgreementGetTypeOfIa({
+    address: ia,
+    onSuccess(data) {
+      setTypeOfIa(data);
+    }
+  })
+
   const [ activeStep, setActiveStep ] = useState<number>();
 
   const [ fileState, setFileState ] = useState<number>();
@@ -95,7 +97,7 @@ function Lifecycle() {
 
   const {
     data: headOfFile,
-    refetch: refetchFileState
+    refetch: getHeadOfFile,
   } = useFilesFolderGetHeadOfFile({
     address: boox[1],
     args: [ia],
@@ -216,7 +218,11 @@ function Lifecycle() {
                     <Typography>
                       Propose IA to General Meeting for approval (only for Parties & Members).
                     </Typography>
-                    <ProposeDocOfGm addr={ ia } setNextStep={ setFileState } />
+
+                    {ia != '0x' && typeOfIa && (
+                      <ProposeDocOfGm addr={ ia } seqOfVR={ typeOfIa } setNextStep={ setFileState } />
+                    )}
+
                   </StepContent>
 
                 </Step>

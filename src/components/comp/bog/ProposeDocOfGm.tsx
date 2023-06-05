@@ -1,12 +1,19 @@
 
 import { Button } from "@mui/material";
 import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../generated";
-import { FileHistoryProps, } from "../../../interfaces";
+import { FileHistoryProps, HexType, } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { BigNumber } from "ethers";
 
-export function ProposeDocOfGm({ addr, setNextStep }: FileHistoryProps) {
+
+interface ProposeDocOfGmProps {
+  addr: HexType,
+  seqOfVR: number,
+  setNextStep: (next: number ) => void,
+}
+
+export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmProps) {
 
   const { gk } = useComBooxContext();
 
@@ -14,7 +21,7 @@ export function ProposeDocOfGm({ addr, setNextStep }: FileHistoryProps) {
     config
   } =  usePrepareGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: [addr, BigNumber.from('8'), BigNumber.from('0') ],
+    args: [addr, BigNumber.from(seqOfVR), BigNumber.from('0') ],
   });
 
   const {

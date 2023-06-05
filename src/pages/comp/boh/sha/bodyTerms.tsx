@@ -194,7 +194,7 @@ function BodyTerms() {
 
       {guoLs && (<GroupUpdateOrders sha={ sha } seqList={ guoLs } finalized={finalized} />)}
 
-      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } />
+      <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } finalized={finalized} />
 
     </Stack>    
   );

@@ -62,7 +62,8 @@ interface BenchmarkType {
 interface SetShaTermProps {
   sha: HexType,
   term?: HexType | undefined,
-  setTerm: (term?: HexType) => void, 
+  setTerm: (term?: HexType) => void,
+  finalized: boolean,
 }
 
 async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkType[]> {

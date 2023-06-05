@@ -17,6 +17,7 @@ import { ContractProps, HexType } from '../../../interfaces';
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 import { dateParser } from '../../../scripts/toolsKit';
+import dayjs from 'dayjs';
 
 export function MembersList({ addr }:ContractProps ) {
   const [membersList, setMembersList] = useState<string[]>();
@@ -72,7 +73,7 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
 
     list[i] = {
       acct: members[i].toHexString().substring(2).padStart(10,'0'),
-      date: dateParser(item.timestamp),
+      date: dayjs.unix(item.timestamp).format('YYYY-MM-DD HH:mm:ss'),
       paid: item.paid.toString(),
       par: item.par.toString(),
       clean: item.cleanPaid.toString()
