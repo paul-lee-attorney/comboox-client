@@ -87,7 +87,7 @@ export function SetTypeOfIa({ia, finalized}: SetTypeOfIaProps) {
         onClick={()=> setTypeOfIa?.()}
         size='small'
       >
-        Set_Type_Of_IA
+        Set
       </Button>
 
     </Stack>

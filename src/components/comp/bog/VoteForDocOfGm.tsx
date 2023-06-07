@@ -144,7 +144,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForShaProps) {
     <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
 
       <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="attitude-lable">Authority</InputLabel>
+        <InputLabel id="attitude-lable">Attitude</InputLabel>
         <Select
           labelId="attitude-lable"
           id="attitude-select"

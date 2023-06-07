@@ -33,7 +33,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 240;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference }  from '@mui/icons-material';
+import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference, Payments, ContentCopy, ContentCopyOutlined }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -179,7 +179,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
       <AppBar position="fixed" open={ appBarOpen }>
         <Toolbar>
           <IconButton
-            disabled={ gk === AddrZero }
             color="inherit"
             aria-label="open drawer"
             onClick={ handleDrawerOpen }
@@ -301,6 +300,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
           <ListItem disablePadding >
             <ListItemButton 
+              disabled={gk==AddrZero}
               LinkComponent={Link}
               href='/comp/mainPage'
             >
@@ -312,7 +312,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           </ListItem>
 
           <ListItem disablePadding >
-            <ListItemButton 
+            <ListItemButton
+              disabled={gk==AddrZero}
               LinkComponent={Link}
               href='/comp/boh/bookOfSHA'
             >
@@ -324,14 +325,28 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           </ListItem>
 
           <ListItem disablePadding >
-            <ListItemButton 
+            <ListItemButton
+              disabled={gk==AddrZero}
               LinkComponent={Link}
               href='/comp/boa/bookOfIA'
             >
               <ListItemIcon>
-                <Difference />
+                <ContentCopyOutlined />
               </ListItemIcon>
               <ListItemText primary="BookOfIA" />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding >
+            <ListItemButton
+              disabled={gk==AddrZero}
+              LinkComponent={Link}
+              href='/comp/bos/bookOfShares'
+            >
+              <ListItemIcon>
+                <Payments />
+              </ListItemIcon>
+              <ListItemText primary="BookOfShares" />
             </ListItemButton>
           </ListItem>
 

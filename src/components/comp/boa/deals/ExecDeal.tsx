@@ -11,14 +11,16 @@ import { getHash } from "next/dist/server/image-optimizer";
 
 import dayjs, {Dayjs} from "dayjs";
 import { DateTimeField } from "@mui/x-date-pickers";
+import { Deal } from "./SetDeal";
 
 interface ExecDealProps{
-  ia: HexType,
-  seq: number,
-  setLock: (lock: HexType) => void,
+  ia: HexType;
+  seq: number;
+  newDeal: Deal;
+  getDeal: () => any;
 }
 
-export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
+export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
   const {gk} = useComBooxContext();
 
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -38,8 +40,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   } = useGeneralKeeperPushToCoffer({
     ...config,
     onSuccess() {
-      console.log('closingDate: ', closingDate);
-      setLock(hashLock);
+      getDeal()
     }
   })
 
@@ -53,9 +54,12 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   const {
     isLoading: closeDealLoading,
     write: closeDeal
-  } = useGeneralKeeperCloseDeal(
-    closeDealConfig
-  );
+  } = useGeneralKeeperCloseDeal({
+    ...closeDealConfig,
+    onSuccess() {
+      getDeal()
+    }
+  });
 
   const {
     config: revokeDealConfig
@@ -67,9 +71,12 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   const {
     isLoading: revokeDealLoading,
     write: revokeDeal
-  } = useGeneralKeeperRevokeDeal(
-    revokeDealConfig
-  );
+  } = useGeneralKeeperRevokeDeal({
+    ...revokeDealConfig,
+    onSuccess() {
+      getDeal()
+    }
+  });
 
   const {
     config: terminateDealConfig
@@ -81,9 +88,12 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   const {
     isLoading: terminateDealLoading,
     write: terminateDeal
-  } = useGeneralKeeperTerminateDeal(
-    terminateDealConfig
-  );
+  } = useGeneralKeeperTerminateDeal({
+    ...terminateDealConfig,
+    onSuccess() {
+      getDeal();
+    }
+  });
 
   const {
     config: issueNewShareConfig
@@ -95,9 +105,12 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   const {
     isLoading: issueNewShareLoading,
     write: issueNewShare
-  } = useGeneralKeeperIssueNewShare(
-    issueNewShareConfig
-  );
+  } = useGeneralKeeperIssueNewShare({
+    ...issueNewShareConfig,
+    onSuccess() {
+      getDeal()
+    }
+  });
 
   const {
     config: transferTargetShareConfig
@@ -109,9 +122,12 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
   const {
     isLoading: transferTargetShareLoading,
     write: transferTargetShare
-  } = useGeneralKeeperTransferTargetShare(
-    transferTargetShareConfig
-  );
+  } = useGeneralKeeperTransferTargetShare({
+    ...transferTargetShareConfig,
+    onSuccess() {
+      getDeal()
+    }
+  });
 
   const [ useLock, setUseLock ] = useState<boolean>();
 
@@ -151,7 +167,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
           <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
             <Button 
-              disabled = {!pushToCoffer || isLoading}
+              disabled = {!pushToCoffer || isLoading || newDeal.body.state > 1 }
 
               sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
               variant="contained" 
@@ -159,7 +175,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
               onClick={()=> pushToCoffer?.()}
               size='small'
             >
-              Lock_Share
+              Lock Share
             </Button>
 
             <TextField 
@@ -197,7 +213,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
               onClick={()=> closeDeal?.()}
               size='small'
             >
-              Take_Share
+              Take Share
             </Button>
 
             <TextField 
@@ -212,7 +228,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
             />
 
             <Button 
-              disabled = {!revokeDeal || revokeDealLoading}
+              disabled = {!revokeDeal || revokeDealLoading || newDeal.body.state != 2}
 
               sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
               variant="contained" 
@@ -220,7 +236,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
               onClick={()=> revokeDeal?.()}
               size='small'
             >
-              Revoke_Deal
+              Revoke Deal
             </Button>
 
           </Stack>
@@ -237,11 +253,11 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
             onClick={()=> issueNewShare?.()}
             size='small'
           >
-            Issue_Share
+            Issue Share
           </Button>
 
           <Button 
-            disabled = {!transferTargetShare || transferTargetShareLoading}
+            disabled = {!transferTargetShare || transferTargetShareLoading || newDeal.body.state == 7}
 
             sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
             variant="contained" 
@@ -249,11 +265,11 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
             onClick={()=> transferTargetShare?.()}
             size='small'
           >
-            Transfer_Share
+            Transfer Share
           </Button>
 
           <Button 
-            disabled = {!terminateDeal || terminateDealLoading}
+            disabled = {!terminateDeal || terminateDealLoading || newDeal.body.state == 4}
 
             sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
             variant="contained" 
@@ -261,7 +277,7 @@ export function ExecDeal({ia, seq, setLock}: ExecDealProps) {
             onClick={()=> terminateDeal?.()}
             size='small'
           >
-            Terminate_Deal
+            Terminate Deal
           </Button>
 
         </Stack>

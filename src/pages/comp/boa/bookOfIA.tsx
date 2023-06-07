@@ -95,7 +95,7 @@ function BookOfIA() {
                       onClick={() => createIa?.() }
                       size='small'
                     >
-                      Create_IA
+                      Create IA
                     </Button>
 
                     {loading &&  (

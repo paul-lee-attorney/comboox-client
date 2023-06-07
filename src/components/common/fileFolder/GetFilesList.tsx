@@ -27,7 +27,7 @@ interface GetFilesListProps {
 export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps ) {
 
   const labState = ['ZeroPoint', 'Created', 'Circulated', 'Established', 
-    'Proposed', 'Approved', 'Rejected', 'Executed', 'Revoked'];
+    'Proposed', 'Approved', 'Rejected', 'Closed', 'Terminated'];
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
@@ -65,20 +65,28 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
                   {v.sn.substring(6, 26)}
                 </Link>
               </TableCell>
-              <TableCell align="center"><Chip label={v.sn.substring(26, 36)} /></TableCell>
+              <TableCell align="center"><Chip variant='outlined' label={v.sn.substring(26, 36)} /></TableCell>
               <TableCell align="center">{ dayjs.unix(parseInt(v.sn.substring(36, 48), 16)).format('YYYY-MM-DD HH:mm:ss') }</TableCell>
               <TableCell align="center">{v.addr}</TableCell>
               <TableCell align="center"> 
                 <Chip 
                   label={ labState[v.head.state] } 
                   variant='filled'
-                  color={ 
-                    v.head.state == 7 ? 
-                      'success' :
-                      v.head.state == 8 ?
-                        'warning' :
-                        'default'
-                  } 
+                  color={
+                    v.head.state == 7
+                    ? 'success'
+                    : v.head.state == 6
+                      ? 'error'
+                      : v.head.state == 5
+                        ? 'info'
+                        : v.head.state == 4
+                          ? 'secondary'
+                          : v.head.state == 3
+                            ? 'primary'
+                            : v.head.state == 2
+                              ? 'warning'
+                              : 'default'
+                  }
                 /> 
               </TableCell>
             </TableRow>

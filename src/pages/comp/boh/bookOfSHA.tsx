@@ -155,7 +155,7 @@ function BookOfSHA() {
                       onClick={() => createSha?.() }
                       size='small'
                     >
-                      Create_SHA
+                      Create SHA
                     </Button>
 
                     {loading && (

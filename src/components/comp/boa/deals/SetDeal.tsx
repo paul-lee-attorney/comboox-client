@@ -21,6 +21,7 @@ export interface Head {
   priceOfPaid: number,
   priceOfPar: number,
   closingDate: number,
+  para: number,
 }
 
 const defaultHead: Head = {
@@ -33,6 +34,7 @@ const defaultHead: Head = {
   priceOfPaid: 100,
   priceOfPar: 100,
   closingDate: parseInt((new Date().getTime()/1000).toString()) + 90*86400,
+  para: 0,
 }
 
 export interface Body {
@@ -41,6 +43,9 @@ export interface Body {
   paid: BigNumber,
   par: BigNumber,
   state: number,
+  para: number,
+  argu: number,
+  flag: boolean,
 }
 
 const defaultBody: Body = {
@@ -49,6 +54,9 @@ const defaultBody: Body = {
   paid: BigNumber.from(0),
   par: BigNumber.from(0),
   state: 0,
+  para: 0,
+  argu: 0,
+  flag: false,
 }
 
 export interface Deal {
@@ -65,43 +73,36 @@ const defaultDeal: Deal = {
 
 export const stateOfDeal = ['Drafing', 'Locked', 'Cleared', 'Closed', 'Terminated'];
 
-async function getDeal(ia: HexType, seqOfDeal: number): Promise<Deal> {
+// async function parseDeal(deal: Deal): Promise<Deal> {
 
-  let deal = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'getDeal',
-    args: [BigNumber.from(seqOfDeal)],
-  });
+//   let head: Head = {
+//     typeOfDeal: deal.head.typeOfDeal,
+//     seqOfDeal: deal.head.seqOfDeal,
+//     preSeq: deal.head.preSeq,
+//     classOfShare: deal.head.classOfShare,
+//     seqOfShare: deal.head.seqOfShare,
+//     seller: deal.head.seller,
+//     priceOfPaid: deal.head.priceOfPaid,
+//     priceOfPar: deal.head.priceOfPar,
+//     closingDate: deal.head.closingDate,
+//   }
 
-  let head: Head = {
-    typeOfDeal: deal.head.typeOfDeal,
-    seqOfDeal: deal.head.seqOfDeal,
-    preSeq: deal.head.preSeq,
-    classOfShare: deal.head.classOfShare,
-    seqOfShare: deal.head.seqOfShare,
-    seller: deal.head.seller,
-    priceOfPaid: deal.head.priceOfPaid,
-    priceOfPar: deal.head.priceOfPar,
-    closingDate: deal.head.closingDate,
-  }
+//   let body: Body = {
+//     buyer: deal.body.buyer,
+//     groupOfBuyer: deal.body.groupOfBuyer,
+//     paid: deal.body.paid,
+//     par: deal.body.par,
+//     state: deal.body.state,    
+//   }
 
-  let body: Body = {
-    buyer: deal.body.buyer,
-    groupOfBuyer: deal.body.groupOfBuyer,
-    paid: deal.body.paid,
-    par: deal.body.par,
-    state: deal.body.state,    
-  }
+//   let output: Deal = {
+//     head: head,
+//     body: body,
+//     hashLock: deal.hashLock,
+//   }
 
-  let output: Deal = {
-    head: head,
-    body: body,
-    hashLock: deal.hashLock,
-  }
-
-  return output;
-}
+//   return output;
+// }
 
 export const TypeOfDeal = [
   'NaN', 
@@ -162,6 +163,16 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
   const [ newDeal, setNewDeal ] = useState<Deal>(defaultDeal);
 
   const {
+    refetch: getDeal,
+  } = useInvestmentAgreementGetDeal({
+    address: ia,
+    args: [BigNumber.from(seq)],
+    onSuccess(deal) {
+      setNewDeal(deal)
+    }
+  })
+
+  const {
     config: configAddDeal,
   } = usePrepareInvestmentAgreementAddDeal({
     address: ia,
@@ -179,9 +190,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
   } = useInvestmentAgreementAddDeal({
     ...configAddDeal,
     onSuccess() {
-      getDeal(ia, seq).then(
-        deal => setNewDeal(deal)
-      )
+      getDeal()
     }
   });
 
@@ -198,9 +207,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
   } = useInvestmentAgreementDelDeal({
     ...configDelDeal,
     onSuccess() {
-      getDeal(ia, seq).then(
-        deal => setNewDeal(deal)
-      )
+      getDeal()
     }
   });
 
@@ -208,9 +215,9 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
   const [ hashLock, setHashLock ] = useState<HexType>();
   
-  useEffect(()=>{
-    getDeal(ia, seq).then(deal => setNewDeal(deal))
-  }, [ia, seq, hashLock]);
+  // useEffect(()=>{
+  //   getDeal(ia, seq).then(deal => setNewDeal(deal))
+  // }, [ia, seq, hashLock]);
 
 
   const { boox } = useComBooxContext();
@@ -227,9 +234,9 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
     }
   })
 
-  useEffect(()=>{
-    if (ia) getHeadOfFile()
-  }, [ ia, getHeadOfFile ])
+  // useEffect(()=>{
+  //   if (ia) getHeadOfFile()
+  // }, [ ia, getHeadOfFile ])
 
   return (
     <Paper sx={{
@@ -722,8 +729,8 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
           </Paper>
 
-          { fileState == 5 && (
-            <ExecDeal ia={ ia } seq={ seq } setLock={setHashLock} />
+          { fileState && fileState > 2 && (
+            <ExecDeal ia={ia} seq={seq} newDeal={newDeal} getDeal={getDeal} />
           )}
 
         </Stack>

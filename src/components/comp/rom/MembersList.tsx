@@ -18,6 +18,8 @@ import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 import { dateParser } from '../../../scripts/toolsKit';
 import dayjs from 'dayjs';
+import { LoadingButton } from '@mui/lab';
+import { Send } from '@mui/icons-material';
 
 export function MembersList({ addr }:ContractProps ) {
   const [membersList, setMembersList] = useState<string[]>();
@@ -90,21 +92,40 @@ export function MembersEquityList({ addr }:ContractProps ) {
   const {boox} = useComBooxContext();
   const [equityList, setEquityList] = useState<MemberShareClipType[]>();
 
-  const {data, refetch} = useRegisterOfMembersMembersList({
-    address: addr
-  })
+  const [ loading, setLoading ] = useState<boolean>();
 
-  useEffect(() => {
-    if (data) {
-      getEquityList(boox[8], data).then(list => setEquityList(list));
+  useRegisterOfMembersMembersList({
+    address: addr,
+    onSuccess(data) {
+      setLoading(true);
+      getEquityList(boox[8], data).then(
+        ls => {
+          setEquityList(ls);
+          setLoading(false);
+        }
+      )
     }
-  }, [data, boox]);
+  })
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider' }}>
       <Toolbar>
         <h3>Members List</h3>
+
+        {loading && (
+          <LoadingButton 
+            loading={ loading } 
+            loadingPosition='end' 
+            endIcon={<Send/>} 
+            sx={{p:1, m:1, ml:5}} 
+          >
+            <span>Loading</span>
+          </LoadingButton>
+        )}
+
       </Toolbar>
+
+
       <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
