@@ -2,21 +2,23 @@ import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, T
 import { Share } from "../../../pages/comp/bos/bookOfShares";
 import dayjs from "dayjs";
 import { BigNumber } from "ethers";
+import { LockerOfPayInCap } from "./LockerOfPayInCap";
 
 
 export interface CertificateOfContributionProps{
   open: boolean,
   share: Share,
   setOpen: (flag: boolean)=>void,
+  obtainSharesList: ()=>any,
 }
 
 
-export function CertificateOfContribution({open, share, setOpen}: CertificateOfContributionProps) {
+export function CertificateOfContribution({open, share, setOpen, obtainSharesList}: CertificateOfContributionProps) {
 
 
   return (
     <Dialog
-      maxWidth={'lg'}
+      maxWidth={false}
       open={open}
       onClose={()=>setOpen(false)}
       aria-labelledby="dialog-title" 
@@ -25,7 +27,7 @@ export function CertificateOfContribution({open, share, setOpen}: CertificateOfC
         {"Certificate Of Contribution"}
       </DialogTitle>
       <DialogContent>
-          <table width={1000} >
+          <table width={1180} >
             <thead />
             <tbody>
               <tr>
@@ -254,6 +256,15 @@ export function CertificateOfContribution({open, share, setOpen}: CertificateOfC
                 </td>
               </tr>
 
+              <tr>
+                <td colSpan={4}>
+
+                  {share && !share.body.par.eq(share.body.paid) && (
+                    <LockerOfPayInCap share={share} obtainSharesList={obtainSharesList} setDialogOpen={setOpen} />
+                  )}
+
+                </td>
+              </tr>
 
             </tbody>
           </table>

@@ -118,83 +118,81 @@ function BookOfSHA() {
   });
 
   return (
-    <>
-      <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-        <Toolbar>
-          <h3>BOH - Book Of Shareholders Agreements</h3>
-        </Toolbar>
+    <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+      <Toolbar>
+        <h3>BOH - Book Of Shareholders Agreements</h3>
+      </Toolbar>
 
-        <table width={1680} >
-          <thead />
-          
-          <tbody>
+      <table width={1680} >
+        <thead />
+        
+        <tbody>
 
-            <tr>        
-              <td colSpan={2}>
-                <Stack 
-                    direction={'row'}
-                  >
-                    <TextField 
-                      sx={{ m: 1, minWidth: 120 }} 
-                      id="tfVersion" 
-                      label="Version" 
-                      variant="outlined"
-                      helperText="Integer <= 2^16 (e.g. '123')"
-                      onChange={(e) => 
-                        setVersion(e.target.value)
-                      }
-                      value = { version }
-                      size='small'
-                    />
-
-                    <Button 
-                      disabled={ !createSha || createShaLoading }
-                      sx={{ m: 1, minWidth: 120, height: 40 }} 
-                      variant="contained" 
-                      endIcon={ <Create /> }
-                      onClick={() => createSha?.() }
-                      size='small'
-                    >
-                      Create SHA
-                    </Button>
-
-                    {loading && (
-                      <LoadingButton 
-                        loading={ loading } 
-                        loadingPosition='end' 
-                        endIcon={<Send/>} 
-                        sx={{p:1, m:1, ml:5}} 
-                      >
-                        <span>Loading</span>
-                      </LoadingButton>
-                    )}
-
-                </Stack>
-              </td>
-              <td colSpan={2} >
-              </td>
-            </tr>
-
-            <tr>
-              <td colSpan={4}>
-
-                {filesInfoList && (
-                  <GetFilesList 
-                    list={ filesInfoList } 
-                    title="SHA List" 
-                    pathName="/comp/boh/sha/bodyTerms" 
-                    pathAs="/comp/boh/sha" 
+          <tr>        
+            <td colSpan={2}>
+              <Stack 
+                  direction={'row'}
+                >
+                  <TextField 
+                    sx={{ m: 1, minWidth: 120 }} 
+                    id="tfVersion" 
+                    label="Version" 
+                    variant="outlined"
+                    helperText="Integer <= 2^16 (e.g. '123')"
+                    onChange={(e) => 
+                      setVersion(e.target.value)
+                    }
+                    value = { version }
+                    size='small'
                   />
-                )}
 
-              </td>
-            </tr>
-          </tbody>
+                  <Button 
+                    disabled={ !createSha || createShaLoading }
+                    sx={{ m: 1, minWidth: 120, height: 40 }} 
+                    variant="contained" 
+                    endIcon={ <Create /> }
+                    onClick={() => createSha?.() }
+                    size='small'
+                  >
+                    Create SHA
+                  </Button>
 
-        </table>
+                  {loading && (
+                    <LoadingButton 
+                      loading={ loading } 
+                      loadingPosition='end' 
+                      endIcon={<Send/>} 
+                      sx={{p:1, m:1, ml:5}} 
+                    >
+                      <span>Loading</span>
+                    </LoadingButton>
+                  )}
 
-      </Paper>
-    </>
+              </Stack>
+            </td>
+            <td colSpan={2} >
+            </td>
+          </tr>
+
+          <tr>
+            <td colSpan={4}>
+
+              {filesInfoList && (
+                <GetFilesList 
+                  list={ filesInfoList } 
+                  title="SHA List" 
+                  pathName="/comp/boh/sha/bodyTerms" 
+                  pathAs="/comp/boh/sha" 
+                />
+              )}
+
+            </td>
+          </tr>
+        </tbody>
+
+      </table>
+
+    </Paper>
   );
 } 
 

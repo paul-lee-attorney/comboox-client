@@ -16,7 +16,6 @@ import {
 import { ContractProps, HexType } from '../../../interfaces';
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
-import { dateParser } from '../../../scripts/toolsKit';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { Send } from '@mui/icons-material';

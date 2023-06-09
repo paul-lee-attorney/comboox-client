@@ -25,29 +25,30 @@ import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
 import { sha256 } from "ethers/lib/utils.js";
+import { SharesListGrid } from "../../../components/comp/bos/SharesList";
 
 export interface Head {
-  seqOfShare: number, // 股票序列号
-  preSeq: number, // 前序股票序列号（股转时原标的股序列号）
-  class: number, // 股票类别/轮次编号
-  issueDate: number, // 股票签发日期（秒时间戳）
-  shareholder: number, // 股东代码
-  priceOfPaid: number, // 发行价格（实缴出资价）
-  priceOfPar: number, // 发行价格（认缴出资价）
+  seqOfShare: number; // 股票序列号
+  preSeq: number; // 前序股票序列号（股转时原标的股序列号）
+  class: number; // 股票类别/轮次编号
+  issueDate: number; // 股票签发日期（秒时间戳）
+  shareholder: number; // 股东代码
+  priceOfPaid: number; // 发行价格（实缴出资价）
+  priceOfPar: number; // 发行价格（认缴出资价）
 }
 
 export interface Body {
-  payInDeadline: number, // 出资期限（秒时间戳）
-  paid: BigNumber, // 实缴出资
-  par: BigNumber, // 认缴出资（注册资本面值）
-  cleanPaid: BigNumber, // 清洁实缴出资（扣除出质、远期、销售要约金额）
-  state: number,
+  payInDeadline: number; // 出资期限（秒时间戳）
+  paid: BigNumber; // 实缴出资
+  par: BigNumber; // 认缴出资（注册资本面值）
+  cleanPaid: BigNumber; // 清洁实缴出资（扣除出质、远期、销售要约金额）
+  state: number;
 }
 
 export interface Share {
-  sn: HexType,
-  head: Head,
-  body: Body,
+  sn: HexType;
+  head: Head;
+  body: Body;
 }
 
 export function codifyHeadOfShare(head: Head): HexType {
@@ -119,7 +120,9 @@ function BookOfShares() {
 
   const [ sharesList, setSharesList ] = useState<Share[]>();
 
-  useRegisterOfMembersSharesList ({
+  const {
+    refetch: obtainSharesList,
+  } = useRegisterOfMembersSharesList ({
     address: boox[8],
     onSuccess(data) {
       if (data.length > 0) {
@@ -237,7 +240,7 @@ function BookOfShares() {
         </table>
         
         {share && (
-          <CertificateOfContribution open={open} share={share} setOpen={setOpen} />
+          <CertificateOfContribution open={open} share={share} setOpen={setOpen} obtainSharesList={obtainSharesList} />
         )}
 
       </Paper>

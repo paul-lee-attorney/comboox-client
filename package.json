@@ -17,6 +17,7 @@
     "@mui/icons-material": "^5.11.16",
     "@mui/lab": "^5.0.0-alpha.129",
     "@mui/material": "^5.12.1",
+    "@mui/x-data-grid": "^6.6.0",
     "@mui/x-date-pickers": "^6.5.0",
     "@wagmi/cli": "^0.1.15",
     "dayjs": "^1.11.7",

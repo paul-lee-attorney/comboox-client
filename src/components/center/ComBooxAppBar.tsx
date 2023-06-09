@@ -33,7 +33,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 240;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference, Payments, ContentCopy, ContentCopyOutlined }  from '@mui/icons-material';
+import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference, Payments, ContentCopy, ContentCopyOutlined, Diversity3 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -173,6 +173,15 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
   const theme = useTheme();
 
+  const items = [
+    {href: '/', label: 'RegCenter', icon: <AssuredWorkload /> },
+    {href: '/comp/mainPage', label: 'HomePage', icon: <Home />}, 
+    {href: '/comp/boh/bookOfSHA', label: 'BookOfSHA', icon: <ListAlt />}, 
+    {href: '/comp/boa/bookOfIA', label: 'BookOfIA', icon: <ContentCopyOutlined />}, 
+    {href: '/comp/bos/bookOfShares', label: 'BookOfShares', icon: <Payments />},     
+    {href: '/comp/bog/bookOfGM', label: 'BookOfGM', icon: <Diversity3 />},     
+  ]
+
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
@@ -284,71 +293,22 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
         <List>
 
-          <ListItem disablePadding >
-            <ListItemButton 
-              LinkComponent={Link}
-              href='/'
-            >
-              <ListItemIcon>
-                < AssuredWorkload />
-              </ListItemIcon>
-              <ListItemText primary="RegCenter" />
-            </ListItemButton>
-          </ListItem>
-
-        <Divider />
-
-          <ListItem disablePadding >
-            <ListItemButton 
-              disabled={gk==AddrZero}
-              LinkComponent={Link}
-              href='/comp/mainPage'
-            >
-              <ListItemIcon>
-                < Home />
-              </ListItemIcon>
-              <ListItemText primary="HomePage" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding >
-            <ListItemButton
-              disabled={gk==AddrZero}
-              LinkComponent={Link}
-              href='/comp/boh/bookOfSHA'
-            >
-              <ListItemIcon>
-                <ListAlt />
-              </ListItemIcon>
-              <ListItemText primary="BookOfSHA" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding >
-            <ListItemButton
-              disabled={gk==AddrZero}
-              LinkComponent={Link}
-              href='/comp/boa/bookOfIA'
-            >
-              <ListItemIcon>
-                <ContentCopyOutlined />
-              </ListItemIcon>
-              <ListItemText primary="BookOfIA" />
-            </ListItemButton>
-          </ListItem>
-
-          <ListItem disablePadding >
-            <ListItemButton
-              disabled={gk==AddrZero}
-              LinkComponent={Link}
-              href='/comp/bos/bookOfShares'
-            >
-              <ListItemIcon>
-                <Payments />
-              </ListItemIcon>
-              <ListItemText primary="BookOfShares" />
-            </ListItemButton>
-          </ListItem>
+          {items.map((v, i)=>(
+            <>
+              <ListItem key={i} disablePadding >
+                <ListItemButton 
+                  LinkComponent={Link}
+                  href={v.href}
+                >
+                  <ListItemIcon>
+                    {v.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={v.label} />
+                </ListItemButton>
+              </ListItem>
+              {i==0 && (<Divider />)}
+            </>
+          ))}
 
         </List>
 

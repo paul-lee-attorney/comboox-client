@@ -132,161 +132,157 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
   const [ useLock, setUseLock ] = useState<boolean>();
 
   return (
-    <>
-      <Paper sx={{
-        p:1, 
-        border: 1, 
-        borderColor:'divider' 
-        }} 
-      >
+    <Paper sx={{
+      p:1, 
+      border: 1, 
+      borderColor:'divider' 
+      }} 
+    >
+      <Stack direction={'row'} sx={{ alignItems:'center'}} >
+
+        <Box sx={{ minWidth:600 }} >
+          <Toolbar>
+            <h4>Execute Transaction </h4>
+          </Toolbar>
+        </Box>
+
+        <Typography>
+          Direct Transfer  
+        </Typography>
+
+        <Switch 
+          color="primary" 
+          onChange={(e) => setUseLock( e.target.checked )} 
+          checked={ useLock } 
+        />
+
+        <Typography>
+          Via Hash Locker
+        </Typography>
+
+      </Stack>
+
+      <Collapse in={ useLock } >
         <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
-          <Box sx={{ minWidth:600 }} >
-            <Toolbar>
-              <h4>Execute Transaction </h4>
-            </Toolbar>
-          </Box>
+          <Button 
+            disabled = {!pushToCoffer || isLoading || newDeal.body.state > 1 }
 
-          <Typography>
-            Direct Transfer  
-          </Typography>
+            sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
+            variant="contained" 
+            endIcon={<LockClock />}
+            onClick={()=> pushToCoffer?.()}
+            size='small'
+          >
+            Lock Share
+          </Button>
 
-          <Switch 
-            color="primary" 
-            onChange={(e) => setUseLock( e.target.checked )} 
-            checked={ useLock } 
+          <TextField 
+            variant='filled'
+            label='HashLock'
+            sx={{
+              m:1,
+              minWidth: 680,
+            }}
+            onChange={(e) => setHashLock(`0x${e.target.value}`)}
+            value={ hashLock.substring(2) }
           />
 
-          <Typography>
-            Via Hash Locker
-          </Typography>
-  
+          <DateTimeField
+            label='ClosingDate'
+            sx={{
+              m:1,
+              minWidth: 218,
+            }} 
+            value={ closingDate }
+            onChange={(date) => setClosingDate(date)}
+            format='YYYY-MM-DD HH:mm:ss'
+          />
+
         </Stack>
 
-        <Collapse in={ useLock } >
-          <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
-            <Button 
-              disabled = {!pushToCoffer || isLoading || newDeal.body.state > 1 }
-
-              sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
-              variant="contained" 
-              endIcon={<LockClock />}
-              onClick={()=> pushToCoffer?.()}
-              size='small'
-            >
-              Lock Share
-            </Button>
-
-            <TextField 
-              variant='filled'
-              label='HashLock'
-              sx={{
-                m:1,
-                minWidth: 680,
-              }}
-              onChange={(e) => setHashLock(`0x${e.target.value}`)}
-              value={ hashLock.substring(2) }
-            />
-
-            <DateTimeField
-              label='ClosingDate'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }} 
-              value={ closingDate }
-              onChange={(date) => setClosingDate(date)}
-              format='YYYY-MM-DD HH:mm:ss'
-            />
-
-          </Stack>
-
-          <Stack direction={'row'} sx={{ alignItems:'center'}} >
-
-            <Button 
-              disabled = {!closeDeal || closeDealLoading}
-
-              sx={{ m: 1, minWidth: 120, height: 40, width: 218 }} 
-              variant="contained" 
-              endIcon={<LockOpen />}
-              onClick={()=> closeDeal?.()}
-              size='small'
-            >
-              Take Share
-            </Button>
-
-            <TextField 
-              variant='filled'
-              label='HashKey'
-              sx={{
-                m:1,
-                minWidth: 680,
-              }}
-              value={ hashKey }
-              onChange={(e)=>setHashKey(e.target.value)}
-            />
-
-            <Button 
-              disabled = {!revokeDeal || revokeDealLoading || newDeal.body.state != 2}
-
-              sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
-              variant="contained" 
-              endIcon={<RemoveShoppingCartOutlined />}
-              onClick={()=> revokeDeal?.()}
-              size='small'
-            >
-              Revoke Deal
-            </Button>
-
-          </Stack>
-        </Collapse>
-
-       <Collapse in={ !useLock } >  
-        <Stack direction={'row'} sx={{ alignItems:'center' }} >
           <Button 
-            disabled = {!issueNewShare || issueNewShareLoading}
+            disabled = {!closeDeal || closeDealLoading || newDeal.body.state > 2 }
 
-            sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
+            sx={{ m: 1, minWidth: 120, height: 40, width: 218 }} 
             variant="contained" 
-            endIcon={<RocketLaunch />}
-            onClick={()=> issueNewShare?.()}
+            endIcon={<LockOpen />}
+            onClick={()=> closeDeal?.()}
             size='small'
           >
-            Issue Share
+            Take Share
           </Button>
 
+          <TextField 
+            variant='filled'
+            label='HashKey'
+            sx={{
+              m:1,
+              minWidth: 680,
+            }}
+            value={ hashKey }
+            onChange={(e)=>setHashKey(e.target.value)}
+          />
+
           <Button 
-            disabled = {!transferTargetShare || transferTargetShareLoading || newDeal.body.state == 7}
+            disabled = {!revokeDeal || revokeDealLoading || newDeal.body.state != 2}
 
             sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
             variant="contained" 
-            endIcon={<CurrencyExchange />}
-            onClick={()=> transferTargetShare?.()}
+            endIcon={<RemoveShoppingCartOutlined />}
+            onClick={()=> revokeDeal?.()}
             size='small'
           >
-            Transfer Share
-          </Button>
-
-          <Button 
-            disabled = {!terminateDeal || terminateDealLoading || newDeal.body.state == 4}
-
-            sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
-            variant="contained" 
-            endIcon={<DirectionsRun />}
-            onClick={()=> terminateDeal?.()}
-            size='small'
-          >
-            Terminate Deal
+            Revoke Deal
           </Button>
 
         </Stack>
       </Collapse>
 
-      </Paper>
+      <Collapse in={ !useLock } >  
+      <Stack direction={'row'} sx={{ alignItems:'center' }} >
+        <Button 
+          disabled = {!issueNewShare || issueNewShareLoading}
 
+          sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
+          variant="contained" 
+          endIcon={<RocketLaunch />}
+          onClick={()=> issueNewShare?.()}
+          size='small'
+        >
+          Issue Share
+        </Button>
 
-    </>
+        <Button 
+          disabled = {!transferTargetShare || transferTargetShareLoading || newDeal.body.state > 2}
+
+          sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
+          variant="contained" 
+          endIcon={<CurrencyExchange />}
+          onClick={()=> transferTargetShare?.()}
+          size='small'
+        >
+          Transfer Share
+        </Button>
+
+        <Button 
+          disabled = {!terminateDeal || terminateDealLoading || newDeal.body.state > 2}
+
+          sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
+          variant="contained" 
+          endIcon={<DirectionsRun />}
+          onClick={()=> terminateDeal?.()}
+          size='small'
+        >
+          Terminate Deal
+        </Button>
+
+      </Stack>
+    </Collapse>
+
+    </Paper>
   );
 }
 

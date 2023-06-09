@@ -41,27 +41,6 @@ export interface FileHistoryProps {
   setNextStep: (nextStep:number ) => void,
 }
 
-export interface VotingRuleType {
-  subTitle: string;
-  seqOfRule: number;
-  qtyOfSubRule: number;
-  seqOfSubRule: number;
-  authority: number;
-  headRatio: number;
-  amountRatio: number;
-  onlyAttendance: boolean;
-  impliedConsent: boolean;
-  partyAsConsent: boolean;
-  againstShallBuy: boolean;
-  shaExecDays: number;
-  reviewDays: number;
-  reconsiderDays: number;
-  votePrepareDays: number;
-  votingDays: number;
-  execDaysForPutOpt: number;
-  vetoers1: number;
-  vetoers2: number;
-}
 
 export interface FirstRefusalRuleType {
   subTitle: string,
