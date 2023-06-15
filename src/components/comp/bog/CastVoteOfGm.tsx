@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   useGeneralKeeperCastVoteOfGm,
@@ -16,9 +16,10 @@ import { EmojiPeople, Handshake, HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../interfaces";
 import { EntrustDelegaterOfMember } from "./EntrustDelegaterOfMember";
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
+import { VoteCase, getVoteResult } from "./VoteForDocOfGm";
 
 interface ProposeMotionProps {
-  seqOfMotion: string,
+  seqOfMotion: BigNumber,
   setOpen: (flag: boolean) => void,
   getMotionsList: () => any,
 }
@@ -27,13 +28,21 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
 
   const { gk, boox } = useComBooxContext();
 
+  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+
+  useEffect(()=>{
+    getVoteResult(seqOfMotion, boox[3]).then(
+      list => setVoteResult(list)
+    )
+  }, [seqOfMotion, boox]);
+
   const [ attitude, setAttitude ] = useState<string>('3');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
   const {config} = usePrepareGeneralKeeperCastVoteOfGm({
     address: gk,
     args: attitude 
-        ? [BigNumber.from(seqOfMotion), BigNumber.from(attitude), sigHash]
+        ? [seqOfMotion, BigNumber.from(attitude), sigHash]
         : undefined,
   });
 
@@ -43,6 +52,9 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
   } = useGeneralKeeperCastVoteOfGm({
     ...config,
     onSuccess() {
+      getVoteResult(seqOfMotion, boox[3]).then(
+        list => setVoteResult(list)
+      );
       getMotionsList();
       setOpen(false);
     }
@@ -77,8 +89,6 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
       </Stack>
 
       <Collapse in={ !appear } >
-
-        <VoteResult seqOfMotion={seqOfMotion} addrOfBook={boox[3]} />
 
         <Stack direction="row" sx={{ alignItems:'center' }} >
 
@@ -117,7 +127,12 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
           >
             Vote
           </Button>
-      </Stack>
+        </Stack>
+
+        {voteResult && (
+          <VoteResult addr={boox[3]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
+        )}
+
       </Collapse>
 
       <Collapse in={ appear } >

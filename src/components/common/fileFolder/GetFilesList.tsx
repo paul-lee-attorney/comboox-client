@@ -15,6 +15,7 @@ import Link from '../../../scripts/Link';
 
 import { InfoOfFile } from '../../../pages/comp/boh/bookOfSHA';
 import dayjs from 'dayjs';
+import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 
 interface GetFilesListProps {
   list: InfoOfFile[],
@@ -64,8 +65,8 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
                   {v.sn.substring(6, 26)}
                 </Link>
               </TableCell>
-              <TableCell align="center"><Chip variant='outlined' label={v.sn.substring(26, 36)} /></TableCell>
-              <TableCell align="center">{ dayjs.unix(parseInt(v.sn.substring(36, 48), 16)).format('YYYY-MM-DD HH:mm:ss') }</TableCell>
+              <TableCell align="center"><Chip variant='outlined' label={ longSnParser(parseInt(`0x${v.sn.substring(26, 36)}`).toString())} /></TableCell>
+              <TableCell align="center">{  dateParser(parseInt(v.sn.substring(36, 48), 16)) }</TableCell>
               <TableCell align="center">{v.addr}</TableCell>
               <TableCell align="center"> 
                 <Chip 

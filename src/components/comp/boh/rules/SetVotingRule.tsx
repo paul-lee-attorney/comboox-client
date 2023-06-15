@@ -40,7 +40,7 @@ export function vrParser(hexVr: HexType):VotingRule {
     partyAsConsent: hexVr.substring(26, 28) === '01',
     againstShallBuy: hexVr.substring(28, 30) === '01',
     shaExecDays: parseInt(hexVr.substring(30, 32), 16),
-    reviewDays: parseInt(hexVr.substring(32, 34), 16),
+    shaConfirmDays: parseInt(hexVr.substring(32, 34), 16),
     reconsiderDays: parseInt(hexVr.substring(34, 36), 16),
     votePrepareDays: parseInt(hexVr.substring(36, 38), 16),
     votingDays: parseInt(hexVr.substring(38, 40), 16),
@@ -64,7 +64,7 @@ export function vrCodifier(objVr: VotingRule ): HexType {
     (objVr.partyAsConsent ? '01' : '00' )+
     (objVr.againstShallBuy ? '01' : '00' )+
     (objVr.shaExecDays.toString(16).padStart(2, '0')) +
-    (objVr.reviewDays.toString(16).padStart(2, '0')) +
+    (objVr.shaConfirmDays.toString(16).padStart(2, '0')) +
     (objVr.reconsiderDays.toString(16).padStart(2, '0')) +
     (objVr.votePrepareDays.toString(16).padStart(2, '0')) +
     (objVr.votingDays.toString(16).padStart(2, '0')) +
@@ -95,7 +95,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
               partyAsConsent: true,
               againstShallBuy: false,
               shaExecDays: 15,
-              reviewDays: 15,
+              shaConfirmDays: 15,
               reconsiderDays: 0,
               votePrepareDays: 0,
               votingDays: 1,
@@ -499,7 +499,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
               />
             )}
 
-            {newVR?.reviewDays != undefined && (
+            {newVR?.shaConfirmDays != undefined && (
               <TextField 
                 variant='filled'
                 label='ReviewDays'
@@ -508,7 +508,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                   m:1,
                   minWidth: 218,
                 }}
-                value={newVR.reviewDays.toString()}
+                value={newVR.shaConfirmDays.toString()}
               />
             )}
 
@@ -594,9 +594,9 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  reviewDays: parseInt(e.target.value ?? '0'),
+                  shaConfirmDays: parseInt(e.target.value ?? '0'),
                 }))}
-                value={ objVR?.reviewDays}                                        
+                value={ objVR?.shaConfirmDays}                                        
               />
 
               <TextField 

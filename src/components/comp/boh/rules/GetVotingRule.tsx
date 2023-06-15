@@ -231,7 +231,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                   />
                 )}
 
-                {objVr && objVr.reviewDays > 0 && (
+                {objVr && objVr.shaConfirmDays > 0 && (
                   <TextField 
                     variant='filled'
                     label='ReviewDays'
@@ -240,7 +240,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={objVr?.reviewDays.toString()}
+                    value={objVr?.shaConfirmDays.toString()}
                   />
                 )}
 

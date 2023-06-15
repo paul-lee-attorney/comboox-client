@@ -11,7 +11,7 @@ import { Button, Stack, TextField, } from "@mui/material";
 import { Handshake, } from "@mui/icons-material";
 
 interface EntrustDelegaterOfMemberProps {
-  seqOfMotion: string,
+  seqOfMotion: BigNumber,
   setOpen: (flag: boolean) => void,
   getMotionsList: () => any,
 }
@@ -27,7 +27,7 @@ export function EntrustDelegaterOfMember({ seqOfMotion, setOpen, getMotionsList 
   } = usePrepareGeneralKeeperEntrustDelegateOfMember({
     address: gk,
     args: delegater
-        ? [BigNumber.from(seqOfMotion), BigNumber.from(delegater) ]
+        ? [seqOfMotion, BigNumber.from(delegater) ]
         : undefined ,
   });
 

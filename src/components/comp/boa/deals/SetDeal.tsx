@@ -401,7 +401,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.head.priceOfPaid.toString() }
+                  value={ longDataParser(newDeal.head.priceOfPaid.toString()) }
                 />
               )}
 
@@ -414,7 +414,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.head.priceOfPar.toString() }
+                  value={ longDataParser(newDeal.head.priceOfPar.toString()) }
                 />
               )}
 

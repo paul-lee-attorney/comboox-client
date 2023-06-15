@@ -31,7 +31,7 @@ export interface HeadOfFile {
   closingDays: number;
   seqOfVR: number;
   shaExecDays: number;
-  reviewDays: number;
+  shaConfirmDays: number;
   proposeDate: number;
   reconsiderDays: number;
   votePrepareDays: number;

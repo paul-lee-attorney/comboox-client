@@ -2,7 +2,6 @@ import { Alert, Box, Button, Divider, FormControl, InputLabel, MenuItem, Select,
 import { 
   meetingMinutesABI,
   useGeneralKeeperCastVoteOfGm,
-  useMeetingMinutesGetCaseOfAttitude, 
   usePrepareGeneralKeeperCastVoteOfGm, 
 } from "../../../generated";
 
@@ -16,8 +15,9 @@ import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 
 
 export interface VoteCase {
-  head: number,
-  weight: BigNumber,  
+  head: number;
+  weight: BigNumber;
+  voters: number[];
 }
 
 interface VoteForDocOfGmProps {
@@ -25,7 +25,7 @@ interface VoteForDocOfGmProps {
   setNextStep: (next: number) => void;
 }
 
-async function getVoteResult(seq: BigNumber, addr: HexType): Promise<VoteCase[]>{
+export async function getVoteResult(seq: BigNumber, addr: HexType): Promise<VoteCase[]>{
 
   let i = 0;
   let list: VoteCase[] = [];
@@ -38,9 +38,14 @@ async function getVoteResult(seq: BigNumber, addr: HexType): Promise<VoteCase[]>
       args: [seq, BigNumber.from(i)],
     })
 
+    let vts: number[] = [];
+
+    item.voters.map(v => vts.push(v.toNumber()));
+
     list.push({
       head: item.sumOfHead,
       weight: item.sumOfWeight,
+      voters: vts,
     });
     
     i++;

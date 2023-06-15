@@ -112,7 +112,7 @@ const columns: GridColDef[] = [
         }
       />
     ),
-    width: 120,
+    width: 180,
     headerAlign: 'center',
     align: 'center',
   },

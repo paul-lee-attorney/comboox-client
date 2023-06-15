@@ -12,6 +12,8 @@ import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { ProposeMotionOfGm } from "../../comp/bog/ProposeMotionOfGm";
 import { CastVoteOfGm } from "../../comp/bog/CastVoteOfGm";
+import { VoteCase, getVoteResult } from "../../comp/bog/VoteForDocOfGm";
+import { BallotsList } from "./BallotsList";
 
 export interface FlowchartOfMotionProps{
   open: boolean,
@@ -36,6 +38,14 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
 
   const { boox } = useComBooxContext();
 
+  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+
+  useEffect(()=>{
+    getVoteResult(motion.head.seqOfMotion, boox[3]).then(
+      list => setVoteResult(list)
+    )
+  }, [motion, boox]);
+
   const [ addrOfDoc, setAddrOfDoc ]=useState<HexType>();
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
 
@@ -52,10 +62,11 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
 
   return (
     <Dialog
-      maxWidth={false}
+      maxWidth="xl"
       open={open}
       onClose={()=>setOpen(false)}
-      aria-labelledby="dialog-title" 
+      aria-labelledby="dialog-title"
+      sx={{m:1, p:1}} 
     >
       <DialogTitle id="dialog-title">
         {"Flowchart of Motion"}
@@ -146,21 +157,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                   </td>
 
                   <td>
-                    {motion.body.state < 3 && (
-                      <GetVotingRule seq={motion.head.seqOfVR} />
-                    )}
-                    {motion.body.state > 2 && (
-                      <TextField 
-                        fullWidth
-                        inputProps={{readOnly: true}}
-                        sx={{ m: 1 }} 
-                        id="tfSeqOfVR" 
-                        label="SeqOfVR" 
-                        variant="outlined"
-                        value = { motion.head.seqOfVR }
-                        size='small'
-                      />                      
-                    )}
+                    <GetVotingRule seq={motion.head.seqOfVR} />
                   </td>
 
                   <td colSpan={2}>
@@ -252,6 +249,38 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                 </tr>
               )}
 
+              {motion.body.state > 2 && voteResult && (
+                <tr>
+                  <td>
+                    <BallotsList 
+                      addr={boox[3]}
+                      seqOfMotion={motion.head.seqOfMotion}
+                      attitude={ 1 }
+                      allVote={voteResult[0]}
+                      voteCase={voteResult[1]}
+                    />
+                  </td>
+                  <td>
+                    <BallotsList 
+                      addr={boox[3]}
+                      seqOfMotion={motion.head.seqOfMotion}
+                      attitude={ 3 }
+                      allVote={voteResult[0]}
+                      voteCase={voteResult[3]}
+                    />
+                  </td>
+                  <td>
+                    <BallotsList 
+                      addr={boox[3]}
+                      seqOfMotion={motion.head.seqOfMotion}
+                      attitude={ 2 }
+                      allVote={voteResult[0]}
+                      voteCase={voteResult[2]}
+                    />
+                  </td>                  
+                </tr>
+              )}
+
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
@@ -263,7 +292,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
               {motion.body.state == 2 && (
                 <tr>
                   <td colSpan={4}>
-                  <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion.toString()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                  <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
