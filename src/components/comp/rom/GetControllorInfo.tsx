@@ -8,7 +8,7 @@ import {
 } from '../../../generated';
 
 import { ContractProps } from '../../../interfaces';
-import { userNoParser } from '../../../scripts/toolsKit';
+import { longDataParser, longSnParser } from '../../../scripts/toolsKit';
 
 export function Controllor({ addr }:ContractProps ) {
   const [controllor, setControllor] = useState<string>();
@@ -19,14 +19,14 @@ export function Controllor({ addr }:ContractProps ) {
 
   useEffect(() => {
     if ( data ) 
-      setControllor(data.toString(16).padStart(10, '0'));
+      setControllor(data.toString());
   }, [ data ]);
 
   return (
     <>
       {controllor && (
         <TextField 
-          value={ controllor } 
+          value={ longSnParser(controllor) } 
           variant='filled' 
           label="ActualControllor" 
           inputProps={{readOnly: true}}
@@ -57,7 +57,7 @@ export function VotesOfController({ addr }:ContractProps ) {
     <>
       {votesOfController && (
         <TextField 
-          value={votesOfController} 
+          value={ longDataParser(votesOfController) } 
           variant='filled' 
           label="VotesOfController" 
           inputProps={{readOnly: true}}

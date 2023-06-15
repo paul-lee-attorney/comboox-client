@@ -59,7 +59,7 @@ export interface StrSigType {
   blocknumber: string,
 }
 
-export interface StrParasOfSigPageType {
+export interface StrParasOfSigPage {
   circulateDate: number,
   established: boolean,
   counterOfBlanks: string,
@@ -68,8 +68,8 @@ export interface StrParasOfSigPageType {
   closingDays: string,
 }
 
-function parseParasOfPage(data: any): StrParasOfSigPageType {
-  let output: StrParasOfSigPageType = {
+function parseParasOfPage(data: any): StrParasOfSigPage {
+  let output: StrParasOfSigPage = {
     circulateDate: data.sigDate,
     established: data.flag,
     counterOfBlanks: data.para.toString(),
@@ -96,7 +96,7 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
     });
 
     output.push({
-      signer: parties[len-1].toHexString().substring(2).padStart(10, '0'),
+      signer: parties[len-1].toString().padStart(13, '0'),
       sigDate: item.sig.sigDate,
       blocknumber: item.sig.blocknumber.toString(),
     });
@@ -115,7 +115,7 @@ interface SigPageProps {
 
 
 export function Signatures({ addr, initPage, finalized }: SigPageProps) {
-  const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
+  const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPage>();
 
   const {
     refetch: refetchParasOfPage

@@ -16,6 +16,7 @@ import {
 } from '../../../generated';
 
 import { Bytes32Zero, ContractProps, HexType } from '../../../interfaces';
+import { longSnParser } from '../../../scripts/toolsKit';
 
 
 export function CompSymbol({ addr }:ContractProps) {
@@ -143,14 +144,14 @@ export function RegNum({ addr }:ContractProps ) {
 
   useEffect(()=>{
     if (data) 
-      setRegNum(data.toHexString().substring(2).padStart(10, '0'));
+      setRegNum(data.toString());
   }, [data])
 
   return (
     <>
-      {addr && (
+      {regNum && (
         <>
-          ({regNum})
+          ({ longSnParser(regNum)})
         </>
       )}
     </>
@@ -167,14 +168,14 @@ export function RegNumTF({ addr }:ContractProps ) {
 
   useEffect(()=>{
     if (data)
-      setRegNum(data.toHexString().substring(2).padStart(10, '0'));
+      setRegNum(data.toString());
   }, [data])
 
   return (
     <>
       {regNum && (
         <TextField 
-          value={regNum} 
+          value={ longSnParser(regNum) } 
           variant='filled' 
           label="RegNum" 
           inputProps={{readOnly: true}}

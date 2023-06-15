@@ -42,21 +42,6 @@ export interface FileHistoryProps {
 }
 
 
-export interface FirstRefusalRuleType {
-  subTitle: string,
-  seqOfRule: number;
-  qtyOfSubRule: number;
-  seqOfSubRule: number;
-  typeOfDeal: number;
-  membersEqual: boolean;
-  proRata: boolean;
-  basedOnPar: boolean;
-  rightholder1: number;
-  rightholder2: number;
-  rightholder3: number;
-  rightholder4: number;
-}
-
 export interface SetShaRuleProps {
   sha: HexType,
   qty: number,

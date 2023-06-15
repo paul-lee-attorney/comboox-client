@@ -56,8 +56,8 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
   }, [share]);
 
   let snOfLocker: HexType = `0x${
-    locker.from.toString(16).padStart(10, '0') +
-    locker.to.toString(16).padStart(10, '0') +
+    locker.from.toString().padStart(13, '0') +
+    locker.to.toString().padStart(13, '0') +
     locker.expireDate.toString(16).padStart(12, '0') +
     locker.hashLock.substring(34)
   }`;

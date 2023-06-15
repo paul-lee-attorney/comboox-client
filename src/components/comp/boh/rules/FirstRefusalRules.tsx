@@ -8,7 +8,7 @@ import {
   Box,
 } from "@mui/material";
 
-import { FirstRefusalRuleType, ShaRuleInputProps } from "../../../../interfaces";
+import { ShaRuleInputProps } from "../../../../interfaces";
 
 import {
   AddCircle,
@@ -18,6 +18,7 @@ import {
 import { 
   SetFirstRefusalRule, 
 } from '../../..';
+import { FirstRefusalRuleWrap } from "./SetFirstRefusalRule";
 
 export function FirstRefusalRules({sha, seqList, finalized}: ShaRuleInputProps) {
 
@@ -39,34 +40,36 @@ export function FirstRefusalRules({sha, seqList, finalized}: ShaRuleInputProps) 
     })
   }
 
-let defaultRules: {[seq: number]: FirstRefusalRuleType} = {
+let defaultRules: {[seq: number]: FirstRefusalRuleWrap} = {
     512 : {
       subTitle: '- For Capital Increase ',
-      seqOfRule: 512, 
-      qtyOfSubRule: 2, 
-      seqOfSubRule: 1,
-      typeOfDeal: 1,
-      membersEqual: true,
-      proRata: true,
-      basedOnPar: false,
-      rightholder1: 0,
-      rightholder2: 0,
-      rightholder3: 0,
-      rightholder4: 0
+      rule: {
+        seqOfRule: 512, 
+        qtyOfSubRule: 2, 
+        seqOfSubRule: 1,
+        typeOfDeal: 1,
+        membersEqual: true,
+        proRata: true,
+        basedOnPar: false,
+        rightholders: [0,0,0,0],
+        para: 0,
+        argu: 0,
+      },
     },
     513 : {
       subTitle: '- For External Transfer ',
-      seqOfRule: 513, 
-      qtyOfSubRule: 2, 
-      seqOfSubRule: 2,
-      typeOfDeal: 2,
-      membersEqual: true,
-      proRata: true,
-      basedOnPar: false,
-      rightholder1: 0,
-      rightholder2: 0,
-      rightholder3: 0,
-      rightholder4: 0
+      rule: {
+        seqOfRule: 513, 
+        qtyOfSubRule: 2, 
+        seqOfSubRule: 2,
+        typeOfDeal: 2,
+        membersEqual: true,
+        proRata: true,
+        basedOnPar: false,
+        rightholders: [0,0,0,0],
+        para: 0,
+        argu: 0,
+      },
     },
   }
 

@@ -19,6 +19,9 @@ import { useComBooxContext } from '../../../scripts/ComBooxContext';
 import dayjs from 'dayjs';
 import { LoadingButton } from '@mui/lab';
 import { Send } from '@mui/icons-material';
+import { dateParser, longSnParser, userNoParser } from '../../../scripts/toolsKit';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import internal from 'stream';
 
 export function MembersList({ addr }:ContractProps ) {
   const [membersList, setMembersList] = useState<string[]>();
@@ -42,30 +45,27 @@ export function MembersList({ addr }:ContractProps ) {
   )
 }
 
-type ShareClipType = {
+type ShareClip = {
   timestamp: number,
   paid: BigNumber,
   par: BigNumber,
   cleanPaid: BigNumber,
 }
 
-type MemberShareClipType = {
-  acct: string,
-  date: string,
-  paid: string,
-  par: string,
-  clean: string,
+type MemberShareClip = {
+  acct: BigNumber,
+  clip: ShareClip,
 }
 
-async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promise<MemberShareClipType[]> {
+async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promise<MemberShareClip[]> {
 
-  let list: MemberShareClipType[] = [];
+  let list: MemberShareClip[] = [];
   let len: number = members.length;
   let i=0;
 
   while(i < len) {
 
-    let item: ShareClipType = await readContract({
+    let item: ShareClip = await readContract({
       address: rom,
       abi: registerOfMembersABI,
       functionName: 'sharesClipOfMember',
@@ -73,11 +73,8 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
     });
 
     list[i] = {
-      acct: members[i].toHexString().substring(2).padStart(10,'0'),
-      date: dayjs.unix(item.timestamp).format('YYYY-MM-DD HH:mm:ss'),
-      paid: item.paid.toString(),
-      par: item.par.toString(),
-      clean: item.cleanPaid.toString()
+      acct: members[i],
+      clip: item,
     };
 
     i++;
@@ -87,9 +84,52 @@ async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promi
   return list;
 }
 
+
+
+const columns: GridColDef[] = [
+  {
+    field: 'usrNo',
+    headerName: 'UserNo',
+    valueGetter: (p) => longSnParser(p.row.acct.toString()),
+    width: 218,    
+  },
+  {
+    field: 'lastUpdate',
+    headerName: 'LastUpdate',
+    valueGetter: (p) => dateParser(p.row.clip.timestamp),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+  {
+    field: 'par',
+    headerName: 'Par',
+    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.clip.par.toString())),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+  {
+    field: 'paid',
+    headerName: 'Paid',
+    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.clip.paid.toString())),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+  {
+    field: 'clean',
+    headerName: 'CleanPaid',
+    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.clip.cleanPaid.toString())),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+]
+
+
 export function MembersEquityList({ addr }:ContractProps ) {
-  const {boox} = useComBooxContext();
-  const [equityList, setEquityList] = useState<MemberShareClipType[]>();
+  const [equityList, setEquityList] = useState<MemberShareClip[]>();
 
   const [ loading, setLoading ] = useState<boolean>();
 
@@ -97,7 +137,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
     address: addr,
     onSuccess(data) {
       setLoading(true);
-      getEquityList(boox[8], data).then(
+      getEquityList(addr, data).then(
         ls => {
           setEquityList(ls);
           setLoading(false);
@@ -107,7 +147,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
   })
 
   return (
-    <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider' }}>
+    <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
       <Toolbar>
         <h3>Members List</h3>
 
@@ -124,15 +164,26 @@ export function MembersEquityList({ addr }:ContractProps ) {
 
       </Toolbar>
 
+      {equityList && (
+        <DataGrid
+          initialState={{pagination:{paginationModel:{pageSize: 5}}}}
+          pageSizeOptions={[5, 10, 15, 20]}
+          getRowId={row => row.acct}
+          rows={ equityList }
+          columns={ columns }
+        />
+      )}
 
-      <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
+
+
+      {/* <Table sx={{ minWidth: 650 }} size="small" aria-label="a dense table">
         <TableHead>
           <TableRow>
             <TableCell >User No. </TableCell>
             <TableCell align="right">Update Date</TableCell>
-            <TableCell align="right">Subscribed Contribution</TableCell>
-            <TableCell align="right">Paid-In Contribution</TableCell>
-            <TableCell align="right">Clean Paid Contribution</TableCell>
+            <TableCell align="right">Par</TableCell>
+            <TableCell align="right">Paid</TableCell>
+            <TableCell align="right">Clean Paid</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -152,7 +203,7 @@ export function MembersEquityList({ addr }:ContractProps ) {
             </TableRow>
           )))}
         </TableBody>
-      </Table>
+      </Table> */}
     </TableContainer>
   )
 }

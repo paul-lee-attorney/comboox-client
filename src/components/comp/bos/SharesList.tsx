@@ -8,18 +8,19 @@ import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
 import dayjs from 'dayjs';
 import { Share } from '../../../pages/comp/bos/bookOfShares';
+import { dateParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
 
 const columns: GridColDef[] = [
   { 
     field: 'sn', 
     headerName: 'Sn',
-    valueGetter: (p) => (p.row.head.seqOfShare.toString(16).padStart(8, '0')),
+    valueGetter: p => longSnParser(p.row.head.seqOfShare.toString()),
     width: 120,
   },
   { 
     field: 'class', 
     headerName: 'Class',
-    valueGetter: (p) => (p.row.head.class),
+    valueGetter: p => p.row.head.class,
     renderCell: ({ value }) => (<Chip label={value} />),
     headerAlign:'center',
     align: 'center',
@@ -28,7 +29,7 @@ const columns: GridColDef[] = [
   { 
     field: 'issueDate', 
     headerName: 'IssueDate',
-    valueGetter: (p) => (dayjs.unix(p.row.head.issueDate).format('YYYY-MM-DD HH:mm:ss')),
+    valueGetter: p => dateParser(p.row.head.issueDate),
     headerAlign: 'center',
     align:'center',
     width: 180,
@@ -36,7 +37,7 @@ const columns: GridColDef[] = [
   { 
     field: 'shareholder', 
     headerName: 'Shareholder',
-    valueGetter: (p) => (p.row.head.shareholder.toString(16).padStart(10, '0')),
+    valueGetter: p => longSnParser(p.row.head.shareholder.toString()),
     headerAlign: 'center',
     align: 'center',
     width: 160,
@@ -44,7 +45,7 @@ const columns: GridColDef[] = [
   { 
     field: 'par', 
     headerName: 'Par',
-    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.body.par.toString())),
+    valueGetter: p => longDataParser(p.row.body.par.toString()),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -52,7 +53,7 @@ const columns: GridColDef[] = [
   { 
     field: 'paid', 
     headerName: 'Paid',
-    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.body.paid.toString())),
+    valueGetter: p => longDataParser(p.row.body.paid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -60,7 +61,7 @@ const columns: GridColDef[] = [
   { 
     field: 'clean', 
     headerName: 'CleanPaid',
-    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.body.cleanPaid.toString())),
+    valueGetter: p => longDataParser(p.row.body.cleanPaid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -68,7 +69,7 @@ const columns: GridColDef[] = [
   { 
     field: 'state', 
     headerName: 'State',
-    valueGetter: (p) => (p.row.body.state == 0 ? 'Normal' : 'Freezed'),
+    valueGetter: p => (p.row.body.state == 0 ? 'Normal' : 'Freezed'),
     renderCell: ({ value }) => (
       <Chip 
         label={ value } 

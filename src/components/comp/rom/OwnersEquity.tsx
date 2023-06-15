@@ -6,24 +6,23 @@ import {
 
 import { ContractProps } from '../../../interfaces';
 import { TextField } from '@mui/material';
+import { longDataParser } from '../../../scripts/toolsKit';
 
 export function RegisteredCapital({ addr }:ContractProps ) {
   const [ par, setPar ] = useState<string>();
 
-  const { data } = useRegisterOfMembersOwnersEquity({
+  useRegisterOfMembersOwnersEquity({
     address: addr,
+    onSuccess(data) {
+      setPar(data.par.toString())
+    }
   })
-
-  useEffect(()=>{
-    if (data)
-      setPar(data.par.toString());
-  }, [data])
 
   return (
     <>
       {par && (
         <TextField 
-          value={par} 
+          value={ longDataParser(par)} 
           variant='filled' 
           label="RegisteredCapital" 
           inputProps={{readOnly: true}}
@@ -40,20 +39,18 @@ export function RegisteredCapital({ addr }:ContractProps ) {
 export function PaidInCapital({ addr }:ContractProps ) {
   const [paid, setPaid] = useState<string>();
 
-  const {data} = useRegisterOfMembersOwnersEquity({
+  useRegisterOfMembersOwnersEquity({
     address: addr,
-  })
-
-  useEffect(()=>{
-    if (data)
+    onSuccess(data) {
       setPaid(data.paid.toString());
-  }, [data]);
+    }
+  })
 
   return (
     <>
       {paid && (
         <TextField 
-          value={paid} 
+          value={ longDataParser(paid) } 
           variant='filled' 
           label="PaidInCapital" 
           inputProps={{readOnly: true}}

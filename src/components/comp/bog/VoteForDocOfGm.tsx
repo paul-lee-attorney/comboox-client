@@ -1,193 +1,131 @@
-import { Alert, Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, Stack, Tooltip, Typography } from "@mui/material";
+import { Alert, Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { 
+  meetingMinutesABI,
   useGeneralKeeperCastVoteOfGm,
   useMeetingMinutesGetCaseOfAttitude, 
   usePrepareGeneralKeeperCastVoteOfGm, 
 } from "../../../generated";
 
-import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../interfaces";
+import { Bytes32Zero, HexType } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { DriveFileRenameOutline, Fingerprint, HowToVote } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import { HowToVote } from "@mui/icons-material";
+import { useState } from "react";
 import { BigNumber } from "ethers";
 import { readContract } from "@wagmi/core";
-import { toPercent } from "../../../scripts/toolsKit";
+import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 
-interface StrParasOfSigPageType {
-  circulateDate: number,
-  established: boolean,
-  counterOfBlanks: string,
-  counterOfSigs: string,
-  signingDays: string,
-  closingDays: string,
-}
 
-function parseParasOfPage(data: any): StrParasOfSigPageType {
-  let output: StrParasOfSigPageType = {
-    circulateDate: data.sigDate,
-    established: data.flag,
-    counterOfBlanks: data.para.toString(),
-    counterOfSigs: data.arg.toString(),
-    signingDays: data.seq.toString(),
-    closingDays: data.attr.toString(),
-  }
-  return output;
-}
-
-interface VoteCaseType {
+export interface VoteCase {
   head: number,
   weight: BigNumber,  
 }
 
-interface VoteForShaProps {
+interface VoteForDocOfGmProps {
   seqOfMotion: BigNumber ;
   setNextStep: (next: number) => void;
 }
 
-export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForShaProps) {
+async function getVoteResult(seq: BigNumber, addr: HexType): Promise<VoteCase[]>{
 
-  const [ voteResult, setVoteResult ] = useState<VoteCaseType[]>([]);
+  let i = 0;
+  let list: VoteCase[] = [];
+
+  while (i < 4) {
+    let item = await readContract({
+      address: addr,
+      abi: meetingMinutesABI,
+      functionName: 'getCaseOfAttitude',
+      args: [seq, BigNumber.from(i)],
+    })
+
+    list.push({
+      head: item.sumOfHead,
+      weight: item.sumOfWeight,
+    });
+    
+    i++;
+  }
+
+  return list;
+}
+
+
+
+export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps) {
+
+  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
   const { gk, boox } = useComBooxContext();
 
-  const {
-    refetch: refetchAll
-  } = useMeetingMinutesGetCaseOfAttitude({
-    address: boox[3],
-    args: [seqOfMotion, BigNumber.from('0')],
-    onSuccess(data) {
-      setVoteResult(v => {
-        let arr = [...v];
-        arr[0] = {
-          head: data.sumOfHead,
-          weight: data.sumOfWeight,
-        };
-        return arr;
-      })
-    }
-  })
-
-  const {
-    refetch: refetchSupport
-  } = useMeetingMinutesGetCaseOfAttitude({
-    address: boox[3],
-    args: [seqOfMotion, BigNumber.from('1')],
-    onSuccess(data) {
-      setVoteResult(v => {
-        let arr = [...v];
-        arr[1] = {
-          head: data.sumOfHead,
-          weight: data.sumOfWeight,
-        };
-        return arr;
-      })
-    }
-  })
-
-  const {
-    refetch: refetchAgainst
-  } = useMeetingMinutesGetCaseOfAttitude({
-    address: boox[3],
-    args: [seqOfMotion, BigNumber.from('2')],
-    onSuccess(data) {
-      setVoteResult(v => {
-        let arr = [...v];
-        arr[2] = {
-          head: data.sumOfHead,
-          weight: data.sumOfWeight,
-        };
-        return arr;
-      })
-    }
-  })
-
-  const {
-    refetch: refetchAbstain
-  } = useMeetingMinutesGetCaseOfAttitude({
-    address: boox[3],
-    args: [seqOfMotion, BigNumber.from('3')],
-    onSuccess(data) {
-      setVoteResult(v => {
-        let arr = [...v];
-        arr[3] = {
-          head: data.sumOfHead,
-          weight: data.sumOfWeight,
-        };
-        return arr;
-      })
-    }
-  })
-
-  const [ attitude, setAttitude ] = useState('3');
+  const [ attitude, setAttitude ] = useState<string>('3');
+  const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
   const { 
     config
   } =  usePrepareGeneralKeeperCastVoteOfGm ({
     address: gk,
-    args: [ seqOfMotion, BigNumber.from(attitude), Bytes32Zero ],
+    args: attitude && sigHash
+        ? [ seqOfMotion, BigNumber.from(attitude), sigHash ]
+        : undefined,
   });
 
   const {
-    data,
-    isLoading,
-    write
+    isLoading: castVoteLoading,
+    write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     ...config,
     onSuccess() {
-      refetchAll();
-      refetchSupport();
-      refetchAgainst();
-      refetchAbstain();
+      getVoteResult(seqOfMotion, boox[3]).then(
+        list => setVoteResult(list)
+      )
     }
   });
 
   return (
-    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+    <Stack direction='column' sx={{m:1, p:1, justifyContent:'center'}} >
 
-      <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
-        <InputLabel id="attitude-lable">Attitude</InputLabel>
-        <Select
-          labelId="attitude-lable"
-          id="attitude-select"
-          value={ attitude }
-          onChange={(e) => setAttitude(e.target.value)}
+      <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
 
-          label="Attitude"
-        >
-          <MenuItem value={'1'}>Support</MenuItem>
-          <MenuItem value={'2'}>Against</MenuItem>
-          <MenuItem value={'3'}>Abstain</MenuItem>
-        </Select>
-      </FormControl>
-
-      <Button
-        disabled={!write || isLoading}
-        variant="contained"
-        endIcon={<HowToVote />}
-        sx={{ m:1, minWidth:218 }}
-        onClick={()=>write?.()}
-      >
-        Cast Vote
-      </Button>
-
-        <Box sx={{ minWidth:880 }} >        
-          <Alert 
-            variant='outlined' 
-            severity='info' 
-            sx={{ height: 55,  m: 1 }} 
+        <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+          <InputLabel id="attitude-lable">Attitude</InputLabel>
+          <Select
+            labelId="attitude-lable"
+            id="attitude-select"
+            value={ attitude }
+            onChange={(e) => setAttitude(e.target.value)}
+            size="small"
+            label="Attitude"
           >
-            <Typography>
-              Support: { voteResult[1]?.weight.toString() } by { voteResult[1]?.head.toString() } member(s) {' | '}
-              Against: { voteResult[2]?.weight.toString() } by { voteResult[2]?.head.toString() } member(s) {' | '}
-              Abstain: { voteResult[3]?.weight.toString() } by { voteResult[3]?.head.toString() } member(s)
+            <MenuItem value={'1'}>Support</MenuItem>
+            <MenuItem value={'2'}>Against</MenuItem>
+            <MenuItem value={'3'}>Abstain</MenuItem>
+          </Select>
+        </FormControl>
 
-              {voteResult[0]?.weight.toNumber() > 0 ?
-                ' | Support Ratio:' + toPercent(voteResult[1]?.weight.mul(10000).div(voteResult[0]?.weight).toNumber()) :
-                ''
-              }
-            </Typography>
+        <TextField 
+          sx={{ m: 1, minWidth: 650 }} 
+          id="tfHashOfAction" 
+          label="SigHash / CID in IPFS" 
+          variant="outlined"
+          onChange={e => setSigHash(`0x${e.target.value}`)}
+          value = { sigHash.substring(2) }
+          size='small'
+        />                                            
 
-          </Alert>
-        </Box>  
+        <Button
+          disabled={!castVote || castVoteLoading}
+          variant="contained"
+          endIcon={<HowToVote />}
+          sx={{ m:1, minWidth:218 }}
+          onClick={()=>castVote?.()}
+        >
+          Cast Vote
+        </Button>
+
+      </Stack>
+
+      {voteResult && (
+        <VoteResult voteResult={voteResult} />
+      )}
 
     </Stack>
   )

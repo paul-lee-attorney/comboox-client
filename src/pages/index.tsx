@@ -1,17 +1,8 @@
-import { useState } from 'react';
 
-import { Box, TextField, Button, Grid, Paper, Stack } from '@mui/material';
-
-import { Search } from '@mui/icons-material';
-
+import { Stack } from '@mui/material';
 import { CreateComp, GetComp } from '../components'
-import { AddrOfRegCenter, HexType } from '../interfaces';
-import { useRegCenterGetDocByUserNo } from '../generated';
-import { BigNumber } from 'ethers';
-import { useComBooxContext } from '../scripts/ComBooxContext';
 
 function FrontPage() {
-
 
   return (
     <Stack 

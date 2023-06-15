@@ -7,6 +7,9 @@ import { bookOfGmABI, useBookOfGmGetSeqList } from "../../../generated";
 import { readContract } from "@wagmi/core";
 import { Paper, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
+import { CreateMotionOfGm } from "../../../components/comp/bog/CreateMotionOfGm";
+import { FlowchartOfMotion } from "../../../components/common/meetingMinutes/FlowchartOfMotion";
+import { Share } from "../bos/bookOfShares";
 
 export interface Head {
   typeOfMotion: number;
@@ -80,7 +83,7 @@ function BookOfGM() {
   const [ motionsList, setMotionsList ] = useState<Motion[]>();
 
   const {
-    refetch: getSnList
+    refetch: getSeqList
   } = useBookOfGmGetSeqList({
     address: boox[3],
     onSuccess(ls) {
@@ -90,6 +93,9 @@ function BookOfGM() {
     }
   });
 
+  const [ open, setOpen ] = useState(false);
+  const [ motion, setMotion ] = useState<Motion>();
+  
   return (
     <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       <Toolbar>
@@ -102,6 +108,9 @@ function BookOfGM() {
         <tbody>
 
           <tr>
+            <td colSpan={4} >
+              <CreateMotionOfGm  getMotionsList={getSeqList} />
+            </td>
           </tr>
 
           <tr>
@@ -110,7 +119,17 @@ function BookOfGM() {
                 <GetMotionsList 
                   list={motionsList} 
                   title="Motions List - General Meeting of Shareholders" 
+                  setMotion={setMotion}
+                  setOpen={setOpen}
                 />
+              )}
+            </td>
+          </tr>
+
+          <tr>
+            <td colSpan={4}>
+              {motion && (
+                <FlowchartOfMotion  open={open} motion={motion} setOpen={setOpen} obtainMotionsList={getSeqList} />
               )}
             </td>
           </tr>

@@ -46,40 +46,40 @@ import {
 
 import { BigNumber } from "ethers";
 
-import { dateParser } from "../../../scripts/toolsKit";
+import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 
-export interface StrSigType {
-  signer: string,
+export interface StrSig {
+  signer: number,
   sigDate: number,
   blocknumber: string,
 }
 
-export interface StrParasOfSigPageType {
+export interface ParasOfSigPage {
   circulateDate: number,
   established: boolean,
-  counterOfBlanks: string,
-  counterOfSigs: string,
-  signingDays: string,
-  closingDays: string,
+  counterOfBlanks: number,
+  counterOfSigs: number,
+  signingDays: number,
+  closingDays: number,
 }
 
-function parseParasOfPage(data: any): StrParasOfSigPageType {
-  let output: StrParasOfSigPageType = {
+function parseParasOfPage(data: any): ParasOfSigPage {
+  let output: ParasOfSigPage = {
     circulateDate: data.sigDate,
     established: data.flag,
-    counterOfBlanks: data.para.toString(),
-    counterOfSigs: data.arg.toString(),
-    signingDays: data.seq.toString(),
-    closingDays: data.attr.toString(),
+    counterOfBlanks: data.para,
+    counterOfSigs: data.arg,
+    signingDays: data.seq,
+    closingDays: data.attr,
   }
   return output;
 }
 
 
-async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly BigNumber[] ): Promise<StrSigType[]> {
+async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly BigNumber[] ): Promise<StrSig[]> {
 
   let len = parties.length;
-  let output: StrSigType[] = [];
+  let output: StrSig[] = [];
 
   while (len > 0) {
 
@@ -91,7 +91,7 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
     });
 
     output.push({
-      signer: parties[len-1].toHexString().substring(2).padStart(10, '0'),
+      signer: parties[len-1].toNumber(),
       sigDate: item.sig.sigDate,
       blocknumber: item.sig.blocknumber.toString(),
     });
@@ -110,7 +110,7 @@ interface SigPageProps {
 
 
 export function Signatures({ addr, initPage, finalized }: SigPageProps) {
-  const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
+  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
 
   const {
     refetch: getParasOfPage
@@ -134,12 +134,12 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   } = usePrepareSigPageSetTiming({
     address: addr,
     args: timing?.closingDays &&
-      timing?.signingDays ? 
-        [ initPage, 
-          BigNumber.from(timing.signingDays), 
-          BigNumber.from(timing.closingDays)
-        ] : 
-        undefined,
+          timing?.signingDays 
+        ? [ initPage, 
+            BigNumber.from(timing.signingDays), 
+            BigNumber.from(timing.closingDays)
+          ] 
+        : undefined,
   });
 
   const {
@@ -154,7 +154,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
 
   // ==== Buyers ====
 
-  const [ buyerSigs, setBuyerSigs ] = useState<StrSigType[]>();
+  const [ buyerSigs, setBuyerSigs ] = useState<StrSig[]>();
 
   const {
     refetch: refetchGetBuyers
@@ -169,7 +169,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
 
   // ==== Seller ====
 
-  const [ sellerSigs, setSellerSigs ] = useState<StrSigType[]>();  
+  const [ sellerSigs, setSellerSigs ] = useState<StrSig[]>();  
 
   const {
     refetch: refetchGetSellers
@@ -485,7 +485,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ v.signer }
+                    value={ longSnParser(v.signer.toString()) }
                   />
 
                   <TextField 
@@ -507,7 +507,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ v.blocknumber }
+                    value={ longSnParser(v.blocknumber) }
                   />
 
                 </Stack>
@@ -534,7 +534,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ v.signer }
+                    value={ longSnParser(v.signer.toString()) }
                   />
 
                   <TextField 
@@ -556,7 +556,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ v.blocknumber }
+                    value={ longSnParser(v.blocknumber) }
                   />
 
                 </Stack>

@@ -3,6 +3,7 @@ import { Share } from "../../../pages/comp/bos/bookOfShares";
 import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
+import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 
 export interface CertificateOfContributionProps{
@@ -23,7 +24,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
       onClose={()=>setOpen(false)}
       aria-labelledby="dialog-title" 
     >
-      <DialogTitle id="dialog-title">
+      <DialogTitle id="dialog-title" >
         {"Certificate Of Contribution"}
       </DialogTitle>
       <DialogContent>
@@ -51,7 +52,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfIssueDate" 
                     label="IssueDate" 
                     variant="outlined"
-                    value = { dayjs.unix(share.head.issueDate).format('YYYY-MM-DD HH:mm:ss') }
+                    value = { dateParser(share.head.issueDate) }
                     size='small'
                   />
                 </td>            
@@ -66,7 +67,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfSeqOfShare" 
                     label="SeqOfShare" 
                     variant="outlined"
-                    value = { share.head.seqOfShare.toString(16).padStart(8, '0') }
+                    value = { longSnParser(share.head.seqOfShare.toString()) }
                     size='small'
                   />
                 </td>
@@ -78,7 +79,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPreSeq" 
                     label="PreSeq" 
                     variant="outlined"
-                    value = { share.head.preSeq.toString(16).padStart(8, '0') }
+                    value = { longSnParser(share.head.preSeq.toString()) }
                     size='small'
                   />
                 </td>
@@ -104,7 +105,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPayInDate" 
                     label="PayInDate" 
                     variant="outlined"
-                    value = { dayjs.unix(share.body.payInDeadline).format('YYYY-MM-DD HH:mm:ss') }
+                    value = { dateParser(share.body.payInDeadline) }
                     size='small'
                   />                                
                 </td>
@@ -122,7 +123,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfShareholder" 
                     label="Shareholder" 
                     variant="outlined"
-                    value = { share.head.shareholder.toString(16).padStart(10, '0') }
+                    value = { longSnParser(share.head.shareholder.toString()) }
                     size='small'
                   />
                 </td>
@@ -138,7 +139,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPar" 
                     label="Par" 
                     variant="outlined"
-                    value = { share.body.par.toString() }
+                    value = { longDataParser(share.body.par.toString()) }
                     size='small'
                   />                
                 </td>
@@ -151,7 +152,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPriceOfPar" 
                     label="PriceOfPar" 
                     variant="outlined"
-                    value = { share.head.priceOfPar.toString() }
+                    value = { longDataParser(share.head.priceOfPar.toString()) }
                     size='small'
                   />                
                 </td>
@@ -164,7 +165,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValueOfParBalance" 
                     label="ValueOfParBalance" 
                     variant="outlined"
-                    value = { share.body.par.sub(share.body.paid).mul(BigNumber.from(share.head.priceOfPar)).toString() }
+                    value = { longDataParser(share.body.par.sub(share.body.paid).mul(BigNumber.from(share.head.priceOfPar)).toString()) }
                     size='small'
                   />                
                 </td>
@@ -180,7 +181,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPaid" 
                     label="Paid" 
                     variant="outlined"
-                    value = { share.body.paid.toString() }
+                    value = { longDataParser(share.body.paid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -193,7 +194,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPriceOfPaid" 
                     label="PriceOfPaid" 
                     variant="outlined"
-                    value = { share.head.priceOfPaid.toString() }
+                    value = { longDataParser(share.head.priceOfPaid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -206,7 +207,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValueOfPaid" 
                     label="ValueOfPaid" 
                     variant="outlined"
-                    value = { share.body.paid.mul(BigNumber.from(share.head.priceOfPaid)).toString() }
+                    value = { longDataParser(share.body.paid.mul(BigNumber.from(share.head.priceOfPaid)).toString()) }
                     size='small'
                   />                
                 </td>
@@ -235,7 +236,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfCleanPaid" 
                     label="CleanPaid" 
                     variant="outlined"
-                    value = { share.body.cleanPaid.toString() }
+                    value = { longDataParser(share.body.cleanPaid.toString()) }
                     size='small'
                   />                                
                 </td>
@@ -248,9 +249,9 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValue" 
                     label="Value" 
                     variant="outlined"
-                    value = { share.body.paid.mul(share.head.priceOfPaid).add(
-                      share.body.par.sub(share.body.paid).mul(share.head.priceOfPar)
-                    )}
+                    value = { longDataParser(share.body.paid.mul(share.head.priceOfPaid).add(
+                      share.body.par.sub(share.body.paid).mul(share.head.priceOfPar)).toString())
+                    }
                     size='small'
                   />                                
                 </td>

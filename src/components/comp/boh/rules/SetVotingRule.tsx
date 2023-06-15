@@ -3,13 +3,9 @@ import { useState } from 'react';
 
 import { 
   Stack,
-  Divider,
   TextField,
   Paper,
   Toolbar,
-  Checkbox,
-  FormControlLabel,
-  Button,
   Box,
   FormControl,
   InputLabel,
@@ -21,8 +17,7 @@ import {
 import { AddRule } from './AddRule';
 
 import { Bytes32Zero, HexType } from '../../../../interfaces';
-import { BigNumber } from 'ethers';
-import { dateParser, toBasePoint, toPercent } from '../../../../scripts/toolsKit';
+import { longSnParser, toPercent } from '../../../../scripts/toolsKit';
 import { VotingRule, VotingRuleWrap } from './VotingRules';
 
 interface SetVotingRuleProps {
@@ -32,57 +27,91 @@ interface SetVotingRuleProps {
   finalized: boolean,
 }
 
-export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRuleProps) {
-  const [ objVR, setObjVR ] = useState<VotingRule>(defaultRule.votingRule); 
+export function vrParser(hexVr: HexType):VotingRule {
+  let rule: VotingRule = {
+    seqOfRule: parseInt(hexVr.substring(2, 6), 16), 
+    qtyOfSubRule: parseInt(hexVr.substring(6, 8), 16),
+    seqOfSubRule: parseInt(hexVr.substring(8, 10), 16),
+    authority: parseInt(hexVr.substring(10, 14), 16),
+    headRatio: parseInt(hexVr.substring(14, 18), 16),
+    amountRatio: parseInt(hexVr.substring(18, 22), 16),
+    onlyAttendance: hexVr.substring(22, 24) === '01',
+    impliedConsent: hexVr.substring(24, 26) === '01',
+    partyAsConsent: hexVr.substring(26, 28) === '01',
+    againstShallBuy: hexVr.substring(28, 30) === '01',
+    shaExecDays: parseInt(hexVr.substring(30, 32), 16),
+    reviewDays: parseInt(hexVr.substring(32, 34), 16),
+    reconsiderDays: parseInt(hexVr.substring(34, 36), 16),
+    votePrepareDays: parseInt(hexVr.substring(36, 38), 16),
+    votingDays: parseInt(hexVr.substring(38, 40), 16),
+    execDaysForPutOpt: parseInt(hexVr.substring(40, 42), 16),
+    vetoers: [parseInt(hexVr.substring(42, 52), 16), parseInt(hexVr.substring(52, 62), 16)],
+    para: 0,    
+  }
+  return rule;
+}
 
-  let hexVR: HexType = `0x${
-    (objVR.seqOfRule.toString(16).padStart(4, '0')) +
-    (objVR.qtyOfSubRule.toString(16).padStart(2, '0')) +
-    (objVR.seqOfSubRule.toString(16).padStart(2, '0')) +
-    (objVR.authority.toString(16).padStart(4, '0')) +
-    (objVR.headRatio.toString(16).padStart(4, '0')) +
-    (objVR.amountRatio.toString(16).padStart(4, '0')) +
-    (objVR.onlyAttendance ? '01' : '00' )+
-    (objVR.impliedConsent ? '01' : '00' )+
-    (objVR.partyAsConsent ? '01' : '00' )+
-    (objVR.againstShallBuy ? '01' : '00' )+
-    (objVR.shaExecDays.toString(16).padStart(2, '0')) +
-    (objVR.reviewDays.toString(16).padStart(2, '0')) +
-    (objVR.reconsiderDays.toString(16).padStart(2, '0')) +
-    (objVR.votePrepareDays.toString(16).padStart(2, '0')) +
-    (objVR.votingDays.toString(16).padStart(2, '0')) +
-    (objVR.execDaysForPutOpt.toString(16).padStart(2, '0')) +
-    (objVR.vetoers[0].toString(16).padStart(10, '0')) +
-    (objVR.vetoers[1].toString(16).padStart(10, '0')) +
+export function vrCodifier(objVr: VotingRule ): HexType {
+  let hexVr: HexType = `0x${
+    (objVr.seqOfRule.toString(16).padStart(4, '0')) +
+    (objVr.qtyOfSubRule.toString(16).padStart(2, '0')) +
+    (objVr.seqOfSubRule.toString(16).padStart(2, '0')) +
+    (objVr.authority.toString(16).padStart(4, '0')) +
+    (objVr.headRatio.toString(16).padStart(4, '0')) +
+    (objVr.amountRatio.toString(16).padStart(4, '0')) +
+    (objVr.onlyAttendance ? '01' : '00' )+
+    (objVr.impliedConsent ? '01' : '00' )+
+    (objVr.partyAsConsent ? '01' : '00' )+
+    (objVr.againstShallBuy ? '01' : '00' )+
+    (objVr.shaExecDays.toString(16).padStart(2, '0')) +
+    (objVr.reviewDays.toString(16).padStart(2, '0')) +
+    (objVr.reconsiderDays.toString(16).padStart(2, '0')) +
+    (objVr.votePrepareDays.toString(16).padStart(2, '0')) +
+    (objVr.votingDays.toString(16).padStart(2, '0')) +
+    (objVr.execDaysForPutOpt.toString(16).padStart(2, '0')) +
+    (objVr.vetoers[0].toString(16).padStart(10, '0')) +
+    (objVr.vetoers[1].toString(16).padStart(10, '0')) +
     '0000' 
   }`;
+  return hexVr;
+}
 
-  const authorities:string[] = ['Null', 'GeneralMeeting', 'Board', 'Board & GeneralMeeting'];
+export const authorities:string[] = ['Null', 'GeneralMeeting', 'Board', 'Board & GeneralMeeting'];
+  
+export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRuleProps) {
+
+  const defVrWrap: VotingRuleWrap = defaultRule 
+        ? defaultRule
+        : { subTitle: '- newly Added Rule ',
+            votingRule: {
+              seqOfRule: seq, 
+              qtyOfSubRule: seq, 
+              seqOfSubRule: seq,
+              authority: 1,
+              headRatio: 0,
+              amountRatio: 0,
+              onlyAttendance: false,
+              impliedConsent: false,
+              partyAsConsent: true,
+              againstShallBuy: false,
+              shaExecDays: 15,
+              reviewDays: 15,
+              reconsiderDays: 0,
+              votePrepareDays: 0,
+              votingDays: 1,
+              execDaysForPutOpt: 0,
+              vetoers: [0,0],
+              para: 0,
+            },
+          };
+
+  const [ objVR, setObjVR ] = useState<VotingRule>(defVrWrap.votingRule); 
+
+  let hexVR: HexType = vrCodifier(objVR);
 
   const [ newHexVR, setNewHexVR ] = useState<HexType>(Bytes32Zero);
 
-  let newVR: VotingRule = {
-    seqOfRule: parseInt(newHexVR.substring(2, 6), 16), 
-    qtyOfSubRule: parseInt(newHexVR.substring(6, 8), 16),
-    seqOfSubRule: parseInt(newHexVR.substring(8, 10), 16),
-    authority: parseInt(newHexVR.substring(10, 14), 16),
-    headRatio: parseInt(newHexVR.substring(14, 18), 16),
-    amountRatio: parseInt(newHexVR.substring(18, 22), 16),
-    onlyAttendance: newHexVR.substring(22, 24) === '01',
-    impliedConsent: newHexVR.substring(24, 26) === '01',
-    partyAsConsent: newHexVR.substring(26, 28) === '01',
-    againstShallBuy: newHexVR.substring(28, 30) === '01',
-    shaExecDays: parseInt(newHexVR.substring(30, 32), 16),
-    reviewDays: parseInt(newHexVR.substring(32, 34), 16),
-    reconsiderDays: parseInt(newHexVR.substring(34, 36), 16),
-    votePrepareDays: parseInt(newHexVR.substring(36, 38), 16),
-    votingDays: parseInt(newHexVR.substring(38, 40), 16),
-    execDaysForPutOpt: parseInt(newHexVR.substring(40, 42), 16),
-    vetoers: [parseInt(newHexVR.substring(42, 52), 16), parseInt(newHexVR.substring(52, 62), 16)],
-    para: 0,
-  } 
-
-  // console.log('newVR: ', newVR);
+  let newVR: VotingRule = vrParser(newHexVR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 
@@ -100,7 +129,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
         <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
           <Box sx={{ minWidth:600 }} >
             <Toolbar>
-              <h4>Rule No. { seq.toString() }  { defaultRule.subTitle } </h4>
+              <h4>Rule No. { seq.toString() }  { defVrWrap.subTitle } </h4>
             </Toolbar>
           </Box>
 
@@ -196,7 +225,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  seqOfRule: parseInt(e.target.value),
+                  seqOfRule: parseInt(e.target.value ?? '0'),
                   }))
                 }
                 
@@ -231,7 +260,6 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 >
                   <MenuItem value={1}>GeneralMeeting</MenuItem>
                   <MenuItem value={2}>Board</MenuItem>
-                  <MenuItem value={3}>Board & GeneralMeeting</MenuItem>
                 </Select>
               </FormControl>
 
@@ -329,7 +357,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                   m:1,
                   minWidth: 218,
                 }}
-                value={newVR.vetoers[0].toString()}
+                value={ longSnParser(newVR.vetoers[0].toString()) }
               />
             )}
 
@@ -342,7 +370,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                   m:1,
                   minWidth: 218,
                 }}
-                value={newVR.vetoers[1].toString()}
+                value={ longSnParser(newVR.vetoers[1].toString())}
               />
             )}
 
@@ -430,10 +458,11 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  vetoers1: parseInt(e.target.value),
-                }))}
+                onChange={(e) => setObjVR((v) => {
+                  let arr = [...v.vetoers];
+                  arr[0] = parseInt(e.target.value ?? '0');
+                  return {...v, vetoers:arr};
+                })}
                 value={ objVR?.vetoers[0]}   
               />
 
@@ -444,10 +473,11 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjVR((v) => ({
-                  ...v,
-                  vetoers2: parseInt(e.target.value),
-                }))}
+                onChange={(e) => setObjVR((v) => {
+                  let arr = [...v.vetoers];
+                  arr[1] = parseInt(e.target.value ?? '0');
+                  return {...v, vetoers:arr};
+                })}
                 value={ objVR?.vetoers[1]}
               />
 
@@ -455,8 +485,6 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
           </Collapse>
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-
 
             {newVR?.shaExecDays != undefined && (
               <TextField 
@@ -552,7 +580,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  shaExecDays: parseInt(e.target.value),
+                  shaExecDays: parseInt(e.target.value ?? '0'),
                 }))}
                 value={ objVR?.shaExecDays}                                        
               />
@@ -566,7 +594,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  reviewDays: parseInt(e.target.value),
+                  reviewDays: parseInt(e.target.value ?? '0'),
                 }))}
                 value={ objVR?.reviewDays}                                        
               />
@@ -580,7 +608,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  reconsiderDays: parseInt(e.target.value),
+                  reconsiderDays: parseInt(e.target.value ?? '0'),
                 }))}
                 value={ objVR?.reconsiderDays}                                        
               />
@@ -594,7 +622,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  votePrepareDays: parseInt(e.target.value),
+                  votePrepareDays: parseInt(e.target.value ?? '0'),
                 }))}
                 value={ objVR?.votePrepareDays}                                        
               />
@@ -608,7 +636,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  votingDays: parseInt(e.target.value),
+                  votingDays: parseInt(e.target.value ?? '0'),
                 }))}
                 value={ objVR?.votingDays}                                        
               />
@@ -622,14 +650,13 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                 }}
                 onChange={(e) => setObjVR((v) => ({
                   ...v,
-                  execDaysForPutOpt: parseInt(e.target.value),
+                  execDaysForPutOpt: parseInt(e.target.value ?? '0'),
                 }))}
                 value={ objVR?.execDaysForPutOpt}                                        
               />
 
             </Stack>
           </Collapse>
-
 
         </Stack>
     

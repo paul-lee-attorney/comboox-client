@@ -16,6 +16,7 @@ import { regCenterABI } from '../../generated';
 import { AddrOfRegCenter } from '../../interfaces';
 
 import { RegUser } from './RegUser';
+import { longSnParser } from '../../scripts/toolsKit';
 
 type DialogType = {
   flag: boolean,
@@ -35,7 +36,7 @@ export function DialogMyUserNo({flag, closeDialog}: DialogType) {
     if (signer && rc) {
       let temp = rc.connect(signer);
       temp.getMyUserNo().
-        then(num => setUserNo(num.toString(16).padStart(10, '0')))
+        then(num => setUserNo( longSnParser(num.toString()) ))
     }
   });
 
@@ -58,7 +59,7 @@ export function DialogMyUserNo({flag, closeDialog}: DialogType) {
         </DialogContent>
         <DialogActions>
 
-          {userNo === '0000000000' && (
+          {userNo === '0000' && (
             <RegUser closeDialog={closeDialog} />
           )}
 

@@ -5,9 +5,15 @@ import {
   Box, 
   TextField, 
   Button,
+  Paper,
+  Toolbar,
+  Stack,
+  Divider,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 
-import { ArrowBack, ArrowForward, Send }  from '@mui/icons-material';
+import { AddCircle, ArrowBack, ArrowForward, RemoveCircle, Send }  from '@mui/icons-material';
 
 import Link from '../../../scripts/Link';
 
@@ -20,47 +26,51 @@ import {
   useBookOfSharesSetDirectKeeper,
   usePrepareRegisterOfMembersSetDirectKeeper,
   useRegisterOfMembersSetDirectKeeper,
+  usePrepareBookOfSharesDecreaseCapital,
 } from '../../../generated';
 
 import { BigNumber } from 'ethers';
 
-import { HexType } from '../../../interfaces';
+import { Bytes32Zero, HexType } from '../../../interfaces';
 
 import { DataList } from '../../../components';
 
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
+import { Share, codifyHeadOfShare, getSharesList } from '../bos/bookOfShares';
+import { dateParser } from '../../../scripts/toolsKit';
+import { SharesList } from '../../../components/comp/bos/SharesList';
 
 
-export interface ShareArgs {
-  class: number,
-  issueDate: number,
-  shareholder: number,
-  priceOfPaid: number,
-  priceOfPar: number,
-  payInDeadline: number,
-  paid: string,
-  par: string,
-}
-
-const defaultShareArgs: ShareArgs = {
-  class: 1,
-  issueDate: 0,
-  shareholder: 0,
-  priceOfPaid: 100,
-  priceOfPar: 100,
-  payInDeadline: 0,
-  paid: '0',
-  par: '0',
+const defaultShare: Share = {
+  sn: Bytes32Zero,
+  head: {
+    seqOfShare: 0,
+    preSeq: 0,
+    class: 1,
+    issueDate: 0,
+    shareholder: 0,
+    priceOfPaid: 100,
+    priceOfPar: 100,
+  },
+  body: {
+    payInDeadline: 0,
+    paid: BigNumber.from(0),
+    par: BigNumber.from(0),
+    cleanPaid: BigNumber.from(0),
+    state: 0,
+  },
 }
 
 function InitBosPage() {
   const { gk, boox } = useComBooxContext();
 
-  const [sharesList, setSharesList] = useState<readonly HexType[]>();
+  const [loading, setLoading] = useState(false);
 
-  const [shareArgs, setShareArgs] = useState<ShareArgs>(defaultShareArgs);
+  const [sharesList, setSharesList] = useState<Share[]>();
+
+  const [share, setShare] = useState<Share>(defaultShare);
 
   const {
     data: romKeeper
@@ -70,11 +80,15 @@ function InitBosPage() {
   })
 
   const {
-    refetch: refetchSharesList
+    refetch: getSharenumberList
   } = useRegisterOfMembersSharesList({
     address: boox[8],
     onSuccess(ls) {
-      setSharesList(ls);
+      setLoading(true);
+      getSharesList(boox[7], ls).then(list => {
+        setLoading(false);
+        setSharesList(list);
+      });
     }
   });
 
@@ -89,64 +103,56 @@ function InitBosPage() {
     config
   } = usePrepareBookOfSharesIssueShare({
     address: boox[7],
-    args: shareArgs?.class &&
-      shareArgs?.issueDate &&
-      shareArgs?.shareholder && 
-      shareArgs?.priceOfPaid && 
-      shareArgs?.priceOfPar && 
-      shareArgs?.payInDeadline &&
-      shareArgs?.paid &&
-      shareArgs?.par ? 
+    args: share.head.class &&
+      share.head.issueDate &&
+      share.head.shareholder && 
+      share.head.priceOfPaid && 
+      share.head.priceOfPar && 
+      share.body.payInDeadline &&
+      share.body.paid &&
+      share.body.par ? 
         [
-          `0x${'0'.padEnd(16, '0') + 
-            shareArgs.class.toString(16).padStart(4, '0') + 
-            shareArgs.issueDate.toString(16).padStart(12, '0') + 
-            shareArgs.shareholder.toString(16).padStart(10, '0') + 
-            shareArgs.priceOfPaid.toString(16).padStart(8, '0') + 
-            shareArgs.priceOfPar.toString(16).padStart(8, '0') +
-            '0'.padEnd(6, '0')
-          }`,
-          BigNumber.from(shareArgs.payInDeadline),
-          BigNumber.from(shareArgs.paid),
-          BigNumber.from(shareArgs.par)
+          codifyHeadOfShare(share.head),
+          BigNumber.from(share.body.payInDeadline),
+          share.body.paid,
+          share.body.par
         ] :
         undefined,
   });
 
   const {
-    isLoading,
-    write
+    isLoading: issueShareLoading,
+    write: issueShare,
   } = useBookOfSharesIssueShare({
     ...config,
     onSuccess() {
-      refetchSharesList();
+      getSharenumberList();
     }
   });
 
   const {
-    config: romSetDKConfig,
+    config: setDirectKeeperConfig,
   } = usePrepareRegisterOfMembersSetDirectKeeper({
     address: boox[8],
     args: romKeeper ? [ romKeeper ] : undefined,
   });
 
   const {
-    isLoading: romSetDKIsLoading,
+    isLoading: setRomDKLoading,
     write: setRomDK,
-  } = useRegisterOfMembersSetDirectKeeper(romSetDKConfig);
+  } = useRegisterOfMembersSetDirectKeeper(setDirectKeeperConfig);
 
   const {
-    config: bosSetDKConfig,
+    config: setBosDKConfig,
   } = usePrepareBookOfSharesSetDirectKeeper({
     address: boox[7],
     args: bosKeeper ? [ bosKeeper ] : undefined,
   });
 
   const {
-    isLoading: bosSetDKIsLoading,
+    isLoading: setBosDKLoading,
     write: setBosDK
-  } = useBookOfSharesSetDirectKeeper(bosSetDKConfig);
-
+  } = useBookOfSharesSetDirectKeeper(setBosDKConfig);
 
   return (
     <>
@@ -155,198 +161,201 @@ function InitBosPage() {
       <br />
       <br />
 
-      <Grid 
-        container 
-        direction='row'
-        justifyContent='center'
-        alignItems='flex-end'
-        spacing={1}
-      >
+      <Paper sx={{m:1, p:1, border:1, borderColor:'divider', width:'90%' }} >
 
-        <Grid item xs={4}>
-          <Box sx={{
-            border: 1,
-            boxShadow: 2,
-            borderRadius: 1,
-            p: 1,
-          }} >
-
-            <h2> Initiate BookOfShares</h2>
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfClass" 
-              label="ClassOfShare" 
-              variant="outlined"
-              helperText="Integer < 2^16 (e.g. '5')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  class: parseInt(e.target.value),
-                }));
-              }}
-
-              value = {shareArgs?.class}
-              size='small'
-            />
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfShareholder" 
-              label="Shareholder" 
-              variant="outlined"
-              helperText="Integer < 2^40 (e.g. '12345')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  shareholder: parseInt(e.target.value),
-                }));
-              }}
-
-              value = {shareArgs?.shareholder}
-              size='small'
-            />
-
-            <br />
-
-            <DateTimeField
-              label='IssueDateOfShare'
-              sx={{m:1}}
-              value={ dayjs.unix(shareArgs?.issueDate) }
-              onChange={(date) => setShareArgs((v) => ({
-                ...v,
-                issueDate: date ? date.unix() : 0,
-              }))}
-              format='YYYY-MM-DD HH:mm:ss'
-              size='small'
-            />
-
-            <DateTimeField
-              label='PayInDeadline'
-              sx={{m:1}}
-              value={ dayjs.unix(shareArgs?.payInDeadline) }
-              onChange={(date) => setShareArgs((v) => ({
-                ...v,
-                payInDeadline: date ? date.unix() : 0,
-              }))}
-              format='YYYY-MM-DD HH:mm:ss'
-              size='small'
-            />
-
-            <br />
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfPriceOfPaid" 
-              label="PriceOfPaid" 
-              variant="outlined"
-              helperText="Integer < 2^32 (e.g. '12345')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  priceOfPaid: parseInt(e.target.value),
-                }));
-              }}
-
-              value = {shareArgs?.priceOfPaid}
-              size='small'
-            />
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfPriceOfPar" 
-              label="PriceOfPar" 
-              variant="outlined"
-              helperText="Integer < 2^32 (e.g. '12345')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  priceOfPar: parseInt(e.target.value),
-                }));
-              }}
-
-              value = {shareArgs?.priceOfPar}
-              size='small'
-            />
-
-            <br />
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfPaidAmount" 
-              label="PaidAmount" 
-              variant="outlined"
-              helperText="Number < 2^64 (e.g. '18000')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  paid: e.target.value,
-                }));
-              }}
-
-              value = {shareArgs?.paid}
-              size='small'
-            />
-
-            <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
-              id="tfPar" 
-              label="ParAmount" 
-              variant="outlined"
-              helperText="Number < 2^64 (e.g, '18000')"
-              onChange={(e) => {
-                setShareArgs(v => ({
-                  ...v,
-                  par: e.target.value,
-                }));
-              }}
-
-              value = {shareArgs?.par}
-              size='small'
-            />
-
-            <hr />
-
-            <Button 
-              disabled = {!write || isLoading}
-
-              sx={{ m: 1, minWidth: 120, height: 40 }} 
-              variant="contained" 
-              endIcon={<Send />}
-              onClick={()=> write?.()}
-              size='small'
-            >
-              Issue
-            </Button>
-
-          </Box>
-        </Grid>
-
-        <Grid item xs={6} >
-          <Box sx={{
-            border: 1,
-            boxShadow: 2,
-            borderRadius: 1,
-            p: 1,
-            minHeight: 462,            
-          }}>
-            {sharesList && (
-              <div>
-                <h2>Shares List</h2>
-                <hr />
-                <DataList isOrdered={true} data={sharesList} />
-                <br  />
-              </div>
-            )}
-          </Box>
+        <Toolbar>
+          <h3>Initiate BookOfShares</h3>
+        </Toolbar>
         
-        </Grid>
+        <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
-        <br />
+          <Stack direction={'column'} sx={{m:1, p:1, justifyContent:'center'}}>
 
-      </Grid>
+            <Stack direction={'row'} sx={{alignItems:'center' }}>
 
-      <hr />
+              <TextField 
+                sx={{ m: 1, minWidth: 120 }} 
+                id="tfClass" 
+                label="ClassOfShare" 
+                variant="outlined"
+                helperText="Integer < 2^16 (e.g. '5')"
+                onChange={(e) => {
+                  setShare(v => ({
+                    sn: v.sn,
+                    head: {
+                      ...v.head,
+                      class: parseInt(e.target.value),
+                    },
+                    body: v.body,
+                  }));
+                }}
+                value = {share.head.class}
+                size='small'
+              />
+
+              <TextField 
+                sx={{ m: 1, minWidth: 120 }} 
+                id="tfShareholder" 
+                label="Shareholder" 
+                variant="outlined"
+                helperText="Integer < 2^40 (e.g. '12345')"
+                onChange={(e) => {
+                  setShare(v => ({
+                    sn: v.sn,
+                    head: {
+                      ...v.head,
+                      shareholder: parseInt(e.target.value), 
+                    },
+                    body: v.body,
+                  }));
+                }}
+                value = {share.head.shareholder}
+                size='small'
+              />
+
+              <TextField 
+                sx={{ m: 1, minWidth: 120 }} 
+                id="tfPriceOfPaid" 
+                label="PriceOfPaid" 
+                variant="outlined"
+                helperText="Integer < 2^32 (e.g. '12345')"
+                onChange={(e) => {
+                  setShare(v => ({
+                    sn: v.sn,
+                    head: {
+                      ...v.head,
+                      priceOfPaid: parseInt(e.target.value),
+                    },
+                    body: v.body,
+                  }));
+                }}
+                value = {share.head.priceOfPaid}
+                size='small'
+              />
+
+              <TextField 
+                sx={{ m: 1, minWidth: 120 }} 
+                id="tfPriceOfPar" 
+                label="PriceOfPar" 
+                variant="outlined"
+                helperText="Integer < 2^32 (e.g. '12345')"
+                onChange={(e) => {
+                  setShare(v => ({
+                    sn: v.sn,
+                    head: {
+                      ...v.head,
+                      priceOfPar: parseInt(e.target.value),
+                    },
+                    body: v.body,
+                  }));
+                }}
+                value = {share.head.priceOfPar}
+                size='small'
+              />
+
+            </Stack>
+
+            <Stack direction={'row'} sx={{alignItems:'center' }}>
+
+              <DateTimeField
+                label='IssueDate'
+                sx={{m:1}}
+                helperText="Date & Time in UTC"
+                value={ dayjs.unix(share.head.issueDate) }
+                onChange={(date) => setShare((v) => ({
+                  sn: v.sn,
+                  head: {
+                    ...v.head,
+                    issueDate: date ? date.unix() : 0,
+                  },
+                  body: v.body,
+                }))}
+                format='YYYY-MM-DD HH:mm:ss'
+                size='small'
+              />
+
+              <DateTimeField
+                label='PayInDeadline'
+                helperText="Date & Time in UTC"
+                sx={{m:1}}
+                value={ dayjs.unix(share.body.payInDeadline) }
+                onChange={(date) => setShare((v) => ({
+                  sn: v.sn,
+                  head: v.head,
+                  body: {
+                    ...v.body,
+                    payInDeadline: date ? date.unix() : 0,
+                  },
+                }))}
+                format='YYYY-MM-DD HH:mm:ss'
+                size='small'
+              />
+
+              <TextField 
+                sx={{ m: 1, minWidth: 120 }} 
+                id="tfPaidAmount" 
+                label="PaidAmount" 
+                variant="outlined"
+                helperText="Number < 2^64 (e.g. '18000')"
+                onChange={(e) => {
+                  setShare(v => ({
+                    sn: v.sn,
+                    head: v.head,
+                    body: {
+                      ...v.body,
+                      paid: BigNumber.from(e.target.value),
+                    },
+                  }));
+                }}
+                value = {share.body.paid.toString()}
+                size='small'
+              />
+
+              <TextField 
+                sx={{ m: 1, minWidth: 120 }} 
+                id="tfPar" 
+                label="ParAmount" 
+                variant="outlined"
+                helperText="Number < 2^64 (e.g, '18000')"
+                onChange={(e) => {
+                  setShare(v => ({
+                    sn: v.sn,
+                    head: v.head,
+                    body: {
+                      ...v.body,
+                      par: BigNumber.from(e.target.value),
+                    },
+                  }));
+                }}
+                value = {share.body.par.toString()}
+                size='small'
+              />
+
+            </Stack>
+
+          </Stack>
+
+          <Divider orientation='vertical' sx={{m:1}} />
+
+          <Button
+            disabled={!issueShare || issueShareLoading}
+            variant='contained'
+            onClick={()=>issueShare?.()}
+          >
+            Add Share
+          </Button>
+
+        </Stack>
+
+        <hr />
+
+        {sharesList && (
+          <SharesList list={sharesList} setShare={()=>{}} setOpen={(flag: boolean)=>{}} />
+        )}
+
+      </Paper>
+
+
 
       <Grid
         container
@@ -386,7 +395,7 @@ function InitBosPage() {
 
         <Grid item >
           <Button 
-            disabled = {!setRomDK || romSetDKIsLoading }
+            disabled = {!setRomDK || setRomDKLoading }
 
             sx={{ m: 1, minWidth: 120, height: 40 }} 
 
@@ -404,7 +413,7 @@ function InitBosPage() {
 
         <Grid item>
           <Button 
-            disabled = {!setBosDK || bosSetDKIsLoading }
+            disabled = {!setBosDK || setBosDKLoading }
 
             sx={{ m: 1, minWidth: 120, height: 40 }} 
 

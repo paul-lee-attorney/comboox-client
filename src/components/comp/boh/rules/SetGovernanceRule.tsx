@@ -33,9 +33,10 @@ export interface GovernanceRule {
   maxNumOfDirectors: number ;
   tenureMonOfBoard: number ;
   quorumOfBoardMeeting: number ;
-  establishedDate: Dayjs | null ;
+  establishedDate: number ;
   businessTermInYears: number ;
   typeOfComp: number ; 
+  annualPenaltyRateForLatePayInCap: number;
 }
 
 const defaultGR: GovernanceRule = {
@@ -48,51 +49,62 @@ const defaultGR: GovernanceRule = {
   maxNumOfDirectors: 7,
   tenureMonOfBoard: 36,
   quorumOfBoardMeeting: 3,
-  establishedDate: dayjs('2019-09-09T07:30:00Z'),
+  establishedDate: 0,
   businessTermInYears: 20,
-  typeOfComp: 1,   
+  typeOfComp: 1,
+  annualPenaltyRateForLatePayInCap: 1500,   
 }
+
+export function grCodifier(rule: GovernanceRule): HexType {
+  let hexGR: HexType = `0x${
+    '0000' + '01' + '01' +
+    (rule.basedOnPar ? '01' : '00' ) +
+    (rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') ) +
+    (rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') ) + 
+    (rule.proposeHeadRatioOfDirectors.toString(16).padStart(4, '0') ) + 
+    (rule.maxQtyOfMembers.toString(16).padStart(4, '0') ) +       
+    (rule.quorumOfGM.toString(16).padStart(4, '0') ) +       
+    (rule.maxNumOfDirectors.toString(16).padStart(4, '0') ) +       
+    (rule.tenureMonOfBoard.toString(16).padStart(4, '0') ) +       
+    (rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') ) +       
+    (rule.establishedDate.toString(16).padStart(12, '0') ) + 
+    (rule.businessTermInYears.toString(16).padStart(4, '0') ) +                 
+    (rule.typeOfComp.toString(16).padStart(2, '0')) +                 
+    (rule.annualPenaltyRateForLatePayInCap.toString(16).padStart(4, '0'))                 
+  }`;
+
+  return hexGR;
+}
+
+export function grParser(hexRule: HexType): GovernanceRule {
+  let rule: GovernanceRule = {
+    basedOnPar: hexRule.substring(10, 12) === '01',
+    proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16),
+    proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16),
+    proposeHeadRatioOfDirectors: parseInt(hexRule.substring(20, 24), 16),
+    maxQtyOfMembers: parseInt(hexRule.substring(24, 28), 16),
+    quorumOfGM: parseInt(hexRule.substring(28, 32), 16),
+    maxNumOfDirectors: parseInt(hexRule.substring(32, 36), 16),
+    tenureMonOfBoard: parseInt(hexRule.substring(36, 40), 16),
+    quorumOfBoardMeeting: parseInt(hexRule.substring(40, 44), 16),
+    establishedDate: parseInt(hexRule.substring(44, 56), 16),
+    businessTermInYears: parseInt(hexRule.substring(56, 60), 16),
+    typeOfComp: parseInt(hexRule.substring(60, 62), 16),
+    annualPenaltyRateForLatePayInCap: parseInt(hexRule.substring(62, 66), 16),    
+  };
+
+  return rule;
+}
+
 
 export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRule>(defaultGR);
 
-  let hexGR: HexType = `0x${
-    '0000' + '01' + '01' +
-    (objGR?.basedOnPar != undefined ? objGR?.basedOnPar ? '01' : '00' : defaultGR.basedOnPar ? '01' : '00' ) +
-    (objGR?.proposeWeightRatioOfGM.toString(16).padStart(4, '0') ?? defaultGR.proposeWeightRatioOfGM.toString(16).padStart(4, '0') ) +
-    (objGR?.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') ?? defaultGR.proposeHeadRatioOfMembers.toString(16).padStart(4, '0')) + 
-    (objGR?.proposeHeadRatioOfDirectors.toString(16).padStart(4, '0') ?? defaultGR.proposeHeadRatioOfDirectors.toString(16).padStart(4, '0')) + 
-    (objGR?.maxQtyOfMembers.toString(16).padStart(4, '0') ?? defaultGR.maxQtyOfMembers.toString(16).padStart(4, '0') ) +       
-    (objGR?.quorumOfGM.toString(16).padStart(4, '0') ?? defaultGR.quorumOfGM.toString(16).padStart(4, '0') ) +       
-    (objGR?.maxNumOfDirectors.toString(16).padStart(4, '0') ??  defaultGR.maxNumOfDirectors.toString(16).padStart(4, '0') ) +       
-    (objGR?.tenureMonOfBoard.toString(16).padStart(4, '0') ?? defaultGR.tenureMonOfBoard.toString(16).padStart(4, '0') ) +       
-    (objGR?.quorumOfBoardMeeting.toString(16).padStart(4, '0') ?? defaultGR.quorumOfBoardMeeting.toString(16).padStart(4, '0') ) +       
-    (objGR?.establishedDate?.unix().toString(16).padStart(12, '0') ?? defaultGR.establishedDate?.unix().toString(16).padStart(12, '0') ) + 
-    (objGR?.businessTermInYears.toString(16).padStart(4, '0') ?? defaultGR.businessTermInYears.toString(16).padStart(4, '0')) +                 
-    (objGR?.typeOfComp.toString(16).padStart(2, '0') ?? defaultGR.typeOfComp.toString(16).padStart(2, '0') ) +                 
-    '0000'
-  }`;
-
-  // console.log('objGR: ', objGR);
+  let hexGR: HexType = grCodifier(objGR);
 
   const [ newHexGR, setNewHexGR ] = useState<HexType>(Bytes32Zero);
 
-  let newGR: GovernanceRule = {
-    basedOnPar: newHexGR.substring(10, 12) === '01',
-    proposeWeightRatioOfGM: parseInt(newHexGR.substring(12,16), 16),
-    proposeHeadRatioOfMembers: parseInt(newHexGR.substring(16, 20), 16),
-    proposeHeadRatioOfDirectors: parseInt(newHexGR.substring(20, 24), 16),
-    maxQtyOfMembers: parseInt(newHexGR.substring(24, 28), 16),
-    quorumOfGM: parseInt(newHexGR.substring(28, 32), 16),
-    maxNumOfDirectors: parseInt(newHexGR.substring(32, 36), 16),
-    tenureMonOfBoard: parseInt(newHexGR.substring(36, 40), 16),
-    quorumOfBoardMeeting: parseInt(newHexGR.substring(40, 44), 16),
-    establishedDate: dayjs.unix(parseInt(newHexGR.substring(44, 56), 16)),
-    businessTermInYears: parseInt(newHexGR.substring(56, 60), 16),
-    typeOfComp: parseInt(newHexGR.substring(60, 62), 16),
-  } 
-
-  // console.log('newGR: ', newGR);
+  let newGR: GovernanceRule = grParser(newHexGR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 
@@ -356,7 +368,7 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newGR.establishedDate.format('YYYY-MM-DD HH:mm:ss')}
+                    value={ dateParser(newGR.establishedDate) }
                   />
                 )}
 
@@ -383,6 +395,19 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       minWidth: 218,
                     }}
                     value={newGR.typeOfComp.toString()}
+                  />
+                )}
+
+                {newGR?.annualPenaltyRateForLatePayInCap != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='LatePenaltyRate'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.annualPenaltyRateForLatePayInCap.toString()}
                   />
                 )}
 
@@ -440,10 +465,10 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       m:1,
                       minWidth: 218,
                     }} 
-                    value={ objGR?.establishedDate }
+                    value={ dayjs.unix(objGR.establishedDate) }
                     onChange={(date) => setObjGR((v) => ({
                       ...v,
-                      establishedDate: date,
+                      establishedDate: date ? date.unix() : 0,
                     }))}
                     format='YYYY-MM-DD HH:mm:ss'
                   />
@@ -474,6 +499,20 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       typeOfComp: parseInt(e.target.value),
                     }))}
                     value={ objGR?.typeOfComp }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='LatePenaltyRate'
+                    sx={{
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      annualPenaltyRateForLatePayInCap: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.annualPenaltyRateForLatePayInCap }
                   />
 
                 </Stack>

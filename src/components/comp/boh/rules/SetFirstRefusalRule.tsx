@@ -18,53 +18,104 @@ import {
 
 import { AddRule } from './AddRule'
 
-import { Bytes32Zero, FirstRefusalRuleType, HexType } from '../../../../interfaces';
+import { Bytes32Zero, HexType } from '../../../../interfaces';
+import { longSnParser } from '../../../../scripts/toolsKit';
+import { VotingRule } from './VotingRules';
+
+
+export interface FirstRefusalRule {
+  seqOfRule: number;
+  qtyOfSubRule: number;
+  seqOfSubRule: number;
+  typeOfDeal: number;
+  membersEqual: boolean;
+  proRata: boolean;
+  basedOnPar: boolean;
+  rightholders: number[];
+  para: number;
+  argu: number;
+}
+
+export interface FirstRefusalRuleWrap {
+  subTitle: string;
+  rule: FirstRefusalRule;
+}
 
 interface SetFirstRefusalRuleProps {
   sha: HexType,
-  defaultRule: FirstRefusalRuleType,
+  defaultRule: FirstRefusalRuleWrap,
   seq: number,
   finalized: boolean,
 }
 
-export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFirstRefusalRuleProps) {
-  const [ objFR, setObjFR ] = useState<FirstRefusalRuleType>(defaultRule); 
-
+export function frCodifier(rule: FirstRefusalRule): HexType {
   let hexFR: HexType = `0x${
-    (objFR?.seqOfRule.toString(16).padStart(4, '0') ?? defaultRule.seqOfRule.toString(16).padStart(4, '0')) +
-    (objFR?.qtyOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.qtyOfSubRule.toString(16).padStart(2, '0')) +
-    (objFR?.seqOfSubRule.toString(16).padStart(2, '0') ?? defaultRule.seqOfSubRule.toString(16).padStart(2, '0')) +
-    (objFR?.typeOfDeal.toString(16).padStart(2, '0') ?? defaultRule.typeOfDeal.toString(16).padStart(2, '0')) +
-    (objFR?.membersEqual != undefined ? objFR.membersEqual ? '01' : '00' : defaultRule.membersEqual ? '01': '00') +
-    (objFR?.proRata != undefined ? objFR.proRata ? '01' : '00' : defaultRule.proRata ? '01': '00') +
-    (objFR?.basedOnPar != undefined ? objFR.basedOnPar ? '01' : '00' : defaultRule.basedOnPar ? '01':'00') +
-    (objFR?.rightholder1.toString(16).padStart(10, '0') ?? defaultRule.rightholder1.toString(16).padStart(10, '0')) +
-    (objFR?.rightholder2.toString(16).padStart(10, '0') ?? defaultRule.rightholder2.toString(16).padStart(10, '0')) +
-    (objFR?.rightholder3.toString(16).padStart(10, '0') ?? defaultRule.rightholder3.toString(16).padStart(10, '0')) +
-    (objFR?.rightholder4.toString(16).padStart(10, '0') ?? defaultRule.rightholder4.toString(16).padStart(10, '0')) +
-    '0'.padStart(8, '0')
+    (rule.seqOfRule.toString(16).padStart(4, '0')) +
+    (rule.qtyOfSubRule.toString(16).padStart(2, '0')) +
+    (rule.seqOfSubRule.toString(16).padStart(2, '0')) +
+    (rule.typeOfDeal.toString(16).padStart(2, '0')) +
+    (rule.membersEqual ? '01' : '00') +
+    (rule.proRata ? '01' : '00') +
+    (rule.basedOnPar ? '01' : '00') +
+    (rule.rightholders[0]?.toString(16).padStart(10, '0')) +
+    (rule.rightholders[1]?.toString(16).padStart(10, '0')) +
+    (rule.rightholders[2]?.toString(16).padStart(10, '0')) +
+    (rule.rightholders[3]?.toString(16).padStart(10, '0')) +
+    (rule.para.toString(16).padStart(4, '0')) +
+    (rule.argu.toString(16).padStart(4, '0'))
   }`;
 
-  // console.log('objFR: ', objFR);
+  return hexFR;
+}
+
+export function frParser(hexRule: HexType ): FirstRefusalRule {
+  let rule: FirstRefusalRule = {
+    seqOfRule: parseInt(hexRule.substring(2, 6), 16), 
+    qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16),
+    seqOfSubRule: parseInt(hexRule.substring(8, 10), 16),
+    typeOfDeal: parseInt(hexRule.substring(10, 12), 16),
+    membersEqual: hexRule.substring(12, 14) === '01',
+    proRata: hexRule.substring(14, 16) === '01',
+    basedOnPar: hexRule.substring(16, 18) === '01',
+    rightholders: [
+      parseInt(hexRule.substring(18, 28), 16),
+      parseInt(hexRule.substring(28, 38), 16),
+      parseInt(hexRule.substring(38, 48), 16),
+      parseInt(hexRule.substring(48, 58), 16),
+    ],
+    para: parseInt(hexRule.substring(58, 62), 16),
+    argu: parseInt(hexRule.substring(62, 66), 16),
+  }; 
+  
+  return rule;
+} 
+
+export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFirstRefusalRuleProps) {
+
+  let defFrWrap: FirstRefusalRuleWrap = defaultRule 
+      ? defaultRule
+      : { subTitle: '- Newly Added FirstRefusal Rule',
+          rule: {
+            seqOfRule: seq, 
+            qtyOfSubRule: seq - 511, 
+            seqOfSubRule: seq - 511,
+            typeOfDeal: 2,
+            membersEqual: true,
+            proRata: true,
+            basedOnPar: false,
+            rightholders: [0,0,0,0],
+            para: 0,
+            argu: 0,
+          },
+        };
+
+  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(defFrWrap.rule); 
+
+  let hexFR: HexType = frCodifier(objFR);
 
   const [ newHexFR, setNewHexFR ] = useState<HexType>(Bytes32Zero);
 
-  let newFR: FirstRefusalRuleType = {
-    subTitle: defaultRule.subTitle,
-    seqOfRule: parseInt(newHexFR.substring(2, 6), 16), 
-    qtyOfSubRule: parseInt(newHexFR.substring(6, 8), 16),
-    seqOfSubRule: parseInt(newHexFR.substring(8, 10), 16),
-    typeOfDeal: parseInt(newHexFR.substring(10, 12), 16),
-    membersEqual: newHexFR.substring(12, 14) === '01',
-    proRata: newHexFR.substring(14, 16) === '01',
-    basedOnPar: newHexFR.substring(16, 18) === '01',
-    rightholder1: parseInt(newHexFR.substring(18, 28), 16),
-    rightholder2: parseInt(newHexFR.substring(28, 38), 16),
-    rightholder3: parseInt(newHexFR.substring(38, 48), 16),
-    rightholder4: parseInt(newHexFR.substring(48, 58), 16),
-  }; 
-
-  // console.log('newFR: ', newFR);
+  let newFR: FirstRefusalRule = frParser(newHexFR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 
@@ -82,7 +133,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
         <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
           <Box sx={{ minWidth:600 }} >
             <Toolbar>
-              <h4>Rule No. { seq.toString() } { defaultRule.subTitle } </h4>
+              <h4>Rule No. { seq.toString() } { defFrWrap.subTitle } </h4>
             </Toolbar>
           </Box>
 
@@ -103,57 +154,49 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            {newFR?.seqOfRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='SeqOfRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.seqOfRule.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='SeqOfRule'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newFR.seqOfRule.toString() }
+            />
 
-            {newFR?.qtyOfSubRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='QtyOfSubRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.qtyOfSubRule.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='QtyOfSubRule'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newFR.qtyOfSubRule.toString() }
+            />
 
-            {newFR?.typeOfDeal != undefined && (
-              <TextField 
-                variant='filled'
-                label='TypeOfDeal'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.typeOfDeal.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='TypeOfDeal'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newFR.typeOfDeal.toString() }
+            />
 
-            {newFR?.membersEqual != undefined && (
-              <TextField 
-                variant='filled'
-                label='MembersEqual ?'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={newFR.membersEqual ? 'True' : 'False'}
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='MembersEqual ?'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={newFR.membersEqual ? 'True' : 'False'}
+            />
 
             {newFR?.proRata != undefined && (
               <TextField 
@@ -236,7 +279,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   value={ objFR?.membersEqual ? '1' : '0' }
                   onChange={(e) => setObjFR((v) => ({
                     ...v,
-                    membersEqual: e.target.value == '01',
+                    membersEqual: e.target.value == '1',
                   }))}
 
                   label="MembersEqual ?"
@@ -255,7 +298,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   value={ objFR?.proRata ? '1' : '0' }
                   onChange={(e) => setObjFR((v) => ({
                     ...v,
-                    proRata: e.target.value == '01',
+                    proRata: e.target.value == '1',
                   }))}
 
                   label="ProRata ?"
@@ -273,7 +316,7 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   value={ objFR?.basedOnPar ? '1' : '0' }
                   onChange={(e) => setObjFR((v) => ({
                     ...v,
-                    basedOnPar: e.target.value == '01',
+                    basedOnPar: e.target.value == '1',
                   }))}
 
                   label="BasedOnPar ?"
@@ -289,57 +332,49 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            {newFR?.rightholder1 != undefined && (
-              <TextField 
-                variant='filled'
-                label='Rightholder_1'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.rightholder1.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Rightholder_1'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newFR.rightholders[0].toString()) }
+            />
 
-            {newFR?.rightholder2 != undefined && (
-              <TextField 
-                variant='filled'
-                label='Rightholder_2'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.rightholder2.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Rightholder_2'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newFR.rightholders[1].toString()) }
+            />
 
-            {newFR?.rightholder3 != undefined && (
-              <TextField 
-                variant='filled'
-                label='Rightholder_3'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.rightholder3.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Rightholder_3'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newFR.rightholders[2].toString()) }
+            />
 
-            {newFR?.rightholder4 != undefined && (
-              <TextField 
-                variant='filled'
-                label='Rightholder_4'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newFR.rightholder4.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Rightholder_4'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newFR.rightholders[3].toString()) }
+            />
 
           </Stack>
 
@@ -353,11 +388,12 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  rightholder1: parseInt(e.target.value),
-                }))}
-                value={ objFR?.rightholder1 }
+                onChange={(e) => setObjFR((v) => {
+                  let holders = [...v.rightholders];
+                  holders[0] = parseInt(e.target.value ?? '0');
+                  return {...v, rightholders: holders};
+                })}
+                value={ objFR?.rightholders[0] }
               />
 
               <TextField 
@@ -367,11 +403,12 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  rightholder2: parseInt(e.target.value),
-                }))}
-                value={ objFR?.rightholder2 }
+                onChange={(e) => setObjFR((v) => {
+                  let holders = [...v.rightholders];
+                  holders[1] = parseInt(e.target.value ?? '0');
+                  return {...v, rightholders: holders};
+                })}
+                value={ objFR?.rightholders[1] }
               />
 
               <TextField 
@@ -381,11 +418,12 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  rightholder3: parseInt(e.target.value),
-                }))}
-                value={ objFR?.rightholder3 }
+                onChange={(e) => setObjFR((v) => {
+                  let holders = [...v.rightholders];
+                  holders[2] = parseInt(e.target.value ?? '0');
+                  return {...v, rightholders: holders};
+                })}
+                value={ objFR?.rightholders[2] }
               />
 
               <TextField 
@@ -395,11 +433,12 @@ export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFir
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  rightholder4: parseInt(e.target.value),
-                }))}
-                value={ objFR?.rightholder4 }
+                onChange={(e) => setObjFR((v) => {
+                  let holders = [...v.rightholders];
+                  holders[3] = parseInt(e.target.value ?? '0');
+                  return {...v, rightholders: holders};
+                })}
+                value={ objFR?.rightholders[3] }
               />
 
             </Stack>

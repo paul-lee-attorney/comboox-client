@@ -1,10 +1,11 @@
 
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../generated";
 import { FileHistoryProps, HexType, } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { BigNumber } from "ethers";
+import { useState } from "react";
 
 
 interface ProposeDocOfGmProps {
@@ -16,12 +17,13 @@ interface ProposeDocOfGmProps {
 export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmProps) {
 
   const { gk } = useComBooxContext();
+  const [ executor, setExecutor ] = useState<string>('0');
 
   const { 
     config
   } =  usePrepareGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: [addr, BigNumber.from(seqOfVR), BigNumber.from('0') ],
+    args: [addr, BigNumber.from(seqOfVR), BigNumber.from(executor) ],
   });
 
   const {
@@ -35,6 +37,17 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   });
 
   return (
+    <>
+      <TextField 
+        variant='filled'
+        label='Executor'
+        sx={{
+          m:1,
+          minWidth: 218,
+        }}
+        onChange={(e)=>setExecutor(e.target.value)}
+        value={executor}
+      />      
       <Button
         disabled={!write || isLoading}
         variant="contained"
@@ -44,6 +57,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
       >
         Propose
       </Button>
+    </>
   )
 
 }

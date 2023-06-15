@@ -25,13 +25,14 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from '@mui/material';
 
 import Link from '../../scripts/Link';
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
-const drawerWidth = 240;
+const drawerWidth = 180;
 
 import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference, Payments, ContentCopy, ContentCopyOutlined, Diversity3 }  from '@mui/icons-material';
 
@@ -174,12 +175,12 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
-    {href: '/', label: 'RegCenter', icon: <AssuredWorkload /> },
-    {href: '/comp/mainPage', label: 'HomePage', icon: <Home />}, 
-    {href: '/comp/boh/bookOfSHA', label: 'BookOfSHA', icon: <ListAlt />}, 
-    {href: '/comp/boa/bookOfIA', label: 'BookOfIA', icon: <ContentCopyOutlined />}, 
-    {href: '/comp/bos/bookOfShares', label: 'BookOfShares', icon: <Payments />},     
-    {href: '/comp/bog/bookOfGM', label: 'BookOfGM', icon: <Diversity3 />},     
+    {href: '/', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload /> },
+    {href: '/comp/mainPage', label: 'Home', tip: 'Homepage Of Target Company', icon: <Home />}, 
+    {href: '/comp/boh/bookOfSHA', label: 'BOH', tip: 'Book Of Shareholders Agreements', icon: <ListAlt />}, 
+    {href: '/comp/boa/bookOfIA', label: 'BOA', tip:'Book Of Investment Agreements', icon: <ContentCopyOutlined />}, 
+    {href: '/comp/bos/bookOfShares', label: 'BOS', tip:'Book Of Shares', icon: <Payments />},     
+    {href: '/comp/bog/bookOfGM', label: 'BOG', tip:'Minutes Book Of Shareholders General Meeting', icon: <Diversity3 />},     
   ]
 
   return (
@@ -296,15 +297,17 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           {items.map((v, i)=>(
             <>
               <ListItem key={i} disablePadding >
-                <ListItemButton 
-                  LinkComponent={Link}
-                  href={v.href}
-                >
-                  <ListItemIcon>
-                    {v.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={v.label} />
-                </ListItemButton>
+                <Tooltip title={v.tip} placement='right' arrow >
+                  <ListItemButton 
+                    LinkComponent={Link}
+                    href={v.href}
+                  >
+                    <ListItemIcon>
+                      {v.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={v.label} />
+                  </ListItemButton>
+                </Tooltip>
               </ListItem>
               {i==0 && (<Divider />)}
             </>

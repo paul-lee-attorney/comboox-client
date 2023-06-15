@@ -13,7 +13,6 @@ import {
 
 import Link from '../../../scripts/Link';
 
-import { dateParser } from '../../../scripts/toolsKit';
 import { InfoOfFile } from '../../../pages/comp/boh/bookOfSHA';
 import dayjs from 'dayjs';
 

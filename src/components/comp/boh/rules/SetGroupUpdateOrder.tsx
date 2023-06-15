@@ -16,52 +16,73 @@ import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { AddRule } from './AddRule';
 
 import { SetShaRuleProps } from '../../../../interfaces';
+import { longSnParser } from '../../../../scripts/toolsKit';
 
-interface GroupUpdateOrderType {
-  seqOfRule?: number | undefined;
-  qtyOfSubRule?: number | undefined;
-  seqOfSubRule?: number | undefined;
-  addMember?: boolean | undefined;
-  groupRep?: number | undefined;
-  members1?: number | undefined;
-  members2?: number | undefined;
-  members3?: number | undefined;
-  members4?: number | undefined;
+export interface GroupUpdateOrder {
+  seqOfRule: number;
+  qtyOfSubRule: number;
+  seqOfSubRule: number;
+  addMember: boolean;
+  groupRep: number;
+  members: number[];
+  para: number;
+}
+
+export function guoCodifier(order: GroupUpdateOrder):HexType {
+  let hexGuo: HexType = `0x${
+    (order.seqOfRule.toString(16).padStart(4, '0')) +
+    (order.qtyOfSubRule.toString(16).padStart(2, '0')) +
+    (order.seqOfSubRule.toString(16).padStart(2, '0')) +
+    (order.addMember ? '01' : '00') +
+    (order.groupRep.toString(16).padStart(10, '0')) +
+    (order.members[0].toString(16).padStart(10, '0')) +
+    (order.members[1].toString(16).padStart(10, '0')) +
+    (order.members[2].toString(16).padStart(10, '0')) +
+    (order.members[3].toString(16).padStart(10, '0')) +
+    (order.para.toString(16).padStart(4, '0'))
+  }`;
+
+  return hexGuo;
+}
+
+export function guoParser(hexOrder: HexType): GroupUpdateOrder {
+  let order: GroupUpdateOrder = {
+    seqOfRule: parseInt(hexOrder.substring(2, 6), 16), 
+    qtyOfSubRule: parseInt(hexOrder.substring(6, 8), 16),
+    seqOfSubRule: parseInt(hexOrder.substring(8, 10), 16),
+    addMember: hexOrder.substring(10, 12) === '01',
+    groupRep: parseInt(hexOrder.substring(12, 22), 16),
+    members: [
+      parseInt(hexOrder.substring(22, 32), 16),
+      parseInt(hexOrder.substring(32, 42), 16),
+      parseInt(hexOrder.substring(42, 52), 16),
+      parseInt(hexOrder.substring(52, 62), 16),
+    ],
+    para: parseInt(hexOrder.substring(62, 66), 16),
+  }
+
+  return order;
 }
 
 export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProps) {
-  const [ objGuo, setObjGuo ] = useState<GroupUpdateOrderType>(); 
 
-  let hexGuo: HexType = `0x${
-    (objGuo?.seqOfRule?.toString(16).padStart(4, '0') ?? seq.toString(16).padStart(4, '0')) +
-    (objGuo?.qtyOfSubRule?.toString(16).padStart(2, '0') ?? qty.toString(16).padStart(2, '0')) +
-    (objGuo?.seqOfSubRule?.toString(16).padStart(2, '0') ?? (seq - 767).toString(16).padStart(2, '0')) +
-    (objGuo?.addMember ? '01' : '00') +
-    (objGuo?.groupRep?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objGuo?.members1?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objGuo?.members2?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objGuo?.members3?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    (objGuo?.members4?.toString(16).padStart(10, '0') ?? '0'.padStart(10, '0')) +
-    '0'.padStart(4, '0')
-  }`;
+  const defaultOrder: GroupUpdateOrder = {
+    seqOfRule: seq,
+    qtyOfSubRule: seq - 767,
+    seqOfSubRule: seq - 767,
+    addMember: true,
+    groupRep: 0,
+    members: [0, 0, 0, 0],
+    para: 0,    
+  };
 
-  // console.log('objGuo: ', objGuo);
+  const [ objGuo, setObjGuo ] = useState<GroupUpdateOrder>(defaultOrder); 
+
+  let hexGuo: HexType = guoCodifier(objGuo);
 
   const [ newHexGuo, setNewHexGuo ] = useState<HexType>(Bytes32Zero);
 
-  let newGuo: GroupUpdateOrderType = {
-    seqOfRule: parseInt(newHexGuo.substring(2, 6), 16), 
-    qtyOfSubRule: parseInt(newHexGuo.substring(6, 8), 16),
-    seqOfSubRule: parseInt(newHexGuo.substring(8, 10), 16),
-    addMember: newHexGuo.substring(10, 12) === '01',
-    groupRep: parseInt(newHexGuo.substring(12, 22), 16),
-    members1: parseInt(newHexGuo.substring(22, 32), 16),
-    members2: parseInt(newHexGuo.substring(32, 42), 16),
-    members3: parseInt(newHexGuo.substring(42, 52), 16),
-    members4: parseInt(newHexGuo.substring(52, 62), 16),
-  };
-
-  // console.log('newGuo: ', newGuo);
+  let newGuo: GroupUpdateOrder = guoParser(newHexGuo);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 
@@ -160,7 +181,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                value={ newGuo.groupRep.toString() }
+                value={ longSnParser(newGuo.groupRep.toString()) }
               />
             )}
 
@@ -168,7 +189,6 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
 
           <Collapse in={ editable && !finalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-              {/* <Collapse in={ false } >   */}            
 
               <TextField 
                 variant='filled'
@@ -250,7 +270,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            {newGuo?.members1 != undefined && (
+            {newGuo?.members[0] != undefined && (
               <TextField 
                 variant='filled'
                 label='Members_1'
@@ -259,11 +279,11 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                value={ newGuo.members1.toString() }
+                value={ longSnParser(newGuo.members[0].toString()) }
               />
             )}
 
-            {newGuo?.members2 != undefined && (
+            {newGuo?.members[1] != undefined && (
               <TextField 
                 variant='filled'
                 label='Members_2'
@@ -272,11 +292,11 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                value={ newGuo.members2.toString() }
+                value={ longSnParser(newGuo.members[1].toString()) }
               />
             )}
 
-            {newGuo?.members3 != undefined && (
+            {newGuo?.members[2] != undefined && (
               <TextField 
                 variant='filled'
                 label='Members_3'
@@ -285,11 +305,11 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                value={ newGuo.members3.toString() }
+                value={ longSnParser(newGuo.members[2].toString()) }
               />
             )}
 
-            {newGuo?.members4 != undefined && (
+            {newGuo?.members[3] != undefined && (
               <TextField 
                 variant='filled'
                 label='Members_4'
@@ -298,7 +318,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                value={ newGuo.members4.toString() }
+                value={ longSnParser(newGuo.members[3].toString()) }
               />
             )}
 
@@ -314,11 +334,15 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  members1: parseInt(e.target.value),
-                }))}
-                value={ objGuo?.members1 }
+                onChange={(e) => setObjGuo((v) => {
+                  let arr = [...v.members];
+                  arr[0] = parseInt(e.target.value);
+                  return {
+                    ...v,
+                    members: arr,
+                  };
+                })}
+                value={ objGuo?.members[0] }
               />
 
               <TextField 
@@ -328,11 +352,15 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  members2: parseInt(e.target.value),
-                }))}
-                value={ objGuo?.members2 }
+                onChange={(e) => setObjGuo((v) => {
+                  let arr = [...v.members];
+                  arr[1] = parseInt(e.target.value);
+                  return {
+                    ...v,
+                    members: arr,
+                  };
+                })}
+                value={ objGuo?.members[1] }
               />
 
               <TextField 
@@ -342,11 +370,15 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  members3: parseInt(e.target.value),
-                }))}
-                value={ objGuo?.members3 }
+                onChange={(e) => setObjGuo((v) => {
+                  let arr = [...v.members];
+                  arr[2] = parseInt(e.target.value);
+                  return {
+                    ...v,
+                    members: arr,
+                  };
+                })}
+                value={ objGuo?.members[2] }
               />
 
               <TextField 
@@ -356,11 +388,15 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  members4: parseInt(e.target.value),
-                }))}
-                value={ objGuo?.members4 }
+                onChange={(e) => setObjGuo((v) => {
+                  let arr = [...v.members];
+                  arr[3] = parseInt(e.target.value);
+                  return {
+                    ...v,
+                    members: arr,
+                  };
+                })}
+                value={ objGuo?.members[3] }
               />
 
             </Stack>

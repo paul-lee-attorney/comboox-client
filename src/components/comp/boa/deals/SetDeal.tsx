@@ -10,6 +10,7 @@ import { ExecDeal } from "./ExecDeal";
 import dayjs, { Dayjs } from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
 
 export interface Head {
   typeOfDeal: number,
@@ -24,18 +25,6 @@ export interface Head {
   para: number,
 }
 
-const defaultHead: Head = {
-  typeOfDeal: 2,
-  seqOfDeal: 0,
-  preSeq: 0,
-  classOfShare: 1,
-  seqOfShare: 0,
-  seller: 0,
-  priceOfPaid: 100,
-  priceOfPar: 100,
-  closingDate: parseInt((new Date().getTime()/1000).toString()) + 90*86400,
-  para: 0,
-}
 
 export interface Body {
   buyer: number,
@@ -48,64 +37,15 @@ export interface Body {
   flag: boolean,
 }
 
-const defaultBody: Body = {
-  buyer: 0,
-  groupOfBuyer: 0,
-  paid: BigNumber.from(0),
-  par: BigNumber.from(0),
-  state: 0,
-  para: 0,
-  argu: 0,
-  flag: false,
-}
-
 export interface Deal {
   head: Head,
   body: Body,
   hashLock: HexType,
 }
 
-const defaultDeal: Deal = {
-  head: defaultHead,
-  body: defaultBody,
-  hashLock: Bytes32Zero,
-}
-
 export const stateOfDeal = ['Drafing', 'Locked', 'Cleared', 'Closed', 'Terminated'];
 
-// async function parseDeal(deal: Deal): Promise<Deal> {
-
-//   let head: Head = {
-//     typeOfDeal: deal.head.typeOfDeal,
-//     seqOfDeal: deal.head.seqOfDeal,
-//     preSeq: deal.head.preSeq,
-//     classOfShare: deal.head.classOfShare,
-//     seqOfShare: deal.head.seqOfShare,
-//     seller: deal.head.seller,
-//     priceOfPaid: deal.head.priceOfPaid,
-//     priceOfPar: deal.head.priceOfPar,
-//     closingDate: deal.head.closingDate,
-//   }
-
-//   let body: Body = {
-//     buyer: deal.body.buyer,
-//     groupOfBuyer: deal.body.groupOfBuyer,
-//     paid: deal.body.paid,
-//     par: deal.body.par,
-//     state: deal.body.state,    
-//   }
-
-//   let output: Deal = {
-//     head: head,
-//     body: body,
-//     hashLock: deal.hashLock,
-//   }
-
-//   return output;
-// }
-
 export const TypeOfDeal = [
-  'NaN', 
   'CapitalIncrease', 
   'ShareTransferExternal', 
   'ShareTransferInternal', 
@@ -141,22 +81,57 @@ interface SetDealProps{
   finalized: boolean,
 }
 
+export function dealSnCodifier(head: Head): HexType {
+  let hexSn:HexType = `0x${
+    (head.typeOfDeal.toString(16).padStart(2, '0')) +
+    (head.seqOfDeal.toString(16).padStart(4, '0')) +
+    (head.preSeq.toString(16).padStart(4, '0')) +
+    (head.classOfShare.toString(16).padStart(4, '0')) +
+    (head.seqOfShare.toString(16).padStart(8, '0')) +
+    (head.seller.toString(16).padStart(10, '0')) +
+    (head.priceOfPaid.toString(16).padStart(8, '0')) +
+    (head.priceOfPar.toString(16).padStart(8, '0')) +
+    (head.closingDate.toString(16).padStart(12, '0')) + 
+    '0000'
+  }`;
+  return hexSn;
+}
+
 export function SetDeal({ia, seq, finalized}: SetDealProps) {
+
+  const defaultHead: Head = {
+    typeOfDeal: 1,
+    seqOfDeal: seq,
+    preSeq: 0,
+    classOfShare: 1,
+    seqOfShare: 0,
+    seller: 0,
+    priceOfPaid: 100,
+    priceOfPar: 100,
+    closingDate: parseInt((new Date().getTime()/1000).toString()) + 90*86400,
+    para: 0,
+  };
+  
+  const defaultBody: Body = {
+    buyer: 0,
+    groupOfBuyer: 0,
+    paid: BigNumber.from(0),
+    par: BigNumber.from(0),
+    state: 0,
+    para: 0,
+    argu: 0,
+    flag: false,
+  };
+  
+  const defaultDeal: Deal = {
+    head: defaultHead,
+    body: defaultBody,
+    hashLock: Bytes32Zero,
+  };
 
   const [ objSn, setObjSn ] = useState<Head>(defaultHead);
 
-  let hexSn:HexType = `0x${
-    (objSn?.typeOfDeal.toString(16).padStart(2, '0') ?? defaultHead.typeOfDeal.toString(16).padStart(2, '0')) +
-    seq.toString(16).padStart(4, '0') +
-    (objSn?.preSeq.toString(16).padStart(4, '0') ?? defaultHead.preSeq.toString(16).padStart(4, '0')) +
-    (objSn?.classOfShare.toString(16).padStart(4, '0') ?? defaultHead.classOfShare.toString(16).padStart(4, '0')) +
-    (objSn?.seqOfShare.toString(16).padStart(8, '0') ?? defaultHead.seqOfShare.toString(16).padStart(8, '0')) +
-    (objSn?.seller.toString(16).padStart(10, '0') ?? defaultHead.seller.toString(16).padStart(10, '0')) +
-    (objSn?.priceOfPaid.toString(16).padStart(8, '0') ?? defaultHead.priceOfPaid.toString(16).padStart(8, '0')) +
-    (objSn?.priceOfPar.toString(16).padStart(8, '0') ?? defaultHead.priceOfPar.toString(16).padStart(8, '0')) +
-    (objSn?.closingDate.toString(16).padStart(12, '0') ?? defaultHead.closingDate?.toString(16).padStart(12, '0')) + 
-    '0000'
-  }`;
+  let hexSn:HexType = dealSnCodifier(objSn);
 
   const [ objBody, setObjBody ] = useState<Body>(defaultBody);
 
@@ -173,14 +148,14 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
   })
 
   const {
-    config: configAddDeal,
+    config: addDealConfig,
   } = usePrepareInvestmentAgreementAddDeal({
     address: ia,
     args: [ hexSn,
             BigNumber.from(objBody.buyer),
             BigNumber.from(objBody.groupOfBuyer),
-            BigNumber.from(objBody.paid),
-            BigNumber.from(objBody.par)            
+            objBody.paid,
+            objBody.par            
           ],
   });
 
@@ -188,7 +163,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
     isLoading: addDealLoading,
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
-    ...configAddDeal,
+    ...addDealConfig,
     onSuccess() {
       getDeal()
     }
@@ -215,11 +190,6 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
   const [ hashLock, setHashLock ] = useState<HexType>();
   
-  // useEffect(()=>{
-  //   getDeal(ia, seq).then(deal => setNewDeal(deal))
-  // }, [ia, seq, hashLock]);
-
-
   const { boox } = useComBooxContext();
 
   const [ fileState, setFileState ] = useState<number>();
@@ -353,7 +323,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ dayjs.unix(newDeal.head.closingDate).format('YYYY-MM-DD HH:mm:ss') }
+                  value={ dateParser(newDeal.head.closingDate) }
                 />
               )}
 
@@ -382,7 +352,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
             <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-              {newDeal?.head.typeOfDeal != undefined && (
+              {newDeal && newDeal.head.typeOfDeal != undefined && (
                 <TextField 
                   variant='filled'
                   label='TypeOfDeal'
@@ -391,7 +361,8 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ TypeOfDeal[newDeal.head.typeOfDeal] }
+                  value={ TypeOfDeal[newDeal.head.typeOfDeal - 1] }
+                  defaultValue={ TypeOfDeal[0] }
                 />
               )}
 
@@ -456,7 +427,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ dayjs.unix(newDeal.head.closingDate).format('YYYY-MM-DD HH:mm:ss') }
+                  value={ dateParser(newDeal.head.closingDate) }
                 />
               )}
 
@@ -479,7 +450,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     label="TypeOfDeal"
                   >
                     {TypeOfDeal.map((v,i) => (
-                      <MenuItem key={v} value={i}>{v}</MenuItem>
+                      <MenuItem key={v} value={i+1}>{v}</MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -571,7 +542,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.head.seller.toString(16).padStart(10, '0') }
+                  value={ longSnParser(newDeal.head.seller.toString()) }
                 />
 
                 <TextField 
@@ -582,7 +553,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.body.buyer.toString(16).padStart(10, '0') }
+                  value={ longSnParser(newDeal.body.buyer.toString()) }
                 />
 
                 <TextField 
@@ -593,7 +564,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.body.groupOfBuyer.toString(16).padStart(10, '0') }
+                  value={ longSnParser(newDeal.body.groupOfBuyer.toString()) }
                 />
 
                 <TextField 
@@ -604,7 +575,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.body.paid.toString() }
+                  value={ longDataParser(newDeal.body.paid.toString()) }
                 />
 
                 <TextField 
@@ -615,7 +586,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ newDeal.body.par.toString() }
+                  value={ longDataParser(newDeal.body.par.toString()) }
                 />
 
                 <TextField 
@@ -626,7 +597,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ 
+                  value={ longDataParser( 
                     newDeal.body.par.sub(newDeal.body.paid).
                     mul(BigNumber.from(newDeal.head.priceOfPar)).
                     add(
@@ -634,7 +605,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
                         BigNumber.from(newDeal.head.priceOfPaid)
                       )
                     ).toString()  
-                  }
+                  )}
                 />
 
               </Stack>
