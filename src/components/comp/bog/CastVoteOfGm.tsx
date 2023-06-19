@@ -2,26 +2,22 @@ import { useEffect, useState } from "react";
 
 import { 
   useGeneralKeeperCastVoteOfGm,
-  useGeneralKeeperEntrustDelegateOfMember, 
-  useGeneralKeeperProposeMotionOfGm, 
   usePrepareGeneralKeeperCastVoteOfGm, 
-  usePrepareGeneralKeeperEntrustDelegateOfMember, 
-  usePrepareGeneralKeeperProposeMotionOfGm 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
-import { EmojiPeople, Handshake, HowToVote, } from "@mui/icons-material";
+import { HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../interfaces";
-import { EntrustDelegaterOfMember } from "./EntrustDelegaterOfMember";
+import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "./VoteForDocOfGm";
+import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
 
 interface ProposeMotionProps {
   seqOfMotion: BigNumber,
   setOpen: (flag: boolean) => void,
-  getMotionsList: () => any,
+  getMotionsList: (minutes:HexType) => any,
 }
 
 export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionProps) {
@@ -31,7 +27,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
   useEffect(()=>{
-    getVoteResult(seqOfMotion, boox[3]).then(
+    getVoteResult(boox[3], seqOfMotion).then(
       list => setVoteResult(list)
     )
   }, [seqOfMotion, boox]);
@@ -52,10 +48,10 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
   } = useGeneralKeeperCastVoteOfGm({
     ...config,
     onSuccess() {
-      getVoteResult(seqOfMotion, boox[3]).then(
+      getVoteResult(boox[3], seqOfMotion).then(
         list => setVoteResult(list)
       );
-      getMotionsList();
+      getMotionsList(boox[3]);
       setOpen(false);
     }
   });
@@ -136,7 +132,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterOfMember seqOfMotion={seqOfMotion} setOpen={setOpen} getMotionsList={getMotionsList} />
+        <EntrustDelegaterForGeneralMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} getMotionsList={getMotionsList} />
       </Collapse>
 
     </Paper>

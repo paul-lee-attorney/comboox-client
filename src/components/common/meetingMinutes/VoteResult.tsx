@@ -1,11 +1,9 @@
-import { Button, Stack } from "@mui/material";
-import { LinearProgress, Typography } from "@mui/joy";
+import { Stack } from "@mui/material";
 
 import { BigNumber } from "ethers";
-import { toPercent } from "../../../scripts/toolsKit";
-import { VoteCase } from "../../comp/bog/VoteForDocOfGm";
 import { BallotsList } from "./BallotsList";
 import { HexType } from "../../../interfaces";
+import { VoteCase } from "../../../queries/meetingMinutes";
 
 interface VoteResultProps {
   addr: HexType;

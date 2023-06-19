@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 
 import { 
+  Box,
+  LinearProgress,
   Stack,
 } from "@mui/material";
 
@@ -173,14 +175,16 @@ function BodyTerms() {
       )}
 
       {(!vrLs || !prLs || !frLs || !guoLs) && (
-        <LoadingButton 
-          loading={true} 
-          loadingPosition='end' 
-          endIcon={<Send/>} 
-          sx={{p:1, m:1}} 
-        >
-          <span>Loading</span>
-        </LoadingButton>
+        <>
+          <LoadingButton 
+            loading={true} 
+            loadingPosition='end' 
+            endIcon={<Send/>} 
+            sx={{p:1, m:1}} 
+          >
+            <span>Loading</span>
+          </LoadingButton>
+        </>
       )}
 
 

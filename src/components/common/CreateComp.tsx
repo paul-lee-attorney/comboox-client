@@ -52,7 +52,7 @@ export function CreateCompPage() {
         addrOfGK: query.addrOfGK?.toString() ?? ''
       };
       setLog(logOfQuery);
-      console.log('logOfQuery: ', logOfQuery);
+      // console.log('logOfQuery: ', logOfQuery);
     }
   }, [query]);
 

@@ -24,16 +24,7 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 import { BigNumber } from 'ethers';
-
-async function getOwner(addr: HexType): Promise<number> {
-  let owner = await readContract({
-    address: addr,
-    abi: accessControlABI,
-    functionName: 'getOwner',
-  });
-
-  return owner;
-}
+import { getOwner } from '../../../queries/accessControl';
 
 export function SetOwner({ addr }: ContractProps) {
   const [owner, setOwner] = useState<string>();

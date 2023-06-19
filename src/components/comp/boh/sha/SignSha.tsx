@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Stack, Tooltip } from "@mui/material";
+import { Alert, Box, Button, Stack, TextField, Tooltip } from "@mui/material";
 import { useGeneralKeeperSignSha, usePrepareGeneralKeeperSignSha, useSigPageGetParasOfPage } from "../../../../generated";
 import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
@@ -42,12 +42,15 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   })
 
   const { gk } = useComBooxContext();
+  const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
 
   const { 
     config
   } =  usePrepareGeneralKeeperSignSha({
     address: gk,
-    args: [addr, Bytes32Zero],
+    args: sigHash 
+        ? [addr, sigHash]
+        : undefined,
   });
 
   const {
@@ -62,6 +65,17 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
 
   return (
     <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+
+      <TextField
+        sx={{ m: 1, minWidth: 650 }} 
+        id="tfHashOfAction" 
+        label="SigHash / CID in IPFS" 
+        variant="outlined"
+        onChange={e => setSigHash(`0x${e.target.value}`)}
+        value = { sigHash.substring(2) }
+        size='small'
+      />                                            
+
       <Button
         disabled={!write || isLoading}
         variant="contained"

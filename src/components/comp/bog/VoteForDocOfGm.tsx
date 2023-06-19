@@ -1,6 +1,5 @@
-import { Alert, Box, Button, Divider, FormControl, InputLabel, MenuItem, Select, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { 
-  meetingMinutesABI,
   useGeneralKeeperCastVoteOfGm,
   usePrepareGeneralKeeperCastVoteOfGm, 
 } from "../../../generated";
@@ -10,48 +9,12 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { HowToVote } from "@mui/icons-material";
 import { useState } from "react";
 import { BigNumber } from "ethers";
-import { readContract } from "@wagmi/core";
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
-
-
-export interface VoteCase {
-  head: number;
-  weight: BigNumber;
-  voters: number[];
-}
+import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
 
 interface VoteForDocOfGmProps {
   seqOfMotion: BigNumber ;
   setNextStep: (next: number) => void;
-}
-
-export async function getVoteResult(seq: BigNumber, addr: HexType): Promise<VoteCase[]>{
-
-  let i = 0;
-  let list: VoteCase[] = [];
-
-  while (i < 4) {
-    let item = await readContract({
-      address: addr,
-      abi: meetingMinutesABI,
-      functionName: 'getCaseOfAttitude',
-      args: [seq, BigNumber.from(i)],
-    })
-
-    let vts: number[] = [];
-
-    item.voters.map(v => vts.push(v.toNumber()));
-
-    list.push({
-      head: item.sumOfHead,
-      weight: item.sumOfWeight,
-      voters: vts,
-    });
-    
-    i++;
-  }
-
-  return list;
 }
 
 
@@ -79,7 +42,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
   } = useGeneralKeeperCastVoteOfGm({
     ...config,
     onSuccess() {
-      getVoteResult(seqOfMotion, boox[3]).then(
+      getVoteResult(boox[3], seqOfMotion).then(
         list => setVoteResult(list)
       )
     }
@@ -129,7 +92,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
       </Stack>
 
       {voteResult && (
-        <VoteResult voteResult={voteResult} />
+        <VoteResult addr={boox[3]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
       )}
 
     </Stack>

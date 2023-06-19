@@ -15,11 +15,11 @@ const ComBooxContext = createContext<ContextType>({
   setBoox: ()=>{},
 });
 
-type WrapperType = {
-  children: any
+interface ComBooxWrapperProps {
+  children: any;
 }
 
-export function ComBooxWrapper({ children }: WrapperType) {
+export function ComBooxWrapper({ children }: ComBooxWrapperProps) {
   const [gk, setGK] = useState<HexType>(AddrZero);
   const [boox, setBoox] = useState<HexType[]>([]);
 

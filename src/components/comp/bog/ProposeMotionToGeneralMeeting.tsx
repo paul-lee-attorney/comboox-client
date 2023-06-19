@@ -1,40 +1,41 @@
 import { useState } from "react";
 
 import { 
-  useGeneralKeeperProposeMotionOfGm, 
-  usePrepareGeneralKeeperProposeMotionOfGm 
+  useGeneralKeeperProposeMotionToGeneralMeeting, 
+  usePrepareGeneralKeeperProposeMotionToGeneralMeeting 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { EntrustDelegaterOfMember } from "./EntrustDelegaterOfMember";
+import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
+import { HexType } from "../../../interfaces";
 
-interface ProposeMotionProps {
-  seqOfMotion: string,
+interface ProposeMotionToGmProps {
+  seqOfMotion: BigNumber,
   setOpen: (flag: boolean) => void,
-  getMotionsList: () => any,
+  getMotionsList: (minutes:HexType) => any,
 }
 
-export function ProposeMotionOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionProps) {
+export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionToGmProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   const {
-    config: proposeMotionOfGmConfig,
-  } = usePrepareGeneralKeeperProposeMotionOfGm({
+    config: proposeMotionToGeneralMeetingConfig,
+  } = usePrepareGeneralKeeperProposeMotionToGeneralMeeting ({
     address: gk,
     args: [BigNumber.from(seqOfMotion)],
   });
 
   const {
-    isLoading: proposeMotionOfGmLoading,
-    write: proposeMotionOfGm,
-  } = useGeneralKeeperProposeMotionOfGm({
-    ...proposeMotionOfGmConfig,
+    isLoading: proposeMotionToGmLoading,
+    write: proposeMotionToGm,
+  } = useGeneralKeeperProposeMotionToGeneralMeeting({
+    ...proposeMotionToGeneralMeetingConfig,
     onSuccess(){
-      getMotionsList();
+      getMotionsList(boox[3]);
       setOpen(false);
     }
   });
@@ -70,11 +71,11 @@ export function ProposeMotionOfGm({ seqOfMotion, setOpen, getMotionsList }: Prop
       <Collapse in={ !appear } >
         <Stack direction="row" sx={{ alignItems:'center' }} >
          <Button
-            disabled={ !proposeMotionOfGm || proposeMotionOfGmLoading }
+            disabled={ !proposeMotionToGm || proposeMotionToGmLoading }
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:118 }}
-            onClick={()=>proposeMotionOfGm?.()}
+            onClick={()=>proposeMotionToGm?.()}
           >
             Propose
           </Button>
@@ -82,7 +83,7 @@ export function ProposeMotionOfGm({ seqOfMotion, setOpen, getMotionsList }: Prop
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterOfMember 
+        <EntrustDelegaterForGeneralMeeting 
           seqOfMotion={seqOfMotion} 
           setOpen={setOpen} 
           getMotionsList={getMotionsList} 

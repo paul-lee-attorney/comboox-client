@@ -34,7 +34,7 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 180;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Difference, Payments, ContentCopy, ContentCopyOutlined, Diversity3 }  from '@mui/icons-material';
+import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Payments, ContentCopyOutlined, Diversity3 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -51,6 +51,8 @@ import { AddrZero, GKInfo, HexType } from '../../interfaces';
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 
 import { CompSymbol, CompAddr, RegNum } from '../comp/gk/CompBrief';
+import { getBook, getBoox, nameOfCompany, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
+import { longSnParser } from '../../scripts/toolsKit';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -101,33 +103,34 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
 }));
 
-async function getBoox(addrOfGK: HexType): Promise<HexType[]> {
-  let books: HexType[] = [];
-  books[0] = addrOfGK;
-
-  for (let i = 1; i<10; i++) {
-    let temp: HexType = await readContract({
-      address: addrOfGK,
-      abi: generalKeeperABI,
-      functionName: 'getBook',
-      args: [BigNumber.from(i)],
-    });
-    books[i] = temp;
-  }
-  return books;
-} 
-
 type ComBooxAppBarType = {
   children: any
 }
 
 export function ComBooxAppBar({ children }: ComBooxAppBarType) {
-  const { gk, boox, setBoox } = useComBooxContext();
+  const { gk, setGK, boox, setBoox } = useComBooxContext();
+  const [ regNum, setRegNum ] = useState<number>();
+  const [ name, setName ] = useState<string>();
+  const [ symbol, setSymbol ] = useState<string>();
   
   useEffect(() => {
-    if (gk != undefined && gk != AddrZero)
-      getBoox(gk).then((boox) => setBoox(boox));
-  });
+    if (gk != AddrZero) {
+      getBoox(gk).then(
+        (boox) => setBoox(boox)
+      );
+      regNumOfCompany(gk).then(
+        res => setRegNum(res.toNumber())
+      );
+      nameOfCompany(gk).then(
+        res => setName(res)
+      );
+      symbolOfCompany(gk).then(
+        res => setSymbol(res)
+      );
+    } else {
+      setBoox([]);
+    }
+  }, [gk, setBoox]);
 
   const [auth, setAuth] = useState(true);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -175,13 +178,17 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
-    {href: '/', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload /> },
     {href: '/comp/mainPage', label: 'Home', tip: 'Homepage Of Target Company', icon: <Home />}, 
     {href: '/comp/boh/bookOfSHA', label: 'BOH', tip: 'Book Of Shareholders Agreements', icon: <ListAlt />}, 
     {href: '/comp/boa/bookOfIA', label: 'BOA', tip:'Book Of Investment Agreements', icon: <ContentCopyOutlined />}, 
     {href: '/comp/bos/bookOfShares', label: 'BOS', tip:'Book Of Shares', icon: <Payments />},     
     {href: '/comp/bog/bookOfGM', label: 'BOG', tip:'Minutes Book Of Shareholders General Meeting', icon: <Diversity3 />},     
   ]
+
+  const backToCenter = () => {
+    setGK(AddrZero);
+    setBoox([]);
+  }
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -203,15 +210,10 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           </Typography>
 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { gk !== AddrZero && (
-              <>
-                <CompSymbol addr={ gk } /> 
-                {' '}
-                <RegNum addr={ gk } />
-                {' : '}
-                <CompAddr addr={ gk } />
-              </>
-            )} 
+            { gk != AddrZero 
+                ? symbol + ' (' + longSnParser(regNum ? regNum.toString() : '') + ') : ' + gk
+                : ''
+            } 
           </Typography>
 
           <FormGroup sx={{
@@ -294,23 +296,37 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
         <List>
 
+          <ListItem disablePadding >
+            <Tooltip title={"Registration Center"} placement='right' arrow >
+              <ListItemButton 
+                LinkComponent={ Link }
+                href={"/"}
+                onClick={ backToCenter }
+              >
+                <ListItemIcon>
+                  {<AssuredWorkload />}
+                </ListItemIcon>
+                <ListItemText primary={"RegCenter"} />
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+
+          <Divider />
+
           {items.map((v, i)=>(
-            <>
-              <ListItem key={i} disablePadding >
-                <Tooltip title={v.tip} placement='right' arrow >
-                  <ListItemButton 
-                    LinkComponent={Link}
-                    href={v.href}
-                  >
-                    <ListItemIcon>
-                      {v.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={v.label} />
-                  </ListItemButton>
-                </Tooltip>
-              </ListItem>
-              {i==0 && (<Divider />)}
-            </>
+            <ListItem key={i} disablePadding >
+              <Tooltip title={v.tip} placement='right' arrow >
+                <ListItemButton 
+                  LinkComponent={Link}
+                  href={v.href}
+                >
+                  <ListItemIcon>
+                    {v.icon}
+                  </ListItemIcon>
+                  <ListItemText primary={v.label} />
+                </ListItemButton>
+              </Tooltip>
+            </ListItem>
           ))}
 
         </List>

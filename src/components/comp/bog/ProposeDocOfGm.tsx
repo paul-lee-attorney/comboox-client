@@ -1,7 +1,7 @@
 
-import { Button, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../generated";
-import { FileHistoryProps, HexType, } from "../../../interfaces";
+import { HexType, } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { BigNumber } from "ethers";
@@ -37,7 +37,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   });
 
   return (
-    <>
+    <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'center'}}>
       <TextField 
         variant='filled'
         label='Executor'
@@ -57,7 +57,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
       >
         Propose
       </Button>
-    </>
+    </Stack>
   )
 
 }

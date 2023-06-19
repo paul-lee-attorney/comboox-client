@@ -1,30 +1,31 @@
 import { useState } from "react";
 
 import { 
-  useGeneralKeeperEntrustDelegateOfMember, 
-  usePrepareGeneralKeeperEntrustDelegateOfMember, 
+  useGeneralKeeperEntrustDelegaterForGeneralMeeting, 
+  usePrepareGeneralKeeperEntrustDelegaterForGeneralMeeting 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { Button, Stack, TextField, } from "@mui/material";
 import { Handshake, } from "@mui/icons-material";
+import { HexType } from "../../../interfaces";
 
 interface EntrustDelegaterOfMemberProps {
   seqOfMotion: BigNumber,
   setOpen: (flag: boolean) => void,
-  getMotionsList: () => any,
+  getMotionsList: (minutes:HexType) => any,
 }
 
-export function EntrustDelegaterOfMember({ seqOfMotion, setOpen, getMotionsList }: EntrustDelegaterOfMemberProps) {
+export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMotionsList }: EntrustDelegaterOfMemberProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>();
 
   const {
-    config: entrustDelegateOfMemberConfig
-  } = usePrepareGeneralKeeperEntrustDelegateOfMember({
+    config: entrustDelegaterOfMemberConfig
+  } = usePrepareGeneralKeeperEntrustDelegaterForGeneralMeeting({
     address: gk,
     args: delegater
         ? [seqOfMotion, BigNumber.from(delegater) ]
@@ -32,12 +33,12 @@ export function EntrustDelegaterOfMember({ seqOfMotion, setOpen, getMotionsList 
   });
 
   const {
-    isLoading: entrustDelegateOfMemberLoading,
-    write: entrustDelegateOfMember,
-  } = useGeneralKeeperEntrustDelegateOfMember({
-    ...entrustDelegateOfMemberConfig,
+    isLoading: entrustDelegaterOfMemberLoading,
+    write: entrustDelegaterOfMember,
+  } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
+    ...entrustDelegaterOfMemberConfig,
     onSuccess() {
-      getMotionsList();
+      getMotionsList(boox[3]);
       setOpen(false);
     },
   });
@@ -58,11 +59,11 @@ export function EntrustDelegaterOfMember({ seqOfMotion, setOpen, getMotionsList 
       />
 
       <Button
-        disabled={ !entrustDelegateOfMember || entrustDelegateOfMemberLoading }
+        disabled={ !entrustDelegaterOfMember || entrustDelegaterOfMemberLoading }
         variant="contained"
         endIcon={<Handshake />}
         sx={{ m:1, minWidth:118 }}
-        onClick={()=>entrustDelegateOfMember?.()}
+        onClick={()=>entrustDelegaterOfMember?.()}
       >
         Entrust
       </Button>

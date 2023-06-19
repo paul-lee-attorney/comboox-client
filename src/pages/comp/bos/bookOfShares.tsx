@@ -11,7 +11,7 @@ import {
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
 import { Search, Send } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../interfaces";
+import { HexType } from "../../../interfaces";
 
 import { readContract } from "@wagmi/core";
 
@@ -24,8 +24,6 @@ import { BigNumber } from "ethers";
 import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
-import { sha256 } from "ethers/lib/utils.js";
-import { SharesListGrid } from "../../../components/comp/bos/SharesList";
 
 export interface Head {
   seqOfShare: number; // 股票序列号
@@ -79,24 +77,22 @@ export function parseSnOfShare(sn: HexType): Head {
   return head
 }
 
-export async function getShare(bos: HexType, sn: HexType): Promise<Share> {
+export async function getShare(bos: HexType, seq: number): Promise<Share> {
 
-  let head: Head = parseSnOfShare(sn);
-  
-  let body = await readContract({
+  let share = await readContract({
     address: bos,
     abi: bookOfSharesABI,
-    functionName: 'getBodyOfShare',
-    args: [BigNumber.from(head.seqOfShare)],
+    functionName: 'getShare',
+    args: [BigNumber.from(seq)],
   });
 
-  let share:Share = {
-    sn: sn,
-    head: head,
-    body: body,
-  }
+  let shareWrap:Share = {
+    sn: codifyHeadOfShare(share.head),
+    head: share.head,
+    body: share.body,
+  } 
 
-  return share;
+  return shareWrap;
 }
 
 export async function getSharesList(bos: HexType, snList: readonly HexType[]): Promise<Share[]> {
@@ -106,7 +102,10 @@ export async function getSharesList(bos: HexType, snList: readonly HexType[]): P
   let i = 0;
 
   while(i < len) {
-    list[i] = await getShare(bos, snList[i]);
+
+    let seq: number = parseSnOfShare(snList[i]).seqOfShare;
+
+    list[i] = await getShare(bos, seq);
     i++;
   }
 
@@ -142,7 +141,7 @@ function BookOfShares() {
   const [ share, setShare ] = useState<Share>();
 
   const { 
-    refetch: getShare, 
+    refetch: getShareFunc, 
   } = useBookOfSharesGetShare({
     address: boox[7],
     args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
@@ -160,7 +159,7 @@ function BookOfShares() {
   const searchShare = () => {
     if (seqOfShare) {
       setBnSeqOfShare(BigNumber.from(seqOfShare));
-      getShare();
+      getShareFunc();
     }
   }
 

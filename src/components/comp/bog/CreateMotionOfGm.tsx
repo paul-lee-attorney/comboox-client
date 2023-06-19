@@ -1,10 +1,32 @@
 import { useState } from "react";
-import { useGeneralKeeperNominateDirector, useGeneralKeeperProposeActionOfGm, useGeneralKeeperProposeDocOfGm, useGeneralKeeperProposeToRemoveDirector, usePrepareGeneralKeeperAbandonRole, usePrepareGeneralKeeperNominateDirector, usePrepareGeneralKeeperProposeActionOfGm, usePrepareGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeToRemoveDirector } from "../../../generated";
+
+import { 
+  useGeneralKeeperCreateActionOfGm, 
+  useGeneralKeeperCreateMotionToRemoveDirector, 
+  useGeneralKeeperNominateDirector, 
+  useGeneralKeeperProposeDocOfGm, 
+  usePrepareGeneralKeeperCreateActionOfGm, 
+  usePrepareGeneralKeeperCreateMotionToRemoveDirector, 
+  usePrepareGeneralKeeperNominateDirector, 
+  usePrepareGeneralKeeperProposeDocOfGm 
+} from "../../../generated";
+
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { AddrZero, HexType } from "../../../interfaces";
-import { Box, Button, Collapse, FormControl, FormControlLabel, FormLabel, IconButton, Paper, Radio, RadioGroup, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
-import { AddCircle, EmojiPeople, PersonAdd, PersonRemove, RemoveCircle } from "@mui/icons-material";
+
+import { 
+  Box, Button, Collapse, 
+  FormControlLabel, IconButton, 
+  Paper, Radio, RadioGroup, 
+  Stack, TextField, Toolbar, 
+  Tooltip, Typography 
+} from "@mui/material";
+
+import { 
+  AddCircle, EmojiPeople, PersonAdd, 
+  PersonRemove, RemoveCircle 
+} from "@mui/icons-material";
 
 export interface Action {
   target: HexType;
@@ -19,12 +41,12 @@ const defaultAction: Action = {
 }
 
 interface CreateMotionProps {
-  getMotionsList: () => any,
+  getMotionsList: (minutes:HexType) => any,
 }
 
 export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   const [ seqOfPos, setSeqOfPos ] = useState<number>();
   const [ candidate, setCandidate ] = useState<number>();
@@ -44,13 +66,13 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   } = useGeneralKeeperNominateDirector({
     ...addDirectorConfig,
     onSuccess(){
-      getMotionsList();
+      getMotionsList(boox[3]);
     }
   });
 
   const {
     config: removeDirectorConfig
-  } = usePrepareGeneralKeeperProposeToRemoveDirector({
+  } = usePrepareGeneralKeeperCreateMotionToRemoveDirector ({
     address: gk,
     args: seqOfPos 
           ? [ BigNumber.from(seqOfPos)]
@@ -60,10 +82,10 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   const{
     isLoading: removeDirectorLoading,
     write: removeDirector
-  } = useGeneralKeeperProposeToRemoveDirector({
+  } = useGeneralKeeperCreateMotionToRemoveDirector({
     ...removeDirectorConfig,
     onSuccess() {
-      getMotionsList();
+      getMotionsList(boox[3]);
     }
   });
 
@@ -86,13 +108,9 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   } = useGeneralKeeperProposeDocOfGm({
     ...proposeDocOfGmConfig,
     onSuccess() {
-      getMotionsList();
+      getMotionsList(boox[3]);
     }
   });
-
-  // const [ targets, setTargets ] = useState<readonly HexType[]>();
-  // const [ values, setValues ] = useState<string[]>();
-  // const [ params, setParams ] = useState<readonly HexType[]>();
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
 
@@ -100,7 +118,7 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
 
   const {
     config: proposeActionConfig,
-  } = usePrepareGeneralKeeperProposeActionOfGm({
+  } = usePrepareGeneralKeeperCreateActionOfGm({
     address: gk,
     args: seqOfVr && desHash && executor
         ? [BigNumber.from(seqOfVr), 
@@ -114,16 +132,14 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
-  } = useGeneralKeeperProposeActionOfGm({
+  } = useGeneralKeeperCreateActionOfGm({
     ...proposeActionConfig,
     onSuccess() {
-      getMotionsList();
+      getMotionsList(boox[3]);
     }
   });
 
   const [ typeOfMotion, setTypeOfMotion ] = useState<string>('director');
-
-  // const [ cp, setCp ] = useState([1]);
 
   const addAction = () => {
     setActions(v => {
@@ -155,7 +171,6 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
           row
           aria-labelledby="createMotionRadioGrup"
           name="createMotionRadioGroup"
-          // defaultValue="director"
           onChange={(e)=>(setTypeOfMotion(e.target.value))}
           value={typeOfMotion}
         >

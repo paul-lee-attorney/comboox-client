@@ -24,51 +24,16 @@ import {
 } from '../../../../components';
 
 import { 
-  accessControlABI,
-  filesFolderABI,
-  meetingMinutesABI,
-  useFilesFolderGetHeadOfFile, 
   useInvestmentAgreementGetTypeOfIa, 
-  useMeetingMinutesVoteEnded 
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
-import { readContract } from "@wagmi/core";
 import { SignIa } from "../../../../components/comp/boa/ia/SignIa";
-import { VoteCountingForDocOfGm } from "../../../../components/comp/bog/VoteCountingForDocOfGm";
-
-async function finalized(ia: HexType): Promise<boolean> {
-  let flag = await readContract({
-    address: ia,
-    abi: accessControlABI,
-    functionName: 'finalized',
-  })
-
-  return flag;
-}
-
-async function getSeqOfMotion(boa: HexType, ia: HexType): Promise<BigNumber>{
-  let head = await readContract({
-    address: boa,
-    abi: filesFolderABI,
-    functionName: 'getHeadOfFile',
-    args: [ ia ],
-  });
-
-  return head.seqOfMotion;
-}
-
-async function voteEnded(bog: HexType, seqOfMotion: BigNumber): Promise<boolean> {
-  let flag = await readContract({
-    address: bog,
-    abi: meetingMinutesABI,
-    functionName: 'voteEnded',
-    args: [ seqOfMotion ],
-  })
-
-  return flag;
-}
+import { VoteCountingOfGm } from "../../../../components/comp/bog/VoteCountingOfGm";
+import { voteEnded } from "../../../../queries/meetingMinutes";
+import { Head, getHeadOfFile } from "../../../../queries/filesFolder";
+import { finalized } from "../../../../queries/accessControl";
 
 function Lifecycle() {
 
@@ -95,15 +60,23 @@ function Lifecycle() {
 
   const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
 
-  const {
-    data: headOfFile,
-    refetch: getHeadOfFile,
-  } = useFilesFolderGetHeadOfFile({
-    address: boox[1],
-    args: [ia],
-    onSuccess(data) {
-      setFileState(data.state);
-    }
+  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
+
+  // const {
+  //   data: headOfFile,
+  //   refetch: refetchHeadOfFile,
+  // } = useFilesFolderGetHeadOfFile({
+  //   address: boox[1],
+  //   args: [ia],
+  //   onSuccess(data) {
+  //     setFileState(data.state);
+  //   }
+  // })
+
+  useEffect(()=>{
+    getHeadOfFile(boox[1], ia).then(
+      (head:Head) => setFileState(head.state)
+    )
   })
 
   useEffect(()=> {
@@ -121,10 +94,10 @@ function Lifecycle() {
         setActiveStep(fileState); 
         break;
       case 4: // Proposed
-        getSeqOfMotion(boox[1], ia).then(
-          seq => {
-            setSeqOfMotion(seq);
-            voteEnded(boox[3], seq).
+        getHeadOfFile(boox[1], ia).then(
+          (head:Head) => {
+            setSeqOfMotion(head.seqOfMotion);
+            voteEnded(boox[3], head.seqOfMotion).
               then(flag => setActiveStep(
                 flag ? 5 : 4
               ));
@@ -254,7 +227,7 @@ function Lifecycle() {
                       Count vote result of IA (only for Members).
                     </Typography>
                     {ia != '0x' && seqOfMotion && (
-                      <VoteCountingForDocOfGm seqOfMotion={ seqOfMotion } addrOfFile={ ia } seqOfBoox={1} setNextStep={ setFileState } />
+                      <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={ setVoteIsPassed } />
                     )}
                   </StepContent>
 

@@ -1,25 +1,12 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Stack } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
 import { LinearProgress, Typography } from "@mui/joy";
 
 import { BigNumber } from "ethers";
 import { dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/toolsKit";
-import { VoteCase } from "../../comp/bog/VoteForDocOfGm";
 import { Bytes32Zero, HexType } from "../../../interfaces";
-import { readContract } from "@wagmi/core";
-import { meetingMinutesABI } from "../../../generated";
 import { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-
-
-export interface Ballot {
-  acct: number;
-  attitude: number;
-  head: number;
-  weight: BigNumber;
-  sigDate: number;
-  blocknumber: BigNumber;
-  sigHash: HexType;
-}
+import { Ballot, VoteCase, getBallotsList } from "../../../queries/meetingMinutes";
 
 const columns: GridColDef[] = [
   { 
@@ -31,7 +18,7 @@ const columns: GridColDef[] = [
   { 
     field: 'head', 
     headerName: 'Head',
-    valueGetter: p => p.row.head,
+    valueGetter: p => p.row.sumOfHead,
     renderCell: ({ value }) => (<Chip label={value} />),
     headerAlign:'center',
     align: 'center',
@@ -40,7 +27,7 @@ const columns: GridColDef[] = [
   { 
     field: 'weight', 
     headerName: 'Weight',
-    valueGetter: p =>  longDataParser(p.row.weight.toString()),
+    valueGetter: p =>  longDataParser(p.row.sumOfWeight.toString()),
     headerAlign: 'right',
     align:'right',
     width: 180,
@@ -71,31 +58,6 @@ const columns: GridColDef[] = [
   },
 ];
 
-export async function getBallot(addr:HexType, seqOfMotion: BigNumber, acct: number): Promise<Ballot> {
-  let ballot = await readContract({
-    address: addr,
-    abi: meetingMinutesABI,
-    functionName: 'getBallot',
-    args: [seqOfMotion, BigNumber.from(acct)],
-  });
-
-  return ballot;
-}
-
-export async function getBallotsList(addr: HexType, seqOfMotion: BigNumber, voters: number[]): Promise<Ballot[]> {
-  let list: Ballot[] = [];
-
-  let len = voters.length;
-  let i=0;
-
-  while (i < len) {
-    let ballot = await getBallot(addr, seqOfMotion, voters[i]);
-    list.push(ballot);
-    i++;
-  }
-
-  return list;
-}
 
 interface BallotsListProps {
   addr: HexType;
@@ -140,8 +102,8 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         color={ attitudes[attitude-1].colorJoy }
         size="sm"
         thickness={38}
-        value={ !allVote.weight.eq(0) 
-          ? voteCase.weight.mul(100).div(allVote.weight).toNumber()
+        value={ !allVote.sumOfWeight.eq(0) 
+          ? voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber()
           : 0 }
         sx={{
           '--LinearProgress-radius': '0px',
@@ -164,9 +126,9 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
             sx={{ mixBlendMode: 'difference' }}
           >
             {attitudes[attitude-1].name} Ratio: 
-            ({voteCase.head}/{allVote.head}) 
-            {` ${ !allVote.weight.eq(0)
-                ? Math.round(voteCase.weight.mul(100).div(allVote.weight).toNumber())
+            ({voteCase.sumOfHead}/{allVote.sumOfHead}) 
+            {` ${ !allVote.sumOfWeight.eq(0)
+                ? Math.round(voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber())
                 : 0 
             }%`} 
           </Typography>            
@@ -190,8 +152,8 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
               color={attitudes[attitude-1].colorMaterial} 
               label={
                 attitudes[attitude-1].name + 
-                ' (' + voteCase.head.toString() + '/' + allVote.head.toString() + ') ' + 
-                `${Math.round(voteCase.weight * 100 / allVote.weight)}%`              
+                ' (' + voteCase.sumOfHead.toString() + '/' + allVote.sumOfHead.toString() + ') ' + 
+                `${Math.round(voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber())}%`              
               }
               sx={{mx:1}}
             /> 
@@ -216,7 +178,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         </DialogContent>
 
         <DialogActions>
-        <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

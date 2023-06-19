@@ -1,37 +1,22 @@
 
 import { Button, Stack } from "@mui/material";
 import { 
-  filesFolderABI,
   useGeneralKeeperVoteCountingOfGm, 
   usePrepareGeneralKeeperVoteCountingOfGm 
 } from "../../../generated";
 
-import { HexType } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { BigNumber } from "ethers";
-import { readContract } from "@wagmi/core";
+import { isPassed } from "../../../queries/meetingMinutes";
 
-async function isPassed(folder: HexType, addrOfFile: HexType): Promise<number> {
 
-  let res = await readContract({
-    address: folder,
-    abi: filesFolderABI,
-    functionName: 'getHeadOfFile',
-    args: [ addrOfFile ],
-  })
-
-  return res.state;
+interface VoteCountingOfGmProps {
+  seqOfMotion: BigNumber;
+  setResult: (flag: boolean) => void;
 }
 
-interface VoteCountingForDocOfGmProps {
-  seqOfMotion: BigNumber,
-  addrOfFile: HexType,
-  seqOfBoox: number,
-  setNextStep: (next: number) => void,
-}
-
-export function VoteCountingForDocOfGm({ seqOfMotion, addrOfFile, seqOfBoox, setNextStep }: VoteCountingForDocOfGmProps) {
+export function VoteCountingOfGm({ seqOfMotion, setResult }: VoteCountingOfGmProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -48,10 +33,10 @@ export function VoteCountingForDocOfGm({ seqOfMotion, addrOfFile, seqOfBoox, set
   } = useGeneralKeeperVoteCountingOfGm({
     ...config,
     onSuccess() {
-      isPassed(boox[ seqOfBoox ], addrOfFile).then(
-        fileState => setNextStep( fileState )
+      isPassed(boox[3], seqOfMotion).then(
+        flag => setResult(flag)
       )
-    },
+    }
   });
 
   return (

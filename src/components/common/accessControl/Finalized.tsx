@@ -7,15 +7,7 @@ import { readContract } from "@wagmi/core";
 import { 
   accessControlABI,
 } from "../../../generated";
-
-async function isFinalized(addr:HexType): Promise<boolean> {
-  let flag = await readContract({
-    address: addr,
-    abi: accessControlABI,
-    functionName: 'finalized',
-  })
-  return flag;
-}
+import { finalized } from "../../../queries/accessControl";
 
 interface FinalizedProps {
   addr: HexType,
@@ -26,7 +18,7 @@ export function Finalized({addr, setFinalized}:FinalizedProps) {
 
   useEffect(()=>{
     if (addr) {
-      isFinalized(addr).then(
+      finalized(addr).then(
         flag => setFinalized(flag)
       )
     }

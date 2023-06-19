@@ -1,17 +1,13 @@
-import { useRegCenterGetDocByUserNo } from '../../generated';
+import { regCenterABI, useRegCenterGetDocByUserNo } from '../../generated';
 import { AddrOfRegCenter, AddrZero, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 import { useEffect, useState } from 'react';
 import { BigNumber } from 'ethers';
-import { Button, Stack, TextField } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
+import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { readContract } from '@wagmi/core';
-
-type GetCompType = {
-  regNum: string
-}
 
 export interface Head {
   typeOfDoc: number,
@@ -30,66 +26,63 @@ export interface Doc {
   body: HexType,
 }
 
-// async function getDocByUserNo(regNum: string): Promise<Doc>{
+async function getDocByUserNo(regNum: string): Promise<Doc>{
 
-//   let data:Doc = await readContract({
-//     address: AddrOfRegCenter,
-//     abi: regCenterABI,
-//     functionName: 'getDocByUserNo',
-//     args: [BigNumber.from(regNum)],
-//   })
+  let data:Doc = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getDocByUserNo',
+    args: [BigNumber.from(regNum)],
+  })
 
-//   return data;
-// }
-
+  return data;
+}
 
 export function GetComp() {
 
   const { setGK } = useComBooxContext();
 
-  const [ regNum, setRegNum ] = useState<number>();
+  const [ regNum, setRegNum ] = useState<string>();
 
   const [ doc, setDoc ] = useState<Doc>();
 
-  const [ bnRegNum, setBnRegNum ] = useState<BigNumber>();
-
-  const {
-    refetch: getDocByUserNo
-  } = useRegCenterGetDocByUserNo({
-    address: AddrOfRegCenter,
-    args: bnRegNum ? [bnRegNum] : undefined,
-    onSuccess(doc){
-      if (doc.body != AddrZero) {
-        setGK(doc.body);
-        setDoc(doc);
-      }
-    }
-  })
+  const [ open, setOpen ] = useState(false);
 
   const handleClick = async () => {
     if ( regNum ) {
-      setBnRegNum(BigNumber.from(regNum));
-      getDocByUserNo();
+      getDocByUserNo(regNum).then(
+        (doc:Doc) => {
+          if (doc.body != AddrZero) {
+            setOpen(false);
+            setGK(doc.body);
+            setDoc(doc);
+          } else {
+            setGK(AddrZero);
+            setDoc(undefined);
+            setOpen(true);
+          }
+        }
+      )
     }
   }
 
   return (
     <Stack direction={'column'} sx={{ width:'100%', alignItems:'center' }} >
 
-      <Stack direction={'row'} sx={{m:1, p:1, justifyContent:'center'}}>
+      <Stack direction={'row'} sx={{mt:2, mb:0, p:1, justifyContent:'center'}}>
         <TextField 
-          sx={{ m: 1, minWidth: 280 }} 
+          sx={{ m: 1, minWidth: 200 }} 
           id="txRegNumOfComp" 
           label="RegNumOfComp" 
           variant="outlined"
           helperText=" Integer < 2^40 "
-          onChange={(e) => setRegNum(parseInt(e.target.value))}
+          onChange={(e) => setRegNum( e.target.value )}
           value = { regNum }
           size='small'
         />
 
         <Button 
-          sx={{ m: 1, minWidth: 120, height: 40 }} 
+          sx={{ m: 1, minWidth: 200, height: 40 }} 
           variant="contained" 
           endIcon={ <Search /> }
           onClick={ handleClick }
@@ -121,7 +114,7 @@ export function GetComp() {
 
           underline='hover'
         >
-          <Button>
+          <Button variant='contained' sx={{width: 415}} endIcon={<DriveFileMove />} >
           SN: { '0x' +
                 doc?.head.version.toString(16).padStart(4, '0') +
                 doc?.head.seqOfDoc.toHexString().substring(2).padStart(16, '0')
@@ -130,6 +123,29 @@ export function GetComp() {
         </Link>
         
       )}
+
+      <Collapse in={ open } sx={{ width:415 }} >        
+        <Alert 
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <Close fontSize="inherit" />
+            </IconButton>
+          }
+
+          variant='outlined' 
+          severity='info' 
+          sx={{ height: 45, p:0.5 }} 
+        >
+          No Records. 
+        </Alert>
+      </Collapse>
         
     </Stack>
   )

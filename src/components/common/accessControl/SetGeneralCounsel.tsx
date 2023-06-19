@@ -25,16 +25,7 @@ import {
 import { waitForTransaction } from '@wagmi/core';
 import { ContractProps, HexType } from '../../../interfaces';
 import { BigNumber } from 'ethers';
-
-async function getGC(addr: HexType): Promise<number> {
-  let gc = await readContract({
-    address: addr,
-    abi: accessControlABI,
-    functionName: 'getGeneralCounsel',
-  });
-
-  return gc;
-}
+import { getGeneralCounsel } from '../../../queries/accessControl';
 
 async function getReceipt(hash: HexType): Promise<string> {
   const receipt = await waitForTransaction({
@@ -73,7 +64,7 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
   }
 
   useEffect(() => { 
-    getGC(addr).then(gc => {
+    getGeneralCounsel(addr).then(gc => {
       setNewGC(gc);
       setOpen(true);
     });

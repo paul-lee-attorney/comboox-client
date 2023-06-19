@@ -27,7 +27,8 @@ export interface GovernanceRule {
   basedOnPar: boolean ;
   proposeWeightRatioOfGM: number ;
   proposeHeadRatioOfMembers: number ;
-  proposeHeadRatioOfDirectors: number ;
+  proposeHeadRatioOfDirectorsInGM: number ;
+  proposeHeadRatioOfDirectorsInBoard: number ;
   maxQtyOfMembers: number ;
   quorumOfGM: number ;
   maxNumOfDirectors: number ;
@@ -43,12 +44,13 @@ const defaultGR: GovernanceRule = {
   basedOnPar: false,
   proposeWeightRatioOfGM: 1000,
   proposeHeadRatioOfMembers: 0,
-  proposeHeadRatioOfDirectors: 3333,
+  proposeHeadRatioOfDirectorsInGM: 3333,
+  proposeHeadRatioOfDirectorsInBoard: 5000,
   maxQtyOfMembers: 50,
   quorumOfGM: 5000,
   maxNumOfDirectors: 7,
   tenureMonOfBoard: 36,
-  quorumOfBoardMeeting: 3,
+  quorumOfBoardMeeting: 5000,
   establishedDate: 0,
   businessTermInYears: 20,
   typeOfComp: 1,
@@ -61,14 +63,15 @@ export function grCodifier(rule: GovernanceRule): HexType {
     (rule.basedOnPar ? '01' : '00' ) +
     (rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') ) +
     (rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') ) + 
-    (rule.proposeHeadRatioOfDirectors.toString(16).padStart(4, '0') ) + 
+    (rule.proposeHeadRatioOfDirectorsInGM.toString(16).padStart(4, '0') ) + 
+    (rule.proposeHeadRatioOfDirectorsInBoard.toString(16).padStart(4, '0') ) + 
     (rule.maxQtyOfMembers.toString(16).padStart(4, '0') ) +       
     (rule.quorumOfGM.toString(16).padStart(4, '0') ) +       
-    (rule.maxNumOfDirectors.toString(16).padStart(4, '0') ) +       
+    (rule.maxNumOfDirectors.toString(16).padStart(2, '0') ) +       
     (rule.tenureMonOfBoard.toString(16).padStart(4, '0') ) +       
     (rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') ) +       
     (rule.establishedDate.toString(16).padStart(12, '0') ) + 
-    (rule.businessTermInYears.toString(16).padStart(4, '0') ) +                 
+    (rule.businessTermInYears.toString(16).padStart(2, '0') ) +                 
     (rule.typeOfComp.toString(16).padStart(2, '0')) +                 
     (rule.annualPenaltyRateForLatePayInCap.toString(16).padStart(4, '0'))                 
   }`;
@@ -81,14 +84,15 @@ export function grParser(hexRule: HexType): GovernanceRule {
     basedOnPar: hexRule.substring(10, 12) === '01',
     proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16),
     proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16),
-    proposeHeadRatioOfDirectors: parseInt(hexRule.substring(20, 24), 16),
-    maxQtyOfMembers: parseInt(hexRule.substring(24, 28), 16),
-    quorumOfGM: parseInt(hexRule.substring(28, 32), 16),
-    maxNumOfDirectors: parseInt(hexRule.substring(32, 36), 16),
-    tenureMonOfBoard: parseInt(hexRule.substring(36, 40), 16),
-    quorumOfBoardMeeting: parseInt(hexRule.substring(40, 44), 16),
-    establishedDate: parseInt(hexRule.substring(44, 56), 16),
-    businessTermInYears: parseInt(hexRule.substring(56, 60), 16),
+    proposeHeadRatioOfDirectorsInGM: parseInt(hexRule.substring(20, 24), 16),
+    proposeHeadRatioOfDirectorsInBoard: parseInt(hexRule.substring(24, 28), 16),
+    maxQtyOfMembers: parseInt(hexRule.substring(28, 32), 16),
+    quorumOfGM: parseInt(hexRule.substring(32, 36), 16),
+    maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16),
+    tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16),
+    quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16),
+    establishedDate: parseInt(hexRule.substring(46, 58), 16),
+    businessTermInYears: parseInt(hexRule.substring(58, 60), 16),
     typeOfComp: parseInt(hexRule.substring(60, 62), 16),
     annualPenaltyRateForLatePayInCap: parseInt(hexRule.substring(62, 66), 16),    
   };
@@ -183,42 +187,29 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                   value={toPercent(newGR?.proposeHeadRatioOfMembers ?? 0)}
                 />
 
-                {newGR?.proposeHeadRatioOfDirectors != undefined && (
+                {newGR?.proposeHeadRatioOfDirectorsInGM != undefined && (
                   <TextField 
                     variant='filled'
-                    label='ProposeHeadRatioOfDirectors'
+                    label='ProposeHeadRatioOfDirectorsInGM'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={toPercent(newGR.proposeHeadRatioOfDirectors ?? 0)}
+                    value={toPercent(newGR.proposeHeadRatioOfDirectorsInGM ?? 0)}
                   />
                 )}
 
-                {newGR?.maxQtyOfMembers != undefined && (
+                {newGR?.proposeHeadRatioOfDirectorsInBoard != undefined && (
                   <TextField 
                     variant='filled'
-                    label='MaxQtyOfMembers'
+                    label='ProposeHeadRatioOfDirectorsInBM'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newGR.maxQtyOfMembers.toString()}
-                  />
-                )}
-
-                {newGR?.quorumOfGM != undefined && (
-                  <TextField 
-                    variant='filled'
-                    label='QuorumOfGM'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ toPercent(newGR.quorumOfGM)}
+                    value={toPercent(newGR.proposeHeadRatioOfDirectorsInBoard ?? 0)}
                   />
                 )}
 
@@ -275,51 +266,63 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
 
                   <TextField 
                     variant='filled'
-                    label='ProposeHeadNumOfDirectors'
+                    label='ProposeHeadNumOfDirectorsInGM'
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
                     onChange={(e) => setObjGR((v) => ({
                       ...v,
-                      proposeHeadRatioOfDirectors: parseInt(e.target.value),
+                      proposeHeadRatioOfDirectorsInGM: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.proposeHeadRatioOfDirectors }
+                    value={ objGR?.proposeHeadRatioOfDirectorsInGM }
                   />
 
                   <TextField 
                     variant='filled'
-                    label='MaxQtyOfMembers'
+                    label='ProposeHeadNumOfDirectorsInBM'
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
                     onChange={(e) => setObjGR((v) => ({
                       ...v,
-                      maxQtyOfMembers: parseInt(e.target.value),
+                      proposeHeadRatioOfDirectorsInBoard: parseInt(e.target.value),
                     }))}
-                    value={ objGR?.maxQtyOfMembers?.toString() } 
-                  />
-
-                  <TextField 
-                    variant='filled'
-                    label='QuorumOfGM'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      quorumOfGM: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.quorumOfGM }
+                    value={ objGR?.proposeHeadRatioOfDirectorsInBoard }
                   />
 
                 </Stack>
               </Collapse>
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                            
+
+                {newGR?.maxQtyOfMembers != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='MaxQtyOfMembers'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newGR.maxQtyOfMembers.toString()}
+                  />
+                )}
+
+                {newGR?.quorumOfGM != undefined && (
+                  <TextField 
+                    variant='filled'
+                    label='QuorumOfGM'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ toPercent(newGR.quorumOfGM)}
+                  />
+                )}
+
                 {newGR?.maxNumOfDirectors != undefined && (
                   <TextField 
                     variant='filled'
@@ -355,10 +358,90 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newGR.quorumOfBoardMeeting.toString()}
+                    value={ toPercent(newGR.quorumOfBoardMeeting)}
                   />
                 )}
 
+              </Stack>
+
+              <Collapse in={ editable && !finalized }>
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                  <TextField 
+                    variant='filled'
+                    label='MaxQtyOfMembers'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      maxQtyOfMembers: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.maxQtyOfMembers?.toString() } 
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='QuorumOfGM'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      quorumOfGM: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.quorumOfGM }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='MaxNumOfDirectors'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      maxNumOfDirectors: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.maxNumOfDirectors }
+
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='TenureMonOfBoard'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      tenureMonOfBoard: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.tenureMonOfBoard } 
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='QuorumOfBoardMeeting'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      quorumOfBoardMeeting: parseInt(e.target.value),
+                    }))}
+                    value={ objGR?.quorumOfBoardMeeting }   
+                  />
+
+                </Stack>
+              </Collapse>
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                 {newGR?.establishedDate != undefined && (
                   <TextField 
                     variant='filled'
@@ -407,7 +490,7 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newGR.annualPenaltyRateForLatePayInCap.toString()}
+                    value={ toPercent(newGR.annualPenaltyRateForLatePayInCap)}
                   />
                 )}
 
@@ -415,49 +498,6 @@ export function SetGovernanceRule({ addr, finalized }: ContractEditProps) {
 
               <Collapse in={ editable && !finalized }>
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-                  <TextField 
-                    variant='filled'
-                    label='MaxNumOfDirectors'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      maxNumOfDirectors: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.maxNumOfDirectors }
-
-                  />
-
-                  <TextField 
-                    variant='filled'
-                    label='TenureMonOfBoard'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      tenureMonOfBoard: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.tenureMonOfBoard } 
-                  />
-
-                  <TextField 
-                    variant='filled'
-                    label='QuorumOfBoardMeeting'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      quorumOfBoardMeeting: parseInt(e.target.value),
-                    }))}
-                    value={ objGR?.quorumOfBoardMeeting }   
-                  />
 
                   <DateTimeField
                     label='EstablishedDate'

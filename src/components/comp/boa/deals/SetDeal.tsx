@@ -352,19 +352,19 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
             <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-              {newDeal && newDeal.head.typeOfDeal != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='TypeOfDeal'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ TypeOfDeal[newDeal.head.typeOfDeal - 1] }
-                  defaultValue={ TypeOfDeal[0] }
-                />
-              )}
+            {newDeal?.head.typeOfDeal != undefined && (
+              <TextField 
+                variant='filled'
+                label='TypeOfDeal'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                defaultValue={ TypeOfDeal[0] }
+                value={ TypeOfDeal[newDeal.head.typeOfDeal - 1] }
+              />
+            )}
 
               {newDeal?.head.classOfShare != undefined && (
                 <TextField 

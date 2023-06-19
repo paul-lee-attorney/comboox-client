@@ -27,6 +27,7 @@ import {
   usePrepareRegisterOfMembersSetDirectKeeper,
   useRegisterOfMembersSetDirectKeeper,
   usePrepareBookOfSharesDecreaseCapital,
+  useBookOfSharesDecreaseCapital,
 } from '../../../generated';
 
 import { BigNumber } from 'ethers';
@@ -41,6 +42,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { Share, codifyHeadOfShare, getSharesList } from '../bos/bookOfShares';
 import { dateParser } from '../../../scripts/toolsKit';
 import { SharesList } from '../../../components/comp/bos/SharesList';
+import { DelShare } from '../../../components/comp/bos/DelShare';
 
 
 const defaultShare: Share = {
@@ -154,6 +156,32 @@ function InitBosPage() {
     write: setBosDK
   } = useBookOfSharesSetDirectKeeper(setBosDKConfig);
 
+  const {
+    config: delShareConfig
+  } = usePrepareBookOfSharesDecreaseCapital({
+    address: boox[7],
+    args: share.head.seqOfShare > 0
+        ? [BigNumber.from(share.head.seqOfShare), share.body.paid, share.body.par]
+        : undefined,
+  })
+
+  const {
+    isLoading: delShareLoading,
+    write: delShare
+  } = useBookOfSharesDecreaseCapital({
+    ...delShareConfig,
+    onSuccess(){
+      setShare(v => ({
+        ...v,
+        head: {
+          ...v.head,
+          seqOfShare: 0,
+        }
+      }));
+      getSharenumberList();
+    }
+  })
+
   return (
     <>
       <br />
@@ -168,6 +196,19 @@ function InitBosPage() {
         </Toolbar>
         
         <Stack direction={'row'} sx={{ alignItems:'center' }} >
+
+          <Button
+            sx={{m:1, mx:3, px:3, py:1}}
+            variant='contained'
+            startIcon={<AddCircle />}
+            disabled={!issueShare || issueShareLoading}
+            onClick={()=>issueShare?.()}
+            size="small"
+          >
+            Add Share
+          </Button>
+
+          <Divider orientation='vertical' sx={{m:2}} flexItem />
 
           <Stack direction={'column'} sx={{m:1, p:1, justifyContent:'center'}}>
 
@@ -335,15 +376,42 @@ function InitBosPage() {
 
           </Stack>
 
-          <Divider orientation='vertical' sx={{m:1}} />
+          <Divider orientation='vertical' sx={{m:2}} flexItem />
 
-          <Button
-            disabled={!issueShare || issueShareLoading}
-            variant='contained'
-            onClick={()=>issueShare?.()}
-          >
-            Add Share
-          </Button>
+          <Stack direction='row' sx={{m:1, p:1, alignItems:'center'}}>
+
+            <TextField
+              variant="outlined"
+              label="SeqOfShare"
+              sx={{
+                m:1,
+                minWidth: 218
+              }}
+              onChange={(e)=>setShare(v => ({
+                ...v,
+                head: {
+                  ...v.head,
+                  seqOfShare: parseInt(e.target.value),
+                }
+              }))}
+              value={ share.head.seqOfShare.toString() }
+              size='small'
+            />
+
+            <Button
+              sx={{m:1, p:1}}
+              variant='contained'
+              endIcon={<RemoveCircle />}
+              disabled={ !delShare || delShareLoading }
+              onClick={()=>delShare?.()}
+              size="small"
+            >
+              Remove Share
+            </Button>
+
+          </Stack>
+
+          {/* <DelShare getList={getSharenumberList} /> */}
 
         </Stack>
 

@@ -101,7 +101,7 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
     }
 
     output.push(item);
-    console.log('item: ', item);
+    // console.log('item: ', item);
 
     len--;
   }

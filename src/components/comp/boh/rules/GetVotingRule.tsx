@@ -5,8 +5,7 @@ import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { bookOfShaABI, useRegisterOfMembersRemoveDirectKeeperEvent, useShareholdersAgreementGetRule } from "../../../../generated";
 import { BigNumber } from "ethers";
-import { authorities, vrParser } from "./SetVotingRule";
-import { VotingRule } from "./VotingRules";
+import { VotingRule, authorities, vrParser } from "./SetVotingRule";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { ListAlt, Rule } from "@mui/icons-material";
 import { toPercent } from "../../../../scripts/toolsKit";
@@ -48,7 +47,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
     } 
   });
 
-  let objVr:VotingRule | undefined = hexVr 
+  let objVr: VotingRule | undefined = hexVr 
         ? vrParser(hexVr)
         : undefined;
 

@@ -12,9 +12,7 @@ import {
   OutlinedInput,
 } from '@mui/material';
 
-import { Approval, Close, EditNote, PersonRemove }  from '@mui/icons-material';
-
-import { readContract } from '@wagmi/core';
+import { Close, PersonRemove }  from '@mui/icons-material';
 
 import { 
   accessControlABI,
@@ -24,19 +22,9 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 import { BigNumber } from 'ethers';
+import { hasRole } from '../../../queries/accessControl';
 
 const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
-
-async function isAttorney(addr: HexType, acct: string): Promise<boolean> {
-  let flag = await readContract({
-    address: addr,
-    abi: accessControlABI,
-    functionName: 'hasRole',
-    args: [ATTORNEYS, BigNumber.from(acct)],
-  });
-
-  return flag;
-}
 
 export function RemoveAttorney({ addr }: ContractProps) {
 
@@ -62,7 +50,7 @@ export function RemoveAttorney({ addr }: ContractProps) {
 
   useEffect(() => {
     if (acct) 
-      isAttorney(addr, acct).then(flag => {
+      hasRole(addr, ATTORNEYS, acct).then(flag => {
         setFlag(flag);
         setOpen(true);
       });

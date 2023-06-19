@@ -18,27 +18,7 @@ import {
 import { 
   SetVotingRule, 
 } from '../../..';
-
-export interface VotingRule {
-  seqOfRule: number;
-  qtyOfSubRule: number;
-  seqOfSubRule: number;
-  authority: number;
-  headRatio: number;
-  amountRatio: number;
-  onlyAttendance: boolean;
-  impliedConsent: boolean;
-  partyAsConsent: boolean;
-  againstShallBuy: boolean;
-  shaExecDays: number;
-  shaConfirmDays: number;
-  reconsiderDays: number;
-  votePrepareDays: number;
-  votingDays: number;
-  execDaysForPutOpt: number;
-  vetoers: readonly number[];
-  para: number;
-}
+import { VotingRule } from "./SetVotingRule";
 
 export interface VotingRuleWrap {
   subTitle: string,
@@ -81,8 +61,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: false,
         shaExecDays: 15,
         shaConfirmDays: 15,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],
@@ -105,8 +85,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: true,
         shaExecDays: 15,
         shaConfirmDays: 15,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],
@@ -153,8 +133,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: false,
         shaExecDays: 15,
         shaConfirmDays: 15,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],
@@ -177,8 +157,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: true,
         shaExecDays: 15,
         shaConfirmDays: 15,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],
@@ -201,8 +181,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: false,
         shaExecDays: 15,
         shaConfirmDays: 15,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],
@@ -225,8 +205,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: false,
         shaExecDays: 15,
         shaConfirmDays: 15,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],
@@ -249,8 +229,8 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
         againstShallBuy: false,
         shaExecDays: 0,
         shaConfirmDays: 0,
-        reconsiderDays: 28,
-        votePrepareDays: 2,
+        reconsiderDays: 14,
+        votePrepareDays: 1,
         votingDays: 1,
         execDaysForPutOpt: 0,
         vetoers: [0,0],

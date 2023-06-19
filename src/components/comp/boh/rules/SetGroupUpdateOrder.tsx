@@ -10,6 +10,10 @@ import {
   Box,
   Collapse,
   Toolbar,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from '@mui/material';
 
 import { Bytes32Zero, HexType } from '../../../../interfaces';
@@ -162,7 +166,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
             {newGuo?.addMember != undefined && (
               <TextField 
                 variant='filled'
-                label='AddMember'
+                label='AddMember ?'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
@@ -232,24 +236,23 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                 value={ objGuo?.seqOfSubRule }
               />
 
-              <Box sx={{ minWidth: 218, m: 1 }} >
-                <FormControlLabel 
-                  label='AddMember'
-                  control={
-                    <Checkbox 
-                      sx={{
-                        m: 1,
-                        height: 64,
-                      }}
-                      onChange={e => setObjGuo(v => ({
-                        ...v,
-                        addMember: e.target.checked,
-                      }))}
-                      checked={ objGuo?.addMember }
-                    />
-                  }
-                />
-              </Box>
+              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="addMember-label">AddMember ?</InputLabel>
+                <Select
+                  labelId="addMember-label"
+                  id="addMember-select"
+                  value={ objGuo?.addMember ? '1' : '0' }
+                  onChange={(e) => setObjGuo((v) => ({
+                    ...v,
+                    addMember: e.target.value == '1',
+                  }))}
+
+                  label="AddMember ?"
+                >
+                  <MenuItem value={ '1' } > True </MenuItem>
+                  <MenuItem value={ '0' } > False </MenuItem>
+                </Select>
+              </FormControl>
 
               <TextField 
                 variant='filled'

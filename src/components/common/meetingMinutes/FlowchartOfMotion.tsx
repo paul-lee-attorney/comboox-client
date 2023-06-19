@@ -1,5 +1,4 @@
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Toolbar } from "@mui/material";
-import { Motion } from "../../../pages/comp/bog/bookOfGM";
+import { Box, Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { GetVotingRule } from "../../comp/boh/rules/GetVotingRule";
 import { GetPosition } from "../../comp/bod/GetPosition";
@@ -10,21 +9,22 @@ import { filesFolderABI } from "../../../generated";
 import { readContract } from "@wagmi/core";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { ProposeMotionOfGm } from "../../comp/bog/ProposeMotionOfGm";
+import { ProposeMotionToGeneralMeeting } from "../../comp/bog/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "../../comp/bog/CastVoteOfGm";
-import { VoteCase, getVoteResult } from "../../comp/bog/VoteForDocOfGm";
 import { BallotsList } from "./BallotsList";
+import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
+import { VoteCountingOfGm } from "../../comp/bog/VoteCountingOfGm";
 
 export interface FlowchartOfMotionProps{
   open: boolean,
   motion: Motion,
   setOpen: (flag: boolean)=>void,
-  obtainMotionsList: ()=>any,
+  obtainMotionsList: (minutes:HexType)=>any,
 }
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
-async function getSnOfFile(folder: HexType, addr: HexType): Promise<HexType>{
+export async function getSnOfFile(folder: HexType, addr: HexType): Promise<HexType>{
   let sn:HexType = await readContract({
     address: folder,
     abi: filesFolderABI,
@@ -41,7 +41,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
   useEffect(()=>{
-    getVoteResult(motion.head.seqOfMotion, boox[3]).then(
+    getVoteResult(boox[3], motion.head.seqOfMotion).then(
       list => setVoteResult(list)
     )
   }, [motion, boox]);
@@ -59,6 +59,23 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
       );
     }
   }, [motion, addrOfDoc, boox]);
+
+  const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
+
+  useEffect(()=>{
+    // console.log('motion:', motion);
+    let minutes: HexType =
+        motion.votingRule.authority == 1
+        ? boox[3] : boox[2];
+    voteEnded(minutes, motion.head.seqOfMotion).then(
+      flag => {
+        // console.log('flag: ', flag);          
+        setVoteIsEnd(flag);
+      }
+    );
+  }, [motion, boox ])
+
+  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
 
   return (
     <Dialog
@@ -284,7 +301,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                  <ProposeMotionOfGm seqOfMotion={motion.head.seqOfMotion.toString()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -292,11 +309,15 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
               {motion.body.state == 2 && (
                 <tr>
                   <td colSpan={4}>
-                  <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <Collapse in={voteIsEnd == false}>
+                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    </Collapse>
+                    <Collapse in={voteIsEnd == true}>
+                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} />
+                    </Collapse>
                   </td>
                 </tr>
               )}
-
 
             </tbody>
           </table>

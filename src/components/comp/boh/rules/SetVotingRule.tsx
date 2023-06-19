@@ -18,13 +18,34 @@ import { AddRule } from './AddRule';
 
 import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { longSnParser, toPercent } from '../../../../scripts/toolsKit';
-import { VotingRule, VotingRuleWrap } from './VotingRules';
+import { VotingRuleWrap } from './VotingRules';
 
 interface SetVotingRuleProps {
   sha: HexType,
   defaultRule: VotingRuleWrap,
   seq: number,
   finalized: boolean,
+}
+
+export interface VotingRule {
+  seqOfRule: number;
+  qtyOfSubRule: number;
+  seqOfSubRule: number;
+  authority: number;
+  headRatio: number;
+  amountRatio: number;
+  onlyAttendance: boolean;
+  impliedConsent: boolean;
+  partyAsConsent: boolean;
+  againstShallBuy: boolean;
+  shaExecDays: number;
+  shaConfirmDays: number;
+  reconsiderDays: number;
+  votePrepareDays: number;
+  votingDays: number;
+  execDaysForPutOpt: number;
+  vetoers: readonly number[];
+  para: number;
 }
 
 export function vrParser(hexVr: HexType):VotingRule {
@@ -76,7 +97,7 @@ export function vrCodifier(objVr: VotingRule ): HexType {
   return hexVr;
 }
 
-export const authorities:string[] = ['Null', 'GeneralMeeting', 'Board', 'Board & GeneralMeeting'];
+export const authorities:string[] = ['GeneralMeeting', 'Board'];
   
 export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRuleProps) {
 
@@ -185,7 +206,8 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
                   m:1,
                   minWidth: 218,
                 }}
-                value={ authorities[newVR.authority] }
+                defaultValue={ authorities[0] }
+                value={ authorities[newVR.authority - 1] }
               />
             )}
 
@@ -502,7 +524,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
             {newVR?.shaConfirmDays != undefined && (
               <TextField 
                 variant='filled'
-                label='ReviewDays'
+                label='ShaConfirmDays'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
@@ -587,7 +609,7 @@ export function SetVotingRule({ sha, defaultRule, seq, finalized }: SetVotingRul
 
               <TextField 
                 variant='filled'
-                label='ReviewDays'
+                label='ShaConfirmDays'
                 sx={{
                   m:1,
                   minWidth: 218,

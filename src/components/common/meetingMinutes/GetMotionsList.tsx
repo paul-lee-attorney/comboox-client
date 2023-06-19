@@ -141,8 +141,8 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
         <DataGrid 
           initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
           pageSizeOptions={[5, 10, 15, 20]} 
-          getRowId={row => row.head.seqOfMotion } 
           rows={ list } 
+          getRowId={(row:Motion) => row.head.seqOfMotion.toString() } 
           columns={ columns }
           disableRowSelectionOnClick
           onRowClick={ handleRowClick }

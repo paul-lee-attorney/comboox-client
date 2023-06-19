@@ -47,34 +47,7 @@ import {
 import { BigNumber } from "ethers";
 
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-
-export interface StrSig {
-  signer: number,
-  sigDate: number,
-  blocknumber: string,
-}
-
-export interface ParasOfSigPage {
-  circulateDate: number,
-  established: boolean,
-  counterOfBlanks: number,
-  counterOfSigs: number,
-  signingDays: number,
-  closingDays: number,
-}
-
-function parseParasOfPage(data: any): ParasOfSigPage {
-  let output: ParasOfSigPage = {
-    circulateDate: data.sigDate,
-    established: data.flag,
-    counterOfBlanks: data.para,
-    counterOfSigs: data.arg,
-    signingDays: data.seq,
-    closingDays: data.attr,
-  }
-  return output;
-}
-
+import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../queries/sigPage";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly BigNumber[] ): Promise<StrSig[]> {
 
@@ -94,6 +67,7 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
       signer: parties[len-1].toNumber(),
       sigDate: item.sig.sigDate,
       blocknumber: item.sig.blocknumber.toString(),
+      sigHash: item.sigHash,
     });
 
     len--;
@@ -110,15 +84,15 @@ interface SigPageProps {
 
 
 export function Signatures({ addr, initPage, finalized }: SigPageProps) {
-  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
+  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
 
   const {
     refetch: getParasOfPage
   } = useSigPageGetParasOfPage({
     address: addr,
     args: [initPage],
-    onSuccess(data) {
-      setParasOfPage(parseParasOfPage(data));
+    onSuccess(paras) {
+      setParasOfPage(parseParasOfPage(paras));
     }
   })
 
@@ -157,12 +131,12 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   const [ buyerSigs, setBuyerSigs ] = useState<StrSig[]>();
 
   const {
-    refetch: refetchGetBuyers
+    refetch: getBuyers
   } = useSigPageGetBuyers({
     address: addr,
     args: [true],
-    onSuccess(data) {
-      getSigsOfRole(addr, true, data).
+    onSuccess(buyers) {
+      getSigsOfRole(addr, true, buyers).
         then(sigs => setBuyerSigs(sigs));
     }
   });
@@ -172,12 +146,12 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   const [ sellerSigs, setSellerSigs ] = useState<StrSig[]>();  
 
   const {
-    refetch: refetchGetSellers
+    refetch: getSellers
   } = useSigPageGetSellers ({
     address: addr,
     args: [true],
-    onSuccess(data) {
-      getSigsOfRole(addr, true, data).
+    onSuccess(sellers) {
+      getSigsOfRole(addr, true, sellers).
         then(sigs => setSellerSigs(sigs));
     }
   });
@@ -208,8 +182,8 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
     ...addBlankConfig,
     onSuccess() {
       getParasOfPage();
-      refetchGetSellers();
-      refetchGetBuyers();
+      getSellers();
+      getBuyers();
     }
   });
 
@@ -232,8 +206,8 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
     ...removeBlankConfig,
     onSuccess() {
       getParasOfPage();
-      refetchGetSellers();
-      refetchGetBuyers();
+      getSellers();
+      getBuyers();
     }
   });
 
@@ -474,43 +448,58 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                 color="primary" 
               />
 
-              {sellerSigs?.map(v => (              
-                <Stack key={ v.signer } direction={'row'} sx={{ alignItems:'center' }} > 
+              {sellerSigs?.map(v => (
+                <Paper key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+              
+                  <Stack  direction={'row'} sx={{ alignItems:'center' }} > 
+
+                    <TextField 
+                      variant='filled'
+                      label='UserNo.'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ longSnParser(v.signer.toString()) }
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='SigDate'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ dateParser(v.sigDate) }
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='Blocknumber'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ longSnParser(v.blocknumber) }
+                    />
+
+                  </Stack>
 
                   <TextField 
                     variant='filled'
-                    label='UserNo.'
+                    label='SigHash'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
-                      minWidth: 218,
+                      minWidth: 688,
                     }}
-                    value={ longSnParser(v.signer.toString()) }
+                    value={ v.sigHash }
                   />
 
-                  <TextField 
-                    variant='filled'
-                    label='SigDate'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ dateParser(v.sigDate) }
-                  />
-
-                  <TextField 
-                    variant='filled'
-                    label='Blocknumber'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(v.blocknumber) }
-                  />
-
-                </Stack>
+                </Paper>
               ))}
 
             </Paper>
@@ -523,43 +512,59 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                 color="success" 
               />
 
-              {buyerSigs?.map(v => (              
-                <Stack key={ v.signer } direction={'row'} sx={{ alignItems:'center' }} > 
+              {buyerSigs?.map(v => (
+                <Paper key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+
+                  <Stack direction={'row'} sx={{ alignItems:'center' }} > 
+
+                    <TextField 
+                      variant='filled'
+                      label='UserNo.'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ longSnParser(v.signer.toString()) }
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='SigDate'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ dateParser(v.sigDate) }
+                    />
+
+                    <TextField 
+                      variant='filled'
+                      label='Blocknumber'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ longSnParser(v.blocknumber) }
+                    />
+
+                  </Stack>
 
                   <TextField 
                     variant='filled'
-                    label='UserNo.'
+                    label='SigHash'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
-                      minWidth: 218,
+                      minWidth: 688,
                     }}
-                    value={ longSnParser(v.signer.toString()) }
+                    value={ v.sigHash }
                   />
 
-                  <TextField 
-                    variant='filled'
-                    label='SigDate'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ dateParser(v.sigDate) }
-                  />
+                </Paper>
 
-                  <TextField 
-                    variant='filled'
-                    label='Blocknumber'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(v.blocknumber) }
-                  />
-
-                </Stack>
               ))}
 
             </Paper>
