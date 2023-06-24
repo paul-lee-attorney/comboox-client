@@ -22,7 +22,7 @@ export type ContractProps = {
 
 export interface ContractEditProps {
   addr: HexType,
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
 export interface SigPageProps {
@@ -33,20 +33,12 @@ export interface SigPageProps {
 export interface ShaRuleInputProps{
   sha: HexType,
   seqList: number[],
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
 export interface FileHistoryProps {
   addr: HexType,
   setNextStep: (nextStep:number ) => void,
-}
-
-
-export interface SetShaRuleProps {
-  sha: HexType,
-  qty: number,
-  seq: number,
-  finalized: boolean,
 }
 
 

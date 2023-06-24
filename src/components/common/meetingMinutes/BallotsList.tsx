@@ -153,7 +153,10 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
               label={
                 attitudes[attitude-1].name + 
                 ' (' + voteCase.sumOfHead.toString() + '/' + allVote.sumOfHead.toString() + ') ' + 
-                `${Math.round(voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber())}%`              
+                `${ allVote.sumOfWeight.gt(0)
+                  ? Math.round(voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber())
+                  : ''
+                }%`              
               }
               sx={{mx:1}}
             /> 

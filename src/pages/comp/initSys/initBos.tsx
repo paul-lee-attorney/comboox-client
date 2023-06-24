@@ -189,7 +189,7 @@ function InitBosPage() {
       <br />
       <br />
 
-      <Paper sx={{m:1, p:1, border:1, borderColor:'divider', width:'90%' }} >
+      <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'90%' }} >
 
         <Toolbar>
           <h3>Initiate BookOfShares</h3>

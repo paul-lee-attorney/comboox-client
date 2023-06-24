@@ -89,6 +89,7 @@ export function AppointAttorney({ addr }: ContractProps) {
               </InputAdornment>
             }
             label='AppointAttorney'
+            sx={{ height:50 }}
             onChange={(e) => setAcct(e.target.value)}
           />
         </FormControl>
@@ -110,7 +111,7 @@ export function AppointAttorney({ addr }: ContractProps) {
 
             variant='outlined' 
             severity={ flag ? "success" : "warning"}
-            sx={{ height: 55,  m: 1, }} 
+            sx={{ height: 50,  m: 1, }} 
           >
             { flag ? 'Is Attorney' : 'Not Attorney' } 
           </Alert>

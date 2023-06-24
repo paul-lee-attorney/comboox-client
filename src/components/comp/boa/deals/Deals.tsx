@@ -8,10 +8,10 @@ import { SetTypeOfIa } from "./SetTypeOfIa";
 interface DealsProps{
   ia: HexType,
   seqList: number[],
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
-export function Deals({ia, seqList, finalized}: DealsProps) {
+export function Deals({ia, seqList, isFinalized}: DealsProps) {
 
   const [ cp, setCp ] = useState(seqList);
 
@@ -32,7 +32,7 @@ export function Deals({ia, seqList, finalized}: DealsProps) {
   }
 
   return(
-    <Paper sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
+    <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
       <Box sx={{ width:1680 }}>
 
         <Stack direction={'row'} sx={{ alignItems:'center' }}>
@@ -40,7 +40,7 @@ export function Deals({ia, seqList, finalized}: DealsProps) {
             <h4>Deals</h4>
           </Toolbar>
 
-          {!finalized && (
+          {!isFinalized && (
             <>
               <IconButton 
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
@@ -58,14 +58,14 @@ export function Deals({ia, seqList, finalized}: DealsProps) {
                 <RemoveCircle/>
               </IconButton>
 
-              <SetTypeOfIa  ia={ia} finalized={ finalized } />
+              <SetTypeOfIa  ia={ia} isFinalized={ isFinalized } />
             </>
           )}
 
         </Stack>
 
         {cp.map((v)=> (
-          <SetDeal key={ v } ia={ ia } seq={ v } finalized={ finalized } />
+          <SetDeal key={ v } ia={ ia } seq={ v } isFinalized={ isFinalized } />
         ))}
 
       </Box>

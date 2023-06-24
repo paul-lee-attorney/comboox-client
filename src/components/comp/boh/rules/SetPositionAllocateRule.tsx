@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import dayjs from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers';
@@ -15,12 +15,18 @@ import {
   MenuItem,
   Collapse,
   Toolbar,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 
 import { AddRule } from './AddRule';
 
-import { Bytes32Zero, HexType, SetShaRuleProps } from '../../../../interfaces';
+import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { dateParser, longSnParser } from '../../../../scripts/toolsKit';
+import { getRule } from '../../../../queries/sha';
+import { ListAlt } from '@mui/icons-material';
 
 export interface PosAllocateRule {
   seqOfRule: number ;
@@ -37,7 +43,6 @@ export interface PosAllocateRule {
   argu: number;
   data: number; 
 }
-
 
 const titleOfPositions: string[] = ['Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
 
@@ -80,18 +85,24 @@ export function prParser(hexRule: HexType): PosAllocateRule {
   return rule;
 }
 
-export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRuleProps) {
+interface SetPositionAllocateRuleProps {
+  sha: HexType;
+  seq: number;
+  isFinalized: boolean;
+}
+
+export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAllocateRuleProps) {
 
   const defaultRule: PosAllocateRule = {
     seqOfRule: seq, 
-    qtyOfSubRule: 0,
-    seqOfSubRule: 0,
+    qtyOfSubRule: seq - 255,
+    seqOfSubRule: seq - 255,
     removePos: false,
     seqOfPos: 0,
-    titleOfPos: 1,
+    titleOfPos: 4,
     nominator: 0,
     titleOfNominator: 1,
-    seqOfVR: 0,
+    seqOfVR: 9,
     endDate: 0,
     para: 0,
     argu: 0,
@@ -100,311 +111,346 @@ export function SetPositionAllocateRule({ sha, qty, seq, finalized }: SetShaRule
   
   const [ objPR, setObjPR ] = useState<PosAllocateRule>(defaultRule); 
 
-  let hexPR:HexType = prCodifier(objPR);
-
-  const [ newHexPR, setNewHexPr ] = useState<HexType>(Bytes32Zero);
-
-  let newPR: PosAllocateRule = prParser(newHexPR);
+  const [ newPR, setNewPR ] = useState<PosAllocateRule>(defaultRule);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
+  const [ open, setOpen ] = useState(false);
+
+
+  const obtainRule = async ()=>{
+    let hexRule = await getRule(sha, objPR.seqOfRule);
+    let objRule: PosAllocateRule = prParser(hexRule);
+    setNewPR(objRule);    
+  }
+
+  useEffect(()=>{
+    const obtainInitRule = async ()=>{
+      let hexRule = await getRule(sha, seq);
+      let objRule: PosAllocateRule = prParser(hexRule);
+      setNewPR(objRule);    
+    }
+    obtainInitRule();
+  })
 
   return (
     <>
-      <Paper sx={{
-        alignContent:'center', 
-        justifyContent:'center', 
-        p:1, m:1, 
-        border: 1, 
-        borderColor:'divider' 
-        }} 
+      <Button
+        // disabled={ !newGR }
+        variant="outlined"
+        startIcon={<ListAlt />}
+        fullWidth={true}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
       >
-        <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+        Rule No. { seq } 
+      </Button>
 
-          <Box sx={{ minWidth:600 }} >
-            <Toolbar>
-              <h4>Rule No. { seq.toString() } </h4>
-            </Toolbar>
-          </Box>
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
 
-          <AddRule 
-            sha={ sha } 
-            rule={ hexPR } 
-            setUpdatedRule={setNewHexPr} 
-            editable={editable} 
-            setEditable={setEditable} 
-            finalized={finalized}
-          />
-        </Stack>
+        <DialogContent>
 
-        <Stack 
-          direction={'column'} 
-          spacing={1} 
-        >
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            <TextField 
-              variant='filled'
-              label='SeqOfRule'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newPR.seqOfRule.toString() }
-            />
+          <Paper elevation={3} sx={{
+            alignContent:'center', 
+            justifyContent:'center', 
+            p:1, m:1, 
+            border: 1, 
+            borderColor:'divider' 
+            }} 
+          >
+            <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
 
-            <TextField 
-              variant='filled'
-              label='QtyOfSubRule'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newPR.qtyOfSubRule.toString() }
-            />
+              <Box sx={{ minWidth:600 }} >
+                <Toolbar sx={{ textDecoration:'underline' }} >
+                  <h4>Rule No. { seq.toString() } - { titleOfPositions[newPR.titleOfPos - 1] } </h4>
+                </Toolbar>
+              </Box>
 
-            <TextField 
-              variant='filled'
-              label='RemovePos ?'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={newPR.removePos ? 'True' : 'False'}
-            />
-
-            <TextField 
-              variant='filled'
-              label='SeqOfPosition'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newPR.seqOfPos.toString() }
-            />
-
-            <TextField 
-              variant='filled'
-              label='TitleOfPos'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ titleOfPositions[newPR.titleOfPos - 1] }
-              defaultValue={ titleOfPositions[0] }
-            />
-
-            <TextField 
-              variant='filled'
-              label='EndDate'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ dateParser(newPR.endDate) }
-            />
-
-          </Stack>
-
-          <Collapse in={ editable && !finalized } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <TextField 
-                variant='filled'
-                label='SeqOfRule'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjPR((v) => ({
-                  ...v,
-                  seqOfRule: parseInt(e.target.value),
-                }))}
-                value={ objPR.seqOfRule }              
+              <AddRule 
+                sha={ sha } 
+                rule={ prCodifier(objPR) } 
+                refreshRule={obtainRule} 
+                editable={editable} 
+                setEditable={setEditable} 
+                isFinalized={isFinalized}
               />
+            </Stack>
 
-              <TextField 
-                variant='filled'
-                label='QtyOfSubRule'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjPR((v) => ({
-                  ...v,
-                  qtyOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objPR.qtyOfSubRule }              
-              />
+            <Stack 
+              direction={'column'} 
+              spacing={1} 
+            >
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="removePos-label">RemovePos ?</InputLabel>
-                <Select
-                  labelId="removePos-label"
-                  id="removePos-select"
-                  value={ objPR.removePos ? '1' : '0' }
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    removePos: e.target.value == '1',
-                  }))}
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                  
+                <TextField 
+                  variant='filled'
+                  label='SeqOfRule'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newPR.seqOfRule.toString() }
+                />
 
-                  label="RemovePos ?"
-                >
-                  <MenuItem value={ '1' } > True </MenuItem>
-                  <MenuItem value={ '0' } > False </MenuItem>
-                </Select>
-              </FormControl>
+                <TextField 
+                  variant='filled'
+                  label='QtyOfSubRule'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newPR.qtyOfSubRule.toString() }
+                />
 
-              <TextField 
-                variant='filled'
-                label='SeqOfPos'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjPR((v) => ({
-                  ...v,
-                  seqOfPos: parseInt(e.target.value),
-                }))}
-                value={ objPR.seqOfPos }              
-              />
+                <TextField 
+                  variant='filled'
+                  label='RemovePos ?'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newPR.removePos ? 'True' : 'False'}
+                />
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
-                <Select
-                  labelId="titleOfPos-label"
-                  id="titleOfPos-select"
-                  value={ objPR.titleOfPos == undefined ? '' : objPR.titleOfPos }
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    titleOfPos: parseInt(e.target.value.toString()),
-                  }))}
+                <TextField 
+                  variant='filled'
+                  label='SeqOfPosition'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newPR.seqOfPos.toString() }
+                />
 
-                  label="TitleOfPos"
-                >
-                  { titleOfPositions.map( (v, i) => (
-                    <MenuItem key={v} value={i+1}> { v } </MenuItem>
-                  ))}
+                <TextField 
+                  variant='filled'
+                  label='TitleOfPos'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ titleOfPositions[newPR.titleOfPos - 1] }
+                />
 
-                </Select>
-              </FormControl>
+                <TextField 
+                  variant='filled'
+                  label='EndDate'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ dateParser(newPR.endDate) }
+                />
 
-              <DateTimeField
-                label='EndDate'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }} 
-                value={ dayjs.unix(objPR.endDate) }
-                onChange={(date) => setObjPR((v) => ({
-                  ...v,
-                  endDate: date ? date.unix() : 0,
-                }))}
-                format='YYYY-MM-DD HH:mm:ss'
-              />
+              </Stack>
+
+              <Collapse in={ editable && !isFinalized } >
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                  <TextField 
+                    variant='filled'
+                    label='SeqOfRule'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      seqOfRule: parseInt( e.target.value ),
+                    }))}
+                    value={ objPR.seqOfRule }              
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='QtyOfSubRule'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      qtyOfSubRule: parseInt(e.target.value),
+                    }))}
+                    value={ objPR.qtyOfSubRule }              
+                  />
+
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="removePos-label">RemovePos ?</InputLabel>
+                    <Select
+                      labelId="removePos-label"
+                      id="removePos-select"
+                      value={ objPR.removePos ? '1' : '0' }
+                      onChange={(e) => setObjPR((v) => ({
+                        ...v,
+                        removePos: e.target.value == '1',
+                      }))}
+                    >
+                      <MenuItem value={ '1' } > True </MenuItem>
+                      <MenuItem value={ '0' } > False </MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <TextField 
+                    variant='filled'
+                    label='SeqOfPos'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      seqOfPos: parseInt(e.target.value),
+                    }))}
+                    value={ objPR.seqOfPos }              
+                  />
+
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
+                    <Select
+                      labelId="titleOfPos-label"
+                      id="titleOfPos-select"
+                      value={ objPR.titleOfPos }
+                      onChange={(e) => setObjPR((v) => ({
+                        ...v,
+                        titleOfPos: parseInt(e.target.value.toString()),
+                      }))}
+                    >
+                      { titleOfPositions.map( (v, i) => (
+                        <MenuItem key={v} value={i+1}> { v } </MenuItem>
+                      ))}
+
+                    </Select>
+                  </FormControl>
+
+                  <DateTimeField
+                    label='EndDate'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }} 
+                    value={ dayjs.unix(objPR.endDate) }
+                    onChange={(date) => setObjPR((v) => ({
+                      ...v,
+                      endDate: date ? date.unix() : 0,
+                    }))}
+                    format='YYYY-MM-DD HH:mm:ss'
+                  />
+
+                </Stack>
+              </Collapse>
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                <TextField 
+                  variant='filled'
+                  label='Nominator'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longSnParser(newPR.nominator.toString())}
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='titleOfNominator'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ titleOfNominator[newPR.titleOfNominator - 1]}
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='SeqOfVR'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={newPR.seqOfVR.toString()}
+                />
+
+              </Stack>
+
+              <Collapse in={ editable && !isFinalized } >
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                  <TextField 
+                    variant='filled'
+                    label='Nominator'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      nominator: parseInt(e.target.value),
+                    }))}
+                    value={ objPR.nominator }                                        
+                  />
+
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
+                    <Select
+                      labelId="titleOfNominator-label"
+                      id="titleOfNominator-select"
+                      value={ objPR.titleOfNominator == undefined ? '' : objPR.titleOfNominator }
+                      onChange={(e) => setObjPR((v) => ({
+                        ...v,
+                        titleOfNominator: parseInt(e.target.value.toString()),
+                      }))}
+                    >
+                      { titleOfNominator.map( (v, i) => (
+                        <MenuItem key={v} value={i+1}> { v } </MenuItem>
+                      ))}
+
+                    </Select>
+                  </FormControl>
+
+                  <TextField 
+                    variant='filled'
+                    label='seqOfVR'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      seqOfVR: parseInt(e.target.value),
+                    }))}
+                    value={ objPR.seqOfVR }                                        
+                  />
+
+                </Stack>
+              </Collapse>
 
             </Stack>
-          </Collapse>
+          </Paper>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+        </DialogContent>
 
-            <TextField 
-              variant='filled'
-              label='Nominator'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newPR.nominator.toString())}
-            />
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
 
-            <TextField 
-              variant='filled'
-              label='titleOfNominator'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ titleOfNominator[newPR.titleOfNominator - 1]}
-              defaultValue={ titleOfNominator[0] }
-            />
-
-            <TextField 
-              variant='filled'
-              label='SeqOfVR'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={newPR.seqOfVR.toString()}
-            />
-
-          </Stack>
-
-          <Collapse in={ editable && !finalized } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <TextField 
-                variant='filled'
-                label='Nominator'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjPR((v) => ({
-                  ...v,
-                  nominator: parseInt(e.target.value),
-                }))}
-                value={ objPR.nominator}                                        
-              />
-
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
-                <Select
-                  labelId="titleOfNominator-label"
-                  id="titleOfNominator-select"
-                  value={ objPR.titleOfNominator == undefined ? '' : objPR.titleOfNominator }
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    titleOfNominator: parseInt(e.target.value.toString()),
-                  }))}
-
-                  label="TitleOfNominator"
-                >
-                  { titleOfNominator.map( (v, i) => (
-                    <MenuItem key={v} value={i+1}> { v } </MenuItem>
-                  ))}
-
-                </Select>
-              </FormControl>
-
-              <TextField 
-                variant='filled'
-                label='seqOfVR'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjPR((v) => ({
-                  ...v,
-                  seqOfVR: parseInt(e.target.value),
-                }))}
-                value={ objPR.seqOfVR}                                        
-              />
-
-            </Stack>
-          </Collapse>
-
-        </Stack>
-      </Paper>
+      </Dialog>
     </> 
   )
 }

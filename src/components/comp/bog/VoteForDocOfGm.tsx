@@ -17,8 +17,6 @@ interface VoteForDocOfGmProps {
   setNextStep: (next: number) => void;
 }
 
-
-
 export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps) {
 
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();

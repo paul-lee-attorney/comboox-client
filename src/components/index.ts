@@ -7,7 +7,6 @@ export { Layout } from './common/Layout'
 
 export { GetFilesList } from './common/fileFolder/GetFilesList'
 
-
 export { SetGeneralCounsel } from './common/accessControl/SetGeneralCounsel'
 export { SetOwner } from './common/accessControl/SetOwner'
 export { LockContents } from './common/accessControl/LockContents'

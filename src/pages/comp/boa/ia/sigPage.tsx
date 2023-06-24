@@ -1,7 +1,6 @@
 import { useRouter } from "next/router";
 
 import { 
-  Box,
   Stack,
 } from "@mui/material";
 
@@ -15,7 +14,7 @@ import { useState } from "react";
 import { Finalized } from "../../../../components";
 
 function SigPage() {
-  const [finalized, setFinalized] = useState(false);
+  const [isFinalized, setFinalized] = useState(false);
 
   const { query } = useRouter();
   const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
@@ -31,7 +30,7 @@ function SigPage() {
       {ia != '0x' && (
         <>
           <Finalized addr={ ia } setFinalized={ setFinalized } />
-          <Signatures addr={ ia } initPage={ true } finalized={ finalized } />
+          <Signatures addr={ ia } initPage={ true } isFinalized={ isFinalized } />
         </>
       )}
 

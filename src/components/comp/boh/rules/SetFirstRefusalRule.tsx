@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   Stack,
@@ -14,13 +14,18 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 
 import { AddRule } from './AddRule'
 
 import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { longSnParser } from '../../../../scripts/toolsKit';
-import { VotingRule } from './VotingRules';
+import { getRule } from '../../../../queries/sha';
+import { ListAlt } from '@mui/icons-material';
 
 
 export interface FirstRefusalRule {
@@ -43,9 +48,8 @@ export interface FirstRefusalRuleWrap {
 
 interface SetFirstRefusalRuleProps {
   sha: HexType,
-  defaultRule: FirstRefusalRuleWrap,
   seq: number,
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
 export function frCodifier(rule: FirstRefusalRule): HexType {
@@ -90,363 +94,430 @@ export function frParser(hexRule: HexType ): FirstRefusalRule {
   return rule;
 } 
 
-export function SetFirstRefusalRule({ sha, defaultRule, seq, finalized }: SetFirstRefusalRuleProps) {
+const subTitles: string[] = [
+  '- For Capital Increase ',
+  '- For External Transfer ',
+  '- Newly Added First Refusal Rule', 
+]
 
-  let defFrWrap: FirstRefusalRuleWrap = defaultRule 
-      ? defaultRule
-      : { subTitle: '- Newly Added FirstRefusal Rule',
-          rule: {
-            seqOfRule: seq, 
-            qtyOfSubRule: seq - 511, 
-            seqOfSubRule: seq - 511,
-            typeOfDeal: 2,
-            membersEqual: true,
-            proRata: true,
-            basedOnPar: false,
-            rightholders: [0,0,0,0],
-            para: 0,
-            argu: 0,
-          },
-        };
+const defaultRules: FirstRefusalRule[] = [
+  { seqOfRule: 512, 
+    qtyOfSubRule: 2, 
+    seqOfSubRule: 1,
+    typeOfDeal: 1,
+    membersEqual: true,
+    proRata: true,
+    basedOnPar: false,
+    rightholders: [0,0,0,0],
+    para: 0,
+    argu: 0,
+  },
+  { seqOfRule: 513, 
+    qtyOfSubRule: 2, 
+    seqOfSubRule: 2,
+    typeOfDeal: 2,
+    membersEqual: true,
+    proRata: true,
+    basedOnPar: false,
+    rightholders: [0,0,0,0],
+    para: 0,
+    argu: 0,
+  }
+]
 
-  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(defFrWrap.rule); 
+export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
-  let hexFR: HexType = frCodifier(objFR);
+interface SetFirstRefusalRuleProps {
+  sha: HexType;
+  seq: number;
+  isFinalized: boolean;
+}
 
-  const [ newHexFR, setNewHexFR ] = useState<HexType>(Bytes32Zero);
+export function SetFirstRefusalRule({ sha, seq, isFinalized }: SetFirstRefusalRuleProps) {
 
-  let newFR: FirstRefusalRule = frParser(newHexFR);
+  const defFR: FirstRefusalRule = 
+      { seqOfRule: seq, 
+        qtyOfSubRule: seq - 511, 
+        seqOfSubRule: seq - 511,
+        typeOfDeal: 2,
+        membersEqual: true,
+        proRata: true,
+        basedOnPar: false,
+        rightholders: [0,0,0,0],
+        para: 0,
+        argu: 0,
+      };
+
+  let subTitle: string = (seq < 514) ? subTitles[seq - 512] : subTitles[2]; 
+
+  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(seq < 514 ? defaultRules[seq - 512] : defFR); 
+
+  const [ newFR, setNewFR ] = useState<FirstRefusalRule>(defFR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
 
+  const obtainRule = async ()=>{
+    let hexRule = await getRule(sha, objFR.seqOfRule);
+    let objRule: FirstRefusalRule = frParser(hexRule);
+    setNewFR(objRule);
+  }
+
+  useEffect(()=>{
+    const obtainInitRule = async ()=>{
+      let hexRule = await getRule(sha, seq);
+      let objRule: FirstRefusalRule = frParser(hexRule);
+      setNewFR(objRule);
+    }
+    obtainInitRule();
+  })
+
+  const [ open, setOpen ] = useState(false);
+
   return (
     <>
-      <Paper sx={{
-        alignContent:'center', 
-        justifyContent:'center', 
-        p:1, m:1, 
-        border: 1, 
-        borderColor:'divider' 
-        }} 
+      <Button
+        // disabled={ !newGR }
+        variant="outlined"
+        startIcon={<ListAlt />}
+        fullWidth={true}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
       >
-        
-        <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
-          <Box sx={{ minWidth:600 }} >
-            <Toolbar>
-              <h4>Rule No. { seq.toString() } { defFrWrap.subTitle } </h4>
-            </Toolbar>
-          </Box>
+        Rule No. { seq } 
+      </Button>
 
-          <AddRule 
-            sha={ sha }
-            rule={ hexFR }
-            setUpdatedRule={ setNewHexFR }
-            editable = { editable }
-            setEditable={ setEditable }
-            finalized={finalized}
-          />
-        </Stack>
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
 
-        <Stack 
-          direction={'column'} 
-          spacing={1} 
-        >
+        <DialogContent>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+          <Paper elevation={3} sx={{
+            alignContent:'center', 
+            justifyContent:'center', 
+            p:1, m:1, 
+            border: 1, 
+            borderColor:'divider' 
+            }} 
+          >
+            
+            <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+              <Box sx={{ minWidth:600 }} >
+                <Toolbar sx={{ textDecoration:'underline' }} >
+                  <h4>Rule No. {seq} - FirstRefusalRight for { typesOfDeal[newFR.typeOfDeal -1] }  </h4>
+                </Toolbar>
+              </Box>
 
-            <TextField 
-              variant='filled'
-              label='SeqOfRule'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newFR.seqOfRule.toString() }
-            />
-
-            <TextField 
-              variant='filled'
-              label='QtyOfSubRule'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newFR.qtyOfSubRule.toString() }
-            />
-
-            <TextField 
-              variant='filled'
-              label='TypeOfDeal'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newFR.typeOfDeal.toString() }
-            />
-
-            <TextField 
-              variant='filled'
-              label='MembersEqual ?'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={newFR.membersEqual ? 'True' : 'False'}
-            />
-
-            {newFR?.proRata != undefined && (
-              <TextField 
-                variant='filled'
-                label='ProRata ?'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={newFR.proRata ? 'True' : 'False'}
+              <AddRule 
+                sha={ sha }
+                rule={ frCodifier(objFR) }
+                refreshRule={ obtainRule }
+                editable = { editable }
+                setEditable={ setEditable }
+                isFinalized={isFinalized}
               />
-            )}
+            </Stack>
 
-            {newFR?.basedOnPar != undefined && (
-              <TextField 
-                variant='filled'
-                label='BasedOnPar ?'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={newFR.basedOnPar ? 'True' : 'False'}
-              />
-            )}
+            <Stack 
+              direction={'column'} 
+              spacing={1} 
+            >
 
-          </Stack>
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-          <Collapse in={ editable && !finalized } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                  <TextField 
+                    variant='filled'
+                    label='SeqOfRule'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ newFR.seqOfRule.toString() }
+                  />
 
-              <TextField 
-                variant='filled'
-                label='SeqOfRule'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  seqOfRule: parseInt(e.target.value),
-                }))}
-                value={ objFR?.seqOfRule }              
-              />
+                  <TextField 
+                    variant='filled'
+                    label='QtyOfSubRule'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ newFR.qtyOfSubRule.toString() }
+                  />
 
-              <TextField 
-                variant='filled'
-                label='QtyOfSubRule'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  qtyOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objFR?.qtyOfSubRule }              
-              />
+                  <TextField 
+                    variant='filled'
+                    label='TypeOfDeal'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ typesOfDeal[newFR.typeOfDeal -1] }
+                  />
 
-              <TextField 
-                variant='filled'
-                label='TypeOfDeal'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => ({
-                  ...v,
-                  typeOfDeal: parseInt(e.target.value),
-                }))}
-                value={ objFR?.typeOfDeal }              
-              />
+                  <TextField 
+                    variant='filled'
+                    label='MembersEqual ?'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newFR.membersEqual ? 'True' : 'False'}
+                  />
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="membersEqual-label">MembersEqual ?</InputLabel>
-                <Select
-                  labelId="membersEqual-label"
-                  id="membersEqual-select"
-                  value={ objFR?.membersEqual ? '1' : '0' }
-                  onChange={(e) => setObjFR((v) => ({
-                    ...v,
-                    membersEqual: e.target.value == '1',
-                  }))}
+                  <TextField 
+                    variant='filled'
+                    label='ProRata ?'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newFR.proRata ? 'True' : 'False'}
+                  />
 
-                  label="MembersEqual ?"
-                >
-                  <MenuItem value={'1'}>True</MenuItem>
-                  <MenuItem value={'0'}>False</MenuItem>
-                </Select>
-              </FormControl>
+                  <TextField 
+                    variant='filled'
+                    label='BasedOnPar ?'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={newFR.basedOnPar ? 'True' : 'False'}
+                  />
+
+                </Stack>
+
+              <Collapse in={ editable && !isFinalized } >
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                  <TextField 
+                    variant='filled'
+                    label='SeqOfRule'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      seqOfRule: parseInt(e.target.value),
+                    }))}
+                    value={ objFR.seqOfRule }              
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='QtyOfSubRule'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      qtyOfSubRule: parseInt(e.target.value),
+                    }))}
+                    value={ objFR.qtyOfSubRule }              
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='TypeOfDeal'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      typeOfDeal: parseInt(e.target.value),
+                    }))}
+                    value={ objFR.typeOfDeal }              
+                  />
+
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="membersEqual-label">MembersEqual ?</InputLabel>
+                    <Select
+                      labelId="membersEqual-label"
+                      id="membersEqual-select"
+                      value={ objFR?.membersEqual ? '1' : '0' }
+                      onChange={(e) => setObjFR((v) => ({
+                        ...v,
+                        membersEqual: e.target.value == '1',
+                      }))}
+                    >
+                      <MenuItem value={'1'}>True</MenuItem>
+                      <MenuItem value={'0'}>False</MenuItem>
+                    </Select>
+                  </FormControl>
 
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="proRata-label">ProRata ?</InputLabel>
-                <Select
-                  labelId="proRata-label"
-                  id="proRata-select"
-                  value={ objFR?.proRata ? '1' : '0' }
-                  onChange={(e) => setObjFR((v) => ({
-                    ...v,
-                    proRata: e.target.value == '1',
-                  }))}
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="proRata-label">ProRata ?</InputLabel>
+                    <Select
+                      labelId="proRata-label"
+                      id="proRata-select"
+                      value={ objFR.proRata ? '1' : '0' }
+                      onChange={(e) => setObjFR((v) => ({
+                        ...v,
+                        proRata: e.target.value == '1',
+                      }))}
+                    >
+                      <MenuItem value={'1'}>True</MenuItem>
+                      <MenuItem value={'0'}>False</MenuItem>
+                    </Select>
+                  </FormControl>
 
-                  label="ProRata ?"
-                >
-                  <MenuItem value={'1'}>True</MenuItem>
-                  <MenuItem value={'0'}>False</MenuItem>
-                </Select>
-              </FormControl>
+                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
+                    <Select
+                      labelId="basedOnPar-label"
+                      id="basedOnPar-select"
+                      value={ objFR.basedOnPar ? '1' : '0' }
+                      onChange={(e) => setObjFR((v) => ({
+                        ...v,
+                        basedOnPar: e.target.value == '1',
+                      }))}
+                    >
+                      <MenuItem value={'1'}>True</MenuItem>
+                      <MenuItem value={'0'}>False</MenuItem>
+                    </Select>
+                  </FormControl>
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
-                <Select
-                  labelId="basedOnPar-label"
-                  id="basedOnPar-select"
-                  value={ objFR?.basedOnPar ? '1' : '0' }
-                  onChange={(e) => setObjFR((v) => ({
-                    ...v,
-                    basedOnPar: e.target.value == '1',
-                  }))}
+                </Stack>
+              </Collapse>
 
-                  label="BasedOnPar ?"
-                >
-                  <MenuItem value={'1'}>True</MenuItem>
-                  <MenuItem value={'0'}>False</MenuItem>
-                </Select>
-              </FormControl>
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
+                <TextField 
+                  variant='filled'
+                  label='Rightholder_1'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longSnParser(newFR.rightholders[0].toString()) }
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='Rightholder_2'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longSnParser(newFR.rightholders[1].toString()) }
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='Rightholder_3'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longSnParser(newFR.rightholders[2].toString()) }
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='Rightholder_4'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longSnParser(newFR.rightholders[3].toString()) }
+                />
+
+              </Stack>
+
+              <Collapse in={ editable && !isFinalized } >
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                  <TextField 
+                    variant='filled'
+                    label='Rightholder_1'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => {
+                      let holders = [...v.rightholders];
+                      holders[0] = parseInt(e.target.value);
+                      return {...v, rightholders: holders};
+                    })}
+                    value={ objFR.rightholders[0] }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='Rightholder_2'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => {
+                      let holders = [...v.rightholders];
+                      holders[1] = parseInt(e.target.value);
+                      return {...v, rightholders: holders};
+                    })}
+                    value={ objFR.rightholders[1] }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='Rightholder_3'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => {
+                      let holders = [...v.rightholders];
+                      holders[2] = parseInt(e.target.value);
+                      return {...v, rightholders: holders};
+                    })}
+                    value={ objFR.rightholders[2] }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='Rightholder_4'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjFR((v) => {
+                      let holders = [...v.rightholders];
+                      holders[3] = parseInt(e.target.value);
+                      return {...v, rightholders: holders};
+                    })}
+                    value={ objFR.rightholders[3] }
+                  />
+
+                </Stack>
+              </Collapse>
 
             </Stack>
-          </Collapse>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+          </Paper>
 
-            <TextField 
-              variant='filled'
-              label='Rightholder_1'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newFR.rightholders[0].toString()) }
-            />
+        </DialogContent>
+      
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
 
-            <TextField 
-              variant='filled'
-              label='Rightholder_2'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newFR.rightholders[1].toString()) }
-            />
-
-            <TextField 
-              variant='filled'
-              label='Rightholder_3'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newFR.rightholders[2].toString()) }
-            />
-
-            <TextField 
-              variant='filled'
-              label='Rightholder_4'
-              inputProps={{readOnly: true}}
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newFR.rightholders[3].toString()) }
-            />
-
-          </Stack>
-
-          <Collapse in={ editable && !finalized } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <TextField 
-                variant='filled'
-                label='Rightholder_1'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => {
-                  let holders = [...v.rightholders];
-                  holders[0] = parseInt(e.target.value ?? '0');
-                  return {...v, rightholders: holders};
-                })}
-                value={ objFR?.rightholders[0] }
-              />
-
-              <TextField 
-                variant='filled'
-                label='Rightholder_2'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => {
-                  let holders = [...v.rightholders];
-                  holders[1] = parseInt(e.target.value ?? '0');
-                  return {...v, rightholders: holders};
-                })}
-                value={ objFR?.rightholders[1] }
-              />
-
-              <TextField 
-                variant='filled'
-                label='Rightholder_3'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => {
-                  let holders = [...v.rightholders];
-                  holders[2] = parseInt(e.target.value ?? '0');
-                  return {...v, rightholders: holders};
-                })}
-                value={ objFR?.rightholders[2] }
-              />
-
-              <TextField 
-                variant='filled'
-                label='Rightholder_4'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjFR((v) => {
-                  let holders = [...v.rightholders];
-                  holders[3] = parseInt(e.target.value ?? '0');
-                  return {...v, rightholders: holders};
-                })}
-                value={ objFR?.rightholders[3] }
-              />
-
-            </Stack>
-          </Collapse>
-
-        </Stack>
-
-      </Paper>
+      </Dialog>
     </> 
   )
 }

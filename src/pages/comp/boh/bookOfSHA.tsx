@@ -118,7 +118,7 @@ function BookOfSHA() {
   });
 
   return (
-    <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       <Toolbar>
         <h3>BOH - Book Of Shareholders Agreements</h3>
       </Toolbar>
@@ -181,7 +181,7 @@ function BookOfSHA() {
                 <GetFilesList 
                   list={ filesInfoList } 
                   title="SHA List" 
-                  pathName="/comp/boh/sha/bodyTerms" 
+                  pathName="/comp/boh/sha/Sha" 
                   pathAs="/comp/boh/sha" 
                 />
               )}

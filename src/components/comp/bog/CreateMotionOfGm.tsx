@@ -158,7 +158,7 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   }
 
   return (
-    <Paper sx={{m:1, p:1, color:'divider', border:1 }} >
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
       <Stack direction={'row'} sx={{ alignItems:'center', color:'black' }} >
 
         <Box sx={{ minWidth:200 }} >

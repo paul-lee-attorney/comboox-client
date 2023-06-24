@@ -25,6 +25,7 @@ import {
   Update,
   PersonAdd,
   PersonRemove,
+  Face,
 } from "@mui/icons-material"
 
 import { 
@@ -79,11 +80,11 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
 interface SigPageProps {
   addr: HexType,
   initPage: boolean,
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
 
-export function Signatures({ addr, initPage, finalized }: SigPageProps) {
+export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
 
   const {
@@ -212,16 +213,15 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
   });
 
   return (
-    <>
-      <Paper sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-        <Box sx={{ width:1680 }}>
+    <Stack direction="column" sx={{width:'100%'}} >
+      <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
           <Stack direction={'row'} sx={{ alignItems:'center' }} >
-            <Toolbar>
+            <Toolbar sx={{ textDecoration:'underline'}}>
               <h4>Props of SigPage</h4>
             </Toolbar>
 
-            {!finalized && (
+            {!isFinalized && (
               <>
                 <TextField 
                   variant='filled'
@@ -268,106 +268,103 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
               </>
             )}
 
-
           </Stack>
 
-          <Paper sx={{m:1, p:1, border:1, borderColor:'divider'}} >
+          <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
             
-              <Stack direction={'row'} >    
-                {parasOfPage && (
-                  <TextField 
-                    variant='filled'
-                    label='CirculateDate'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ dateParser(parasOfPage.circulateDate) }
-                  />
-                )}
+            <Stack direction={'row'} >    
+              {parasOfPage && (
+                <TextField 
+                  variant='filled'
+                  label='CirculateDate'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ dateParser(parasOfPage.circulateDate) }
+                />
+              )}
 
-                {parasOfPage && (
-                  <TextField 
-                    variant='filled'
-                    label='SigningDays'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ parasOfPage.signingDays }
-                  />
-                )}
+              {parasOfPage && (
+                <TextField 
+                  variant='filled'
+                  label='SigningDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ parasOfPage.signingDays }
+                />
+              )}
 
-                {parasOfPage && (
-                  <TextField 
-                    variant='filled'
-                    label='ClosingDays'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ parasOfPage.closingDays }
-                  />
-                )}
+              {parasOfPage && (
+                <TextField 
+                  variant='filled'
+                  label='ClosingDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ parasOfPage.closingDays }
+                />
+              )}
 
-                {parasOfPage && (
-                  <TextField 
-                    variant='filled'
-                    label='CounterOfBlanks'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ parasOfPage.counterOfBlanks }
-                  />
-                )}
+              {parasOfPage && (
+                <TextField 
+                  variant='filled'
+                  label='CounterOfBlanks'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ parasOfPage.counterOfBlanks }
+                />
+              )}
 
-                {parasOfPage && (
-                  <TextField 
-                    variant='filled'
-                    label='CounterOfSigs'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ parasOfPage.counterOfSigs }
-                  />
-                )}
+              {parasOfPage && (
+                <TextField 
+                  variant='filled'
+                  label='CounterOfSigs'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ parasOfPage.counterOfSigs }
+                />
+              )}
 
-                {parasOfPage && (
-                  <TextField 
-                    variant='filled'
-                    label='Established'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ parasOfPage.established ? 'True' : 'False' }
-                  />
-                )}
+              {parasOfPage && (
+                <TextField 
+                  variant='filled'
+                  label='Established'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ parasOfPage.established ? 'True' : 'False' }
+                />
+              )}
 
-              </Stack>
+            </Stack>
 
           </Paper>
 
-        </Box>
       </Paper>
 
-      <Paper sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
-        <Box sx={{ width:1680 }}>
+      <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
 
           <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }} >
-            <Toolbar>
+            <Toolbar sx={{ textDecoration:'underline' }}>
               <h4>Signatures of Doc</h4>
             </Toolbar>
 
-            {!finalized && (
+            {!isFinalized && (
               <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
                 <Tooltip
@@ -440,28 +437,26 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
 
           <Stack direction="row" >
 
-            <Paper sx={{m:1, border:1, borderColor:'divider', width:'50%' }} >
+            <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
               
               <Chip
-                sx={{ minWidth:80, m:1 }}
+                sx={{ minWidth:188, m:1, ml:3 }}
                 label="Original Shareholders" 
                 color="primary" 
               />
 
               {sellerSigs?.map(v => (
-                <Paper key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+                <Paper elevation={3} key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
               
                   <Stack  direction={'row'} sx={{ alignItems:'center' }} > 
 
-                    <TextField 
-                      variant='filled'
-                      label='UserNo.'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ longSnParser(v.signer.toString()) }
+                    <Chip
+                      sx={{minWidth: 218, height:40, 
+                        m:1, mt:3, p:1, justifyContent:'start' }}
+                      icon={<Face />}
+                      variant="filled"
+                      color="primary"
+                      label={ longSnParser(v.signer.toString()) }
                     />
 
                     <TextField 
@@ -496,6 +491,7 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
                       m:1,
                       minWidth: 688,
                     }}
+                    
                     value={ v.sigHash }
                   />
 
@@ -504,28 +500,25 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
 
             </Paper>
 
-            <Paper sx={{m:1, border:1, borderColor:'divider', width:'50%' }} >
+            <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
               
               <Chip
-                sx={{ minWidth:80, m:1 }}
+                sx={{ minWidth:188, m:1, ml:3 }}
                 label="Investors" 
                 color="success" 
               />
 
               {buyerSigs?.map(v => (
-                <Paper key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+                <Paper elevation={3} key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
 
                   <Stack direction={'row'} sx={{ alignItems:'center' }} > 
-
-                    <TextField 
-                      variant='filled'
-                      label='UserNo.'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ longSnParser(v.signer.toString()) }
+                    <Chip
+                      sx={{minWidth: 218, height:40, 
+                        m:1, mt:3, p:1, justifyContent:'start' }}
+                      icon={<Face />}
+                      variant="filled"
+                      color="success"
+                      label={ longSnParser(v.signer.toString()) }
                     />
 
                     <TextField 
@@ -571,9 +564,8 @@ export function Signatures({ addr, initPage, finalized }: SigPageProps) {
 
           </Stack>
 
-        </Box>
       </Paper>
-    </>
+    </Stack>
   );
 } 
 

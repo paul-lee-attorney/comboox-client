@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -6,28 +6,58 @@ import {
   Paper,
   Toolbar,
   Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Grid,
 } from "@mui/material";
 
-import { ShaRuleInputProps } from "../../../../interfaces";
+import { HexType, ShaRuleInputProps } from "../../../../interfaces";
 
 import {
   AddCircle,
+  ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
 
-import { 
-  SetFirstRefusalRule, 
-} from '../../..';
-import { FirstRefusalRuleWrap } from "./SetFirstRefusalRule";
+import { FirstRefusalRuleWrap, SetFirstRefusalRule } from "./SetFirstRefusalRule";
 
-export function FirstRefusalRules({sha, seqList, finalized}: ShaRuleInputProps) {
+interface FirstRefusalRulesProps {
+  sha: HexType;
+  initSeqList: number[] | undefined;
+  isFinalized: boolean;
+}
 
-  const [ cp, setCp ] = useState(seqList);
+export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalRulesProps) {
+
+  const mandatoryRules:number[] = isFinalized ? [] : [512, 513];
+
+  const [ cp, setCp ] = useState(mandatoryRules);
+
+  useEffect(()=>{
+    if (initSeqList) {
+      if (!isFinalized) {
+        setCp(v => {
+          let setRules = new Set([...v]);
+          initSeqList.forEach(k => {
+            setRules.add(k)
+          });
+          let arrRules = Array.from(setRules).sort(
+            (a, b) => (a-b)
+          );
+          return arrRules;
+        })
+      } else {
+        setCp(initSeqList);
+      }
+    } 
+  }, [initSeqList, isFinalized]);
 
   const addCp = () => {
     setCp(v => {
       let arr = [...v];
-      arr.push(v[v.length-1] + 1);      
+      arr.push(v[v.length-1] + 1);
       return arr;
     })
   }
@@ -35,82 +65,88 @@ export function FirstRefusalRules({sha, seqList, finalized}: ShaRuleInputProps) 
   const removeCp = () => {
     setCp(v => {
       let arr = [...v];
-      arr.pop();      
+      arr.pop();
       return arr;
     })
   }
 
-let defaultRules: {[seq: number]: FirstRefusalRuleWrap} = {
-    512 : {
-      subTitle: '- For Capital Increase ',
-      rule: {
-        seqOfRule: 512, 
-        qtyOfSubRule: 2, 
-        seqOfSubRule: 1,
-        typeOfDeal: 1,
-        membersEqual: true,
-        proRata: true,
-        basedOnPar: false,
-        rightholders: [0,0,0,0],
-        para: 0,
-        argu: 0,
-      },
-    },
-    513 : {
-      subTitle: '- For External Transfer ',
-      rule: {
-        seqOfRule: 513, 
-        qtyOfSubRule: 2, 
-        seqOfSubRule: 2,
-        typeOfDeal: 2,
-        membersEqual: true,
-        proRata: true,
-        basedOnPar: false,
-        rightholders: [0,0,0,0],
-        para: 0,
-        argu: 0,
-      },
-    },
-  }
+  const [open, setOpen] = useState(false);
 
   return (
-    <Paper sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
+    <>
 
-      <Box sx={{ width:1680 }}>
+      <Button
+        // disabled={ !newGR }
+        variant="outlined"
+        startIcon={<ListAlt />}
+        // fullWidth={true}
+        sx={{ m:0.5,minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
+      >
+        First Refusal Rules 
+      </Button>
 
-        <Stack direction={'row'} sx={{ alignItems:'center' }}>
-          <Toolbar>
-            <h4>First Refusal Rules</h4>
-          </Toolbar>
-          {!finalized && (
-            <>
-              <IconButton 
-                sx={{width: 20, height: 20, m: 1, p: 1}} 
-                onClick={ addCp }
-                color="primary"
-              >
-                <AddCircle/>
-              </IconButton>
-              <IconButton
-                disabled={ cp.length < 2 } 
-                sx={{width: 20, height: 20, m: 1, p: 1, }} 
-                onClick={ removeCp }
-                color="primary"
-              >
-                <RemoveCircle/>
-              </IconButton>
-            </>
-          )}
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
+        <DialogContent>
 
-        </Stack>
+          <Paper elevation={3} sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
 
-        {cp.map((v)=> (
-          <SetFirstRefusalRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } finalized={ finalized } />
-        ))}
+            <Box sx={{ width: 1180 }}>
 
-      </Box>
+              <Stack direction={'row'} sx={{ alignItems:'center' }}>
+                <Toolbar sx={{ textDecoration:'underline' }}>
+                  <h4>First Refusal Rules</h4>
+                </Toolbar>
+                {!isFinalized && (
+                  <>
+                    <IconButton 
+                      sx={{width: 20, height: 20, m: 1, p: 1}} 
+                      onClick={ addCp }
+                      color="primary"
+                    >
+                      <AddCircle/>
+                    </IconButton>
+                    <IconButton
+                      disabled={ cp.length < 2 } 
+                      sx={{width: 20, height: 20, m: 1, p: 1, }} 
+                      onClick={ removeCp }
+                      color="primary"
+                    >
+                      <RemoveCircle/>
+                    </IconButton>
+                  </>
+                )}
 
-    </Paper>
+              </Stack>
+
+              <Grid container spacing={0.5} >
+
+                {cp.map((v)=> (
+                  <Grid key={ v } item xs={3}>
+                    <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                  </Grid>
+                ))}
+
+              </Grid>
+              
+            </Box>
+
+          </Paper>
+
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
+
+      </Dialog>
+
+    </>
   );
 } 
 

@@ -1,0 +1,236 @@
+import { useEffect, useState } from "react";
+
+import { 
+  Stack,
+  Paper,
+  Box,
+  Stepper,
+  Step,
+  StepLabel,
+  StepContent,
+  Typography,
+} from "@mui/material";
+
+import { HexType } from "../../../../interfaces";
+
+import { 
+  CirculateSha,
+  SignSha,
+  ActivateSha,
+  LockContents,
+  ProposeDocOfGm,
+  VoteForDocOfGm,
+} from '../../..';
+
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { BigNumber } from "ethers";
+import { VoteCountingOfGm } from "../../bog/VoteCountingOfGm";
+import { voteEnded } from "../../../../queries/meetingMinutes";
+import { getHeadOfFile } from "../../../../queries/filesFolder";
+
+interface ShaLifecycleProps {
+  sha: HexType;
+  isFinalized: boolean;
+}
+
+export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
+
+  const { boox } = useComBooxContext();
+  const [ activeStep, setActiveStep ] = useState<number>();
+  const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
+
+  useEffect(()=>{
+    const updateActiveStep = async () => {
+
+      if (boox) {
+
+        let head = await getHeadOfFile(boox[4], sha);
+        let fileState = head.state;
+        let seq = head.seqOfMotion;
+        let nextStep = 0;
+        
+        switch (fileState) {
+          case 1: 
+            nextStep = isFinalized ? 1: 0;
+            break;
+          case 4: 
+            let flag = await voteEnded(boox[3], seq);
+            nextStep = flag ? 5 : 4;
+            break;
+          case 5: 
+            nextStep = 6;
+            break;
+          case 6: // Rejected
+            nextStep = 8;
+            break;
+          default:
+            nextStep = fileState;
+        }
+  
+        setActiveStep( nextStep );
+  
+        if (seq) setSeqOfMotion(seq); 
+      }
+    };
+
+    updateActiveStep();
+  }, [boox, sha, isFinalized]);
+
+  return (
+    <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
+      
+      <Paper elevation={3}
+        sx={{
+          m:1, p:1,
+          border:1,
+          borderColor:'divider'
+        }} 
+      >
+        {activeStep != undefined && (
+          <Box sx={{ width:1680 }} >
+            <Stepper sx={{ pl:5 }} activeStep={ activeStep } orientation="vertical" >
+
+              <Step index={0} >
+                
+                <StepLabel>
+                  <h3>Finalize SHA</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Finalize terms & conditions of SHA (only for Owner of SHA).
+                  </Typography>
+                  <LockContents addr={ sha } setNextStep={ setActiveStep } />
+                </StepContent>
+
+              </Step>
+
+
+              <Step index={1} >
+
+                <StepLabel>
+                  <h3>Circulate SHA</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Circulate SHA to parties for execution (only for Parties of SHA).
+                  </Typography>
+                  <CirculateSha addr={ sha } setNextStep={ setActiveStep } />
+                </StepContent>
+
+              </Step>
+
+              <Step index={2} >
+
+                <StepLabel>
+                  <h3>Sign SHA</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Sign SHA to accept its terms (only for Parties of SHA).
+                  </Typography>
+                  <SignSha addr={ sha } setNextStep={ setActiveStep } />
+                </StepContent>
+
+              </Step>
+
+              <Step index={3} >
+
+                <StepLabel>
+                  <h3>Propose SHA</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Propose SHA to General Meeting for approval (only for Parties & Members).
+                  </Typography>
+                  <ProposeDocOfGm addr={ sha } seqOfVR={8} setNextStep={ setActiveStep } />
+                </StepContent>
+
+              </Step>
+
+              <Step index={4} >
+
+                <StepLabel>
+                  <h3>Vote for SHA</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Cast vote in General Meeting to approve SHA.
+                  </Typography>
+
+                  {seqOfMotion && (
+                    <VoteForDocOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
+                  )}
+                </StepContent>
+
+              </Step>
+
+              <Step index={5} >
+
+                <StepLabel>
+                  <h3>Count Vote</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Count vote result of SHA (only for Members).
+                  </Typography>
+                  {seqOfMotion && (
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
+                  )}
+                </StepContent>
+
+              </Step>
+
+              <Step index={6} >
+
+                <StepLabel>
+                  <h3>Activate SHA</h3>
+                </StepLabel>
+                <StepContent  >
+                  <Typography>
+                    Activate SHA into leagal forces (only for Parties of SHA).
+                  </Typography>
+                  <ActivateSha addr={ sha } setNextStep={ setActiveStep } />
+                  
+                </StepContent>
+
+              </Step>
+
+              <Step index={7} >
+
+                <StepLabel>
+                  <h3>In Force</h3>
+                </StepLabel>
+                <StepContent  >
+                  
+                  <Typography color={'HighlightText'}>
+                    The SHA currently is In Force.
+                  </Typography>
+
+                </StepContent>
+
+              </Step>
+
+              <Step index={8} >
+
+                <StepLabel>
+                  <h3>Revoked</h3>
+                </StepLabel>
+                <StepContent  >
+                  
+                  <Typography color={'HighlightText'}>
+                    SHA currently is revoked.
+                  </Typography>
+
+                </StepContent>
+
+              </Step>
+
+            </Stepper>
+          </Box>
+        )}
+
+      </Paper>
+
+    </Stack>   
+  );
+} 

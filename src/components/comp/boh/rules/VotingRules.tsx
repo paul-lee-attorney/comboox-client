@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -6,12 +6,18 @@ import {
   Paper,
   Toolbar,
   Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Grid,
 } from "@mui/material";
 
-import { ShaRuleInputProps } from "../../../../interfaces";
+import { HexType } from "../../../../interfaces";
 
 import {
   AddCircle,
+  ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
 
@@ -25,14 +31,37 @@ export interface VotingRuleWrap {
   votingRule: VotingRule,
 }
 
-export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
+interface VotingRulesProps {
+  sha: HexType;
+  initSeqList: number[] | undefined;
+  isFinalized: boolean;
+}
 
-  const [ cp, setCp ] = useState(seqList);
+export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
+
+  const mandatoryRules: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
+
+  const [ cp, setCp ] = useState(mandatoryRules);
+
+  useEffect(()=>{
+    if (initSeqList) {
+      setCp(v => {
+        let setRules = new Set([...v]);
+        initSeqList.forEach(k => {
+          setRules.add(k)
+        });
+        let arrRules = Array.from(setRules).sort(
+          (a, b) => (a-b)
+        );
+        return arrRules;
+      })
+    }
+  }, [initSeqList]);
 
   const addCp = () => {
     setCp(v => {
       let arr = [...v];
-      arr.push(v[v.length-1] + 1);      
+      arr.push(v[v.length - 1]+1);
       return arr;
     })
   }
@@ -40,336 +69,86 @@ export function VotingRules({sha, seqList, finalized}: ShaRuleInputProps) {
   const removeCp = () => {
     setCp(v => {
       let arr = [...v];
-      arr.pop();      
+      arr.pop();
       return arr;
     })
   }
 
-  let defaultRules: {[seq: number]: VotingRuleWrap} = {
-    1 : {
-      subTitle: '- Issue New Share (i.e. Capital Increase "CI")',
-      votingRule: {
-        seqOfRule: 1, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 1,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 6667,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: true,
-        againstShallBuy: false,
-        shaExecDays: 15,
-        shaConfirmDays: 15,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    2 : {
-      subTitle: '- Transfer Share to External Invester (i.e. External Transfer "EXT")',
-      votingRule: {
-        seqOfRule: 2, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 2,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 5000,
-        onlyAttendance: false,
-        impliedConsent: true,
-        partyAsConsent: false,
-        againstShallBuy: true,
-        shaExecDays: 15,
-        shaConfirmDays: 15,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-    
-    3: {
-      subTitle: '- Transfer Share to Other Shareholders (i.e. Internal Transfer "INT")',
-      votingRule: {
-        seqOfRule: 3, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 3,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 0,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: false,
-        againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 0,
-        votePrepareDays: 0,
-        votingDays: 0,
-        execDaysForPutOpt: 0,
-        vetoers: [0, 0],
-        para: 0,
-      },
-    },
-
-    4: {
-      subTitle: '- Capital Increase and Internal Transfer (i.e. CI & INT)',
-      votingRule: {
-        seqOfRule: 4, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 4,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 6667,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: true,
-        againstShallBuy: false,
-        shaExecDays: 15,
-        shaConfirmDays: 15,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    5: {
-      subTitle: '- Internal and External Transfer (i.e. EXT & INT)',
-      votingRule: {
-        seqOfRule: 5, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 5,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 5000,
-        onlyAttendance: false,
-        impliedConsent: true,
-        partyAsConsent: false,
-        againstShallBuy: true,
-        shaExecDays: 15,
-        shaConfirmDays: 15,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    6: {
-      subTitle: '- Capital Increase, External Transfer and Internal Transfer (i.e. CI & EXT & INT)',
-      votingRule: {
-        seqOfRule: 6, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 6,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 6667,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: true,
-        againstShallBuy: false,
-        shaExecDays: 15,
-        shaConfirmDays: 15,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    7: {
-      subTitle: '- Capital Increase and External Transfer (i.e. CI & EXT) ',
-      votingRule: {
-        seqOfRule: 7, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 7,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 6667,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: true,
-        againstShallBuy: false,
-        shaExecDays: 15,
-        shaConfirmDays: 15,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    8: {
-      subTitle: "- Approve Shareholders' Agreement",
-      votingRule: {
-        seqOfRule: 8, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 8,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 6667,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: true,
-        againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    9: {
-      subTitle: '- Ordinary resolution of Shareholders Meeting',
-      votingRule: {
-        seqOfRule: 9, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 9,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 5000,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: false,
-        againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },
-
-    10: {
-      subTitle: '- Special resolution of Shareholders Meeting',
-      votingRule: {
-        seqOfRule: 10, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 10,
-        authority: 1,
-        headRatio: 0,
-        amountRatio: 6667,
-        onlyAttendance: false,
-        impliedConsent: false,
-        partyAsConsent: false,
-        againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },    
-    11: {
-      subTitle: '- Ordinary resolution of Board Meeting',
-      votingRule: {
-        seqOfRule: 11, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 11,
-        authority: 2,
-        headRatio: 5000,
-        amountRatio: 0,
-        onlyAttendance: true,
-        impliedConsent: false,
-        partyAsConsent: false,
-        againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },    
-    12: {
-      subTitle: '- Special resolution of Board Meeting',
-      votingRule: {
-        seqOfRule: 12, 
-        qtyOfSubRule: 12, 
-        seqOfSubRule: 12,
-        authority: 2,
-        headRatio: 6667,
-        amountRatio: 0,
-        onlyAttendance: true,
-        impliedConsent: false,
-        partyAsConsent: false,
-        againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 14,
-        votePrepareDays: 1,
-        votingDays: 1,
-        execDaysForPutOpt: 0,
-        vetoers: [0,0],
-        para: 0,
-      },
-    },    
-  }
+  const [open, setOpen] = useState(false);
 
   return (
-    <Paper sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
-      <Box sx={{ width:1680 }}>
+    <>
+      <Button
+        // disabled={ !newGR }
+        variant="outlined"
+        startIcon={<ListAlt />}
+        // fullWidth={true}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
+      >
+        Voting Rules 
+      </Button>
 
-        <Stack direction={'row'} sx={{ alignItems:'center' }}>
-          <Toolbar>
-            <h4>Voting Rules</h4>
-          </Toolbar>
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
+        <DialogContent>
 
-          {!finalized && (
-            <>
-              <IconButton 
-                sx={{width: 20, height: 20, m: 1, p: 1}} 
-                onClick={ addCp }
-                color="primary"
-              >
-                <AddCircle/>
-              </IconButton>
-              <IconButton 
-                disabled={ cp.length < 13 }
-                sx={{width: 20, height: 20, m: 1, p: 1, }} 
-                onClick={ removeCp }
-                color="primary"
-              >
-                <RemoveCircle/>
-              </IconButton>
-            </>
-          )}
+          <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
+            <Box sx={{ width:1180 }}>
 
-        </Stack>
+              <Stack direction={'row'} sx={{ alignItems:'center' }}>
+                <Toolbar sx={{ textDecoration:'underline' }}>
+                  <h4>Voting Rules</h4>
+                </Toolbar>
 
-        {cp.map((v)=> (
-          <SetVotingRule key={ v } sha={ sha } defaultRule={ defaultRules[v] } seq={ v } finalized={ finalized } />
-        ))}
+                {!isFinalized && cp && (
+                  <>
+                    <IconButton 
+                      sx={{width: 20, height: 20, m: 1, p: 1}} 
+                      onClick={ addCp }
+                      color="primary"
+                    >
+                      <AddCircle/>
+                    </IconButton>
+                    <IconButton 
+                      disabled={ cp.length < 13 }
+                      sx={{width: 20, height: 20, m: 1, p: 1, }} 
+                      onClick={ removeCp }
+                      color="primary"
+                    >
+                      <RemoveCircle/>
+                    </IconButton>
+                  </>
+                )}
 
-      </Box>
-    </Paper>
+              </Stack>
+
+              <Grid container spacing={0.5} >
+
+                {cp.map(v=> (
+                  <Grid key={ v } item xs={3} >
+                      <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                  </Grid>
+                ))}
+
+              </Grid>
+
+            </Box>
+          </Paper>
+
+        </DialogContent>
+
+        <DialogActions>
+            <Button onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
+
+      </Dialog>
+    
+    </>
   );
 } 
 

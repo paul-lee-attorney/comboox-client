@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   Stack,
@@ -21,6 +21,7 @@ import { AddRule } from './AddRule';
 
 import { SetShaRuleProps } from '../../../../interfaces';
 import { longSnParser } from '../../../../scripts/toolsKit';
+import { getRule } from '../../../../queries/sha';
 
 export interface GroupUpdateOrder {
   seqOfRule: number;
@@ -68,7 +69,13 @@ export function guoParser(hexOrder: HexType): GroupUpdateOrder {
   return order;
 }
 
-export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProps) {
+interface SetGroupUpdateOrderProps {
+  sha: HexType;
+  seq: number;
+  isFinalized: boolean;
+}
+
+export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrderProps) {
 
   const defaultOrder: GroupUpdateOrder = {
     seqOfRule: seq,
@@ -82,17 +89,35 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
 
   const [ objGuo, setObjGuo ] = useState<GroupUpdateOrder>(defaultOrder); 
 
-  let hexGuo: HexType = guoCodifier(objGuo);
+  // let hexGuo: HexType = guoCodifier(objGuo);
 
-  const [ newHexGuo, setNewHexGuo ] = useState<HexType>(Bytes32Zero);
+  // const [ newHexGuo, setNewHexGuo ] = useState<HexType>(Bytes32Zero);
 
-  let newGuo: GroupUpdateOrder = guoParser(newHexGuo);
+  // let newGuo: GroupUpdateOrder = guoParser(newHexGuo);
 
-  const [ editable, setEditable ] = useState<boolean>(false); 
+  const [ newGuo, setNewGuo ] = useState<GroupUpdateOrder>(defaultOrder);
+
+  const [ editable, setEditable ] = useState<boolean>(false);
+  
+  const obtainRule = async ()=>{
+    let hexRule = await getRule(sha, objGuo.seqOfRule);
+    let objRule: GroupUpdateOrder = guoParser(hexRule);
+    setNewGuo(objRule);
+  }
+
+  useEffect(()=>{
+    const obtainInitRule = async ()=>{
+      let hexRule = await getRule(sha, seq);
+      let objRule: GroupUpdateOrder = guoParser(hexRule);
+      setNewGuo(objRule);
+    }
+  
+    obtainInitRule();
+  })
 
   return (
     <>
-      <Paper sx={{
+      <Paper elevation={3} sx={{
         alignContent:'center', 
         justifyContent:'center', 
         p:1, m:1, 
@@ -109,89 +134,77 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
 
           <AddRule 
             sha={ sha }
-            rule={ hexGuo }
-            setUpdatedRule={ setNewHexGuo }
+            rule={ guoCodifier(objGuo) }
+            refreshRule={ obtainRule }
             editable={ editable }
             setEditable={ setEditable }
-            finalized={finalized}
+            isFinalized={isFinalized}
           />
         </Stack>
 
 
-        <Stack 
-          direction={'column'} 
-          spacing={1} 
-        >
+        <Stack direction={'column'} spacing={1} >
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-            {newGuo?.seqOfRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='SeqOfRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newGuo.seqOfRule.toString() }
-              />
-            )}
 
-            {newGuo?.qtyOfSubRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='QtyOfSubRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newGuo.qtyOfSubRule.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='SeqOfRule'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newGuo.seqOfRule.toString() }
+            />
 
-            {newGuo?.seqOfSubRule != undefined && (
-              <TextField 
-                variant='filled'
-                label='SeqOfSubRule'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newGuo.seqOfSubRule.toString() }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='QtyOfSubRule'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newGuo.qtyOfSubRule.toString() }
+            />
 
-            {newGuo?.addMember != undefined && (
-              <TextField 
-                variant='filled'
-                label='AddMember ?'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ newGuo.addMember ? 'True' : 'False' }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='SeqOfSubRule'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newGuo.seqOfSubRule.toString() }
+            />
 
-            {newGuo?.groupRep != undefined && (
-              <TextField 
-                variant='filled'
-                label='GroupRep'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ longSnParser(newGuo.groupRep.toString()) }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='AddMember ?'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ newGuo.addMember ? 'True' : 'False' }
+            />
+
+            <TextField 
+              variant='filled'
+              label='GroupRep'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newGuo.groupRep.toString()) }
+            />
 
           </Stack>
 
-          <Collapse in={ editable && !finalized } >
+          <Collapse in={ editable && !isFinalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <TextField 
@@ -205,7 +218,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   ...v,
                   seqOfRule: parseInt(e.target.value),
                 }))}
-                value={ objGuo?.seqOfRule }
+                value={ objGuo.seqOfRule }
               />
 
               <TextField 
@@ -219,7 +232,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   ...v,
                   qtyOfSubRule: parseInt(e.target.value),
                 }))}
-                value={ objGuo?.qtyOfSubRule }              
+                value={ objGuo.qtyOfSubRule }              
               />
 
               <TextField 
@@ -233,7 +246,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   ...v,
                   seqOfSubRule: parseInt(e.target.value),
                 }))}
-                value={ objGuo?.seqOfSubRule }
+                value={ objGuo.seqOfSubRule }
               />
 
               <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
@@ -241,13 +254,11 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                 <Select
                   labelId="addMember-label"
                   id="addMember-select"
-                  value={ objGuo?.addMember ? '1' : '0' }
+                  value={ objGuo.addMember ? '1' : '0' }
                   onChange={(e) => setObjGuo((v) => ({
                     ...v,
                     addMember: e.target.value == '1',
                   }))}
-
-                  label="AddMember ?"
                 >
                   <MenuItem value={ '1' } > True </MenuItem>
                   <MenuItem value={ '0' } > False </MenuItem>
@@ -265,7 +276,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                   ...v,
                   groupRep: parseInt(e.target.value),
                 }))}
-                value={ objGuo?.groupRep }
+                value={ objGuo.groupRep }
               />
 
             </Stack>
@@ -273,61 +284,53 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            {newGuo?.members[0] != undefined && (
-              <TextField 
-                variant='filled'
-                label='Members_1'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ longSnParser(newGuo.members[0].toString()) }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Members_1'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newGuo.members[0].toString()) }
+            />
 
-            {newGuo?.members[1] != undefined && (
-              <TextField 
-                variant='filled'
-                label='Members_2'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ longSnParser(newGuo.members[1].toString()) }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Members_2'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newGuo.members[1].toString()) }
+            />
 
-            {newGuo?.members[2] != undefined && (
-              <TextField 
-                variant='filled'
-                label='Members_3'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ longSnParser(newGuo.members[2].toString()) }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Members_3'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newGuo.members[2].toString()) }
+            />
 
-            {newGuo?.members[3] != undefined && (
-              <TextField 
-                variant='filled'
-                label='Members_4'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ longSnParser(newGuo.members[3].toString()) }
-              />
-            )}
+            <TextField 
+              variant='filled'
+              label='Members_4'
+              inputProps={{readOnly: true}}
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ longSnParser(newGuo.members[3].toString()) }
+            />
 
           </Stack>
 
-          <Collapse in={ editable && !finalized } >
+          <Collapse in={ editable && !isFinalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <TextField 
@@ -345,7 +348,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                     members: arr,
                   };
                 })}
-                value={ objGuo?.members[0] }
+                value={ objGuo.members[0] }
               />
 
               <TextField 
@@ -363,7 +366,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                     members: arr,
                   };
                 })}
-                value={ objGuo?.members[1] }
+                value={ objGuo.members[1] }
               />
 
               <TextField 
@@ -381,7 +384,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                     members: arr,
                   };
                 })}
-                value={ objGuo?.members[2] }
+                value={ objGuo.members[2] }
               />
 
               <TextField 
@@ -399,7 +402,7 @@ export function SetGroupUpdateOrder({ sha, qty, seq, finalized }: SetShaRuleProp
                     members: arr,
                   };
                 })}
-                value={ objGuo?.members[3] }
+                value={ objGuo.members[3] }
               />
 
             </Stack>

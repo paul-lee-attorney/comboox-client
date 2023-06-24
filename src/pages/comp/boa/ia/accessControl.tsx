@@ -1,20 +1,19 @@
 import { useRouter } from "next/router";
 
 import { 
-  Box, Paper, Stack,
+  Paper, Stack,
 } from "@mui/material";
 
 import { HexType } from "../../../../interfaces";
 
 import { ShaNavi, SetGeneralCounsel, AppointAttorney, Finalized } from '../../../../components';
 import { SetOwner } from "../../../../components/common/accessControl/SetOwner";
-import { LockContents } from "../../../../components/common/accessControl/LockContents";
 import { RemoveAttorney } from "../../../../components/common/accessControl/RemoveAttorney";
 import { QuitAttorney } from "../../../../components/common/accessControl/QuitAttorney";
 import { useState } from "react";
 
 function AccessControl() {
-  const [ finalized, setFinalized ] = useState<boolean>();
+  const [ isFinalized, setFinalized ] = useState<boolean>();
 
   const { query } = useRouter();
   const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
@@ -33,17 +32,17 @@ function AccessControl() {
 
       <Stack direction={'row'} >
 
-        {finalized != undefined && !finalized && (
+        {isFinalized != undefined && !isFinalized && (
           <>
             <Stack direction={'column'}  >
-              <Paper sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+              <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
                 <SetOwner addr={ ia } />
                 <SetGeneralCounsel addr={ ia } />
               </Paper>
             </Stack>
 
             <Stack direction={'column'} >
-              <Paper sx={{m:1, p:1, border:1, borderColor:'divider'}} >
+              <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
                 <AppointAttorney addr={ ia } />
                 <RemoveAttorney addr={ ia } />
                 <QuitAttorney addr={ ia } />

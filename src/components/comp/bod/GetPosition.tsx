@@ -70,7 +70,7 @@ export function GetPosition({seq}: GetPositionProps) {
 
         <DialogContent>
 
-          <Paper sx={{
+          <Paper elevation={3} sx={{
             alignContent:'center', 
             justifyContent:'center', 
             p:1, m:1, 

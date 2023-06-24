@@ -59,7 +59,7 @@ function BookOfIA() {
 
   return (
     <>
-      <Paper sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+      <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Toolbar>
           <h3>BOA - Book Of Investment Agreements</h3>
         </Toolbar>

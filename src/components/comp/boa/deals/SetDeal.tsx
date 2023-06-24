@@ -78,7 +78,7 @@ export const StateOfDeal = [
 interface SetDealProps{
   ia: HexType,
   seq: number, 
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
 export function dealSnCodifier(head: Head): HexType {
@@ -97,7 +97,7 @@ export function dealSnCodifier(head: Head): HexType {
   return hexSn;
 }
 
-export function SetDeal({ia, seq, finalized}: SetDealProps) {
+export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
   const defaultHead: Head = {
     typeOfDeal: 1,
@@ -209,7 +209,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
   // }, [ ia, getHeadOfFile ])
 
   return (
-    <Paper sx={{
+    <Paper elevation={3} sx={{
       alignContent:'center', 
       justifyContent:'center', 
       p:1, m:1, 
@@ -225,7 +225,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
             </Toolbar>
           </Box>
 
-          {!finalized && (
+          {!isFinalized && (
             <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
               <Button 
@@ -280,7 +280,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
           spacing={1} 
         >
 
-          <Paper sx={{
+          <Paper elevation={3} sx={{
             p:1, 
             border: 1, 
             borderColor:'divider' 
@@ -343,7 +343,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
             </Stack>
           </Paper>
 
-          <Paper sx={{
+          <Paper elevation={3} sx={{
             p:1, 
             border: 1, 
             borderColor:'divider' 
@@ -433,7 +433,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
             </Stack>
 
-            <Collapse in={ editable && !finalized } >
+            <Collapse in={ editable && !isFinalized } >
               <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                 <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
@@ -612,7 +612,7 @@ export function SetDeal({ia, seq, finalized}: SetDealProps) {
 
             )}
 
-            <Collapse in={ editable && !finalized } >
+            <Collapse in={ editable && !isFinalized } >
               <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                 <TextField 

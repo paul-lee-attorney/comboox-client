@@ -13,7 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { AddrZero, Bytes32Zero, HexType } from "../../../../interfaces";
+import { HexType } from "../../../../interfaces";
 
 import { 
   ShaNavi, 
@@ -33,7 +33,7 @@ import { SignIa } from "../../../../components/comp/boa/ia/SignIa";
 import { VoteCountingOfGm } from "../../../../components/comp/bog/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { Head, getHeadOfFile } from "../../../../queries/filesFolder";
-import { finalized } from "../../../../queries/accessControl";
+import { isFinalized } from "../../../../queries/accessControl";
 
 function Lifecycle() {
 
@@ -83,7 +83,7 @@ function Lifecycle() {
     if (fileState)
     switch (fileState) {
       case 1: // created
-        finalized(ia).then(
+        isFinalized(ia).then(
           (flag) => setActiveStep(flag ? 1: 0)
         );
         break;
@@ -128,7 +128,7 @@ function Lifecycle() {
           <ShaNavi contractName={'Investment Agreement'} addr={ ia } snOfDoc={ snOfDoc } thisPath='./lifecycle' />
         )}
                 
-        <Paper
+        <Paper elevation={3}
           sx={{
             m:1, p:1,
             border:1,

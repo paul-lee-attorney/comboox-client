@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -6,12 +6,18 @@ import {
   Paper,
   Toolbar,
   Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Grid,
 } from "@mui/material";
 
-import { ShaRuleInputProps } from "../../../../interfaces";
+import { HexType, ShaRuleInputProps } from "../../../../interfaces";
 
 import {
   AddCircle,
+  ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
 
@@ -19,14 +25,30 @@ import {
   SetPositionAllocateRule, 
 } from '../../..';
 
-export function PositionAllocateRules({sha, seqList, finalized}: ShaRuleInputProps) {
+import { Position } from "../../bod/GetPosition";
+import { PosAllocateRule } from "./SetPositionAllocateRule";
 
-  const [ cp, setCp ] = useState(seqList);
+interface PositionAllocateRulesProps {
+  sha: HexType;
+  initSeqList: number[] | undefined;
+  isFinalized: boolean;
+}
+
+export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionAllocateRulesProps) {
+
+  const mandatoryRules = [256];
+  
+  const [ cp, setCp ] = useState<number[]>(mandatoryRules);
+
+  useEffect(()=>{
+    if (initSeqList) 
+      setCp(initSeqList);
+  }, [initSeqList]);
 
   const addCp = () => {
     setCp(v => {
       let arr = [...v];
-      arr.push(v[v.length-1] + 1);      
+      arr.push(v[v.length-1] + 1);
       return arr;
     })
   }
@@ -39,43 +61,81 @@ export function PositionAllocateRules({sha, seqList, finalized}: ShaRuleInputPro
     })
   }
 
+  const [open, setOpen] = useState(false);
+
   return (
-    <Paper sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
-      <Box sx={{ width:1680 }}>
+    <>
+      <Button
+        // disabled={ !newGR }
+        variant="outlined"
+        startIcon={<ListAlt />}
+        // fullWidth={true}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
+      >
+        Position Rules 
+      </Button>
 
-        <Stack direction={'row'} sx={{ alignItems:'center' }}>
-          <Toolbar>
-            <h4>Position Allocate Rules</h4>
-          </Toolbar>
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
+        <DialogContent>      
 
-          {!finalized && (
-            <>
-              <IconButton 
-                sx={{width: 20, height: 20, m: 1, p: 1}} 
-                onClick={ addCp }
-                color="primary"
-              >
-                <AddCircle/>
-              </IconButton>
-              <IconButton
-                disabled={ cp.length < 2 } 
-                sx={{width: 20, height: 20, m: 1, p: 1, }} 
-                onClick={ removeCp }
-                color="primary"
-              >
-                <RemoveCircle/>
-              </IconButton>            
-            </>
-          )}
+          <Paper elevation={3} sx={{ m:1, p:1, border: 1, borderColor:'divider' }}>
+            <Box sx={{ width:1180 }}>
 
-        </Stack>
+              <Stack direction={'row'} sx={{ alignItems:'center' }}>
+                <Toolbar sx={{ textDecoration:'underline' }}>
+                  <h4>Position Allocate Rules</h4>
+                </Toolbar>
 
-        {cp.map((v, _, arr)=> (
-          <SetPositionAllocateRule key={ v } sha={ sha } qty={ arr.length } seq={ v } finalized={ finalized } />
-        ))}
+                {!isFinalized && (
+                  <>
+                    <IconButton 
+                      sx={{width: 20, height: 20, m: 1, p: 1}} 
+                      onClick={ addCp }
+                      color="primary"
+                    >
+                      <AddCircle/>
+                    </IconButton>
+                    <IconButton
+                      disabled={ cp.length < 2 } 
+                      sx={{width: 20, height: 20, m: 1, p: 1, }} 
+                      onClick={ removeCp }
+                      color="primary"
+                    >
+                      <RemoveCircle/>
+                    </IconButton>            
+                  </>
+                )}
 
-      </Box>
-    </Paper>
+              </Stack>
+
+              <Grid container spacing={0.5} >
+
+                {cp.map((v)=> (
+                  <Grid key={v} item xs={3}>
+                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                  </Grid>
+                ))}
+
+              </Grid>
+
+            </Box>
+          </Paper>
+
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
+
+      </Dialog>
+
+    </>
   );
 } 
 

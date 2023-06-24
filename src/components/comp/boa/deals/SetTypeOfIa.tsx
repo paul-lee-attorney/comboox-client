@@ -14,10 +14,10 @@ export const strTypeOfIa = ['ZeroPoint', 'CI', 'EXT', 'INT', 'CI & INT', 'EXT & 
 
 interface SetTypeOfIaProps{
   ia: HexType,
-  finalized: boolean,
+  isFinalized: boolean,
 }
 
-export function SetTypeOfIa({ia, finalized}: SetTypeOfIaProps) {
+export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
 
   const [ type, setType ] = useState<string>();
   const [ newType, setNewType ] = useState<number>(0);

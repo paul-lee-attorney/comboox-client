@@ -13,10 +13,10 @@ import { isPassed } from "../../../queries/meetingMinutes";
 
 interface VoteCountingOfGmProps {
   seqOfMotion: BigNumber;
-  setResult: (flag: boolean) => void;
+  setNextStep: (step: number) => void;
 }
 
-export function VoteCountingOfGm({ seqOfMotion, setResult }: VoteCountingOfGmProps) {
+export function VoteCountingOfGm({ seqOfMotion, setNextStep }: VoteCountingOfGmProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -34,7 +34,7 @@ export function VoteCountingOfGm({ seqOfMotion, setResult }: VoteCountingOfGmPro
     ...config,
     onSuccess() {
       isPassed(boox[3], seqOfMotion).then(
-        flag => setResult(flag)
+        flag => setNextStep(flag ? 6 : 8)
       )
     }
   });

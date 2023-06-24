@@ -91,6 +91,7 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
               </InputAdornment>
             }
             label='SetGeneralCounsel'
+            sx={{height: 50}}
             onChange={(e) => setGC(e.target.value)}
           />
         </FormControl>
@@ -112,7 +113,7 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
 
             variant='outlined' 
             severity='info' 
-            sx={{ height: 55,  m: 1 }} 
+            sx={{ height: 50,  m: 1 }} 
           >
             General Counsel: { newGC } 
           </Alert>

@@ -75,6 +75,7 @@ export function SetOwner({ addr }: ContractProps) {
               </InputAdornment>
             }
             label='SetOwner'
+            sx={{ height:50 }}
             onChange={(e) => setOwner(e.target.value)}
           />
         </FormControl>
@@ -95,7 +96,7 @@ export function SetOwner({ addr }: ContractProps) {
 
             variant='outlined' 
             severity='info' 
-            sx={{ height: 55,  m: 1, }} 
+            sx={{ m:1, height:50 }} 
           >
             Owner : { newOwner } 
           </Alert>

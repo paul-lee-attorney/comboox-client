@@ -136,7 +136,7 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
   const [ open, setOpen ] = useState<boolean>(false);
 
   return (
-    <Paper sx={{
+    <Paper elevation={3} sx={{
       p:1, m:1,
       border: 1, 
       borderColor:'divider' 

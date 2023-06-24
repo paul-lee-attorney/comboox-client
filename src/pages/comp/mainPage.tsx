@@ -19,7 +19,7 @@ function MainPage() {
 
   return (
     <>
-      <Paper 
+      <Paper elevation={3} 
         sx={{
           alignContent:'center', 
           justifyContent:'center', 

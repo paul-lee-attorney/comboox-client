@@ -132,7 +132,7 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
   const [ useLock, setUseLock ] = useState<boolean>();
 
   return (
-    <Paper sx={{
+    <Paper elevation={3} sx={{
       p:1, 
       border: 1, 
       borderColor:'divider' 

@@ -7,7 +7,6 @@ import { EmojiPeople } from "@mui/icons-material";
 import { BigNumber } from "ethers";
 import { useState } from "react";
 
-
 interface ProposeDocOfGmProps {
   addr: HexType,
   seqOfVR: number,

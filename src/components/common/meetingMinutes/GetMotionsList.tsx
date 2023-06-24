@@ -133,7 +133,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
   }
 
   return (
-    <Paper sx={{ m:1, p:1, color:'divider', border:1 }} >
+    <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <Box sx={{width: '100%', color: 'black' }} >
         <Toolbar>
           <h3>{ title }</h3>

@@ -77,6 +77,7 @@ export function RemoveAttorney({ addr }: ContractProps) {
               </InputAdornment>
             }
             label='RemoveAttorney'
+            sx={{height:50}}
             onChange={(e) => setAcct(e.target.value)}
           />
         </FormControl>
@@ -98,7 +99,7 @@ export function RemoveAttorney({ addr }: ContractProps) {
 
             severity={ flag ? "success" : "warning" }
             variant='outlined' 
-            sx={{ height: 55,  m: 1, }} 
+            sx={{ height: 50,  m: 1, }} 
           >
             { flag ? 'Is Attorney' : 'Not Attorney' } 
           </Alert>

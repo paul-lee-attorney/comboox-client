@@ -86,7 +86,7 @@ function BodyTerms() {
  
   const snOfDoc:string = query?.snOfDoc?.toString() ?? '';
 
-  const [ finalized, setFinalized ] = useState(false);
+  const [ isFinalized, setFinalized ] = useState(false);
 
   const [ seqList, setSeqList ] = useState<number[]>();
 
@@ -147,7 +147,7 @@ function BodyTerms() {
       )}
 
       {seqList && (
-        <Deals ia={ ia } seqList={ seqList } finalized={ finalized } /> 
+        <Deals ia={ ia } seqList={ seqList } isFinalized={ isFinalized } /> 
       )}
 
     </Stack>
