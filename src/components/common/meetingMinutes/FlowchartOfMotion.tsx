@@ -12,14 +12,16 @@ import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { ProposeMotionToGeneralMeeting } from "../../comp/bog/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "../../comp/bog/CastVoteOfGm";
 import { BallotsList } from "./BallotsList";
-import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
+import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
 import { VoteCountingOfGm } from "../../comp/bog/VoteCountingOfGm";
+import { TakeSeat } from "../../comp/bog/TakeSeat";
 
 export interface FlowchartOfMotionProps{
-  open: boolean,
-  motion: Motion,
-  setOpen: (flag: boolean)=>void,
-  obtainMotionsList: (minutes:HexType)=>any,
+  minutes: HexType;
+  open: boolean;
+  motion: Motion;
+  setOpen: (flag: boolean)=>void;
+  obtainMotionsList: ()=>any;
 }
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
@@ -34,17 +36,17 @@ export async function getSnOfFile(folder: HexType, addr: HexType): Promise<HexTy
   return sn;
 }
 
-export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: FlowchartOfMotionProps) {
+export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotionsList}: FlowchartOfMotionProps) {
 
   const { boox } = useComBooxContext();
 
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
   useEffect(()=>{
-    getVoteResult(boox[3], motion.head.seqOfMotion).then(
+    getVoteResult(minutes, motion.head.seqOfMotion).then(
       list => setVoteResult(list)
     )
-  }, [motion, boox]);
+  }, [minutes, motion]);
 
   const [ addrOfDoc, setAddrOfDoc ]=useState<HexType>();
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
@@ -186,8 +188,8 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                       <Link
                         href={{
                           pathname: motion.head.seqOfVR == 8
-                                  ? '/comp/boh/sha/bodyTerms'
-                                  : '/comp/boa/ia/bodyTerms'
+                                  ? '/comp/boh/Sha'
+                                  : '/comp/boa/Ia'
                           ,
                           query: {
                             addr: addrOfDoc,
@@ -270,7 +272,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                 <tr>
                   <td>
                     <BallotsList 
-                      addr={boox[3]}
+                      addr={minutes}
                       seqOfMotion={motion.head.seqOfMotion}
                       attitude={ 1 }
                       allVote={voteResult[0]}
@@ -279,7 +281,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                   </td>
                   <td>
                     <BallotsList 
-                      addr={boox[3]}
+                      addr={minutes}
                       seqOfMotion={motion.head.seqOfMotion}
                       attitude={ 3 }
                       allVote={voteResult[0]}
@@ -288,7 +290,7 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                   </td>
                   <td>
                     <BallotsList 
-                      addr={boox[3]}
+                      addr={minutes}
                       seqOfMotion={motion.head.seqOfMotion}
                       attitude={ 2 }
                       allVote={voteResult[0]}
@@ -313,8 +315,16 @@ export function FlowchartOfMotion({open, motion, setOpen, obtainMotionsList}: Fl
                       <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} />
+                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} />
                     </Collapse>
+                  </td>
+                </tr>
+              )}
+
+              {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
+                <tr>
+                  <td colSpan={4}>
+                    <TakeSeat seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}

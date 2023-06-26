@@ -181,7 +181,7 @@ function BookOfSHA() {
                 <GetFilesList 
                   list={ filesInfoList } 
                   title="SHA List" 
-                  pathName="/comp/boh/sha/Sha" 
+                  pathName="/comp/boh/Sha" 
                   pathAs="/comp/boh/sha" 
                 />
               )}

@@ -41,7 +41,7 @@ const defaultAction: Action = {
 }
 
 interface CreateMotionProps {
-  getMotionsList: (minutes:HexType) => any,
+  getMotionsList: () => any,
 }
 
 export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
@@ -66,7 +66,7 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   } = useGeneralKeeperNominateDirector({
     ...addDirectorConfig,
     onSuccess(){
-      getMotionsList(boox[3]);
+      getMotionsList();
     }
   });
 
@@ -85,7 +85,7 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   } = useGeneralKeeperCreateMotionToRemoveDirector({
     ...removeDirectorConfig,
     onSuccess() {
-      getMotionsList(boox[3]);
+      getMotionsList();
     }
   });
 
@@ -108,7 +108,7 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   } = useGeneralKeeperProposeDocOfGm({
     ...proposeDocOfGmConfig,
     onSuccess() {
-      getMotionsList(boox[3]);
+      getMotionsList();
     }
   });
 
@@ -135,7 +135,7 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
   } = useGeneralKeeperCreateActionOfGm({
     ...proposeActionConfig,
     onSuccess() {
-      getMotionsList(boox[3]);
+      getMotionsList();
     }
   });
 

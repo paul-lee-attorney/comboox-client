@@ -64,7 +64,7 @@ export function GetPosition({seq}: GetPositionProps) {
       >
         {pos && (
           <DialogTitle id="dialog-title">
-            Position Info - No. {pos.seqOfPos.toString().padStart(3, '0')}
+            <b>Position Info - No. {pos.seqOfPos.toString().padStart(3, '0')}</b>
           </DialogTitle>
         )}
 

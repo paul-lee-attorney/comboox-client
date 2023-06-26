@@ -1,10 +1,11 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Paper, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 import { CreateMotionOfGm } from "../../../components/comp/bog/CreateMotionOfGm";
 import { FlowchartOfMotion } from "../../../components/common/meetingMinutes/FlowchartOfMotion";
-import { Motion, getMotionsList, getSeqList } from "../../../queries/meetingMinutes";
+import { Motion, getMotion } from "../../../queries/meetingMinutes";
+import { useMeetingMinutesGetSeqList } from "../../../generated";
 
 function BookOfGM() {
 
@@ -12,11 +13,30 @@ function BookOfGM() {
 
   const [ motionsList, setMotionsList ] = useState<Motion[]>();
 
-  useEffect(()=>{
-    getMotionsList(boox[3]).then(
-      ls => setMotionsList(ls)
-    )
-  }, [boox])
+  const {
+    refetch: getSeqList
+  } = useMeetingMinutesGetSeqList({
+    address: boox[3],
+    onSuccess(seqList) {
+
+      const obtainMotionsList = async () => {
+        let list: Motion[] = [];
+        let len = seqList.length;
+        let i = len >= 100 ? len - 100 : 0;
+
+        while( i < len ) {
+          let motion = await getMotion(boox[3], seqList[i]);
+          list.push(motion);
+          i++;
+        }
+      
+        console.log('motionsList: ', list);
+        setMotionsList(list);
+      }
+
+      obtainMotionsList();
+    }
+  });
 
   const [ open, setOpen ] = useState(false);
   const [ motion, setMotion ] = useState<Motion>();
@@ -54,7 +74,7 @@ function BookOfGM() {
           <tr>
             <td colSpan={4}>
               {motion && (
-                <FlowchartOfMotion  open={open} motion={motion} setOpen={setOpen} obtainMotionsList={getMotionsList} />
+                <FlowchartOfMotion minutes={boox[3]}  open={open} motion={motion} setOpen={setOpen} obtainMotionsList={getSeqList} />
               )}
             </td>
           </tr>

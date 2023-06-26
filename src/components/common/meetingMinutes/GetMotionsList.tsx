@@ -92,7 +92,8 @@ const columns: GridColDef[] = [
     headerName: 'State',
     valueGetter: p => state[p.row.body.state],
     renderCell: ({ value }) => (
-      <Chip 
+      <Chip
+        sx={{width: 168}} 
         label={ value }
         variant="filled"
         color={

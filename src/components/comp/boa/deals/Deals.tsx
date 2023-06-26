@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { HexType } from "../../../../interfaces";
 import { Box, IconButton, Paper, Stack, Toolbar } from "@mui/material";
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
@@ -7,13 +7,27 @@ import { SetTypeOfIa } from "./SetTypeOfIa";
 
 interface DealsProps{
   ia: HexType,
-  seqList: number[],
+  seqList: number[] | undefined,
   isFinalized: boolean,
 }
 
 export function Deals({ia, seqList, isFinalized}: DealsProps) {
 
-  const [ cp, setCp ] = useState(seqList);
+  const [ cp, setCp ] = useState<number[]>([1]);
+
+  useEffect(()=>{
+    if (seqList)
+      setCp(v => {
+        let setDeals = new Set([...v]);
+        seqList.forEach(k => {
+          setDeals.add(k)
+        });
+        let arrDeals = Array.from(setDeals).sort(
+          (a, b) => (a-b)
+        );
+        return arrDeals;
+      })
+  }, [seqList])
 
   const addCp = () => {
     setCp(v => {
@@ -33,10 +47,10 @@ export function Deals({ia, seqList, isFinalized}: DealsProps) {
 
   return(
     <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-      <Box sx={{ width:1680 }}>
+      <Box sx={{ width:'100%' }}>
 
         <Stack direction={'row'} sx={{ alignItems:'center' }}>
-          <Toolbar>
+          <Toolbar sx={{ textDecoration:'underline' }}>
             <h4>Deals</h4>
           </Toolbar>
 
@@ -58,7 +72,7 @@ export function Deals({ia, seqList, isFinalized}: DealsProps) {
                 <RemoveCircle/>
               </IconButton>
 
-              <SetTypeOfIa  ia={ia} isFinalized={ isFinalized } />
+              <SetTypeOfIa ia={ia} isFinalized={ isFinalized } />
             </>
           )}
 

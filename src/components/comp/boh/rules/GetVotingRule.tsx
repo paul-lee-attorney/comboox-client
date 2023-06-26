@@ -60,12 +60,12 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
   return (
     <>
       <Button
-        // disabled={ !objVr }
+        disabled={ !objVr }
         variant="outlined"
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:1 }}
-        onClick={()=>setOpen(false)}      
+        onClick={()=>setOpen(true)}      
       >
         Seq Of VotingRule: {seq}
       </Button>

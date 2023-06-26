@@ -1,49 +1,43 @@
-import { BigNumber } from "ethers";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { readContract, waitForTransaction } from "@wagmi/core";
-import { investmentAgreementABI, useFilesFolder, useFilesFolderGetHeadOfFile, useInvestmentAgreementAddDeal, useInvestmentAgreementDelDeal, useInvestmentAgreementGetDeal, usePrepareInvestmentAgreementAddDeal, usePrepareInvestmentAgreementDelDeal } from "../../../../generated";
 import { useEffect, useState } from "react";
-import { Box, Button, Checkbox, Collapse, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, TextField, Toolbar } from "@mui/material";
-import { AddCircle, EditNote, LockClock, RemoveCircle } from "@mui/icons-material";
+
+import { BigNumber } from "ethers";
+
+import { Bytes32Zero, HexType } from "../../../../interfaces";
+
+import { 
+  useInvestmentAgreementAddDeal, 
+  useInvestmentAgreementDelDeal, 
+  useInvestmentAgreementGetDeal, 
+  usePrepareInvestmentAgreementAddDeal, 
+  usePrepareInvestmentAgreementDelDeal 
+} from "../../../../generated";
+
+import { 
+  Box, 
+  Button, 
+  Checkbox, 
+  Collapse, 
+  FormControl, 
+  FormControlLabel, 
+  InputLabel, 
+  MenuItem, 
+  Paper, 
+  Select, 
+  Stack, 
+  TextField, 
+  Toolbar 
+} from "@mui/material";
+
+import { AddCircle, RemoveCircle } from "@mui/icons-material";
+
 import { ExecDeal } from "./ExecDeal";
 
 import dayjs, { Dayjs } from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
-
-export interface Head {
-  typeOfDeal: number,
-  seqOfDeal: number,
-  preSeq: number,
-  classOfShare: number,
-  seqOfShare: number,
-  seller: number,
-  priceOfPaid: number,
-  priceOfPar: number,
-  closingDate: number,
-  para: number,
-}
-
-
-export interface Body {
-  buyer: number,
-  groupOfBuyer: number,
-  paid: BigNumber,
-  par: BigNumber,
-  state: number,
-  para: number,
-  argu: number,
-  flag: boolean,
-}
-
-export interface Deal {
-  head: Head,
-  body: Body,
-  hashLock: HexType,
-}
-
-export const stateOfDeal = ['Drafing', 'Locked', 'Cleared', 'Closed', 'Terminated'];
+import { Body, Deal, Head } from "../../../../queries/ia";
+import { getHeadOfFile } from "../../../../queries/filesFolder";
 
 export const TypeOfDeal = [
   'CapitalIncrease', 
@@ -100,7 +94,7 @@ export function dealSnCodifier(head: Head): HexType {
 export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
   const defaultHead: Head = {
-    typeOfDeal: 1,
+    typeOfDeal: 2,
     seqOfDeal: seq,
     preSeq: 0,
     classOfShare: 1,
@@ -131,8 +125,6 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
   const [ objSn, setObjSn ] = useState<Head>(defaultHead);
 
-  let hexSn:HexType = dealSnCodifier(objSn);
-
   const [ objBody, setObjBody ] = useState<Body>(defaultBody);
 
   const [ newDeal, setNewDeal ] = useState<Deal>(defaultDeal);
@@ -151,7 +143,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
     config: addDealConfig,
   } = usePrepareInvestmentAgreementAddDeal({
     address: ia,
-    args: [ hexSn,
+    args: [ dealSnCodifier(objSn),
             BigNumber.from(objBody.buyer),
             BigNumber.from(objBody.groupOfBuyer),
             objBody.paid,
@@ -187,26 +179,18 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
   });
 
   const [ editable, setEditable ] = useState<boolean>(false); 
-
-  const [ hashLock, setHashLock ] = useState<HexType>();
   
   const { boox } = useComBooxContext();
 
   const [ fileState, setFileState ] = useState<number>();
 
-  const {
-    refetch: getHeadOfFile,
-  } = useFilesFolderGetHeadOfFile({
-    address: boox[1],
-    args: [ia],
-    onSuccess(head) {
-      setFileState(head.state)
+  useEffect(()=>{
+    const obtainFileState = async ()=>{
+      let head = await getHeadOfFile(boox[1], ia);
+      setFileState(head.state);
     }
-  })
-
-  // useEffect(()=>{
-  //   if (ia) getHeadOfFile()
-  // }, [ ia, getHeadOfFile ])
+    obtainFileState();
+  }, [ boox, ia ]);
 
   return (
     <Paper elevation={3} sx={{
@@ -288,57 +272,49 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
           >
             <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            {newDeal?.head.seqOfDeal != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='SeqOfDeal'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newDeal.head.seqOfDeal.toString() }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='SeqOfDeal'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ newDeal.head.seqOfDeal.toString() }
+              />
 
-              {newDeal?.head.preSeq != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='PreSeq'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newDeal.head.preSeq.toString() }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='PreSeq'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ newDeal.head.preSeq.toString() }
+              />
 
-              {newDeal?.head.closingDate != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='ClosingDate'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ dateParser(newDeal.head.closingDate) }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='ClosingDate'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ dateParser(newDeal.head.closingDate) }
+              />
 
-              {newDeal?.body.state != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='State'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ stateOfDeal[newDeal.body.state] }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='State'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ StateOfDeal[newDeal.body.state] }
+              />
 
             </Stack>
           </Paper>
@@ -352,7 +328,6 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
             <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            {newDeal?.head.typeOfDeal != undefined && (
               <TextField 
                 variant='filled'
                 label='TypeOfDeal'
@@ -361,75 +336,63 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   m:1,
                   minWidth: 218,
                 }}
-                defaultValue={ TypeOfDeal[0] }
-                value={ TypeOfDeal[newDeal.head.typeOfDeal - 1] }
+                value={ TypeOfDeal[(newDeal.head.typeOfDeal > 0 ? newDeal.head.typeOfDeal : 1) - 1] }
               />
-            )}
 
-              {newDeal?.head.classOfShare != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='ClassOfShare'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newDeal.head.classOfShare.toString() }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='ClassOfShare'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ newDeal.head.classOfShare.toString() }
+              />
 
-              {newDeal?.head.seqOfShare != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='SeqOfShare'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newDeal.head.seqOfShare.toString() }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='SeqOfShare'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ newDeal.head.seqOfShare.toString() }
+              />
 
-              {newDeal?.head.priceOfPaid != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='PriceOfPaid'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser(newDeal.head.priceOfPaid.toString()) }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='PriceOfPaid'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longDataParser(newDeal.head.priceOfPaid.toString()) }
+              />
 
-              {newDeal?.head.priceOfPar != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='PriceOfPar'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser(newDeal.head.priceOfPar.toString()) }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='PriceOfPar'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longDataParser(newDeal.head.priceOfPar.toString()) }
+              />
 
-              {newDeal?.head.closingDate != undefined && (
-                <TextField 
-                  variant='filled'
-                  label='ClosingDate'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ dateParser(newDeal.head.closingDate) }
-                />
-              )}
+              <TextField 
+                variant='filled'
+                label='ClosingDate'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ dateParser(newDeal.head.closingDate) }
+              />
 
             </Stack>
 
@@ -441,13 +404,11 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   <Select
                     labelId="typeOfDeal-label"
                     id="typeOfDeal-select"
-                    value={ objSn?.typeOfDeal }
+                    value={ objSn.typeOfDeal }
                     onChange={(e) => setObjSn((v) => ({
                       ...v,
                       typeOfDeal: parseInt(e.target.value.toString()),
                     }))}
-
-                    label="TypeOfDeal"
                   >
                     {TypeOfDeal.map((v,i) => (
                       <MenuItem key={v} value={i+1}>{v}</MenuItem>
@@ -467,8 +428,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     classOfShare: parseInt(e.target.value),
                     }))
                   }
-                  
-                  value={ objSn?.classOfShare }
+                  value={ objSn.classOfShare }
                 />
 
                 <TextField 
@@ -482,7 +442,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     ...v,
                     seqOfShare: parseInt(e.target.value),
                   }))}
-                  value={ objSn?.seqOfShare } 
+                  value={ objSn.seqOfShare } 
                 />
 
                 <TextField 
@@ -496,7 +456,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     ...v,
                     priceOfPaid: parseInt(e.target.value),
                   }))}
-                  value={ objSn?.priceOfPaid }
+                  value={ objSn.priceOfPaid }
                 />
 
                 <TextField 
@@ -510,7 +470,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     ...v,
                     priceOfPar: parseInt(e.target.value),
                   }))}
-                  value={ objSn?.priceOfPar }
+                  value={ objSn.priceOfPar }
                 />
 
                 <DateTimeField
@@ -531,86 +491,83 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
             </Collapse>
 
 
-            {newDeal && (
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+            <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                <TextField 
-                  variant='filled'
-                  label='Seller'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newDeal.head.seller.toString()) }
-                />
+              <TextField 
+                variant='filled'
+                label='Seller'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longSnParser(newDeal.head.seller.toString()) }
+              />
 
-                <TextField 
-                  variant='filled'
-                  label='Buyer'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newDeal.body.buyer.toString()) }
-                />
+              <TextField 
+                variant='filled'
+                label='Buyer'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longSnParser(newDeal.body.buyer.toString()) }
+              />
 
-                <TextField 
-                  variant='filled'
-                  label='GroupOfBuyer'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newDeal.body.groupOfBuyer.toString()) }
-                />
+              <TextField 
+                variant='filled'
+                label='GroupOfBuyer'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longSnParser(newDeal.body.groupOfBuyer.toString()) }
+              />
 
-                <TextField 
-                  variant='filled'
-                  label='QtyOfPaid'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser(newDeal.body.paid.toString()) }
-                />
+              <TextField 
+                variant='filled'
+                label='QtyOfPaid'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longDataParser(newDeal.body.paid.toString()) }
+              />
 
-                <TextField 
-                  variant='filled'
-                  label='QtyOfPar'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser(newDeal.body.par.toString()) }
-                />
+              <TextField 
+                variant='filled'
+                label='QtyOfPar'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longDataParser(newDeal.body.par.toString()) }
+              />
 
-                <TextField 
-                  variant='filled'
-                  label='TotalAmount'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser( 
-                    newDeal.body.par.sub(newDeal.body.paid).
-                    mul(BigNumber.from(newDeal.head.priceOfPar)).
-                    add(
-                        newDeal.body.paid.mul(
-                        BigNumber.from(newDeal.head.priceOfPaid)
-                      )
-                    ).toString()  
-                  )}
-                />
+              <TextField 
+                variant='filled'
+                label='TotalAmount'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ longDataParser( 
+                  newDeal.body.par.sub(newDeal.body.paid).
+                  mul(BigNumber.from(newDeal.head.priceOfPar)).
+                  add(
+                      newDeal.body.paid.mul(
+                      BigNumber.from(newDeal.head.priceOfPaid)
+                    )
+                  ).toString()  
+                )}
+              />
 
-              </Stack>
-
-            )}
+            </Stack>
 
             <Collapse in={ editable && !isFinalized } >
               <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
@@ -627,8 +584,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     seller: parseInt(e.target.value),
                     }))
                   }
-                  
-                  value={ objSn?.seller }
+                  value={ objSn.seller }
                 />
 
                 <TextField 
@@ -644,7 +600,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     }))
                   }
                   
-                  value={ objBody?.buyer }
+                  value={ objBody.buyer }
                 />
 
                 <TextField 
@@ -660,7 +616,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     }))
                   }
                   
-                  value={ objBody?.groupOfBuyer }
+                  value={ objBody.groupOfBuyer }
                 />
 
                 <TextField 
@@ -676,7 +632,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     }))
                   }
                   
-                  value={ objBody?.paid.toString() }
+                  value={ objBody.paid.toString() }
                 />
 
                 <TextField 
@@ -692,7 +648,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     }))
                   }
                   
-                  value={ objBody?.par.toString() }
+                  value={ objBody.par.toString() }
                 />
 
               </Stack>

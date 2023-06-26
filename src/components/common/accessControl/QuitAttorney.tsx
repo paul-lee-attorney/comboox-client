@@ -52,7 +52,7 @@ export function QuitAttorney({ addr }: ContractProps) {
 
         <Button
           disabled={ !write || isLoading }
-          sx={{m:1, width: 250, height:50}}
+          sx={{m:1, width: 250, height:55}}
           variant='outlined'
           endIcon={<Skateboarding />}
           onClick={ handleClick }
@@ -77,7 +77,7 @@ export function QuitAttorney({ addr }: ContractProps) {
 
             variant='outlined' 
             severity={ flag ? "warning" : "success" } 
-            sx={{ height: 50,  m: 1, }} 
+            sx={{ height: 55,  m: 1, }} 
           >
             { flag ? 'Not Attorney' : 'Is Attorney' } 
           </Alert>

@@ -20,6 +20,7 @@ import {
   LockContents,
   ProposeDocOfGm,
   VoteForDocOfGm,
+  CirculateIa,
 } from '../../..';
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
@@ -27,24 +28,37 @@ import { BigNumber } from "ethers";
 import { VoteCountingOfGm } from "../../bog/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
+import { SignIa } from "./SignIa";
+import { getTypeOfIA } from "../../../../queries/ia";
 
-interface ShaLifecycleProps {
-  sha: HexType;
+interface IaLifecycleProps {
+  ia: HexType;
   isFinalized: boolean;
 }
 
-export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
+export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
 
   const { boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
   const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
+
+  const [ typeOfIa, setTypeOfIa ] = useState<number>();
+
+  useEffect(()=>{
+    const obtainTypeOfIa = async ()=>{
+      let typeOfIa = await getTypeOfIA(ia);
+      setTypeOfIa(typeOfIa);
+    };
+
+    obtainTypeOfIa();
+  })
 
   useEffect(()=>{
     const updateActiveStep = async () => {
 
       if (boox) {
 
-        let head = await getHeadOfFile(boox[4], sha);
+        let head = await getHeadOfFile(boox[1], ia);
         let fileState = head.state;
         let seq = head.seqOfMotion;
         let nextStep = 0;
@@ -74,7 +88,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
     };
 
     updateActiveStep();
-  }, [boox, sha, isFinalized]);
+  }, [boox, ia, isFinalized]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -87,34 +101,33 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
         }} 
       >
         {activeStep != undefined && (
-          <Box sx={{ width:980 }} >
+          <Box sx={{ width:1280 }} >
             <Stepper sx={{ pl:5 }} activeStep={ activeStep } orientation="vertical" >
 
               <Step index={0} >
                 
                 <StepLabel>
-                  <h3>Finalize SHA</h3>
+                  <h3>Finalize IA</h3>
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Finalize terms & conditions of SHA (only for Owner of SHA).
+                    Finalize terms & conditions of IA (only for Owner of IA).
                   </Typography>
-                  <LockContents addr={ sha } setNextStep={ setActiveStep } />
+                  <LockContents addr={ ia } setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>
 
-
               <Step index={1} >
 
                 <StepLabel>
-                  <h3>Circulate SHA</h3>
+                  <h3>Circulate IA</h3>
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Circulate SHA to parties for execution (only for Parties of SHA).
+                    Circulate IA to parties for execution (only for Parties of IA).
                   </Typography>
-                  <CirculateSha addr={ sha } setNextStep={ setActiveStep } />
+                  <CirculateIa addr={ ia } setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>
@@ -122,13 +135,13 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
               <Step index={2} >
 
                 <StepLabel>
-                  <h3>Sign SHA</h3>
+                  <h3>Sign IA</h3>
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Sign SHA to accept its terms (only for Parties of SHA).
+                    Sign IA to accept its terms (only for Parties of IA).
                   </Typography>
-                  <SignSha addr={ sha } setNextStep={ setActiveStep } />
+                  <SignIa addr={ ia } setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>
@@ -136,13 +149,15 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
               <Step index={3} >
 
                 <StepLabel>
-                  <h3>Propose SHA</h3>
+                  <h3>Propose IA</h3>
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Propose SHA to General Meeting for approval (only for Parties & Members).
+                    Propose IA to General Meeting for approval (only for Parties & Members).
                   </Typography>
-                  <ProposeDocOfGm addr={ sha } seqOfVR={8} setNextStep={ setActiveStep } />
+                  {typeOfIa && (
+                    <ProposeDocOfGm addr={ ia } seqOfVR={typeOfIa} setNextStep={ setActiveStep } />
+                  )}
                 </StepContent>
 
               </Step>
@@ -150,11 +165,11 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
               <Step index={4} >
 
                 <StepLabel>
-                  <h3>Vote for SHA</h3>
+                  <h3>Vote for IA</h3>
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Cast vote in General Meeting to approve SHA.
+                    Cast vote in General Meeting to approve IA.
                   </Typography>
 
                   {seqOfMotion && (
@@ -171,7 +186,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Count vote result of SHA (only for Members).
+                    Count vote result of IA (only for Members).
                   </Typography>
                   {seqOfMotion && (
                     <VoteCountingOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
@@ -183,14 +198,12 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
               <Step index={6} >
 
                 <StepLabel>
-                  <h3>Activate SHA</h3>
+                  <h3>Is Approved</h3>
                 </StepLabel>
                 <StepContent  >
                   <Typography>
-                    Activate SHA into leagal forces (only for Parties of SHA).
-                  </Typography>
-                  <ActivateSha addr={ sha } setNextStep={ setActiveStep } />
-                  
+                    The IA is approved by Shareholders.
+                  </Typography>                  
                 </StepContent>
 
               </Step>
@@ -198,12 +211,12 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
               <Step index={7} >
 
                 <StepLabel>
-                  <h3>In Force</h3>
+                  <h3>Closed</h3>
                 </StepLabel>
                 <StepContent  >
                   
-                  <Typography color={'HighlightText'}>
-                    The SHA currently is In Force.
+                  <Typography>
+                    The IA currently is Closed.
                   </Typography>
 
                 </StepContent>
@@ -217,8 +230,8 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                 </StepLabel>
                 <StepContent  >
                   
-                  <Typography color={'HighlightText'}>
-                    SHA currently is revoked.
+                  <Typography>
+                    The IA currently is revoked.
                   </Typography>
 
                 </StepContent>

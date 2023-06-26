@@ -18,7 +18,7 @@ const columns: GridColDef[] = [
   { 
     field: 'head', 
     headerName: 'Head',
-    valueGetter: p => p.row.sumOfHead,
+    valueGetter: p => p.row.head,
     renderCell: ({ value }) => (<Chip label={value} />),
     headerAlign:'center',
     align: 'center',
@@ -27,7 +27,7 @@ const columns: GridColDef[] = [
   { 
     field: 'weight', 
     headerName: 'Weight',
-    valueGetter: p =>  longDataParser(p.row.sumOfWeight.toString()),
+    valueGetter: p =>  longDataParser(p.row.weight.toString()),
     headerAlign: 'right',
     align:'right',
     width: 180,
@@ -185,7 +185,6 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         </DialogActions>
 
       </Dialog>
-
 
     </>
   )

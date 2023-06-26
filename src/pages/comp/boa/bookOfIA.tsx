@@ -122,7 +122,7 @@ function BookOfIA() {
                   <GetFilesList 
                     list={ filesInfoList } 
                     title="Investment Agreements List" 
-                    pathName="/comp/boa/ia/bodyTerms" 
+                    pathName="/comp/boa/Ia" 
                     pathAs="/comp/boa/ia" 
                   />
                 )}
