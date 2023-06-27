@@ -126,8 +126,10 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
   useEffect(()=>{
     const obtainInitRule = async ()=>{
       let hexRule = await getRule(sha, seq);
-      let objRule: PosAllocateRule = prParser(hexRule);
-      setNewPR(objRule);    
+      if (hexRule != Bytes32Zero) {
+        let objRule: PosAllocateRule = prParser(hexRule);
+        setNewPR(objRule);    
+      }
     }
     obtainInitRule();
   })
@@ -240,7 +242,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfPositions[newPR.titleOfPos - 1] }
+                  value={ titleOfPositions[(newPR.titleOfPos ?? 1) - 1] }
                 />
 
                 <TextField 
@@ -373,7 +375,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfNominator[newPR.titleOfNominator - 1]}
+                  value={ titleOfNominator[(newPR.titleOfNominator ?? 1) - 1]}
                 />
 
                 <TextField 

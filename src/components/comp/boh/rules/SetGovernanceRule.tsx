@@ -293,7 +293,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
 
                         <TextField 
                           variant='filled'
-                          label='ProposeHeadNumOfDirectorsInGM'
+                          label='ProposeHeadRatioOfDirectorsInGM'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -307,7 +307,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
 
                         <TextField 
                           variant='filled'
-                          label='ProposeHeadNumOfDirectorsInBM'
+                          label='ProposeHeadRatioOfDirectorsInBM'
                           sx={{
                             m:1,
                             minWidth: 218,

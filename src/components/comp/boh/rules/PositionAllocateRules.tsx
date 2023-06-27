@@ -27,6 +27,8 @@ import {
 
 import { Position } from "../../bod/GetPosition";
 import { PosAllocateRule } from "./SetPositionAllocateRule";
+import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
+import { BigNumber } from "ethers";
 
 interface PositionAllocateRulesProps {
   sha: HexType;
@@ -41,8 +43,11 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
   const [ cp, setCp ] = useState<number[]>(mandatoryRules);
 
   useEffect(()=>{
-    if (initSeqList) 
-      setCp(initSeqList);
+    if (initSeqList && initSeqList.length > 0) {
+      // console.log('cp: ', cp);
+      console.log('initSeqList: ', initSeqList);
+      setCp([...initSeqList]);
+    }
   }, [initSeqList]);
 
   const addCp = () => {
@@ -53,15 +58,34 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
     })
   }
 
-  const removeCp = () => {
-    setCp(v => {
-      let arr = [...v];
-      arr.pop();      
-      return arr;
-    })
-  }
-
   const [open, setOpen] = useState(false);
+
+  const {
+    config: removeRuleConfig
+  } = usePrepareShareholdersAgreementRemoveRule({
+    address: sha,
+    args: [BigNumber.from(cp[cp.length - 1])]
+  })
+
+  const {
+    isLoading: removeRuleLoading,
+    write: removeRule,
+  } = useShareholdersAgreementRemoveRule({
+    ...removeRuleConfig,
+    onSuccess() {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();      
+        return arr;
+      });
+      setOpen(false);
+    }
+  })
+
+
+  const removeCp = () => {
+    removeRule?.();
+  }
 
   return (
     <>
@@ -102,7 +126,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ cp.length < 2 } 
+                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule } 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ removeCp }
                       color="primary"

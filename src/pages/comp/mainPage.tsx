@@ -1,87 +1,110 @@
-import { Paper, Toolbar, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
+
+import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/material";
 
 import { useComBooxContext } from "../../scripts/ComBooxContext";
-import { 
-  RegisteredCapital,
-  PaidInCapital,
-  RegNumTF,
-  CompName,
-  Controllor,
-  VotesOfController,
-  MembersEquityList,
-  CompSymbolTf,
-  CompAddrTf,
-} from "../../components";
+
+import { SetCompId } from "../../components/comp/gk/SetCompId";
+import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers";
+import { InitBos } from "../../components/comp/bos/InitBos";
+import { TurnKey } from "../../components/comp/gk/TurnKey";
+import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
+import { getBookeeper } from "../../queries/accessControl";
+import { getKeeper } from "../../queries/gk";
 
 
 function MainPage() {
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
+  const [ activeStep, setActiveStep ] = useState<number>(0);
+
+  useEffect(()=>{
+    const checkDirectKeepers = async ()=> {
+      let dkOfRom = await getBookeeper(boox[8]);
+      let romKeeper = await getKeeper(gk, 8);
+      let dkOfBos = await getBookeeper(boox[7]);
+      let bosKeeper = await getKeeper(gk, 7);
+
+      if (dkOfRom == romKeeper && dkOfBos == bosKeeper)
+        setActiveStep(4);
+    }
+
+    checkDirectKeepers();
+  })
 
   return (
-    <>
-      <Paper elevation={3} 
-        sx={{
-          alignContent:'center', 
-          justifyContent:'center', 
-          p:1, m:1, border:1, 
-          borderColor:'divider' 
-        }} 
-      >
-        <Toolbar>
-          <h3>General Info</h3>
-        </Toolbar>
+    <Stack direction='column' width='100%' height='100%' >
+      <Box width={'100%'} height={'100%'} >
+        <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider' }}>
 
-        <table width={1680} >
-          <thead>
+          {activeStep < 4 && (
+            <Stepper sx={{ mt: 2, height: 800, alignItems:'start' }} activeStep={ activeStep } orientation="horizontal" >
 
-            <tr>        
-              <td colSpan={4}>
-                <CompName addr={ boox[0] } />
-              </td>
-            </tr>
+              <Step index={0} >
 
-            <tr>        
-              <td >
-                <RegNumTF addr={ boox[0] } />
-              </td>
+                <StepLabel>
+                  <h3>Company ID</h3>
+                </StepLabel>
 
-              <td >
-                <CompSymbolTf addr={ boox[0] } />
-              </td>
+                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
 
-              <td colSpan={2} >
-                <CompAddrTf addr={ boox[0] } />
-              </td>
-            </tr>
-          </thead>
-          
-          <tbody>
+                  <SetCompId nextStep={setActiveStep} />
 
+                </StepContent>
 
-            <tr>
-              <td>
-                <Controllor addr={ boox[8] } />
-              </td>
-              <td>
-                <VotesOfController addr={ boox[8] } />
-              </td>
-              <td>
-                <RegisteredCapital addr={ boox[8] } />
-              </td>
-              <td>
-                <PaidInCapital addr={ boox[8] } />
-              </td>
-            </tr>
+              </Step>
 
-            <tr>
-              <td colSpan={4}>
-                <MembersEquityList addr={ boox[8] } />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </Paper>
-    </>
+              <Step index={1} >
+
+                <StepLabel>
+                  <h3>Max Members</h3>
+                </StepLabel>
+
+                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+
+                  <SetMaxQtyOfMembers nextStep={setActiveStep} />
+
+                </StepContent>
+
+              </Step>
+
+              <Step index={2} >
+
+                <StepLabel>
+                  <h3>Book Of Shares</h3>
+                </StepLabel>
+
+                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+
+                  <InitBos nextStep={setActiveStep} />
+
+                </StepContent>
+
+              </Step>
+
+              <Step index={3} >
+
+                <StepLabel>
+                  <h3>Turn Key</h3>
+                </StepLabel>
+
+                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+
+                  <TurnKey nextStep={setActiveStep} />
+
+                </StepContent>
+
+              </Step>
+
+            </Stepper>
+          )}
+
+          {activeStep > 3 && (
+            <GeneralInfo />
+          )}
+
+        </Paper>
+      </Box>
+    </Stack>
   );
 } 
 
