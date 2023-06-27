@@ -87,7 +87,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
         }} 
       >
         {activeStep != undefined && (
-          <Box sx={{ width:980 }} >
+          <Box sx={{ width:1280 }} >
             <Stepper sx={{ pl:5 }} activeStep={ activeStep } orientation="vertical" >
 
               <Step index={0} >
@@ -103,7 +103,6 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                 </StepContent>
 
               </Step>
-
 
               <Step index={1} >
 
@@ -174,7 +173,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                     Count vote result of SHA (only for Members).
                   </Typography>
                   {seqOfMotion && (
-                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } />
                   )}
                 </StepContent>
 

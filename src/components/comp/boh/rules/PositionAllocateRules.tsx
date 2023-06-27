@@ -13,7 +13,7 @@ import {
   Grid,
 } from "@mui/material";
 
-import { HexType, ShaRuleInputProps } from "../../../../interfaces";
+import { HexType } from "../../../../interfaces";
 
 import {
   AddCircle,
@@ -25,9 +25,11 @@ import {
   SetPositionAllocateRule, 
 } from '../../..';
 
-import { Position } from "../../bod/GetPosition";
-import { PosAllocateRule } from "./SetPositionAllocateRule";
-import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
+import { 
+  usePrepareShareholdersAgreementRemoveRule, 
+  useShareholdersAgreementRemoveRule 
+} from "../../../../generated";
+
 import { BigNumber } from "ethers";
 
 interface PositionAllocateRulesProps {
@@ -44,8 +46,6 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
-      // console.log('cp: ', cp);
-      console.log('initSeqList: ', initSeqList);
       setCp([...initSeqList]);
     }
   }, [initSeqList]);
@@ -90,10 +90,8 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
   return (
     <>
       <Button
-        // disabled={ !newGR }
         variant="outlined"
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >

@@ -44,7 +44,6 @@ export { AddRule } from './comp/boh/rules/AddRule'
 export { ProposeDocOfGm } from './comp/bog/ProposeDocOfGm'
 export { VoteForDocOfGm } from './comp/bog/VoteForDocOfGm'
 
-export { ShaNavi } from './comp/boh/sha/ShaNavi'
 export { Signatures } from './common/sigPage/Signatures'
 export { SignSha } from './comp/boh/sha/SignSha'
 export { CirculateSha } from './comp/boh/sha/CirculateSha'

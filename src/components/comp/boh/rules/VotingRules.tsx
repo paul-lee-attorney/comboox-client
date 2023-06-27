@@ -24,7 +24,15 @@ import {
 import { 
   SetVotingRule, 
 } from '../../..';
+
 import { VotingRule } from "./SetVotingRule";
+
+import { 
+  usePrepareShareholdersAgreementRemoveRule, 
+  useShareholdersAgreementRemoveRule 
+} from "../../../../generated";
+
+import { BigNumber } from "ethers";
 
 export interface VotingRuleWrap {
   subTitle: string,
@@ -44,7 +52,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
   const [ cp, setCp ] = useState(mandatoryRules);
 
   useEffect(()=>{
-    if (initSeqList) {
+    if (initSeqList && initSeqList.length > 0) {
       setCp(v => {
         let setRules = new Set([...v]);
         initSeqList.forEach(k => {
@@ -66,23 +74,39 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
     })
   }
 
-  const removeCp = () => {
-    setCp(v => {
-      let arr = [...v];
-      arr.pop();
-      return arr;
-    })
-  }
-
   const [open, setOpen] = useState(false);
+
+  const {
+    config: removeRuleConfig
+  } = usePrepareShareholdersAgreementRemoveRule({
+    address: sha,
+    args: [BigNumber.from(cp[cp.length - 1])]
+  })
+
+  const {
+    isLoading: removeRuleLoading,
+    write: removeRule,
+  } = useShareholdersAgreementRemoveRule({
+    ...removeRuleConfig,
+    onSuccess() {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();      
+        return arr;
+      });
+      setOpen(false);
+    }
+  })
+
+  const removeCp = () => {
+    removeRule?.();
+  }
 
   return (
     <>
       <Button
-        // disabled={ !newGR }
         variant="outlined"
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
@@ -115,7 +139,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
                       <AddCircle/>
                     </IconButton>
                     <IconButton 
-                      disabled={ cp.length < 13 }
+                      disabled={ cp.length < 13 || removeRuleLoading || !removeRule }
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ removeCp }
                       color="primary"
