@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   Button, 
@@ -10,37 +10,21 @@ import {
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
-import { Create, ReadMoreOutlined, Send } from "@mui/icons-material";
+import { Create } from "@mui/icons-material";
 
 import { 
-  useFilesFolderGetFilesList,
   useGeneralKeeperCreateIa, 
   usePrepareGeneralKeeperCreateIa,
 } from "../../../generated";
 import { BigNumber } from "ethers";
-import { GetFilesList } from "../../../components";
-import { InfoOfFile, getFilesListWithInfo } from "../boh/bookOfSHA";
-import { LoadingButton } from "@mui/lab";
+
+import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
+import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 
 function BookOfIA() {
   const { gk, boox } = useComBooxContext();
 
-  const [ loading, setLoading ] = useState<boolean>();
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
-  const {
-    refetch: getFilesList,
-  } = useFilesFolderGetFilesList({
-    address: boox[1],
-    onSuccess(data) {
-      if (data.length > 0) {
-        setLoading(true);
-        getFilesListWithInfo(boox[1], data).then(list => {
-          setLoading(false);
-          setFilesInfoList(list);
-        });
-      }
-    }
-  })
 
   const [ version, setVersion ] = useState<string>();
   const { config } = usePrepareGeneralKeeperCreateIa({
@@ -52,10 +36,15 @@ function BookOfIA() {
     write: createIa,
   } = useGeneralKeeperCreateIa({
     ...config,
-    onSuccess(data) {
-      getFilesList();
-    }
   });
+
+  useEffect(()=>{
+    if (boox) {
+      getFilesListWithInfo(boox[1]).then(
+        list => setFilesInfoList(list)
+      )
+    }
+  }, [boox, createIa]);
 
   return (
     <>
@@ -98,27 +87,13 @@ function BookOfIA() {
                       Create IA
                     </Button>
 
-                    {loading &&  (
-                      <LoadingButton 
-                        loading={ loading } 
-                        loadingPosition='end' 
-                        endIcon={<Send/>} 
-                        sx={{p:1, m:1, ml:5}} 
-                      >
-                        <span>Loading</span>
-                      </LoadingButton>
-                    )}
-
                 </Stack>
-              </td>
-              <td colSpan={2} >
-  
               </td>
             </tr>
 
             <tr>
               <td colSpan={4}>
-                {filesInfoList && (
+                {filesInfoList && filesInfoList.length > 0 && (
                   <GetFilesList 
                     list={ filesInfoList } 
                     title="Investment Agreements List" 

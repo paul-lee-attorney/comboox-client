@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { 
   TextField, 
@@ -37,7 +37,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const {
     refetch: getMaxQty
   } = useRegisterOfMembersMaxQtyOfMembers({
-    address: boox[8],
+    address: boox ? boox[8] : undefined,
     onSuccess(max) {
       setMax(max.toString());
     }
@@ -46,7 +46,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const {
     config: setMaxQtyConfig,
   } = usePrepareRegisterOfMembersSetMaxQtyOfMembers({
-    address: boox[8],
+    address: boox ? boox[8] : undefined,
     args: [BigNumber.from(inputMax)],
   });
 

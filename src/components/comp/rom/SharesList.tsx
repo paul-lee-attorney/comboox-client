@@ -1,12 +1,11 @@
 import { useState } from 'react';
 
-import { DataList } from '../../.';
-
 import {
   useRegisterOfMembersSharesList
 } from '../../../generated';
 
 import { ContractProps } from '../../../interfaces';
+import { DataList } from '../../common/DataList';
 
 
 export function SharesList({ addr }:ContractProps ) {

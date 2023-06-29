@@ -30,6 +30,13 @@ export interface File {
   ref: Ref;
 }
 
+export interface InfoOfFile {
+  addr: HexType;
+  sn: HexType;
+  head: Head;
+  ref: Ref;
+}
+
 export async function signingDeadline(folder: HexType, body: HexType):Promise<number>{
   let deadline: number = await readContract({
     address: folder,
@@ -63,15 +70,15 @@ export async function shaExecDeadline(folder: HexType, body: HexType):Promise<nu
   return deadline;
 }
 
-export async function proposeDeadline(folder: HexType, body: HexType):Promise<number>{
-  let deadline: number = await readContract({
+export async function terminateStartpoint(folder: HexType, body: HexType):Promise<number>{
+  let res = await readContract({
     address: folder,
     abi: filesFolderABI,
-    functionName: 'proposeDeadline',
+    functionName: 'terminateStartpoint',
     args: [ body ],
   })
 
-  return deadline;
+  return res;
 }
 
 export async function votingDeadline(folder: HexType, body: HexType):Promise<number>{
@@ -162,3 +169,30 @@ export async function getRefOfFile(folder: HexType, addrOfFile: HexType): Promis
 
   return ref;
 }
+
+export async function getFilesListWithInfo(addr: HexType):Promise<InfoOfFile[]>{
+
+  let ls = await getFilesList(addr);
+
+  let list: InfoOfFile[] = [];
+  let len: number = ls.length;
+  let i = len > 100 ? len - 100 : 0;
+
+  while(i < len) {
+  
+    let file = await getFile(addr, ls[i]);
+
+    list.push({
+      addr: ls[i],
+      sn: file.snOfDoc,
+      head: file.head,
+      ref: file.ref,
+    });
+
+    i++;
+
+  }
+
+  return list;
+}
+

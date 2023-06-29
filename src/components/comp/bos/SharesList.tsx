@@ -1,14 +1,12 @@
 import { 
   Chip,
   Box,
-  Toolbar,
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
-import dayjs from 'dayjs';
-import { Share } from '../../../pages/comp/bos/bookOfShares';
 import { dateParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { Share } from '../../../queries/bos';
 
 const columns: GridColDef[] = [
   { 

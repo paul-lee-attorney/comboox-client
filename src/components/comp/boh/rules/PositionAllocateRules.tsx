@@ -22,15 +22,12 @@ import {
 } from "@mui/icons-material"
 
 import { 
-  SetPositionAllocateRule, 
-} from '../../..';
-
-import { 
   usePrepareShareholdersAgreementRemoveRule, 
   useShareholdersAgreementRemoveRule 
 } from "../../../../generated";
 
 import { BigNumber } from "ethers";
+import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
 
 interface PositionAllocateRulesProps {
   sha: HexType;

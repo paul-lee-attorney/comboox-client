@@ -1,8 +1,7 @@
 import { Box, Chip, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { Motion } from "../../../pages/comp/bog/bookOfGM";
-import dayjs from "dayjs";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { Motion } from "../../../queries/meetingMinutes";
 
 const type = ['zeroPoint', 'ElectOfficer', 'RemoveOfficer', 'ApproveDoc', 'ApproveAction'];
 

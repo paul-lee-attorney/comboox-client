@@ -15,7 +15,7 @@ import { regCenterABI } from '../../generated';
 
 import { AddrOfRegCenter } from '../../interfaces';
 
-import { RegUser } from './RegUser';
+import { RegUser } from '../center/RegUser';
 import { longSnParser } from '../../scripts/toolsKit';
 
 type DialogType = {

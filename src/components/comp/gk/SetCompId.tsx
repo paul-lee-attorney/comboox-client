@@ -3,23 +3,18 @@ import { useState } from 'react';
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 import { 
-  Box, 
   TextField, 
   Button,
   Card, 
   CardContent, 
   Typography,
-  Grid,
-  CardActions,
   Stack,
   Divider,
   Paper,  
 } from '@mui/material';
 
 
-import { Update, ArrowForward, Handyman }  from '@mui/icons-material';
-
-import Link from '../../../scripts/Link';
+import { Update, ArrowForward }  from '@mui/icons-material';
 
 import { 
   usePrepareGeneralKeeperSetCompInfo,
@@ -27,8 +22,6 @@ import {
   useGeneralKeeperRegNumOfCompany,
   useGeneralKeeperNameOfCompany,
   useGeneralKeeperSymbolOfCompany,
-  useGeneralKeeperCreateCorpSeal,
-  usePrepareGeneralKeeperCreateCorpSeal,
 } from '../../../generated';
 
 

@@ -13,10 +13,10 @@ import {
   usePrepareGeneralKeeperWithdrawPayInAmt
 } from "../../../generated";
 import { Box, Collapse, IconButton, Paper, Stack, Switch, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
-import { Download, ExitToApp, IosShare, Output, Upload } from "@mui/icons-material";
-import { Share } from "../../../pages/comp/bos/bookOfShares";
+import { ExitToApp, IosShare, Output } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { Share } from "../../../queries/bos";
 
 export interface Locker {
   from: number;
@@ -65,7 +65,7 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
   const {
     refetch: getLocker,
   } = useBookOfSharesGetLocker({
-    address: boox[7],
+    address: boox ? boox[7] : undefined,
     args: snOfLocker 
           ? [ snOfLocker ]
           : undefined,

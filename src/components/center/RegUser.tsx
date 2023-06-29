@@ -1,46 +1,41 @@
-import { useAccount } from 'wagmi';
+
+import { Button } from '@mui/material';
 
 import { 
   usePrepareRegCenterRegUser, 
   useRegCenterRegUser
 } from '../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero } from '../../interfaces';
+import { AddrOfRegCenter } from '../../interfaces';
 
-export function RegUser() {
-  const { address } = useAccount();
+interface RegUserProps {
+  closeDialog: () => void,
+}
+
+export function RegUser({ closeDialog }:RegUserProps) {
   
-  const {
-    config,
-    error: prepareError,
-    isError: isPrepareError,
-  } = usePrepareRegCenterRegUser({
-    address: AddrOfRegCenter,
-    args: [ `0x${Bytes32Zero}` ],
+  const { config } = usePrepareRegCenterRegUser({
+    address: AddrOfRegCenter
   })  
 
-  const { 
-    error, 
-    isError, 
-    isLoading, 
-    isSuccess, 
-    write 
-  } = useRegCenterRegUser(config)
+  const { isLoading, write: regUser } = useRegCenterRegUser({
+    ...config,
+    onSuccess() {
+      closeDialog();
+    }
+  })
 
   return (
     <div>
-      <button disabled={!write || isLoading} onClick={() => write?.()}>
+      <Button 
+        disabled={ !regUser || isLoading } 
+        onClick={() => {
+          regUser?.()
+        }}
+        variant='text'        
+      >
         {isLoading ? 'Loading...' : 'RegUser'}
-      </button>
-      {isSuccess && (
-        <div>
-          Successfully registered User! <br/>
-          Account: {address} <br/>
-        </div>
-      )}
-      {(isPrepareError || isError) && (
-        <div>Error: {(prepareError || error)?.message}</div>
-      )}
+      </Button>
     </div>
   )
 }

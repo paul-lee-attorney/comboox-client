@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Button, 
@@ -10,112 +10,42 @@ import {
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
-import { Create, Send } from "@mui/icons-material";
-import { HexType } from "../../../interfaces";
-
-import { readContract } from "@wagmi/core";
+import { Create } from "@mui/icons-material";
 
 import { 
-  filesFolderABI,
-  useFilesFolderGetFilesList,
   useGeneralKeeperCreateSha,
   usePrepareGeneralKeeperCreateSha,
 } from "../../../generated";
+
 import { BigNumber } from "ethers";
-import { GetFilesList } from "../../../components";
-import { LoadingButton } from "@mui/lab";
 
-export interface HeadOfFile {
-  circulateDate: number;
-  signingDays: number;
-  closingDays: number;
-  seqOfVR: number;
-  shaExecDays: number;
-  shaConfirmDays: number;
-  proposeDate: number;
-  reconsiderDays: number;
-  votePrepareDays: number;
-  votingDays: number;
-  execDaysForPutOpt: number;
-  seqOfMotion: BigNumber;
-  state: number;
-}
-
-export interface RefOfFile {
-  docUrl: HexType;
-  docHash: HexType;
-}
-
-export interface InfoOfFile {
-  addr: HexType;
-  sn: HexType;
-  head: HeadOfFile;
-  ref: RefOfFile;
-}
-
-export async function getFilesListWithInfo(folder: HexType, files: readonly HexType[]): Promise<InfoOfFile[]> {
-
-  let list: InfoOfFile[] = [];
-  let len: number = files.length;
-  let i = len > 20 ? len-20 : 0;
-
-  while(i < len) {
-  
-    let file = await readContract({
-      address: folder,
-      abi: filesFolderABI,
-      functionName: 'getFile',
-      args: [files[i]],
-    });
-
-    list[len - i] = {
-      addr: files[i],
-      sn: file.snOfDoc,
-      head: file.head,
-      ref: file.ref,
-    };
-
-    i++;
-
-  }
-
-  return list;
-}
+import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
+import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 
 function BookOfSHA() {
   const { gk, boox } = useComBooxContext();
 
-  const [ loading, setLoading ] = useState<boolean>();
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
-  const {
-    refetch: getFilesList,
-  } = useFilesFolderGetFilesList({
-    address: boox[4],
-    onSuccess(data) {
-      if (data.length > 0) {
-        setLoading(true);
-        getFilesListWithInfo(boox[4], data).then(list => {
-          setLoading(false);
-          setFilesInfoList(list);
-        });
-      }
-    }
-  })
 
   const [ version, setVersion ] = useState<string>();
+
   const { config } = usePrepareGeneralKeeperCreateSha({
     address: gk,
     args: version ? [BigNumber.from(version)] : undefined,
   });
+
   const {
     isLoading: createShaLoading, 
     write: createSha,
-  } = useGeneralKeeperCreateSha({
-    ...config,
-    onSuccess() {
-      getFilesList();
+  } = useGeneralKeeperCreateSha(config);
+
+  useEffect(()=>{
+    if (boox) {
+      getFilesListWithInfo(boox[4]).then(
+        list => setFilesInfoList(list)
+      )
     }
-  });
+  }, [boox, createSha]);
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -156,18 +86,6 @@ function BookOfSHA() {
                   >
                     Create SHA
                   </Button>
-
-                  {loading && (
-                    <LoadingButton 
-                      loading={ loading } 
-                      loadingPosition='end' 
-                      endIcon={<Send/>} 
-                      sx={{p:1, m:1, ml:5}} 
-                    >
-                      <span>Loading</span>
-                    </LoadingButton>
-                  )}
-
               </Stack>
             </td>
             <td colSpan={2} >

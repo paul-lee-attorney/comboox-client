@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Button, 
@@ -22,6 +22,7 @@ import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
 import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/bos";
+import { getShareNumbersList } from "../../../queries/rom";
 
 
 function BookOfShares() {
@@ -34,12 +35,10 @@ function BookOfShares() {
   const {
     refetch: obtainSharesList,
   } = useRegisterOfMembersSharesList ({
-    address: boox[8],
+    address: boox ? boox[8] : undefined,
     onSuccess(data) {
-      if (data.length > 0) {
-        setLoading(true);
+      if (boox && data.length > 0) {
         getSharesList(boox[7], data).then(list => {
-          setLoading(false);
           setSharesList(list);
         });
       }
@@ -55,7 +54,7 @@ function BookOfShares() {
   const { 
     refetch: getShareFunc, 
   } = useBookOfSharesGetShare({
-    address: boox[7],
+    address: boox ? boox[7]: undefined,
     args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
     onSuccess(data) {
       let share:Share = {
@@ -67,6 +66,7 @@ function BookOfShares() {
       setOpen(true);
     }
   });
+
 
   const searchShare = () => {
     if (seqOfShare) {

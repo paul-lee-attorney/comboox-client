@@ -11,18 +11,14 @@ import {
 
 import { HexType } from "../../../../interfaces";
 
-
-import { 
-  SetGovernanceRule, 
-  PositionAllocateRules,
-  FirstRefusalRules,
-  VotingRules,
-  GroupUpdateOrders,
-} from '../../..';
-
 import { AntiDilution } from "../terms/antiDilution/AntiDilution";
 
 import { getTerm, obtainRules, obtainTitles } from "../../../../queries/sha";
+import { SetGovernanceRule } from "../rules/SetGovernanceRule";
+import { VotingRules } from "../rules/VotingRules";
+import { PositionAllocateRules } from "../rules/PositionAllocateRules";
+import { FirstRefusalRules } from "../rules/FirstRefusalRules";
+import { GroupUpdateOrders } from "../rules/GroupUpdateOrders";
 
 export async function getGroupOfRules(addr: HexType): Promise<number[][]>{
 
@@ -39,7 +35,7 @@ export async function getGroupOfRules(addr: HexType): Promise<number[][]>{
     }
   })
 
-  console.log('rules before return: ', rules);
+  // console.log('rules before return: ', rules);
   return rules;
 }
 
@@ -57,7 +53,7 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
   useEffect(()=>{
     const setUpRules = async () => {
-      console.log('enter time: ', new Date().getTime())
+      // console.log('enter time: ', new Date().getTime())
       
       let rules = await getGroupOfRules(sha);
 
@@ -66,9 +62,9 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
       setFrLs(rules[2]);
       setGuoLs(rules[3]);
 
-      console.log('rules in Effect: ', rules);
+      // console.log('rules in Effect: ', rules);
 
-      console.log('exit time: ', new Date().getTime())
+      // console.log('exit time: ', new Date().getTime())
     }
     setUpRules();
   }, [sha]);

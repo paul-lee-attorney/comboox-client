@@ -16,7 +16,7 @@ export function MaxQtyOfMembers({ addr }:ContractProps ) {
   const {isSuccess} = useRegisterOfMembersMaxQtyOfMembers({
     address: addr,
     onSuccess(data) {
-      setMaxQty(data);
+      setMaxQty(data.toString());
     }
   })
 

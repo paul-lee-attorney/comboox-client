@@ -15,28 +15,31 @@ import { getKeeper } from "../../queries/gk";
 
 function MainPage() {
   const { gk, boox } = useComBooxContext();
-  const [ activeStep, setActiveStep ] = useState<number>(0);
+  const [ activeStep, setActiveStep ] = useState<number>();
 
   useEffect(()=>{
     const checkDirectKeepers = async ()=> {
-      let dkOfRom = await getBookeeper(boox[8]);
-      let romKeeper = await getKeeper(gk, 8);
-      let dkOfBos = await getBookeeper(boox[7]);
-      let bosKeeper = await getKeeper(gk, 7);
-
-      if (dkOfRom == romKeeper && dkOfBos == bosKeeper)
-        setActiveStep(4);
+      if (gk && boox) {
+        let dkOfRom = await getBookeeper(boox[8]);
+        let romKeeper = await getKeeper(gk, 8);
+        let dkOfBos = await getBookeeper(boox[7]);
+        let bosKeeper = await getKeeper(gk, 7);
+  
+        if (dkOfRom == romKeeper && dkOfBos == bosKeeper)
+          setActiveStep(4);
+        else setActiveStep(0);
+      }
     }
 
     checkDirectKeepers();
-  })
+  }, [gk, boox])
 
   return (
     <Stack direction='column' width='100%' height='100%' >
       <Box width={'100%'} height={'100%'} >
         <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider' }}>
 
-          {activeStep < 4 && (
+          {activeStep != undefined && activeStep < 4 && (
             <Stepper sx={{ mt: 2, height: 800, alignItems:'start' }} activeStep={ activeStep } orientation="horizontal" >
 
               <Step index={0} >
@@ -98,7 +101,7 @@ function MainPage() {
             </Stepper>
           )}
 
-          {activeStep > 3 && (
+          {activeStep != undefined && activeStep > 3 && (
             <GeneralInfo />
           )}
 

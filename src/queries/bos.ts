@@ -4,9 +4,6 @@ import { readContract } from "@wagmi/core";
 import { bookOfSharesABI } from "../generated";
 
 
-
-
-
 export interface Head {
   seqOfShare: number; // 股票序列号
   preSeq: number; // 前序股票序列号（股转时原标的股序列号）

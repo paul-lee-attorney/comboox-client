@@ -1,3 +1,4 @@
+import { useRouter } from 'next/navigation';
 
 import { Button } from '@mui/material';
 import { Create } from '@mui/icons-material';
@@ -26,6 +27,7 @@ async function getReceipt(hash: HexType): Promise<HexType> {
 
 export function CreateComp() {
   const { setGK } = useComBooxContext();
+  const router = useRouter();
 
   const {
     config,
@@ -40,15 +42,18 @@ export function CreateComp() {
   } = useRegCenterCreateComp({
     ...config,
     onSuccess(data) {
-      getReceipt(data.hash).then(
-        addrOfGK => setGK(addrOfGK)
-      )
+      const initComp = async ()=>{
+        let addrOfGK = await getReceipt(data.hash);
+        await setGK(addrOfGK);
+        router.push('/comp/mainPage');
+      }
+      initComp();
     }
   })
 
   return (
     <Button 
-      sx={{ m: 1, minWidth: 415, height: 40 }} 
+      sx={{ m: 1, minWidth: 488, height: 40 }} 
       variant="outlined" 
       disabled={ !write || isLoading }
       endIcon={ <Create /> }

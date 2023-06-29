@@ -11,7 +11,7 @@ import { getHash } from "next/dist/server/image-optimizer";
 
 import dayjs, {Dayjs} from "dayjs";
 import { DateTimeField } from "@mui/x-date-pickers";
-import { Deal } from "./SetDeal";
+import { Deal } from "../../../../queries/ia";
 
 interface ExecDealProps{
   ia: HexType;

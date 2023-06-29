@@ -43,15 +43,10 @@ import { DialogMyUserNo } from '../common/DialogMyUserNo';
 
 import { useConnect, useDisconnect } from 'wagmi';
 
-import { readContract } from '@wagmi/core';
-import { generalKeeperABI } from '../../generated';
-import { BigNumber } from 'ethers';
-
-import { AddrZero, GKInfo, HexType } from '../../interfaces';
+import { AddrZero } from '../../interfaces';
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 
-import { CompSymbol, CompAddr, RegNum } from '../comp/gk/CompBrief';
-import { getBook, getBoox, nameOfCompany, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
+import { getBoox, nameOfCompany, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
 import { longSnParser } from '../../scripts/toolsKit';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
@@ -114,9 +109,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const [ symbol, setSymbol ] = useState<string>();
   
   useEffect(() => {
-    if (gk != AddrZero) {
+    if (gk) {
       getBoox(gk).then(
-        (boox) => setBoox(boox)
+        (res) => setBoox(res)
       );
       regNumOfCompany(gk).then(
         res => setRegNum(res.toNumber())
@@ -128,7 +123,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         res => setSymbol(res)
       );
     } else {
-      setBoox([]);
+      setBoox(undefined);
     }
   }, [gk, setBoox]);
 
@@ -186,8 +181,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   ]
 
   const backToCenter = () => {
-    setGK(AddrZero);
-    setBoox([]);
+    setGK(undefined);
+    setBoox(undefined);
   }
 
   return (
@@ -210,10 +205,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           </Typography>
 
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { gk != AddrZero 
-                ? symbol + ' (' + longSnParser(regNum ? regNum.toString() : '') + ') : ' + gk
-                : ''
-            } 
+            { gk != undefined ? symbol + ' (' + longSnParser(regNum ? regNum.toString() : '') + ') : ' + gk : '' } 
           </Typography>
 
           <FormGroup sx={{

@@ -13,16 +13,6 @@ import {
 
 import { HexType } from "../../../../interfaces";
 
-import { 
-  CirculateSha,
-  SignSha,
-  ActivateSha,
-  LockContents,
-  ProposeDocOfGm,
-  VoteForDocOfGm,
-  CirculateIa,
-} from '../../..';
-
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { VoteCountingOfGm } from "../../bog/VoteCountingOfGm";
@@ -30,6 +20,10 @@ import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
 import { SignIa } from "./SignIa";
 import { getTypeOfIA } from "../../../../queries/ia";
+import { LockContents } from "../../../common/accessControl/LockContents";
+import { CirculateIa } from "./CirculateIa";
+import { ProposeDocOfGm } from "../../bog/ProposeDocOfGm";
+import { VoteForDocOfGm } from "../../bog/VoteForDocOfGm";
 
 interface IaLifecycleProps {
   ia: HexType;
@@ -189,7 +183,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                     Count vote result of IA (only for Members).
                   </Typography>
                   {seqOfMotion && (
-                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } />
                   )}
                 </StepContent>
 

@@ -3,7 +3,7 @@ import { AddrOfRegCenter, AddrZero, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BigNumber } from 'ethers';
 import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
@@ -71,7 +71,7 @@ export function GetComp() {
 
       <Stack direction={'row'} sx={{mt:2, mb:0, p:1, justifyContent:'center'}}>
         <TextField 
-          sx={{ m: 1, minWidth: 200 }} 
+          sx={{ m:1, mr:3, width: 218 }} 
           id="txRegNumOfComp" 
           label="RegNumOfComp" 
           variant="outlined"
@@ -82,7 +82,7 @@ export function GetComp() {
         />
 
         <Button 
-          sx={{ m: 1, minWidth: 200, height: 40 }} 
+          sx={{ m:1, ml:3, width: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <Search /> }
           onClick={ handleClick }
@@ -114,17 +114,17 @@ export function GetComp() {
 
           underline='hover'
         >
-          <Button variant='contained' sx={{width: 415}} endIcon={<DriveFileMove />} >
-          SN: { '0x' +
-                doc?.head.version.toString(16).padStart(4, '0') +
-                doc?.head.seqOfDoc.toHexString().substring(2).padStart(16, '0')
-              }
+          <Button variant='contained' sx={{width: 488, height:40}} endIcon={<DriveFileMove />} >
+            SN: { '0x' +
+                  doc?.head.version.toString(16).padStart(4, '0') +
+                  doc?.head.seqOfDoc.toHexString().substring(2).padStart(16, '0')
+                }
           </Button>
         </Link>
         
       )}
 
-      <Collapse in={ open } sx={{ width:415 }} >        
+      <Collapse in={ open } sx={{ width:488 }} >        
         <Alert 
           action={
             <IconButton
@@ -141,7 +141,7 @@ export function GetComp() {
 
           variant='outlined' 
           severity='info' 
-          sx={{ height: 45, p:0.5 }} 
+          sx={{ height: 40, p:0.5 }} 
         >
           No Records. 
         </Alert>

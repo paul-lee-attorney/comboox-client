@@ -34,12 +34,14 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep }: VoteCo
   } = useGeneralKeeperVoteCountingOfGm({
     ...config,
     onSuccess() {
-      isPassed(boox[3], seqOfMotion).then(
-        flag => {
-          setResult(flag);
-          setNextStep(flag ? 6 : 8);
-        }
-      )
+      if (boox) {
+        isPassed(boox[3], seqOfMotion).then(
+          flag => {
+            setResult(flag);
+            setNextStep(flag ? 6 : 8);
+          }
+        )
+      }
     }
   });
 
@@ -49,7 +51,7 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep }: VoteCo
         disabled={ !write || isLoading}
         variant="contained"
         endIcon={<Calculate />}
-        sx={{ m:1, mr:6 }}
+        sx={{ m:1, mr:6, width:218 }}
         onClick={()=>write?.()}
       >
         Count

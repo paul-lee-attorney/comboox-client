@@ -5,12 +5,11 @@ import { WagmiConfig } from 'wagmi'
 
 import { client } from '../wagmi'
 
-import { Layout } from '../components'
-
 import { ComBooxWrapper } from '../scripts/ComBooxContext'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
+import { Layout } from '../components/common/Layout'
 
 function App({ Component, pageProps }: AppProps) {
   const [mounted, setMounted] = React.useState(false)

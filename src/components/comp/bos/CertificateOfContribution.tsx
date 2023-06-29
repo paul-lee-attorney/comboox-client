@@ -1,9 +1,9 @@
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { Share } from "../../../pages/comp/bos/bookOfShares";
 import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { Share } from "../../../queries/bos";
 
 
 export interface CertificateOfContributionProps{

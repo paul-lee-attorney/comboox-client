@@ -8,7 +8,7 @@ import { useState } from "react";
 export default function DateTime() {
   const [ date, setDate ] = useState<Dayjs | null>(dayjs('2019-09-08T23:30'));
 
-  console.log('date: ', date?.unix());
+  // console.log('date: ', date?.unix());
 
   return(
     <DateTimeField 

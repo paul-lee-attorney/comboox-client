@@ -1,32 +1,20 @@
 import { useState, useEffect } from 'react';
 
 import { 
-  Grid,
-  Box, 
   TextField, 
   Button,
   Paper,
-  Toolbar,
   Stack,
   Divider,
-  Tooltip,
-  IconButton,
   Typography,
 } from '@mui/material';
 
 import { AddCircle, ArrowBack, ArrowForward, RemoveCircle, Send }  from '@mui/icons-material';
 
-import Link from '../../../scripts/Link';
 
 import {
-  useGeneralKeeperGetKeeper,
-  useRegisterOfMembersSharesList,
   usePrepareBookOfSharesIssueShare,
   useBookOfSharesIssueShare,
-  usePrepareBookOfSharesSetDirectKeeper,
-  useBookOfSharesSetDirectKeeper,
-  usePrepareRegisterOfMembersSetDirectKeeper,
-  useRegisterOfMembersSetDirectKeeper,
   usePrepareBookOfSharesDecreaseCapital,
   useBookOfSharesDecreaseCapital,
 } from '../../../generated';
@@ -35,18 +23,13 @@ import { BigNumber } from 'ethers';
 
 import { Bytes32Zero, HexType } from '../../../interfaces';
 
-import { DataList } from '../..';
-
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs, { Dayjs } from 'dayjs';
 
-
-
-import { dateParser } from '../../../scripts/toolsKit';
 import { SharesList } from './SharesList';
-import { DelShare } from './DelShare';
-import { Share, codifyHeadOfShare, getSharesList } from '../../../queries/bos';
+import { Share, codifyHeadOfShare, getSharesList, } from '../../../queries/bos';
+import { getShareNumbersList } from '../../../queries/rom';
 
 
 const defaultShare: Share = {
@@ -74,32 +57,15 @@ interface InitBosProps {
 }
 
 export function InitBos({nextStep}: InitBosProps) {
-  const { gk, boox } = useComBooxContext();
-
-  const [loading, setLoading] = useState(false);
+  const { boox } = useComBooxContext();
 
   const [sharesList, setSharesList] = useState<Share[]>();
-
   const [share, setShare] = useState<Share>(defaultShare);
-
-  const {
-    refetch: getSharenumberList
-  } = useRegisterOfMembersSharesList({
-    address: boox[8],
-    onSuccess(ls) {
-      setLoading(true);
-      getSharesList(boox[7], ls).then(
-        list => {
-          setLoading(false);
-          setSharesList(list);
-      });
-    }
-  });
 
   const {
     config
   } = usePrepareBookOfSharesIssueShare({
-    address: boox[7],
+    address: boox ? boox[7] : undefined,
     args: share.head.class &&
       share.head.issueDate &&
       share.head.shareholder && 
@@ -120,17 +86,12 @@ export function InitBos({nextStep}: InitBosProps) {
   const {
     isLoading: issueShareLoading,
     write: issueShare,
-  } = useBookOfSharesIssueShare({
-    ...config,
-    onSuccess() {
-      getSharenumberList();
-    }
-  });
+  } = useBookOfSharesIssueShare(config);
 
   const {
     config: delShareConfig
   } = usePrepareBookOfSharesDecreaseCapital({
-    address: boox[7],
+    address: boox ? boox[7] : undefined,
     args: share.head.seqOfShare > 0
         ? [BigNumber.from(share.head.seqOfShare), share.body.paid, share.body.par]
         : undefined,
@@ -149,9 +110,17 @@ export function InitBos({nextStep}: InitBosProps) {
           seqOfShare: 0,
         }
       }));
-      getSharenumberList();
     }
   })
+
+  useEffect(()=>{
+    if (boox) {
+      getShareNumbersList(boox[8]).then(
+        list => getSharesList(boox[7], list).then(
+            ls => setSharesList(ls)
+      ))
+    }
+  }, [boox, issueShare, delShare]);
 
   return (
 

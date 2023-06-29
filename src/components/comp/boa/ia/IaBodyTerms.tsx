@@ -14,9 +14,6 @@ import { HexType } from "../../../../interfaces";
 
 import { readContract } from "@wagmi/core";
 
-import { 
-  ShaNavi, 
-} from '../../..';
 
 import { 
   investmentAgreementABI,

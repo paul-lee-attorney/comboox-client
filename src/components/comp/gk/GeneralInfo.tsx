@@ -1,21 +1,56 @@
+import { useEffect, useState } from "react";
+
 import { Paper, Toolbar, TextField } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { 
-  RegisteredCapital,
-  PaidInCapital,
-  RegNumTF,
-  CompName,
-  Controllor,
-  VotesOfController,
-  MembersEquityList,
-  CompSymbolTf,
-  CompAddrTf,
-} from "../..";
+
+
+import { nameOfCompany, regNumOfCompany, symbolOfCompany } from "../../../queries/gk";
+import { getControllor, getOwnersEquity, getVotesOfController } from "../../../queries/rom";
+
+import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
+
+import { MembersEquityList } from "../rom/MembersList";
 
 
 export function GeneralInfo() {
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
+
+  const [ compName, setCompName ] = useState<string>();
+  const [ regNum, setRegNum ] = useState<string>();
+  const [ symbol, setSymbol ] = useState<string>();
+
+  const [ controllor, setControllor ] = useState<string>();
+  const [ votesOfController, setVotesOfController ] = useState<string>();
+  const [ par, setPar ] = useState<string>();
+  const [ paid, setPaid ] = useState<string>();
+
+  useEffect(()=>{
+    if (gk && boox) {
+      nameOfCompany(gk).then(
+        res => setCompName(res)
+      );
+      regNumOfCompany(gk).then(
+        res => setRegNum(res.toString())
+      );
+      symbolOfCompany(gk).then(
+        res => setSymbol(res)
+      );
+      
+      getControllor(boox[8]).then(
+        res => setControllor(res.toString())
+      );
+      getVotesOfController(boox[8]).then(
+        res => setVotesOfController(res.toString())
+      );
+      getOwnersEquity(boox[8]).then(
+        res => {
+          setPar(res.par.toString());
+          setPaid(res.paid.toString());
+        }
+      )
+    }
+  }, [gk, boox]);
 
   return (
     <>
@@ -36,46 +71,134 @@ export function GeneralInfo() {
 
             <tr>        
               <td colSpan={4}>
-                <CompName addr={ boox[0] } />
+                {compName && (
+                  <TextField 
+                    value={ compName } 
+                    variant='filled' 
+                    label="NameOfCompany" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
             </tr>
 
             <tr>        
               <td >
-                <RegNumTF addr={ boox[0] } />
+                {regNum && (
+                  <TextField 
+                    value={ longSnParser(regNum) } 
+                    variant='filled' 
+                    label="RegNum" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      minWidth: 120,
+                      m:1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
 
               <td >
-                <CompSymbolTf addr={ boox[0] } />
+                {symbol && (
+                  <TextField 
+                    value={symbol} 
+                    variant='filled' 
+                    label="SymbolOfCompany" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
 
               <td colSpan={2} >
-                <CompAddrTf addr={ boox[0] } />
+                {gk && (
+                  <TextField 
+                    value={gk} 
+                    variant='filled' 
+                    label="AddressOfCompany" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
             </tr>
           </thead>
           
           <tbody>
 
-
             <tr>
               <td>
-                <Controllor addr={ boox[8] } />
+                {controllor && (
+                  <TextField 
+                    value={ longSnParser(controllor) } 
+                    variant='filled' 
+                    label="ActualControllor" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m: 1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
               <td>
-                <VotesOfController addr={ boox[8] } />
+                {votesOfController && (
+                  <TextField 
+                    value={ longDataParser(votesOfController) } 
+                    variant='filled' 
+                    label="VotesOfController" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m: 1,
+                    }} 
+                    fullWidth
+                  />
+                )}
               </td>
               <td>
-                <RegisteredCapital addr={ boox[8] } />
+                {par && (
+                  <TextField 
+                    value={ longDataParser(par)} 
+                    variant='filled' 
+                    label="RegisteredCapital" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m: 1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
               <td>
-                <PaidInCapital addr={ boox[8] } />
+                {paid && (
+                  <TextField 
+                    value={ longDataParser(paid) } 
+                    variant='filled' 
+                    label="PaidInCapital" 
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m: 1,
+                    }}
+                    fullWidth
+                  />
+                )}
               </td>
             </tr>
 
             <tr>
               <td colSpan={4}>
-                <MembersEquityList addr={ boox[8] } />
+                <MembersEquityList />
               </td>
             </tr>
           </tbody>

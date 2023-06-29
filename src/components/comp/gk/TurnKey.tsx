@@ -1,59 +1,36 @@
 import { useState, useEffect } from 'react';
 
-import { 
-  Grid,
-  Box, 
-  TextField, 
+import {  
   Button,
   Paper,
-  Toolbar,
   Stack,
   Divider,
-  Tooltip,
-  IconButton,
   Typography,
   Card,
   CardContent,
+  Chip,
 } from '@mui/material';
 
-import { AddCircle, ArrowBack, ArrowForward, RemoveCircle, Send }  from '@mui/icons-material';
+import { ArrowBack, ArrowForward, Key }  from '@mui/icons-material';
 
-import Link from '../../../scripts/Link';
 
 import {
-  useGeneralKeeperGetKeeper,
-  useRegisterOfMembersSharesList,
-  usePrepareBookOfSharesIssueShare,
-  useBookOfSharesIssueShare,
   usePrepareBookOfSharesSetDirectKeeper,
   useBookOfSharesSetDirectKeeper,
   usePrepareRegisterOfMembersSetDirectKeeper,
   useRegisterOfMembersSetDirectKeeper,
-  usePrepareBookOfSharesDecreaseCapital,
-  useBookOfSharesDecreaseCapital,
 } from '../../../generated';
 
-import { BigNumber } from 'ethers';
+import { HexType } from '../../../interfaces';
 
-import { Bytes32Zero, HexType } from '../../../interfaces';
-
-import { DataList } from '../..';
 
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
-import { DateTimeField } from '@mui/x-date-pickers';
-import dayjs, { Dayjs } from 'dayjs';
-import { Share, codifyHeadOfShare, getSharesList } from '../bos/bookOfShares';
-import { dateParser } from '../../../scripts/toolsKit';
-import { SharesList } from '../bos/SharesList';
-import { DelShare } from '../bos/DelShare';
-import { getBook, getKeeper } from '../../../queries/gk';
+import { getKeeper } from '../../../queries/gk';
 import { getBookeeper } from '../../../queries/accessControl';
-
 
 interface TurnKeyProps {
   nextStep: (next: number) => void;
 }
-
 
 export function TurnKey({nextStep}:TurnKeyProps) {
   const { gk, boox } = useComBooxContext();
@@ -66,11 +43,13 @@ export function TurnKey({nextStep}:TurnKeyProps) {
 
   useEffect(()=>{
     const obtainKeepers = async ()=>{
-      setRomKeeper(await getKeeper(gk, 8));
-      setDKOfRom(await getBookeeper(boox[8]));
-
-      setBosKeeper(await getKeeper(gk, 7));
-      setDKOfBos(await getBookeeper(boox[7]));
+      if (gk && boox) {
+        setRomKeeper(await getKeeper(gk, 8));
+        setDKOfRom(await getBookeeper(boox[8]));
+  
+        setBosKeeper(await getKeeper(gk, 7));
+        setDKOfBos(await getBookeeper(boox[7]));
+      }
     }
     
     obtainKeepers();
@@ -79,7 +58,7 @@ export function TurnKey({nextStep}:TurnKeyProps) {
   const {
     config: setRomDKConfig,
   } = usePrepareRegisterOfMembersSetDirectKeeper({
-    address: boox[8],
+    address: boox ? boox[8] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
   });
 
@@ -91,7 +70,7 @@ export function TurnKey({nextStep}:TurnKeyProps) {
   const {
     config: setBosDKConfig,
   } = usePrepareBookOfSharesSetDirectKeeper({
-    address: boox[7],
+    address: boox ? boox[7] : undefined,
     args: bosKeeper ? [ bosKeeper ] : undefined,
   });
 
@@ -112,23 +91,59 @@ export function TurnKey({nextStep}:TurnKeyProps) {
         <Card sx={{ width:'100%', }} variant='outlined'>
             <CardContent>
 
-              <Typography variant="body1" component="div" sx={{ m:1 }} >
-                <b>RomKeeper </b> : {romKeeper}
-              </Typography>
+              <Stack direction='row' >
+                <Chip
+                  variant='filled'
+                  color='primary'
+                  label='RomKeeper'
+                  sx={{width:120}}
+                />
 
-              <Typography variant="body1" component="div" sx={{ m:1 }} >
-                <b>KeeperOfROM</b> : {dkOfRom}
-              </Typography>
+                <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
+                  {romKeeper}
+                </Typography>
+              </Stack>
+
+              <Stack direction='row' >
+                <Chip
+                  variant={ dkOfRom == romKeeper ? 'filled' : 'outlined' }
+                  color={ dkOfRom == romKeeper ? 'primary' : 'default' }
+                  label='KeeperOfRom'
+                  sx={{width:120}}
+                />
+
+                <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
+                  {dkOfRom}
+                </Typography>
+              </Stack>
 
               <Divider />
 
-              <Typography variant="body1" component="div" sx={{ m:1 }} >
-                <b>BosKeeper</b> : {bosKeeper}
-              </Typography>
+              <Stack direction='row' >
+                <Chip
+                  variant='filled'
+                  color='success'
+                  label='BosKeeper'
+                  sx={{width:120}}
+                />
 
-              <Typography variant="body1" component="div" sx={{ m:1 }} >
-                <b>KeeperOfBOS</b> : {dkOfBos}
-              </Typography>
+                <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
+                  {bosKeeper}
+                </Typography>
+              </Stack>
+
+              <Stack direction='row' >
+                <Chip
+                  variant={ dkOfBos == bosKeeper ? 'filled' : 'outlined' }
+                  color={ dkOfBos == bosKeeper ? 'success' : 'default' }
+                  label='KeeperOfBos'
+                  sx={{width:120}}
+                />
+
+                <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
+                  {dkOfBos}
+                </Typography>
+              </Stack>
 
             </CardContent>        
         </Card>
@@ -137,15 +152,13 @@ export function TurnKey({nextStep}:TurnKeyProps) {
 
           <Button 
             disabled = {!setRomDK || setRomDKLoading }
-
             sx={{ m: 1, mr: 5, minWidth: 120, height: 40 }} 
-
             variant="outlined" 
-
+            color='primary'
+            startIcon={<Key />}
             onClick={() => { 
               setRomDK?.(); 
             }}
-
             size='small'
           >
             Turn Key of ROM
@@ -153,15 +166,13 @@ export function TurnKey({nextStep}:TurnKeyProps) {
 
           <Button 
             disabled = {!setBosDK || setBosDKLoading }
-
             sx={{ m: 1, ml:5, minWidth: 120, height: 40 }} 
-
             variant="outlined" 
-
+            color='success'
+            startIcon={<Key />}
             onClick={()=> {
               setBosDK?.();
             }}
-
             size='small'
           >
             Turn Key of BOS

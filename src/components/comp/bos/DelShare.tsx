@@ -2,9 +2,9 @@ import { BigNumber } from "ethers";
 import { useBookOfSharesDecreaseCapital, usePrepareBookOfSharesDecreaseCapital } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { useEffect, useState } from "react";
-import { Share, getShare } from "../../../pages/comp/bos/bookOfShares";
 import { Button, Stack, TextField } from "@mui/material";
 import { RemoveCircle } from "@mui/icons-material";
+import { Share, getShare } from "../../../queries/bos";
 
 interface DelShareProps {
   getList: ()=>any;
@@ -19,7 +19,7 @@ export function DelShare ({getList}:DelShareProps) {
   const [ share, setShare ] = useState<Share>();
 
   useEffect(()=>{
-    if (seq){
+    if (seq && boox){
       getShare(boox[7], parseInt(seq)).then(
         target => setShare(target)
       )
@@ -29,7 +29,7 @@ export function DelShare ({getList}:DelShareProps) {
   const {
     config: delShareConfig
   } = usePrepareBookOfSharesDecreaseCapital({
-    address: boox[7],
+    address: boox ? boox[7] : undefined,
     args: seq && share
         ? [BigNumber.from(seq), share.body.paid, share.body.par]
         : undefined,

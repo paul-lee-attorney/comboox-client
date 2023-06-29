@@ -13,20 +13,17 @@ import {
 
 import { HexType } from "../../../../interfaces";
 
-import { 
-  CirculateSha,
-  SignSha,
-  ActivateSha,
-  LockContents,
-  ProposeDocOfGm,
-  VoteForDocOfGm,
-} from '../../..';
-
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { VoteCountingOfGm } from "../../bog/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
+import { LockContents } from "../../../common/accessControl/LockContents";
+import { CirculateSha } from "./CirculateSha";
+import { SignSha } from "./SignSha";
+import { ProposeDocOfGm } from "../../bog/ProposeDocOfGm";
+import { VoteForDocOfGm } from "../../bog/VoteForDocOfGm";
+import { ActivateSha } from "./ActivateSha";
 
 interface ShaLifecycleProps {
   sha: HexType;

@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
-import { DataList } from '../..';
-
 import {
   useRegisterOfMembersMembersOfGroup
 } from '../../../generated';
 
 import { ContractProps } from '../../../interfaces';
 import { BigNumber } from 'ethers';
+import { DataList } from '../../common/DataList';
 
 type MembersOfGroupProps = ContractProps & {
   args: readonly [BigNumber]

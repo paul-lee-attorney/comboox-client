@@ -53,7 +53,7 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
 
   useEffect(()=>{
     setAddrOfDoc(`0x${motion.contents.toHexString().padStart(66, '0').substring(26, 66)}`);
-    if (addrOfDoc && motion.head.seqOfVR < 9) {
+    if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
                           ? boox[4] : boox[1];
       getSnOfFile(folder, addrOfDoc).then(
@@ -65,16 +65,16 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
   const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
 
   useEffect(()=>{
-    // console.log('motion:', motion);
-    let minutes: HexType =
-        motion.votingRule.authority == 1
-        ? boox[3] : boox[2];
-    voteEnded(minutes, motion.head.seqOfMotion).then(
-      flag => {
-        // console.log('flag: ', flag);          
-        setVoteIsEnd(flag);
-      }
-    );
+    if ( boox ) {
+      let minutes: HexType =
+      motion.votingRule.authority == 1
+      ? boox[3] : boox[2];
+      voteEnded(minutes, motion.head.seqOfMotion).then(
+        flag => {
+          setVoteIsEnd(flag);
+        }
+      ); 
+    }
   }, [motion, boox ])
 
   const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();

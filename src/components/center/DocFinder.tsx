@@ -28,7 +28,7 @@ export function DocFinder() {
 
   const handleTypeChange = (e: SelectChangeEvent) => {
     setTypeOfDoc(e.target.value);
-    console.log(e.target.value);
+    // console.log(e.target.value);
   };
 
   const handleClick = () => {
@@ -36,7 +36,7 @@ export function DocFinder() {
       parseInt(version).toString(16).padStart(4, '0') +
       parseInt(seqOfDoc).toString(16).padStart(16, '0') + 
       '0'.padEnd(40, '0')}`;
-    console.log(sn); 
+    // console.log(sn); 
     setSnOfDoc(sn);
   };
 

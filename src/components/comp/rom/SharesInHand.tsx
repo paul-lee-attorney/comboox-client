@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
-import { DataList } from '../..';
-
 import {
   useRegisterOfMembersSharesInHand
 } from '../../../generated';
 
 import { ContractProps } from '../../../interfaces';
 import { BigNumber } from 'ethers';
+import { DataList } from '../../common/DataList';
 
 type SharesInHandProps = ContractProps & {
   args: readonly [BigNumber]

@@ -2,16 +2,16 @@ import { Dispatch, SetStateAction, createContext, useContext, useState } from "r
 import { AddrZero, HexType } from "../interfaces";
 
 interface ContextType {
-  gk: HexType,
-  setGK: Dispatch<SetStateAction<HexType>>,
-  boox: HexType[],
-  setBoox: Dispatch<SetStateAction<HexType[]>>,
+  gk: HexType | undefined,
+  setGK: Dispatch<SetStateAction<HexType | undefined>>,
+  boox: HexType[] | undefined,
+  setBoox: Dispatch<SetStateAction<HexType[] | undefined>>,
 }
 
 const ComBooxContext = createContext<ContextType>({
-  gk: AddrZero, 
+  gk: undefined, 
   setGK: ()=>{},
-  boox: [],
+  boox: undefined,
   setBoox: ()=>{},
 });
 
@@ -20,8 +20,8 @@ interface ComBooxWrapperProps {
 }
 
 export function ComBooxWrapper({ children }: ComBooxWrapperProps) {
-  const [gk, setGK] = useState<HexType>(AddrZero);
-  const [boox, setBoox] = useState<HexType[]>([]);
+  const [gk, setGK] = useState<HexType>();
+  const [boox, setBoox] = useState<HexType[]>();
 
   return (
     <ComBooxContext.Provider value={{ gk, setGK, boox, setBoox}} >

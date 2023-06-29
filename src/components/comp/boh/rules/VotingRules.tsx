@@ -21,11 +21,7 @@ import {
   RemoveCircle,
 } from "@mui/icons-material"
 
-import { 
-  SetVotingRule, 
-} from '../../..';
-
-import { VotingRule } from "./SetVotingRule";
+import { SetVotingRule, VotingRule } from "./SetVotingRule";
 
 import { 
   usePrepareShareholdersAgreementRemoveRule, 

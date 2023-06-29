@@ -27,9 +27,11 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
   useEffect(() => {
 
     const obtainVR = async ()=>{
-      let sha: HexType = await getSha(boox[4]);
-      let hexVr: HexType = await getRule(sha, seq);
-      setObjVr(vrParser(hexVr));
+      if (boox) {
+        let sha: HexType = await getSha(boox[4]);
+        let hexVr: HexType = await getRule(sha, seq);
+        setObjVr(vrParser(hexVr));
+      }
     }
     
     obtainVR();

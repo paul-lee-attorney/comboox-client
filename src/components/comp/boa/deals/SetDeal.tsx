@@ -186,8 +186,10 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
   useEffect(()=>{
     const obtainFileState = async ()=>{
-      let head = await getHeadOfFile(boox[1], ia);
-      setFileState(head.state);
+      if (boox ) {
+        let head = await getHeadOfFile(boox[1], ia);
+        setFileState(head.state);
+      }
     }
     obtainFileState();
   }, [ boox, ia ]);

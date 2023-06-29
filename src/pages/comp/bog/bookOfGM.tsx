@@ -16,22 +16,25 @@ function BookOfGM() {
   const {
     refetch: getSeqList
   } = useMeetingMinutesGetSeqList({
-    address: boox[3],
+    address: boox ? boox[3] : undefined,
     onSuccess(seqList) {
 
       const obtainMotionsList = async () => {
-        let list: Motion[] = [];
-        let len = seqList.length;
-        let i = len >= 100 ? len - 100 : 0;
 
-        while( i < len ) {
-          let motion = await getMotion(boox[3], seqList[i]);
-          list.push(motion);
-          i++;
+        if ( boox ) {
+          let list: Motion[] = [];
+          let len = seqList.length;
+          let i = len >= 100 ? len - 100 : 0;
+
+          while( i < len ) {
+            let motion = await getMotion(boox[3], seqList[i]);
+            list.push(motion);
+            i++;
+          }
+        
+          // console.log('motionsList: ', list);
+          setMotionsList(list);
         }
-      
-        console.log('motionsList: ', list);
-        setMotionsList(list);
       }
 
       obtainMotionsList();
@@ -73,7 +76,7 @@ function BookOfGM() {
 
           <tr>
             <td colSpan={4}>
-              {motion && (
+              {motion && boox && (
                 <FlowchartOfMotion minutes={boox[3]}  open={open} motion={motion} setOpen={setOpen} obtainMotionsList={getSeqList} />
               )}
             </td>

@@ -22,6 +22,8 @@ import {
 } from "@mui/icons-material"
 
 import { FirstRefusalRuleWrap, SetFirstRefusalRule } from "./SetFirstRefusalRule";
+import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
+import { BigNumber } from "ethers";
 
 interface FirstRefusalRulesProps {
   sha: HexType;
@@ -31,7 +33,7 @@ interface FirstRefusalRulesProps {
 
 export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalRulesProps) {
 
-  const mandatoryRules:number[] = isFinalized ? [] : [512, 513];
+  const mandatoryRules = [512, 513];
 
   const [ cp, setCp ] = useState(mandatoryRules);
 
@@ -62,24 +64,41 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
     })
   }
 
+  const [open, setOpen] = useState(false);
+
+  const {
+    config: removeRuleConfig
+  } = usePrepareShareholdersAgreementRemoveRule({
+    address: sha,
+    args: [BigNumber.from(cp[cp.length - 1] ?? '513')]
+  })
+
+  const {
+    isLoading: removeRuleLoading,
+    write: removeRule,
+  } = useShareholdersAgreementRemoveRule({
+    ...removeRuleConfig,
+    onSuccess() {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();      
+        return arr;
+      });
+      setOpen(false);
+    }
+  })
+
+
   const removeCp = () => {
-    setCp(v => {
-      let arr = [...v];
-      arr.pop();
-      return arr;
-    })
+    removeRule?.();
   }
 
-  const [open, setOpen] = useState(false);
 
   return (
     <>
-
       <Button
-        // disabled={ !newGR }
         variant="outlined"
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5,minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
@@ -112,7 +131,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ cp.length < 2 } 
+                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule } 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ removeCp }
                       color="primary"
