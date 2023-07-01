@@ -10,7 +10,7 @@ import { ExecDeal } from "./ExecDeal";
 import dayjs, { Dayjs } from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 
-export const strTypeOfIa = ['ZeroPoint', 'CI', 'EXT', 'INT', 'CI & INT', 'EXT & INT', 'CI & EXT & INT'];
+export const strTypeOfIa = ['CI', 'EXT', 'INT', 'CI & INT', 'EXT & INT', 'CI & EXT & INT'];
 
 interface SetTypeOfIaProps{
   ia: HexType,
@@ -19,8 +19,8 @@ interface SetTypeOfIaProps{
 
 export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
 
-  const [ type, setType ] = useState<string>();
-  const [ newType, setNewType ] = useState<number>(0);
+  const [ type, setType ] = useState<number>(2);
+  const [ newType, setNewType ] = useState<number>(2);
 
   const {
     refetch: getTypeOfIa,
@@ -59,7 +59,7 @@ export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
           m:1,
           minWidth: 218,
         }}
-        value={ strTypeOfIa[newType] }
+        value={ strTypeOfIa[newType-1] }
       />
 
       <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
@@ -68,11 +68,11 @@ export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
           labelId="typeOfIA-label"
           id="typeOfIA-select"
           value={ type }
-          onChange={(e) => setType(e.target.value)}
+          onChange={(e) => setType(parseInt(e.target.value.toString()))}
         >
           {
             strTypeOfIa.map((v, i) => (
-              <MenuItem key={i} value={i.toString()}>{v}</MenuItem>
+              <MenuItem key={v} value={i+1}>{v}</MenuItem>
             ))
           }
         </Select>

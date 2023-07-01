@@ -25,7 +25,7 @@ interface GetFilesListProps {
   pathAs: string,
 }
 
-const labState = ['ZeroPoint', 'Created', 'Circulated', 'Established', 
+const labState = ['Created', 'Circulated', 'Established', 
 'Proposed', 'Approved', 'Rejected', 'Closed', 'Terminated'];
 
 
@@ -58,6 +58,8 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
       headerName: 'Creator',
       valueGetter: p => longSnParser(parseInt(`0x${p.row.sn.substring(26, 36)}`).toString()),
       width: 218,
+      headerAlign:'center',
+      align: 'center',
       renderCell: ({ value }) => (
         <Chip 
           variant='outlined'
@@ -70,22 +72,32 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
       headerName: 'CreateDate',
       valueGetter: p => dateParser(parseInt(p.row.sn.substring(36, 48), 16)),
       width: 218,
+      headerAlign:'center',
+      align: 'center',
     },
     {
       field: 'addr',
       headerName: 'Address',
       valueGetter: p => p.row.addr,
       width: 550,
+      headerAlign:'center',
+      align: 'center',
     },
     {
       field: 'state',
       headerName: 'State',
-      valueGetter: p => labState[p.row.head.state],
+      valueGetter: p => p.row.head.state,
       width: 218,
+      headerAlign:'center',
+      align: 'center',
       renderCell: ({ value }) => (
         <Chip 
           variant='filled'
-          label={ value } 
+          label={ 
+            labState[value - 1] == 'Closed' && title == 'SHA List' 
+              ? 'In Force' 
+              : labState[value - 1]
+          } 
           sx={{width: 128}}
           color={
             value == 7

@@ -35,6 +35,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
   const { boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
   const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
+  const [ passed, setPassed ] = useState<boolean>(false);
 
   useEffect(()=>{
     const updateActiveStep = async () => {
@@ -71,7 +72,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
     };
 
     updateActiveStep();
-  }, [boox, sha, isFinalized]);
+  }, [boox, sha, isFinalized, passed, activeStep]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -170,7 +171,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                     Count vote result of SHA (only for Members).
                   </Typography>
                   {seqOfMotion && (
-                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } />
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={setPassed} setNextStep={ setActiveStep } setOpen={()=>{}} getMotionsList={()=>{}}/>
                   )}
                 </StepContent>
 

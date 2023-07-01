@@ -7,6 +7,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, 
 import { AssignmentInd, Rule } from "@mui/icons-material";
 import { useBookOfDirectorsGetPosition } from "../../../generated";
 import dayjs from "dayjs";
+import { longSnParser } from "../../../scripts/toolsKit";
 
 
 export interface Position {
@@ -34,7 +35,7 @@ export function GetPosition({seq}: GetPositionProps) {
   const [ pos, setPos ] = useState<Position>();
 
   useBookOfDirectorsGetPosition({
-    address: boox[2],
+    address: boox ? boox[2]: undefined,
     args: [BigNumber.from(seq)],
     onSuccess(data) {
       setPos(data);
@@ -63,7 +64,7 @@ export function GetPosition({seq}: GetPositionProps) {
         aria-labelledby="dialog-title"
       >
         {pos && (
-          <DialogTitle id="dialog-title">
+          <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }} >
             <b>Position Info - No. {pos.seqOfPos.toString().padStart(3, '0')}</b>
           </DialogTitle>
         )}
@@ -84,7 +85,7 @@ export function GetPosition({seq}: GetPositionProps) {
               spacing={1} 
             >
               {pos && (
-                <Typography>
+                <Typography sx={{ textDecoration:'underline' }} >
                   <h3>
                     Title: { arrTitleOfOfficers[pos.title] }
                   </h3>
@@ -100,7 +101,7 @@ export function GetPosition({seq}: GetPositionProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ pos?.acct.toString().padStart(13, '0') }
+                  value={ longSnParser(pos?.acct.toString() ?? '0' ) }
                 />
 
                 <TextField 
@@ -111,7 +112,7 @@ export function GetPosition({seq}: GetPositionProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ pos?.nominator.toString().padStart(13, '0') }
+                  value={ longSnParser(pos?.nominator.toString() ?? '0') }
                 />
 
               </Stack>

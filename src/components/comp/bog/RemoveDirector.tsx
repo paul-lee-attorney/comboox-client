@@ -2,8 +2,8 @@ import { BigNumber } from "ethers";
 import { useGeneralKeeperRemoveDirector, usePrepareGeneralKeeperRemoveDirector } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { HexType } from "../../../interfaces";
-import { Button } from "@mui/material";
-import { Chair } from "@mui/icons-material";
+import { Button, Paper } from "@mui/material";
+import { Chair, FollowTheSigns } from "@mui/icons-material";
 
 
 interface RemoveDirectorProps {
@@ -31,20 +31,26 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:
   } = useGeneralKeeperRemoveDirector({
     ...removeDirectorConfig,
     onSuccess(){
-      getMotionsList(boox[3]);
-      setOpen(false);
+      if (boox) {
+        getMotionsList(boox[3]);
+        setOpen(false);
+      }
     }
   })
 
   return (
-    <Button
-      disabled={ !removeDirector || removeDirectorLoading}
-      variant="contained"
-      endIcon={<Chair />}
-      sx={{ m:1, mr:6 }}
-      onClick={()=>removeDirector?.()}
-    >
-      Remove Director
-    </Button>
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+
+      <Button
+        disabled={ !removeDirector || removeDirectorLoading}
+        variant="contained"
+        endIcon={<FollowTheSigns />}
+        sx={{ m:1, mr:6 }}
+        onClick={()=>removeDirector?.()}
+      >
+        Remove Director
+      </Button>
+
+    </Paper>
   );
 }

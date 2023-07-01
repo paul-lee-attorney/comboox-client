@@ -79,8 +79,8 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
           onClose={()=>setOpen(false)}
           aria-labelledby="dialog-title"
         >
-          <DialogTitle id="dialog-title">
-            Voting Rule - No. {seq} ({objVr.seqOfSubRule} / {objVr.qtyOfSubRule})
+          <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
+            <h4>Voting Rule - No. {seq} ({objVr.seqOfSubRule} / {objVr.qtyOfSubRule})</h4>
           </DialogTitle>
 
           <DialogContent>
@@ -109,7 +109,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ authorities[objVr.authority] }
+                      value={ authorities[objVr.authority - 1] }
                     />
                   )}
 

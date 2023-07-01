@@ -153,7 +153,6 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
         <Switch 
           color="primary" 
           onChange={(e) => setUseLock( e.target.checked )} 
-          checked={ useLock } 
         />
 
         <Typography>

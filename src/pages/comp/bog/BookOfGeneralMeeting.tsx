@@ -7,9 +7,9 @@ import { FlowchartOfMotion } from "../../../components/common/meetingMinutes/Flo
 import { Motion, getMotion } from "../../../queries/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
 
-function BookOfGM() {
+function BookOfGeneralMeeting() {
 
-  const { gk, boox } = useComBooxContext();
+  const { boox } = useComBooxContext();
 
   const [ motionsList, setMotionsList ] = useState<Motion[]>();
 
@@ -32,7 +32,6 @@ function BookOfGM() {
             i++;
           }
         
-          // console.log('motionsList: ', list);
           setMotionsList(list);
         }
       }
@@ -43,6 +42,10 @@ function BookOfGM() {
 
   const [ open, setOpen ] = useState(false);
   const [ motion, setMotion ] = useState<Motion>();
+
+  const obtainSeqList = ()=> {
+    getSeqList();
+  }
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -57,7 +60,7 @@ function BookOfGM() {
 
           <tr>
             <td colSpan={4} >
-              <CreateMotionOfGm  getMotionsList={getSeqList} />
+              <CreateMotionOfGm  getMotionsList={obtainSeqList} />
             </td>
           </tr>
 
@@ -77,7 +80,13 @@ function BookOfGM() {
           <tr>
             <td colSpan={4}>
               {motion && boox && (
-                <FlowchartOfMotion minutes={boox[3]}  open={open} motion={motion} setOpen={setOpen} obtainMotionsList={getSeqList} />
+                <FlowchartOfMotion 
+                  minutes={boox[3]}  
+                  open={open} 
+                  motion={motion} 
+                  setOpen={setOpen} 
+                  obtainMotionsList={obtainSeqList} 
+                />
               )}
             </td>
           </tr>
@@ -91,4 +100,4 @@ function BookOfGM() {
   );
 } 
 
-export default BookOfGM;
+export default BookOfGeneralMeeting;

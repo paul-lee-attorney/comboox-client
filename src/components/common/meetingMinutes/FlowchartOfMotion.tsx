@@ -1,4 +1,4 @@
-import { Box, Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, TextField, Toolbar } from "@mui/material";
+import { Box, Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { GetVotingRule } from "../../comp/boh/rules/GetVotingRule";
 import { GetPosition } from "../../comp/bod/GetPosition";
@@ -15,6 +15,8 @@ import { BallotsList } from "./BallotsList";
 import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
 import { VoteCountingOfGm } from "../../comp/bog/VoteCountingOfGm";
 import { TakeSeat } from "../../comp/bog/TakeSeat";
+import { RemoveDirector } from "../../comp/bog/RemoveDirector";
+import { ExecActionOfGm } from "../../comp/bog/ExecActionOfGm";
 
 export interface FlowchartOfMotionProps{
   minutes: HexType;
@@ -81,26 +83,27 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
 
   return (
     <Dialog
-      maxWidth="xl"
+      maxWidth={false}
       open={open}
       onClose={()=>setOpen(false)}
       aria-labelledby="dialog-title"
       sx={{m:1, p:1}} 
     >
-      <DialogTitle id="dialog-title">
-        {"Flowchart of Motion"}
+      <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
+        <h4>{"Flowchart of Motion"}</h4>
       </DialogTitle>
       <DialogContent>
-          <table width={1280} >
+        <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+          <table width={1580} >
             <thead> 
               <tr>
                 <td colSpan={2}>
-                  <Toolbar>
+                  <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
                     <h4> Motion Of General Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
                   </Toolbar>
                 </td>
                 <td colSpan={2}>
-                  <Toolbar>
+                  <Toolbar sx={{ color:'black', textDecoration:'underline' }} >
                     <h6> No. ( { longSnParser(motion.head.seqOfMotion.toString()) } ) </h6>
                   </Toolbar>
                 </td>
@@ -160,72 +163,71 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
 
               </tr>
 
-              {/* {(motion.head.typeOfMotion == 1 || motion.head.typeOfMotion == 2) && ( */}
-                <tr>
-                  <td>
+              <tr>
+                <td>
+                  <TextField 
+                    fullWidth
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfExectuor" 
+                    label={ motion.head.typeOfMotion == 1 ? "Candidate" : "Executor" } 
+                    variant="outlined"
+                    value = { longSnParser(motion.head.executor.toString()) }
+                    size='small'
+                  />
+                </td>
+
+                <td>
+                  <GetVotingRule seq={motion.head.seqOfVR} />
+                </td>
+
+                <td colSpan={2}>
+                  {motion.head.typeOfMotion < 3 && (
+                    <GetPosition seq={motion.contents.toNumber()} />
+                  )}
+
+                  {motion.head.typeOfMotion == 3 && snOfDoc && (
+                    <Link
+                      href={{
+                        pathname: motion.head.seqOfVR == 8
+                                ? '/comp/boh/Sha'
+                                : '/comp/boa/Ia'
+                        ,
+                        query: {
+                          addr: addrOfDoc,
+                          snOfDoc: snOfDoc.substring(6, 26),
+                        }
+                      }}
+                      as={motion.head.seqOfVR == 8
+                          ? '/comp/boh/sha'
+                          : '/comp/boa/ia'}
+                    >            
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Article />}
+                        sx={{ m:1 }}
+                      >
+                        Doc: {addrOfDoc}
+                      </Button>
+                    </Link>
+                  )}
+
+                  {motion.head.typeOfMotion == 4 && (
                     <TextField 
                       fullWidth
                       inputProps={{readOnly: true}}
                       sx={{ m: 1 }} 
-                      id="tfExectuor" 
-                      label={ motion.head.typeOfMotion == 1 ? "Candidate" : "Executor" } 
+                      id="tfHashOfAction" 
+                      label="HashOfAction" 
                       variant="outlined"
-                      value = { longSnParser(motion.head.executor.toString()) }
+                      value = { motion.contents.toHexString() }
                       size='small'
-                    />
-                  </td>
+                    />                                            
+                  )}
 
-                  <td>
-                    <GetVotingRule seq={motion.head.seqOfVR} />
-                  </td>
-
-                  <td colSpan={2}>
-                    {motion.head.typeOfMotion < 3 && (
-                      <GetPosition seq={motion.contents.toNumber()} />
-                    )}
-
-                    {motion.head.typeOfMotion == 3 && snOfDoc && (
-                      <Link
-                        href={{
-                          pathname: motion.head.seqOfVR == 8
-                                  ? '/comp/boh/Sha'
-                                  : '/comp/boa/Ia'
-                          ,
-                          query: {
-                            addr: addrOfDoc,
-                            snOfDoc: snOfDoc.substring(6, 26),
-                          }
-                        }}
-                        as={motion.head.seqOfVR == 8
-                            ? '/comp/boh/sha'
-                            : '/comp/boa/ia'}
-                      >            
-                        <Button
-                          variant="outlined"
-                          fullWidth
-                          startIcon={<Article />}
-                          sx={{ m:1 }}
-                        >
-                          Doc: {addrOfDoc}
-                        </Button>
-                      </Link>
-                    )}
-
-                    {motion.head.typeOfMotion == 4 && (
-                      <TextField 
-                        fullWidth
-                        inputProps={{readOnly: true}}
-                        sx={{ m: 1 }} 
-                        id="tfHashOfAction" 
-                        label="HashOfAction" 
-                        variant="outlined"
-                        value = { motion.contents.toHexString() }
-                        size='small'
-                      />                                            
-                    )}
-
-                  </td>
-                </tr>
+                </td>
+              </tr>
 
               {motion.body.state > 1 && (
                 <tr>
@@ -315,7 +317,7 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
                       <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} />
+                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                   </td>
                 </tr>
@@ -329,9 +331,26 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
                 </tr>
               )}
 
+              {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
+                <tr>
+                  <td colSpan={4}>
+                    <RemoveDirector seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                  </td>
+                </tr>
+              )}
+
+              {motion.body.state == 3 && motion.head.typeOfMotion == 4 && (
+                <tr>
+                  <td colSpan={4}>
+                    <ExecActionOfGm seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                  </td>
+                </tr>
+              )}
+
+
             </tbody>
           </table>
-
+        </Paper>
       </DialogContent>
       <DialogActions>
         <Button onClick={()=>setOpen(false)}>Close</Button>

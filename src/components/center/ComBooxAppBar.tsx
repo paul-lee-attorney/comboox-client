@@ -177,7 +177,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     {href: '/comp/boh/bookOfSHA', label: 'BOH', tip: 'Book Of Shareholders Agreements', icon: <ListAlt />}, 
     {href: '/comp/boa/bookOfIA', label: 'BOA', tip:'Book Of Investment Agreements', icon: <ContentCopyOutlined />}, 
     {href: '/comp/bos/bookOfShares', label: 'BOS', tip:'Book Of Shares', icon: <Payments />},     
-    {href: '/comp/bog/bookOfGM', label: 'BOG', tip:'Minutes Book Of Shareholders General Meeting', icon: <Diversity3 />},     
+    {href: '/comp/bog/BookOfGeneralMeeting', label: 'BOG', tip:'Minutes Book Of Shareholders General Meeting', icon: <Diversity3 />},     
   ]
 
   const backToCenter = () => {

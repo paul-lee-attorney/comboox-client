@@ -68,7 +68,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
 
       <TextField
         sx={{ m: 1, minWidth: 650 }} 
-        id="tfHashOfAction" 
+        id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
         onChange={e => setSigHash(`0x${e.target.value}`)}

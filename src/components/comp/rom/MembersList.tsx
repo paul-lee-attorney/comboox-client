@@ -85,20 +85,15 @@ const columns: GridColDef[] = [
 
 export function MembersEquityList() {
   const { boox } = useComBooxContext();
-
   const [equityList, setEquityList] = useState<MemberShareClip[]>();
-
-  // const [ loading, setLoading ] = useState<boolean>();
 
   useEffect(()=>{
     if (boox) {
       getMembersList(boox[8]).then(
         list => {
-          // setLoading(true);
           getEquityList(boox[8], list).then(
             ls => {
               setEquityList(ls);
-              // setLoading(false);
             }
           )
         }
@@ -108,20 +103,8 @@ export function MembersEquityList() {
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
-      <Toolbar>
+      <Toolbar sx={{ textDecoration:'underline' }}>
         <h3>Members List</h3>
-
-        {/* {loading && (
-          <LoadingButton 
-            loading={ loading } 
-            loadingPosition='end' 
-            endIcon={<Send/>} 
-            sx={{p:1, m:1, ml:5}} 
-          >
-            <span>Loading</span>
-          </LoadingButton>
-        )} */}
-
       </Toolbar>
 
       {equityList && (

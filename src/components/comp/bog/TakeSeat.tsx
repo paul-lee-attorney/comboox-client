@@ -2,7 +2,7 @@ import { BigNumber } from "ethers";
 import { useGeneralKeeperTakeSeat, usePrepareGeneralKeeperTakeSeat } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { HexType } from "../../../interfaces";
-import { Button } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
 
 
@@ -31,20 +31,26 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, getMotionsList}:TakeSe
   } = useGeneralKeeperTakeSeat({
     ...takeSeatConfig,
     onSuccess(){
-      getMotionsList(boox[3]);
-      setOpen(false);
+      if (boox) {
+        getMotionsList(boox[3]);
+        setOpen(false);
+      }
     }
   })
 
   return (
-    <Button
-      disabled={ !takeSeat || takeSeatLoading}
-      variant="contained"
-      endIcon={<Chair />}
-      sx={{ m:1, mr:6 }}
-      onClick={()=>takeSeat?.()}
-    >
-      Take Seat
-    </Button>
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+
+      <Button
+        disabled={ !takeSeat || takeSeatLoading}
+        variant="contained"
+        endIcon={<Chair />}
+        sx={{ m:1, mr:6 }}
+        onClick={()=>takeSeat?.()}
+      >
+        Take Seat
+      </Button>
+
+    </Paper>
   );
 }

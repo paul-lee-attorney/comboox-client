@@ -38,8 +38,10 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMot
   } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
     ...entrustDelegaterOfMemberConfig,
     onSuccess() {
-      getMotionsList(boox[3]);
-      setOpen(false);
+      if (boox ) {
+        getMotionsList(boox[3]);
+        setOpen(false);  
+      }
     },
   });
 

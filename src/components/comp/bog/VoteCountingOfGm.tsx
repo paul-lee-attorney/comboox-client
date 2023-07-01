@@ -1,5 +1,5 @@
 
-import { Button, Stack } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import { 
   useGeneralKeeperVoteCountingOfGm, 
   usePrepareGeneralKeeperVoteCountingOfGm 
@@ -8,16 +8,19 @@ import {
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { BigNumber } from "ethers";
-import { isPassed } from "../../../queries/meetingMinutes";
+import { getMotionsList, isPassed } from "../../../queries/meetingMinutes";
+import { HexType } from "../../../interfaces";
 
 
 interface VoteCountingOfGmProps {
   seqOfMotion: BigNumber;
   setResult: (flag: boolean) => void;
   setNextStep: (step: number) => void;
+  setOpen: (flag: boolean) => void;
+  getMotionsList: (minutes:HexType) => void;
 }
 
-export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep }: VoteCountingOfGmProps) {
+export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen }: VoteCountingOfGmProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -39,6 +42,8 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep }: VoteCo
           flag => {
             setResult(flag);
             setNextStep(flag ? 6 : 8);
+            getMotionsList(boox[3]);
+            setOpen(false);
           }
         )
       }
@@ -46,7 +51,9 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep }: VoteCo
   });
 
   return (
-    <Stack sx={{ alignItems:'center' }} direction={ 'row' } >
+
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+
       <Button
         disabled={ !write || isLoading}
         variant="contained"
@@ -57,7 +64,7 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep }: VoteCo
         Count
       </Button>
 
-    </Stack>
+    </Paper>
   )
 
 }

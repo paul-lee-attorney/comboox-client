@@ -27,9 +27,11 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
   useEffect(()=>{
-    getVoteResult(boox[3], seqOfMotion).then(
-      list => setVoteResult(list)
-    )
+    if (boox) {
+      getVoteResult(boox[3], seqOfMotion).then(
+        list => setVoteResult(list)
+      )
+    }
   }, [seqOfMotion, boox]);
 
   const [ attitude, setAttitude ] = useState<string>('3');
@@ -48,11 +50,13 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
   } = useGeneralKeeperCastVoteOfGm({
     ...config,
     onSuccess() {
-      getVoteResult(boox[3], seqOfMotion).then(
-        list => setVoteResult(list)
-      );
-      getMotionsList(boox[3]);
-      setOpen(false);
+      if (boox) {
+        getVoteResult(boox[3], seqOfMotion).then(
+          list => setVoteResult(list)
+        );
+        getMotionsList(boox[3]);
+        setOpen(false);
+      }
     }
   });
 

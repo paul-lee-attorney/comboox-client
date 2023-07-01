@@ -1,6 +1,6 @@
-import { Alert, Box, Button, Stack, } from "@mui/material";
+import { Alert, Box, Button, Stack, TextField, } from "@mui/material";
 import { useGeneralKeeperSignIa, usePrepareGeneralKeeperSignIa, useSigPageGetParasOfPage } from "../../../../generated";
-import { Bytes32Zero, FileHistoryProps, } from "../../../../interfaces";
+import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useState } from "react";
@@ -42,12 +42,15 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   })
 
   const { gk } = useComBooxContext();
+  const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
 
   const { 
     config
   } =  usePrepareGeneralKeeperSignIa({
     address: gk,
-    args: [addr, Bytes32Zero],
+    args: sigHash
+      ? [addr, sigHash]
+      : undefined,
   });
 
   const {
@@ -62,6 +65,17 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
 
   return (
     <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+
+      <TextField
+        sx={{ m: 1, minWidth: 650 }} 
+        id="tfSigHash" 
+        label="SigHash / CID in IPFS" 
+        variant="outlined"
+        onChange={e => setSigHash(`0x${e.target.value}`)}
+        value = { sigHash.substring(2) }
+        size='small'
+      />                                            
+
       <Button
         disabled={!write || isLoading}
         variant="contained"
