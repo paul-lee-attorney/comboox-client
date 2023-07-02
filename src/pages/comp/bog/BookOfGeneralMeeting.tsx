@@ -3,9 +3,9 @@ import { useState } from "react";
 import { Paper, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 import { CreateMotionOfGm } from "../../../components/comp/bog/CreateMotionOfGm";
-import { FlowchartOfMotion } from "../../../components/common/meetingMinutes/FlowchartOfMotion";
 import { Motion, getMotion } from "../../../queries/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
+import { FlowchartOfMotion } from "../../../components/comp/bog/FlowchartOfMotion";
 
 function BookOfGeneralMeeting() {
 

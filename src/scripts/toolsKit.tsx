@@ -18,7 +18,9 @@ export function dateParser(timestamp: number): string {
 
 export function longSnParser(sn: string): string {
   if (sn.length < 4) sn = sn.padStart(4, '0');
-  return sn.replace(/\d{1,4}(?=(\d{4})+$)/g, (match) => (match + '-'));
+  sn = sn.replace(/\d{1,4}(?=(\d{4})+$)/g, (match) => (match + '-'));
+  if (sn === '0000') sn = '-';
+  return sn;
 }
 
 export function longDataParser(data: string): string {

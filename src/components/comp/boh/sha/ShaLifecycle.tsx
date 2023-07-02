@@ -36,6 +36,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
   const [ activeStep, setActiveStep ] = useState<number>();
   const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
   const [ passed, setPassed ] = useState<boolean>(false);
+  const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 
   useEffect(()=>{
     const updateActiveStep = async () => {
@@ -49,7 +50,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
         
         switch (fileState) {
           case 1: 
-            nextStep = isFinalized ? 1: 0;
+            nextStep = finalized ? 1: 0;
             break;
           case 4: 
             let flag = await voteEnded(boox[3], seq);
@@ -72,7 +73,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
     };
 
     updateActiveStep();
-  }, [boox, sha, isFinalized, passed, activeStep]);
+  }, [boox, sha, finalized, passed, activeStep]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -97,7 +98,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of SHA (only for Owner of SHA).
                   </Typography>
-                  <LockContents addr={ sha } setNextStep={ setActiveStep } />
+                  <LockContents addr={ sha } setIsFinalized={setFinalized} setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>

@@ -13,7 +13,7 @@ import { getBookeeper } from "../../queries/accessControl";
 import { getKeeper } from "../../queries/gk";
 
 
-function MainPage() {
+function HomePage() {
   const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
 
@@ -111,4 +111,4 @@ function MainPage() {
   );
 } 
 
-export default MainPage;
+export default HomePage;

@@ -10,11 +10,15 @@ import {
   usePrepareAccessControlLockContents,
   useAccessControlLockContents,
 } from '../../../generated';
+import { HexType } from '../../../interfaces';
 
-import { FileHistoryProps } from '../../../interfaces';
+interface LockContentsProps {
+  addr: HexType;
+  setIsFinalized: (flag: boolean) => void;
+  setNextStep: (step:number) => void;
+}
 
-
-export function LockContents({ addr, setNextStep }: FileHistoryProps) {
+export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
 
   const { config } = usePrepareAccessControlLockContents({
     address: addr,
@@ -26,6 +30,7 @@ export function LockContents({ addr, setNextStep }: FileHistoryProps) {
   } = useAccessControlLockContents({
     ...config,
     onSuccess() {
+      setIsFinalized(true);
       setNextStep(1);
     }
   });

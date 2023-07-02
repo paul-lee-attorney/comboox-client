@@ -45,7 +45,7 @@ export function CreateComp() {
       const initComp = async ()=>{
         let addrOfGK = await getReceipt(data.hash);
         await setGK(addrOfGK);
-        router.push('/comp/mainPage');
+        router.push('/comp/HomePage');
       }
       initComp();
     }

@@ -37,6 +37,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
   const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
 
   const [ typeOfIa, setTypeOfIa ] = useState<number>();
+  const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 
   useEffect(()=>{
     const obtainTypeOfIa = async ()=>{
@@ -59,7 +60,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
         
         switch (fileState) {
           case 1: 
-            nextStep = isFinalized ? 1: 0;
+            nextStep = finalized ? 1: 0;
             break;
           case 4: 
             let flag = await voteEnded(boox[3], seq);
@@ -107,7 +108,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of IA (only for Owner of IA).
                   </Typography>
-                  <LockContents addr={ ia } setNextStep={ setActiveStep } />
+                  <LockContents addr={ ia } setIsFinalized={setFinalized} setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>

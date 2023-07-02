@@ -1,5 +1,5 @@
 
-import { Button, Stack } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import { 
   filesFolderABI,
   useGeneralKeeperVoteCounting,
@@ -11,14 +11,17 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { BigNumber } from "ethers";
 import { readContract } from "@wagmi/core";
+import { isPassed } from "../../../queries/meetingMinutes";
 
 interface VoteCountingOfBoard {
   seqOfMotion: BigNumber;
+  setResult: (flag: boolean) => void;
+  setNextStep: (next:number) => void;
   setOpen: (flag: boolean) => void;
   getMotionsList: () => any;
 }
 
-export function VoteCountingOfBoard({ seqOfMotion, setOpen, getMotionsList }: VoteCountingOfBoard) {
+export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, getMotionsList }: VoteCountingOfBoard) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -31,17 +34,28 @@ export function VoteCountingOfBoard({ seqOfMotion, setOpen, getMotionsList }: Vo
 
   const {
     isLoading,
-    write
+    write,
+    data,
   } = useGeneralKeeperVoteCounting({
     ...config,
     onSuccess() {
-      getMotionsList();
-      setOpen(false);
+      if (boox) {
+        isPassed(boox[2], seqOfMotion).then(
+          flag => {
+            setResult(flag);
+            setNextStep(1);
+            getMotionsList();
+            setOpen(false);
+          }
+        )
+      }
+
     },
   });
 
   return (
-    <Stack sx={{ alignItems:'center' }} direction={ 'row' } >
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+
       <Button
         disabled={ !write || isLoading}
         variant="contained"
@@ -52,7 +66,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setOpen, getMotionsList }: Vo
         Count
       </Button>
 
-    </Stack>
+    </Paper>
   )
 
 }

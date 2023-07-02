@@ -11,14 +11,20 @@ import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { ProposeMotionToGeneralMeeting } from "../../comp/bog/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "../../comp/bog/CastVoteOfGm";
-import { BallotsList } from "./BallotsList";
 import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
 import { VoteCountingOfGm } from "../../comp/bog/VoteCountingOfGm";
 import { TakeSeat } from "../../comp/bog/TakeSeat";
 import { RemoveDirector } from "../../comp/bog/RemoveDirector";
 import { ExecActionOfGm } from "../../comp/bog/ExecActionOfGm";
+import { BallotsList } from "../../common/meetingMinutes/BallotsList";
+import { getSnOfFile } from "../../../queries/filesFolder";
+import { ProposeMotionToBoardMeeting } from "./ProposeMotionToBoardMeeting";
+import { CastVoteOfBm } from "./CastVoteOfBm";
+import { VoteCountingOfBoard } from "./VoteCountingOfBoard";
+import { TakePosition } from "./TakePosition";
+import { RemoveOfficer } from "./RemoveOfficer";
 
-export interface FlowchartOfMotionProps{
+export interface FlowchartOfBoardMotionProps{
   minutes: HexType;
   open: boolean;
   motion: Motion;
@@ -28,17 +34,7 @@ export interface FlowchartOfMotionProps{
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
-export async function getSnOfFile(folder: HexType, addr: HexType): Promise<HexType>{
-  let sn:HexType = await readContract({
-    address: folder,
-    abi: filesFolderABI,
-    functionName: 'getSNOfFile',
-    args: [addr],
-  })
-  return sn;
-}
-
-export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotionsList}: FlowchartOfMotionProps) {
+export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMotionsList}: FlowchartOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -99,7 +95,7 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
               <tr>
                 <td colSpan={2}>
                   <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h4> Motion Of General Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
+                    <h4> Motion Of Board Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
                   </Toolbar>
                 </td>
                 <td colSpan={2}>
@@ -305,7 +301,7 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -314,10 +310,10 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
                 <tr>
                   <td colSpan={4}>
                     <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                   </td>
                 </tr>
@@ -326,7 +322,7 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
               {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <TakeSeat seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -334,7 +330,7 @@ export function FlowchartOfMotion({minutes, open, motion, setOpen, obtainMotions
               {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
                 <tr>
                   <td colSpan={4}>
-                    <RemoveDirector seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}

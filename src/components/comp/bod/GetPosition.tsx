@@ -8,22 +8,13 @@ import { AssignmentInd, Rule } from "@mui/icons-material";
 import { useBookOfDirectorsGetPosition } from "../../../generated";
 import dayjs from "dayjs";
 import { longSnParser } from "../../../scripts/toolsKit";
+import { titleOfNominator, titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
+import { Position } from "../../../queries/bod";
 
 
-export interface Position {
-  title: number;
-  seqOfPos: number;
-  acct: number;
-  nominator: number;
-  startDate: number;
-  endDate: number;
-  seqOfVR: number;
-  para: number;
-  argu: number;  
-}
+// export const arrTitleOfOfficers = ['Chairman', 'ViceChairman', 'ManagingDirector', 'Director', 'CEO',
+// 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
 
-export const arrTitleOfOfficers = ['ZeroPoint', 'Chairman', 'ViceChairman', 'ManagingDirector', 'Director', 'CEO',
-'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
 
 interface GetPositionProps{
   seq: number;
@@ -85,9 +76,9 @@ export function GetPosition({seq}: GetPositionProps) {
               spacing={1} 
             >
               {pos && (
-                <Typography sx={{ textDecoration:'underline' }} >
+                <Typography sx={{ ml:1, textDecoration:'underline' }} >
                   <h3>
-                    Title: { arrTitleOfOfficers[pos.title] }
+                    Title: { titleOfPositions[pos.title - 1] }
                   </h3>
                 </Typography>
               )}
@@ -99,10 +90,13 @@ export function GetPosition({seq}: GetPositionProps) {
                   inputProps={{readOnly: true}}
                   sx={{
                     m:1,
-                    minWidth: 218,
+                    width: 450,
                   }}
                   value={ longSnParser(pos?.acct.toString() ?? '0' ) }
                 />
+              </Stack>
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                 <TextField 
                   variant='filled'
@@ -113,6 +107,17 @@ export function GetPosition({seq}: GetPositionProps) {
                     minWidth: 218,
                   }}
                   value={ longSnParser(pos?.nominator.toString() ?? '0') }
+                />
+
+                <TextField 
+                  variant='filled'
+                  label='TitleOfNominator'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ titleOfNominator[(pos?.titleOfNominator ?? 1) -1] }
                 />
 
               </Stack>

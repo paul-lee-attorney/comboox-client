@@ -44,13 +44,13 @@ export interface PosAllocateRule {
   data: number; 
 }
 
-const titleOfPositions: string[] = ['Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
+export const titleOfPositions: string[] = ['Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
 
-const titleOfNominator: string[] = ['Shareholder', 'Chairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager']
+export const titleOfNominator: string[] = ['Shareholder', 'Chairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager']
 
 export function prCodifier(rule: PosAllocateRule): HexType {
   let hexRule: HexType = `0x${
-    (rule.seqOfRule.toString(16).padStart(4, '0'))  +
+    (rule.seqOfRule.toString(16).padStart(4, '0')) +
     (rule.qtyOfSubRule.toString(16).padStart(2, '0')) +
     (rule.seqOfSubRule.toString(16).padStart(2, '0')) +
     (rule.removePos ? '01' : '00' ) +

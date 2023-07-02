@@ -97,7 +97,7 @@ export function GetComp() {
         <Link
           
           href={{
-            pathname: `/comp/mainPage`,
+            pathname: `/comp/HomePage`,
             query: {
               typeOfDoc: doc?.head.typeOfDoc.toString(),
               version: doc?.head.version.toString(),
@@ -108,7 +108,7 @@ export function GetComp() {
             }
           }}
           
-          as={`/comp/mainPage`}
+          as={`/comp/HomePage`}
 
           variant='body1'
 

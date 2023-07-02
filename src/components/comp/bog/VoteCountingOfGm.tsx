@@ -17,10 +17,10 @@ interface VoteCountingOfGmProps {
   setResult: (flag: boolean) => void;
   setNextStep: (step: number) => void;
   setOpen: (flag: boolean) => void;
-  getMotionsList: (minutes:HexType) => void;
+  getMotionsList: () => void;
 }
 
-export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen }: VoteCountingOfGmProps) {
+export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, getMotionsList }: VoteCountingOfGmProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -42,7 +42,7 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen 
           flag => {
             setResult(flag);
             setNextStep(flag ? 6 : 8);
-            getMotionsList(boox[3]);
+            getMotionsList();
             setOpen(false);
           }
         )

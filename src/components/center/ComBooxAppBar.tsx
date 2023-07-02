@@ -34,7 +34,20 @@ import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
 const drawerWidth = 180;
 
-import { AccountCircle, ChevronLeft, Inbox, Mail, Home, AssuredWorkload, ListAlt, Payments, ContentCopyOutlined, Diversity3 }  from '@mui/icons-material';
+import { 
+  AccountCircle, 
+  ChevronLeft, 
+  Inbox, 
+  Mail, 
+  Home, 
+  AssuredWorkload, 
+  ListAlt, 
+  Payments, 
+  ContentCopyOutlined, 
+  Diversity3, 
+  GroupOutlined,
+  SwitchAccount
+}  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
@@ -173,11 +186,12 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
-    {href: '/comp/mainPage', label: 'Home', tip: 'Homepage Of Target Company', icon: <Home />}, 
-    {href: '/comp/boh/bookOfSHA', label: 'BOH', tip: 'Book Of Shareholders Agreements', icon: <ListAlt />}, 
-    {href: '/comp/boa/bookOfIA', label: 'BOA', tip:'Book Of Investment Agreements', icon: <ContentCopyOutlined />}, 
-    {href: '/comp/bos/bookOfShares', label: 'BOS', tip:'Book Of Shares', icon: <Payments />},     
-    {href: '/comp/bog/BookOfGeneralMeeting', label: 'BOG', tip:'Minutes Book Of Shareholders General Meeting', icon: <Diversity3 />},     
+    {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <Home />},
+    {href: '/comp/boh/BookOfSHA', label: 'BOH', tip: 'Book of Shareholders Agreements', icon: <ListAlt />},
+    {href: '/comp/boa/BookOfIA', label: 'BOA', tip:'Book of Investment Agreements', icon: <ContentCopyOutlined />},
+    {href: '/comp/bos/BookOfShares', label: 'BOS', tip:'Book of Shares', icon: <Payments />},
+    {href: '/comp/bod/BookOfDirectors', label: 'BOD', tip:'Book of Directors & Board Meeting Minutes', icon: <SwitchAccount />},  
+    {href: '/comp/bog/BookOfGeneralMeeting', label: 'BOG', tip:'Book of General Meeting Minutes', icon: <Diversity3 />},  
   ]
 
   const backToCenter = () => {

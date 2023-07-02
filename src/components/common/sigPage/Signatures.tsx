@@ -454,7 +454,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
                       sx={{minWidth: 218, height:40, 
                         m:1, mt:3, p:1, justifyContent:'start' }}
                       icon={<Face />}
-                      variant="filled"
+                      variant={v.sigDate > 0 ? 'filled' : 'outlined'}
                       color="primary"
                       label={ longSnParser(v.signer.toString()) }
                     />
@@ -516,7 +516,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
                       sx={{minWidth: 218, height:40, 
                         m:1, mt:3, p:1, justifyContent:'start' }}
                       icon={<Face />}
-                      variant="filled"
+                      variant={v.sigDate > 0 ? 'filled' : 'outlined'}
                       color="success"
                       label={ longSnParser(v.signer.toString()) }
                     />
