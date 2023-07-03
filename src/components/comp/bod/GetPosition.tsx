@@ -4,28 +4,29 @@ import { readContract } from "@wagmi/core";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { BigNumber } from "ethers";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
-import { AssignmentInd, Rule } from "@mui/icons-material";
-import { useBookOfDirectorsGetPosition } from "../../../generated";
+import { AssignmentInd, FollowTheSigns, Rule } from "@mui/icons-material";
+import { useBookOfDirectorsGetPosition, useGeneralKeeperQuitPosition, usePrepareGeneralKeeperQuitPosition } from "../../../generated";
 import dayjs from "dayjs";
-import { longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { titleOfNominator, titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
 import { Position } from "../../../queries/bod";
-
-
-// export const arrTitleOfOfficers = ['Chairman', 'ViceChairman', 'ManagingDirector', 'Director', 'CEO',
-// 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
+import { QuitPosition } from "./QuitPosition";
+import { GetVotingRule } from "../boh/rules/GetVotingRule";
 
 
 interface GetPositionProps{
   seq: number;
+  getOfficersList: ()=>any;
 }
 
-export function GetPosition({seq}: GetPositionProps) {
-  const { boox } = useComBooxContext();
+export function GetPosition({seq, getOfficersList}: GetPositionProps) {
+  const { gk, boox } = useComBooxContext();
 
   const [ pos, setPos ] = useState<Position>();
 
-  useBookOfDirectorsGetPosition({
+  const {
+    refetch: getPosition
+  } = useBookOfDirectorsGetPosition({
     address: boox ? boox[2]: undefined,
     args: [BigNumber.from(seq)],
     onSuccess(data) {
@@ -56,7 +57,7 @@ export function GetPosition({seq}: GetPositionProps) {
       >
         {pos && (
           <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }} >
-            <b>Position Info - No. {pos.seqOfPos.toString().padStart(3, '0')}</b>
+            <b>Position Info - No. {pos.seqOfPos.toString().padStart(4, '0')}</b>
           </DialogTitle>
         )}
 
@@ -133,7 +134,7 @@ export function GetPosition({seq}: GetPositionProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dayjs.unix( pos.startDate ).format('YYYY-MM-DD HH:mm:ss') }
+                    value={ dateParser(pos.startDate) }
                   />
                 )}
 
@@ -146,10 +147,15 @@ export function GetPosition({seq}: GetPositionProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dayjs.unix( pos.endDate ).format('YYYY-MM-DD HH:mm:ss') }
+                    value={ dateParser( pos.endDate ) }
                   />
                 )}
 
+              </Stack>
+              <Stack direction={'row'} sx={{ m:1, p:1, alignItems: 'center' }} >
+                {pos && (
+                  <GetVotingRule seq={pos.seqOfVR} />
+                )}
               </Stack>
 
             </Stack>
@@ -159,7 +165,14 @@ export function GetPosition({seq}: GetPositionProps) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <QuitPosition seq={seq} getOfficersList={getOfficersList} setOpen={setOpen} refreshPosition={getPosition} />          
+          <Button 
+            sx={{m:1, ml:5, p:1, minWidth:128 }}
+            variant="outlined"
+            onClick={()=>setOpen(false)}
+          >
+            Close
+          </Button>
         </DialogActions>
       
       </Dialog>

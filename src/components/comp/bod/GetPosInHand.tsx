@@ -7,40 +7,23 @@ import { Position } from "../../../queries/bod";
 import { GetPosition } from "./GetPosition";
 import { GetFullPosInfoInHand } from "./GetFullPosInfoInHand";
 
-interface GetOfficersListProps {
+interface GetPosInHandProps {
   list: readonly Position[];
-  title: string;
-  getOfficersList: () => any;
-  // setOpen: (flag: boolean) => void;
 }
 
-export function GetOfficersList({ list, title, getOfficersList }:GetOfficersListProps) {
+export function GetPosInHand({ list }:GetPosInHandProps) {
 
   const columns: GridColDef[] = [
     {
       field: 'sn',
       headerName: 'Sn',
-      valueGetter: p => longDataParser(p.row.seqOfPos),
-      renderCell: ({ value }) => (
-        <GetPosition seq={value} getOfficersList={getOfficersList} />
-      ),
-      width: 288,    
+      valueGetter: p => p.row.seqOfPos,
+      width: 60,    
     },
     {
       field: 'title',
       headerName: 'Title',
       valueGetter: p => titleOfPositions[p.row.title - 1],
-      width: 218,
-      headerAlign: 'center',
-      align: 'center',
-    },
-    {
-      field: 'userNo',
-      headerName: 'UserNo',
-      valueGetter: p => p.row.acct,
-      renderCell: ({value}) => (
-        <GetFullPosInfoInHand userNo={value} />
-      ),
       width: 218,
       headerAlign: 'center',
       align: 'center',
@@ -90,20 +73,15 @@ export function GetOfficersList({ list, title, getOfficersList }:GetOfficersList
 
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
-      <Box sx={{width: '100%', color: 'black' }} >
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>{ title }</h3>
-        </Toolbar>
-        <DataGrid 
-          initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
-          pageSizeOptions={[5, 10, 15, 20]} 
-          rows={ list } 
-          getRowId={(row:Position) => row.seqOfPos.toString() } 
-          columns={ columns }
-          disableRowSelectionOnClick
-          // onRowClick={ handleRowClick }
-        />      
-      </Box>
+      <DataGrid 
+        initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
+        pageSizeOptions={[5, 10, 15, 20]} 
+        rows={ list } 
+        getRowId={(row:Position) => row.seqOfPos.toString() } 
+        columns={ columns }
+        disableRowSelectionOnClick
+        // onRowClick={ handleRowClick }
+      />      
     </Paper>
   );
 }

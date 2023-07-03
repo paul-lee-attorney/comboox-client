@@ -11,10 +11,11 @@ interface TakeSeatProps {
   seqOfPos: number;  
   setOpen: (flag: boolean) => void;
   getMotionsList: (minutes: HexType)=>any;
+  getOfficersList: ()=>any;
 }
 
 
-export function TakeSeat({seqOfMotion, seqOfPos, setOpen, getMotionsList}:TakeSeatProps) {
+export function TakeSeat({seqOfMotion, seqOfPos, setOpen, getMotionsList, getOfficersList}:TakeSeatProps) {
 
   const {gk, boox} = useComBooxContext();
   
@@ -33,6 +34,7 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, getMotionsList}:TakeSe
     onSuccess(){
       if (boox) {
         getMotionsList(boox[3]);
+        getOfficersList();
         setOpen(false);
       }
     }

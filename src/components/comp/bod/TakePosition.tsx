@@ -14,10 +14,11 @@ interface TakePositionProps {
   seqOfPos: number;  
   setOpen: (flag: boolean) => void;
   getMotionsList: ()=>any;
+  getOfficersList: ()=>any;
 }
 
 
-export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList}:TakePositionProps) {
+export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList, getOfficersList}:TakePositionProps) {
 
   const { gk } = useComBooxContext();
   
@@ -35,6 +36,7 @@ export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList}:Ta
     ...takePositionConfig,
     onSuccess(){
         getMotionsList();
+        getOfficersList();
         setOpen(false);
     }
   })

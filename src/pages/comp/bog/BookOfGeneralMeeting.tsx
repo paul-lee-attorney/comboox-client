@@ -1,15 +1,30 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { useState } from "react";
-import { Paper, Toolbar } from "@mui/material";
+import { useEffect, useState } from "react";
+import { Box, Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 import { CreateMotionOfGm } from "../../../components/comp/bog/CreateMotionOfGm";
 import { Motion, getMotion } from "../../../queries/meetingMinutes";
-import { useMeetingMinutesGetSeqList } from "../../../generated";
+import { useBookOfDirectorsGetDirectorsFullPosInfo, useMeetingMinutesGetSeqList } from "../../../generated";
 import { FlowchartOfMotion } from "../../../components/comp/bog/FlowchartOfMotion";
+import { Tabs, Tab, TabList, TabPanel } from "@mui/joy";
+import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
+import { Position, getDirectorsFullPosInfo } from "../../../queries/bod";
+import { MembersEquityList } from "../../../components/comp/rom/MembersList";
 
 function BookOfGeneralMeeting() {
 
   const { boox } = useComBooxContext();
+
+  const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
+
+  const {
+    refetch: getDirectorsList
+  } = useBookOfDirectorsGetDirectorsFullPosInfo({
+    address: boox ? boox[2] : undefined,
+    onSuccess(list) {
+      setDirectorsList(list);
+    }
+  });
 
   const [ motionsList, setMotionsList ] = useState<Motion[]>();
 
@@ -49,52 +64,61 @@ function BookOfGeneralMeeting() {
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
-        <h3>BOG - Minutes Book Of Shareholders General Meeting</h3>
+      <Toolbar sx={{m:1, p:1}}>
+        <h3>BOG - Book Of General Meeting</h3>
       </Toolbar>
 
-      <table width={1680}>
-        <thead/>
+      <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
 
-        <tbody>
+        <Tabs size="sm" defaultValue={0} sx={{ m:1, justifyContent:'center', alignItems:'start' }} >
 
-          <tr>
-            <td colSpan={4} >
-              <CreateMotionOfGm  getMotionsList={obtainSeqList} />
-            </td>
-          </tr>
+          <TabList variant="soft" color="primary" sx={{ m:1, width: 980 }}  >
+            <Tab value={0}><b>Members List</b></Tab>
+            <Tab value={1}><b>General Meeting Minutes</b></Tab>
+            <Tab value={2}><b>Directors List</b></Tab>
+          </TabList>
 
-          <tr>
-            <td colSpan={4}>
-              {motionsList && (
-                <GetMotionsList 
-                  list={motionsList} 
-                  title="Motions List - General Meeting of Shareholders" 
-                  setMotion={setMotion}
-                  setOpen={setOpen}
-                />
-              )}
-            </td>
-          </tr>
+          <TabPanel value={0} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
+            <MembersEquityList />
+          </TabPanel>
 
-          <tr>
-            <td colSpan={4}>
-              {motion && boox && (
-                <FlowchartOfMotion 
-                  minutes={boox[3]}  
-                  open={open} 
-                  motion={motion} 
-                  setOpen={setOpen} 
-                  obtainMotionsList={obtainSeqList} 
-                />
-              )}
-            </td>
-          </tr>
+          <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
 
-        </tbody>
+            <CreateMotionOfGm  getMotionsList={obtainSeqList} />
 
-      </table>
+            {motionsList && (
+              <GetMotionsList 
+                list={motionsList} 
+                title="Motions List - General Meeting of Shareholders" 
+                setMotion={setMotion}
+                setOpen={setOpen}
+              />
+            )}
 
+            {motion && boox && (
+              <FlowchartOfMotion 
+                minutes={boox[3]}  
+                open={open} 
+                motion={motion} 
+                setOpen={setOpen} 
+                obtainMotionsList={obtainSeqList}
+                getOfficersList={getDirectorsList} 
+              />
+            )}
+
+
+          </TabPanel>
+
+          <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
+
+            {directorsList && (
+              <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />
+            )}
+
+          </TabPanel>
+
+        </Tabs>
+      </Stack>
 
     </Paper>
   );

@@ -14,10 +14,11 @@ interface RemoveOfficerProps {
   seqOfPos: number;  
   setOpen: (flag: boolean) => void;
   getMotionsList: ()=>any;
+  getOfficersList: ()=>any;
 }
 
 
-export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:RemoveOfficerProps) {
+export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList, getOfficersList}:RemoveOfficerProps) {
 
   const {gk, boox} = useComBooxContext();
   
@@ -35,6 +36,7 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:R
     ...removeOfficerConfig,
     onSuccess(){
       getMotionsList();
+      getOfficersList();
       setOpen(false);
     }
   })

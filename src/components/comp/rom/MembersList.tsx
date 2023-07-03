@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { BigNumber } from 'ethers';
 
-import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, Paper, Toolbar } from '@mui/material';
+import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, Paper, Toolbar, Box } from '@mui/material';
 
 import { readContract } from '@wagmi/core';
 
@@ -102,22 +102,23 @@ export function MembersEquityList() {
   });
 
   return (
-    <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
-      <Toolbar sx={{ textDecoration:'underline' }}>
-        <h3>Members List</h3>
-      </Toolbar>
+    <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
+      <Box sx={{width: '100%', color: 'black' }} >
+        <Toolbar sx={{ textDecoration:'underline' }}>
+          <h3>Members List</h3>
+        </Toolbar>
 
-      {equityList && (
-        <DataGrid
-          initialState={{pagination:{paginationModel:{pageSize: 5}}}}
-          pageSizeOptions={[5, 10, 15, 20]}
-          getRowId={row => row.acct}
-          rows={ equityList }
-          columns={ columns }
-        />
-      )}
-
-    </TableContainer>
+        {equityList && (
+          <DataGrid
+            initialState={{pagination:{paginationModel:{pageSize: 5}}}}
+            pageSizeOptions={[5, 10, 15, 20]}
+            getRowId={row => row.acct}
+            rows={ equityList }
+            columns={ columns }
+          />
+        )}
+      </Box>
+    </Paper>
   )
 }
 

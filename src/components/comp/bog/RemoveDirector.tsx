@@ -11,10 +11,11 @@ interface RemoveDirectorProps {
   seqOfPos: number;  
   setOpen: (flag: boolean) => void;
   getMotionsList: (minutes: HexType)=>any;
+  getOfficersList: ()=>any;
 }
 
 
-export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:RemoveDirectorProps) {
+export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList, getOfficersList}:RemoveDirectorProps) {
 
   const {gk, boox} = useComBooxContext();
   
@@ -33,6 +34,7 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:
     onSuccess(){
       if (boox) {
         getMotionsList(boox[3]);
+        getOfficersList();
         setOpen(false);
       }
     }

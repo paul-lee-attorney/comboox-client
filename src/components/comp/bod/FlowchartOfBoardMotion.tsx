@@ -30,11 +30,12 @@ export interface FlowchartOfBoardMotionProps{
   motion: Motion;
   setOpen: (flag: boolean)=>void;
   obtainMotionsList: ()=>any;
+  getOfficersList: ()=>any;
 }
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
-export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMotionsList}: FlowchartOfBoardMotionProps) {
+export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMotionsList, getOfficersList}: FlowchartOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -86,7 +87,7 @@ export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMo
       sx={{m:1, p:1}} 
     >
       <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
-        <h4>{"Flowchart of Motion"}</h4>
+        <h4>{"Approval Form of Motion"}</h4>
       </DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
@@ -179,7 +180,7 @@ export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMo
 
                 <td colSpan={2}>
                   {motion.head.typeOfMotion < 3 && (
-                    <GetPosition seq={motion.contents.toNumber()} />
+                    <GetPosition seq={motion.contents.toNumber()} getOfficersList={getOfficersList} />
                   )}
 
                   {motion.head.typeOfMotion == 3 && snOfDoc && (
@@ -322,7 +323,7 @@ export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMo
               {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} getOfficersList={getOfficersList} />
                   </td>
                 </tr>
               )}
@@ -330,7 +331,7 @@ export function FlowchartOfBoardMotion({minutes, open, motion, setOpen, obtainMo
               {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
                 <tr>
                   <td colSpan={4}>
-                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} getOfficersList={getOfficersList} />
                   </td>
                 </tr>
               )}

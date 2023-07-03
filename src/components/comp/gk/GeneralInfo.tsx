@@ -11,6 +11,9 @@ import { getControllor, getOwnersEquity, getVotesOfController } from "../../../q
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
+import { Position } from "../../../queries/bod";
+import { useBookOfDirectorsGetDirectorsFullPosInfo } from "../../../generated";
+import { GetOfficersList } from "../bod/GetOfficersList";
 
 
 export function GeneralInfo() {
@@ -52,6 +55,17 @@ export function GeneralInfo() {
     }
   }, [gk, boox]);
 
+  const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
+
+  const {
+    refetch: getDirectorsList
+  } = useBookOfDirectorsGetDirectorsFullPosInfo({
+    address: boox ? boox[2] : undefined,
+    onSuccess(list) {
+      setDirectorsList(list);
+    }
+  });
+
   return (
     <>
       <Paper elevation={3} 
@@ -66,7 +80,7 @@ export function GeneralInfo() {
           <h3>General Info</h3>
         </Toolbar>
 
-        <table width={1680} >
+        <table width={1680}>
           <thead>
 
             <tr>        
@@ -78,7 +92,7 @@ export function GeneralInfo() {
                     label="NameOfCompany" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1,
+                      m:1, p:1
                     }}
                     fullWidth
                   />
@@ -96,7 +110,7 @@ export function GeneralInfo() {
                     inputProps={{readOnly: true}}
                     sx={{
                       minWidth: 120,
-                      m:1,
+                      m:1, p:1
                     }}
                     fullWidth
                   />
@@ -111,7 +125,7 @@ export function GeneralInfo() {
                     label="SymbolOfCompany" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1,
+                      m:1, p:1
                     }}
                     fullWidth
                   />
@@ -126,7 +140,7 @@ export function GeneralInfo() {
                     label="AddressOfCompany" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1,
+                      m:1, p:1
                     }}
                     fullWidth
                   />
@@ -146,7 +160,7 @@ export function GeneralInfo() {
                     label="ActualControllor" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m: 1,
+                      m:1, p:1
                     }}
                     fullWidth
                   />
@@ -160,7 +174,7 @@ export function GeneralInfo() {
                     label="VotesOfController" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m: 1,
+                      m:1, p:1
                     }} 
                     fullWidth
                   />
@@ -174,7 +188,7 @@ export function GeneralInfo() {
                     label="RegisteredCapital" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m: 1,
+                      m:1, p:1
                     }}
                     fullWidth
                   />
@@ -188,7 +202,7 @@ export function GeneralInfo() {
                     label="PaidInCapital" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m: 1,
+                      m: 1, p:1
                     }}
                     fullWidth
                   />
@@ -201,6 +215,15 @@ export function GeneralInfo() {
                 <MembersEquityList />
               </td>
             </tr>
+
+            <tr>
+              <td colSpan={4}>
+                {directorsList && (
+                  <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />
+                )}
+              </td>
+            </tr>
+
           </tbody>
         </table>
       </Paper>
