@@ -2,7 +2,7 @@ import dayjs from "dayjs";
 import { BigNumber } from "ethers";
 
 export function toPercent(num: number): string {
-  let percent = Number(num / 100).toFixed(2) + '%';
+  let percent = num == 0 ? '-' : Number(num / 100).toFixed(2) + '%';
   return percent;
 }
 

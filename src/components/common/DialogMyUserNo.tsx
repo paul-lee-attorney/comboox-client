@@ -59,7 +59,7 @@ export function DialogMyUserNo({flag, closeDialog}: DialogType) {
         </DialogContent>
         <DialogActions>
 
-          {userNo === '0000' && (
+          {userNo === '-' && (
             <RegUser closeDialog={closeDialog} />
           )}
 

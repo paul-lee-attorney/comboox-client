@@ -44,9 +44,7 @@ export interface PosAllocateRule {
   data: number; 
 }
 
-export const titleOfPositions: string[] = ['Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
-
-export const titleOfNominator: string[] = ['Shareholder', 'Chairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager']
+export const titleOfPositions: string[] = ['Shareholder', 'Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
 
 export function prCodifier(rule: PosAllocateRule): HexType {
   let hexRule: HexType = `0x${
@@ -99,7 +97,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
     seqOfSubRule: seq - 255,
     removePos: false,
     seqOfPos: 0,
-    titleOfPos: 4,
+    titleOfPos: 5,
     nominator: 0,
     titleOfNominator: 1,
     seqOfVR: 9,
@@ -242,7 +240,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfPositions[(newPR.titleOfPos ?? 1) - 1] }
+                  value={ titleOfPositions[newPR.titleOfPos - 1] }
                 />
 
                 <TextField 
@@ -375,7 +373,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfNominator[(newPR.titleOfNominator ?? 1) - 1]}
+                  value={ titleOfPositions[(newPR.titleOfNominator ?? 1) - 1]}
                 />
 
                 <TextField 
@@ -419,7 +417,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                         titleOfNominator: parseInt(e.target.value.toString()),
                       }))}
                     >
-                      { titleOfNominator.map( (v, i) => (
+                      { titleOfPositions.map( (v, i) => (
                         <MenuItem key={v} value={i+1}> { v } </MenuItem>
                       ))}
 
