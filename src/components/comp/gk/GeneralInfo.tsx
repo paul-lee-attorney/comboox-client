@@ -11,8 +11,7 @@ import { getControllor, getOwnersEquity, getVotesOfController } from "../../../q
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
-import { Position } from "../../../queries/bod";
-import { useBookOfDirectorsGetDirectorsFullPosInfo } from "../../../generated";
+import { Position, getDirectorsFullPosInfo, getDirectorsPosList, getPosition } from "../../../queries/bod";
 import { GetOfficersList } from "../bod/GetOfficersList";
 
 
@@ -27,6 +26,15 @@ export function GeneralInfo() {
   const [ votesOfController, setVotesOfController ] = useState<string>();
   const [ par, setPar ] = useState<string>();
   const [ paid, setPaid ] = useState<string>();
+
+  const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
+
+  const getDirectorsList = async ()=>{
+    if (boox) {
+      let list = await getDirectorsFullPosInfo(boox[2]);
+      setDirectorsList(list);  
+    }   
+  };
 
   useEffect(()=>{
     if (gk && boox) {
@@ -51,20 +59,32 @@ export function GeneralInfo() {
           setPar(res.par.toString());
           setPaid(res.paid.toString());
         }
-      )
-    }
-  }, [gk, boox]);
-
-  const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
-
-  const {
-    refetch: getDirectorsList
-  } = useBookOfDirectorsGetDirectorsFullPosInfo({
-    address: boox ? boox[2] : undefined,
-    onSuccess(list) {
-      setDirectorsList(list);
+      );
+      getDirectorsList();
     }
   });
+
+
+  // const {
+  //   refetch: getDirectorsList
+  // } = useBookOfDirectorsGetDirectorsPosList({
+  //   address: boox ? boox[2] : undefined,
+  //   onSuccess(list) {
+  //     let len = list.length;
+  //     let output: Position[] = [];
+  //     while (len > 0) {
+  //       if (boox) {
+  //         getPosition(boox[2], list[len-1]).then(
+  //           v => {
+  //             output.push(v);
+  //             len--;
+  //           }
+  //         )
+  //       }
+  //     }
+  //     setDirectorsList(output);
+  //   }
+  // });
 
   return (
     <>

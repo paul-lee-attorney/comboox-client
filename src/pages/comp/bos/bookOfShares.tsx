@@ -89,43 +89,41 @@ function BookOfShares() {
 
             <tr>        
               <td colSpan={2}>
-                <Stack 
-                    direction={'row'}
+                <Stack direction='row' sx={{ alignItems:'center' }} >
+
+                  <TextField 
+                    sx={{ m: 1, minWidth: 218 }} 
+                    id="tfSeqOfShare" 
+                    label="seqOfShare" 
+                    variant="outlined"
+                    onChange={(e) => 
+                      setSeqOfShare(e.target.value)
+                    }
+                    value = { seqOfShare }
+                    size='small'
+                  />
+
+                  <Button 
+                    disabled={ !seqOfShare }
+                    sx={{ m: 1, minWidth: 168, height: 40 }} 
+                    variant="contained" 
+                    endIcon={ <Search /> }
+                    onClick={ searchShare }
+                    size='small'
                   >
-                    <TextField 
-                      sx={{ m: 1, minWidth: 120 }} 
-                      id="tfSeqOfShare" 
-                      label="seqOfShare" 
-                      variant="outlined"
-                      helperText="Number <= 2^32 (e.g. '123')"
-                      onChange={(e) => 
-                        setSeqOfShare(e.target.value)
-                      }
-                      value = { seqOfShare }
-                      size='small'
-                    />
+                    Search
+                  </Button>
 
-                    <Button 
-                      disabled={ !seqOfShare }
-                      sx={{ m: 1, minWidth: 120, height: 40 }} 
-                      variant="contained" 
-                      endIcon={ <Search /> }
-                      onClick={ searchShare }
-                      size='small'
+                  {loading && (
+                    <LoadingButton 
+                      loading={ loading } 
+                      loadingPosition='end' 
+                      endIcon={<Send/>} 
+                      sx={{p:1, m:1, ml:5}} 
                     >
-                      Search
-                    </Button>
-
-                    {loading && (
-                      <LoadingButton 
-                        loading={ loading } 
-                        loadingPosition='end' 
-                        endIcon={<Send/>} 
-                        sx={{p:1, m:1, ml:5}} 
-                      >
-                        <span>Loading</span>
-                      </LoadingButton>
-                    )}
+                      <span>Loading</span>
+                    </LoadingButton>
+                  )}
 
                 </Stack>
               </td>

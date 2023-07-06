@@ -8,7 +8,7 @@ import { AssignmentInd, FollowTheSigns, Rule } from "@mui/icons-material";
 import { useBookOfDirectorsGetPosition, useGeneralKeeperQuitPosition, usePrepareGeneralKeeperQuitPosition } from "../../../generated";
 import dayjs from "dayjs";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { titleOfNominator, titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
+import { titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
 import { Position } from "../../../queries/bod";
 import { QuitPosition } from "./QuitPosition";
 import { GetVotingRule } from "../boh/rules/GetVotingRule";
@@ -16,11 +16,10 @@ import { GetVotingRule } from "../boh/rules/GetVotingRule";
 
 interface GetPositionProps{
   seq: number;
-  getOfficersList: ()=>any;
 }
 
-export function GetPosition({seq, getOfficersList}: GetPositionProps) {
-  const { gk, boox } = useComBooxContext();
+export function GetPosition({seq}: GetPositionProps) {
+  const { boox } = useComBooxContext();
 
   const [ pos, setPos ] = useState<Position>();
 
@@ -118,7 +117,7 @@ export function GetPosition({seq, getOfficersList}: GetPositionProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfNominator[(pos?.titleOfNominator ?? 1) -1] }
+                  value={ titleOfPositions[(pos?.titleOfNominator ?? 1) -1] }
                 />
 
               </Stack>
@@ -165,7 +164,7 @@ export function GetPosition({seq, getOfficersList}: GetPositionProps) {
         </DialogContent>
 
         <DialogActions>
-          <QuitPosition seq={seq} getOfficersList={getOfficersList} setOpen={setOpen} refreshPosition={getPosition} />          
+          <QuitPosition seq={seq} setOpen={setOpen} refreshPosition={getPosition} />          
           <Button 
             sx={{m:1, ml:5, p:1, minWidth:128 }}
             variant="outlined"

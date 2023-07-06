@@ -188,7 +188,7 @@ export function TurnKey({nextStep}:TurnKeyProps) {
             variant="contained"
             sx={{
               height: 40,
-              mr: 10,
+              mr: 20,
             }}
             startIcon={ <ArrowBack /> }
 
@@ -201,7 +201,7 @@ export function TurnKey({nextStep}:TurnKeyProps) {
             variant="contained"
             sx={{
               height: 40,
-              ml: 10,
+              ml: 20,
             }}
             endIcon={ <ArrowForward /> }
 

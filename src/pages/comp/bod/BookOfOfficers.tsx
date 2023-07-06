@@ -12,35 +12,36 @@ import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
 
 import { Tabs, Tab, TabList, TabPanel } from "@mui/joy";
 
-function BookOfDirectors() {
+function BookOfOfficers() {
 
   const { boox } = useComBooxContext();
 
-  const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
 
-  const getDirectorsList = async ()=>{
+  const [ officersList, setOfficersList ] = useState<readonly Position[]>();
+
+  const getOfficersList = async ()=>{
     if (boox) {
-      let list = await getDirectorsFullPosInfo(boox[2]);
-      setDirectorsList(list);
+      let list = await getManagersFullPosInfo(boox[2]);
+      setOfficersList(list);
     }
   }
 
   useEffect(()=>{
-    getDirectorsList();
+    getOfficersList();
   });
 
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth: 1680, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
       <Toolbar>
-        <h3>BOD - Book Of Directors (Addr: {boox ? boox[2]: undefined}) </h3>
+        <h3>BOO - Book Of Officers (Addr: {boox ? boox[2]: undefined}) </h3>
       </Toolbar>
 
-      {directorsList && (
-        <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />
+      {officersList && (
+        <GetOfficersList list={officersList} title="Officers List" getOfficersList={getOfficersList} />
       )}
         
     </Paper>
   );
 } 
 
-export default BookOfDirectors;
+export default BookOfOfficers;

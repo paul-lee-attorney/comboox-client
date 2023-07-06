@@ -50,7 +50,7 @@ const defaultGR: GovernanceRule = {
   proposeWeightRatioOfGM: 1000,
   proposeHeadRatioOfMembers: 0,
   proposeHeadRatioOfDirectorsInGM: 3333,
-  proposeHeadRatioOfDirectorsInBoard: 5000,
+  proposeHeadRatioOfDirectorsInBoard: 1000,
   maxQtyOfMembers: 50,
   quorumOfGM: 5000,
   maxNumOfDirectors: 7,

@@ -1,7 +1,7 @@
 
 import { BigNumber } from "ethers";
 
-export const AddrOfRegCenter:HexType = "0x193521C8934bCF3473453AF4321911E7A89E0E12";
+export const AddrOfRegCenter:HexType = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 

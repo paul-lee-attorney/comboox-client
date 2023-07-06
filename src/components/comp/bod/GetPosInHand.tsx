@@ -1,7 +1,7 @@
 import { Box, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
-import { titleOfNominator, titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
+import { titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
 import { GetVotingRule } from "../boh/rules/GetVotingRule";
 import { Position } from "../../../queries/bod";
 import { GetPosition } from "./GetPosition";
@@ -39,7 +39,7 @@ export function GetPosInHand({ list }:GetPosInHandProps) {
     {
       field: 'titleOfNominator',
       headerName: 'TitleOfNominator',
-      valueGetter: p => titleOfNominator[p.row.titleOfNominator - 1],
+      valueGetter: p => titleOfPositions[p.row.titleOfNominator - 1],
       width: 218,
       headerAlign: 'center',
       align: 'center',

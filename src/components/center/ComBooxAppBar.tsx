@@ -46,7 +46,16 @@ import {
   ContentCopyOutlined, 
   Diversity3, 
   GroupOutlined,
-  SwitchAccount
+  SwitchAccount,
+  CollectionsBookmarkOutlined,
+  LibraryBooksOutlined,
+  Groups,
+  Diversity1,
+  Groups2Outlined,
+  BadgeOutlined,
+  PaymentsOutlined,
+  HomeOutlined,
+  Diversity1Outlined
 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -186,12 +195,16 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
-    {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <Home />},
-    {href: '/comp/boh/BookOfSHA', label: 'BOH', tip: 'Book of Shareholders Agreements', icon: <ListAlt />},
-    {href: '/comp/boa/BookOfIA', label: 'BOA', tip:'Book of Investment Agreements', icon: <ContentCopyOutlined />},
-    {href: '/comp/bos/BookOfShares', label: 'BOS', tip:'Book of Shares', icon: <Payments />},
-    {href: '/comp/bod/BookOfDirectors', label: 'BOD', tip:'Book of Directors & Board Meeting Minutes', icon: <SwitchAccount />},  
-    {href: '/comp/bog/BookOfGeneralMeeting', label: 'BOG', tip:'Book of General Meeting Minutes', icon: <Diversity3 />},  
+    {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: false},
+    {href: '/comp/boh/BookOfSHA', label: 'BOH', tip: 'Book of Shareholders Agreements', icon: <ListAlt />, divider: false},
+    {href: '/comp/boa/BookOfIA', label: 'BOA', tip:'Book of Investment Agreements', icon: <ContentCopyOutlined />, divider: true},
+    {href: '/comp/bod/BookOfDirectors', label: 'BOD', tip:'Book of Directors', icon: <GroupOutlined />, divider: false},  
+    {href: '/comp/bod/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: false},  
+    {href: '/comp/bod/BookOfOfficers', label: 'BOO', tip:'Book of Officers', icon: <BadgeOutlined />, divider: true},  
+    {href: '/comp/bog/BookOfMembers', label: 'BOM', tip:'Book of Members', icon: <Diversity1Outlined />, divider: false},  
+    {href: '/comp/bog/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/comp/bos/BookOfShares', label: 'BOS', tip:'Book of Shares', icon: <PaymentsOutlined />, divider: false},
+    {href: '/comp/bop/BookOfPledges', label: 'BOP', tip:'Book of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
   ]
 
   const backToCenter = () => {
@@ -320,37 +333,28 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           <Divider />
 
           {items.map((v, i)=>(
-            <ListItem key={i} disablePadding >
-              <Tooltip title={v.tip} placement='right' arrow >
-                <ListItemButton 
-                  LinkComponent={Link}
-                  href={v.href}
-                >
-                  <ListItemIcon>
-                    {v.icon}
-                  </ListItemIcon>
-                  <ListItemText primary={v.label} />
-                </ListItemButton>
-              </Tooltip>
-            </ListItem>
+            <>
+              <ListItem key={i} disablePadding >
+                <Tooltip title={v.tip} placement='right' arrow >
+                  <ListItemButton 
+                    LinkComponent={Link}
+                    href={v.href}
+                  >
+                    <ListItemIcon>
+                      {v.icon}
+                    </ListItemIcon>
+                    <ListItemText primary={v.label} />
+                  </ListItemButton>
+                </Tooltip>
+              </ListItem>
+              {v.divider && (
+                <Divider />
+              )}
+            </>
           ))}
 
         </List>
 
-        <Divider />
-        
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <Inbox /> : <Mail />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
 
       <Main open={ appBarOpen } >

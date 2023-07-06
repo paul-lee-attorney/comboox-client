@@ -7,12 +7,11 @@ import { FollowTheSigns } from "@mui/icons-material";
 
 interface QuitPositionProps{
   seq: number;
-  getOfficersList: ()=>any;
   setOpen: (flag:boolean)=>void;
   refreshPosition: ()=>void;
 }
 
-export function QuitPosition({seq, getOfficersList, setOpen, refreshPosition}: QuitPositionProps) {
+export function QuitPosition({seq, setOpen, refreshPosition}: QuitPositionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -29,7 +28,6 @@ export function QuitPosition({seq, getOfficersList, setOpen, refreshPosition}: Q
   } = useGeneralKeeperQuitPosition({
     ...quitPositionConfig,
     onSuccess() {
-      getOfficersList();
       refreshPosition();
       setOpen(false);
     }

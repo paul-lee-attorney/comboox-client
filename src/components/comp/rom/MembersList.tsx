@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 
-import { BigNumber } from 'ethers';
 
-import { Table, TableBody, TableContainer, TableHead, TableRow, TableCell, Paper, Toolbar, Box } from '@mui/material';
+import { Paper, Toolbar, Box } from '@mui/material';
 
-import { readContract } from '@wagmi/core';
 
 import {
-  registerOfMembersABI,
   useRegisterOfMembersMembersList,
 } from '../../../generated';
 
@@ -18,29 +15,6 @@ import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MemberShareClip, ShareClip, getEquityList, getMembersList } from '../../../queries/rom';
 import { DataList } from '../../common/DataList';
-
-export function MembersList({ addr }:ContractProps ) {
-  const [membersList, setMembersList] = useState<string[]>();
-
-  const {data, refetch} = useRegisterOfMembersMembersList({
-    address: addr,
-  })
-
-  useEffect(()=>{
-    if (data) {
-      let list: string[] = [];
-      data.map(v => list.push(v.toString()));
-      setMembersList(list);
-    }
-  }, [data]);
-
-  return (
-    <>
-      {membersList && (<DataList isOrdered={true} data={membersList} />)}
-    </>
-  )
-}
-
 
 const columns: GridColDef[] = [
   {

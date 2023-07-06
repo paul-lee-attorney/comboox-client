@@ -12,7 +12,6 @@ import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
 import { getBookeeper } from "../../queries/accessControl";
 import { getKeeper } from "../../queries/gk";
 import { Position, getDirectorsFullPosInfo } from "../../queries/bod";
-import { useBookOfDirectorsGetDirectorsFullPosInfo } from "../../generated";
 
 
 function HomePage() {
