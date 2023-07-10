@@ -18,7 +18,7 @@ import {
   usePrepareBookOfSharesSetDirectKeeper,
   useBookOfSharesSetDirectKeeper,
   usePrepareRegisterOfMembersSetDirectKeeper,
-  useRegisterOfMembersSetDirectKeeper,
+  useBookOfMembersSetDirectKeeper,
 } from '../../../generated';
 
 import { HexType } from '../../../interfaces';
@@ -45,10 +45,10 @@ export function TurnKey({nextStep}:TurnKeyProps) {
     const obtainKeepers = async ()=>{
       if (gk && boox) {
         setRomKeeper(await getKeeper(gk, 8));
-        setDKOfRom(await getBookeeper(boox[8]));
+        setDKOfRom(await getBookeeper(boox[4]));
   
-        setBosKeeper(await getKeeper(gk, 7));
-        setDKOfBos(await getBookeeper(boox[7]));
+        setBosKeeper(await getKeeper(gk, 9));
+        setDKOfBos(await getBookeeper(boox[9]));
       }
     }
     
@@ -58,19 +58,19 @@ export function TurnKey({nextStep}:TurnKeyProps) {
   const {
     config: setRomDKConfig,
   } = usePrepareRegisterOfMembersSetDirectKeeper({
-    address: boox ? boox[8] : undefined,
+    address: boox ? boox[4] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
   });
 
   const {
     isLoading: setRomDKLoading,
     write: setRomDK,
-  } = useRegisterOfMembersSetDirectKeeper(setRomDKConfig);
+  } = useBookOfMembersSetDirectKeeper(setRomDKConfig);
 
   const {
     config: setBosDKConfig,
   } = usePrepareBookOfSharesSetDirectKeeper({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[9] : undefined,
     args: bosKeeper ? [ bosKeeper ] : undefined,
   });
 

@@ -1,6 +1,6 @@
 import { Box, Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { GetVotingRule } from "../boh/rules/GetVotingRule";
+import { GetVotingRule } from "../boc/rules/GetVotingRule";
 import { GetPosition } from "./GetPosition";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -9,13 +9,13 @@ import { filesFolderABI } from "../../../generated";
 import { readContract } from "@wagmi/core";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { ProposeMotionToGeneralMeeting } from "../bog/ProposeMotionToGeneralMeeting";
-import { CastVoteOfGm } from "../bog/CastVoteOfGm";
+import { ProposeMotionToGeneralMeeting } from "../gmm/ProposeMotionToGeneralMeeting";
+import { CastVoteOfGm } from "../gmm/CastVoteOfGm";
 import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
-import { VoteCountingOfGm } from "../bog/VoteCountingOfGm";
-import { TakeSeat } from "../bog/TakeSeat";
-import { RemoveDirector } from "../bog/RemoveDirector";
-import { ExecActionOfGm } from "../bog/ExecActionOfGm";
+import { VoteCountingOfGm } from "../gmm/VoteCountingOfGm";
+import { TakeSeat } from "../gmm/TakeSeat";
+import { RemoveDirector } from "../gmm/RemoveDirector";
+import { ExecActionOfGm } from "../gmm/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
 import { ProposeMotionToBoardMeeting } from "./ProposeMotionToBoardMeeting";
@@ -53,7 +53,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
     setAddrOfDoc(`0x${motion.contents.toHexString().padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
-                          ? boox[4] : boox[1];
+                          ? boox[1] : boox[5];
       getSnOfFile(folder, addrOfDoc).then(
         sn => setSnOfDoc(sn)
       );
@@ -66,7 +66,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
     if ( boox ) {
       let minutes: HexType =
       motion.votingRule.authority == 1
-      ? boox[3] : boox[2];
+      ? boox[5] : boox[3];
       voteEnded(minutes, motion.head.seqOfMotion).then(
         flag => {
           setVoteIsEnd(flag);

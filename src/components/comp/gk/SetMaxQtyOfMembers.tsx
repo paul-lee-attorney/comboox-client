@@ -14,9 +14,9 @@ import {
 import { ArrowBack, ArrowForward, Update }  from '@mui/icons-material';
 
 import {
-  useRegisterOfMembersMaxQtyOfMembers,
+  useBookOfMembersMaxQtyOfMembers,
   usePrepareRegisterOfMembersSetMaxQtyOfMembers,
-  useRegisterOfMembersSetMaxQtyOfMembers,
+  useBookOfMembersSetMaxQtyOfMembers,
 } from '../../../generated';
 
 import { BigNumber } from 'ethers';
@@ -36,8 +36,8 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   const {
     refetch: getMaxQty
-  } = useRegisterOfMembersMaxQtyOfMembers({
-    address: boox ? boox[8] : undefined,
+  } = useBookOfMembersMaxQtyOfMembers({
+    address: boox ? boox[4] : undefined,
     onSuccess(max) {
       setMax(max.toString());
     }
@@ -46,14 +46,14 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const {
     config: setMaxQtyConfig,
   } = usePrepareRegisterOfMembersSetMaxQtyOfMembers({
-    address: boox ? boox[8] : undefined,
+    address: boox ? boox[4] : undefined,
     args: [BigNumber.from(inputMax)],
   });
 
   const {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 
-  } = useRegisterOfMembersSetMaxQtyOfMembers({
+  } = useBookOfMembersSetMaxQtyOfMembers({
     ...setMaxQtyConfig,
     onSuccess() {
       getMaxQty();

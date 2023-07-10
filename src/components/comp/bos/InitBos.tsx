@@ -65,7 +65,7 @@ export function InitBos({nextStep}: InitBosProps) {
   const {
     config
   } = usePrepareBookOfSharesIssueShare({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[9] : undefined,
     args: share.head.class &&
       share.head.issueDate &&
       share.head.shareholder && 
@@ -91,7 +91,7 @@ export function InitBos({nextStep}: InitBosProps) {
   const {
     config: delShareConfig
   } = usePrepareBookOfSharesDecreaseCapital({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[9] : undefined,
     args: share.head.seqOfShare > 0
         ? [BigNumber.from(share.head.seqOfShare), share.body.paid, share.body.par]
         : undefined,
@@ -115,8 +115,8 @@ export function InitBos({nextStep}: InitBosProps) {
 
   useEffect(()=>{
     if (boox) {
-      getShareNumbersList(boox[8]).then(
-        list => getSharesList(boox[7], list).then(
+      getShareNumbersList(boox[4]).then(
+        list => getSharesList(boox[9], list).then(
             ls => setSharesList(ls)
       ))
     }

@@ -1,8 +1,8 @@
 import { Box, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
-import { titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
-import { GetVotingRule } from "../boh/rules/GetVotingRule";
+import { titleOfPositions } from "../boc/rules/SetPositionAllocateRule";
+import { GetVotingRule } from "../boc/rules/GetVotingRule";
 import { Position } from "../../../queries/bod";
 import { GetPosition } from "./GetPosition";
 import { GetFullPosInfoInHand } from "./GetFullPosInfoInHand";

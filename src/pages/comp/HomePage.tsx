@@ -21,10 +21,10 @@ function HomePage() {
   useEffect(()=>{
     const checkDirectKeepers = async ()=> {
       if (gk && boox) {
-        let dkOfRom = await getBookeeper(boox[8]);
-        let romKeeper = await getKeeper(gk, 8);
-        let dkOfBos = await getBookeeper(boox[7]);
-        let bosKeeper = await getKeeper(gk, 7);
+        let dkOfRom = await getBookeeper(boox[4]);
+        let romKeeper = await getKeeper(gk, 4);
+        let dkOfBos = await getBookeeper(boox[9]);
+        let bosKeeper = await getKeeper(gk, 9);
   
         if (dkOfRom == romKeeper && dkOfBos == bosKeeper)
           setActiveStep(4);

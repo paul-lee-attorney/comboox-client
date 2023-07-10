@@ -18,7 +18,6 @@ export function GetMyUserNo() {
   const handleClick = async () => {
     const res = await rc?.getMyUserNo();
     res && setUserNo(res.toString());
-    console.log(res);
   }
 
   return (

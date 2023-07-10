@@ -19,7 +19,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
 
   const obtainPledge = async ()=>{
     if (boox && seqOfShare && seqOfPld) {
-      let pld = await getPledge(boox[6], seqOfShare, seqOfPld);
+      let pld = await getPledge(boox[8], seqOfShare, seqOfPld);
       setPld(pld);
       setOpen(true);
     }

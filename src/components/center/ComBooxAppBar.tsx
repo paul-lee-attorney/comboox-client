@@ -37,21 +37,12 @@ const drawerWidth = 180;
 import { 
   AccountCircle, 
   ChevronLeft, 
-  Inbox, 
-  Mail, 
-  Home, 
   AssuredWorkload, 
   ListAlt, 
-  Payments, 
   ContentCopyOutlined, 
-  Diversity3, 
   GroupOutlined,
-  SwitchAccount,
   CollectionsBookmarkOutlined,
   LibraryBooksOutlined,
-  Groups,
-  Diversity1,
-  Groups2Outlined,
   BadgeOutlined,
   PaymentsOutlined,
   HomeOutlined,
@@ -60,16 +51,13 @@ import {
 
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { DialogPrimeKey } from '../common/DialogPrimeKey';
-import { DialogMyUserNo } from '../common/DialogMyUserNo';
-
 import { useConnect, useDisconnect } from 'wagmi';
 
-import { AddrZero } from '../../interfaces';
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 
 import { getBoox, nameOfCompany, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
 import { longSnParser } from '../../scripts/toolsKit';
+import { AcctPage } from './AcctPage';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -150,7 +138,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   }, [gk, setBoox]);
 
   const [auth, setAuth] = useState(true);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
@@ -159,30 +146,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     auth ? disconnect() : connect({ connector: connectors[0] });
     setAuth(e.target.checked);
   };
-
-  const handleMenu = (e: MouseEvent<HTMLElement>) => {
-    setAnchorEl(e.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const [acctOpen, setAcctOpen] = useState(false);
-  const handleAcctOpen = () => {
-    setAcctOpen(true);
-  }
-  const handleAcctClose = () => {
-    setAcctOpen(false);
-  }
-
-  const [myUserNoOpen, setMyUserNoOpen] = useState(false);
-  const handleMyUserNoOpen = () => {
-    setMyUserNoOpen(true);
-  }
-  const handleMyUserNoClose = () => {
-    setMyUserNoOpen(false);
-  }
     
   const [appBarOpen, setAppBarOpen] = useState(false);
   const handleDrawerOpen = () => {
@@ -196,13 +159,13 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
   const items = [
     {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: false},
-    {href: '/comp/boh/BookOfSHA', label: 'BOH', tip: 'Book of Shareholders Agreements', icon: <ListAlt />, divider: false},
-    {href: '/comp/boa/BookOfIA', label: 'BOA', tip:'Book of Investment Agreements', icon: <ContentCopyOutlined />, divider: true},
+    {href: '/comp/boc/BookOfConstitution', label: 'BOC', tip: 'Book of Constitution', icon: <ListAlt />, divider: false},
+    {href: '/comp/boi/BookOfIA', label: 'BOI', tip:'Book of Investment Agreements', icon: <ContentCopyOutlined />, divider: true},
     {href: '/comp/bod/BookOfDirectors', label: 'BOD', tip:'Book of Directors', icon: <GroupOutlined />, divider: false},  
     {href: '/comp/bod/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: false},  
     {href: '/comp/bod/BookOfOfficers', label: 'BOO', tip:'Book of Officers', icon: <BadgeOutlined />, divider: true},  
-    {href: '/comp/bog/BookOfMembers', label: 'BOM', tip:'Book of Members', icon: <Diversity1Outlined />, divider: false},  
-    {href: '/comp/bog/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/comp/bom/BookOfMembers', label: 'BOM', tip:'Book of Members', icon: <Diversity1Outlined />, divider: false},  
+    {href: '/comp/bom/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
     {href: '/comp/bos/BookOfShares', label: 'BOS', tip:'Book of Shares', icon: <PaymentsOutlined />, divider: false},
     {href: '/comp/bop/BookOfPledges', label: 'BOP', tip:'Book of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
   ]
@@ -251,44 +214,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             />
           </FormGroup>
 
-          <Box sx={{
-            width: 120,
-          }} >
-            {auth && (
-              <div>
-                <IconButton
-                  size="large"
-                  aria-label="account of current user"
-                  aria-controls="menu-appbar"
-                  aria-haspopup="true"
-                  onClick={handleMenu}
-                  color="inherit"
-                >
-                  <AccountCircle />
-                </IconButton>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  anchorOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  keepMounted
-                  transformOrigin={{
-                    vertical: 'top',
-                    horizontal: 'right',
-                  }}
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
-                >
-                  <MenuItem onClick={handleAcctOpen}>PrimeKey</MenuItem>
-                    <DialogPrimeKey flag={acctOpen} closeDialog={handleAcctClose} />
-                  <MenuItem onClick={handleMyUserNoOpen}>UserNo</MenuItem>
-                    <DialogMyUserNo flag={myUserNoOpen} closeDialog={handleMyUserNoClose} />
-                </Menu>
-              </div>
-            )}
-          </Box>
+          <AcctPage flag={ auth } />
+
         </Toolbar>
       </AppBar>
       

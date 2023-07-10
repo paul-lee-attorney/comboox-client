@@ -8,10 +8,10 @@ import { AssignmentInd, FollowTheSigns, Rule } from "@mui/icons-material";
 import { useBookOfDirectorsGetPosition, useGeneralKeeperQuitPosition, usePrepareGeneralKeeperQuitPosition } from "../../../generated";
 import dayjs from "dayjs";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { titleOfPositions } from "../boh/rules/SetPositionAllocateRule";
+import { titleOfPositions } from "../boc/rules/SetPositionAllocateRule";
 import { Position } from "../../../queries/bod";
 import { QuitPosition } from "./QuitPosition";
-import { GetVotingRule } from "../boh/rules/GetVotingRule";
+import { GetVotingRule } from "../boc/rules/GetVotingRule";
 
 
 interface GetPositionProps{

@@ -10,7 +10,7 @@ import { getControllor, getOwnersEquity, getVotesOfController } from "../../../q
 
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
-import { MembersEquityList } from "../rom/MembersList";
+import { MembersEquityList } from "../bom/MembersList";
 import { Position, getDirectorsFullPosInfo, getDirectorsPosList, getPosition } from "../../../queries/bod";
 import { GetOfficersList } from "../bod/GetOfficersList";
 
@@ -48,13 +48,13 @@ export function GeneralInfo() {
         res => setSymbol(res)
       );
       
-      getControllor(boox[8]).then(
+      getControllor(boox[4]).then(
         res => setControllor(res.toString())
       );
-      getVotesOfController(boox[8]).then(
+      getVotesOfController(boox[4]).then(
         res => setVotesOfController(res.toString())
       );
-      getOwnersEquity(boox[8]).then(
+      getOwnersEquity(boox[4]).then(
         res => {
           setPar(res.par.toString());
           setPaid(res.paid.toString());

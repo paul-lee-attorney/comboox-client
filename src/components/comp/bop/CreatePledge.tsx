@@ -79,7 +79,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
                     ...v,
                     seqOfShare: seq,
                   }));
-                  obtainPledgor(boox[7], seq).then(
+                  obtainPledgor(boox[8], seq).then(
                     pledgor => setHead(v => ({
                       ...v,
                       pledgor: pledgor,

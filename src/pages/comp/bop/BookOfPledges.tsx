@@ -25,7 +25,7 @@ function BookOfPledges() {
   const {
     refetch: getAllPledges,
   } = useBookOfPledgesGetAllPledges ({
-    address: boox ? boox[6] : undefined,
+    address: boox ? boox[8] : undefined,
     onSuccess(data) {
       setPldList(data);
     }

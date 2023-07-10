@@ -20,7 +20,7 @@ export function DelShare ({getList}:DelShareProps) {
 
   useEffect(()=>{
     if (seq && boox){
-      getShare(boox[7], parseInt(seq)).then(
+      getShare(boox[9], parseInt(seq)).then(
         target => setShare(target)
       )
     }
@@ -29,7 +29,7 @@ export function DelShare ({getList}:DelShareProps) {
   const {
     config: delShareConfig
   } = usePrepareBookOfSharesDecreaseCapital({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[9] : undefined,
     args: seq && share
         ? [BigNumber.from(seq), share.body.paid, share.body.par]
         : undefined,

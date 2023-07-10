@@ -2,7 +2,7 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { meetingMinutesABI } from "../generated";
 import { BigNumber } from "ethers";
-import { VotingRule } from "../components/comp/boh/rules/SetVotingRule";
+import { VotingRule } from "../components/comp/boc/rules/SetVotingRule";
 
 export async function isProposed(minutes: HexType, seqOfMotion: BigNumber): Promise<boolean> {
   let flag: boolean = await readContract({

@@ -13,16 +13,14 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Search, Send } from "@mui/icons-material";
 
 import { 
-  bookOfSharesABI,
   useBookOfSharesGetShare,
-  useRegisterOfMembersSharesList,
+  useBookOfMembersSharesList,
 } from "../../../generated";
 import { BigNumber } from "ethers";
 import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
 import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/bos";
-import { getShareNumbersList } from "../../../queries/rom";
 
 
 function BookOfShares() {
@@ -34,11 +32,11 @@ function BookOfShares() {
 
   const {
     refetch: obtainSharesList,
-  } = useRegisterOfMembersSharesList ({
-    address: boox ? boox[8] : undefined,
+  } = useBookOfMembersSharesList ({
+    address: boox ? boox[4] : undefined,
     onSuccess(data) {
       if (boox && data.length > 0) {
-        getSharesList(boox[7], data).then(list => {
+        getSharesList(boox[9], data).then(list => {
           setSharesList(list);
         });
       }
@@ -54,7 +52,7 @@ function BookOfShares() {
   const { 
     refetch: getShareFunc, 
   } = useBookOfSharesGetShare({
-    address: boox ? boox[7]: undefined,
+    address: boox ? boox[9]: undefined,
     args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
     onSuccess(data) {
       let share:Share = {
