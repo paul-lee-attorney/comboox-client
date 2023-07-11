@@ -1,13 +1,18 @@
 import { useEffect, useState } from "react";
-import { AddrOfRegCenter, AddrZero } from "../../interfaces";
-import { User, getMyUserNo, getUser } from "../../queries/rc";
+import { AddrOfRegCenter, AddrZero, HexType } from "../../interfaces";
+import { Locker, User, getMyUserNo, getOwner, getUser, getLocker } from "../../queries/rc";
 import { Collapse, Divider, Paper, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser } from "../../scripts/toolsKit";
 import { RegUser } from "../../components/center/RegUser";
-import { regCenterABI, useRegCenterGetMyUserNo, useRegCenterGetUser } from "../../generated";
+import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetMyUserNo, useRegCenterGetUser } from "../../generated";
 import { SetBackupKey } from "../../components/center/SetBackupKey";
 import { useAccount, useContract, useSigner } from "wagmi";
 import { MintPoints } from "../../components/center/MintPoints";
+import { MintAndLockPoints } from "../../components/center/MintAndLockPoints";
+import { MintTools } from "../../components/center/MintTools";
+import { LockersList } from "../../components/center/LockersList";
+import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
+
 
 
 
@@ -18,6 +23,7 @@ function UserInfo() {
   const {isConnected} = useAccount();
 
   const {data: signer} = useSigner();
+
 
   const rc = useContract({
     address: AddrOfRegCenter,
@@ -39,13 +45,51 @@ function UserInfo() {
     res && setUser( res );
   }
 
+  const [ isOwner, setIsOwner ] = useState(false);
+
+  const checkOwner = async ()=>{
+    let owner = await getOwner(AddrOfRegCenter);
+    let addrOfSigner = await signer?.getAddress();
+    setIsOwner(addrOfSigner == owner);
+  }
+
+  const [ lockersList, setLockersList ] = useState<Locker[]>();
+
+  const {
+    refetch: getLocksList
+  } = useRegCenterGetLocksList({
+    address: AddrOfRegCenter,
+    onSuccess(ls) {
+      const obtainLockers = async ()=>{
+        let len = ls.length;
+        let list: Locker[] = [];
+
+        while (len > 0) {
+          list.push(await getLocker(AddrOfRegCenter, ls[len-1]));
+          len--;
+        }
+        
+        if (list.length > 0)
+          setLockersList(list);
+      }
+
+      obtainLockers();
+    }
+  });
+
   useEffect(()=>{
     obtainMyUserNo();
     obtainUser();
+    checkOwner();
   });
 
+  const [ open, setOpen ] = useState(false);
+  const [ locker, setLocker ] = useState<Locker>();
+
   return (
-    <Collapse in={isConnected} >
+    // <Collapse in={isConnected} >
+    <>
+    {isConnected && (
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:1, border:1, borderColor:'divider' }} >
         <Toolbar>
           <h3>User Info - ( No. { longSnParser(userNo?.toString() ?? '0') } ) </h3>
@@ -109,7 +153,7 @@ function UserInfo() {
                     m:1,
                     minWidth: 456,
                   }}
-                  value={ user?.primeKey.pubKey ?? '-' }
+                  value={ user?.primeKey.pubKey.toLowerCase() ?? '-' }
                 />
               </td>
               <td>
@@ -164,7 +208,7 @@ function UserInfo() {
                     m:1,
                     minWidth: 456,
                   }}
-                  value={ user?.backupKey.pubKey ?? '-' }
+                  value={ user?.backupKey.pubKey.toLowerCase() ?? '-' }
                 />
               </td>
               <td>
@@ -216,6 +260,22 @@ function UserInfo() {
 
             <tr>
               <td colSpan={4}>
+                {lockersList && (
+                  <LockersList list={ lockersList } setLocker={ setLocker } setOpen={ setOpen } />
+                )}
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={4}>
+                {locker && (
+                  <HashLockerOfPoints open={ open } locker={ locker } setOpen={ setOpen } refreshList={ getLocksList }  />
+                )}
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={4}>
                 {!userNo && (
                   <RegUser getMyUserNo={ obtainMyUserNo } getUser={ obtainUser } />
                 )}
@@ -232,8 +292,8 @@ function UserInfo() {
 
             <tr>
               <td colSpan={4}>
-                {userNo && (
-                  <MintPoints />
+                {isOwner && (
+                  <MintTools refreshList={ getLocksList } />
                 )}
               </td>
             </tr>
@@ -241,7 +301,8 @@ function UserInfo() {
           </tbody>
         </table>
       </Paper>
-    </Collapse>
+    )}
+    </>
   );
 }
 

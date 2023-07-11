@@ -1,32 +1,30 @@
 
-import { Alert, Button, Paper, Stack, TextField, Toolbar } from '@mui/material';
+import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
 
 import { 
   usePrepareRegCenterMintPoints,
-  usePrepareRegCenterRegUser, 
-  usePrepareRegCenterSetBackupKey, 
   useRegCenterMintPoints, 
-  useRegCenterRegUser,
-  useRegCenterSetBackupKey
 } from '../../generated';
 
 import { AddrOfRegCenter, HexType } from '../../interfaces';
-import { BorderColor, Create } from '@mui/icons-material';
+import { BorderColor, Close, Create } from '@mui/icons-material';
 import { useState } from 'react';
 import { BigNumber } from 'ethers';
 import { getReceipt } from '../../queries/common';
 import { longDataParser, longSnParser } from '../../scripts/toolsKit';
 
-export interface Receipt{
+interface Receipt{
   to: string;
   amt: string;
 }
+
 
 export function MintPoints() {
 
   const [ to, setTo ] = useState<string>();
   const [ amt, setAmt ] = useState<string>();
   const [ receipt, setReceipt ] = useState<Receipt>();
+  const [ open, setOpen ] = useState(false);
 
   const { config: mintPointsConfig } = usePrepareRegCenterMintPoints({
     address: AddrOfRegCenter,
@@ -44,28 +42,22 @@ export function MintPoints() {
       getReceipt(data.hash).then(
         r => {
           if (r) {
-            // let rpt:Receipt = {
-            //   to: longSnParser(r.logs[0].topics[1]?.toString()),
-            //   amt: longDataParser(r.logs[0].topics[2]?.toString())
-            // }
-            // console.log('to: ', longSnParser(r.logs[0].topics[1]?.toString()));
-            // console.log('amt: ', longDataParser(r.logs[0].topics[2]?.toString()));
-            // setReceipt(rpt);          
-            console.log('receipt: ', r);
+            let rpt:Receipt = {
+              to: longSnParser(BigNumber.from(r.logs[0].topics[1]).toString()),
+              amt: longDataParser(r.logs[0].topics[2]?.toString())
+            }
+            setReceipt(rpt);
+            setOpen(true);
           }
         }
       )
     }
   })
 
+
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-
-      <Toolbar sx={{ color:'black' }} >
-        <h4>Mint Points {receipt ? '- To: ' + receipt.to : ''} {receipt? 'With Amount: ' + receipt.amt : ''} </h4>
-      </Toolbar>
-
-      <Stack direction='row' sx={{m:1, p:1, alignItems:'center', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
         <TextField 
           size="small"
@@ -98,11 +90,34 @@ export function MintPoints() {
             mintPoints?.()
           }}
           variant='contained'
-          sx={{ m:1, ml:2, minWidth:128 }} 
+          sx={{ m:1, mx:2, minWidth:128 }} 
           endIcon={<BorderColor />}       
         >
           {mintPointsLoading ? 'Loading...' : 'Set'}
         </Button>
+
+        <Collapse in={ open } sx={{ m:1 }} >
+          <Alert 
+            action={
+              <IconButton
+                aria-label="close"
+                color="inherit"
+                size="small"
+                onClick={() => {
+                  setOpen(false);
+                }}
+              >
+                <Close fontSize="inherit" />
+              </IconButton>
+            }
+
+            variant='outlined' 
+            severity='info' 
+            sx={{ height: 45, p:0.5 }} 
+          >
+            {receipt?.amt} points minted to User ({receipt?.to})
+          </Alert>          
+        </Collapse>
 
       </Stack>
     </Paper>

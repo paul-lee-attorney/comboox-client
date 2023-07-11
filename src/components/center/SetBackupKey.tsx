@@ -37,7 +37,7 @@ export function SetBackupKey({ getUser }:SetBackupKeyProps) {
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Toolbar sx={{ textDecoration:'underline', color:'black' }} >
+      <Toolbar sx={{ color:'black' }} >
         <h4>Set Backup Key</h4>
       </Toolbar>
 

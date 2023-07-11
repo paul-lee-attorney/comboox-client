@@ -14,11 +14,12 @@ export interface HeadOfLocker {
 
 export interface BodyOfLocker {
   counterLocker: HexType;
-  selector: string;
+  selector: HexType;
   data: BigNumber;
 }
 
 export interface Locker {
+  hashLock: HexType;
   head: HeadOfLocker;
   body: BodyOfLocker;
 }
@@ -70,6 +71,55 @@ export interface HeadOfDoc {
 export interface Doc {
   head: HeadOfDoc;
   body: HexType;
+}
+
+export function headOfLockerCodifier(head:HeadOfLocker):HexType {
+  let sn:HexType = `0x${
+    (head.from.toString(16).padStart(10, '0')) +
+    (head.to.toString(16).padStart(10, '0')) +
+    (head.expireDate.toString(16).padStart(12, '0')) +
+    (head.value.toHexString().substring(2).padStart(32, '0'))
+  }`;
+  return sn;
+}
+
+export function headOfLockerParser(sn:HexType):HeadOfLocker {
+
+  let head:HeadOfLocker = {
+    from: parseInt(sn.substring(2, 12), 16),
+    to: parseInt(sn.substring(12, 22), 16),
+    expireDate: parseInt(sn.substring(22, 34), 16),
+    value: BigNumber.from(`0x${sn.substring(34, 66)}`),
+  };
+
+  return head;
+}
+
+export function bodyOfLockerCodifier(body:BodyOfLocker):HexType {
+  let bodySn:HexType = `0x${
+    body.counterLocker.substring(2).padStart(40, '0') +
+    body.selector.padStart(8, '0') +
+    body.data.toHexString().substring(2).padStart(16, '0')
+  }`;
+
+  return bodySn;
+}
+
+export function bodyOfLockerParser(sn:HexType):BodyOfLocker {
+  let body:BodyOfLocker = {
+    counterLocker: `0x${sn.substring(2,42)}`,
+    selector: `0x${sn.substring(42, 50)}`,
+    data: BigNumber.from(`0x${sn.substring(50, 66)}`),
+  }
+
+  return body;
+}
+
+export const defaultHeadOfLocker:HeadOfLocker = {
+  from: 0,
+  to: 0,
+  expireDate: 0,
+  value: BigNumber.from('0'),
 }
 
 // ==== Options ====
@@ -295,3 +345,19 @@ export async function getTempsList(addr: HexType, typeOfDoc: string): Promise<re
   return res;
 }
 
+export async function getLocker(addr: HexType, hashLock: HexType): Promise<Locker>{
+  let res = await readContract({
+    address: addr,
+    abi: regCenterABI,
+    functionName: 'getLocker',
+    args: [ hashLock ]
+  });
+
+  let locker:Locker = {
+    hashLock: hashLock,
+    head: res.head,
+    body: res.body,
+  }
+
+  return locker;
+}
