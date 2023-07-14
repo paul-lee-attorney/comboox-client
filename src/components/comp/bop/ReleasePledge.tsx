@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useGeneralKeeperReleasePledge, usePrepareGeneralKeeperReleasePledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Key } from "@mui/icons-material";
 
@@ -18,23 +17,29 @@ export function ReleasePledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:Rel
   
   const [ key, setKey ] = useState<string>();
 
-  const {
-    config: releasePledgeConfig
-  } = usePrepareGeneralKeeperReleasePledge({
-    address: gk,
-    args: key
-      ? [ BigNumber.from(seqOfShare), 
-          BigNumber.from(seqOfPld), 
-          key
-        ]
-      : undefined,
-  })
+  // const {
+  //   config: releasePledgeConfig
+  // } = usePrepareGeneralKeeperReleasePledge({
+  //   address: gk,
+  //   args: key
+  //     ? [ BigInt(seqOfShare), 
+  //         BigInt(seqOfPld), 
+  //         key
+  //       ]
+  //     : undefined,
+  // })
 
   const {
     isLoading: releasePledgeLoading,
     write: releasePledge,
   } = useGeneralKeeperReleasePledge({
-    ...releasePledgeConfig,
+    address: gk,
+    args: key
+      ? [ BigInt(seqOfShare), 
+          BigInt(seqOfPld), 
+          key
+        ]
+      : undefined,
     onSuccess(){
       getAllPledges();
       setOpen(false);

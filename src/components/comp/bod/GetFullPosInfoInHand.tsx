@@ -1,16 +1,10 @@
 import { useState } from "react";
 import { Position } from "../../../queries/bod";
-import { useBookOfDirectors, useBookOfDirectorsGetFullPosInfoInHand } from "../../../generated";
+import { useBookOfDirectorsGetFullPosInfoInHand } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { AssignmentInd } from "@mui/icons-material";
-import { longSnParser } from "../../../scripts/toolsKit";
-import { GetOfficersList } from "./GetOfficersList";
 import { GetPosInHand } from "./GetPosInHand";
-
-
-
+import { longSnParser } from "../../../scripts/toolsKit";
 
 interface GetFullPosInfoInHandProps {
   userNo: number;
@@ -28,7 +22,7 @@ export function GetFullPosInfoInHand({userNo}:GetFullPosInfoInHandProps) {
     refetch: getPosInHand
   } = useBookOfDirectorsGetFullPosInfoInHand({
     address: boox ? boox[2]:undefined,
-    args: [BigNumber.from(userNo)],
+    args: [BigInt(userNo)],
     onSuccess(list) {
       setPosList(list);
     }

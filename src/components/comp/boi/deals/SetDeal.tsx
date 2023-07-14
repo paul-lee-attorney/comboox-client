@@ -1,15 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { BigNumber } from "ethers";
-
 import { Bytes32Zero, HexType } from "../../../../interfaces";
 
 import { 
   useInvestmentAgreementAddDeal, 
   useInvestmentAgreementDelDeal, 
   useInvestmentAgreementGetDeal, 
-  usePrepareInvestmentAgreementAddDeal, 
-  usePrepareInvestmentAgreementDelDeal 
 } from "../../../../generated";
 
 import { 
@@ -85,7 +81,7 @@ export function dealSnCodifier(head: Head): HexType {
     (head.seller.toString(16).padStart(10, '0')) +
     (head.priceOfPaid.toString(16).padStart(8, '0')) +
     (head.priceOfPar.toString(16).padStart(8, '0')) +
-    (head.closingDate.toString(16).padStart(12, '0')) + 
+    (head.closingDeadline.toString(16).padStart(12, '0')) + 
     '0000'
   }`;
   return hexSn;
@@ -102,15 +98,15 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
     seller: 0,
     priceOfPaid: 100,
     priceOfPar: 100,
-    closingDate: parseInt((new Date().getTime()/1000).toString()) + 90*86400,
+    closingDeadline: parseInt((new Date().getTime()/1000).toString()) + 90*86400,
     para: 0,
   };
   
   const defaultBody: Body = {
     buyer: 0,
     groupOfBuyer: 0,
-    paid: BigNumber.from(0),
-    par: BigNumber.from(0),
+    paid: BigInt(0),
+    par: BigInt(0),
     state: 0,
     para: 0,
     argu: 0,
@@ -133,46 +129,53 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
     refetch: getDeal,
   } = useInvestmentAgreementGetDeal({
     address: ia,
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
     onSuccess(deal) {
       setNewDeal(deal)
     }
   })
 
-  const {
-    config: addDealConfig,
-  } = usePrepareInvestmentAgreementAddDeal({
-    address: ia,
-    args: [ dealSnCodifier(objSn),
-            BigNumber.from(objBody.buyer),
-            BigNumber.from(objBody.groupOfBuyer),
-            objBody.paid,
-            objBody.par            
-          ],
-  });
+  // const {
+  //   config: addDealConfig,
+  // } = usePrepareInvestmentAgreementAddDeal({
+  //   address: ia,
+  //   args: [ dealSnCodifier(objSn),
+  //           BigInt(objBody.buyer),
+  //           BigInt(objBody.groupOfBuyer),
+  //           objBody.paid,
+  //           objBody.par            
+  //         ],
+  // });
 
   const {
     isLoading: addDealLoading,
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
-    ...addDealConfig,
+    address: ia,
+    args: [ dealSnCodifier(objSn),
+            BigInt(objBody.buyer),
+            BigInt(objBody.groupOfBuyer),
+            objBody.paid,
+            objBody.par            
+          ],
     onSuccess() {
       getDeal()
     }
   });
 
-  const {
-    config: configDelDeal
-  } = usePrepareInvestmentAgreementDelDeal({
-    address: ia,
-    args: [ BigNumber.from(seq) ],
-  });
+  // const {
+  //   config: configDelDeal
+  // } = usePrepareInvestmentAgreementDelDeal({
+  //   address: ia,
+  //   args: [ BigInt(seq) ],
+  // });
 
   const {
     isLoading: delDealLoading,
     write: delDeal,
   } = useInvestmentAgreementDelDeal({
-    ...configDelDeal,
+    address: ia,
+    args: [ BigInt(seq) ],
     onSuccess() {
       getDeal()
     }
@@ -298,13 +301,13 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
               <TextField 
                 variant='filled'
-                label='ClosingDate'
+                label='ClosingDeadline'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                value={ dateParser(newDeal.head.closingDate) }
+                value={ dateParser(newDeal.head.closingDeadline) }
               />
 
               <TextField 
@@ -393,7 +396,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   m:1,
                   minWidth: 218,
                 }}
-                value={ dateParser(newDeal.head.closingDate) }
+                value={ dateParser(newDeal.head.closingDeadline) }
               />
 
             </Stack>
@@ -481,7 +484,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                     m:1,
                     minWidth: 218,
                   }} 
-                  value={ dayjs.unix(objSn?.closingDate) }
+                  value={ dayjs.unix(objSn?.closingDeadline) }
                   onChange={(date) => setObjSn((v) => ({
                     ...v,
                     closingDate: date ? date.unix() : 0,
@@ -558,14 +561,9 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   m:1,
                   minWidth: 218,
                 }}
-                value={ longDataParser( 
-                  newDeal.body.par.sub(newDeal.body.paid).
-                  mul(BigNumber.from(newDeal.head.priceOfPar)).
-                  add(
-                      newDeal.body.paid.mul(
-                      BigNumber.from(newDeal.head.priceOfPaid)
-                    )
-                  ).toString()  
+                value={ longDataParser(
+                  ((newDeal.body.par - newDeal.body.paid) * BigInt(newDeal.head.priceOfPar) 
+                  + (newDeal.body.paid * BigInt(newDeal.head.priceOfPaid))).toString()  
                 )}
               />
 
@@ -630,7 +628,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   }}
                   onChange={(e) => setObjBody((v) => ({
                     ...v,
-                    paid: BigNumber.from(e.target.value),
+                    paid: BigInt(e.target.value),
                     }))
                   }
                   
@@ -646,7 +644,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   }}
                   onChange={(e) => setObjBody((v) => ({
                     ...v,
-                    par: BigNumber.from(e.target.value),
+                    par: BigInt(e.target.value),
                     }))
                   }
                   

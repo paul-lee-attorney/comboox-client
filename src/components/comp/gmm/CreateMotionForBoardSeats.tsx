@@ -4,11 +4,8 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { 
   useGeneralKeeperCreateMotionToRemoveDirector, 
   useGeneralKeeperNominateDirector, 
-  usePrepareGeneralKeeperCreateMotionToRemoveDirector, 
-  usePrepareGeneralKeeperNominateDirector 
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 
@@ -23,39 +20,45 @@ export function CreateMotionForBoardSeats({ getMotionsList }:CreateMotionForBoar
   const [ seqOfPos, setSeqOfPos ] = useState<number>();
   const [ candidate, setCandidate ] = useState<number>();
 
-  const {
-    config: addDirectorConfig
-  } = usePrepareGeneralKeeperNominateDirector({
-    address: gk,
-    args: seqOfPos && candidate
-          ? [BigNumber.from(seqOfPos), BigNumber.from(candidate)]
-          : undefined,
-  });
+  // const {
+  //   config: addDirectorConfig
+  // } = usePrepareGeneralKeeperNominateDirector({
+  //   address: gk,
+  //   args: seqOfPos && candidate
+  //         ? [BigInt(seqOfPos), BigInt(candidate)]
+  //         : undefined,
+  // });
 
   const {
     isLoading: addDirectorLoading,
     write: addDirector,
   } = useGeneralKeeperNominateDirector({
-    ...addDirectorConfig,
+    address: gk,
+    args: seqOfPos && candidate
+          ? [BigInt(seqOfPos), BigInt(candidate)]
+          : undefined,
     onSuccess(){
       getMotionsList();
     }
   });
 
-  const {
-    config: removeDirectorConfig
-  } = usePrepareGeneralKeeperCreateMotionToRemoveDirector({
-    address: gk,
-    args: seqOfPos 
-          ? [ BigNumber.from(seqOfPos)]
-          : undefined,
-  });
+  // const {
+  //   config: removeDirectorConfig
+  // } = usePrepareGeneralKeeperCreateMotionToRemoveDirector({
+  //   address: gk,
+  //   args: seqOfPos 
+  //         ? [ BigInt(seqOfPos)]
+  //         : undefined,
+  // });
 
   const{
     isLoading: removeDirectorLoading,
     write: removeDirector
   } = useGeneralKeeperCreateMotionToRemoveDirector({
-    ...removeDirectorConfig,
+    address: gk,
+    args: seqOfPos 
+          ? [ BigInt(seqOfPos)]
+          : undefined,
     onSuccess() {
       getMotionsList();
     }

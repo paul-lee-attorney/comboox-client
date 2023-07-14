@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   Button, 
@@ -16,7 +16,6 @@ import {
   useBookOfSharesGetShare,
   useBookOfMembersSharesList,
 } from "../../../generated";
-import { BigNumber } from "ethers";
 import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
@@ -36,7 +35,7 @@ function BookOfShares() {
     address: boox ? boox[4] : undefined,
     onSuccess(data) {
       if (boox && data.length > 0) {
-        getSharesList(boox[9], data).then(list => {
+        getSharesList(boox[10], data).then(list => {
           setSharesList(list);
         });
       }
@@ -44,7 +43,7 @@ function BookOfShares() {
   })
 
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
-  const [ bnSeqOfShare, setBnSeqOfShare ] = useState<BigNumber>();
+  const [ bnSeqOfShare, setBnSeqOfShare ] = useState<bigint>();
 
   const [ open, setOpen ] = useState<boolean>(false);
   const [ share, setShare ] = useState<Share>();
@@ -52,7 +51,7 @@ function BookOfShares() {
   const { 
     refetch: getShareFunc, 
   } = useBookOfSharesGetShare({
-    address: boox ? boox[9]: undefined,
+    address: boox ? boox[10]: undefined,
     args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
     onSuccess(data) {
       let share:Share = {
@@ -68,7 +67,7 @@ function BookOfShares() {
 
   const searchShare = () => {
     if (seqOfShare) {
-      setBnSeqOfShare(BigNumber.from(seqOfShare));
+      setBnSeqOfShare(BigInt(seqOfShare));
       getShareFunc();
     }
   }

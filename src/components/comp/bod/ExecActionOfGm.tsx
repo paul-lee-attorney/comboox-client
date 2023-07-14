@@ -4,10 +4,7 @@ import { AddrZero, HexType } from "../../../interfaces";
 
 import { 
   useGeneralKeeperExecAction,
-  usePrepareGeneralKeeperExecAction, 
 } from "../../../generated";
-
-import { BigNumber } from "ethers";
 
 import { 
   Button, 
@@ -39,7 +36,7 @@ const defaultAction: Action = {
 
 interface ExecActionProps {
   seqOfVr: number;
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   setOpen: (flag: boolean)=>void;
   getMotionsList: () => any;
 }
@@ -51,24 +48,31 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecA
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();
 
-  const {
-    config: execActionConfig,
-  } = usePrepareGeneralKeeperExecAction({
-    address: gk,
-    args: seqOfVr && desHash && seqOfMotion
-        ? [BigNumber.from(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigNumber.from(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigNumber.from(seqOfMotion)]
-        : undefined,
-  });
+  // const {
+  //   config: execActionConfig,
+  // } = usePrepareGeneralKeeperExecAction({
+  //   address: gk,
+  //   args: seqOfVr && desHash && seqOfMotion
+  //       ? [BigInt(seqOfVr), 
+  //         actions.map(v => (v.target)), 
+  //         actions.map(v => (BigInt(v.value))),
+  //         actions.map(v => (v.params)),
+  //         desHash, BigInt(seqOfMotion)]
+  //       : undefined,
+  // });
 
   const {
     isLoading: execActionLoading,
     write: execAction,
   } = useGeneralKeeperExecAction({
-    ...execActionConfig,
+    address: gk,
+    args: seqOfVr && desHash && seqOfMotion
+        ? [BigInt(seqOfVr), 
+          actions.map(v => (v.target)), 
+          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (v.params)),
+          desHash, BigInt(seqOfMotion)]
+        : undefined,
     onSuccess() {
       getMotionsList();
     }
@@ -140,7 +144,7 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecA
       />
 
       <Button
-        disabled={ !execAction || execActionLoading }
+        disabled={ execActionLoading }
         variant="contained"
         endIcon={<Surfing />}
         sx={{ m:1, minWidth:218 }}

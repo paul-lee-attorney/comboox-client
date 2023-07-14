@@ -4,7 +4,6 @@ import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm }
 import { HexType, } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
-import { BigNumber } from "ethers";
 import { useState } from "react";
 
 interface ProposeDocOfGmProps {
@@ -18,18 +17,19 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   const { gk } = useComBooxContext();
   const [ executor, setExecutor ] = useState<string>('0');
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperProposeDocOfGm({
-    address: gk,
-    args: [addr, BigNumber.from(seqOfVR), BigNumber.from(executor) ],
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperProposeDocOfGm({
+  //   address: gk,
+  //   args: [addr, BigInt(seqOfVR), BigInt(executor) ],
+  // });
 
   const {
     isLoading,
     write
   } = useGeneralKeeperProposeDocOfGm({
-    ...config,
+    address: gk,
+    args: [addr, BigInt(seqOfVR), BigInt(executor) ],    
     onSuccess() {
       setNextStep(4);
     }

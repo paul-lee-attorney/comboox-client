@@ -12,7 +12,6 @@ import {
 import { Skateboarding, Close, }  from '@mui/icons-material';
 
 import { 
-  usePrepareAccessControlRenounceRole,
   useAccessControlRenounceRole,
 } from '../../../generated';
 
@@ -25,16 +24,17 @@ export function QuitAttorney({ addr }: ContractProps) {
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);
 
-  const { config } = usePrepareAccessControlRenounceRole({
-    address: addr,
-    args: [ATTORNEYS],
-  });
+  // const { config } = usePrepareAccessControlRenounceRole({
+  //   address: addr,
+  //   args: [ATTORNEYS],
+  // });
 
   const {
     isLoading,
     write,
   } = useAccessControlRenounceRole({
-    ...config,
+    address: addr,
+    args: [ATTORNEYS],
     onSuccess() {
       setFlag(true);
       setOpen(true);
@@ -51,7 +51,7 @@ export function QuitAttorney({ addr }: ContractProps) {
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
         <Button
-          disabled={ !write || isLoading }
+          disabled={ isLoading }
           sx={{m:1, width: 250, height:55}}
           variant='outlined'
           endIcon={<Skateboarding />}

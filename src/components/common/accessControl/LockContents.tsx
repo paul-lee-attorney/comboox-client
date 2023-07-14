@@ -7,7 +7,6 @@ import { Lock }  from '@mui/icons-material';
 
 
 import { 
-  usePrepareAccessControlLockContents,
   useAccessControlLockContents,
 } from '../../../generated';
 import { HexType } from '../../../interfaces';
@@ -20,15 +19,15 @@ interface LockContentsProps {
 
 export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
 
-  const { config } = usePrepareAccessControlLockContents({
-    address: addr,
-  });
+  // const { config } = usePrepareAccessControlLockContents({
+  //   address: addr,
+  // });
 
   const {
     isLoading,
     write,
   } = useAccessControlLockContents({
-    ...config,
+    address: addr,
     onSuccess() {
       setIsFinalized(true);
       setNextStep(1);
@@ -37,7 +36,7 @@ export function LockContents({ addr, setIsFinalized, setNextStep }: LockContents
 
   return (
     <Button
-      disabled={ !write || isLoading }
+      disabled={ isLoading }
       sx={{m:1, minWidth:218}}
       variant='contained'
       endIcon={<Lock />}

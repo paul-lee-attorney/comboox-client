@@ -1,20 +1,11 @@
 import { useEffect, useState } from 'react';
-
-
 import { Paper, Toolbar, Box } from '@mui/material';
 
-
-import {
-  useBookOfMembersMembersList,
-} from '../../../generated';
-
-import { ContractProps, HexType } from '../../../interfaces';
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { MemberShareClip, ShareClip, getEquityList, getMembersList } from '../../../queries/rom';
-import { DataList } from '../../common/DataList';
+import { MemberShareClip, getEquityList, getMembersList } from '../../../queries/rom';
 
 const columns: GridColDef[] = [
   {

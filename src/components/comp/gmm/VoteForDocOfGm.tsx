@@ -1,19 +1,17 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { 
   useGeneralKeeperCastVoteOfGm,
-  usePrepareGeneralKeeperCastVoteOfGm, 
 } from "../../../generated";
 
 import { Bytes32Zero, HexType } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { HowToVote } from "@mui/icons-material";
 import { useState } from "react";
-import { BigNumber } from "ethers";
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
 
 interface VoteForDocOfGmProps {
-  seqOfMotion: BigNumber ;
+  seqOfMotion: bigint ;
   setNextStep: (next: number) => void;
 }
 
@@ -22,27 +20,31 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
   const { gk, boox } = useComBooxContext();
 
-  const [ attitude, setAttitude ] = useState<string>('3');
+  const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperCastVoteOfGm ({
-    address: gk,
-    args: attitude && sigHash
-        ? [ seqOfMotion, BigNumber.from(attitude), sigHash ]
-        : undefined,
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperCastVoteOfGm ({
+  //   address: gk,
+  //   args: attitude && sigHash
+  //       ? [ seqOfMotion, BigInt(attitude), sigHash ]
+  //       : undefined,
+  // });
 
   const {
     isLoading: castVoteLoading,
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
-    ...config,
+    address: gk,
+    args: attitude && sigHash
+        ? [ seqOfMotion, BigInt(attitude), sigHash ]
+        : undefined,
     onSuccess() {
-      getVoteResult(boox[5], seqOfMotion).then(
-        list => setVoteResult(list)
-      )
+      if (boox)
+        getVoteResult(boox[5], seqOfMotion).then(
+          list => setVoteResult(list)
+        );
     }
   });
 
@@ -89,7 +91,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
 
       </Stack>
 
-      {voteResult && (
+      {voteResult && boox && (
         <VoteResult addr={boox[5]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
       )}
 

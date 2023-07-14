@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { accessControlABI } from "../generated";
-import { BigNumber } from "ethers";
 
 export async function getOwner(addr: HexType): Promise<number> {
   let owner = await readContract({
@@ -48,7 +47,7 @@ export async function hasRole(addr: HexType, role: HexType, acct: string): Promi
     address: addr,
     abi: accessControlABI,
     functionName: 'hasRole',
-    args: [role, BigNumber.from(acct)],
+    args: [role, BigInt(acct)],
   });
 
   return flag;

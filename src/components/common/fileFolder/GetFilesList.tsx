@@ -1,11 +1,6 @@
 
 import { 
-  Table, 
-  TableBody, 
   TableContainer, 
-  TableHead, 
-  TableRow, 
-  TableCell, 
   Paper, 
   Toolbar, 
   Chip
@@ -16,7 +11,6 @@ import Link from '../../../scripts/Link';
 import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { InfoOfFile } from '../../../queries/filesFolder';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { HexType } from '../../../interfaces';
 
 interface GetFilesListProps {
   list: InfoOfFile[],

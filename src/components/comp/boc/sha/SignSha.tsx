@@ -1,6 +1,6 @@
-import { Alert, Box, Button, Stack, TextField, Tooltip } from "@mui/material";
-import { useGeneralKeeperSignSha, usePrepareGeneralKeeperSignSha, useSigPageGetParasOfPage } from "../../../../generated";
-import { Bytes32Zero, ContractProps, FileHistoryProps, HexType } from "../../../../interfaces";
+import { Alert, Box, Button, Stack, TextField } from "@mui/material";
+import { useGeneralKeeperSignSha, useSigPageGetParasOfPage } from "../../../../generated";
+import { Bytes32Zero, FileHistoryProps, HexType } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline, Fingerprint } from "@mui/icons-material";
 import { useState } from "react";
@@ -44,20 +44,23 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperSignSha({
-    address: gk,
-    args: sigHash 
-        ? [addr, sigHash]
-        : undefined,
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperSignSha({
+  //   address: gk,
+  //   args: sigHash 
+  //       ? [addr, sigHash]
+  //       : undefined,
+  // });
 
   const {
     isLoading,
     write
   } = useGeneralKeeperSignSha({
-    ...config,
+    address: gk,
+    args: sigHash 
+        ? [addr, sigHash]
+        : undefined,
     onSuccess() {
       refetchParasOfPage();
     }
@@ -77,7 +80,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
       />                                            
 
       <Button
-        disabled={!write || isLoading}
+        disabled={isLoading}
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, minWidth:218 }}

@@ -1,7 +1,5 @@
-import { BigNumber } from "ethers";
 import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { readContract, waitForTransaction } from "@wagmi/core";
-import { investmentAgreementABI, useGeneralKeeperCloseDeal, useGeneralKeeperIssueNewShare, useGeneralKeeperPushToCoffer, useGeneralKeeperRevokeDeal, useGeneralKeeperTerminateDeal, useGeneralKeeperTransferTargetShare, useInvestmentAgreementCreateDeal, usePrepareGeneralKeeperCloseDeal, usePrepareGeneralKeeperIssueNewShare, usePrepareGeneralKeeperPushToCoffer, usePrepareGeneralKeeperRevokeDeal, usePrepareGeneralKeeperTerminateDeal, usePrepareGeneralKeeperTransferPledge, usePrepareGeneralKeeperTransferTargetShare, usePrepareInvestmentAgreementCreateDeal } from "../../../../generated";
+import { useGeneralKeeperCloseDeal, useGeneralKeeperIssueNewShare, useGeneralKeeperPushToCoffer, useGeneralKeeperTerminateDeal, useGeneralKeeperTransferTargetShare } from "../../../../generated";
 import { useEffect, useState } from "react";
 import { Box, Button, Checkbox, Collapse, Divider, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import { Cancel, CurrencyBitcoin, CurrencyExchange, DirectionsRun, EditNote, HighlightOff, LockClock, LockOpen, RemoveShoppingCart, RemoveShoppingCartOutlined, RocketLaunch } from "@mui/icons-material";
@@ -27,103 +25,111 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
   const [ closingDate, setClosingDate ] = useState<Dayjs | null>(dayjs('2019-09-09T00:00:00Z'));
   const [ hashKey, setHashKey ] = useState<string>('Input your key string here');
 
-  const {config} = usePrepareGeneralKeeperPushToCoffer({
-    address: gk,
-    args: closingDate?.unix() ? 
-      [ia, BigNumber.from(seq), hashLock, BigNumber.from(closingDate.unix()) ] :
-      undefined,
-  })
+  // const {config} = usePrepareGeneralKeeperPushToCoffer({
+  //   address: gk,
+  //   args: closingDate?.unix() ? 
+  //     [ia, BigInt(seq), hashLock, BigInt(closingDate.unix()) ] :
+  //     undefined,
+  // })
 
   const {
     isLoading,
     write: pushToCoffer,
   } = useGeneralKeeperPushToCoffer({
-    ...config,
+    address: gk,
+    args: closingDate?.unix() ? 
+      [ia, BigInt(seq), hashLock, BigInt(closingDate.unix()) ] :
+      undefined,
     onSuccess() {
       getDeal()
     }
   })
 
-  const {
-    config: closeDealConfig
-  } = usePrepareGeneralKeeperCloseDeal({
-    address: gk,
-    args: [ia, BigNumber.from(seq), hashKey],
-  })
+  // const {
+  //   config: closeDealConfig
+  // } = usePrepareGeneralKeeperCloseDeal({
+  //   address: gk,
+  //   args: [ia, BigInt(seq), hashKey],
+  // })
   
   const {
     isLoading: closeDealLoading,
     write: closeDeal
   } = useGeneralKeeperCloseDeal({
-    ...closeDealConfig,
+    address: gk,
+    args: [ia, BigInt(seq), hashKey],
     onSuccess() {
       getDeal()
     }
   });
 
-  const {
-    config: revokeDealConfig
-  } = usePrepareGeneralKeeperRevokeDeal({
-    address: gk,
-    args: [ia, BigNumber.from(seq), hashKey],
-  })
+  // const {
+  //   config: revokeDealConfig
+  // } = usePrepareGeneralKeeperRevokeDeal({
+  //   address: gk,
+  //   args: [ia, BigInt(seq), hashKey],
+  // })
   
-  const {
-    isLoading: revokeDealLoading,
-    write: revokeDeal
-  } = useGeneralKeeperRevokeDeal({
-    ...revokeDealConfig,
-    onSuccess() {
-      getDeal()
-    }
-  });
+  // const {
+  //   isLoading: revokeDealLoading,
+  //   write: revokeDeal
+  // } = useGeneralKeeperRevokeDeal({
+  //   address: gk,
+  //   args: [ia, BigInt(seq), hashKey],
+  //   onSuccess() {
+  //     getDeal()
+  //   }
+  // });
 
-  const {
-    config: terminateDealConfig
-  } = usePrepareGeneralKeeperTerminateDeal({
-    address: gk,
-    args: [ia, BigNumber.from(seq)],
-  });
+  // const {
+  //   config: terminateDealConfig
+  // } = usePrepareGeneralKeeperTerminateDeal({
+  //   address: gk,
+  //   args: [ia, BigInt(seq)],
+  // });
   
   const {
     isLoading: terminateDealLoading,
     write: terminateDeal
   } = useGeneralKeeperTerminateDeal({
-    ...terminateDealConfig,
+    address: gk,
+    args: [ia, BigInt(seq)],
     onSuccess() {
       getDeal();
     }
   });
 
-  const {
-    config: issueNewShareConfig
-  } = usePrepareGeneralKeeperIssueNewShare({
-    address: gk,
-    args: [ia, BigNumber.from(seq)],
-  });
+  // const {
+  //   config: issueNewShareConfig
+  // } = usePrepareGeneralKeeperIssueNewShare({
+  //   address: gk,
+  //   args: [ia, BigInt(seq)],
+  // });
   
   const {
     isLoading: issueNewShareLoading,
     write: issueNewShare
   } = useGeneralKeeperIssueNewShare({
-    ...issueNewShareConfig,
+    address: gk,
+    args: [ia, BigInt(seq)],
     onSuccess() {
       getDeal()
     }
   });
 
-  const {
-    config: transferTargetShareConfig
-  } = usePrepareGeneralKeeperTransferTargetShare({
-    address: gk,
-    args: [ia, BigNumber.from(seq)],
-  });
+  // const {
+  //   config: transferTargetShareConfig
+  // } = usePrepareGeneralKeeperTransferTargetShare({
+  //   address: gk,
+  //   args: [ia, BigInt(seq)],
+  // });
   
   const {
     isLoading: transferTargetShareLoading,
     write: transferTargetShare
   } = useGeneralKeeperTransferTargetShare({
-    ...transferTargetShareConfig,
+    address: gk,
+    args: [ia, BigInt(seq)],
     onSuccess() {
       getDeal()
     }
@@ -203,7 +209,7 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
         <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
           <Button 
-            disabled = {!closeDeal || closeDealLoading || newDeal.body.state > 2 }
+            disabled = {closeDealLoading || newDeal.body.state > 2 }
 
             sx={{ m: 1, minWidth: 120, height: 40, width: 218 }} 
             variant="contained" 
@@ -225,25 +231,13 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
             onChange={(e)=>setHashKey(e.target.value)}
           />
 
-          <Button 
-            disabled = {!revokeDeal || revokeDealLoading || newDeal.body.state != 2}
-
-            sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
-            variant="contained" 
-            endIcon={<RemoveShoppingCartOutlined />}
-            onClick={()=> revokeDeal?.()}
-            size='small'
-          >
-            Revoke Deal
-          </Button>
-
         </Stack>
       </Collapse>
 
       <Collapse in={ !useLock } >  
       <Stack direction={'row'} sx={{ alignItems:'center' }} >
         <Button 
-          disabled = {!issueNewShare || issueNewShareLoading}
+          disabled = { issueNewShareLoading }
 
           sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
           variant="contained" 
@@ -255,7 +249,7 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
         </Button>
 
         <Button 
-          disabled = {!transferTargetShare || transferTargetShareLoading || newDeal.body.state > 2}
+          disabled = { transferTargetShareLoading || newDeal.body.state > 2}
 
           sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
           variant="contained" 
@@ -267,7 +261,7 @@ export function ExecDeal({ia, seq, newDeal, getDeal}: ExecDealProps) {
         </Button>
 
         <Button 
-          disabled = {!terminateDeal || terminateDealLoading || newDeal.body.state > 2}
+          disabled = { terminateDealLoading || newDeal.body.state > 2}
 
           sx={{ m: 1, minWidth: 120, height: 40, width:218 }} 
           variant="contained" 

@@ -11,7 +11,6 @@ import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
 import { getBookeeper } from "../../queries/accessControl";
 import { getKeeper } from "../../queries/gk";
-import { Position, getDirectorsFullPosInfo } from "../../queries/bod";
 
 
 function HomePage() {
@@ -21,12 +20,12 @@ function HomePage() {
   useEffect(()=>{
     const checkDirectKeepers = async ()=> {
       if (gk && boox) {
-        let dkOfRom = await getBookeeper(boox[4]);
-        let romKeeper = await getKeeper(gk, 4);
-        let dkOfBos = await getBookeeper(boox[9]);
-        let bosKeeper = await getKeeper(gk, 9);
+        let dkOfBom = await getBookeeper(boox[4]);
+        let bomKeeper = await getKeeper(gk, 4);
+        let dkOfBos = await getBookeeper(boox[10]);
+        let bosKeeper = await getKeeper(gk, 4);
   
-        if (dkOfRom == romKeeper && dkOfBos == bosKeeper)
+        if (dkOfBom == bomKeeper && dkOfBos == bosKeeper)
           setActiveStep(4);
         else setActiveStep(0);
       }
@@ -41,7 +40,7 @@ function HomePage() {
         <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider' }}>
 
           {activeStep != undefined && activeStep < 4 && (
-            <Stepper sx={{ mt: 2, height: 800, alignItems:'start' }} activeStep={ activeStep } orientation="horizontal" >
+            <Stepper sx={{ mt: 2, height: 1200, alignItems:'start' }} activeStep={ activeStep } orientation="vertical" >
 
               <Step index={0} >
 
@@ -49,7 +48,7 @@ function HomePage() {
                   <h3>Company ID</h3>
                 </StepLabel>
 
-                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+                <StepContent sx={{ alignItems:'start', justifyContent:'start', justifyItems:'start'}} >
 
                   <SetCompId nextStep={setActiveStep} />
 

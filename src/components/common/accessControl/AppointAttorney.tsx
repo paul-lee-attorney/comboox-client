@@ -18,12 +18,10 @@ import { readContract } from '@wagmi/core';
 
 import { 
   accessControlABI,
-  usePrepareAccessControlGrantRole,
   useAccessControlGrantRole,
 } from '../../../generated';
 
 import { ContractProps, HexType } from '../../../interfaces';
-import { BigNumber } from 'ethers';
 
 const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 
@@ -32,7 +30,7 @@ async function isAttorney(addr: HexType, acct: string): Promise<boolean> {
     address: addr,
     abi: accessControlABI,
     functionName: 'hasRole',
-    args: [ATTORNEYS, BigNumber.from(acct)],
+    args: [ATTORNEYS, BigInt(acct)],
   });
 
   return flag;
@@ -42,16 +40,19 @@ export function AppointAttorney({ addr }: ContractProps) {
 
   const [acct, setAcct] = useState<string>();
 
-  const { config } = usePrepareAccessControlGrantRole({
-    address: addr,
-    args: acct ? [ATTORNEYS, BigNumber.from(acct)] : undefined,
-  });
+  // const { config } = usePrepareAccessControlGrantRole({
+  //   address: addr,
+  //   args: acct ? [ATTORNEYS, BigInt(acct)] : undefined,
+  // });
 
   const {
     data,
     isLoading,
     write,
-  } = useAccessControlGrantRole(config);
+  } = useAccessControlGrantRole({
+    address: addr,
+    args: acct ? [ATTORNEYS, BigInt(acct)] : undefined,    
+  });
 
   const [ flag, setFlag ] = useState<boolean>();
   const [ open, setOpen ] = useState(false);
@@ -80,7 +81,7 @@ export function AppointAttorney({ addr }: ContractProps) {
               <InputAdornment position="end">
                 <IconButton
                   color='primary'
-                  disabled={ !write || isLoading }
+                  disabled={ isLoading }
                   onClick={ handleClick }
                   edge="end"
                 >

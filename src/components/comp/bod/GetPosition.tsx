@@ -1,12 +1,9 @@
-import { useEffect, useState } from "react";
-import { readContract } from "@wagmi/core";
+import { useState } from "react";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
-import { AssignmentInd, FollowTheSigns, Rule } from "@mui/icons-material";
-import { useBookOfDirectorsGetPosition, useGeneralKeeperQuitPosition, usePrepareGeneralKeeperQuitPosition } from "../../../generated";
-import dayjs from "dayjs";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Typography } from "@mui/material";
+import { AssignmentInd } from "@mui/icons-material";
+import { useBookOfDirectorsGetPosition } from "../../../generated";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { titleOfPositions } from "../boc/rules/SetPositionAllocateRule";
 import { Position } from "../../../queries/bod";
@@ -27,7 +24,7 @@ export function GetPosition({seq}: GetPositionProps) {
     refetch: getPosition
   } = useBookOfDirectorsGetPosition({
     address: boox ? boox[2]: undefined,
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
     onSuccess(data) {
       setPos(data);
     } 

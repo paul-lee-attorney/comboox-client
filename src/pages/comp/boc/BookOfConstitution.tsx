@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   Button, 
@@ -14,12 +14,9 @@ import { Create } from "@mui/icons-material";
 
 import { 
   useGeneralKeeperCreateSha,
-  usePrepareGeneralKeeperCreateSha,
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
-
-import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
+import { InfoOfFile } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 
 function BookOfConstitution() {
@@ -29,23 +26,33 @@ function BookOfConstitution() {
 
   const [ version, setVersion ] = useState<string>();
 
-  const { config } = usePrepareGeneralKeeperCreateSha({
-    address: gk,
-    args: version ? [BigNumber.from(version)] : undefined,
-  });
+  // const { config: createShaPrepared } = usePrepareGeneralKeeperCreateSha({
+  //   address: gk,
+  //   args: version ? [BigInt(version)] : undefined,
+  //   onSuccess(){
+  //     console.log('config: ', createShaPrepared);
+  //   }
+  // });
 
   const {
+    error,
     isLoading: createShaLoading, 
     write: createSha,
-  } = useGeneralKeeperCreateSha(config);
-
-  useEffect(()=>{
-    if (boox) {
-      getFilesListWithInfo(boox[1]).then(
-        list => setFilesInfoList(list)
-      )
+  } = useGeneralKeeperCreateSha({
+    address: gk,
+    args: version ? [BigInt(version)] : undefined,
+    onError() {
+      console.log('error: ', error);
     }
-  }, [boox, createSha]);
+  });
+
+  // useEffect(()=>{
+  //   if (boox) {
+  //     getFilesListWithInfo(boox[1]).then(
+  //       list => setFilesInfoList(list)
+  //     )
+  //   }
+  // }, [boox, createSha]);
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -69,19 +76,20 @@ function BookOfConstitution() {
                     label="Version" 
                     variant="outlined"
                     helperText="Integer <= 2^16 (e.g. '123')"
-                    onChange={(e) => 
-                      setVersion(e.target.value)
+                    onChange={(e) => {
+                      setVersion(e.target.value);
                     }
-                    value = { version }
+                    }
+                    // value = { version }
                     size='small'
                   />
 
                   <Button 
-                    disabled={ !createSha || createShaLoading }
+                    disabled={ createShaLoading }
                     sx={{ m: 1, minWidth: 120, height: 40 }} 
                     variant="contained" 
                     endIcon={ <Create /> }
-                    onClick={() => createSha?.() }
+                    onClick={()=>createSha() }
                     size='small'
                   >
                     Create SHA

@@ -1,56 +1,38 @@
 import { useEffect, useState } from "react";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../interfaces";
-import { Locker, User, getMyUserNo, getOwner, getUser, getLocker } from "../../queries/rc";
-import { Collapse, Divider, Paper, TextField, Toolbar } from "@mui/material";
+import { AddrOfRegCenter, AddrZero } from "../../interfaces";
+import { Locker, User, getOwner, getLocker, getUser } from "../../queries/rc";
+import { Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser } from "../../scripts/toolsKit";
 import { RegUser } from "../../components/center/RegUser";
-import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetMyUserNo, useRegCenterGetUser } from "../../generated";
+import { useRegCenterGetLocksList } from "../../generated";
 import { SetBackupKey } from "../../components/center/SetBackupKey";
-import { useAccount, useContract, useSigner } from "wagmi";
-import { MintPoints } from "../../components/center/MintPoints";
-import { MintAndLockPoints } from "../../components/center/MintAndLockPoints";
+import { useAccount } from "wagmi";
 import { MintTools } from "../../components/center/MintTools";
 import { LockersList } from "../../components/center/LockersList";
 import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
-
-
-
-
+import { TransferTools } from "../../components/center/TransferTools";
+import { LockConsideration } from "../../components/center/LockConsideration";
+import { useComBooxContext } from "../../scripts/ComBooxContext";
 
 
 function UserInfo() {
 
-  const {isConnected} = useAccount();
 
-  const {data: signer} = useSigner();
-
-
-  const rc = useContract({
-    address: AddrOfRegCenter,
-    abi: regCenterABI,
-    signerOrProvider: signer,
-  });
-
-  const [ userNo, setUserNo ] = useState<number>();
-
-  const obtainMyUserNo = async ()=> {
-    let res = await rc?.getMyUserNo();
-    res && setUserNo( res );
-  }
+  const { userNo } = useComBooxContext();
 
   const [ user, setUser ] = useState<User>();
 
   const obtainUser = async ()=>{
-    let res = await rc?.getUser();
-    res && setUser( res );
+    setUser( await getUser());
   }
 
   const [ isOwner, setIsOwner ] = useState(false);
 
+  const { address:signer, isConnected } = useAccount();
+
   const checkOwner = async ()=>{
     let owner = await getOwner(AddrOfRegCenter);
-    let addrOfSigner = await signer?.getAddress();
-    setIsOwner(addrOfSigner == owner);
+    setIsOwner(signer ? signer == owner : false);
   }
 
   const [ lockersList, setLockersList ] = useState<Locker[]>();
@@ -78,13 +60,16 @@ function UserInfo() {
   });
 
   useEffect(()=>{
-    obtainMyUserNo();
     obtainUser();
     checkOwner();
   });
 
   const [ open, setOpen ] = useState(false);
   const [ locker, setLocker ] = useState<Locker>();
+
+  const [ typeOfAction, setTypeOfAction ] = useState<string>();
+
+  const [ showList, setShowList ] = useState(false);
 
   return (
     // <Collapse in={isConnected} >
@@ -99,46 +84,48 @@ function UserInfo() {
           <thead />
 
           <tbody>
+          {userNo && (
+            <>
             <tr>
-              <td>
-                <TextField 
-                  size="small"
-                  variant='filled'
-                  label='BalanceAmt'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 456,
-                  }}
-                  value={ longDataParser(user?.balance.toString() ?? '0') }
-                />
-              </td>
-              <td colSpan={2}>
-                <TextField 
-                  size="small"
-                  variant='filled'
-                  label='CounterOfVerification'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 456,
-                  }}
-                  value={ longDataParser(user?.counterOfV.toString() ?? '0') }
-                />
-              </td>
-              <td>
-                <TextField 
-                  size="small"
-                  variant='filled'
-                  label='TypeOfAcct'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ user?.isCOA ? 'COA' : 'EOA' }
-                />
-              </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='filled'
+                label='BalanceAmt'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 456,
+                }}
+                value={ longDataParser(user?.balance.toString() ?? '0') }
+              />
+            </td>
+            <td colSpan={2}>
+              <TextField 
+                size="small"
+                variant='filled'
+                label='CounterOfVerification'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 465,
+                }}
+                value={ longDataParser(user?.counterOfV.toString() ?? '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='filled'
+                label='TypeOfAcct'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ user?.isCOA ? 'COA' : 'EOA' }
+              />
+            </td>
 
             </tr>
 
@@ -257,10 +244,99 @@ function UserInfo() {
                 <Divider />
               </td>
             </tr>
+            </>
+          )}
 
             <tr>
               <td colSpan={4}>
-                {lockersList && (
+
+                {!userNo && (
+                  <RegUser getUser={ obtainUser } />
+                )}
+
+                {userNo && (
+                  <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+                    <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between', color:'black', }}>
+
+                      <Toolbar >
+                        <h4>User Actions</h4>
+                      </Toolbar>
+
+                      <FormControlLabel 
+                        label='Show Lockers List'
+                        sx={{
+                          ml: 1,
+                        }}
+                        control={
+                          <Checkbox 
+                            sx={{
+                              m: 1,
+                              height: 64,
+                            }}
+                            onChange={e => setShowList(e.target.checked)}
+                            checked={ showList }
+                          />
+                        }
+                      />
+
+                    </Stack>
+
+                    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
+                      <RadioGroup
+                        sx={{mx:1, px:1, color:'black' }}
+                        row
+                        aria-labelledby="typeOfActionRadioGrup"
+                        name="typeOfActionRadioGroup"
+                        onChange={(e)=>(setTypeOfAction(e.target.value))}
+                        defaultValue={'0'}
+                      >
+                        {userNo && user && user.backupKey.pubKey == AddrZero && (
+                          <FormControlLabel value={'0'} control={<Radio size='small' />} label="Set BackupKey" />
+                        )}
+
+                        {isOwner && (
+                          <FormControlLabel value={'1'} control={<Radio size='small' />} label="Mint Points" />
+                        )}
+                        {!isOwner && (
+                          <FormControlLabel value={'2'} control={<Radio size='small' />} label="Transfer Points" />
+                        )}
+
+                        <FormControlLabel value={'3'} control={<Radio size='small' />} label="Lock Consideration" />
+                      </RadioGroup>
+                    </Paper>
+
+                  </Paper>
+                )}
+
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={4}>
+                {userNo && user && user.backupKey.pubKey == AddrZero && (
+                  <Collapse in={ typeOfAction == '0' } >
+                    <SetBackupKey getUser={ obtainUser } />
+                  </Collapse>
+                )}
+                {isOwner && (
+                  <Collapse in={ typeOfAction == '1' } >
+                    <MintTools refreshList={ getLocksList } />
+                  </Collapse>
+                )}
+                {!isOwner && (
+                  <Collapse in={ typeOfAction == '2' } >
+                    <TransferTools refreshList={ getLocksList } getUser={ obtainUser } />
+                  </Collapse>
+                )}
+                  <Collapse in={ typeOfAction == '3' }>
+                    <LockConsideration refreshList={ getLocksList } getUser={ obtainUser } />                  
+                  </Collapse>
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={4}>
+                {lockersList && userNo && showList && (
                   <LockersList list={ lockersList } setLocker={ setLocker } setOpen={ setOpen } />
                 )}
               </td>
@@ -268,32 +344,8 @@ function UserInfo() {
 
             <tr>
               <td colSpan={4}>
-                {locker && (
-                  <HashLockerOfPoints open={ open } locker={ locker } setOpen={ setOpen } refreshList={ getLocksList }  />
-                )}
-              </td>
-            </tr>
-
-            <tr>
-              <td colSpan={4}>
-                {!userNo && (
-                  <RegUser getMyUserNo={ obtainMyUserNo } getUser={ obtainUser } />
-                )}
-              </td>
-            </tr>
-
-            <tr>
-              <td colSpan={4}>
-                {userNo && user && user.backupKey.pubKey == AddrZero && (
-                  <SetBackupKey getUser={ obtainUser } />
-                )}
-              </td>
-            </tr>
-
-            <tr>
-              <td colSpan={4}>
-                {isOwner && (
-                  <MintTools refreshList={ getLocksList } />
+                {locker && userNo && (
+                  <HashLockerOfPoints open={ open } locker={ locker } userNo={ userNo } setOpen={ setOpen } refreshList={ getLocksList } getUser={ obtainUser }  />
                 )}
               </td>
             </tr>

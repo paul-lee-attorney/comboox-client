@@ -1,12 +1,7 @@
 import { useState } from "react";
-import { useBookOfPledgesCreatePledge, useGeneralKeeperTransferPledge, usePrepareBookOfPledgesCreatePledge, usePrepareGeneralKeeperTransferPledge } from "../../../generated";
+import { useGeneralKeeperTransferPledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { Body, Head, codifyHeadOfPledge } from "../../../queries/bop";
-import { BigNumber } from "ethers";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
-import { getShare } from "../../../queries/bos";
 import { Create } from "@mui/icons-material";
 
 interface TransferPledgeProps{
@@ -18,29 +13,36 @@ interface TransferPledgeProps{
 
 export function TransferPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:TransferPledgeProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
   
   const [ buyer, setBuyer ] = useState<number>();
   const [ amt, setAmt ] = useState<number>();
 
-  const {
-    config: transferPledgeConfig
-  } = usePrepareGeneralKeeperTransferPledge({
-    address: gk,
-    args: buyer && amt
-      ? [ BigNumber.from(seqOfShare), 
-          BigNumber.from(seqOfPld), 
-          BigNumber.from(buyer),
-          BigNumber.from(amt)
-        ]
-      : undefined,
-  })
+  // const {
+  //   config: transferPledgeConfig
+  // } = usePrepareGeneralKeeperTransferPledge({
+  //   address: gk,
+  //   args: buyer && amt
+  //     ? [ BigInt(seqOfShare), 
+  //         BigInt(seqOfPld), 
+  //         BigInt(buyer),
+  //         BigInt(amt)
+  //       ]
+  //     : undefined,
+  // })
 
   const {
     isLoading: transferPledgeLoading,
     write: transferPledge,
   } = useGeneralKeeperTransferPledge({
-    ...transferPledgeConfig,
+    address: gk,
+    args: buyer && amt
+      ? [ BigInt(seqOfShare), 
+          BigInt(seqOfPld), 
+          BigInt(buyer),
+          BigInt(amt)
+        ]
+      : undefined,
     onSuccess(){
       getAllPledges();
       setOpen(false);

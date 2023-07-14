@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 
 import { 
   useGeneralKeeperCastVote,
-  usePrepareGeneralKeeperCastVote,
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 
 import { 
   Box, 
@@ -31,7 +29,7 @@ import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 
 interface CastVoteOfBmProps {
-  seqOfMotion: BigNumber,
+  seqOfMotion: bigint,
   setOpen: (flag: boolean) => void,
   getMotionsList: (minutes:HexType) => any,
 }
@@ -53,18 +51,21 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
-  const {config} = usePrepareGeneralKeeperCastVote({
-    address: gk,
-    args: attitude 
-        ? [seqOfMotion, BigNumber.from(attitude), sigHash]
-        : undefined,
-  });
+  // const {config} = usePrepareGeneralKeeperCastVote({
+  //   address: gk,
+  //   args: attitude 
+  //       ? [seqOfMotion, BigInt(attitude), sigHash]
+  //       : undefined,
+  // });
 
   const {
     isLoading: castVoteLoading,
     write: castVote,
   } = useGeneralKeeperCastVote({
-    ...config,
+    address: gk,
+    args: attitude 
+        ? [seqOfMotion, BigInt(attitude), sigHash]
+        : undefined,
     onSuccess() {
       if (boox) {
         getVoteResult(boox[2], seqOfMotion).then(
@@ -135,7 +136,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
           />                                            
 
           <Button
-            disabled={ !castVote || castVoteLoading }
+            disabled={ castVoteLoading }
             variant="contained"
             endIcon={<HowToVote />}
             sx={{ m:1, minWidth:118 }}

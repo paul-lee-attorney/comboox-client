@@ -1,22 +1,16 @@
 
-import { Alert, Button, Collapse, Divider, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
+import { Button, Divider, Paper, Stack, TextField, } from '@mui/material';
 
 import { 
-  usePrepareRegCenterMintAndLockPoints,
-  usePrepareRegCenterMintPoints,
   useRegCenterMintAndLockPoints,
-  useRegCenterMintPoints, 
 } from '../../generated';
 
 import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../interfaces';
-import { BorderColor, Close, Create, LockReset } from '@mui/icons-material';
+import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
-import { BigNumber } from 'ethers';
-import { getReceipt } from '../../queries/common';
-import { dateParser, longDataParser, longSnParser } from '../../scripts/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { BodyOfLocker, HeadOfLocker, defaultHeadOfLocker } from '../../queries/rc';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../queries/rc';
 
 
 interface MintAndLockPointsProps{
@@ -28,78 +22,47 @@ export function MintAndLockPoints({refreshList}:MintAndLockPointsProps) {
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
-  // // const [ receipt, setReceipt ] = useState<Receipt>();
-  // const [ upHead, setUpHead ] = useState<HeadOfLocker>();
-  const [ upHashLock, setUpHashLock ] = useState<HexType>();
-
   const [ open, setOpen ] = useState(false);
 
-  const {
-    config: mintAndLockPointsConfig
-  } = usePrepareRegCenterMintAndLockPoints({
-    address: AddrOfRegCenter,
-    args: head.to && head.value && head.expireDate && hashLock
-        ? [ 
-            BigNumber.from(head.to),
-            BigNumber.from(head.value),
-            BigNumber.from(head.expireDate),
-            hashLock
-          ]
-        : undefined,
-  })
+  // const {
+  //   config: mintAndLockPointsConfig
+  // } = usePrepareRegCenterMintAndLockPoints({
+  //   address: AddrOfRegCenter,
+  //   args: head.to && head.value && head.expireDate && hashLock
+  //       ? [ 
+  //           BigInt(head.to),
+  //           BigInt(head.value),
+  //           BigInt(head.expireDate),
+  //           hashLock
+  //         ]
+  //       : undefined,
+  // })
 
   const {
     isLoading: mintAndLockPointsLoading,
     write: mintAndLockPoints,
   } = useRegCenterMintAndLockPoints({
-    ...mintAndLockPointsConfig,
-    onSuccess(data) {
-      getReceipt(data.hash).then(
-        r => {
-          if (r) {
-            setUpHashLock( r.logs[0].topics[3] );
-            setOpen(true);
-            refreshList();
-          }
-        }
-      )
+    address: AddrOfRegCenter,
+    args: head.to && head.value && head.expireDate && hashLock
+        ? [ 
+            BigInt(head.to),
+            BigInt(head.value),
+            BigInt(head.expireDate),
+            hashLock
+          ]
+        : undefined,
+    onSuccess() {
+      refreshList();
     }
   })
 
   return (
-    <Paper elevation={3} sx={{m:1, color:'divider', border:1 }}  >
-      {/* <Stack direction='row' sx={{alignItems:'center', justifyContent:'start' }}>
-
-        <Collapse in={ open } sx={{ ml:3, minWidth:680 }} >
-          <Alert 
-            action={
-              <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                <Close fontSize="inherit" />
-              </IconButton>
-            }
-
-            variant='outlined' 
-            severity='info' 
-            sx={{ height: 45, p:0.5 }} 
-          >
-            Locker ({ upHashLock }) established.             
-          </Alert>          
-        </Collapse>
-      </Stack> */}
-
-      <Stack direction='row' sx={{m:1, alignItems:'center', justifyContent:'start'}} >
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
+      <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
         <Stack direction='column' >
-        
-          <Stack direction='row' sx={{m:1, alignItems:'center', justifyContent:'start'}} >
 
+          <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
             <TextField 
               size="small"
               variant='filled'
@@ -126,7 +89,7 @@ export function MintAndLockPoints({refreshList}:MintAndLockPointsProps) {
               value={ head.value }
               onChange={e => setHead(v=>({
                 ...v,
-                value: BigNumber.from(e.target.value ?? '0'),
+                value: BigInt(e.target.value ?? '0'),
               }))}
             />
 
@@ -147,7 +110,7 @@ export function MintAndLockPoints({refreshList}:MintAndLockPointsProps) {
 
           </Stack>
 
-          <Stack direction='row' sx={{m:1, alignItems:'center', justifyContent:'start'}} >
+          <Stack direction='row' sx={{ alignItems:'center', justifyContent:'start'}} >
             <TextField 
               size="small"
               variant='filled'
@@ -167,19 +130,18 @@ export function MintAndLockPoints({refreshList}:MintAndLockPointsProps) {
 
         <Button 
           size='small'
-          disabled={ !mintAndLockPoints || mintAndLockPointsLoading } 
+          disabled={ mintAndLockPointsLoading } 
           onClick={() => {
             mintAndLockPoints?.()
           }}
           variant='contained'
-          sx={{ m:1, ml:2, minWidth:128 }} 
-          endIcon={<LockReset />}       
+          sx={{ m:1, minWidth:128 }} 
+          endIcon={<LockClockOutlined />}       
         >
           {mintAndLockPointsLoading ? 'Loading...' : 'Mint & Lock'}
         </Button>
 
       </Stack>
-
     </Paper>
   )
 }

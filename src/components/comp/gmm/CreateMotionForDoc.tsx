@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { HexType } from "../../../interfaces";
-import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../generated";
-import { BigNumber } from "ethers";
+import { useGeneralKeeperProposeDocOfGm } from "../../../generated";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 
@@ -20,20 +19,23 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
 
-  const {
-    config: proposeDocOfGmConfig,
-  } = usePrepareGeneralKeeperProposeDocOfGm({
-    address: gk,
-    args: doc && seqOfVr && executor
-          ? [ doc, BigNumber.from(seqOfVr), BigNumber.from(executor) ]
-          : undefined,
-  });
+  // const {
+  //   config: proposeDocOfGmConfig,
+  // } = usePrepareGeneralKeeperProposeDocOfGm({
+  //   address: gk,
+  //   args: doc && seqOfVr && executor
+  //         ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
+  //         : undefined,
+  // });
 
   const {
     isLoading: proposeDocOfGmLoading,
     write: proposeDocOfGm,
   } = useGeneralKeeperProposeDocOfGm({
-    ...proposeDocOfGmConfig,
+    address: gk,
+    args: doc && seqOfVr && executor
+          ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
+          : undefined,
     onSuccess() {
       getMotionsList();
     }

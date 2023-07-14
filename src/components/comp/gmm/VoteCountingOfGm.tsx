@@ -2,18 +2,15 @@
 import { Button, Paper, Stack } from "@mui/material";
 import { 
   useGeneralKeeperVoteCountingOfGm, 
-  usePrepareGeneralKeeperVoteCountingOfGm 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
-import { BigNumber } from "ethers";
-import { getMotionsList, isPassed } from "../../../queries/meetingMinutes";
-import { HexType } from "../../../interfaces";
+import { isPassed } from "../../../queries/meetingMinutes";
 
 
 interface VoteCountingOfGmProps {
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   setResult: (flag: boolean) => void;
   setNextStep: (step: number) => void;
   setOpen: (flag: boolean) => void;
@@ -24,18 +21,19 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen,
 
   const { gk, boox } = useComBooxContext();
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperVoteCountingOfGm({
-    address: gk,
-    args: [ seqOfMotion ],
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperVoteCountingOfGm({
+  //   address: gk,
+  //   args: [ seqOfMotion ],
+  // });
 
   const {
     isLoading,
     write
   } = useGeneralKeeperVoteCountingOfGm({
-    ...config,
+    address: gk,
+    args: [ seqOfMotion ],
     onSuccess() {
       if (boox) {
         isPassed(boox[5], seqOfMotion).then(

@@ -1,6 +1,7 @@
 import { 
   Chip,
-  Box,
+  Toolbar,
+  Paper,
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
@@ -95,7 +96,11 @@ export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
   }
 
   return (
-    <Box sx={{width: '100%' }}>
+    <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }} >
+
+      <Toolbar>
+        <h4>Shares List</h4>
+      </Toolbar>
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
         pageSizeOptions={[5, 10, 15, 20]} 
@@ -104,8 +109,9 @@ export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
         columns={ columns }
         disableRowSelectionOnClick
         onRowClick={ handleRowClick }
-      />      
-    </Box>
+      />   
+
+    </Paper>
   )
 }
 

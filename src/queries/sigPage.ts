@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { HexType } from "../interfaces";
 import { readContract } from "@wagmi/core";
 import { sigPageABI } from "../generated";
@@ -8,7 +7,7 @@ import { sigPageABI } from "../generated";
 export interface Sig{
   signer: number;
   sigDate: number;
-  blocknumber: BigNumber;
+  blocknumber: bigint;
   flag: boolean;
   para: number;
   arg: number;
@@ -132,7 +131,7 @@ export async function getClosingDeadline(addr:HexType): Promise<number>{
   return deadline;
 }
 
-export async function isBuyer(addr:HexType, initPage:boolean, acct: BigNumber): Promise<boolean>{
+export async function isBuyer(addr:HexType, initPage:boolean, acct: bigint): Promise<boolean>{
 
   let flag: boolean = await readContract({
     address: addr,
@@ -144,7 +143,7 @@ export async function isBuyer(addr:HexType, initPage:boolean, acct: BigNumber): 
   return flag;
 }
 
-export async function isSeller(addr:HexType, initPage:boolean, acct: BigNumber): Promise<boolean>{
+export async function isSeller(addr:HexType, initPage:boolean, acct: bigint): Promise<boolean>{
 
   let flag: boolean = await readContract({
     address: addr,
@@ -156,7 +155,7 @@ export async function isSeller(addr:HexType, initPage:boolean, acct: BigNumber):
   return flag;
 }
 
-export async function isParty(addr:HexType, acct: BigNumber): Promise<boolean>{
+export async function isParty(addr:HexType, acct: bigint): Promise<boolean>{
 
   let flag: boolean = await readContract({
     address: addr,
@@ -168,7 +167,7 @@ export async function isParty(addr:HexType, acct: BigNumber): Promise<boolean>{
   return flag;
 }
 
-export async function isInitSigner(addr:HexType, acct: BigNumber): Promise<boolean>{
+export async function isInitSigner(addr:HexType, acct: bigint): Promise<boolean>{
 
   let flag: boolean = await readContract({
     address: addr,
@@ -180,7 +179,7 @@ export async function isInitSigner(addr:HexType, acct: BigNumber): Promise<boole
   return flag;
 }
 
-export async function isSigner(addr:HexType, acct: BigNumber): Promise<boolean>{
+export async function isSigner(addr:HexType, acct: bigint): Promise<boolean>{
 
   let flag: boolean = await readContract({
     address: addr,
@@ -192,9 +191,9 @@ export async function isSigner(addr:HexType, acct: BigNumber): Promise<boolean>{
   return flag;
 }
 
-export async function getBuyers(addr:HexType, initPage: boolean): Promise<readonly BigNumber[]>{
+export async function getBuyers(addr:HexType, initPage: boolean): Promise<readonly bigint[]>{
 
-  let buyers: readonly BigNumber[] = await readContract({
+  let buyers: readonly bigint[] = await readContract({
     address: addr,
     abi: sigPageABI,
     functionName: 'getBuyers',
@@ -204,9 +203,9 @@ export async function getBuyers(addr:HexType, initPage: boolean): Promise<readon
   return buyers;
 }
 
-export async function getSellers(addr:HexType, initPage: boolean): Promise<readonly BigNumber[]>{
+export async function getSellers(addr:HexType, initPage: boolean): Promise<readonly bigint[]>{
 
-  let sellers: readonly BigNumber[] = await readContract({
+  let sellers: readonly bigint[] = await readContract({
     address: addr,
     abi: sigPageABI,
     functionName: 'getSellers',
@@ -216,9 +215,9 @@ export async function getSellers(addr:HexType, initPage: boolean): Promise<reado
   return sellers;
 }
 
-export async function getParties(addr:HexType): Promise<readonly BigNumber[]>{
+export async function getParties(addr:HexType): Promise<readonly bigint[]>{
 
-  let parties: readonly BigNumber[] = await readContract({
+  let parties: readonly bigint[] = await readContract({
     address: addr,
     abi: sigPageABI,
     functionName: 'getParties',
@@ -227,7 +226,7 @@ export async function getParties(addr:HexType): Promise<readonly BigNumber[]>{
   return parties;
 }
 
-export async function getSigOfParty(addr:HexType, initPage: boolean, acct: BigNumber): Promise<any>{
+export async function getSigOfParty(addr:HexType, initPage: boolean, acct: bigint): Promise<any>{
     
   let res = await readContract({
     address: addr,

@@ -20,9 +20,8 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { Bytes32Zero, HexType } from '../../../../interfaces';
+import { HexType } from '../../../../interfaces';
 import { longSnParser, toPercent } from '../../../../scripts/toolsKit';
-import { VotingRuleWrap } from './VotingRules';
 import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
 

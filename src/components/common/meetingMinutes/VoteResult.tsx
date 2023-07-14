@@ -1,13 +1,12 @@
 import { Stack } from "@mui/material";
 
-import { BigNumber } from "ethers";
 import { BallotsList } from "./BallotsList";
 import { HexType } from "../../../interfaces";
 import { VoteCase } from "../../../queries/meetingMinutes";
 
 interface VoteResultProps {
   addr: HexType;
-  seqOfMotion: BigNumber;
+  seqOfMotion: BigInt;
   voteResult: VoteCase[];
 }
 

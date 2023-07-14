@@ -2,17 +2,10 @@ import { useState } from "react";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
 import { 
-  useGeneralKeeperCreateMotionToRemoveDirector, 
   useGeneralKeeperCreateMotionToRemoveOfficer, 
-  useGeneralKeeperNominateDirector, 
   useGeneralKeeperNominateOfficer, 
-  usePrepareGeneralKeeperCreateMotionToRemoveDirector, 
-  usePrepareGeneralKeeperCreateMotionToRemoveOfficer, 
-  usePrepareGeneralKeeperNominateDirector, 
-  usePrepareGeneralKeeperNominateOfficer
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 
@@ -27,39 +20,45 @@ export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficer
   const [ seqOfPos, setSeqOfPos ] = useState<number>();
   const [ candidate, setCandidate ] = useState<number>();
 
-  const {
-    config: addOfficerConfig
-  } = usePrepareGeneralKeeperNominateOfficer({
-    address: gk,
-    args: seqOfPos && candidate
-          ? [BigNumber.from(seqOfPos), BigNumber.from(candidate)]
-          : undefined,
-  });
+  // const {
+  //   config: addOfficerConfig
+  // } = usePrepareGeneralKeeperNominateOfficer({
+  //   address: gk,
+  //   args: seqOfPos && candidate
+  //         ? [BigInt(seqOfPos), BigInt(candidate)]
+  //         : undefined,
+  // });
 
   const {
     isLoading: addOfficerLoading,
     write: addOfficer,
   } = useGeneralKeeperNominateOfficer({
-    ...addOfficerConfig,
+    address: gk,
+    args: seqOfPos && candidate
+          ? [BigInt(seqOfPos), BigInt(candidate)]
+          : undefined,
     onSuccess(){
       getMotionsList();
     }
   });
 
-  const {
-    config: removeOfficerConfig
-  } = usePrepareGeneralKeeperCreateMotionToRemoveOfficer({
-    address: gk,
-    args: seqOfPos 
-          ? [ BigNumber.from(seqOfPos)]
-          : undefined,
-  });
+  // const {
+  //   config: removeOfficerConfig
+  // } = usePrepareGeneralKeeperCreateMotionToRemoveOfficer({
+  //   address: gk,
+  //   args: seqOfPos 
+  //         ? [ BigInt(seqOfPos)]
+  //         : undefined,
+  // });
 
   const{
     isLoading: removeOfficerLoading,
     write: removeOfficer
   } = useGeneralKeeperCreateMotionToRemoveOfficer({
-    ...removeOfficerConfig,
+    address: gk,
+    args: seqOfPos 
+          ? [ BigInt(seqOfPos)]
+          : undefined,
     onSuccess() {
       getMotionsList();
     }

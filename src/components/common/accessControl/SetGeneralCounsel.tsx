@@ -14,47 +14,31 @@ import {
 
 import { Approval, Close, EditNote }  from '@mui/icons-material';
 
-import { readContract } from '@wagmi/core';
-
 import { 
-  accessControlABI,
-  usePrepareAccessControlSetGeneralCounsel,
   useAccessControlSetGeneralCounsel,
 } from '../../../generated';
 
 import { waitForTransaction } from '@wagmi/core';
 import { ContractProps, HexType } from '../../../interfaces';
-import { BigNumber } from 'ethers';
 import { getGeneralCounsel } from '../../../queries/accessControl';
-
-async function getReceipt(hash: HexType): Promise<string> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
-
-  let gc = '';
-
-  if (receipt) {
-    gc = parseInt(receipt.logs[0].topics[1], 16).toString();
-  }
-
-  return gc;
-}
 
 export function SetGeneralCounsel({ addr }: ContractProps) {
   const [gc, setGC] = useState<string>();
 
-  const { config } = usePrepareAccessControlSetGeneralCounsel({
-    address: addr,
-    args: gc ? [BigNumber.from(gc)] : undefined,
-  });
+  // const { config } = usePrepareAccessControlSetGeneralCounsel({
+  //   address: addr,
+  //   args: gc ? [BigInt(gc)] : undefined,
+  // });
 
   const {
     data,
     isSuccess,
     isLoading,
     write,
-  } = useAccessControlSetGeneralCounsel(config);
+  } = useAccessControlSetGeneralCounsel({
+    address: addr,
+    args: gc ? [BigInt(gc)] : undefined,    
+  });
 
   const [ newGC, setNewGC ] = useState<number>();
   const [ open, setOpen ] = useState(false);
@@ -81,7 +65,7 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ !write || isLoading }
+                  disabled={ isLoading }
                   color='primary'
                   onClick={ handleClick }
                   edge="end"

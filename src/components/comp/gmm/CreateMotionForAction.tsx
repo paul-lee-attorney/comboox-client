@@ -7,7 +7,6 @@ import {
   usePrepareGeneralKeeperCreateActionOfGm 
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 
@@ -40,24 +39,31 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
 
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 
-  const {
-    config: proposeActionConfig,
-  } = usePrepareGeneralKeeperCreateActionOfGm({
-    address: gk,
-    args: seqOfVr && desHash && executor
-        ? [BigNumber.from(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigNumber.from(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigNumber.from(executor)]
-        : undefined,
-  });
+  // const {
+  //   config: proposeActionConfig,
+  // } = usePrepareGeneralKeeperCreateActionOfGm({
+  //   address: gk,
+  //   args: seqOfVr && desHash && executor
+  //       ? [BigInt(seqOfVr), 
+  //         actions.map(v => (v.target)), 
+  //         actions.map(v => (BigInt(v.value))),
+  //         actions.map(v => (v.params)),
+  //         desHash, BigInt(executor)]
+  //       : undefined,
+  // });
 
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
   } = useGeneralKeeperCreateActionOfGm({
-    ...proposeActionConfig,
+    address: gk,
+    args: seqOfVr && desHash && executor
+        ? [BigInt(seqOfVr), 
+          actions.map(v => (v.target)), 
+          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (v.params)),
+          desHash, BigInt(executor)]
+        : undefined,
     onSuccess() {
       getMotionsList();
     }

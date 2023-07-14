@@ -51,13 +51,19 @@ import {
 
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { useConnect, useDisconnect } from 'wagmi';
+import { useAccount, useConnect, useContractEvent, useContractRead, useDisconnect, useWalletClient } from 'wagmi';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 
-import { getBoox, nameOfCompany, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
+import { getBoox, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
 import { longSnParser } from '../../scripts/toolsKit';
 import { AcctPage } from './AcctPage';
+import { useRouter } from 'next/router';
+import { AddrOfRegCenter } from '../../interfaces';
+import { regCenterABI } from '../../generated';
+import { Signer, ethers, providers } from 'ethers';
+import { getMyUserNo } from '../../queries/rc';
+import { watchAccount } from '@wagmi/core';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -112,22 +118,27 @@ type ComBooxAppBarType = {
   children: any
 }
 
+
 export function ComBooxAppBar({ children }: ComBooxAppBarType) {
-  const { gk, setGK, boox, setBoox } = useComBooxContext();
+  const { userNo, setUserNo, gk, setGK, boox, setBoox } = useComBooxContext();
   const [ regNum, setRegNum ] = useState<number>();
-  const [ name, setName ] = useState<string>();
   const [ symbol, setSymbol ] = useState<string>();
-  
+
+  const router = useRouter();
+  const { pathname } = router;
+
+  const [auth, setAuth] = useState(false);
+
+  const { connect, connectors } = useConnect();
+  const { disconnect } = useDisconnect();
+
   useEffect(() => {
     if (gk) {
       getBoox(gk).then(
         (res) => setBoox(res)
       );
       regNumOfCompany(gk).then(
-        res => setRegNum(res.toNumber())
-      );
-      nameOfCompany(gk).then(
-        res => setName(res)
+        res => setRegNum(parseInt(res))
       );
       symbolOfCompany(gk).then(
         res => setSymbol(res)
@@ -137,15 +148,19 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     }
   }, [gk, setBoox]);
 
-  const [auth, setAuth] = useState(true);
-
-  const { connect, connectors } = useConnect();
-  const { disconnect } = useDisconnect();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    auth ? disconnect() : connect({ connector: connectors[0] });
+    if (auth) {
+      setUserNo(undefined);
+      disconnect();
+      if (pathname == '/my/UserInfo') router.push('/');
+    } else {
+      connect({ connector: connectors[0] });
+    }
+    
     setAuth(e.target.checked);
   };
+
     
   const [appBarOpen, setAppBarOpen] = useState(false);
   const handleDrawerOpen = () => {
@@ -260,8 +275,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           <Divider />
 
           {items.map((v, i)=>(
-            <>
-              <ListItem key={i} disablePadding >
+            <div key={i}>
+              <ListItem disablePadding >
                 <Tooltip title={v.tip} placement='right' arrow >
                   <ListItemButton 
                     LinkComponent={Link}
@@ -275,9 +290,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                 </Tooltip>
               </ListItem>
               {v.divider && (
-                <Divider />
+                <Divider flexItem />
               )}
-            </>
+            </div>
           ))}
 
         </List>

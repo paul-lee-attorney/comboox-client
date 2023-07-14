@@ -1,11 +1,8 @@
-import { Box, Paper, Toolbar } from "@mui/material";
+import { Paper, } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { titleOfPositions } from "../boc/rules/SetPositionAllocateRule";
-import { GetVotingRule } from "../boc/rules/GetVotingRule";
 import { Position } from "../../../queries/bod";
-import { GetPosition } from "./GetPosition";
-import { GetFullPosInfoInHand } from "./GetFullPosInfoInHand";
 
 interface GetPosInHandProps {
   list: readonly Position[];
@@ -66,11 +63,6 @@ export function GetPosInHand({ list }:GetPosInHandProps) {
     },
   ];
   
-  // const handleRowClick: GridEventListener<'rowClick'> = (p) => {
-  //   setMotion({head: p.row.head, body: p.row.body, votingRule: p.row.votingRule, contents: p.row.contents});
-  //   setOpen(true);
-  // }
-
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <DataGrid 
@@ -80,7 +72,6 @@ export function GetPosInHand({ list }:GetPosInHandProps) {
         getRowId={(row:Position) => row.seqOfPos.toString() } 
         columns={ columns }
         disableRowSelectionOnClick
-        // onRowClick={ handleRowClick }
       />      
     </Paper>
   );

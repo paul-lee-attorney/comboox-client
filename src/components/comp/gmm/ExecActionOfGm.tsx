@@ -4,10 +4,8 @@ import { AddrZero, HexType } from "../../../interfaces";
 
 import { 
   useGeneralKeeperExecActionOfGm, 
-  usePrepareGeneralKeeperExecActionOfGm
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 
@@ -25,7 +23,7 @@ const defaultAction: Action = {
 
 interface ExecActionOfGmProps {
   seqOfVr: number;
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   setOpen: (flag: boolean)=>void;
   getMotionsList: () => any;
 }
@@ -37,24 +35,31 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();
 
-  const {
-    config: execActionConfig,
-  } = usePrepareGeneralKeeperExecActionOfGm({
-    address: gk,
-    args: seqOfVr && desHash && seqOfMotion
-        ? [BigNumber.from(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigNumber.from(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigNumber.from(seqOfMotion)]
-        : undefined,
-  });
+  // const {
+  //   config: execActionConfig,
+  // } = usePrepareGeneralKeeperExecActionOfGm({
+  //   address: gk,
+  //   args: seqOfVr && desHash && seqOfMotion
+  //       ? [BigInt(seqOfVr), 
+  //         actions.map(v => (v.target)), 
+  //         actions.map(v => (BigInt(v.value))),
+  //         actions.map(v => (v.params)),
+  //         desHash, BigInt(seqOfMotion)]
+  //       : undefined,
+  // });
 
   const {
     isLoading: execActionLoading,
     write: execAction,
   } = useGeneralKeeperExecActionOfGm({
-    ...execActionConfig,
+    address: gk,
+    args: seqOfVr && desHash && seqOfMotion
+        ? [BigInt(seqOfVr), 
+          actions.map(v => (v.target)), 
+          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (v.params)),
+          desHash, BigInt(seqOfMotion)]
+        : undefined,
     onSuccess() {
       getMotionsList();
     }

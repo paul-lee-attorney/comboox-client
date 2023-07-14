@@ -2,18 +2,16 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperProposeMotionToGeneralMeeting, 
-  usePrepareGeneralKeeperProposeMotionToGeneralMeeting 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { HexType } from "../../../interfaces";
 
 interface ProposeMotionToGmProps {
-  seqOfMotion: BigNumber,
+  seqOfMotion: bigint,
   setOpen: (flag: boolean) => void,
   getMotionsList: (minutes:HexType) => any,
 }
@@ -22,18 +20,19 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotions
 
   const { gk, boox } = useComBooxContext();
 
-  const {
-    config: proposeMotionToGeneralMeetingConfig,
-  } = usePrepareGeneralKeeperProposeMotionToGeneralMeeting ({
-    address: gk,
-    args: [BigNumber.from(seqOfMotion)],
-  });
+  // const {
+  //   config: proposeMotionToGeneralMeetingConfig,
+  // } = usePrepareGeneralKeeperProposeMotionToGeneralMeeting ({
+  //   address: gk,
+  //   args: [BigInt(seqOfMotion)],
+  // });
 
   const {
     isLoading: proposeMotionToGmLoading,
     write: proposeMotionToGm,
   } = useGeneralKeeperProposeMotionToGeneralMeeting({
-    ...proposeMotionToGeneralMeetingConfig,
+    address: gk,
+    args: [BigInt(seqOfMotion)],
     onSuccess(){
       getMotionsList(boox[5]);
       setOpen(false);

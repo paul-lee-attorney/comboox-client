@@ -1,10 +1,9 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { meetingMinutesABI } from "../generated";
-import { BigNumber } from "ethers";
 import { VotingRule } from "../components/comp/boc/rules/SetVotingRule";
 
-export async function isProposed(minutes: HexType, seqOfMotion: BigNumber): Promise<boolean> {
+export async function isProposed(minutes: HexType, seqOfMotion: bigint): Promise<boolean> {
   let flag: boolean = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
@@ -15,7 +14,7 @@ export async function isProposed(minutes: HexType, seqOfMotion: BigNumber): Prom
   return flag;
 }
 
-export async function voteStarted(minutes: HexType, seqOfMotion: BigNumber): Promise<boolean> {
+export async function voteStarted(minutes: HexType, seqOfMotion: bigint): Promise<boolean> {
   let flag: boolean = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
@@ -26,7 +25,7 @@ export async function voteStarted(minutes: HexType, seqOfMotion: BigNumber): Pro
   return flag;
 }
 
-export async function voteEnded(minutes: HexType, seqOfMotion: BigNumber): Promise<boolean> {
+export async function voteEnded(minutes: HexType, seqOfMotion: bigint): Promise<boolean> {
   let flag: boolean = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
@@ -40,19 +39,19 @@ export async function voteEnded(minutes: HexType, seqOfMotion: BigNumber): Promi
 // ==== Delegate ====
 
 export interface LeavesInfo {
-  weight: BigNumber;
+  weight: bigint;
   emptyHead: number;
 }
 
 export interface Voter {
   delegate: number;
-  weight: BigNumber;
-  repWeight: BigNumber;
+  weight: bigint;
+  repWeight: bigint;
   repHead: number;
   principals: readonly number[];
 }
 
-export async function getVoterOfDelegateMap(minutes: HexType, seqOfMotion: BigNumber, acct: BigNumber): Promise<Voter> {
+export async function getVoterOfDelegateMap(minutes: HexType, seqOfMotion: bigint, acct: bigint): Promise<Voter> {
 
   let voter:Voter = await readContract({
     address: minutes,
@@ -64,9 +63,9 @@ export async function getVoterOfDelegateMap(minutes: HexType, seqOfMotion: BigNu
   return voter;
 }
 
-export async function getDelegateOf(minutes: HexType, seqOfMotion: BigNumber, acct: BigNumber): Promise<BigNumber> {
+export async function getDelegateOf(minutes: HexType, seqOfMotion: bigint, acct: bigint): Promise<bigint> {
   
-  let delegate:BigNumber = await readContract({
+  let delegate:bigint = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
     functionName: 'getDelegateOf',
@@ -76,7 +75,7 @@ export async function getDelegateOf(minutes: HexType, seqOfMotion: BigNumber, ac
   return delegate;
 }
 
-export async function getLeavesWeightAtDate(minutes: HexType, seqOfMotion: BigNumber, acct: BigNumber, baseDate: BigNumber, rom: HexType): Promise<LeavesInfo> {
+export async function getLeavesWeightAtDate(minutes: HexType, seqOfMotion: bigint, acct: bigint, baseDate: bigint, rom: HexType): Promise<LeavesInfo> {
 
   let info:LeavesInfo = await readContract({
     address: minutes,
@@ -88,7 +87,7 @@ export async function getLeavesWeightAtDate(minutes: HexType, seqOfMotion: BigNu
   return info;
 }
 
-export async function getLeavesHeadcountOfDirectors(minutes: HexType, seqOfMotion: BigNumber, acct: BigNumber, bod: HexType): Promise<number> {
+export async function getLeavesHeadcountOfDirectors(minutes: HexType, seqOfMotion: bigint, acct: bigint, bod: HexType): Promise<number> {
 
   let head:number = await readContract({
     address: minutes,
@@ -104,7 +103,7 @@ export async function getLeavesHeadcountOfDirectors(minutes: HexType, seqOfMotio
 
 export interface HeadOfMotion {
   typeOfMotion: number;
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   seqOfVR: number;
   creator: number;
   executor: number;
@@ -126,13 +125,13 @@ export interface Motion {
   head: HeadOfMotion,
   body: BodyOfMotion,
   votingRule: VotingRule,
-  contents: BigNumber,
+  contents: bigint,
 }
 
 export function motionSnParser(sn: HexType): HeadOfMotion {
   let head: HeadOfMotion = {
     typeOfMotion: parseInt(sn.substring(2, 6), 16),
-    seqOfMotion: BigNumber.from(`0x${sn.substring(6, 22)}`),
+    seqOfMotion: BigInt(`0x${sn.substring(6, 22)}`),
     seqOfVR: parseInt(sn.substring(22, 26)),
     creator: parseInt(sn.substring(26, 36)),
     executor: parseInt(sn.substring(36, 46)),
@@ -142,7 +141,7 @@ export function motionSnParser(sn: HexType): HeadOfMotion {
   return head;
 }
 
-export async function getMotion(bog: HexType, seq: BigNumber): Promise<Motion> {
+export async function getMotion(bog: HexType, seq: bigint): Promise<Motion> {
   let motion:Motion = await readContract({
     address: bog,
     abi: meetingMinutesABI,
@@ -153,8 +152,8 @@ export async function getMotion(bog: HexType, seq: BigNumber): Promise<Motion> {
   return motion;
 }
 
-export async function getSeqList(minutes: HexType): Promise<readonly BigNumber[]> {
-  let list: readonly BigNumber[] = await readContract({
+export async function getSeqList(minutes: HexType): Promise<readonly bigint[]> {
+  let list: readonly bigint[] = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
     functionName: 'getSeqList',
@@ -165,7 +164,7 @@ export async function getSeqList(minutes: HexType): Promise<readonly BigNumber[]
 
 export async function getMotionsList(minutes: HexType): Promise<Motion[]> {
 
-  let seqList: readonly BigNumber[] = await getSeqList(minutes);
+  let seqList: readonly bigint[] = await getSeqList(minutes);
 
   let len = seqList.length;
   let ls: Motion[] = [];
@@ -184,11 +183,11 @@ export async function getMotionsList(minutes: HexType): Promise<Motion[]> {
 
 export interface VoteCase {
   sumOfHead: number;
-  sumOfWeight: BigNumber;
-  voters: readonly BigNumber[];
+  sumOfWeight: bigint;
+  voters: readonly bigint[];
 }
 
-export async function isVoted(minutes: HexType, seqOfMotion: BigNumber, acct: BigNumber): Promise<boolean> {
+export async function isVoted(minutes: HexType, seqOfMotion: bigint, acct: bigint): Promise<boolean> {
   let flag:boolean = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
@@ -199,7 +198,7 @@ export async function isVoted(minutes: HexType, seqOfMotion: BigNumber, acct: Bi
   return flag;
 }
 
-export async function isVotedFor(minutes: HexType, seqOfMotion: BigNumber, acct: BigNumber, atti: BigNumber): Promise<boolean> {
+export async function isVotedFor(minutes: HexType, seqOfMotion: bigint, acct: bigint, atti: bigint): Promise<boolean> {
 
   let flag:boolean = await readContract({
     address: minutes,
@@ -211,7 +210,7 @@ export async function isVotedFor(minutes: HexType, seqOfMotion: BigNumber, acct:
   return flag;
 }
 
-export async function getCaseOfAttitude(minutes: HexType, seqOfMotion: BigNumber, atti: BigNumber): Promise<VoteCase> {
+export async function getCaseOfAttitude(minutes: HexType, seqOfMotion: bigint, atti: bigint): Promise<VoteCase> {
   let voteCase: VoteCase = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
@@ -222,13 +221,13 @@ export async function getCaseOfAttitude(minutes: HexType, seqOfMotion: BigNumber
   return voteCase;
 }
 
-export async function getVoteResult(minutes: HexType, seqOfMotion: BigNumber): Promise<VoteCase[]>{
+export async function getVoteResult(minutes: HexType, seqOfMotion: bigint): Promise<VoteCase[]>{
 
   let i = 0;
   let list: VoteCase[] = [];
 
   while (i < 4) {
-    let item = await getCaseOfAttitude(minutes, seqOfMotion, BigNumber.from(i));
+    let item = await getCaseOfAttitude(minutes, seqOfMotion, BigInt(i));
     list.push(item);    
     i++;
   }
@@ -242,13 +241,13 @@ export interface Ballot {
   acct: number;
   attitude: number;
   head: number;
-  weight: BigNumber;
+  weight: bigint;
   sigDate: number;
-  blocknumber: BigNumber;
+  blocknumber: bigint;
   sigHash: HexType;
 }
 
-export async function getBallot(minutes:HexType, seqOfMotion: BigNumber, acct: BigNumber): Promise<Ballot> {
+export async function getBallot(minutes:HexType, seqOfMotion: bigint, acct: bigint): Promise<Ballot> {
   let ballot:Ballot = await readContract({
     address: minutes,
     abi: meetingMinutesABI,
@@ -259,7 +258,7 @@ export async function getBallot(minutes:HexType, seqOfMotion: BigNumber, acct: B
   return ballot;
 }
 
-export async function getBallotsList(minutes: HexType, seqOfMotion: BigNumber, voters: readonly BigNumber[]): Promise<Ballot[]> {
+export async function getBallotsList(minutes: HexType, seqOfMotion: bigint, voters: readonly bigint[]): Promise<Ballot[]> {
   let list: Ballot[] = [];
 
   let len = voters.length;
@@ -274,7 +273,7 @@ export async function getBallotsList(minutes: HexType, seqOfMotion: BigNumber, v
   return list;
 }
 
-export async function isPassed(minutes: HexType, seqOfMotion: BigNumber): Promise<boolean> {
+export async function isPassed(minutes: HexType, seqOfMotion: bigint): Promise<boolean> {
   let flag = await readContract({
     address: minutes,
     abi: meetingMinutesABI,

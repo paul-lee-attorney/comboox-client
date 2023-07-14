@@ -1,5 +1,5 @@
 import { 
-  Box, Paper, Toolbar,
+  Paper, Toolbar,
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'

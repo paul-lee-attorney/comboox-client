@@ -28,24 +28,19 @@ import { waitForTransaction, readContract } from "@wagmi/core";
 
 import {
   antiDilutionABI,
-  usePrepareShareholdersAgreementCreateTerm,
   useShareholdersAgreementCreateTerm,
-  usePrepareShareholdersAgreementRemoveTerm,
   useShareholdersAgreementRemoveTerm,
   useAntiDilutionGetClasses, 
-  usePrepareAntiDilutionAddBenchmark, 
   useAntiDilutionAddBenchmark,
-  usePrepareAntiDilutionRemoveBenchmark,
   useAntiDilutionRemoveBenchmark,
-  usePrepareAntiDilutionAddObligor,
   useAntiDilutionAddObligor,
-  usePrepareAntiDilutionRemoveObligor,
   useAntiDilutionRemoveObligor, 
 } from "../../../../../generated";
 
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 
 import { Benchmark } from "./Benchmark";
+import { splitStrArr } from "../../../../../scripts/toolsKit";
 
 
 async function getReceipt(hash: HexType): Promise<HexType> {
@@ -81,20 +76,20 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
       address: ad,
       abi: antiDilutionABI,
       functionName: 'getFloorPriceOfClass',
-      args: [BigNumber.from(classOfShare)],
+      args: [BigInt(classOfShare)],
     });
 
     let obligors = await readContract({
       address: ad,
       abi: antiDilutionABI,
       functionName: 'getObligorsOfAD',
-      args: [BigNumber.from(classOfShare)],
+      args: [BigInt(classOfShare)],
     });
     
     let strObligors = '';
 
     obligors.map(v => {
-      strObligors += v + `\n`;
+      strObligors += v.toString() + `\n`;
     });
 
     let item: BenchmarkType = {
@@ -117,39 +112,43 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
 
   const [ version, setVersion ] = useState<string>();
 
-  const {
-    config: createAdConfig
-  } = usePrepareShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigNumber.from('23'), BigNumber.from(version)]: 
-      undefined,
-  });
+  // const {
+  //   config: createAdConfig
+  // } = usePrepareShareholdersAgreementCreateTerm({
+  //   address: sha,
+  //   args: version ? 
+  //     [BigInt('24'), BigInt(version)]: 
+  //     undefined,
+  // });
 
   const {
     data: createAdReceipt,
     isLoading: createAdIsLoading,
     write: createAd,
   } = useShareholdersAgreementCreateTerm({
-    ...createAdConfig,
-    onSuccess(data) {
+    address: sha,
+    args: version ? 
+      [BigInt('24'), BigInt(version)]: 
+      undefined,
+    onSuccess(data:any) {
       getReceipt(data.hash).
         then(addrOfAd => setTerm(addrOfAd));      
     }
   });
 
-  const {
-    config: removeAdConfig
-  } = usePrepareShareholdersAgreementRemoveTerm({
-    address: sha,
-    args: [BigNumber.from('23')],
-  });
+  // const {
+  //   config: removeAdConfig
+  // } = usePrepareShareholdersAgreementRemoveTerm({
+  //   address: sha,
+  //   args: [BigInt('24')],
+  // });
 
   const {
     isLoading: removeAdIsLoading,
     write: removeAd,
   } = useShareholdersAgreementRemoveTerm({
-    ...removeAdConfig,
+    address: sha,
+    args: [BigInt('24')],
     onSuccess() {
       setTerm(undefined);
     }
@@ -162,7 +161,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
     onSuccess(data) {
       let ls: number[] = [];
       data.map(v => {
-        ls.push(v.toNumber())
+        ls.push(Number(v))
       })
       if (term)
         getBenchmarks(term, ls).
@@ -173,42 +172,49 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
   const [ classOfShare, setClassOfShare ] = useState<string>();
   const [ price, setPrice ] = useState<string>();
 
-  const { 
-    config: addMarkConfig 
-  } = usePrepareAntiDilutionAddBenchmark({
-    address: term,
-    args: classOfShare && 
-          price ? 
-            [BigNumber.from(classOfShare), BigNumber.from(price)] :
-            undefined, 
-  });
+  // const { 
+  //   config: addMarkConfig 
+  // } = usePrepareAntiDilutionAddBenchmark({
+  //   address: term,
+  //   args: classOfShare && 
+  //         price ? 
+  //           [BigInt(classOfShare), BigInt(price)] :
+  //           undefined, 
+  // });
 
   const { 
     data: addMarkReceipt,
     isLoading: addMarkIsLoading,
     write: addMark 
   } = useAntiDilutionAddBenchmark({
-    ...addMarkConfig,
+    address: term,
+    args: classOfShare && 
+          price ? 
+            [BigInt(classOfShare), BigInt(price)] :
+            undefined, 
     onSuccess() {
       refetch();
     }
   });
 
-  const { 
-    config: removeMarkConfig 
-  } = usePrepareAntiDilutionRemoveBenchmark({
-    address: term,
-    args: classOfShare ? 
-            [BigNumber.from(classOfShare)] :
-            undefined, 
-  });
+  // const { 
+  //   config: removeMarkConfig 
+  // } = usePrepareAntiDilutionRemoveBenchmark({
+  //   address: term,
+  //   args: classOfShare ? 
+  //           [BigInt(classOfShare)] :
+  //           undefined, 
+  // });
 
   const { 
     data: removeMarkReceipt,
     isLoading: removeMarkIsLoading, 
     write: removeMark 
   } = useAntiDilutionRemoveBenchmark({
-    ...removeMarkConfig,
+    address: term,
+    args: classOfShare ? 
+            [BigInt(classOfShare)] :
+            undefined, 
     onSuccess() {
       refetch();
     }
@@ -216,45 +222,55 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
 
   const [ obligor, setObligor ] = useState<string>();
 
-  const { 
-    config: addObligorConfig 
-  } = usePrepareAntiDilutionAddObligor({
-    address: term,
-    args: classOfShare &&
-          obligor ? 
-            [ BigNumber.from(classOfShare),
-              BigNumber.from(obligor)] :
-            undefined, 
-  });
+  // const { 
+  //   config: addObligorConfig 
+  // } = usePrepareAntiDilutionAddObligor({
+  //   address: term,
+  //   args: classOfShare &&
+  //         obligor ? 
+  //           [ BigInt(classOfShare),
+  //             BigInt(obligor)] :
+  //           undefined, 
+  // });
 
   const { 
     data: addObligorReceipt,
     isLoading: addObligorIsLoading, 
     write: addObligor 
   } = useAntiDilutionAddObligor({
-    ...addObligorConfig,
+    address: term,
+    args: classOfShare &&
+          obligor ? 
+            [ BigInt(classOfShare),
+              BigInt(obligor)] :
+            undefined, 
     onSuccess() {
       refetch();
     }
   });
 
-  const { 
-    config: removeObligorConfig 
-  } = usePrepareAntiDilutionRemoveObligor({
-    address: term,
-    args: classOfShare &&
-          obligor ? 
-            [ BigNumber.from(classOfShare),
-              BigNumber.from(obligor)] :
-            undefined, 
-  });
+  // const { 
+  //   config: removeObligorConfig 
+  // } = usePrepareAntiDilutionRemoveObligor({
+  //   address: term,
+  //   args: classOfShare &&
+  //         obligor ? 
+  //           [ BigInt(classOfShare),
+  //             BigInt(obligor)] :
+  //           undefined, 
+  // });
 
   const { 
     data: removeObligorReceipt,
     isLoading: removeObligorIsLoading, 
     write: removeObligor 
   } = useAntiDilutionRemoveObligor({
-    ...removeObligorConfig,
+    address: term,
+    args: classOfShare &&
+          obligor ? 
+            [ BigInt(classOfShare),
+              BigInt(obligor)] :
+            undefined, 
     onSuccess() {
       refetch();
     }
@@ -307,7 +323,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
                       />
 
                       <Button
-                        disabled={ !createAd || createAdIsLoading }
+                        disabled={ createAdIsLoading }
                         variant="contained"
                         sx={{
                           height: 40,
@@ -323,7 +339,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
 
                   {term && !isFinalized && (
                       <Button
-                        disabled={ !removeAd || removeAdIsLoading }
+                        disabled={ removeAdIsLoading }
                         variant="contained"
                         sx={{
                           height: 40,
@@ -347,7 +363,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
                       arrow
                     >
                       <IconButton 
-                        disabled={ !addMark || addMarkIsLoading }
+                        disabled={ addMarkIsLoading }
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addMark?.() }
                         color="primary"
@@ -384,7 +400,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
                       arrow
                     >           
                       <IconButton
-                        disabled={ !removeMark || removeMarkIsLoading } 
+                        disabled={ removeMarkIsLoading } 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeMark?.() }
                         color="primary"
@@ -399,7 +415,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
                       arrow
                     >
                       <IconButton 
-                        disabled={ !addObligor || addObligorIsLoading }
+                        disabled={ addObligorIsLoading }
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
@@ -427,7 +443,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
                     >
 
                       <IconButton
-                        disabled={ !removeObligor || removeObligorIsLoading } 
+                        disabled={ removeObligorIsLoading } 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"

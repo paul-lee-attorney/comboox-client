@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
 import { LinearProgress, Typography } from "@mui/joy";
 
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 import { dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/toolsKit";
 import { Bytes32Zero, HexType } from "../../../interfaces";
 import { useState } from "react";
@@ -61,7 +61,7 @@ const columns: GridColDef[] = [
 
 interface BallotsListProps {
   addr: HexType;
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   allVote: VoteCase;
   attitude: number;
   voteCase: VoteCase;

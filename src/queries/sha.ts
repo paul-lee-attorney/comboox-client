@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { shareholdersAgreementABI } from "../generated";
-import { BigNumber } from "ethers";
 
 export async function obtainRules(sha: HexType): Promise<number[]> {
   let list = await readContract({
@@ -11,7 +10,7 @@ export async function obtainRules(sha: HexType): Promise<number[]> {
   });
 
   let output: number[] = [];
-  list.forEach(v => output.push(v.toNumber()));
+  list.forEach(v => output.push(Number(v)));
 
   return output;
 }
@@ -24,7 +23,7 @@ export async function obtainTitles(sha: HexType): Promise<number[]> {
   });
 
   let output: number[] = [];
-  list.forEach(v => output.push(v.toNumber()));
+  list.forEach(v => output.push(Number(v)));
 
   return output;
 }
@@ -35,7 +34,7 @@ export async function getRule(sha: HexType, seq: number): Promise<HexType> {
     address: sha,
     abi: shareholdersAgreementABI,
     functionName: 'getRule',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   return rule;
@@ -47,7 +46,7 @@ export async function getTerm(addr: HexType, title: number): Promise<HexType> {
     address: addr,
     abi: shareholdersAgreementABI,
     functionName: 'getTerm',
-    args: [BigNumber.from(title)],
+    args: [BigInt(title)],
   });
 
   return addrOfTerm;

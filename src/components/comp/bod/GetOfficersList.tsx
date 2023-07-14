@@ -2,7 +2,6 @@ import { Box, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { titleOfPositions } from "../boc/rules/SetPositionAllocateRule";
-import { GetVotingRule } from "../boc/rules/GetVotingRule";
 import { Position } from "../../../queries/bod";
 import { GetPosition } from "./GetPosition";
 import { GetFullPosInfoInHand } from "./GetFullPosInfoInHand";
@@ -11,10 +10,9 @@ interface GetOfficersListProps {
   list: readonly Position[];
   title: string;
   getOfficersList: () => any;
-  // setOpen: (flag: boolean) => void;
 }
 
-export function GetOfficersList({ list, title, getOfficersList }:GetOfficersListProps) {
+export function GetOfficersList({ list, title }:GetOfficersListProps) {
 
   const columns: GridColDef[] = [
     {
@@ -22,7 +20,7 @@ export function GetOfficersList({ list, title, getOfficersList }:GetOfficersList
       headerName: 'Sn',
       valueGetter: p => longDataParser(p.row.seqOfPos),
       renderCell: ({ value }) => (
-        <GetPosition seq={value} getOfficersList={getOfficersList} />
+        <GetPosition seq={value} />
       ),
       width: 288,    
     },
@@ -83,11 +81,6 @@ export function GetOfficersList({ list, title, getOfficersList }:GetOfficersList
     },
   ];
   
-  // const handleRowClick: GridEventListener<'rowClick'> = (p) => {
-  //   setMotion({head: p.row.head, body: p.row.body, votingRule: p.row.votingRule, contents: p.row.contents});
-  //   setOpen(true);
-  // }
-
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <Box sx={{width: '100%', color: 'black' }} >
@@ -101,7 +94,6 @@ export function GetOfficersList({ list, title, getOfficersList }:GetOfficersList
           getRowId={(row:Position) => row.seqOfPos.toString() } 
           columns={ columns }
           disableRowSelectionOnClick
-          // onRowClick={ handleRowClick }
         />      
       </Box>
     </Paper>

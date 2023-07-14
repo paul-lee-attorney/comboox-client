@@ -1,9 +1,7 @@
-import { useState } from "react";
-import { useGeneralKeeperExecPledge, useGeneralKeeperReleasePledge, usePrepareGeneralKeeperExecPledge, usePrepareGeneralKeeperReleasePledge } from "../../../generated";
+import { useGeneralKeeperExecPledge, usePrepareGeneralKeeperExecPledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
-import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { Key, PlayArrow } from "@mui/icons-material";
+import { Button, Paper, Stack, Toolbar } from "@mui/material";
+import { PlayArrow } from "@mui/icons-material";
 
 interface ExecPledgeProps{
   seqOfShare: number;
@@ -20,7 +18,7 @@ export function ExecPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:ExecPl
     config: execPledgeConfig
   } = usePrepareGeneralKeeperExecPledge({
     address: gk,
-    args: [BigNumber.from(seqOfShare), BigNumber.from(seqOfPld)],
+    args: [BigInt(seqOfShare), BigInt(seqOfPld)],
   })
 
   const {
@@ -43,7 +41,7 @@ export function ExecPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:ExecPl
       <Stack direction='row' >
 
         <Button 
-          disabled={ !execPledge || execPledgeLoading }
+          disabled={ execPledgeLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <PlayArrow /> }

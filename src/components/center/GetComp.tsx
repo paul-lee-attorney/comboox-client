@@ -1,10 +1,9 @@
-import { regCenterABI, useRegCenterGetDocByUserNo } from '../../generated';
+import { regCenterABI } from '../../generated';
 import { AddrOfRegCenter, AddrZero, HexType } from '../../interfaces';
 import Link from '../../scripts/Link';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 import { useState } from 'react';
-import { BigNumber } from 'ethers';
 import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { readContract } from '@wagmi/core';
@@ -12,7 +11,7 @@ import { readContract } from '@wagmi/core';
 export interface Head {
   typeOfDoc: number,
   version: number,
-  seqOfDoc: BigNumber,
+  seqOfDoc: bigint,
   creator: number,
   createDate: number,
   para: number,
@@ -32,7 +31,7 @@ async function getDocByUserNo(regNum: string): Promise<Doc>{
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDocByUserNo',
-    args: [BigNumber.from(regNum)],
+    args: [BigInt(regNum)],
   })
 
   return data;
@@ -77,7 +76,7 @@ export function GetComp() {
           variant="outlined"
           helperText=" Integer < 2^40 "
           onChange={(e) => setRegNum( e.target.value )}
-          value = { regNum }
+          // value = { regNum }
           size='small'
         />
 
@@ -101,7 +100,7 @@ export function GetComp() {
             query: {
               typeOfDoc: doc?.head.typeOfDoc.toString(),
               version: doc?.head.version.toString(),
-              seqOfDoc: doc?.head.seqOfDoc.toHexString(),
+              seqOfDoc: doc?.head.seqOfDoc.toString(16),
               body: doc?.body.substring(2),
               creator: doc?.head.creator.toString(16),
               createDate: doc?.head.createDate.toString(),
@@ -117,7 +116,7 @@ export function GetComp() {
           <Button variant='contained' sx={{width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +
                   doc?.head.version.toString(16).padStart(4, '0') +
-                  doc?.head.seqOfDoc.toHexString().substring(2).padStart(16, '0')
+                  doc?.head.seqOfDoc.toString(16).substring(2).padStart(16, '0')
                 }
           </Button>
         </Link>

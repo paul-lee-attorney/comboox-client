@@ -14,18 +14,19 @@ export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperActivateSha({
-    address: gk,
-    args: [ addr ],
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperActivateSha({
+  //   address: gk,
+  //   args: [ addr ],
+  // });
 
   const {
     isLoading,
     write
   } = useGeneralKeeperActivateSha({
-    ...config,
+    address: gk,
+    args: [ addr ],
     onSuccess() {
       setNextStep(7);
     }
@@ -33,7 +34,7 @@ export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 
   return (
     <Button
-      disabled={!write || isLoading}
+      disabled={isLoading}
       variant="contained"
       endIcon={<LightMode />}
       sx={{ m:1, minWidth:218 }}

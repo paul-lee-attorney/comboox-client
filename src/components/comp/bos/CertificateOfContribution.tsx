@@ -1,6 +1,4 @@
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import dayjs from "dayjs";
-import { BigNumber } from "ethers";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { Share } from "../../../queries/bos";
@@ -12,7 +10,6 @@ export interface CertificateOfContributionProps{
   setOpen: (flag: boolean)=>void,
   obtainSharesList: ()=>any,
 }
-
 
 export function CertificateOfContribution({open, share, setOpen, obtainSharesList}: CertificateOfContributionProps) {
 
@@ -165,7 +162,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValueOfParBalance" 
                     label="ValueOfParBalance" 
                     variant="outlined"
-                    value = { longDataParser(share.body.par.sub(share.body.paid).mul(BigNumber.from(share.head.priceOfPar)).toString()) }
+                    value = { longDataParser(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar)).toString()) }
                     size='small'
                   />                
                 </td>
@@ -207,7 +204,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValueOfPaid" 
                     label="ValueOfPaid" 
                     variant="outlined"
-                    value = { longDataParser(share.body.paid.mul(BigNumber.from(share.head.priceOfPaid)).toString()) }
+                    value = { longDataParser((share.body.paid * BigInt(share.head.priceOfPaid)).toString()) }
                     size='small'
                   />                
                 </td>
@@ -249,8 +246,8 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValue" 
                     label="Value" 
                     variant="outlined"
-                    value = { longDataParser(share.body.paid.mul(share.head.priceOfPaid).add(
-                      share.body.par.sub(share.body.paid).mul(share.head.priceOfPar)).toString())
+                    value = { longDataParser(((share.body.paid * BigInt(share.head.priceOfPaid)) + (
+                      (share.body.par - share.body.paid) * BigInt(share.head.priceOfPar))).toString())
                     }
                     size='small'
                   />                                
@@ -260,7 +257,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
               <tr>
                 <td colSpan={4}>
 
-                  {share && !share.body.par.eq(share.body.paid) && (
+                  {share && (share.body.par != share.body.paid) && (
                     <LockerOfPayInCap share={share} obtainSharesList={obtainSharesList} setDialogOpen={setOpen} />
                   )}
 

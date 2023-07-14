@@ -1,5 +1,5 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 
@@ -7,10 +7,7 @@ import { Motion, getMotion } from "../../../queries/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
 import { CreateMotionOfBoardMeeting } from "../../../components/comp/bod/CreateMotionOfBoardMeeting";
 import { ApprovalFormOfBoardMotion } from "../../../components/comp/bod/ApprovalFormOfBoardMotion";
-import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo } from "../../../queries/bod";
-import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
 
-import { Tabs, Tab, TabList, TabPanel } from "@mui/joy";
 
 function BoardMeetingMinutes() {
 
@@ -21,7 +18,7 @@ function BoardMeetingMinutes() {
   const {
     refetch: getSeqList
   } = useMeetingMinutesGetSeqList({
-    address: boox ? boox[2] : undefined,
+    address: boox ? boox[3] : undefined,
     onSuccess(seqList) {
 
       const obtainMotionsList = async () => {
@@ -32,7 +29,7 @@ function BoardMeetingMinutes() {
           let i = len >= 100 ? len - 100 : 0;
 
           while( i < len ) {
-            let motion = await getMotion(boox[2], seqList[i]);
+            let motion = await getMotion(boox[3], seqList[i]);
             list.push(motion);
             i++;
           }

@@ -30,21 +30,14 @@ export function CreateComp() {
   const router = useRouter();
 
   const {
-    config,
-  } = usePrepareRegCenterCreateComp({
-    address: AddrOfRegCenter
-  });  
-
-  const {
-    data, 
-    isLoading, 
-    write 
+    isLoading: createCompLoading, 
+    write: createComp,
   } = useRegCenterCreateComp({
-    ...config,
+    address: AddrOfRegCenter,
     onSuccess(data) {
       const initComp = async ()=>{
         let addrOfGK = await getReceipt(data.hash);
-        await setGK(addrOfGK);
+        setGK(addrOfGK);
         router.push('/comp/HomePage');
       }
       initComp();
@@ -55,12 +48,12 @@ export function CreateComp() {
     <Button 
       sx={{ m: 1, minWidth: 488, height: 40 }} 
       variant="outlined" 
-      disabled={ !write || isLoading }
+      disabled={ createCompLoading }
       endIcon={ <Create /> }
       size='small'
-      onClick={() => write?.()}
+      onClick={() => createComp?.()}
     >
-      {isLoading ? 'Loading...' : 'Register My Company'}
+      {createCompLoading ? 'Loading...' : 'Register My Company'}
     </Button> 
   )
 }

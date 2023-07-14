@@ -4,6 +4,7 @@ import { AddrOfRegCenter, HexType } from "../../interfaces";
 import { Locker, getLocker } from "../../queries/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { splitPayload } from "../../scripts/toolsKit";
 
 
 
@@ -28,7 +29,11 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
         let locker:Locker = {
           hashLock: hashLock,
           head: target.head,
-          body: target.body,
+          body: {
+            counterLocker: target.body.counterLocker,
+            selector: `0x${target.body.payload.substring(2,10)}`,
+            paras: splitPayload(target.body.payload.substring(10)),
+          }
         };
         setLocker(locker);
       }

@@ -7,13 +7,11 @@ import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
-import { ShaBodyTerms } from "../../../components/comp/boc/sha/ShaBodyTerms";
-import { Signatures } from "../../../components/common/sigPage/Signatures";
 import { useEffect, useState } from "react";
 import { finalized } from "../../../queries/accessControl";
-import { ShaLifecycle } from "../../../components/comp/boc/sha/ShaLifecycle";
 import IaBodyTerms from "../../../components/comp/boi/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/boi/ia/IaLifecycle";
+import { Signatures } from "../../../components/common/sigPage/Signatures";
 
 function Ia() {
   const { query } = useRouter();

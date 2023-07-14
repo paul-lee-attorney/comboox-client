@@ -1,13 +1,11 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
-import { registerOfMembersABI } from "../generated";
-import { BigNumber } from "ethers";
-
+import { bookOfMembersABI } from "../generated";
 
 export async function getShareNumbersList(addr: HexType): Promise<readonly HexType[]> {
   let res = await readContract({
     address: addr,
-    abi: registerOfMembersABI,
+    abi: bookOfMembersABI,
     functionName: 'sharesList',
   });
 
@@ -17,17 +15,17 @@ export async function getShareNumbersList(addr: HexType): Promise<readonly HexTy
 export async function getControllor(addr: HexType): Promise<number> {
   let acct:number = await readContract({
     address: addr,
-    abi: registerOfMembersABI,
+    abi: bookOfMembersABI,
     functionName: 'controllor',
   });
 
   return acct;
 }
 
-export async function getVotesOfController(addr: HexType): Promise<BigNumber> {
+export async function getVotesOfController(addr: HexType): Promise<bigint> {
   let res = await readContract({
     address: addr,
-    abi: registerOfMembersABI,
+    abi: bookOfMembersABI,
     functionName: 'votesOfController',
   });
 
@@ -37,40 +35,40 @@ export async function getVotesOfController(addr: HexType): Promise<BigNumber> {
 
 export interface ShareClip {
   timestamp: number;
-  paid: BigNumber;
-  par: BigNumber;
-  cleanPaid: BigNumber;
+  paid: bigint;
+  par: bigint;
+  cleanPaid: bigint;
 }
 
 export interface MemberShareClip {
-  acct: BigNumber;
+  acct: bigint;
   clip: ShareClip;
 }
 
 export async function getOwnersEquity(addr: HexType): Promise<ShareClip> {
   let res = await readContract({
     address: addr,
-    abi: registerOfMembersABI,
+    abi: bookOfMembersABI,
     functionName: 'ownersEquity',
   });
 
   return res;
 }
 
-export async function getMembersList(addr: HexType): Promise<readonly BigNumber[]> {
+export async function getMembersList(addr: HexType): Promise<readonly bigint[]> {
   let res = await readContract({
     address: addr,
-    abi: registerOfMembersABI,
+    abi: bookOfMembersABI,
     functionName: 'membersList',
   });
 
   return res;
 }
 
-export async function getShareClipOfMember(addr: HexType, acct: BigNumber): Promise<ShareClip> {
+export async function getShareClipOfMember(addr: HexType, acct: bigint): Promise<ShareClip> {
   let res = await readContract({
     address: addr,
-    abi: registerOfMembersABI,
+    abi: bookOfMembersABI,
     functionName: 'sharesClipOfMember',
     args: [ acct ],
   });
@@ -78,7 +76,7 @@ export async function getShareClipOfMember(addr: HexType, acct: BigNumber): Prom
   return res;
 }
 
-export async function getEquityList(rom: HexType, members: readonly BigNumber[]): Promise<MemberShareClip[]> {
+export async function getEquityList(rom: HexType, members: readonly bigint[]): Promise<MemberShareClip[]> {
 
   let list: MemberShareClip[] = [];
   let len: number = members.length;

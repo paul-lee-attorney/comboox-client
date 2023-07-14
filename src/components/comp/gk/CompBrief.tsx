@@ -88,7 +88,7 @@ export function CompId({ addr }:ContractProps ) {
 
   useEffect(() => {
     if (dataOfRegNum)
-      setRegNum(dataOfRegNum.toNumber().toString());
+      setRegNum(dataOfRegNum.toString());
   }, [dataOfRegNum]);
 
   const { data: dataOfNameOfComp } =  useGeneralKeeperNameOfCompany({

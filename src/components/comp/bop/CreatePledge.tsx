@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { useBookOfPledgesCreatePledge, useGeneralKeeperCreatePledge, usePrepareBookOfPledgesCreatePledge, usePrepareGeneralKeeperCreatePledge } from "../../../generated";
+import { useGeneralKeeperCreatePledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Body, Head, codifyHeadOfPledge, defaultBody, defaultHead } from "../../../queries/bop";
-import { BigNumber } from "ethers";
 import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -27,26 +26,32 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
   const [ head, setHead ] = useState<Head>(defaultHead);
   const [ body, setBody ] = useState<Body>(defaultBody);
 
-  const {
-    config: createPledgeConfig
-  } = usePrepareGeneralKeeperCreatePledge({
-    address: gk,
-    args:
-        [ 
-          codifyHeadOfPledge(head), 
-          BigNumber.from(body.creditor),
-          BigNumber.from(body.guaranteeDays),
-          body.paid,
-          body.par,
-          body.guaranteedAmt
-        ],
-  });
+  // const {
+  //   config: createPledgeConfig
+  // } = usePrepareGeneralKeeperCreatePledge({
+  //   address: gk,
+  //   args:
+  //       [ 
+  //         codifyHeadOfPledge(head), 
+  //         body.paid,
+  //         body.par,
+  //         body.guaranteedAmt,
+  //         BigInt(body.execDays)
+  //       ],
+  // });
 
   const {
     isLoading: createPledgeLoading,
     write: createPledge,
   } = useGeneralKeeperCreatePledge({
-    ...createPledgeConfig,
+    address: gk,
+    args:
+        [ codifyHeadOfPledge(head), 
+          body.paid,
+          body.par,
+          body.guaranteedAmt,
+          BigInt(body.execDays)
+        ],
     onSuccess() {
       getAllPledges();
     }    
@@ -93,19 +98,51 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
             />
 
             <DateTimeField
-              label='TriggerDate'
+              label='CreateDate'
               sx={{
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head ? head.triggerDate : 0) }
+              value={ dayjs.unix(head ? head.createDate : 0) }
               onChange={(date) => setHead((v) => ({
                 ...v,
-                triggerDate: date ? date.unix() : 0,
+                createDate: date ? date.unix() : 0,
               }))}
 
               format='YYYY-MM-DD HH:mm:ss'
               size="small"
+            />
+
+            <TextField 
+              variant='filled'
+              label='DaysToMaturity'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setHead((v) => ({
+                ...v,
+                daysToMaturity: parseInt(e.target.value),
+              }))}
+
+              value={ head?.daysToMaturity }
+              size='small'
+            />
+
+            <TextField 
+              variant='filled'
+              label='GuaranteeDays'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setHead((v) => ({
+                ...v,
+                guaranteeDays: parseInt(e.target.value),
+              }))}
+
+              value={ head?.guaranteeDays }
+              size='small'
             />
 
             <TextField 
@@ -115,12 +152,28 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setBody((v) => ({
+              onChange={(e) => setHead((v) => ({
                 ...v,
                 creditor: parseInt(e.target.value),
               }))}
 
-              value={ body?.creditor }
+              value={ head?.creditor }
+              size='small'
+            />
+
+            <TextField 
+              variant='filled'
+              label='Pledgor'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setHead((v) => ({
+                ...v,
+                pledgor: parseInt(e.target.value),
+              }))}
+
+              value={ head?.pledgor }
               size='small'
             />
 
@@ -146,22 +199,6 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
 
             <TextField 
               variant='filled'
-              label='GuaranteeDays'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => setBody((v) => ({
-                ...v,
-                guaranteeDays: parseInt(e.target.value),
-              }))}
-
-              value={ body?.guaranteeDays }
-              size='small'
-            />
-
-            <TextField 
-              variant='filled'
               label='PledgedPaid'
               sx={{
                 m:1,
@@ -169,7 +206,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
               }}
               onChange={(e) => setBody((v) => ({
                 ...v,
-                paid: BigNumber.from(e.target.value),
+                paid: BigInt(e.target.value),
               }))}
 
               value={ body?.paid.toString() }
@@ -185,7 +222,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
               }}
               onChange={(e) => setBody((v) => ({
                 ...v,
-                par: BigNumber.from(e.target.value),
+                par: BigInt(e.target.value),
               }))}
 
               value={ body?.par.toString() }
@@ -201,10 +238,26 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
               }}
               onChange={(e) => setBody((v) => ({
                 ...v,
-                guaranteedAmt: BigNumber.from(e.target.value),
+                guaranteedAmt: BigInt(e.target.value),
               }))}
 
               value={ body?.guaranteedAmt.toString() }
+              size='small'
+            />
+
+            <TextField 
+              variant='filled'
+              label='ExecDays'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setBody((v) => ({
+                ...v,
+                execDays: parseInt(e.target.value),
+              }))}
+
+              value={ body?.execDays.toString() }
               size='small'
             />
 
@@ -215,7 +268,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
         <Divider orientation="vertical" flexItem />
 
         <Button 
-          disabled={ !createPledge || createPledgeLoading }
+          disabled={ createPledgeLoading }
           sx={{ m: 3, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Create /> }

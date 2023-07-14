@@ -10,14 +10,15 @@ import {
   Typography,
   Stack,
   Divider,
-  Paper,  
+  Paper,
+  IconButton,
+  Tooltip,  
 } from '@mui/material';
 
 
-import { Update, ArrowForward }  from '@mui/icons-material';
+import { Update, ArrowForward, ArrowCircleUpOutlined, ArrowCircleUp, ArrowCircleDown, ArrowUpward, ArrowDownward }  from '@mui/icons-material';
 
 import { 
-  usePrepareGeneralKeeperSetCompInfo,
   useGeneralKeeperSetCompInfo,
   useGeneralKeeperRegNumOfCompany,
   useGeneralKeeperNameOfCompany,
@@ -85,18 +86,19 @@ export function SetCompId({nextStep}: SetCompIdProps) {
     }
   });
 
-  const {
-    config: setCompInfoConfig 
-  } = usePrepareGeneralKeeperSetCompInfo({
-    address: gk,
-    args:  [ inputId.name, inputId.symbol ],
-  });
+  // const {
+  //   config: setCompInfoConfig 
+  // } = usePrepareGeneralKeeperSetCompInfo({
+  //   address: gk,
+  //   args:  [ inputId.name, inputId.symbol ],
+  // });
 
   const {
     isLoading: setCompInfoLoading,
     write: setCompInfo, 
    } = useGeneralKeeperSetCompInfo({
-    ...setCompInfoConfig,
+    address: gk,
+    args:  [ inputId.name, inputId.symbol ],
     onSuccess() {
       getSymbol();
       getName();
@@ -105,86 +107,108 @@ export function SetCompId({nextStep}: SetCompIdProps) {
 
   return (
 
-    <Paper elevation={3} sx={{m:1, p:1, width:'100%', alignItems:'center', justifyContent:'center'}} >
-      <Stack direction='column' sx={{m:1, p:1, alignItems:'start', justifyItems:'space-between'}} >    
+    <Paper elevation={3} sx={{m:1, p:1, alignItems:'start', justifyContent:'start', alignContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start', alignContent:'start'}}>
 
-        <Typography variant="h5" sx={{ m:2, textDecoration:'underline' }} >
-          <b>Company ID</b>
-        </Typography>
+        <Stack direction='column' sx={{ height:'100%' }} >
 
-        <Card sx={{ width: '100%', }} variant='outlined'>
-          <CardContent>
-            <Typography variant="body1" sx={{ m:1 }} >
-              RegNum: { newId.regNum }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Name: { newId.name }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Symbol: { newId.symbol }
-            </Typography>
-          </CardContent>
-        </Card>
+          <Tooltip title='Prev Step' placement='left' arrow >
+            <IconButton
+              size='large'
+              color='primary'
+              disabled
+            >
+              <ArrowUpward />
+            </IconButton>
+          </Tooltip>
 
-        <Stack direction='row' sx={{m:1, p:1, alignItems:'start', justifyContent:'center'}} >
-          <TextField 
-            sx={{ m: 1, minWidth: 120 }} 
-            id="tfNameOfComp" 
-            label="NameOfCompany" 
-            variant="outlined"
-            helperText="string (e.g. 'Comboox Inc.')"
-            onChange={(e) => {
-              setInputId((v) => ({
-                ...v,
-                name: (e.target.value ?? ''),
-              }))
-            }}
-            value = {inputId.name}
-            size='small'
-          />
+          <Divider flexItem />
 
-          <TextField 
-            sx={{ m: 1, minWidth: 120 }} 
-            id="tfSymbolOfComp" 
-            label="SymbolOfCompany" 
-            variant="outlined"
-            helperText="string (e.g. 'COMBOOX')"
-            onChange={(e) => {
-              setInputId((v) => ({
-                ...v,
-                symbol: (e.target.value ?? ''),
-              }))
-            }}
+          <Tooltip title='Next Step' placement='left' arrow >
 
-            value = {inputId.symbol}
-            size='small'
-          />
+            <IconButton
+              size='large'
+              color='primary'
+              onClick={()=>nextStep(1)}
+            >
+              <ArrowDownward />
+            </IconButton>
 
-          <Button 
-            disabled = {!setCompInfo || setCompInfoLoading}
-
-            sx={{ m: 1, minWidth: 120, height: 40 }} 
-            variant="contained" 
-            endIcon={<Update />}
-            onClick={()=> setCompInfo?.()}
-            size='small'
-          >
-            Update
-          </Button>
+          </Tooltip>
 
         </Stack>
 
-        <Divider sx={{width:'100%'}} />
+        <Divider sx={{m:1}} orientation='vertical' flexItem />
 
-        <Button
-          sx={{ m: 3, minWidth: 120, height: 40 }} 
-          variant="contained" 
-          endIcon={<ArrowForward />}
-          onClick={()=> nextStep(1)}
-          size='small'
-        >
-          Next
-        </Button>
+        <Stack direction='column' sx={{m:1, alignItems:'start', justifyItems:'start'}} >    
+
+          <Typography variant="h5" sx={{m:1, textDecoration:'underline' }} >
+            <b>Company ID</b>
+          </Typography>
+
+          <Card variant='outlined' sx={{m:1, mr:3, width:'100%' }}>
+            <CardContent>
+              <Typography variant="body1" sx={{ m:1 }} >
+                RegNum: { newId.regNum }
+              </Typography>
+              <Typography variant="body1" sx={{ m:1 }} >
+                Name: { newId.name }
+              </Typography>
+              <Typography variant="body1" sx={{ m:1 }} >
+                Symbol: { newId.symbol }
+              </Typography>
+            </CardContent>
+          </Card>
+
+          <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
+            <TextField 
+              sx={{ m: 1, minWidth: 120 }} 
+              id="tfNameOfComp" 
+              label="NameOfCompany" 
+              variant="outlined"
+              helperText="string (e.g. 'Comboox Inc.')"
+              onChange={(e) => {
+                setInputId((v) => ({
+                  ...v,
+                  name: (e.target.value ?? ''),
+                }))
+              }}
+              value = {inputId.name}
+              size='small'
+            />
+
+            <TextField 
+              sx={{ m: 1, minWidth: 120 }} 
+              id="tfSymbolOfComp" 
+              label="SymbolOfCompany" 
+              variant="outlined"
+              helperText="string (e.g. 'COMBOOX')"
+              onChange={(e) => {
+                setInputId((v) => ({
+                  ...v,
+                  symbol: (e.target.value ?? ''),
+                }))
+              }}
+
+              value = {inputId.symbol}
+              size='small'
+            />
+
+            <Button 
+              disabled = {!setCompInfo || setCompInfoLoading}
+
+              sx={{ m: 1, minWidth: 120, height: 40 }} 
+              variant="contained" 
+              endIcon={<Update />}
+              onClick={()=> setCompInfo?.()}
+              size='small'
+            >
+              Update
+            </Button>
+
+          </Stack>
+
+        </Stack>
 
       </Stack>
     </Paper>

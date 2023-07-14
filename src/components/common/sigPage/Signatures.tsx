@@ -8,7 +8,6 @@ import {
   TextField,
   Button,
   Tooltip,
-  Box,
   FormControl,
   InputLabel,
   Select,
@@ -34,23 +33,19 @@ import {
 
 import {
   sigPageABI,
-  usePrepareSigPageSetTiming,
   useSigPageSetTiming,
   useSigPageGetParasOfPage,
-  usePrepareSigPageAddBlank,
   useSigPageAddBlank,
-  usePrepareSigPageRemoveBlank,
   useSigPageRemoveBlank,
   useSigPageGetBuyers,
   useSigPageGetSellers, 
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
 
-import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../queries/sigPage";
+import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 
-async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly BigNumber[] ): Promise<StrSig[]> {
+async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
 
   let len = parties.length;
   let output: StrSig[] = [];
@@ -65,10 +60,10 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
     });
 
     output.push({
-      signer: parties[len-1].toNumber(),
-      sigDate: item.sig.sigDate,
-      blocknumber: item.sig.blocknumber.toString(),
-      sigHash: item.sigHash,
+      signer: Number(parties[len-1]),
+      sigDate: item[1].sigDate,
+      blocknumber: item[1].blocknumber.toString(),
+      sigHash: item[2],
     });
 
     len--;
@@ -104,24 +99,31 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
 
   const [ timing, setTiming ] = useState<TimingProps>();
 
-  const {
-    config: setTimingConfig
-  } = usePrepareSigPageSetTiming({
-    address: addr,
-    args: timing?.closingDays &&
-          timing?.signingDays 
-        ? [ initPage, 
-            BigNumber.from(timing.signingDays), 
-            BigNumber.from(timing.closingDays)
-          ] 
-        : undefined,
-  });
+  // const {
+  //   config: setTimingConfig
+  // } = usePrepareSigPageSetTiming({
+  //   address: addr,
+  //   args: timing?.closingDays &&
+  //         timing?.signingDays 
+  //       ? [ initPage, 
+  //           BigInt(timing.signingDays), 
+  //           BigInt(timing.closingDays)
+  //         ] 
+  //       : undefined,
+  // });
 
   const {
     isLoading: setTimingIsLoading,
     write: writeSetTiming,
   } = useSigPageSetTiming({
-    ...setTimingConfig,
+    address: addr,
+    args: timing?.closingDays &&
+          timing?.signingDays 
+        ? [ initPage, 
+            BigInt(timing.signingDays), 
+            BigInt(timing.closingDays)
+          ] 
+        : undefined,
     onSuccess() {
       getParasOfPage();
     }
@@ -162,25 +164,33 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
   const [ isBuyer, setIsBuyer ] = useState(true);
   const [ acct, setAcct ] = useState<string>();
 
-  const {
-    config: addBlankConfig
-  } = usePrepareSigPageAddBlank({
-    address: addr,
-    args: isBuyer != undefined &&
-      acct ? 
-        [ initPage,
-          isBuyer, 
-          BigNumber.from('1'), 
-          BigNumber.from(acct)
-        ] : 
-        undefined,
-  });
+  // const {
+  //   config: addBlankConfig
+  // } = usePrepareSigPageAddBlank({
+  //   address: addr,
+  //   args: isBuyer != undefined &&
+  //     acct ? 
+  //       [ initPage,
+  //         isBuyer, 
+  //         BigInt('1'), 
+  //         BigInt(acct)
+  //       ] : 
+  //       undefined,
+  // });
 
   const {
     isLoading: addBlankIsLoading,
     write: addBlank,
   } = useSigPageAddBlank({
-    ...addBlankConfig,
+    address: addr,
+    args: isBuyer != undefined &&
+      acct ? 
+        [ initPage,
+          isBuyer, 
+          BigInt('1'), 
+          BigInt(acct)
+        ] : 
+        undefined,
     onSuccess() {
       getParasOfPage();
       getSellers();
@@ -188,23 +198,29 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
     }
   });
 
-  const {
-    config: removeBlankConfig
-  } = usePrepareSigPageRemoveBlank({
-    address: addr,
-    args: acct ? 
-        [ initPage, 
-          BigNumber.from('1'), 
-          BigNumber.from(acct)
-        ] : 
-        undefined,
-  });
+  // const {
+  //   config: removeBlankConfig
+  // } = usePrepareSigPageRemoveBlank({
+  //   address: addr,
+  //   args: acct ? 
+  //       [ initPage, 
+  //         BigInt('1'), 
+  //         BigInt(acct)
+  //       ] : 
+  //       undefined,
+  // });
 
   const {
     isLoading: removeBlankIsLoading,
     write: removeBlank,
   } = useSigPageRemoveBlank({
-    ...removeBlankConfig,
+    address: addr,
+    args: acct ? 
+        [ initPage, 
+          BigInt('1'), 
+          BigInt(acct)
+        ] : 
+        undefined,
     onSuccess() {
       getParasOfPage();
       getSellers();
@@ -253,7 +269,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
                 />
 
                 <Button
-                  disabled={ !writeSetTiming || setTimingIsLoading }
+                  disabled={ setTimingIsLoading }
                   variant="contained"
                   sx={{
                     height: 40,
@@ -374,7 +390,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
                 >
                   <span>
                   <IconButton 
-                    disabled={ !addBlank || addBlankIsLoading }
+                    disabled={ addBlankIsLoading }
                     sx={{width: 20, height: 20, m: 1 }} 
                     onClick={ () => addBlank?.() }
                     color="primary"
@@ -417,7 +433,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
                 >           
                   <span>
                   <IconButton
-                    disabled={ !removeBlank || removeBlankIsLoading } 
+                    disabled={ removeBlankIsLoading } 
                     sx={{width: 20, height: 20, m: 1, mr:2 }} 
                     onClick={ () => removeBlank?.() }
                     color="primary"

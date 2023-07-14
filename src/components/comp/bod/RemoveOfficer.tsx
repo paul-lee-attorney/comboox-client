@@ -1,7 +1,5 @@
-import { BigNumber } from "ethers";
 import { 
   useGeneralKeeperRemoveOfficer, 
-  usePrepareGeneralKeeperRemoveOfficer 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
@@ -21,18 +19,19 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:R
 
   const {gk, boox} = useComBooxContext();
   
-  const {
-    config: removeOfficerConfig,
-  } = usePrepareGeneralKeeperRemoveOfficer({
-    address: gk,
-    args: [BigNumber.from(seqOfMotion), BigNumber.from(seqOfPos)]
-  })
+  // const {
+  //   config: removeOfficerConfig,
+  // } = usePrepareGeneralKeeperRemoveOfficer({
+  //   address: gk,
+  //   args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
+  // })
 
   const {
     isLoading: removeOfficerLoading,
     write: removeOfficer,
   } = useGeneralKeeperRemoveOfficer({
-    ...removeOfficerConfig,
+    address: gk,
+    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(){
       getMotionsList();
       setOpen(false);
@@ -43,7 +42,7 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:R
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <Button
-        disabled={ !removeOfficer || removeOfficerLoading}
+        disabled={ removeOfficerLoading }
         variant="contained"
         endIcon={<FollowTheSigns />}
         sx={{ m:1, mr:6 }}

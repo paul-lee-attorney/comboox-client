@@ -23,7 +23,7 @@ import {
 
 import { FirstRefusalRuleWrap, SetFirstRefusalRule } from "./SetFirstRefusalRule";
 import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 
 interface FirstRefusalRulesProps {
   sha: HexType;
@@ -66,18 +66,19 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
 
   const [open, setOpen] = useState(false);
 
-  const {
-    config: removeRuleConfig
-  } = usePrepareShareholdersAgreementRemoveRule({
-    address: sha,
-    args: [BigNumber.from(cp[cp.length - 1] ?? '513')]
-  })
+  // const {
+  //   config: removeRuleConfig
+  // } = usePrepareShareholdersAgreementRemoveRule({
+  //   address: sha,
+  //   args: [BigInt(cp[cp.length - 1] ?? '513')]
+  // })
 
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
-    ...removeRuleConfig,
+    address: sha,
+    args: [BigInt(cp[cp.length - 1] ?? '513')],
     onSuccess() {
       setCp(v => {
         let arr = [...v];

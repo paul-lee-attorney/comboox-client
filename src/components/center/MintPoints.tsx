@@ -1,17 +1,16 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
+import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  usePrepareRegCenterMintPoints,
   useRegCenterMintPoints, 
 } from '../../generated';
 
 import { AddrOfRegCenter, HexType } from '../../interfaces';
-import { BorderColor, Close, Create } from '@mui/icons-material';
+import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
-import { BigNumber } from 'ethers';
 import { getReceipt } from '../../queries/common';
 import { longDataParser, longSnParser } from '../../scripts/toolsKit';
+import { TransactionReceipt } from 'viem';
 
 interface Receipt{
   to: string;
@@ -26,24 +25,27 @@ export function MintPoints() {
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
 
-  const { config: mintPointsConfig } = usePrepareRegCenterMintPoints({
-    address: AddrOfRegCenter,
-    args: to && amt
-      ? [BigNumber.from(to), BigNumber.from(amt)]
-      : undefined,
-  })  
+  // const { config: mintPointsConfig } = usePrepareRegCenterMintPoints({
+  //   address: AddrOfRegCenter,
+  //   args: to && amt
+  //     ? [BigInt(to), BigInt(amt)]
+  //     : undefined,
+  // })  
 
   const {
     isLoading: mintPointsLoading,
     write: mintPoints
   } = useRegCenterMintPoints({
-    ...mintPointsConfig,
-    onSuccess(data) {
+    address: AddrOfRegCenter,
+    args: to && amt
+      ? [BigInt(to), BigInt(amt)]
+      : undefined,
+    onSuccess(data:any) {
       getReceipt(data.hash).then(
         r => {
           if (r) {
             let rpt:Receipt = {
-              to: longSnParser(BigNumber.from(r.logs[0].topics[1]).toString()),
+              to: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
               amt: longDataParser(r.logs[0].topics[2]?.toString())
             }
             setReceipt(rpt);
@@ -91,9 +93,9 @@ export function MintPoints() {
           }}
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
-          endIcon={<BorderColor />}       
+          endIcon={<Flare />}       
         >
-          {mintPointsLoading ? 'Loading...' : 'Set'}
+          {mintPointsLoading ? 'Loading...' : 'Mint'}
         </Button>
 
         <Collapse in={ open } sx={{ m:1 }} >

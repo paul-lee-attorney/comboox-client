@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { bookOfDirectorsABI } from "../generated";
-import { BigNumber } from "ethers";
 
 export interface Position {
   title: number;
@@ -15,7 +14,7 @@ export interface Position {
   argu: number;  
 }
 
-export async function getPosition(addr:HexType, seq: BigNumber):Promise<Position> {
+export async function getPosition(addr:HexType, seq: bigint):Promise<Position> {
   let pos = await readContract({
     address: addr,
     abi: bookOfDirectorsABI,
@@ -26,7 +25,7 @@ export async function getPosition(addr:HexType, seq: BigNumber):Promise<Position
   return pos;
 }
 
-export async function getManagersPosList(addr:HexType):Promise<readonly BigNumber[]>{
+export async function getManagersPosList(addr:HexType):Promise<readonly bigint[]>{
   let list = await readContract({
     address: addr,
     abi: bookOfDirectorsABI,
@@ -51,7 +50,7 @@ export async function getManagersFullPosInfo(addr:HexType):Promise<readonly Posi
   return output;
 }
 
-export async function getDirectorsPosList(addr:HexType):Promise<readonly BigNumber[]>{
+export async function getDirectorsPosList(addr:HexType):Promise<readonly bigint[]>{
   let list = await readContract({
     address: addr,
     abi: bookOfDirectorsABI,

@@ -14,7 +14,7 @@ import {
 import { HexType } from "../../../../interfaces";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 import { VoteCountingOfGm } from "../../gmm/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
@@ -34,7 +34,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
 
   const { boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
-  const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
+  const [ seqOfMotion, setSeqOfMotion ] = useState<bigint>();
   const [ passed, setPassed ] = useState<boolean>(false);
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 

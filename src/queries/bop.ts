@@ -1,46 +1,49 @@
-import { BigNumber } from "ethers";
 import { Bytes32Zero, HexType } from "../interfaces";
 import { readContract } from "@wagmi/core";
 import { bookOfPledgesABI } from "../generated";
-
-
 
 export interface Head {
   seqOfShare: number;
   seqOfPld: number;
   createDate: number;
-  triggerDate: number;
-  pledgor: number;
+  daysToMaturity: number;
+  guaranteeDays: number;
+  creditor: number;
   debtor: number;
-  data: number;
+  pledgor: number;
+  state: number;
 }
 
 export const defaultHead: Head = {
   seqOfShare: 0,
   seqOfPld: 0,
   createDate: 0,
-  triggerDate: 0,
-  pledgor: 0,
+  daysToMaturity: 0,
+  guaranteeDays: 0,
+  creditor: 0,
   debtor: 0,
-  data: 0,
+  pledgor: 0,
+  state: 0,
 }
 
 export interface Body{
-  creditor: number;
-  guaranteeDays: number;
-  paid: BigNumber;
-  par: BigNumber;
-  guaranteedAmt: BigNumber;
-  state: number;
+  paid: bigint;
+  par: bigint;
+  guaranteedAmt: bigint;
+  preSeq: number;
+  execDays: number;
+  para: number;
+  argu: number;
 }
 
 export const defaultBody: Body = {
-  creditor: 0,
-  guaranteeDays: 0,
-  paid: BigNumber.from('0'),
-  par: BigNumber.from('0'),
-  guaranteedAmt: BigNumber.from('0'),
-  state: 0,
+  paid: BigInt('0'),
+  par: BigInt('0'),
+  guaranteedAmt: BigInt('0'),
+  preSeq: 0,
+  execDays: 0,
+  para: 0,
+  argu: 0,
 }
 
 export interface Pledge{
@@ -61,10 +64,12 @@ export function parseSnOfPledge(sn:HexType): Head {
     seqOfShare: parseInt(sn.substring(2, 10), 16),
     seqOfPld: parseInt(sn.substring(10,14), 16),
     createDate: parseInt(sn.substring(14, 26), 16),
-    triggerDate: parseInt(sn.substring(26, 38), 16),
-    pledgor: parseInt(sn.substring(38, 48), 16),
-    debtor: parseInt(sn.substring(48, 58), 16),
-    data: parseInt(sn.substring(58, 66), 16),
+    daysToMaturity: parseInt(sn.substring(26, 30), 16),
+    guaranteeDays: parseInt(sn.substring(30, 34), 16),
+    creditor: parseInt(sn.substring(34, 44), 16),
+    debtor: parseInt(sn.substring(44, 54), 16),
+    pledgor: parseInt(sn.substring(54, 64), 16),
+    state: parseInt(sn.substring(64, 66), 16),
   }
 
   return head;
@@ -75,10 +80,12 @@ export function codifyHeadOfPledge(head: Head): HexType {
     head.seqOfShare.toString(16).padStart(8, '0') +
     head.seqOfPld.toString(16).padStart(4, '0') +
     head.createDate.toString(16).padStart(12, '0') +
-    head.triggerDate.toString(16).padStart(12, '0') +
-    head.pledgor.toString(16).padStart(10, '0') +
+    head.daysToMaturity.toString(16).padStart(4, '0') +
+    head.guaranteeDays.toString(16).padStart(4, '0') +
+    head.creditor.toString(16).padStart(10, '0') +
     head.debtor.toString(16).padStart(10, '0') +
-    head.data.toString(16).padStart(8, '0')
+    head.pledgor.toString(16).padStart(10, '0') +
+    head.state.toString(16).padStart(2, '0')
   }`;
 
   return sn;
@@ -89,7 +96,7 @@ export async function getPledge(addr: HexType, seqOfShare:string, seqOfPld:strin
     address: addr,
     abi: bookOfPledgesABI,
     functionName: 'getPledge',
-    args: [BigNumber.from(seqOfShare), BigNumber.from(seqOfPld)],
+    args: [BigInt(seqOfShare), BigInt(seqOfPld)],
   });
 
   return pld;

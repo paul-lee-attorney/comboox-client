@@ -14,9 +14,7 @@ import { Create } from "@mui/icons-material";
 
 import { 
   useGeneralKeeperCreateIa, 
-  usePrepareGeneralKeeperCreateIa,
 } from "../../../generated";
-import { BigNumber } from "ethers";
 
 import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
@@ -27,15 +25,16 @@ function BookOfIA() {
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
   const [ version, setVersion ] = useState<string>();
-  const { config } = usePrepareGeneralKeeperCreateIa({
-    address: gk,
-    args: version ? [BigNumber.from(version)] : undefined,
-  });
+  // const { config } = usePrepareGeneralKeeperCreateIa({
+  //   address: gk,
+  //   args: version ? [BigInt(version)] : undefined,
+  // });
   const {
     isLoading: createIaLoading, 
     write: createIa,
   } = useGeneralKeeperCreateIa({
-    ...config,
+    address: gk,
+    args: version ? [BigInt(version)] : undefined,
   });
 
   useEffect(()=>{
@@ -77,7 +76,7 @@ function BookOfIA() {
                     />
 
                     <Button 
-                      disabled={!createIa || createIaLoading}
+                      disabled={createIaLoading}
                       sx={{ m: 1, minWidth: 120, height: 40 }} 
                       variant="contained" 
                       endIcon={ <Create /> }

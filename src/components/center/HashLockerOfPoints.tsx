@@ -1,17 +1,21 @@
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { Locker } from "../../queries/rc";
-import { dateParser, longDataParser, longSnParser } from "../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../scripts/toolsKit";
 import { AddrZero } from "../../interfaces";
+import { PickupPoints } from "./PickupPoints";
+import { WithdrawPoints } from "./WithdrawPoints";
 
 
 export interface HashLockerOfPointsProps{
   open: boolean,
   locker: Locker,
+  userNo: number,
   setOpen: (flag: boolean)=>void,
-  refreshList: ()=>any,
+  refreshList: () => void,
+  getUser: () => void,
 }
 
-export function HashLockerOfPoints({open, locker, setOpen, refreshList}: HashLockerOfPointsProps) {
+export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, getUser}: HashLockerOfPointsProps) {
 
   return (
     <Dialog
@@ -98,6 +102,7 @@ export function HashLockerOfPoints({open, locker, setOpen, refreshList}: HashLoc
               </tr>
 
               {locker.body.counterLocker != AddrZero && (
+                <>
                 <tr>
                   <td colSpan={2}>
                     <TextField 
@@ -124,8 +129,36 @@ export function HashLockerOfPoints({open, locker, setOpen, refreshList}: HashLoc
                     />                  
                   </td>
                 </tr>
+                <tr>
+                  <td colSpan={3}>
+                    <TextField 
+                      fullWidth={true}
+                      inputProps={{readOnly: true}}
+                      sx={{ m: 1,  }} 
+                      id="tfParas" 
+                      label="Paras" 
+                      variant="outlined"
+                      value = { splitStrArr(locker.body.paras) }
+                      multiline
+                      rows={ locker.body.paras.length }
+                      size='small'
+                    />                  
+                  </td>
+
+                </tr>
+                </>
               )}
 
+              <tr>
+                <td colSpan={3}>
+                  {userNo == locker.head.to && (
+                    <PickupPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} />
+                  )}
+                  {userNo == locker.head.from && (
+                    <WithdrawPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} />
+                  )}
+                </td>
+              </tr>
 
             </tbody>
           </table>

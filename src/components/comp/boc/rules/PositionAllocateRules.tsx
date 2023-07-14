@@ -22,11 +22,9 @@ import {
 } from "@mui/icons-material"
 
 import { 
-  usePrepareShareholdersAgreementRemoveRule, 
   useShareholdersAgreementRemoveRule 
 } from "../../../../generated";
 
-import { BigNumber } from "ethers";
 import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
 
 interface PositionAllocateRulesProps {
@@ -57,18 +55,19 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
 
   const [open, setOpen] = useState(false);
 
-  const {
-    config: removeRuleConfig
-  } = usePrepareShareholdersAgreementRemoveRule({
-    address: sha,
-    args: [BigNumber.from(cp[cp.length - 1])]
-  })
+  // const {
+  //   config: removeRuleConfig
+  // } = usePrepareShareholdersAgreementRemoveRule({
+  //   address: sha,
+  //   args: [BigInt(cp[cp.length - 1])],
+  // })
 
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
-    ...removeRuleConfig,
+    address: sha,
+    args: [BigInt(cp[cp.length - 1])],
     onSuccess() {
       setCp(v => {
         let arr = [...v];

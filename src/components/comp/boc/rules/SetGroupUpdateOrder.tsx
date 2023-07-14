@@ -5,8 +5,6 @@ import {
   Stack,
   TextField,
   Paper,
-  Checkbox,
-  FormControlLabel,
   Box,
   Collapse,
   Toolbar,
@@ -19,7 +17,6 @@ import {
 import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { AddRule } from './AddRule';
 
-import { SetShaRuleProps } from '../../../../interfaces';
 import { longSnParser } from '../../../../scripts/toolsKit';
 import { getRule } from '../../../../queries/sha';
 
@@ -88,12 +85,6 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
   };
 
   const [ objGuo, setObjGuo ] = useState<GroupUpdateOrder>(defaultOrder); 
-
-  // let hexGuo: HexType = guoCodifier(objGuo);
-
-  // const [ newHexGuo, setNewHexGuo ] = useState<HexType>(Bytes32Zero);
-
-  // let newGuo: GroupUpdateOrder = guoParser(newHexGuo);
 
   const [ newGuo, setNewGuo ] = useState<GroupUpdateOrder>(defaultOrder);
 

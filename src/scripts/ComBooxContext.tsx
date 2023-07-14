@@ -2,6 +2,8 @@ import { Dispatch, SetStateAction, createContext, useContext, useState } from "r
 import { AddrZero, HexType } from "../interfaces";
 
 interface ContextType {
+  userNo: number | undefined,
+  setUserNo: Dispatch<SetStateAction<number | undefined>>,
   gk: HexType | undefined,
   setGK: Dispatch<SetStateAction<HexType | undefined>>,
   boox: HexType[] | undefined,
@@ -9,6 +11,8 @@ interface ContextType {
 }
 
 const ComBooxContext = createContext<ContextType>({
+  userNo: undefined,
+  setUserNo: ()=>{}, 
   gk: undefined, 
   setGK: ()=>{},
   boox: undefined,
@@ -20,11 +24,12 @@ interface ComBooxWrapperProps {
 }
 
 export function ComBooxWrapper({ children }: ComBooxWrapperProps) {
+  const [userNo, setUserNo] = useState<number>();
   const [gk, setGK] = useState<HexType>();
   const [boox, setBoox] = useState<HexType[]>();
 
   return (
-    <ComBooxContext.Provider value={{ gk, setGK, boox, setBoox}} >
+    <ComBooxContext.Provider value={{userNo, setUserNo, gk, setGK, boox, setBoox}} >
       { children }
     </ComBooxContext.Provider >
   );

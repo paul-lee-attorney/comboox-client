@@ -2,18 +2,16 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperProposeMotionToBoard,
-  usePrepareGeneralKeeperProposeMotionToBoard, 
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
 import { HexType } from "../../../interfaces";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 
 interface ProposeMotionToBoardProps {
-  seqOfMotion: BigNumber,
+  seqOfMotion: bigint,
   setOpen: (flag: boolean) => void,
   getMotionsList: (minutes:HexType) => any,
 }
@@ -22,18 +20,19 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, getMotionsLi
 
   const { gk, boox } = useComBooxContext();
 
-  const {
-    config: proposeMotionToBoardConfig,
-  } = usePrepareGeneralKeeperProposeMotionToBoard ({
-    address: gk,
-    args: [BigNumber.from(seqOfMotion)],
-  });
+  // const {
+  //   config: proposeMotionToBoardConfig,
+  // } = usePrepareGeneralKeeperProposeMotionToBoard ({
+  //   address: gk,
+  //   args: [BigInt(seqOfMotion)],
+  // });
 
   const {
     isLoading: proposeMotionToBoardLoading,
     write: proposeMotionToBoard,
   } = useGeneralKeeperProposeMotionToBoard({
-    ...proposeMotionToBoardConfig,
+    address: gk,
+    args: [BigInt(seqOfMotion)],
     onSuccess(){
       if (boox) {
         getMotionsList(boox[2]);

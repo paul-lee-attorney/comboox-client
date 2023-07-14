@@ -6,7 +6,6 @@ import {
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import { HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../interfaces";
@@ -15,7 +14,7 @@ import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
 
 interface ProposeMotionProps {
-  seqOfMotion: BigNumber,
+  seqOfMotion: bigint,
   setOpen: (flag: boolean) => void,
   getMotionsList: (minutes:HexType) => any,
 }
@@ -34,21 +33,24 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
     }
   }, [seqOfMotion, boox]);
 
-  const [ attitude, setAttitude ] = useState<string>('3');
+  const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
-  const {config} = usePrepareGeneralKeeperCastVoteOfGm({
-    address: gk,
-    args: attitude 
-        ? [seqOfMotion, BigNumber.from(attitude), sigHash]
-        : undefined,
-  });
+  // const {config} = usePrepareGeneralKeeperCastVoteOfGm({
+  //   address: gk,
+  //   args: attitude 
+  //       ? [seqOfMotion, BigInt(attitude), sigHash]
+  //       : undefined,
+  // });
 
   const {
     isLoading: castVoteLoading,
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
-    ...config,
+    address: gk,
+    args: attitude 
+        ? [seqOfMotion, BigInt(attitude), sigHash]
+        : undefined,
     onSuccess() {
       if (boox) {
         getVoteResult(boox[5], seqOfMotion).then(
@@ -129,7 +131,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
           </Button>
         </Stack>
 
-        {voteResult && (
+        {voteResult && boox && (
           <VoteResult addr={boox[5]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
         )}
 

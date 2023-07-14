@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useGeneralKeeperExtendPledge, usePrepareGeneralKeeperExtendPledge } from "../../../generated";
+import { useGeneralKeeperExtendPledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
 
@@ -18,23 +17,29 @@ export function ExtendPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:Exte
   
   const [ days, setDays ] = useState<number>();
 
-  const {
-    config: extendPledgeConfig
-  } = usePrepareGeneralKeeperExtendPledge({
-    address: gk,
-    args: days
-      ? [ BigNumber.from(seqOfShare), 
-          BigNumber.from(seqOfPld), 
-          BigNumber.from(days)
-        ]
-      : undefined,
-  })
+  // const {
+  //   config: extendPledgeConfig
+  // } = usePrepareGeneralKeeperExtendPledge({
+  //   address: gk,
+  //   args: days
+  //     ? [ BigInt(seqOfShare), 
+  //         BigInt(seqOfPld), 
+  //         BigInt(days)
+  //       ]
+  //     : undefined,
+  // })
 
   const {
     isLoading: extendPledgeLoading,
     write: extendPledge,
   } = useGeneralKeeperExtendPledge({
-    ...extendPledgeConfig,
+    address: gk,
+    args: days
+      ? [ BigInt(seqOfShare), 
+          BigInt(seqOfPld), 
+          BigInt(days)
+        ]
+      : undefined,
     onSuccess(){
       getAllPledges();
       setOpen(false);
@@ -62,7 +67,7 @@ export function ExtendPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:Exte
         />
 
         <Button 
-          disabled={ !extendPledge || extendPledgeLoading }
+          disabled={ extendPledgeLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Start /> }

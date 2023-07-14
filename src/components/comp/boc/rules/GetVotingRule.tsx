@@ -4,7 +4,7 @@ import { readContract } from "@wagmi/core";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { HexType } from "../../../../interfaces";
 import { bookOfConstitutionABI, useShareholdersAgreementGetRule } from "../../../../generated";
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 import { VotingRule, authorities, vrParser } from "./SetVotingRule";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { ListAlt } from "@mui/icons-material";
@@ -42,7 +42,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
   // useShareholdersAgreementGetRule({
   //   address: sha,
-  //   args: [BigNumber.from(seq)],
+  //   args: [BigInt(seq)],
   //   onSuccess(data) {
   //     setHexVr(data);
   //   } 

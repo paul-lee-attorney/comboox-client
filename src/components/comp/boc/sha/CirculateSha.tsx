@@ -1,8 +1,8 @@
 import { Button, Divider, Stack, TextField } from "@mui/material";
-import { useGeneralKeeperCirculateSha, usePrepareGeneralKeeperCirculateSha } from "../../../../generated";
+import { useGeneralKeeperCirculateSha } from "../../../../generated";
 import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { Outbox, Recycling, Share } from "@mui/icons-material";
+import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
 
 export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
@@ -12,18 +12,19 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
   const [ docUrl, setDocUrl ] = useState<HexType>(Bytes32Zero);
   const [ docHash, setDocHash ] = useState<HexType>(Bytes32Zero);
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperCirculateSha({
-    address: gk,
-    args: [addr, docUrl, docHash],
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperCirculateSha({
+  //   address: gk,
+  //   args: [addr, docUrl, docHash],
+  // });
 
   const {
     isLoading,
     write
   } = useGeneralKeeperCirculateSha({
-    ...config,
+    address: gk,
+    args: [addr, docUrl, docHash],
     onSuccess() {
       setNextStep(2);
     }

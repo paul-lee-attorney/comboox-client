@@ -1,4 +1,4 @@
-import { ComBooxAppBar } from "../center/ComBooxAppBar";
+import { ComBooxAppBar } from "../../center/ComBooxAppBar";
 
 interface LayoutProps {
   children: any,

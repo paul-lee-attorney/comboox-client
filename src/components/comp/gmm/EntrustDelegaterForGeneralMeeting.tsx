@@ -6,13 +6,12 @@ import {
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Button, Stack, TextField, } from "@mui/material";
 import { Handshake, } from "@mui/icons-material";
 import { HexType } from "../../../interfaces";
 
 interface EntrustDelegaterOfMemberProps {
-  seqOfMotion: BigNumber,
+  seqOfMotion: bigint,
   setOpen: (flag: boolean) => void,
   getMotionsList: (minutes:HexType) => any,
 }
@@ -23,20 +22,23 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMot
 
   const [ delegater, setDelegater ] = useState<string>();
 
-  const {
-    config: entrustDelegaterOfMemberConfig
-  } = usePrepareGeneralKeeperEntrustDelegaterForGeneralMeeting({
-    address: gk,
-    args: delegater
-        ? [seqOfMotion, BigNumber.from(delegater) ]
-        : undefined ,
-  });
+  // const {
+  //   config: entrustDelegaterOfMemberConfig
+  // } = usePrepareGeneralKeeperEntrustDelegaterForGeneralMeeting({
+  //   address: gk,
+  //   args: delegater
+  //       ? [seqOfMotion, BigInt(delegater) ]
+  //       : undefined ,
+  // });
 
   const {
     isLoading: entrustDelegaterOfMemberLoading,
     write: entrustDelegaterOfMember,
   } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
-    ...entrustDelegaterOfMemberConfig,
+    address: gk,
+    args: delegater
+        ? [seqOfMotion, BigInt(delegater) ]
+        : undefined,
     onSuccess() {
       if (boox ) {
         getMotionsList(boox[5]);

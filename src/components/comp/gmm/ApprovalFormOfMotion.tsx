@@ -43,7 +43,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
 
   useEffect(()=>{
-    setAddrOfDoc(`0x${motion.contents.toHexString().padStart(66, '0').substring(26, 66)}`);
+    setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
                           ? boox[1] : boox[5];
@@ -173,7 +173,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 <td colSpan={2}>
                   {motion.head.typeOfMotion < 3 && (
                     <GetPosition 
-                      seq={motion.contents.toNumber()} 
+                      seq={Number(motion.contents)} 
                     />
                   )}
 
@@ -212,7 +212,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                       id="tfHashOfAction" 
                       label="HashOfAction" 
                       variant="outlined"
-                      value = { motion.contents.toHexString() }
+                      value = { motion.contents.toString(16) }
                       size='small'
                     />                                            
                   )}
@@ -319,7 +319,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                   <td colSpan={4}>
                     <TakeSeat 
                       seqOfMotion={motion.head.seqOfMotion.toString()} 
-                      seqOfPos={motion.contents.toNumber()} 
+                      seqOfPos={Number(motion.contents)} 
                       setOpen={setOpen} getMotionsList={obtainMotionsList}
                     />
                   </td>
@@ -331,7 +331,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                   <td colSpan={4}>
                     <RemoveDirector 
                       seqOfMotion={motion.head.seqOfMotion.toString()} 
-                      seqOfPos={motion.contents.toNumber()} 
+                      seqOfPos={Number(motion.contents)} 
                       setOpen={setOpen} 
                       getMotionsList={obtainMotionsList}
                     />

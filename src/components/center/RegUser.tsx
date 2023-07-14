@@ -2,7 +2,6 @@
 import { Button, Paper, Toolbar } from '@mui/material';
 
 import { 
-  usePrepareRegCenterRegUser, 
   useRegCenterRegUser
 } from '../../generated';
 
@@ -10,23 +9,27 @@ import { AddrOfRegCenter } from '../../interfaces';
 import { BorderColor, Create } from '@mui/icons-material';
 
 interface RegUserProps {
-  getMyUserNo: () => void,
   getUser: () => void,
 }
 
-export function RegUser({ getMyUserNo, getUser }:RegUserProps) {
+export function RegUser({ getUser }:RegUserProps) {
   
-  const { config } = usePrepareRegCenterRegUser({
-    address: AddrOfRegCenter
-  })  
+  // const {
+  //   isSuccess: regUserConfig
+  // } = usePrepareRegCenterRegUser({
+  //   address: AddrOfRegCenter,
+  // })
 
-  const { isLoading, write: regUser } = useRegCenterRegUser({
-    ...config,
+  const {
+    isLoading: regUserLoading,
+    write: regUser
+  } = useRegCenterRegUser({
+    address: AddrOfRegCenter,
     onSuccess() {
-      getMyUserNo();
-      getUser();
+      getUser;
     }
   })
+
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -36,7 +39,7 @@ export function RegUser({ getMyUserNo, getUser }:RegUserProps) {
 
       <Button 
         size="small"
-        disabled={ !regUser || isLoading } 
+        disabled={ regUserLoading } 
         onClick={() => {
           regUser?.()
         }}
@@ -44,7 +47,7 @@ export function RegUser({ getMyUserNo, getUser }:RegUserProps) {
         sx={{ m:1, ml:2, minWidth:128 }} 
         endIcon={<BorderColor />}       
       >
-        {isLoading ? 'Loading...' : 'Register'}
+        {regUserLoading ? 'Loading...' : 'Register'}
       </Button>
     </Paper>
   )

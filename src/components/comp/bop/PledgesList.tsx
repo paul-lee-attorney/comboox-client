@@ -1,4 +1,4 @@
-import { Box, Chip, Paper, Toolbar } from "@mui/material";
+import { Chip, Paper, Toolbar } from "@mui/material";
 import { Pledge } from "../../../queries/bop";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";

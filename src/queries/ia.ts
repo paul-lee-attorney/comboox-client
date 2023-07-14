@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { investmentAgreementABI } from "../generated";
-import { BigNumber } from "ethers";
 
 export interface Head {
   typeOfDeal: number,
@@ -12,15 +11,15 @@ export interface Head {
   seller: number,
   priceOfPaid: number,
   priceOfPar: number,
-  closingDate: number,
+  closingDeadline: number,
   para: number,
 }
 
 export interface Body {
   buyer: number,
   groupOfBuyer: number,
-  paid: BigNumber,
-  par: BigNumber,
+  paid: bigint,
+  par: bigint,
   state: number,
   para: number,
   argu: number,
@@ -68,7 +67,7 @@ export async function isDeal(ia: HexType, seq:number):Promise<boolean>{
     address: ia,
     abi: investmentAgreementABI,
     functionName: 'isDeal',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   return flag;
@@ -79,7 +78,7 @@ export async function getHeadOfDeal(ia: HexType, seq:number):Promise<Head>{
     address: ia,
     abi: investmentAgreementABI,
     functionName: 'getHeadOfDeal',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   return head;
@@ -90,7 +89,7 @@ export async function getBodyOfDeal(ia: HexType, seq:number):Promise<Body>{
     address: ia,
     abi: investmentAgreementABI,
     functionName: 'getBodyOfDeal',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   return body;
@@ -101,7 +100,7 @@ export async function getHashLockOfDeal(ia: HexType, seq:number):Promise<HexType
     address: ia,
     abi: investmentAgreementABI,
     functionName: 'getHashLockOfDeal',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   return lock;
@@ -112,13 +111,13 @@ export async function getDeal(ia: HexType, seq:number):Promise<Deal>{
     address: ia,
     abi: investmentAgreementABI,
     functionName: 'getDeal',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   return deal;
 }
 
-export async function getSeqList(ia: HexType):Promise<readonly BigNumber[]>{
+export async function getSeqList(ia: HexType):Promise<readonly bigint[]>{
   let list = await readContract({
     address: ia,
     abi: investmentAgreementABI,

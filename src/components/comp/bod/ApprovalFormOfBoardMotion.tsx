@@ -1,20 +1,13 @@
-import { Box, Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
+import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { GetVotingRule } from "../boc/rules/GetVotingRule";
 import { GetPosition } from "./GetPosition";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HexType } from "../../../interfaces";
-import { filesFolderABI } from "../../../generated";
-import { readContract } from "@wagmi/core";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { ProposeMotionToGeneralMeeting } from "../gmm/ProposeMotionToGeneralMeeting";
-import { CastVoteOfGm } from "../gmm/CastVoteOfGm";
-import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
-import { VoteCountingOfGm } from "../gmm/VoteCountingOfGm";
-import { TakeSeat } from "../gmm/TakeSeat";
-import { RemoveDirector } from "../gmm/RemoveDirector";
+import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
 import { ExecActionOfGm } from "../gmm/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
@@ -50,7 +43,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
 
   useEffect(()=>{
-    setAddrOfDoc(`0x${motion.contents.toHexString().padStart(66, '0').substring(26, 66)}`);
+    setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
                           ? boox[1] : boox[5];
@@ -179,7 +172,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
 
                 <td colSpan={2}>
                   {motion.head.typeOfMotion < 3 && (
-                    <GetPosition seq={motion.contents.toNumber()} />
+                    <GetPosition seq={Number(motion.contents)} />
                   )}
 
                   {motion.head.typeOfMotion == 3 && snOfDoc && (
@@ -217,7 +210,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                       id="tfHashOfAction" 
                       label="HashOfAction" 
                       variant="outlined"
-                      value = { motion.contents.toHexString() }
+                      value = { motion.contents.toString(16) }
                       size='small'
                     />                                            
                   )}
@@ -322,7 +315,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
               {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={Number(motion.contents)} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -330,7 +323,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
               {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
                 <tr>
                   <td colSpan={4}>
-                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={motion.contents.toNumber()} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={Number(motion.contents)} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}

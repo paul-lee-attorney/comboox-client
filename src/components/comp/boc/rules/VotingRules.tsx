@@ -28,7 +28,7 @@ import {
   useShareholdersAgreementRemoveRule 
 } from "../../../../generated";
 
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 
 export interface VotingRuleWrap {
   subTitle: string,
@@ -72,18 +72,19 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
 
   const [open, setOpen] = useState(false);
 
-  const {
-    config: removeRuleConfig
-  } = usePrepareShareholdersAgreementRemoveRule({
-    address: sha,
-    args: [BigNumber.from(cp[cp.length - 1])]
-  })
+  // const {
+  //   config: removeRuleConfig
+  // } = usePrepareShareholdersAgreementRemoveRule({
+  //   address: sha,
+  //   args: [BigInt(cp[cp.length - 1])]
+  // })
 
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
-    ...removeRuleConfig,
+    address: sha,
+    args: [BigInt(cp[cp.length - 1])],
     onSuccess() {
       setCp(v => {
         let arr = [...v];

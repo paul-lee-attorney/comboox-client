@@ -1,16 +1,9 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { useEffect, useState } from "react";
-import { Paper, Stack, Toolbar } from "@mui/material";
-import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
-import { CreateMotionOfGm } from "../../../components/comp/gmm/CreateMotionOfGm";
-import { Motion, getMotion } from "../../../queries/meetingMinutes";
-import { useMeetingMinutesGetSeqList } from "../../../generated";
-import { Tabs, Tab, TabList, TabPanel } from "@mui/joy";
-import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
-import { Position, getDirectorsFullPosInfo } from "../../../queries/bod";
+import { Paper, Toolbar } from "@mui/material";
+
 import { MembersEquityList } from "../../../components/comp/bom/MembersList";
 
-function BookOfGeneralMeeting() {
+function BookOfMembers() {
 
   const {boox} = useComBooxContext();
   
@@ -26,4 +19,4 @@ function BookOfGeneralMeeting() {
   );
 } 
 
-export default BookOfGeneralMeeting;
+export default BookOfMembers;

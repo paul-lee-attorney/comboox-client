@@ -1,4 +1,4 @@
-import { BigNumber } from "ethers";
+import { bigint } from "ethers";
 
 import { 
   useGeneralKeeperTakePosition, 
@@ -21,18 +21,19 @@ export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList}:Ta
 
   const { gk } = useComBooxContext();
   
-  const {
-    config: takePositionConfig,
-  } = usePrepareGeneralKeeperTakePosition({
-    address: gk,
-    args: [BigNumber.from(seqOfMotion), BigNumber.from(seqOfPos)]
-  })
+  // const {
+  //   config: takePositionConfig,
+  // } = usePrepareGeneralKeeperTakePosition({
+  //   address: gk,
+  //   args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
+  // })
 
   const {
     isLoading: takePositionLoading,
     write: takePosition,
   } = useGeneralKeeperTakePosition({
-    ...takePositionConfig,
+    address: gk,
+    args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
     onSuccess(){
         getMotionsList();
         setOpen(false);

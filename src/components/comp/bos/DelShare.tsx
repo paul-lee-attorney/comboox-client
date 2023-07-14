@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { useBookOfSharesDecreaseCapital, usePrepareBookOfSharesDecreaseCapital } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { useEffect, useState } from "react";
@@ -26,20 +25,23 @@ export function DelShare ({getList}:DelShareProps) {
     }
   }, [seq, boox]);
 
-  const {
-    config: delShareConfig
-  } = usePrepareBookOfSharesDecreaseCapital({
-    address: boox ? boox[9] : undefined,
-    args: seq && share
-        ? [BigNumber.from(seq), share.body.paid, share.body.par]
-        : undefined,
-  })
+  // const {
+  //   config: delShareConfig
+  // } = usePrepareBookOfSharesDecreaseCapital({
+  //   address: boox ? boox[9] : undefined,
+  //   args: seq && share
+  //       ? [BigInt(seq), share.body.paid, share.body.par]
+  //       : undefined,
+  // })
 
   const {
     isLoading: delShareLoading,
     write: delShare
   } = useBookOfSharesDecreaseCapital({
-    ...delShareConfig,
+    address: boox ? boox[10] : undefined,
+    args: seq && share
+        ? [BigInt(seq), share.body.paid, share.body.par]
+        : undefined,
     onSuccess(){
       setSeq(undefined);
       getList();
@@ -65,7 +67,7 @@ export function DelShare ({getList}:DelShareProps) {
         sx={{m:1, p:1}}
         variant='contained'
         endIcon={<RemoveCircle />}
-        disabled={ !delShare || delShareLoading }
+        disabled={ delShareLoading }
         onClick={()=>delShare?.()}
         size="small"
       >

@@ -9,7 +9,6 @@ import {
 import { EditNote }  from '@mui/icons-material';
 
 import { 
-  usePrepareShareholdersAgreementAddRule,
   useShareholdersAgreementAddRule,
 } from '../../../../generated';
 
@@ -26,17 +25,18 @@ interface AddRuleProps {
 
 export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinalized }: AddRuleProps) {
 
-  const { config } = usePrepareShareholdersAgreementAddRule({
-    address: sha,
-    args: [rule],
-  });
+  // const { config } = usePrepareShareholdersAgreementAddRule({
+  //   address: sha,
+  //   args: [rule],
+  // });
 
   const {
     data,
     isLoading,
     write,
   } = useShareholdersAgreementAddRule({
-    ...config,
+    address: sha,
+    args: [rule],
     onSuccess() {
       refreshRule();
     }
@@ -48,7 +48,7 @@ export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinal
         <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
           
           <Button 
-            disabled = {!write || isLoading}
+            disabled = { isLoading }
 
             sx={{ m: 1, minWidth: 120, height: 40 }} 
             variant="contained" 

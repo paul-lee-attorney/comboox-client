@@ -9,17 +9,17 @@ import {
   Paper,
   Stack,
   Divider,
+  Tooltip,
+  IconButton,
 } from '@mui/material';
 
-import { ArrowBack, ArrowForward, Update }  from '@mui/icons-material';
+import { ArrowDownward, ArrowUpward, Update }  from '@mui/icons-material';
 
 import {
   useBookOfMembersMaxQtyOfMembers,
-  usePrepareRegisterOfMembersSetMaxQtyOfMembers,
   useBookOfMembersSetMaxQtyOfMembers,
 } from '../../../generated';
 
-import { BigNumber } from 'ethers';
 
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
@@ -43,18 +43,19 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     }
   });
 
-  const {
-    config: setMaxQtyConfig,
-  } = usePrepareRegisterOfMembersSetMaxQtyOfMembers({
-    address: boox ? boox[4] : undefined,
-    args: [BigNumber.from(inputMax)],
-  });
+  // const {
+  //   config: setMaxQtyConfig,
+  // } = usePrepareBookOfMembersSetMaxQtyOfMembers({
+  //   address: boox ? boox[4] : undefined,
+  //   args: [BigInt(inputMax)],
+  // });
 
   const {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 
   } = useBookOfMembersSetMaxQtyOfMembers({
-    ...setMaxQtyConfig,
+    address: boox ? boox[4] : undefined,
+    args: [BigInt(inputMax)],
     onSuccess() {
       getMaxQty();
     },
@@ -62,86 +63,88 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   return (    
     <Paper elevation={3} sx={{m:1, p:1, width:'100%', alignItems:'center', justifyContent:'center' }} >
-      <Stack direction='column' sx={{m:1, p:1, alignItems:'start', justifyContent:'space-between'}} >
 
-        <Typography variant="h5" component="div" sx={{ m:2, textDecoration:'underline' }} >
-          <b>Max Qty of Members</b>
-        </Typography>
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start', alignContent:'start'}} >
 
+        <Stack direction='column' sx={{ height:'100%' }} >
+          <Tooltip title='Prev Step' placement='left' arrow >
+            <IconButton
+              size='large'
+              color='primary'
+              onClick={()=>nextStep(0)}
+            >
+              <ArrowUpward />
+            </IconButton>
+          </Tooltip>
 
-        <Card sx={{ width:'100%', }} variant='outlined'>
-            <CardContent>
+          <Divider flexItem />
 
-              <Typography variant="body1" component="div" sx={{ m:1 }} >
-                MaxQty: {max}
-              </Typography>
+          <Tooltip title='Next Step' placement='left' arrow >
 
-            </CardContent>        
-        </Card>
-      
-        <Stack direction='row' sx={{m:1, p:1}}>
-          <TextField 
-            sx={{ m: 1, minWidth: 120 }} 
-            id="tfMaxQty" 
-            label="MaxQtyOfMembers" 
-            variant="outlined"
-            helperText="Number (e.g. '50')"
-            onChange={(e) => {
-              setInputMax(e.target.value ?? '0');
-            }}
+            <IconButton
+              size='large'
+              color='primary'
+              onClick={()=>nextStep(2)}
+            >
+              <ArrowDownward />
+            </IconButton>
 
-            value = {inputMax}
-            size='small'
-          />
-
-          <Button 
-            disabled = {!setMaxQty || setMaxQtyLoading}
-
-            sx={{ m: 1, minWidth: 120, height: 40 }} 
-            variant="contained" 
-            endIcon={<Update />}
-            onClick={()=> setMaxQty?.()}
-            size='small'
-          >
-            Update
-          </Button>
+          </Tooltip>
 
         </Stack>
 
-        <Divider sx={{width:'100%'}} />
+        <Divider sx={{m:1}} orientation='vertical' flexItem />
 
-        <Stack direction='row' sx={{m:1, p:1, justifyContent:'space-between'}}>
+        <Stack direction='column' sx={{m:1, alignItems:'start', justifyContent:'space-between'}} >
 
-          <Button
-            variant="contained"
-            sx={{
-              height: 40,
-              mr: 10,
-            }}
-            startIcon={ <ArrowBack /> }
-
-            onClick={()=>nextStep(0)}
-          >
-            Prev
-          </Button>
+          <Typography variant="h5" component="div" sx={{ m:1, textDecoration:'underline' }} >
+            <b>Max Qty of Members</b>
+          </Typography>
 
 
-          <Button
-            variant="contained"
-            sx={{
-              height: 40,
-              ml: 10,
-            }}
-            endIcon={ <ArrowForward /> }
+          <Card sx={{ m:1, width:'100%', }} variant='outlined'>
+              <CardContent>
 
-            onClick={()=>nextStep(2)}
-          >
-            Next
-          </Button>
+                <Typography variant="body1" component="div" sx={{ m:1 }} >
+                  MaxQty: {max}
+                </Typography>
+
+              </CardContent>        
+          </Card>
+        
+          <Stack direction='row' >
+            <TextField 
+              sx={{ m: 1, minWidth: 120 }} 
+              id="tfMaxQty" 
+              label="MaxQtyOfMembers" 
+              variant="outlined"
+              helperText="Number (e.g. '50')"
+              onChange={(e) => {
+                setInputMax(e.target.value ?? '0');
+              }}
+
+              value = {inputMax}
+              size='small'
+            />
+
+            <Button 
+              disabled = {!setMaxQty || setMaxQtyLoading}
+
+              sx={{ m: 1, minWidth: 120, height: 40 }} 
+              variant="contained" 
+              endIcon={<Update />}
+              onClick={()=> setMaxQty?.()}
+              size='small'
+            >
+              Update
+            </Button>
+
+          </Stack>
 
         </Stack>
 
       </Stack>
+
     </Paper>
   )
 }

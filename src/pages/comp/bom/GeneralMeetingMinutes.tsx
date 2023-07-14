@@ -12,7 +12,7 @@ import { Position, getDirectorsFullPosInfo } from "../../../queries/bod";
 import { MembersEquityList } from "../../../components/comp/bom/MembersList";
 import { ApprovalFormOfBoardMotion } from "../../../components/comp/bod/ApprovalFormOfBoardMotion";
 
-function BookOfGeneralMeeting() {
+function GeneralMeetingMinutes() {
 
   const { boox } = useComBooxContext();
 
@@ -55,7 +55,7 @@ function BookOfGeneralMeeting() {
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
       <Toolbar sx={{m:1, p:1}}>
-        <h3>GMM - General Meeting Minutes (Addr: {boox ? boox[] : undefined})</h3>
+        <h3>GMM - General Meeting Minutes (Addr: {boox ? boox[5] : undefined})</h3>
       </Toolbar>
 
       <CreateMotionOfGm  getMotionsList={obtainSeqList} />
@@ -83,4 +83,4 @@ function BookOfGeneralMeeting() {
   );
 } 
 
-export default BookOfGeneralMeeting;
+export default GeneralMeetingMinutes;

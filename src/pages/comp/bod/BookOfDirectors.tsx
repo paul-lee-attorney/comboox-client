@@ -1,16 +1,9 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { useEffect, useState } from "react";
-import { Paper, Stack, Toolbar } from "@mui/material";
-import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
+import { Paper, Toolbar } from "@mui/material";
 
-import { Motion, getMotion } from "../../../queries/meetingMinutes";
-import { useMeetingMinutesGetSeqList } from "../../../generated";
-import { CreateMotionOfBoardMeeting } from "../../../components/comp/bod/CreateMotionOfBoardMeeting";
-import { ApprovalFormOfBoardMotion } from "../../../components/comp/bod/ApprovalFormOfBoardMotion";
 import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo } from "../../../queries/bod";
 import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
-
-import { Tabs, Tab, TabList, TabPanel } from "@mui/joy";
 
 function BookOfDirectors() {
 

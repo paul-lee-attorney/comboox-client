@@ -1,5 +1,5 @@
 import { Alert, Box, Button, Stack, TextField, } from "@mui/material";
-import { useGeneralKeeperSignIa, usePrepareGeneralKeeperSignIa, useSigPageGetParasOfPage } from "../../../../generated";
+import { useGeneralKeeperSignIa, useSigPageGetParasOfPage } from "../../../../generated";
 import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
@@ -44,20 +44,23 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperSignIa({
-    address: gk,
-    args: sigHash
-      ? [addr, sigHash]
-      : undefined,
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperSignIa({
+  //   address: gk,
+  //   args: sigHash
+  //     ? [addr, sigHash]
+  //     : undefined,
+  // });
 
   const {
     isLoading,
     write
   } = useGeneralKeeperSignIa({
-    ...config,
+    address: gk,
+    args: sigHash
+      ? [addr, sigHash]
+      : undefined,
     onSuccess() {
       getParasOfPage();
     }

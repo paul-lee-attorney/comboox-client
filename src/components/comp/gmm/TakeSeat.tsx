@@ -1,4 +1,3 @@
-import { BigNumber } from "ethers";
 import { useGeneralKeeperTakeSeat, usePrepareGeneralKeeperTakeSeat } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { HexType } from "../../../interfaces";
@@ -18,18 +17,19 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, getMotionsList}:TakeSe
 
   const {gk, boox} = useComBooxContext();
   
-  const {
-    config: takeSeatConfig,
-  } = usePrepareGeneralKeeperTakeSeat({
-    address: gk,
-    args: [BigNumber.from(seqOfMotion), BigNumber.from(seqOfPos)]
-  })
+  // const {
+  //   config: takeSeatConfig,
+  // } = usePrepareGeneralKeeperTakeSeat({
+  //   address: gk,
+  //   args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
+  // })
 
   const {
     isLoading: takeSeatLoading,
     write: takeSeat,
   } = useGeneralKeeperTakeSeat({
-    ...takeSeatConfig,
+    address: gk,
+    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(){
       if (boox) {
         getMotionsList(boox[5]);

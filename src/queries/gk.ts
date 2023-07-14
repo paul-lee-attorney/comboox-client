@@ -1,10 +1,9 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
-import { BigNumber } from "ethers";
 import { generalKeeperABI } from "../generated";
 
-export async function regNumOfCompany(addr: HexType):Promise<BigNumber> {
-  let regNum: BigNumber = await readContract({
+export async function regNumOfCompany(addr: HexType):Promise<bigint> {
+  let regNum: bigint = await readContract({
     address: addr,
     abi: generalKeeperABI,
     functionName: 'regNumOfCompany',
@@ -38,7 +37,7 @@ export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
     address: addr,
     abi: generalKeeperABI,
     functionName: 'getKeeper',
-    args: [BigNumber.from(title)]
+    args: [BigInt(title)]
   })
 
   return keeper;
@@ -49,7 +48,7 @@ export async function getBook(addr: HexType, title: number):Promise<HexType> {
     address: addr,
     abi: generalKeeperABI,
     functionName: 'getBook',
-    args: [BigNumber.from(title)]
+    args: [BigInt(title)]
   })
 
   return keeper;
@@ -59,7 +58,7 @@ export async function getBoox(gk: HexType): Promise<HexType[]>{
   let books: HexType[] = [];
   books.push(gk);
 
-  for (let i = 1; i<10; i++) {
+  for (let i = 1; i<11; i++) {
     let temp: HexType = await getBook(gk, i);
     books.push(temp);
   }

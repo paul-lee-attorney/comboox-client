@@ -6,8 +6,6 @@ import {
   TextField,
   Paper,
   Toolbar,
-  Checkbox,
-  FormControlLabel,
   Box,
   Collapse,
   FormControl,
@@ -23,7 +21,6 @@ import {
 import { AddRule } from './AddRule'
 
 import { Bytes32Zero, HexType } from '../../../../interfaces';
-import { longSnParser } from '../../../../scripts/toolsKit';
 import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
 

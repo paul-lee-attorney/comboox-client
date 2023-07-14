@@ -14,7 +14,6 @@ import {
 import { HexType } from "../../../../interfaces";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { VoteCountingOfGm } from "../../gmm/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
@@ -34,7 +33,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
 
   const { boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
-  const [ seqOfMotion, setSeqOfMotion ] = useState<BigNumber>();
+  const [ seqOfMotion, setSeqOfMotion ] = useState<bigint>();
 
   const [ typeOfIa, setTypeOfIa ] = useState<number>();
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
@@ -83,7 +82,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
     };
 
     updateActiveStep();
-  }, [boox, ia, isFinalized]);
+  }, [boox, ia, finalized]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -167,7 +166,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                     Cast vote in General Meeting to approve IA.
                   </Typography>
 
-                  {seqOfMotion && (
+                  {seqOfMotion != undefined && (
                     <VoteForDocOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
                   )}
                 </StepContent>
@@ -183,7 +182,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   <Typography>
                     Count vote result of IA (only for Members).
                   </Typography>
-                  {seqOfMotion && (
+                  {seqOfMotion != undefined && (
                     <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } setOpen={()=>{}} getMotionsList={()=>{}} />
                   )}
                 </StepContent>

@@ -14,7 +14,6 @@ import {
 import { Pledge } from "../../../queries/bop";
 import { PledgesList } from "../../../components/comp/bop/PledgesList";
 import { CertificateOfPledge } from "../../../components/comp/bop/CertificateOfPledge";
-import { SearchPledge } from "../../../components/comp/bop/SearchPledge";
 import { CreatePledge } from "../../../components/comp/bop/CreatePledge";
 
 function BookOfPledges() {
@@ -37,7 +36,7 @@ function BookOfPledges() {
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
       <Toolbar>
-        <h3>BOP - Book Of Pledges</h3>
+        <h3>BOP - Book Of Pledges (Addr: {boox ? boox[8] : ''})</h3>
       </Toolbar>
 
       <Stack direction='column' sx={{m:1, p:1}} >

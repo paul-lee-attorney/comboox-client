@@ -1,14 +1,13 @@
-import { BigNumber } from "ethers";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { readContract, waitForTransaction } from "@wagmi/core";
-import { investmentAgreementABI, useInvestmentAgreementAddDeal, useInvestmentAgreementDelDeal, useInvestmentAgreementGetDeal, useInvestmentAgreementGetTypeOfIa, useInvestmentAgreementSetTypeOfIa, usePrepareInvestmentAgreementAddDeal, usePrepareInvestmentAgreementDelDeal, usePrepareInvestmentAgreementSetTypeOfIa } from "../../../../generated";
-import { useEffect, useState } from "react";
-import { Box, Button, Checkbox, Collapse, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, TextField, Toolbar } from "@mui/material";
-import { AddCircle, EditNote, LockClock, RemoveCircle, Update } from "@mui/icons-material";
-import { ExecDeal } from "./ExecDeal";
+import { HexType } from "../../../../interfaces";
+import { 
+  useInvestmentAgreementGetTypeOfIa, 
+  useInvestmentAgreementSetTypeOfIa,  
+  usePrepareInvestmentAgreementSetTypeOfIa 
+} from "../../../../generated";
 
-import dayjs, { Dayjs } from 'dayjs';
-import { DateTimeField } from "@mui/x-date-pickers";
+import { useState } from "react";
+import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, } from "@mui/material";
+import { EditNote } from "@mui/icons-material";
 
 export const strTypeOfIa = ['CI', 'EXT', 'INT', 'CI & INT', 'EXT & INT', 'CI & EXT & INT'];
 
@@ -31,18 +30,19 @@ export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
     }
   })
 
-  const {
-    config
-  } = usePrepareInvestmentAgreementSetTypeOfIa({
-    address: ia,
-    args: type ? [BigNumber.from(type)] : undefined,
-  })
+  // const {
+  //   config
+  // } = usePrepareInvestmentAgreementSetTypeOfIa({
+  //   address: ia,
+  //   args: type ? [BigInt(type)] : undefined,
+  // })
 
   const {
     isLoading: setTypeOfIaLoading,
     write: setTypeOfIa,
   } = useInvestmentAgreementSetTypeOfIa({
-    ...config,
+    address: ia,
+    args: type ? [BigInt(type)] : undefined,
     onSuccess() {
       getTypeOfIa();
     }

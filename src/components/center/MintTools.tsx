@@ -29,7 +29,7 @@ export function MintTools({ refreshList }:MintToolsProps) {
       </Box>
 
       <Typography>
-        Direct Mint  
+        Directly Mint  
       </Typography>
 
       <Switch 

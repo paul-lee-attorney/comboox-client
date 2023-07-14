@@ -1,20 +1,15 @@
 
 import { Button, Paper, Stack } from "@mui/material";
 import { 
-  filesFolderABI,
   useGeneralKeeperVoteCounting,
-  usePrepareGeneralKeeperVoteCounting, 
 } from "../../../generated";
 
-import { HexType } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
-import { BigNumber } from "ethers";
-import { readContract } from "@wagmi/core";
 import { isPassed } from "../../../queries/meetingMinutes";
 
 interface VoteCountingOfBoard {
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   setResult: (flag: boolean) => void;
   setNextStep: (next:number) => void;
   setOpen: (flag: boolean) => void;
@@ -25,19 +20,20 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
 
   const { gk, boox } = useComBooxContext();
 
-  const { 
-    config
-  } =  usePrepareGeneralKeeperVoteCounting({
-    address: gk,
-    args: [ seqOfMotion ],
-  });
+  // const { 
+  //   config
+  // } =  usePrepareGeneralKeeperVoteCounting({
+  //   address: gk,
+  //   args: [ seqOfMotion ],
+  // });
 
   const {
     isLoading,
     write,
     data,
   } = useGeneralKeeperVoteCounting({
-    ...config,
+    address: gk,
+    args: [ seqOfMotion ],
     onSuccess() {
       if (boox) {
         isPassed(boox[2], seqOfMotion).then(
@@ -57,7 +53,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <Button
-        disabled={ !write || isLoading}
+        disabled={ isLoading }
         variant="contained"
         endIcon={<Calculate />}
         sx={{ m:1, mr:6 }}

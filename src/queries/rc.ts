@@ -1,7 +1,6 @@
-import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
+import { readContract, getWalletClient, getContract, getPublicClient } from "@wagmi/core";
+import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../interfaces";
 import { regCenterABI } from "../generated";
-import { BigNumber } from "ethers";
 
 // ==== Locker ====
 
@@ -9,19 +8,54 @@ export interface HeadOfLocker {
   from: number;
   to: number;
   expireDate: number;
-  value: BigNumber;
+  value: bigint;
 }
 
 export interface BodyOfLocker {
   counterLocker: HexType;
   selector: HexType;
-  data: BigNumber;
+  paras: string[];
 }
 
 export interface Locker {
   hashLock: HexType;
   head: HeadOfLocker;
   body: BodyOfLocker;
+}
+
+export function headOfLockerCodifier(head:HeadOfLocker):HexType {
+  let sn:HexType = `0x${
+    (head.from.toString(16).padStart(10, '0')) +
+    (head.to.toString(16).padStart(10, '0')) +
+    (head.expireDate.toString(16).padStart(12, '0')) +
+    (head.value.toString(16).substring(2).padStart(32, '0'))
+  }`;
+  return sn;
+}
+
+export function headOfLockerParser(sn:HexType):HeadOfLocker {
+
+  let head:HeadOfLocker = {
+    from: parseInt(sn.substring(2, 12), 16),
+    to: parseInt(sn.substring(12, 22), 16),
+    expireDate: parseInt(sn.substring(22, 34), 16),
+    value: BigInt(`0x${sn.substring(34, 66)}`),
+  };
+
+  return head;
+}
+
+export const defaultHeadOfLocker:HeadOfLocker = {
+  from: 0,
+  to: 0,
+  expireDate: 0,
+  value: BigInt('0'),
+}
+
+export const defaultBodyOfLocker:BodyOfLocker = {
+  counterLocker: AddrZero,
+  selector: SelectorZero,
+  paras: [Bytes32Zero],
 }
 
 // ==== User ====
@@ -36,7 +70,7 @@ export interface Key {
 export interface User {
   isCOA: boolean;
   counterOfV: number;
-  balance: BigNumber;
+  balance: bigint;
   primeKey: Key;
   backupKey: Key;
 }
@@ -50,8 +84,8 @@ export interface Reward {
   offAmt: number;
   discRate: number;
   refundRatio: number;
-  ceiling: BigNumber;
-  floor: BigNumber;
+  ceiling: bigint;
+  floor: bigint;
 }
 
 // ==== Doc ====
@@ -59,7 +93,7 @@ export interface Reward {
 export interface HeadOfDoc {
   typeOfDoc: number;
   version: number;
-  seqOfDoc: BigNumber;
+  seqOfDoc: bigint;
   creator: number;
   createDate: number;
   para: number;
@@ -73,54 +107,6 @@ export interface Doc {
   body: HexType;
 }
 
-export function headOfLockerCodifier(head:HeadOfLocker):HexType {
-  let sn:HexType = `0x${
-    (head.from.toString(16).padStart(10, '0')) +
-    (head.to.toString(16).padStart(10, '0')) +
-    (head.expireDate.toString(16).padStart(12, '0')) +
-    (head.value.toHexString().substring(2).padStart(32, '0'))
-  }`;
-  return sn;
-}
-
-export function headOfLockerParser(sn:HexType):HeadOfLocker {
-
-  let head:HeadOfLocker = {
-    from: parseInt(sn.substring(2, 12), 16),
-    to: parseInt(sn.substring(12, 22), 16),
-    expireDate: parseInt(sn.substring(22, 34), 16),
-    value: BigNumber.from(`0x${sn.substring(34, 66)}`),
-  };
-
-  return head;
-}
-
-export function bodyOfLockerCodifier(body:BodyOfLocker):HexType {
-  let bodySn:HexType = `0x${
-    body.counterLocker.substring(2).padStart(40, '0') +
-    body.selector.padStart(8, '0') +
-    body.data.toHexString().substring(2).padStart(16, '0')
-  }`;
-
-  return bodySn;
-}
-
-export function bodyOfLockerParser(sn:HexType):BodyOfLocker {
-  let body:BodyOfLocker = {
-    counterLocker: `0x${sn.substring(2,42)}`,
-    selector: `0x${sn.substring(42, 50)}`,
-    data: BigNumber.from(`0x${sn.substring(50, 66)}`),
-  }
-
-  return body;
-}
-
-export const defaultHeadOfLocker:HeadOfLocker = {
-  from: 0,
-  to: 0,
-  expireDate: 0,
-  value: BigNumber.from('0'),
-}
 
 // ==== Options ====
 
@@ -172,30 +158,57 @@ export async function isCOA(addr: HexType, acct: string): Promise<boolean>{
     address: addr,
     abi: regCenterABI,
     functionName: 'isCOA',
-    args: [BigNumber.from(acct)],
+    args: [BigInt(acct)],
   });
 
   return res;
 }
 
-export async function getUser(addr: HexType): Promise<User>{
-  let res = await readContract({
-    address: addr,
+export async function getUser(): Promise<User>{
+
+  const walletClient = await getWalletClient();
+
+  const rc = getContract({
+    address: AddrOfRegCenter,
     abi: regCenterABI,
-    functionName: 'getUser'
-  });
+    walletClient: walletClient ? walletClient : undefined,
+  })
+
+  let res = await rc.read.getUser();    
 
   return res;
+
+  // let res = await readContract({
+  //   address: addr,
+  //   abi: regCenterABI,
+  //   functionName: 'getUser'
+  // });
+
+  // return res;
 }
 
-export async function getMyUserNo(addr: HexType): Promise<number>{
-  let res = await readContract({
-    address: addr,
+export async function getMyUserNo(): Promise<number>{
+
+  const walletClient = await getWalletClient();
+
+  console.log('walletClient: ', walletClient?.getAddresses());
+
+  const rc = getContract({
+    address: AddrOfRegCenter,
     abi: regCenterABI,
-    functionName: 'getMyUserNo'
-  });
+    walletClient: walletClient ? walletClient : undefined,
+  })
+  
+  let res = await rc.read.getMyUserNo();    
 
   return res;
+
+
+  // let res = await readContract({
+  //   address: addr,
+  //   abi: regCenterABI,
+  //   functionName: 'getMyUserNo'
+  // });
 }
 
 // ==== Docs ====
@@ -205,18 +218,18 @@ export async function counterOfVersions(addr: HexType, typeOfDoc: string): Promi
     address: addr,
     abi: regCenterABI,
     functionName: 'counterOfVersions',
-    args: [BigNumber.from(typeOfDoc)]
+    args: [BigInt(typeOfDoc)]
   });
 
   return res;
 }
 
-export async function counterOfDocs(addr: HexType, typeOfDoc: string, version: string): Promise<BigNumber>{
+export async function counterOfDocs(addr: HexType, typeOfDoc: string, version: string): Promise<bigint>{
   let res = await readContract({
     address: addr,
     abi: regCenterABI,
     functionName: 'counterOfDocs',
-    args: [BigNumber.from(typeOfDoc), BigNumber.from(version)]
+    args: [BigInt(typeOfDoc), BigInt(version)]
   });
 
   return res;
@@ -272,7 +285,7 @@ export async function getDocByUserNo(addr: HexType, acct: string): Promise<Doc>{
     address: addr,
     abi: regCenterABI,
     functionName: 'getDocByUserNo',
-    args: [ BigNumber.from(acct) ]
+    args: [ BigInt(acct) ]
   });
 
   return res;
@@ -306,7 +319,7 @@ export async function getBodiesList(addr: HexType, typeOfDoc: string, version:st
     address: addr,
     abi: regCenterABI,
     functionName: 'getBodiesList',
-    args: [ BigNumber.from(typeOfDoc), BigNumber.from(version) ]
+    args: [ BigInt(typeOfDoc), BigInt(version) ]
   });
 
   return res;
@@ -317,7 +330,7 @@ export async function getSNList(addr: HexType, typeOfDoc: string, version:string
     address: addr,
     abi: regCenterABI,
     functionName: 'getSNList',
-    args: [ BigNumber.from(typeOfDoc), BigNumber.from(version) ]
+    args: [ BigInt(typeOfDoc), BigInt(version) ]
   });
 
   return res;
@@ -328,7 +341,7 @@ export async function getDocsList(addr: HexType, typeOfDoc: string, version:stri
     address: addr,
     abi: regCenterABI,
     functionName: 'getDocsList',
-    args: [ BigNumber.from(typeOfDoc), BigNumber.from(version) ]
+    args: [ BigInt(typeOfDoc), BigInt(version) ]
   });
 
   return res;
@@ -339,10 +352,23 @@ export async function getTempsList(addr: HexType, typeOfDoc: string): Promise<re
     address: addr,
     abi: regCenterABI,
     functionName: 'getTempsList',
-    args: [ BigNumber.from(typeOfDoc) ]
+    args: [ BigInt(typeOfDoc) ]
   });
 
   return res;
+}
+
+export function parasParser(input: string):string[] {
+
+  let len = parseInt(`${input.length / 64}`);
+  let i = 0;
+  let out:string[] = [];
+
+  while (i < len) {
+    out.push(input.slice(64*i, 64*(i+1)));
+    i++;
+  }
+  return out;
 }
 
 export async function getLocker(addr: HexType, hashLock: HexType): Promise<Locker>{
@@ -356,7 +382,12 @@ export async function getLocker(addr: HexType, hashLock: HexType): Promise<Locke
   let locker:Locker = {
     hashLock: hashLock,
     head: res.head,
-    body: res.body,
+    body: 
+      { 
+        counterLocker: res.body.counterLocker,
+        selector: `0x${res.body.payload.substring(2,10)}`,
+        paras: parasParser(res.body.payload.substring(10)),
+      }
   }
 
   return locker;

@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { filesFolderABI } from "../generated";
-import { BigNumber } from "ethers";
 
 export interface Head {
   circulateDate: number;
@@ -15,7 +14,7 @@ export interface Head {
   votePrepareDays: number;
   votingDays: number;
   execDaysForPutOpt: number;
-  seqOfMotion: BigNumber;
+  seqOfMotion: bigint;
   state: number;
 }
 
@@ -92,8 +91,8 @@ export async function votingDeadline(folder: HexType, body: HexType):Promise<num
   return deadline;
 }
 
-export async function qtyOfFiles(folder: HexType, body: HexType):Promise<BigNumber>{
-  let qty: BigNumber = await readContract({
+export async function qtyOfFiles(folder: HexType, body: HexType):Promise<BigInt>{
+  let qty: BigInt = await readContract({
     address: folder,
     abi: filesFolderABI,
     functionName: 'qtyOfFiles',

@@ -14,31 +14,29 @@ import {
 
 import { Approval, Close, EditNote }  from '@mui/icons-material';
 
-import { readContract } from '@wagmi/core';
-
 import { 
-  accessControlABI,
-  usePrepareAccessControlSetOwner,
   useAccessControlSetOwner,
 } from '../../../generated';
 
 import { ContractProps, HexType } from '../../../interfaces';
-import { BigNumber } from 'ethers';
 import { getOwner } from '../../../queries/accessControl';
 
 export function SetOwner({ addr }: ContractProps) {
   const [owner, setOwner] = useState<string>();
 
-  const { config } = usePrepareAccessControlSetOwner({
-    address: addr,
-    args: owner ? [BigNumber.from(owner)] : undefined,
-  });
+  // const { config } = usePrepareAccessControlSetOwner({
+  //   address: addr,
+  //   args: owner ? [BigInt(owner)] : undefined,
+  // });
 
   const {
     data,
     isLoading,
     write,
-  } = useAccessControlSetOwner(config);
+  } = useAccessControlSetOwner({
+    address: addr,
+    args: owner ? [BigInt(owner)] : undefined,    
+  });
 
   const [ newOwner, setNewOwner ] = useState<number>();
   const [ open, setOpen ] = useState(false);
@@ -66,7 +64,7 @@ export function SetOwner({ addr }: ContractProps) {
               <InputAdornment position="end">
                 <IconButton
                   color="primary"
-                  disabled={ !write || isLoading}
+                  disabled={ isLoading}
                   onClick={ handleClick }
                   edge="end"
                 >

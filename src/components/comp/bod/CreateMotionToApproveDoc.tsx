@@ -4,10 +4,8 @@ import { HexType } from "../../../interfaces";
 
 import { 
   useGeneralKeeperCreateMotionToApproveDoc, 
-  usePrepareGeneralKeeperCreateMotionToApproveDoc 
 } from "../../../generated";
 
-import { BigNumber } from "ethers";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 
@@ -23,20 +21,23 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
 
-  const {
-    config: proposeDocConfig,
-  } = usePrepareGeneralKeeperCreateMotionToApproveDoc({
-    address: gk,
-    args: doc && seqOfVr && executor
-          ? [ doc, BigNumber.from(seqOfVr), BigNumber.from(executor) ]
-          : undefined,
-  });
+  // const {
+  //   config: proposeDocConfig,
+  // } = usePrepareGeneralKeeperCreateMotionToApproveDoc({
+  //   address: gk,
+  //   args: doc && seqOfVr && executor
+  //         ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
+  //         : undefined,
+  // });
 
   const {
     isLoading: proposeDocLoading,
     write: proposeDoc,
   } = useGeneralKeeperCreateMotionToApproveDoc({
-    ...proposeDocConfig,
+    address: gk,
+    args: doc && seqOfVr && executor
+          ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
+          : undefined,
     onSuccess() {
       getMotionsList();
     }

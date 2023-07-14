@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useGeneralKeeperLockPledge, usePrepareGeneralKeeperLockPledge } from "../../../generated";
+import { useGeneralKeeperLockPledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { BigNumber } from "ethers";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { LockOutlined, Start } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../interfaces";
@@ -19,23 +18,29 @@ export function LockPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:LockPl
   
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
-  const {
-    config: lockPledgeConfig
-  } = usePrepareGeneralKeeperLockPledge({
-    address: gk,
-    args: hashLock
-      ? [ BigNumber.from(seqOfShare), 
-          BigNumber.from(seqOfPld), 
-          hashLock
-        ]
-      : undefined,
-  })
+  // const {
+  //   config: lockPledgeConfig
+  // } = usePrepareGeneralKeeperLockPledge({
+  //   address: gk,
+  //   args: hashLock
+  //     ? [ BigInt(seqOfShare), 
+  //         BigInt(seqOfPld), 
+  //         hashLock
+  //       ]
+  //     : undefined,
+  // })
 
   const {
     isLoading: lockPledgeLoading,
     write: lockPledge,
   } = useGeneralKeeperLockPledge({
-    ...lockPledgeConfig,
+    address: gk,
+    args: hashLock
+      ? [ BigInt(seqOfShare), 
+          BigInt(seqOfPld), 
+          hashLock
+        ]
+      : undefined,
     onSuccess(){
       getAllPledges();
       setOpen(false);

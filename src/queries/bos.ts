@@ -1,8 +1,6 @@
-import { BigNumber } from "ethers";
 import { HexType } from "../interfaces";
 import { readContract } from "@wagmi/core";
 import { bookOfSharesABI } from "../generated";
-
 
 export interface Head {
   seqOfShare: number; // 股票序列号
@@ -16,9 +14,9 @@ export interface Head {
 
 export interface Body {
   payInDeadline: number; // 出资期限（秒时间戳）
-  paid: BigNumber; // 实缴出资
-  par: BigNumber; // 认缴出资（注册资本面值）
-  cleanPaid: BigNumber; // 清洁实缴出资（扣除出质、远期、销售要约金额）
+  paid: bigint; // 实缴出资
+  par: bigint; // 认缴出资（注册资本面值）
+  cleanPaid: bigint; // 清洁实缴出资（扣除出质、远期、销售要约金额）
   state: number;
 }
 
@@ -62,7 +60,7 @@ export async function getShare(bos: HexType, seq: number): Promise<Share> {
     address: bos,
     abi: bookOfSharesABI,
     functionName: 'getShare',
-    args: [BigNumber.from(seq)],
+    args: [BigInt(seq)],
   });
 
   let shareWrap:Share = {
@@ -119,7 +117,7 @@ export async function isShare(bos: HexType, seqOfShare: number): Promise<boolean
     address: bos,
     abi: bookOfSharesABI,
     functionName: 'isShare',
-    args: [BigNumber.from(seqOfShare)],
+    args: [BigInt(seqOfShare)],
   })
 
   return flag;
@@ -131,7 +129,7 @@ export async function getHeadOfShare(bos: HexType, seqOfShare: number): Promise<
     address: bos,
     abi: bookOfSharesABI,
     functionName: 'getHeadOfShare',
-    args: [BigNumber.from(seqOfShare)],
+    args: [BigInt(seqOfShare)],
   })
 
   return head;
@@ -143,22 +141,10 @@ export async function getBodyOfShare(bos: HexType, seqOfShare: number): Promise<
     address: bos,
     abi: bookOfSharesABI,
     functionName: 'getBodyOfShare',
-    args: [BigNumber.from(seqOfShare)],
+    args: [BigInt(seqOfShare)],
   })
 
   return body;
-}
-
-export async function getLocker(bos: HexType, snOfLocker: HexType): Promise<BigNumber>{
-
-  let locker = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
-    functionName: 'getLocker',
-    args: [ snOfLocker ],
-  })
-
-  return locker;
 }
 
 export async function getSharesOfClass(bos: HexType, classOfShare: number): Promise<number[]>{
@@ -167,13 +153,13 @@ export async function getSharesOfClass(bos: HexType, classOfShare: number): Prom
     address: bos,
     abi: bookOfSharesABI,
     functionName: 'getSharesOfClass',
-    args: [ BigNumber.from(classOfShare) ],
+    args: [ BigInt(classOfShare) ],
   })
 
   let list: number[] = [];
 
   seqList.forEach(v => {
-    list.push(v.toNumber());
+    list.push(Number(v));
   })
 
   return list;
