@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { 
   Stack,
@@ -14,7 +14,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { HexType } from "../../../../../interfaces";
+import { AddrZero, HexType } from "../../../../../interfaces";
 
 import {
   AddCircle,
@@ -24,239 +24,173 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { waitForTransaction, readContract } from "@wagmi/core";
+import { readContract } from "@wagmi/core";
 
 import {
-  antiDilutionABI,
-  usePrepareShareholdersAgreementCreateTerm,
+
   useShareholdersAgreementCreateTerm,
-  usePrepareShareholdersAgreementRemoveTerm,
   useShareholdersAgreementRemoveTerm,
-  useAntiDilutionGetClasses, 
-  usePrepareAntiDilutionAddBenchmark, 
-  useAntiDilutionAddBenchmark,
-  usePrepareAntiDilutionRemoveBenchmark,
-  useAntiDilutionRemoveBenchmark,
-  usePrepareAntiDilutionAddObligor,
-  useAntiDilutionAddObligor,
-  usePrepareAntiDilutionRemoveObligor,
-  useAntiDilutionRemoveObligor, 
+  useLockUpLockedShares,
+  lockUpABI,
+  useLockUpSetLocker,
+  useLockUpRemoveKeyholder,
+  useLockUpDelLocker,
+  useLockUpAddKeyholder, 
 } from "../../../../../generated";
 
-import { bigint } from "ethers";
+import { getDocAddr } from "../../../../../queries/rc";
+import { LockerOfShare } from "./LockerOfShare";
 
-import { Benchmark } from "./Benchmark";
-import { splitStrArr } from "../../../../../scripts/toolsKit";
+interface Locker {
+  seqOfShare: number;
+  dueDate: number;
+  keyholders: number[];
+}
 
-
-async function getReceipt(hash: HexType): Promise<HexType> {
-  const receipt = await waitForTransaction({
-    hash: hash
+async function getLocker(lu: HexType, seq: number): Promise<Locker> {
+  let res = await readContract({
+    address: lu,
+    abi: lockUpABI,
+    functionName: 'getLocker',
+    args: [ BigInt(seq) ],
   });
 
-  return `0x${receipt.logs[0].topics[2].substring(26)}`; 
+  let locker: Locker = {
+    seqOfShare: seq,
+    dueDate: res[0],
+    keyholders: res[1].map(v => Number(v)),
+  }
+
+  return locker;
 }
 
-interface BenchmarkType {
-  classOfShare: string,
-  floorPrice: string,
-  obligors: string,
-}
-
-interface SetShaTermProps {
-  sha: HexType,
-  term: HexType | undefined,
-  setTerm: (term: HexType | undefined) => void,
-  isFinalized: boolean,
-}
-
-async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkType[]> {
-  let len = classes.length;
-  let output: BenchmarkType[] = [];
+async function getLockers(lu: HexType, shares: number[]): Promise<Locker[]> {
+  let len = shares.length;
+  let output: Locker[] = [];
 
   while (len > 0) {
-
-    let classOfShare = classes[len - 1];
-
-    let floorPrice = await readContract({
-      address: ad,
-      abi: antiDilutionABI,
-      functionName: 'getFloorPriceOfClass',
-      args: [BigInt(classOfShare)],
-    });
-
-    let obligors = await readContract({
-      address: ad,
-      abi: antiDilutionABI,
-      functionName: 'getObligorsOfAD',
-      args: [BigInt(classOfShare)],
-    });
-    
-    let strObligors = '';
-
-    obligors.map(v => {
-      strObligors += v.toString() + `\n`;
-    });
-
-    let item: BenchmarkType = {
-      classOfShare: classOfShare.toString(),
-      floorPrice: floorPrice.toString(),
-      obligors: strObligors,
-    }
-
-    output.push(item);
-    // console.log('item: ', item);
-
+    let seqOfShare = shares[len - 1];
+    let locker = await getLocker(lu, seqOfShare);
+    output.push(locker);
     len--;
   }
 
   return output;
 }
 
+interface SetShaTermProps {
+  sha: HexType,
+  term: HexType | undefined,
+  setTerms: Dispatch<SetStateAction<HexType[]>>,
+  isFinalized: boolean,
+}
 
-export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
+export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ version, setVersion ] = useState<string>();
-
-  const {
-    config: createTermConfig
-  } = usePrepareShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigInt('26'), BigInt(version)]: 
-      undefined,
-  });
 
   const {
     isLoading: createTermLoading,
     write: createTerm,
   } = useShareholdersAgreementCreateTerm({
-    ...createTermConfig,
+    address: sha,
+    args: version ? 
+      [BigInt('26'), BigInt(version)]: 
+      undefined,
     onSuccess(data) {
-      getReceipt(data.hash).
-        then(addr => setTerm(addr));      
+      getDocAddr(data.hash).
+        then(addr => setTerms(v => {
+          let out = [...v];
+          out[2] = addr;
+          return out;
+        }));      
     }
   });
 
   const {
-    config: removeTermConfig
-  } = usePrepareShareholdersAgreementRemoveTerm({
+    isLoading: removeTermLoading,
+    write: removeTerm,
+  } = useShareholdersAgreementRemoveTerm({
     address: sha,
     args: [BigInt('26')],
-  });
-
-  const {
-    isLoading: removeAdIsLoading,
-    write: removeAd,
-  } = useShareholdersAgreementRemoveTerm({
-    ...removeTermConfig,
     onSuccess() {
-      setTerm(undefined);
+      setTerms(v=>{
+        let out = [...v];
+        out[2] = AddrZero;
+        return out;
+      });
     }
   });
 
-  const [ newMarks, setNewMarks ] = useState<BenchmarkType[]>();
+  const [ lockers, setLockers ] = useState<Locker[]>();
 
-  const { refetch } = useAntiDilutionGetClasses({
+  const { 
+    refetch: obtainLockers 
+  } = useLockUpLockedShares({
     address: term,
     onSuccess(data) {
       let ls: number[] = [];
       data.map(v => {
-        ls.push(v.toNumber())
+        ls.push(Number(v))
       })
       if (term)
-        getBenchmarks(term, ls).
-          then(marks => setNewMarks(marks));  
+        getLockers(term, ls).
+          then(lks => setLockers(lks)); 
     }
   });
 
-  const [ classOfShare, setClassOfShare ] = useState<string>();
-  const [ price, setPrice ] = useState<string>();
+  const [ seqOfShare, setSeqOfShare ] = useState<string>();
+  const [ dueDate, setDueDate ] = useState<string>();
 
   const { 
-    config: addMarkConfig 
-  } = usePrepareAntiDilutionAddBenchmark({
+    isLoading: addLockerLoading,
+    write: addLocker 
+  } = useLockUpSetLocker({
     address: term,
-    args: classOfShare && 
-          price ? 
-            [BigInt(classOfShare), BigInt(price)] :
-            undefined, 
-  });
-
-  const { 
-    data: addMarkReceipt,
-    isLoading: addMarkIsLoading,
-    write: addMark 
-  } = useAntiDilutionAddBenchmark({
-    ...addMarkConfig,
+    args: seqOfShare && dueDate
+      ? [ BigInt(seqOfShare), BigInt(dueDate) ]
+      : undefined,
     onSuccess() {
-      refetch();
+      obtainLockers();
     }
   });
 
   const { 
-    config: removeMarkConfig 
-  } = usePrepareAntiDilutionRemoveBenchmark({
+    isLoading: removeLockerLoading, 
+    write: removeLocker 
+  } = useLockUpDelLocker({
     address: term,
-    args: classOfShare ? 
-            [BigInt(classOfShare)] :
-            undefined, 
-  });
-
-  const { 
-    data: removeMarkReceipt,
-    isLoading: removeMarkIsLoading, 
-    write: removeMark 
-  } = useAntiDilutionRemoveBenchmark({
-    ...removeMarkConfig,
+    args: seqOfShare ? [ BigInt(seqOfShare) ] : undefined,
     onSuccess() {
-      refetch();
+      obtainLockers();
     }
   });
 
-  const [ obligor, setObligor ] = useState<string>();
+  const [ keyholder, setKeyholder ] = useState<string>();
 
   const { 
-    config: addObligorConfig 
-  } = usePrepareAntiDilutionAddObligor({
+    isLoading: addKeyholderLoading, 
+    write: addKeyholder,
+  } = useLockUpAddKeyholder({
     address: term,
-    args: classOfShare &&
-          obligor ? 
-            [ BigInt(classOfShare),
-              BigInt(obligor)] :
-            undefined, 
-  });
-
-  const { 
-    data: addObligorReceipt,
-    isLoading: addObligorIsLoading, 
-    write: addObligor 
-  } = useAntiDilutionAddObligor({
-    ...addObligorConfig,
+    args: seqOfShare && keyholder
+      ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
+      :   undefined,
     onSuccess() {
-      refetch();
+      obtainLockers();
     }
   });
 
   const { 
-    config: removeObligorConfig 
-  } = usePrepareAntiDilutionRemoveObligor({
+    isLoading: removeKeyholderLoading, 
+    write: removeKeyholder,
+  } = useLockUpRemoveKeyholder({
     address: term,
-    args: classOfShare &&
-          obligor ? 
-            [ BigInt(classOfShare),
-              BigInt(obligor)] :
-            undefined, 
-  });
-
-  const { 
-    data: removeObligorReceipt,
-    isLoading: removeObligorIsLoading, 
-    write: removeObligor 
-  } = useAntiDilutionRemoveObligor({
-    ...removeObligorConfig,
+    args: seqOfShare && keyholder
+      ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
+      :   undefined,
     onSuccess() {
-      refetch();
+      obtainLockers();
     }
   });
 
@@ -268,11 +202,10 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
         disabled={ isFinalized && !term }
         variant="outlined"
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
-        Anti-Dilution 
+        Lock Up
       </Button>
 
       <Dialog
@@ -289,7 +222,7 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
 
                 <Stack direction={'row'} sx={{ alignItems:'center' }}>
                   <Toolbar>
-                    <h4>AntiDilution</h4>
+                    <h4>Lock Up (Addr: { term })</h4>
                   </Toolbar>
 
                   {term == undefined && !isFinalized && (
@@ -307,7 +240,7 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
                       />
 
                       <Button
-                        disabled={ !createTerm || createAdIsLoading }
+                        disabled={ createTermLoading }
                         variant="contained"
                         sx={{
                           height: 40,
@@ -323,14 +256,14 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
 
                   {term && !isFinalized && (
                       <Button
-                        disabled={ !removeAd || removeAdIsLoading }
+                        disabled={ removeTermLoading }
                         variant="contained"
                         sx={{
                           height: 40,
                           mr: 5,
                         }}
                         endIcon={ <Delete /> }
-                        onClick={() => removeAd?.()}
+                        onClick={() => removeTerm?.()}
                       >
                         Remove
                       </Button>
@@ -342,14 +275,14 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
                   <Stack direction={'row'} sx={{ alignItems:'center' }}>      
 
                     <Tooltip
-                      title='Add Benchmark'
+                      title='Add Locker'
                       placement="top-start"
                       arrow
                     >
                       <IconButton 
-                        disabled={ !addMark || addMarkIsLoading }
+                        disabled={ addLockerLoading }
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
-                        onClick={ () => addMark?.() }
+                        onClick={ () => addLocker?.() }
                         color="primary"
                       >
                         <AddCircle/>
@@ -358,35 +291,35 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
 
                     <TextField 
                       variant='filled'
-                      label='ClassOfShare'
+                      label='SeqOfShare'
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setClassOfShare(e.target.value)}
-                      value={ classOfShare }              
+                      onChange={(e) => setSeqOfShare(e.target.value)}
+                      value={ seqOfShare }              
                     />
 
                     <TextField 
                       variant='filled'
-                      label='Price'
+                      label='DueDate'
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setPrice(e.target.value)}
-                      value={ price }
+                      onChange={(e) => setDueDate(e.target.value)}
+                      value={ dueDate }
                     />
 
                     <Tooltip
-                      title='Remove Benchmark'
+                      title='Remove Locker'
                       placement="top-end"
                       arrow
                     >           
                       <IconButton
-                        disabled={ !removeMark || removeMarkIsLoading } 
+                        disabled={ removeLockerLoading } 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
-                        onClick={ () => removeMark?.() }
+                        onClick={ () => removeLocker?.() }
                         color="primary"
                       >
                         <RemoveCircle/>
@@ -394,14 +327,14 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
                     </Tooltip>
 
                     <Tooltip
-                      title='Add Obligor'
+                      title='Add Keyholder'
                       placement="top-start"
                       arrow
                     >
                       <IconButton 
-                        disabled={ !addObligor || addObligorIsLoading }
+                        disabled={ addKeyholderLoading }
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
-                        onClick={ () => addObligor?.() }
+                        onClick={ () => addKeyholder?.() }
                         color="primary"
                       >
                         <AddCircle/>
@@ -411,25 +344,25 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
 
                     <TextField 
                       variant='filled'
-                      label='Obligor'
+                      label='Keyholder'
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setObligor(e.target.value)}
-                      value={ obligor }              
+                      onChange={(e) => setKeyholder(e.target.value)}
+                      value={ keyholder }              
                     />
 
                     <Tooltip
-                      title='Remove Obligor'
+                      title='Remove Keyholder'
                       placement="top-end"
                       arrow
                     >
 
                       <IconButton
-                        disabled={ !removeObligor || removeObligorIsLoading } 
+                        disabled={ removeKeyholderLoading } 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
-                        onClick={ () => removeObligor?.() }
+                        onClick={ () => removeKeyholder?.() }
                         color="primary"
                       >
                         <RemoveCircle/>
@@ -440,12 +373,12 @@ export function LockUp({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
                   </Stack>
                 )}
                 
-                {term && newMarks?.map((v) => (
-                  <Benchmark 
-                    key={v.classOfShare} 
-                    classOfShare={v.classOfShare}
-                    floorPrice={v.floorPrice}
-                    obligors={v.obligors} 
+                {term && lockers?.map((v) => (
+                  <LockerOfShare 
+                    key={v.seqOfShare} 
+                    seqOfShare={v.seqOfShare}
+                    dueDate={v.dueDate}
+                    keyholders={v.keyholders} 
                   />
                 ))}
 

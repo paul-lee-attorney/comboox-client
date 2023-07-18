@@ -1,5 +1,5 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { RefundDebt } from "./RefundDebt";
 import { ExtendPledge } from "./ExtendPledge";
 import { LockPledge } from "./LockPledge";
@@ -7,16 +7,16 @@ import { ReleasePledge } from "./ReleasePledge";
 import { ExecPledge } from "./ExecPledge";
 import { RevokePledge } from "./RevokePledge";
 import { TransferPledge } from "./TransferPledge";
+import { Pledge } from "../../../queries/bop";
 
 
-interface ActionsOfPledgeProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen: (flag:boolean)=>void;
+export interface ActionsOfPledgeProps{
+  pld: Pledge;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   getAllPledges: ()=>void;
 }
 
-export function ActionsOfPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}: ActionsOfPledgeProps) {
+export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgeProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -49,31 +49,31 @@ export function ActionsOfPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}: 
       </Stack>
 
       <Collapse in={ typeOfAction == '0' } >
-        <RefundDebt seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <RefundDebt pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
       <Collapse in={ typeOfAction == '1' } >
-        <ExtendPledge seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <ExtendPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
       <Collapse in={ typeOfAction == '2' } >
-        <LockPledge seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <LockPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
       <Collapse in={ typeOfAction == '3' } >
-        <ReleasePledge seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <ReleasePledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
       <Collapse in={ typeOfAction == '4' } >
-        <ExecPledge seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <ExecPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
       <Collapse in={ typeOfAction == '5' } >
-        <RevokePledge seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <RevokePledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
       <Collapse in={ typeOfAction == '6' } >
-        <TransferPledge seqOfShare={seqOfShare} seqOfPld={seqOfPld} setOpen={setOpen} getAllPledges={getAllPledges} />
+        <TransferPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
       </Collapse>
 
     </Paper>

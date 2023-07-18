@@ -1,6 +1,11 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
+import { AddrZero, HexType } from "../interfaces";
 import { shareholdersAgreementABI } from "../generated";
+
+export const defaultTerms:HexType[] = [
+  AddrZero, AddrZero, AddrZero,
+  AddrZero, AddrZero, AddrZero
+]
 
 export async function obtainRules(sha: HexType): Promise<number[]> {
   let list = await readContract({

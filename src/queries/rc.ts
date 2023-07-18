@@ -1,4 +1,4 @@
-import { readContract, getWalletClient, getContract, getPublicClient } from "@wagmi/core";
+import { readContract, getWalletClient, getContract, getPublicClient, waitForTransaction } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../interfaces";
 import { regCenterABI } from "../generated";
 
@@ -301,6 +301,21 @@ export async function verifyDoc(addr: HexType, snOfDoc: HexType): Promise<boolea
 
   return res;
 }
+
+export async function getDocAddr(hash: HexType): Promise<HexType> {
+  const receipt = await waitForTransaction({
+    hash: hash
+  });
+
+  let out: HexType;
+
+  if (receipt)
+      out = `0x${receipt?.logs[0]?.topics[2]?.substring(26)}`;
+  else out = AddrZero;
+
+  return out; 
+}
+
 
 // ==== BatchQueries ====
 

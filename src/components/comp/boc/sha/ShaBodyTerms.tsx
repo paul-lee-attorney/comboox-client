@@ -11,14 +11,15 @@ import {
 
 import { HexType } from "../../../../interfaces";
 
-import { AntiDilution } from "../terms/antiDilution/AntiDilution";
+import { AntiDilution } from "../terms/AntiDilution/AntiDilution";
 
-import { getTerm, obtainRules, obtainTitles } from "../../../../queries/sha";
+import { defaultTerms, getTerm, obtainRules, obtainTitles } from "../../../../queries/sha";
 import { SetGovernanceRule } from "../rules/SetGovernanceRule";
 import { VotingRules } from "../rules/VotingRules";
 import { PositionAllocateRules } from "../rules/PositionAllocateRules";
 import { FirstRefusalRules } from "../rules/FirstRefusalRules";
 import { GroupUpdateOrders } from "../rules/GroupUpdateOrders";
+import { LockUp } from "../terms/LockUp/LockUp";
 
 export async function getGroupOfRules(addr: HexType): Promise<number[][]>{
 
@@ -69,18 +70,19 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
     setUpRules();
   }, [sha]);
 
-  const [ ad, setAD ] = useState<HexType>();
+  const [ terms, setTerms ] = useState<HexType[]>(defaultTerms);
 
   useEffect(()=>{
     const getTitles = async () => {
-      let titles = await obtainTitles(sha);        
-      titles.forEach(async v => {
-        switch(v) {
-          case 23:
-            setAD(await getTerm(sha, v));
-            break;
-        }
-      })
+      let titles = await obtainTitles(sha);
+      titles.forEach(async (v, i) => {
+        let res: HexType = await getTerm(sha, v);
+        setTerms(k => {
+          let out = [...k];
+          out[i] = res;
+          return out;
+        });
+      });
     }
     getTitles();
   }, [sha]);
@@ -122,8 +124,8 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
             <Divider />
 
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
-              <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } isFinalized={isFinalized} />
-              <AntiDilution sha={ sha } term={ ad } setTerm={ setAD } isFinalized={isFinalized} />
+              <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <LockUp sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
 
           </Paper>

@@ -46,7 +46,8 @@ import {
   BadgeOutlined,
   PaymentsOutlined,
   HomeOutlined,
-  Diversity1Outlined
+  Diversity1Outlined,
+  QuizOutlined
 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -138,7 +139,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         (res) => setBoox(res)
       );
       regNumOfCompany(gk).then(
-        res => setRegNum(parseInt(res))
+        res => setRegNum(Number(res))
       );
       symbolOfCompany(gk).then(
         res => setSymbol(res)
@@ -183,6 +184,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     {href: '/comp/bom/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
     {href: '/comp/bos/BookOfShares', label: 'BOS', tip:'Book of Shares', icon: <PaymentsOutlined />, divider: false},
     {href: '/comp/bop/BookOfPledges', label: 'BOP', tip:'Book of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
+    {href: '/comp/boo/BookOfOptions', label: 'BOO', tip:'Book of Options', icon: <QuizOutlined />, divider: false},
   ]
 
   const backToCenter = () => {

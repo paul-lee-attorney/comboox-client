@@ -1,0 +1,168 @@
+import { useState } from "react";
+
+import { 
+  Stack,
+  Paper,
+  Toolbar,
+  TextField,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Chip,
+} from "@mui/material";
+
+import {
+  ListAlt,
+} from "@mui/icons-material"
+
+import { Cond, comOps, logOps } from "./Options";
+import { longDataParser, } from "../../../../../scripts/toolsKit";
+
+export const optStates = ['Pending', 'Issued', 'Executed', 'Closed'];
+
+interface TriggerConditionProps {
+  cond: Cond; 
+}
+
+export function TriggerCondition({ cond }: TriggerConditionProps) {
+
+  const [ open, setOpen ] = useState (false);
+
+  return (
+    <>
+      <Button
+        variant="outlined"
+        startIcon={<ListAlt />}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
+      >
+        Trigger Condition 
+      </Button>
+
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
+
+        <DialogContent>
+
+          <Toolbar>
+            <h4> Trigger Condition </h4>
+          </Toolbar>
+
+          <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
+
+            <Stack direction='column' spacing={1} >
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                <TextField 
+                  variant='filled'
+                  label='LogicOperator'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 68,
+                  }}
+                  value={ logOps[cond.logicOpr] }
+                />
+
+                {cond.logicOpr > 0 && (<>
+
+                  <TextField 
+                    variant='filled'
+                    label='CompareOperator_1'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 68,
+                    }}
+                    value={ comOps[cond.compOpr1] }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='Parameter_1'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser(cond.para1.toString() ?? '0') }              
+                  />
+
+                </>)}
+
+                {cond.logicOpr > 2 && (<>
+
+                  <TextField 
+                    variant='filled'
+                    label='CompareOperator_2'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 68,
+                    }}
+                    value={ comOps[cond.compOpr2] }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='Parameter_2'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser(cond.para2.toString() ?? '0') }              
+                  />
+
+                </>)}
+
+                {cond.logicOpr > 6 && (<>
+
+                  <TextField 
+                    variant='filled'
+                    label='CompareOperator_3'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 68,
+                    }}
+                    value={ comOps[cond.compOpr3] }
+                  />
+
+                  <TextField 
+                    variant='filled'
+                    label='Parameter_3'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser(cond.para3.toString() ?? '0') }              
+                  />
+
+                </>)}
+
+              </Stack>
+
+            </Stack>
+
+          </Paper>
+
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
+
+      </Dialog>
+  
+    </>
+  );
+} 
+

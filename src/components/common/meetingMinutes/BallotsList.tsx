@@ -1,7 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
 import { LinearProgress, Typography } from "@mui/joy";
 
-import { bigint } from "ethers";
 import { dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/toolsKit";
 import { Bytes32Zero, HexType } from "../../../interfaces";
 import { useState } from "react";
@@ -75,9 +74,9 @@ interface Attitude  {
 }
 
 const attitudes:Attitude[] = [
-  {id: 1, name: 'Support', colorMaterial: 'primary', colorJoy: 'primary'},
-  {id: 2, name: 'Against', colorMaterial: 'error', colorJoy: 'danger'},
-  {id: 3, name: 'Abstain', colorMaterial: 'success', colorJoy: 'success'}
+  {id: 1, name: 'Support', colorMaterial: "primary", colorJoy: "primary"},
+  {id: 2, name: 'Against', colorMaterial: "error", colorJoy: "danger"},
+  {id: 3, name: 'Abstain', colorMaterial: "success", colorJoy: "success"}
 ]
 
 export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: BallotsListProps) {
@@ -102,8 +101,8 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         color={ attitudes[attitude-1].colorJoy }
         size="sm"
         thickness={38}
-        value={ !allVote.sumOfWeight.eq(0) 
-          ? voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber()
+        value={ allVote.sumOfWeight > 0 
+          ? Number(voteCase.sumOfWeight * BigInt(100) / allVote.sumOfWeight)
           : 0 }
         sx={{
           '--LinearProgress-radius': '0px',
@@ -127,8 +126,8 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
           >
             {attitudes[attitude-1].name} Ratio: 
             ({voteCase.sumOfHead}/{allVote.sumOfHead}) 
-            {` ${ !allVote.sumOfWeight.eq(0)
-                ? Math.round(voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber())
+            {` ${ allVote.sumOfWeight > 0
+                ? Math.round(Number(voteCase.sumOfWeight*BigInt(100) / allVote.sumOfWeight))
                 : 0 
             }%`} 
           </Typography>            
@@ -153,8 +152,8 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
               label={
                 attitudes[attitude-1].name + 
                 ' (' + voteCase.sumOfHead.toString() + '/' + allVote.sumOfHead.toString() + ') ' + 
-                `${ allVote.sumOfWeight.gt(0)
-                  ? Math.round(voteCase.sumOfWeight.mul(100).div(allVote.sumOfWeight).toNumber())
+                `${ allVote.sumOfWeight > 0
+                  ? Math.round(Number(voteCase.sumOfWeight * BigInt(100) / allVote.sumOfWeight))
                   : ''
                 }%`              
               }

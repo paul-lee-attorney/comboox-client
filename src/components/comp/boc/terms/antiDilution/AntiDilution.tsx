@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { 
   Stack,
@@ -14,7 +14,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { HexType } from "../../../../../interfaces";
+import { AddrZero, HexType } from "../../../../../interfaces";
 
 import {
   AddCircle,
@@ -37,19 +37,11 @@ import {
   useAntiDilutionRemoveObligor, 
 } from "../../../../../generated";
 
-import { bigint } from "ethers";
 
 import { Benchmark } from "./Benchmark";
 import { splitStrArr } from "../../../../../scripts/toolsKit";
+import { getDocAddr } from "../../../../../queries/rc";
 
-
-async function getReceipt(hash: HexType): Promise<HexType> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
-
-  return `0x${receipt.logs[0].topics[2].substring(26)}`; 
-}
 
 interface BenchmarkType {
   classOfShare: string,
@@ -59,8 +51,8 @@ interface BenchmarkType {
 
 interface SetShaTermProps {
   sha: HexType,
-  term: HexType | undefined,
-  setTerm: (term: HexType | undefined) => void,
+  term: HexType,
+  setTerms: Dispatch<SetStateAction<HexType[]>> ,
   isFinalized: boolean,
 }
 
@@ -108,7 +100,7 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
 }
 
 
-export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProps) {
+export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ version, setVersion ] = useState<string>();
 
@@ -131,8 +123,12 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
       [BigInt('24'), BigInt(version)]: 
       undefined,
     onSuccess(data:any) {
-      getReceipt(data.hash).
-        then(addrOfAd => setTerm(addrOfAd));      
+      getDocAddr(data.hash).
+        then(addrOfAd => setTerms(v => {
+          let out = [...v];
+          out[0] = addrOfAd;
+          return out;
+        }));      
     }
   });
 
@@ -150,7 +146,11 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
     address: sha,
     args: [BigInt('24')],
     onSuccess() {
-      setTerm(undefined);
+      setTerms(v=>{
+        let out = [...v];
+        out[0] = AddrZero;
+        return out;
+      });
     }
   });
 
@@ -305,7 +305,7 @@ export function AntiDilution({ sha, term, setTerm, isFinalized }: SetShaTermProp
 
                 <Stack direction={'row'} sx={{ alignItems:'center' }}>
                   <Toolbar>
-                    <h4>AntiDilution</h4>
+                    <h4>AntiDilution (Addr: {term} )</h4>
                   </Toolbar>
 
                   {term == undefined && !isFinalized && (

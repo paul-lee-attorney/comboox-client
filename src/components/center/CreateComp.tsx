@@ -16,14 +16,7 @@ import {
 } from '../../interfaces';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
-
-async function getReceipt(hash: HexType): Promise<HexType> {
-  const receipt = await waitForTransaction({
-    hash: hash
-  });
-
-  return `0x${receipt.logs[0].topics[2].substring(26)}`; 
-}
+import { getDocAddr } from '../../queries/rc';
 
 export function CreateComp() {
   const { setGK } = useComBooxContext();
@@ -36,7 +29,7 @@ export function CreateComp() {
     address: AddrOfRegCenter,
     onSuccess(data) {
       const initComp = async ()=>{
-        let addrOfGK = await getReceipt(data.hash);
+        let addrOfGK = await getDocAddr(data.hash);
         setGK(addrOfGK);
         router.push('/comp/HomePage');
       }
