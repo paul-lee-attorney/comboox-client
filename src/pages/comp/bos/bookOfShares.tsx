@@ -20,6 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
 import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/bos";
+import { AddrZero } from "../../../interfaces";
 
 
 function BookOfShares() {
@@ -76,7 +77,7 @@ function BookOfShares() {
     <>
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Toolbar>
-          <h3>BOS - Book Of Shares</h3>
+          <h3>BOS - Book Of Shares (Addr: { boox ? boox[10] : AddrZero} )</h3>
         </Toolbar>
 
         <table width={1680} >

@@ -21,16 +21,11 @@ import {
 import { ContractProps, HexType } from '../../../interfaces';
 import { hasRole } from '../../../queries/accessControl';
 
-const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
+export const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 
 export function RemoveAttorney({ addr }: ContractProps) {
 
-  const [acct, setAcct] = useState<string>();
-
-  // const { config } = usePrepareAccessControlRevokeRole({
-  //   address: addr,
-  //   args: acct ? [ATTORNEYS, BigInt(acct)] : undefined,
-  // });
+  const [acct, setAcct] = useState<HexType>();
 
   const {
     data,
@@ -38,7 +33,7 @@ export function RemoveAttorney({ addr }: ContractProps) {
     write,
   } = useAccessControlRevokeRole({
     address: addr,
-    args: acct ? [ATTORNEYS, BigInt(acct)] : undefined,    
+    args: acct ? [ATTORNEYS, acct] : undefined,    
   });
 
   const [ flag, setFlag ] = useState<boolean>();
@@ -60,7 +55,7 @@ export function RemoveAttorney({ addr }: ContractProps) {
     <>
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <FormControl sx={{ m: 1, width: 250 }} variant="outlined">
+        <FormControl sx={{ m: 1, width: 550 }} variant="outlined">
           <InputLabel htmlFor="setAcct-input">RemoveAttorney</InputLabel>
           <OutlinedInput
             id="setAcct-input"
@@ -78,11 +73,11 @@ export function RemoveAttorney({ addr }: ContractProps) {
             }
             label='RemoveAttorney'
             sx={{height:55}}
-            onChange={(e) => setAcct(e.target.value)}
+            onChange={(e) => setAcct(`0x${e.target.value}`)}
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:280}}>        
+        <Collapse in={open} sx={{width:218}}>        
           <Alert 
             action={
               <IconButton

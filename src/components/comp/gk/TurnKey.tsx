@@ -28,7 +28,7 @@ import { HexType } from '../../../interfaces';
 
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 import { getKeeper } from '../../../queries/gk';
-import { getBookeeper } from '../../../queries/accessControl';
+import { getDK } from '../../../queries/accessControl';
 
 interface TurnKeyProps {
   nextStep: (next: number) => void;
@@ -47,10 +47,10 @@ export function TurnKey({nextStep}:TurnKeyProps) {
     const obtainKeepers = async ()=>{
       if (gk && boox) {
         setBomKeeper(await getKeeper(gk, 4));
-        setDKOfBom(await getBookeeper(boox[4]));
+        setDKOfBom(await getDK(boox[4]));
   
         setBosKeeper(await getKeeper(gk, 10));
-        setDKOfBos(await getBookeeper(boox[10]));
+        setDKOfBos(await getDK(boox[10]));
       }
     }
     

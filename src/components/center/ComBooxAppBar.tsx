@@ -128,7 +128,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const router = useRouter();
   const { pathname } = router;
 
-  const [auth, setAuth] = useState(false);
+  const { isConnected, isDisconnected } = useAccount();
 
   const { connect, connectors } = useConnect();
   const { disconnect } = useDisconnect();
@@ -151,15 +151,13 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (auth) {
+    if (isConnected) {
       setUserNo(undefined);
       disconnect();
       if (pathname == '/my/UserInfo') router.push('/');
     } else {
       connect({ connector: connectors[0] });
     }
-    
-    setAuth(e.target.checked);
   };
 
     
@@ -221,17 +219,17 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
             <FormControlLabel
               control={
                 <Switch
-                  checked={auth}
+                  checked={isConnected}
                   onChange={handleChange}
                   aria-label="login switch"
                   color='default'
                 />
               }
-              label={auth ? 'Logout' : 'Login'}
+              label={isConnected ? 'Logout' : 'Login'}
             />
           </FormGroup>
 
-          <AcctPage flag={ auth } />
+          <AcctPage flag={ isConnected } />
 
         </Toolbar>
       </AppBar>

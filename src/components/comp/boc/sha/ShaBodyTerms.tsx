@@ -20,6 +20,9 @@ import { PositionAllocateRules } from "../rules/PositionAllocateRules";
 import { FirstRefusalRules } from "../rules/FirstRefusalRules";
 import { GroupUpdateOrders } from "../rules/GroupUpdateOrders";
 import { LockUp } from "../terms/LockUp/LockUp";
+import { DragAlong } from "../terms/DragAlong/DragAlong";
+import { Options } from "../terms/Options/Options";
+import { TagAlong } from "../terms/TagAlong/TagAlong";
 
 export async function getGroupOfRules(addr: HexType): Promise<number[][]>{
 
@@ -75,11 +78,11 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
   useEffect(()=>{
     const getTitles = async () => {
       let titles = await obtainTitles(sha);
-      titles.forEach(async (v, i) => {
-        let res: HexType = await getTerm(sha, v);
-        setTerms(k => {
+      titles.forEach(async v => {
+        let res = await getTerm(sha, v);
+        setTerms((k) => {          
           let out = [...k];
-          out[i] = res;
+          out[v-24] = res;
           return out;
         });
       });
@@ -125,7 +128,14 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
               <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <DragAlong sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
+            </Stack>
+            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
               <LockUp sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <Options sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={isFinalized} />
+            </Stack>
+            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>                      
+              <TagAlong sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
 
           </Paper>

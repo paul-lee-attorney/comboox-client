@@ -17,20 +17,16 @@ interface Receipt{
   amt: string;
 }
 
+interface MintPointsProps {
+  getUser: ()=>void;
+}
 
-export function MintPoints() {
+export function MintPoints({getUser}:MintPointsProps) {
 
   const [ to, setTo ] = useState<string>();
   const [ amt, setAmt ] = useState<string>();
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
-
-  // const { config: mintPointsConfig } = usePrepareRegCenterMintPoints({
-  //   address: AddrOfRegCenter,
-  //   args: to && amt
-  //     ? [BigInt(to), BigInt(amt)]
-  //     : undefined,
-  // })  
 
   const {
     isLoading: mintPointsLoading,
@@ -50,6 +46,7 @@ export function MintPoints() {
             }
             setReceipt(rpt);
             setOpen(true);
+            getUser();
           }
         }
       )
@@ -117,7 +114,7 @@ export function MintPoints() {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt} points minted to User ({receipt?.to})
+            {receipt?.amt} Points minted to User ({receipt?.to})
           </Alert>          
         </Collapse>
 

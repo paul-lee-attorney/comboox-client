@@ -19,10 +19,6 @@ interface LockContentsProps {
 
 export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
 
-  // const { config } = usePrepareAccessControlLockContents({
-  //   address: addr,
-  // });
-
   const {
     isLoading,
     write,
@@ -37,7 +33,7 @@ export function LockContents({ addr, setIsFinalized, setNextStep }: LockContents
   return (
     <Button
       disabled={ isLoading }
-      sx={{m:1, minWidth:218}}
+      sx={{m:1, minWidth:128}}
       variant='contained'
       endIcon={<Lock />}
       onClick={()=>write?.() }

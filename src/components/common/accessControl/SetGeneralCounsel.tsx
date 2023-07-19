@@ -12,39 +12,32 @@ import {
   OutlinedInput,
 } from '@mui/material';
 
-import { Approval, Close, EditNote }  from '@mui/icons-material';
+import { Approval, Close }  from '@mui/icons-material';
 
 import { 
-  useAccessControlSetGeneralCounsel,
+  useAccessControlSetRoleAdmin,
 } from '../../../generated';
 
-import { waitForTransaction } from '@wagmi/core';
 import { ContractProps, HexType } from '../../../interfaces';
 import { getGeneralCounsel } from '../../../queries/accessControl';
+import { ATTORNEYS } from './RemoveAttorney';
 
 export function SetGeneralCounsel({ addr }: ContractProps) {
-  const [gc, setGC] = useState<string>();
-
-  // const { config } = usePrepareAccessControlSetGeneralCounsel({
-  //   address: addr,
-  //   args: gc ? [BigInt(gc)] : undefined,
-  // });
+  const [gc, setGC] = useState<HexType>();
 
   const {
-    data,
-    isSuccess,
-    isLoading,
-    write,
-  } = useAccessControlSetGeneralCounsel({
+    isLoading: setRoleAdminLoading,
+    write: setRoleAdmin,
+  } = useAccessControlSetRoleAdmin({
     address: addr,
-    args: gc ? [BigInt(gc)] : undefined,    
+    args: gc ? [ ATTORNEYS, gc] : undefined,    
   });
 
-  const [ newGC, setNewGC ] = useState<number>();
+  const [ newGC, setNewGC ] = useState<HexType>();
   const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
-    write?.();
+    setRoleAdmin?.();
   }
 
   useEffect(() => { 
@@ -52,20 +45,20 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
       setNewGC(gc);
       setOpen(true);
     });
-  }, [data, addr]);
+  }, [setRoleAdmin, addr]);
 
   return (
     <>
       <Stack direction={'row'} >
 
-        <FormControl sx={{ m: 1, width: 250 }} variant="outlined">
+        <FormControl sx={{ m: 1, width: 550 }} variant="outlined">
           <InputLabel htmlFor="setGC-input">SetGeneralCounsel</InputLabel>
           <OutlinedInput
             id="setGC-input"
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ isLoading }
+                  disabled={ setRoleAdminLoading || !gc }
                   color='primary'
                   onClick={ handleClick }
                   edge="end"
@@ -76,7 +69,7 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
             }
             label='SetGeneralCounsel'
             sx={{height: 55}}
-            onChange={(e) => setGC(e.target.value)}
+            onChange={(e) => setGC(`0x${e.target.value}`)}
           />
         </FormControl>
 

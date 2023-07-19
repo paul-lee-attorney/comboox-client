@@ -1,32 +1,32 @@
 import { useRouter } from 'next/navigation';
 
-import { Button } from '@mui/material';
+import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
 import { Create } from '@mui/icons-material';
 
-import { waitForTransaction } from '@wagmi/core'
-
 import { 
-  usePrepareRegCenterCreateComp, 
   useRegCenterCreateComp,
 } from '../../generated';
 
 import { 
-  AddrOfRegCenter,
-  HexType
+  AddrOfRegCenter, AddrZero, HexType,
 } from '../../interfaces';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 import { getDocAddr } from '../../queries/rc';
+import { useState } from 'react';
 
 export function CreateComp() {
   const { setGK } = useComBooxContext();
   const router = useRouter();
+
+  const [ dk, setDK ] = useState<HexType>(AddrZero);
 
   const {
     isLoading: createCompLoading, 
     write: createComp,
   } = useRegCenterCreateComp({
     address: AddrOfRegCenter,
+    args: dk ? [dk] : undefined,
     onSuccess(data) {
       const initComp = async ()=>{
         let addrOfGK = await getDocAddr(data.hash);
@@ -38,15 +38,37 @@ export function CreateComp() {
   })
 
   return (
-    <Button 
-      sx={{ m: 1, minWidth: 488, height: 40 }} 
-      variant="outlined" 
-      disabled={ createCompLoading }
-      endIcon={ <Create /> }
-      size='small'
-      onClick={() => createComp?.()}
-    >
-      {createCompLoading ? 'Loading...' : 'Register My Company'}
-    </Button> 
+    <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
+
+
+      <FormControl size='small' sx={{ m: 1, width: 488 }} variant="outlined">
+        <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of General Keeper</InputLabel>
+        <OutlinedInput
+          size='small'
+          id="setGC-input"
+          label='PrimeKey Of General Keeper'
+          endAdornment={
+            <InputAdornment position="end">
+              <Tooltip title={"Register My Company"} placement='right' arrow >
+                <span>
+                  <IconButton
+                    disabled={ createCompLoading || !dk }
+                    color='primary'
+                    onClick={ ()=>createComp?.() }
+                    edge="end"
+                  >
+                    <Create />
+                  </IconButton>
+                </span>
+              </Tooltip>
+            </InputAdornment>
+          }
+          sx={{height: 40}}
+          onChange={(e) => setDK(`0x${e.target.value.substring(2)}`)}
+          value={ dk }
+        />
+      </FormControl>
+
+    </Stack> 
   )
 }

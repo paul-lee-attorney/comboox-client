@@ -195,3 +195,29 @@ export async function getFilesListWithInfo(addr: HexType):Promise<InfoOfFile[]>{
   return list;
 }
 
+export async function getFilesInfoList(addr: HexType, ls: readonly HexType[]):Promise<InfoOfFile[]>{
+
+  // let ls = await getFilesList(addr);
+
+  let list: InfoOfFile[] = [];
+  let len: number = ls.length;
+  let i = len > 100 ? len - 100 : 0;
+
+  while(i < len) {
+  
+    let file = await getFile(addr, ls[i]);
+
+    list.push({
+      addr: ls[i],
+      sn: file.snOfDoc,
+      head: file.head,
+      ref: file.ref,
+    });
+
+    i++;
+
+  }
+
+  return list;
+}
+

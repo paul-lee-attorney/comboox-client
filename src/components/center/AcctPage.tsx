@@ -1,11 +1,11 @@
-import { AccountCircle } from "@mui/icons-material";
+import { AccountCircle, BorderColor } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 import Link from "next/link";
 import { longSnParser } from "../../scripts/toolsKit";
-import { useAccount, useContractRead } from "wagmi";
+import { useAccount, useContractRead, useWalletClient } from "wagmi";
 import { AddrOfRegCenter, HexType } from "../../interfaces";
-import { regCenterABI } from "../../generated";
+import { regCenterABI, useRegCenterRegUser } from "../../generated";
 import { useComBooxContext } from "../../scripts/ComBooxContext";
 
 interface AcctPageProps {
@@ -14,37 +14,73 @@ interface AcctPageProps {
 
 export function AcctPage({ flag }:AcctPageProps) {
 
-  const { address: acct } = useAccount();
+  // const { address: acct, isConnected, isDisconnected } = useAccount();
+
+  const { data: signer } = useWalletClient();
 
   const { userNo, setUserNo } = useComBooxContext();
 
-  useContractRead({
+  const {
+    refetch: getMyUserNo
+  } = useContractRead({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getMyUserNo',
-    account: acct,
+    account: signer?.account ,
     onSuccess(data) {
-      setUserNo(data);
+      if (signer) setUserNo(data);
+      else setUserNo(undefined);
+    },
+  })
+
+  const {
+    isLoading: regUserLoading,
+    write: regUser
+  } = useRegCenterRegUser({
+    address: AddrOfRegCenter,
+    onSuccess() {
+      getMyUserNo();
     }
   })
 
   return (
-    <Link    
-      href={{
-        pathname: flag ? `/my/UserInfo` : '/' ,
-      }}
-      as={`/my/UserInfo`}
-    >
+    <>
+    {userNo && (
+      <Link    
+        href={{
+          pathname: flag ? `/my/UserInfo` : '/' ,
+        }}
+        as={`/my/UserInfo`}
+      >
 
-      <Button
+        <Button
+          variant='contained'
+          color='info'
+          startIcon={<AccountCircle />}
+          sx={{ minWidth:218  }}
+        >
+          {longSnParser(userNo?.toString() ?? '0')}
+        </Button>
+      
+      </Link>
+    )}
+
+    {!userNo && (
+      <Button 
+        size="small"
+        disabled={ !signer || regUserLoading } 
+        onClick={() => {
+          regUser?.()
+        }}
         variant={flag ? 'contained' : 'outlined' }
         color={ flag ? 'info' : 'primary' }
-        startIcon={<AccountCircle />}
-        sx={{ minWidth:218  }}
+        sx={{ minWidth:218 }} 
+        endIcon={<BorderColor />}       
       >
-        {longSnParser(userNo?.toString() ?? '0')}
+        {regUserLoading ? 'Loading...' : 'Register'}
       </Button>
 
-    </Link>
+    )}
+  </>
   );
 }

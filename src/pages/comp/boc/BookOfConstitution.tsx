@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Button, 
@@ -13,10 +13,11 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Create } from "@mui/icons-material";
 
 import { 
+  useFilesFolderGetFilesList,
   useGeneralKeeperCreateSha,
 } from "../../../generated";
 
-import { InfoOfFile } from "../../../queries/filesFolder";
+import { InfoOfFile, getFilesInfoList, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 
 function BookOfConstitution() {
@@ -26,26 +27,30 @@ function BookOfConstitution() {
 
   const [ version, setVersion ] = useState<string>();
 
-  // const { config: createShaPrepared } = usePrepareGeneralKeeperCreateSha({
-  //   address: gk,
-  //   args: version ? [BigInt(version)] : undefined,
-  //   onSuccess(){
-  //     console.log('config: ', createShaPrepared);
-  //   }
-  // });
+  const {
+    refetch: getFilesList     
+  } = useFilesFolderGetFilesList({
+    address: boox ? boox[1] : undefined,
+    onSuccess(ls) {
+      if (boox)
+        getFilesInfoList(boox[1], ls).then(
+          list => setFilesInfoList(list)
+        )
+    }
+  })
+
 
   const {
-    error,
     isLoading: createShaLoading, 
     write: createSha,
   } = useGeneralKeeperCreateSha({
     address: gk,
     args: version ? [BigInt(version)] : undefined,
-    onError() {
-      console.log('error: ', error);
-    }
+    onSuccess(){
+      getFilesList();
+    },
   });
-
+  
   // useEffect(()=>{
   //   if (boox) {
   //     getFilesListWithInfo(boox[1]).then(
@@ -56,7 +61,7 @@ function BookOfConstitution() {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      <Toolbar sx={{ textDecoration:'underline' }}>
         <h3>BOC - Book Of Constitution</h3>
       </Toolbar>
 

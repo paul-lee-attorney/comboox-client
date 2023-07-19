@@ -5,9 +5,10 @@ import { MintPoints } from "./MintPoints";
 
 interface MintToolsProps{
   refreshList: ()=>void;
+  getUser: ()=>void;
 }
 
-export function MintTools({ refreshList }:MintToolsProps) {
+export function MintTools({ refreshList, getUser }:MintToolsProps) {
 
   const [ useLock, setUseLock ] = useState<boolean>();
 
@@ -44,11 +45,11 @@ export function MintTools({ refreshList }:MintToolsProps) {
     </Stack>
 
     {useLock && (
-      <MintAndLockPoints refreshList={ refreshList } />
+      <MintAndLockPoints refreshList={ refreshList } getUser={getUser} />
     )}
 
     {!useLock && (
-      <MintPoints />
+      <MintPoints getUser={ getUser } />
     )}
 
   </Paper>

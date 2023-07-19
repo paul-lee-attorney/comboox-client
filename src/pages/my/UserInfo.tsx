@@ -3,10 +3,9 @@ import { AddrOfRegCenter, AddrZero } from "../../interfaces";
 import { Locker, User, getOwner, getLocker, getUser } from "../../queries/rc";
 import { Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser } from "../../scripts/toolsKit";
-import { RegUser } from "../../components/center/RegUser";
-import { useRegCenterGetLocksList } from "../../generated";
+import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetOwner, useRegCenterGetUser } from "../../generated";
 import { SetBackupKey } from "../../components/center/SetBackupKey";
-import { useAccount } from "wagmi";
+import { useAccount, useContractRead, useWalletClient } from "wagmi";
 import { MintTools } from "../../components/center/MintTools";
 import { LockersList } from "../../components/center/LockersList";
 import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
@@ -22,18 +21,41 @@ function UserInfo() {
 
   const [ user, setUser ] = useState<User>();
 
-  const obtainUser = async ()=>{
-    setUser( await getUser());
-  }
+  // const obtainUser = async ()=>{
+  //   setUser( await getUser());
+  // }
 
+  const { data: signer } = useWalletClient();
+
+  const {
+    refetch: obtainUser
+  } = useContractRead({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getUser',
+    account: signer?.account ,
+    onSuccess(data) {
+      if (signer) setUser(data);
+      else setUser(undefined);
+    },
+  })
+    
   const [ isOwner, setIsOwner ] = useState(false);
 
-  const { address:signer, isConnected } = useAccount();
+  // const checkOwner = async ()=>{
+  //   let owner = await getOwner(AddrOfRegCenter);
+  //   setIsOwner(signer ? signer.account.address == owner : false);
+  // }
 
-  const checkOwner = async ()=>{
-    let owner = await getOwner(AddrOfRegCenter);
-    setIsOwner(signer ? signer == owner : false);
-  }
+  useRegCenterGetOwner({
+    address: AddrOfRegCenter,
+    onSuccess(owner) {
+      if (owner == signer?.account.address)
+        setIsOwner(true);
+      else setIsOwner(false);
+    }
+  })
+
 
   const [ lockersList, setLockersList ] = useState<Locker[]>();
 
@@ -59,10 +81,10 @@ function UserInfo() {
     }
   });
 
-  useEffect(()=>{
-    obtainUser();
-    checkOwner();
-  });
+  // useEffect(()=>{
+  //   // obtainUser();
+  //   checkOwner();
+  // });
 
   const [ open, setOpen ] = useState(false);
   const [ locker, setLocker ] = useState<Locker>();
@@ -74,9 +96,8 @@ function UserInfo() {
   return (
     // <Collapse in={isConnected} >
     <>
-    {isConnected && (
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:1, border:1, borderColor:'divider' }} >
-        <Toolbar>
+        <Toolbar sx={{ textDecoration:'underline' }} >
           <h3>User Info - ( No. { longSnParser(userNo?.toString() ?? '0') } ) </h3>
         </Toolbar>
 
@@ -249,16 +270,12 @@ function UserInfo() {
 
             <tr>
               <td colSpan={4}>
-
-                {!userNo && (
-                  <RegUser getUser={ obtainUser } />
-                )}
-
+                
                 {userNo && (
                   <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
                     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between', color:'black', }}>
 
-                      <Toolbar >
+                      <Toolbar sx={{ textDecoration:'underline' }} >
                         <h4>User Actions</h4>
                       </Toolbar>
 
@@ -288,7 +305,7 @@ function UserInfo() {
                         aria-labelledby="typeOfActionRadioGrup"
                         name="typeOfActionRadioGroup"
                         onChange={(e)=>(setTypeOfAction(e.target.value))}
-                        defaultValue={'0'}
+                        defaultValue={''}
                       >
                         {userNo && user && user.backupKey.pubKey == AddrZero && (
                           <FormControlLabel value={'0'} control={<Radio size='small' />} label="Set BackupKey" />
@@ -320,7 +337,7 @@ function UserInfo() {
                 )}
                 {isOwner && (
                   <Collapse in={ typeOfAction == '1' } >
-                    <MintTools refreshList={ getLocksList } />
+                    <MintTools refreshList={ getLocksList } getUser={ obtainUser } />
                   </Collapse>
                 )}
                 {!isOwner && (
@@ -353,7 +370,6 @@ function UserInfo() {
           </tbody>
         </table>
       </Paper>
-    )}
     </>
   );
 }

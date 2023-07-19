@@ -28,7 +28,7 @@ import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, codifyHeadOfShare, getSharesList, } from '../../../queries/bos';
-import { getShareNumbersList } from '../../../queries/rom';
+import { getShareNumbersList } from '../../../queries/bom';
 
 
 const defaultShare: Share = {
@@ -61,57 +61,21 @@ export function InitBos({nextStep}: InitBosProps) {
   const [sharesList, setSharesList] = useState<Share[]>();
   const [share, setShare] = useState<Share>(defaultShare);
 
-  // const {
-  //   config
-  // } = usePrepareBookOfSharesIssueShare({
-  //   address: boox ? boox[10] : undefined,
-  //   args: share.head.class &&
-  //     share.head.issueDate &&
-  //     share.head.shareholder && 
-  //     share.head.priceOfPaid && 
-  //     share.head.priceOfPar && 
-  //     share.body.payInDeadline &&
-  //     share.body.paid &&
-  //     share.body.par ? 
-  //       [
-  //         codifyHeadOfShare(share.head),
-  //         BigInt(share.body.payInDeadline),
-  //         share.body.paid,
-  //         share.body.par
-  //       ] :
-  //       undefined,
-  // });
-
   const {
     isLoading: issueShareLoading,
     write: issueShare,
   } = useBookOfSharesIssueShare({
     address: boox ? boox[10] : undefined,
-    args: share.head.class &&
-      share.head.issueDate &&
-      share.head.shareholder && 
-      share.head.priceOfPaid && 
-      share.head.priceOfPar && 
-      share.body.payInDeadline &&
-      share.body.paid &&
-      share.body.par ? 
-        [
-          codifyHeadOfShare(share.head),
+    args: share.head.class && share.head.issueDate &&
+          share.head.shareholder && share.head.priceOfPaid && 
+          share.head.priceOfPar && share.body.payInDeadline &&
+          share.body.paid && share.body.par 
+      ? [ codifyHeadOfShare(share.head),
           BigInt(share.body.payInDeadline),
           share.body.paid,
-          share.body.par
-        ] :
-        undefined,
+          share.body.par  ] 
+      : undefined,
   });
-
-  // const {
-  //   config: delShareConfig
-  // } = usePrepareBookOfSharesDecreaseCapital({
-  //   address: boox ? boox[10] : undefined,
-  //   args: share.head.seqOfShare > 0
-  //       ? [BigInt(share.head.seqOfShare), share.body.paid, share.body.par]
-  //       : undefined,
-  // })
 
   const {
     isLoading: delShareLoading,
@@ -119,17 +83,10 @@ export function InitBos({nextStep}: InitBosProps) {
   } = useBookOfSharesDecreaseCapital({
     address: boox ? boox[10] : undefined,
     args: share.head.seqOfShare > 0
-        ? [BigInt(share.head.seqOfShare), share.body.paid, share.body.par]
+        ? [ BigInt(share.head.seqOfShare), 
+            share.body.paid, 
+            share.body.par ]
         : undefined,
-    onSuccess(){
-      setShare(v => ({
-        ...v,
-        head: {
-          ...v.head,
-          seqOfShare: 0,
-        }
-      }));
-    }
   })
 
   useEffect(()=>{

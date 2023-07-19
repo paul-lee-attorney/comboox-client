@@ -4,7 +4,7 @@ import { shareholdersAgreementABI } from "../generated";
 
 export const defaultTerms:HexType[] = [
   AddrZero, AddrZero, AddrZero,
-  AddrZero, AddrZero, AddrZero
+  AddrZero, AddrZero
 ]
 
 export async function obtainRules(sha: HexType): Promise<number[]> {
@@ -27,12 +27,8 @@ export async function obtainTitles(sha: HexType): Promise<number[]> {
     functionName: 'titles',
   });
 
-  let output: number[] = [];
-  list.forEach(v => output.push(Number(v)));
-
-  return output;
+  return list.map(v => Number(v));
 }
-
 
 export async function getRule(sha: HexType, seq: number): Promise<HexType> {
   let rule = await readContract({

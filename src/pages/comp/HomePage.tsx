@@ -9,30 +9,45 @@ import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers"
 import { InitBos } from "../../components/comp/bos/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
-import { getBookeeper } from "../../queries/accessControl";
+import { getDK } from "../../queries/accessControl";
 import { getKeeper } from "../../queries/gk";
+import { useBookOfSharesGetDk } from "../../generated";
 
 
 function HomePage() {
   const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
 
-  useEffect(()=>{
-    const checkDirectKeepers = async ()=> {
-      if (gk && boox) {
-        let dkOfBom = await getBookeeper(boox[4]);
-        let bomKeeper = await getKeeper(gk, 4);
-        let dkOfBos = await getBookeeper(boox[10]);
-        let bosKeeper = await getKeeper(gk, 4);
-  
-        if (dkOfBom == bomKeeper && dkOfBos == bosKeeper)
-          setActiveStep(4);
-        else setActiveStep(0);
-      }
+  useBookOfSharesGetDk({
+    address: boox ? boox[10] : undefined,
+    onSuccess(dk) {
+      if (gk)
+        getKeeper(gk, 10).then(
+          v => {
+            if (v == dk) setActiveStep(4);
+            else setActiveStep(0);
+          }
+        )
     }
+  })
 
-    checkDirectKeepers();
-  }, [gk, boox])
+
+  // useEffect(()=>{
+  //   const checkDirectKeepers = async ()=> {
+  //     if (gk && boox) {
+  //       let dkOfBom = await getDK(boox[4]);
+  //       let bomKeeper = await getKeeper(gk, 4);
+  //       let dkOfBos = await getDK(boox[10]);
+  //       let bosKeeper = await getKeeper(gk, 10);
+  
+  //       if (dkOfBom == bomKeeper && dkOfBos == bosKeeper)
+  //         setActiveStep(4);
+  //       else setActiveStep(0);
+  //     }
+  //   }
+
+  //   checkDirectKeepers();
+  // }, [gk, boox])
 
   return (
     <Stack direction='column' width='100%' height='100%' >

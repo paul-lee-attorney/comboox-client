@@ -116,7 +116,7 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-      <Toolbar>
+      <Toolbar sx={{ textDecoration:'underline' }}>
         <h3>{ title }</h3>
       </Toolbar>
 

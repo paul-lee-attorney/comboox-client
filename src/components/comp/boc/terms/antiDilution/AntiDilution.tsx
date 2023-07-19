@@ -49,13 +49,6 @@ interface BenchmarkType {
   obligors: string,
 }
 
-interface SetShaTermProps {
-  sha: HexType,
-  term: HexType,
-  setTerms: Dispatch<SetStateAction<HexType[]>> ,
-  isFinalized: boolean,
-}
-
 async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkType[]> {
   let len = classes.length;
   let output: BenchmarkType[] = [];
@@ -99,19 +92,16 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
   return output;
 }
 
+export interface SetShaTermProps {
+  sha: HexType,
+  term: HexType,
+  setTerms: Dispatch<SetStateAction<HexType[]>> ,
+  isFinalized: boolean,
+}
 
 export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
-  const [ version, setVersion ] = useState<string>();
-
-  // const {
-  //   config: createAdConfig
-  // } = usePrepareShareholdersAgreementCreateTerm({
-  //   address: sha,
-  //   args: version ? 
-  //     [BigInt('24'), BigInt(version)]: 
-  //     undefined,
-  // });
+  const [ version, setVersion ] = useState<string>('1');
 
   const {
     data: createAdReceipt,
@@ -131,13 +121,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         }));      
     }
   });
-
-  // const {
-  //   config: removeAdConfig
-  // } = usePrepareShareholdersAgreementRemoveTerm({
-  //   address: sha,
-  //   args: [BigInt('24')],
-  // });
 
   const {
     isLoading: removeAdIsLoading,
@@ -172,16 +155,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
   const [ classOfShare, setClassOfShare ] = useState<string>();
   const [ price, setPrice ] = useState<string>();
 
-  // const { 
-  //   config: addMarkConfig 
-  // } = usePrepareAntiDilutionAddBenchmark({
-  //   address: term,
-  //   args: classOfShare && 
-  //         price ? 
-  //           [BigInt(classOfShare), BigInt(price)] :
-  //           undefined, 
-  // });
-
   const { 
     data: addMarkReceipt,
     isLoading: addMarkIsLoading,
@@ -196,15 +169,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
       refetch();
     }
   });
-
-  // const { 
-  //   config: removeMarkConfig 
-  // } = usePrepareAntiDilutionRemoveBenchmark({
-  //   address: term,
-  //   args: classOfShare ? 
-  //           [BigInt(classOfShare)] :
-  //           undefined, 
-  // });
 
   const { 
     data: removeMarkReceipt,
@@ -222,17 +186,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
   const [ obligor, setObligor ] = useState<string>();
 
-  // const { 
-  //   config: addObligorConfig 
-  // } = usePrepareAntiDilutionAddObligor({
-  //   address: term,
-  //   args: classOfShare &&
-  //         obligor ? 
-  //           [ BigInt(classOfShare),
-  //             BigInt(obligor)] :
-  //           undefined, 
-  // });
-
   const { 
     data: addObligorReceipt,
     isLoading: addObligorIsLoading, 
@@ -248,17 +201,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
       refetch();
     }
   });
-
-  // const { 
-  //   config: removeObligorConfig 
-  // } = usePrepareAntiDilutionRemoveObligor({
-  //   address: term,
-  //   args: classOfShare &&
-  //         obligor ? 
-  //           [ BigInt(classOfShare),
-  //             BigInt(obligor)] :
-  //           undefined, 
-  // });
 
   const { 
     data: removeObligorReceipt,
@@ -308,7 +250,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     <h4>AntiDilution (Addr: {term} )</h4>
                   </Toolbar>
 
-                  {term == undefined && !isFinalized && (
+                  {term == AddrZero && !isFinalized && (
                     <>
                       <TextField 
                         variant='filled'
@@ -337,7 +279,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     </>
                   )}
 
-                  {term && !isFinalized && (
+                  {term != AddrZero && !isFinalized && (
                       <Button
                         disabled={ removeAdIsLoading }
                         variant="contained"

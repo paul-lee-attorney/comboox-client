@@ -86,13 +86,6 @@ export function SetCompId({nextStep}: SetCompIdProps) {
     }
   });
 
-  // const {
-  //   config: setCompInfoConfig 
-  // } = usePrepareGeneralKeeperSetCompInfo({
-  //   address: gk,
-  //   args:  [ inputId.name, inputId.symbol ],
-  // });
-
   const {
     isLoading: setCompInfoLoading,
     write: setCompInfo, 

@@ -1,6 +1,6 @@
 
 
-export const AddrOfRegCenter:HexType = "0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f";
+export const AddrOfRegCenter:HexType = "0x4C2F7092C2aE51D986bEFEe378e50BD4dB99C901";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 

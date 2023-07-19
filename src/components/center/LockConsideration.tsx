@@ -9,7 +9,6 @@ import {
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType } from '../../interfaces';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { bigint } from 'ethers';
 import { selectorCodifier } from '../../scripts/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';

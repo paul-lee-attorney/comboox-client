@@ -12,7 +12,7 @@ import {
   OutlinedInput,
 } from '@mui/material';
 
-import { Approval, Close, EditNote, PersonAdd }  from '@mui/icons-material';
+import { Close, PersonAdd }  from '@mui/icons-material';
 
 import { readContract } from '@wagmi/core';
 
@@ -25,12 +25,12 @@ import { ContractProps, HexType } from '../../../interfaces';
 
 const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 
-async function isAttorney(addr: HexType, acct: string): Promise<boolean> {
+async function isAttorney(addr: HexType, acct: HexType): Promise<boolean> {
   let flag = await readContract({
     address: addr,
     abi: accessControlABI,
     functionName: 'hasRole',
-    args: [ATTORNEYS, BigInt(acct)],
+    args: [ATTORNEYS, acct],
   });
 
   return flag;
@@ -38,12 +38,7 @@ async function isAttorney(addr: HexType, acct: string): Promise<boolean> {
 
 export function AppointAttorney({ addr }: ContractProps) {
 
-  const [acct, setAcct] = useState<string>();
-
-  // const { config } = usePrepareAccessControlGrantRole({
-  //   address: addr,
-  //   args: acct ? [ATTORNEYS, BigInt(acct)] : undefined,
-  // });
+  const [acct, setAcct] = useState<HexType>();
 
   const {
     data,
@@ -51,7 +46,7 @@ export function AppointAttorney({ addr }: ContractProps) {
     write,
   } = useAccessControlGrantRole({
     address: addr,
-    args: acct ? [ATTORNEYS, BigInt(acct)] : undefined,    
+    args: acct ? [ATTORNEYS, acct] : undefined,    
   });
 
   const [ flag, setFlag ] = useState<boolean>();
@@ -73,7 +68,7 @@ export function AppointAttorney({ addr }: ContractProps) {
     <>
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <FormControl sx={{ m: 1, width: 250 }} variant="outlined">
+        <FormControl sx={{ m: 1, minWidth: 550 }} variant="outlined">
           <InputLabel htmlFor="setAcct-input">AppointAttorney</InputLabel>
           <OutlinedInput
             id="setAcct-input"
@@ -91,11 +86,11 @@ export function AppointAttorney({ addr }: ContractProps) {
             }
             label='AppointAttorney'
             sx={{ height:55 }}
-            onChange={(e) => setAcct(e.target.value)}
+            onChange={(e) => setAcct(`0x${e.target.value}`)}
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:280}}>        
+        <Collapse in={open} sx={{width:550}}>        
           <Alert 
             action={
               <IconButton

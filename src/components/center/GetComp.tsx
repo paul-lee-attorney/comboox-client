@@ -56,7 +56,7 @@ export function GetComp() {
             setGK(doc.body);
             setDoc(doc);
           } else {
-            setGK(AddrZero);
+            setGK(undefined);
             setDoc(undefined);
             setOpen(true);
           }
@@ -74,7 +74,6 @@ export function GetComp() {
           id="txRegNumOfComp" 
           label="RegNumOfComp" 
           variant="outlined"
-          helperText=" Integer < 2^40 "
           onChange={(e) => setRegNum( e.target.value )}
           // value = { regNum }
           size='small'
@@ -113,17 +112,17 @@ export function GetComp() {
 
           underline='hover'
         >
-          <Button variant='contained' sx={{width: 488, height:40}} endIcon={<DriveFileMove />} >
+          <Button variant='contained' sx={{m:3, width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +
                   doc?.head.version.toString(16).padStart(4, '0') +
-                  doc?.head.seqOfDoc.toString(16).substring(2).padStart(16, '0')
+                  doc?.head.seqOfDoc.toString(16).padStart(16, '0')
                 }
           </Button>
         </Link>
         
       )}
 
-      <Collapse in={ open } sx={{ width:488 }} >        
+      <Collapse in={ open } sx={{ m:3, width:488 }} >        
         <Alert 
           action={
             <IconButton
@@ -140,7 +139,7 @@ export function GetComp() {
 
           variant='outlined' 
           severity='info' 
-          sx={{ height: 40, p:0.5 }} 
+          sx={{ height: 40, p:0.25, px:1, }} 
         >
           No Records. 
         </Alert>

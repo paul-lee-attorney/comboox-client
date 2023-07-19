@@ -5,7 +5,8 @@ import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { MemberShareClip, getEquityList, getMembersList } from '../../../queries/rom';
+import { MemberShareClip, getEquityList, getMembersList } from '../../../queries/bom';
+import { useBookOfMembersMembersList } from '../../../generated';
 
 const columns: GridColDef[] = [
   {
@@ -52,19 +53,32 @@ export function MembersEquityList() {
   const { boox } = useComBooxContext();
   const [equityList, setEquityList] = useState<MemberShareClip[]>();
 
-  useEffect(()=>{
-    if (boox) {
-      getMembersList(boox[4]).then(
-        list => {
-          getEquityList(boox[4], list).then(
-            ls => {
-              setEquityList(ls);
-            }
-          )
-        }
-      )
+  const {
+    refetch: getMembersList
+  } = useBookOfMembersMembersList({
+    address: boox ? boox[4] : undefined,
+    onSuccess(ls){
+      if (boox)
+        getEquityList(boox[4], ls).then(
+          list => setEquityList(list)
+        )
     }
-  });
+  })
+
+
+  // useEffect(()=>{
+  //   if (boox) {
+  //     getMembersList(boox[4]).then(
+  //       list => {
+  //         getEquityList(boox[4], list).then(
+  //           ls => {
+  //             setEquityList(ls);
+  //           }
+  //         )
+  //       }
+  //     )
+  //   }
+  // });
 
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >

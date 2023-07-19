@@ -12,7 +12,7 @@ import {
   OutlinedInput,
 } from '@mui/material';
 
-import { Approval, Close, EditNote }  from '@mui/icons-material';
+import { Approval, Close }  from '@mui/icons-material';
 
 import { 
   useAccessControlSetOwner,
@@ -22,12 +22,7 @@ import { ContractProps, HexType } from '../../../interfaces';
 import { getOwner } from '../../../queries/accessControl';
 
 export function SetOwner({ addr }: ContractProps) {
-  const [owner, setOwner] = useState<string>();
-
-  // const { config } = usePrepareAccessControlSetOwner({
-  //   address: addr,
-  //   args: owner ? [BigInt(owner)] : undefined,
-  // });
+  const [owner, setOwner] = useState<HexType>();
 
   const {
     data,
@@ -35,10 +30,10 @@ export function SetOwner({ addr }: ContractProps) {
     write,
   } = useAccessControlSetOwner({
     address: addr,
-    args: owner ? [BigInt(owner)] : undefined,    
+    args: owner ? [ owner ] : undefined,    
   });
 
-  const [ newOwner, setNewOwner ] = useState<number>();
+  const [ newOwner, setNewOwner ] = useState<HexType>();
   const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
@@ -56,7 +51,7 @@ export function SetOwner({ addr }: ContractProps) {
     <>
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <FormControl sx={{ m: 1, width: 250 }} variant="outlined">
+        <FormControl sx={{ m: 1, width: 550 }} variant="outlined">
           <InputLabel htmlFor="setOwner-input">SetOwner</InputLabel>
           <OutlinedInput
             id="setOwner-input"
@@ -74,11 +69,11 @@ export function SetOwner({ addr }: ContractProps) {
             }
             label='SetOwner'
             sx={{ height:55 }}
-            onChange={(e) => setOwner(e.target.value)}
+            onChange={(e) => setOwner(`0x${e.target.value}`)}
           />
         </FormControl>
 
-        <Collapse in={open} sx={{ width:280 }}>        
+        <Collapse in={open} sx={{ width:218 }}>        
           <Alert 
             action={
               <IconButton

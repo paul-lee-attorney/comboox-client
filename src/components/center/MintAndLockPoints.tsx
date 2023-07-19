@@ -15,28 +15,15 @@ import { HeadOfLocker, defaultHeadOfLocker } from '../../queries/rc';
 
 interface MintAndLockPointsProps{
   refreshList: ()=>void;
+  getUser: ()=>void;
 }
 
-export function MintAndLockPoints({refreshList}:MintAndLockPointsProps) {
+export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps) {
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
   const [ open, setOpen ] = useState(false);
-
-  // const {
-  //   config: mintAndLockPointsConfig
-  // } = usePrepareRegCenterMintAndLockPoints({
-  //   address: AddrOfRegCenter,
-  //   args: head.to && head.value && head.expireDate && hashLock
-  //       ? [ 
-  //           BigInt(head.to),
-  //           BigInt(head.value),
-  //           BigInt(head.expireDate),
-  //           hashLock
-  //         ]
-  //       : undefined,
-  // })
 
   const {
     isLoading: mintAndLockPointsLoading,
@@ -53,6 +40,7 @@ export function MintAndLockPoints({refreshList}:MintAndLockPointsProps) {
         : undefined,
     onSuccess() {
       refreshList();
+      getUser();
     }
   })
 

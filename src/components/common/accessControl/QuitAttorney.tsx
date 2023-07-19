@@ -24,11 +24,6 @@ export function QuitAttorney({ addr }: ContractProps) {
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);
 
-  // const { config } = usePrepareAccessControlRenounceRole({
-  //   address: addr,
-  //   args: [ATTORNEYS],
-  // });
-
   const {
     isLoading,
     write,
@@ -52,7 +47,7 @@ export function QuitAttorney({ addr }: ContractProps) {
 
         <Button
           disabled={ isLoading }
-          sx={{m:1, width: 250, height:55}}
+          sx={{m:1, width: 218, height:55}}
           variant='outlined'
           endIcon={<Skateboarding />}
           onClick={ handleClick }
@@ -60,7 +55,7 @@ export function QuitAttorney({ addr }: ContractProps) {
           Quit Attorney
         </Button>
 
-        <Collapse in={open} sx={{width:280}}>        
+        <Collapse in={open} sx={{width:218}}>        
           <Alert 
             action={
               <IconButton

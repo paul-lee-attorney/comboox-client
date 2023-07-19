@@ -1,90 +1,113 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Paper, Toolbar, TextField } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
-
-import { nameOfCompany, regNumOfCompany, symbolOfCompany } from "../../../queries/gk";
-import { getControllor, getOwnersEquity, getVotesOfController } from "../../../queries/rom";
-
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../bom/MembersList";
-import { Position, getDirectorsFullPosInfo, getDirectorsPosList, getPosition } from "../../../queries/bod";
+import { Position, getPosition } from "../../../queries/bod";
 import { GetOfficersList } from "../bod/GetOfficersList";
 
+import { 
+  useBookOfDirectorsGetDirectorsPosList, 
+  useBookOfMembersControllor, 
+  useBookOfMembersOwnersEquity, 
+  useBookOfMembersVotesOfController, 
+  useGeneralKeeperNameOfCompany, 
+  useGeneralKeeperRegNumOfCompany, 
+  useGeneralKeeperSymbolOfCompany 
+} from "../../../generated";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
 
   const [ compName, setCompName ] = useState<string>();
+
+  useGeneralKeeperNameOfCompany({
+    address: gk,
+    onSuccess(name) {
+      setCompName(name)
+    }
+  })
+
   const [ regNum, setRegNum ] = useState<string>();
+
+  useGeneralKeeperRegNumOfCompany({
+    address: gk,
+    onSuccess(num) {
+      setRegNum( num.toString() )
+    }
+  })
+
   const [ symbol, setSymbol ] = useState<string>();
 
+  useGeneralKeeperSymbolOfCompany({
+    address: gk,
+    onSuccess(res) {
+      setSymbol(res)
+    }
+  })
+
   const [ controllor, setControllor ] = useState<string>();
+
+  useBookOfMembersControllor({
+    address: boox ? boox[4] : undefined,
+    onSuccess(res) {
+      setControllor(res.toString())
+    }
+  })
+
   const [ votesOfController, setVotesOfController ] = useState<string>();
+
+  useBookOfMembersVotesOfController({
+    address: boox ? boox[4] : undefined,
+    onSuccess(res) {
+      setVotesOfController(res.toString())
+    }
+  })
+
   const [ par, setPar ] = useState<string>();
   const [ paid, setPaid ] = useState<string>();
 
+  useBookOfMembersOwnersEquity({
+    address: boox ? boox[4] : undefined,
+    onSuccess(res) {
+      setPar(res.par.toString());
+      setPaid(res.paid.toString());
+    }
+  })
+
   const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
 
-  const getDirectorsList = async ()=>{
-    if (boox) {
-      let list = await getDirectorsFullPosInfo(boox[2]);
-      setDirectorsList(list);  
-    }   
-  };
+  // const getDirectorsList = async ()=>{
+  //   if (boox) {
+  //     let list = await getDirectorsFullPosInfo(boox[2]);
+  //     setDirectorsList(list);  
+  //   }   
+  // };
 
-  useEffect(()=>{
-    if (gk && boox) {
-      nameOfCompany(gk).then(
-        res => setCompName(res)
-      );
-      regNumOfCompany(gk).then(
-        res => setRegNum(res.toString())
-      );
-      symbolOfCompany(gk).then(
-        res => setSymbol(res)
-      );
-      
-      getControllor(boox[4]).then(
-        res => setControllor(res.toString())
-      );
-      getVotesOfController(boox[4]).then(
-        res => setVotesOfController(res.toString())
-      );
-      getOwnersEquity(boox[4]).then(
-        res => {
-          setPar(res.par.toString());
-          setPaid(res.paid.toString());
+  const {
+    refetch: getDirectorsList
+  } = useBookOfDirectorsGetDirectorsPosList({
+    address: boox ? boox[2] : undefined,
+    onSuccess(list) {
+      let len = list.length;
+      let output: Position[] = [];
+      while (len > 0) {
+        if (boox) {
+          getPosition(boox[2], list[len-1]).then(
+            v => {
+              output.push(v);
+              len--;
+            }
+          )
         }
-      );
-      getDirectorsList();
+      }
+      setDirectorsList(output);
     }
   });
-
-
-  // const {
-  //   refetch: getDirectorsList
-  // } = useBookOfDirectorsGetDirectorsPosList({
-  //   address: boox ? boox[2] : undefined,
-  //   onSuccess(list) {
-  //     let len = list.length;
-  //     let output: Position[] = [];
-  //     while (len > 0) {
-  //       if (boox) {
-  //         getPosition(boox[2], list[len-1]).then(
-  //           v => {
-  //             output.push(v);
-  //             len--;
-  //           }
-  //         )
-  //       }
-  //     }
-  //     setDirectorsList(output);
-  //   }
-  // });
 
   return (
     <>

@@ -43,13 +43,6 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     }
   });
 
-  // const {
-  //   config: setMaxQtyConfig,
-  // } = usePrepareBookOfMembersSetMaxQtyOfMembers({
-  //   address: boox ? boox[4] : undefined,
-  //   args: [BigInt(inputMax)],
-  // });
-
   const {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 
