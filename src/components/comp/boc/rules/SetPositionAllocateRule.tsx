@@ -136,7 +136,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
     <>
       <Button
         // disabled={ !newGR }
-        variant="outlined"
+        variant={newPR && newPR.seqOfPos > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}

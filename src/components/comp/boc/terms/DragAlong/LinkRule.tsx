@@ -35,7 +35,10 @@ export function LinkRule({ rule }: LinkRuleProps) {
       <Button
         variant="outlined"
         startIcon={<ListAlt />}
-        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        sx={{ 
+          m:1, minWidth: 218, 
+          justifyContent:'start',
+        }}
         onClick={()=>setOpen(true)}      
       >
         Link Rule 
@@ -50,7 +53,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
 
         <DialogContent>
 
-          <Toolbar>
+          <Toolbar sx={{ textDecoration:'underline' }}>
             <h4> Along Link Rule </h4>
           </Toolbar>
 
@@ -61,8 +64,9 @@ export function LinkRule({ rule }: LinkRuleProps) {
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='TriggerDate'
+                  size="small"
                   inputProps={{readOnly: true}}
                   sx={{
                     m:1,
@@ -72,9 +76,10 @@ export function LinkRule({ rule }: LinkRuleProps) {
                 />
                 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='EffectiveDays'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -83,9 +88,10 @@ export function LinkRule({ rule }: LinkRuleProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='ShareRatioThreshold'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -94,9 +100,10 @@ export function LinkRule({ rule }: LinkRuleProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   inputProps={{readOnly: true}}
                   label='Rate'
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -106,47 +113,43 @@ export function LinkRule({ rule }: LinkRuleProps) {
 
               </Stack>
 
-              <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                  <InputLabel id="triggerType-label">TypeOfTrigger ?</InputLabel>
-                  <Select
-                    labelId="triggerType-label"
-                    inputProps={{readOnly:true}}
-                    id="triggerType-select"
-                    value={ rule.triggerType }
-                  >
-                    {triggerTypes.map((v, i) => (
-                      <MenuItem key={i} value={ i } >{ v }</MenuItem>  
-                    ))}
-                  </Select>
-                </FormControl>
+                <TextField 
+                  variant='outlined'
+                  inputProps={{readOnly: true}}
+                  label='TypeOfTrigger'
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ triggerTypes[rule.triggerType] }              
+                />
 
-                <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                  <InputLabel id="proRata-label">ProRata ?</InputLabel>
-                  <Select
-                    labelId="proRata-label"
-                    inputProps={{readOnly:true}}                    
-                    id="proRata-select"
-                    value={ rule.proRata ? '1' : '0' }
-                  >
-                    <MenuItem value={ '1' } > True </MenuItem>  
-                    <MenuItem value={ '0' } > False </MenuItem>  
-                  </Select>
-                </FormControl>
+                <TextField 
+                  variant='outlined'
+                  inputProps={{readOnly: true}}
+                  label='ProRata ?'
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ rule.proRata ? 'True' : 'False' }              
+                />
 
-                <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                  <InputLabel id="typeOfFollowers-label">TypeOfFollowers</InputLabel>
-                  <Select
-                    labelId="typeOfFollowers-label"
-                    id="typeOfFollowers-select"
-                    inputProps={{readOnly:true}}
-                    value={ rule.typeOfFollowers }
-                  >
-                    <MenuItem value={ '1' } >Rest All Members</MenuItem>  
-                    <MenuItem value={ '0' } >Specified Members</MenuItem>  
-                  </Select>
-                </FormControl>                      
+                <TextField 
+                  variant='outlined'
+                  inputProps={{readOnly: true}}
+                  label='TypeOfFollowers'
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ rule.typeOfFollowers == 1 ? 'RestAllMembers' : 'SpecifiedMembers' }              
+                />
 
               </Stack>
 

@@ -23,6 +23,7 @@ import { AddRule } from './AddRule'
 import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
+import { longSnParser } from '../../../../scripts/toolsKit';
 
 
 export interface FirstRefusalRule {
@@ -173,8 +174,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized }: SetFirstRefusalRu
   return (
     <>
       <Button
-        // disabled={ !newGR }
-        variant="outlined"
+        variant={ newFR && newFR.seqOfRule > 0 ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}

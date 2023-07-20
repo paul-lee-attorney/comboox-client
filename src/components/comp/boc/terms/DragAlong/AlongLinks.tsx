@@ -6,6 +6,7 @@ import {
 } from '@mui/material';
 import { AlongLink } from './DragAlong';
 import { longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
+import { LinkRule } from './LinkRule';
 
 interface AlongLinksProps {
   link: AlongLink;
@@ -25,14 +26,19 @@ export function AlongLinks({ link }: AlongLinksProps) {
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label={ longSnParser(link.drager.toString()) } color='primary' sx={{m:1}} />
+        <Chip 
+          label={ 'Drager: ' + longSnParser(link.drager.toString()) }
+          color='primary' 
+          sx={{ m:1, minWidth:128 }} 
+        />
 
         <LinkRule rule={link.linkRule} />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Followers'
           inputProps={{readOnly: true}}
+          size='small'
           sx={{
             m:1,
             minWidth: 218,

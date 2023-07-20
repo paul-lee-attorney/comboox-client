@@ -128,14 +128,14 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
               <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={isFinalized} />
-              <DragAlong sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <LockUp sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
-              <LockUp sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
-              <Options sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <DragAlong sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <TagAlong sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>                      
-              <TagAlong sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <Options sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
 
           </Paper>

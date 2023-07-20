@@ -6,6 +6,8 @@ import {
   Toolbar,
   TextField,
   Stack,
+  Typography,
+  Box,
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
@@ -19,6 +21,7 @@ import {
 
 import { InfoOfFile, getFilesInfoList, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
+import { AddrZero } from "../../../interfaces";
 
 function BookOfConstitution() {
   const { gk, boox } = useComBooxContext();
@@ -61,10 +64,14 @@ function BookOfConstitution() {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar sx={{ textDecoration:'underline' }}>
-        <h3>BOC - Book Of Constitution</h3>
-      </Toolbar>
-
+      <Stack direction='row' sx={{ alignContent:'space-between' }}>
+          <Toolbar sx={{ textDecoration:'underline' }}>
+            <h3>BOC - Book Of Constitution </h3> 
+          </Toolbar>
+          <Typography sx={{ ml: 10 }}>
+            <h4>(Addr: {(boox ? boox[1] : AddrZero).toLowerCase()})</h4>
+          </Typography>
+      </Stack>
       <table width={1680} >
         <thead />
         

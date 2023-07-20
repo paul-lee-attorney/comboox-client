@@ -47,7 +47,7 @@ export function QuitAttorney({ addr }: ContractProps) {
 
         <Button
           disabled={ isLoading }
-          sx={{m:1, width: 218, height:55}}
+          sx={{m:1, width: '50%', height:55}}
           variant='outlined'
           endIcon={<Skateboarding />}
           onClick={ handleClick }
@@ -55,7 +55,7 @@ export function QuitAttorney({ addr }: ContractProps) {
           Quit Attorney
         </Button>
 
-        <Collapse in={open} sx={{width:218}}>        
+        <Collapse in={open} sx={{width:'50%'}}>        
           <Alert 
             action={
               <IconButton

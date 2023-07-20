@@ -22,23 +22,14 @@ import {
 } from '../../../generated';
 
 import { ContractProps, HexType } from '../../../interfaces';
-
-const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
-
-async function isAttorney(addr: HexType, acct: HexType): Promise<boolean> {
-  let flag = await readContract({
-    address: addr,
-    abi: accessControlABI,
-    functionName: 'hasRole',
-    args: [ATTORNEYS, acct],
-  });
-
-  return flag;
-}
+import { ATTORNEYS, hasRole } from '../../../queries/accessControl';
 
 export function AppointAttorney({ addr }: ContractProps) {
 
   const [acct, setAcct] = useState<HexType>();
+
+  const [ flag, setFlag ] = useState<boolean>();
+  const [ open, setOpen ] = useState(false);
 
   const {
     data,
@@ -46,29 +37,25 @@ export function AppointAttorney({ addr }: ContractProps) {
     write,
   } = useAccessControlGrantRole({
     address: addr,
-    args: acct ? [ATTORNEYS, acct] : undefined,    
+    args: acct && acct != '0x' 
+      ? [ATTORNEYS, acct] : undefined,
+    onSuccess() {
+      if (acct)
+        hasRole(addr, ATTORNEYS, acct).then(flag => {
+          setFlag(flag);
+          setOpen(true);
+        }); 
+    }
   });
-
-  const [ flag, setFlag ] = useState<boolean>();
-  const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
     write?.();
   }
 
-  useEffect(() => {
-    if (acct) 
-      isAttorney(addr, acct).then(flag => {
-        setFlag(flag);
-        setOpen(true);
-      });
-  }, [data, addr, acct]);
-
   return (
-    <>
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <FormControl sx={{ m: 1, minWidth: 550 }} variant="outlined">
+        <FormControl sx={{ m: 1, width: '50%' }} variant="outlined">
           <InputLabel htmlFor="setAcct-input">AppointAttorney</InputLabel>
           <OutlinedInput
             id="setAcct-input"
@@ -76,7 +63,7 @@ export function AppointAttorney({ addr }: ContractProps) {
               <InputAdornment position="end">
                 <IconButton
                   color='primary'
-                  disabled={ isLoading }
+                  disabled={ isLoading || acct == undefined || acct == '0x' }
                   onClick={ handleClick }
                   edge="end"
                 >
@@ -87,10 +74,11 @@ export function AppointAttorney({ addr }: ContractProps) {
             label='AppointAttorney'
             sx={{ height:55 }}
             onChange={(e) => setAcct(`0x${e.target.value}`)}
+            value={ acct?.substring(2) }
           />
         </FormControl>
 
-        <Collapse in={open} sx={{width:550}}>        
+        <Collapse in={open} sx={{width:"50%"}}>        
           <Alert 
             action={
               <IconButton
@@ -114,6 +102,5 @@ export function AppointAttorney({ addr }: ContractProps) {
         </Collapse>
 
       </Stack>
-    </> 
   )
 }

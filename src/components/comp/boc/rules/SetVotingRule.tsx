@@ -403,7 +403,7 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
     <>
       <Button
         // disabled={ !newGR }
-        variant="outlined"
+        variant={ newVR.seqOfRule == seq ? 'contained' : 'outlined' }
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}

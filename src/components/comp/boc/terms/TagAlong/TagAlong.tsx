@@ -34,134 +34,27 @@ import { readContract } from "@wagmi/core";
 import {
   useShareholdersAgreementCreateTerm,
   useShareholdersAgreementRemoveTerm,
-  tagAlongABI,
-  useTagAlongDragers,
+  dragAlongABI,
+  useDragAlongDragers,
+  useDragAlongCreateLink,
+  useDragAlongRemoveDrager,
+  useDragAlongAddFollower,
+  useDragAlongRemoveFollower,
   useTagAlongCreateLink,
   useTagAlongRemoveDrager,
   useTagAlongAddFollower,
-  useTagAlongRemoveFollower, 
+  useTagAlongRemoveFollower,
+  useTagAlongDragers, 
 } from "../../../../../generated";
 
 
 import { getDocAddr } from "../../../../../queries/rc";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+
+import { SetShaTermProps } from "../AntiDilution/AntiDilution";
+import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../DragAlong/DragAlong";
 import { AlongLinks } from "../DragAlong/AlongLinks";
-
-export interface LinkRule{
-  triggerDate: number;
-  effectiveDays: number;
-  triggerType: number;
-  shareRatioThreshold: number;
-  rate: number;
-  proRata: boolean;
-  typeOfFollowers: number;
-}
-
-export const defaultLinkRule: LinkRule = {
-  triggerDate: 0,
-  effectiveDays: 0,
-  triggerType: 0,
-  shareRatioThreshold: 0,
-  rate: 0,
-  proRata: false,
-  typeOfFollowers: 0
-}
-
-export function linkRuleSnParser(sn: HexType): LinkRule {
-  let out: LinkRule = {
-    triggerDate: parseInt(sn.substring(2, 14), 16),
-    effectiveDays: parseInt(sn.substring(14, 18), 16),
-    triggerType: parseInt(sn.substring(18, 20), 16),
-    shareRatioThreshold: parseInt(sn.substring(20, 24), 16),
-    rate: parseInt(sn.substring(24, 32), 16),
-    proRata: parseInt(sn.substring(32, 34), 16) == 1,
-    typeOfFollowers: parseInt(sn.substring(34, 36), 16),
-  }
-  return out;
-}
-
-export function linkRuleCodifier(rule: LinkRule): HexType {
-  let out: HexType = `0x${
-    rule.triggerDate.toString(16).padStart(12, '0') +
-    rule.effectiveDays.toString(16).padStart(4, '0') +
-    rule.triggerType.toString(16).padStart(2, '0') +
-    rule.shareRatioThreshold.toString(16).padStart(4, '0') +
-    rule.rate.toString(16).padStart(8, '0') +
-    (rule.proRata ? '01' : '00') +
-    rule.typeOfFollowers.toString(16).padStart(2, '0')
-  }`;
-  return out;
-}
-
-export interface AlongLink {
-  drager: number;
-  linkRule: LinkRule;
-  followers: number[];
-}
-
-export const defaultFollowers: number[] = [];
-
-export const defaultLink: AlongLink ={
-  drager: 0,
-  linkRule: defaultLinkRule,
-  followers: defaultFollowers,
-} 
-
-export const triggerTypes = [
-  'No Conditions', 'Control Changed', 'Control Changed With Higher Price', 'Control Changed With Higher ROE'
-]
-
-interface SetShaTermProps {
-  sha: HexType,
-  term: HexType,
-  setTerms: Dispatch<SetStateAction<HexType[]>> ,
-  isFinalized: boolean,
-}
-
-async function getLinks(da: HexType, dragers: readonly bigint[]): Promise<AlongLink[]> {
-  let len = dragers.length;
-  let output: AlongLink[] = [];
-
-  while (len > 0) {
-
-    let drager = dragers[len - 1];
-
-    let linkRule = await readContract({
-      address: da,
-      abi: tagAlongABI,
-      functionName: 'linkRule',
-      args: [ drager ],
-    });
-
-    let followers = await readContract({
-      address: da,
-      abi: tagAlongABI,
-      functionName: 'followers',
-      args: [ drager ],
-    });
-    
-    let item: AlongLink = {
-      drager: Number(drager),
-      linkRule: {
-        triggerDate: linkRule.triggerDate,
-        effectiveDays: linkRule.effectiveDays,
-        triggerType: linkRule.triggerType,
-        shareRatioThreshold: linkRule.shareRatioThreshold,
-        rate: linkRule.rate,
-        proRata: linkRule.proRata,
-        typeOfFollowers: linkRule.typeOfFollowers
-      },
-      followers: followers.map(v=>Number(v)),
-    }
-
-    output.push(item);
-
-    len--;
-  }
-
-  return output;
-}
 
 
 export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -180,9 +73,9 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
       getDocAddr(data.hash).
         then(addr => setTerms(v => {
           let out = [...v];
-          out[1] = addr;
+          out[4] = addr;
           return out;
-        }));
+        }));      
     }
   });
 
@@ -195,7 +88,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
     onSuccess() {
       setTerms(v =>{
         let out = [...v];
-        out[1] = AddrZero;
+        out[4] = AddrZero;
         return out;
       });
     }
@@ -249,9 +142,9 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   } = useTagAlongAddFollower({
     address: term,
     args: drager && follower
-      ? [ BigInt(drager),
-          BigInt(follower)] :
-            undefined, 
+      ? [ BigInt(drager ?? '0'),
+          BigInt(follower ?? '0')] 
+      : undefined, 
     onSuccess() {
       getDragers();
     }
@@ -263,7 +156,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   } = useTagAlongRemoveFollower({
     address: term,
     args: drager && follower 
-      ? [ BigInt(drager), BigInt(follower)] 
+      ? [ BigInt(drager ?? '0'), BigInt(follower ?? '0')] 
       : undefined, 
     onSuccess() {
       getDragers();
@@ -276,7 +169,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
     <>
       <Button
         disabled={ isFinalized && !term }
-        variant="outlined"
+        variant={ term != AddrZero ? 'contained' : 'outlined' }
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
@@ -296,13 +189,14 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
             <Box sx={{ width:1180 }}>
 
-              <Stack direction={'row'} sx={{ alignItems:'center' }}>
+              <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Toolbar>
-                  <h4>Tag Along (Addr: {term} )</h4>
+                  <h4>Tag Along   (Addr: {term?.toLowerCase()} )</h4>
                 </Toolbar>
 
-                {term == undefined && !isFinalized && (
-                  <>
+                {term == AddrZero && !isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems:'center' }}>
+
                     <TextField 
                       variant='filled'
                       label='Version'
@@ -327,10 +221,10 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       Create
                     </Button>
 
-                  </>
+                  </Stack>
                 )}
 
-                {term && !isFinalized && (
+                {term != AddrZero && !isFinalized && (
                     <Button
                       disabled={ removeTermLoading }
                       variant="contained"
@@ -347,7 +241,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
               </Stack>
 
-              {term && !isFinalized && (
+              {term != AddrZero && !isFinalized && (
                 <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
                   <Stack direction='column' spacing={1} >
@@ -360,6 +254,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                           m:1,
                           minWidth: 218,
                         }} 
+                        size="small"
                         value={ dayjs.unix(rule.triggerDate) }
                         onChange={(date) => setRule((v) => ({
                           ...v,
@@ -371,6 +266,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       <TextField 
                         variant='filled'
                         label='EffectiveDays'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -385,6 +281,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       <TextField 
                         variant='filled'
                         label='ShareRatioThreshold'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -399,6 +296,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       <TextField 
                         variant='filled'
                         label='Rate'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -412,11 +310,12 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
                     </Stack>
 
-                    <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                    <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                       <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                        <InputLabel id="triggerType-label">TypeOfTrigger ?</InputLabel>
+                        <InputLabel id="triggerType-label">TypeOfTrigger</InputLabel>
                         <Select
+                          size="small"
                           labelId="triggerType-label"
                           id="triggerType-select"
                           value={ rule.triggerType }
@@ -436,6 +335,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                         <Select
                           labelId="proRata-label"
                           id="proRata-select"
+                          size="small"
                           value={ rule.proRata ? '1' : '0' }
                           onChange={(e) => setRule((v) => ({
                             ...v,
@@ -452,6 +352,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                         <Select
                           labelId="typeOfFollowers-label"
                           id="typeOfFollowers-select"
+                          size="small"
                           value={ rule.typeOfFollowers }
                           onChange={(e) => setRule((v) => ({
                             ...v,
@@ -467,7 +368,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
                   </Stack>
 
-                  <Divider flexItem />
+                  <Divider orientation="horizontal" sx={{ width:'100%', m:1 }} flexItem />
 
 
                   <Stack direction={'row'} sx={{ alignItems:'center' }}>      
@@ -490,6 +391,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                     <TextField 
                       variant='filled'
                       label='Drager'
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -532,6 +434,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                     <TextField 
                       variant='filled'
                       label='Follower'
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -558,10 +461,17 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                     </Tooltip>
 
                   </Stack>
-                
-                  <Divider flexItem />
+                </Paper>
+              )}
 
-                  {term && links?.map((v) => (
+              {term != AddrZero && (
+                <Paper elevation={3} sx={{ m:1, border:1, borderColor:'divider' }}>  
+
+                  <Toolbar>
+                    <h4>Tag-Alongs List</h4>
+                  </Toolbar>
+
+                  {links?.map((v) => (
                     <AlongLinks key={ v.drager } link={ v } />
                   ))}
 

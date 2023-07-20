@@ -151,7 +151,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (isConnected) {
+    if ( isConnected ) {
       setUserNo(undefined);
       disconnect();
       if (pathname == '/my/UserInfo') router.push('/');
@@ -220,7 +220,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
               control={
                 <Switch
                   checked={isConnected}
-                  onChange={handleChange}
+                  onChange={ handleChange }
                   aria-label="login switch"
                   color='default'
                 />

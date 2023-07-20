@@ -4,7 +4,7 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
-import { dateParser, longSnParser } from '../../../../../scripts/toolsKit';
+import { dateParser, longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
 
 interface LockerOfShareProps {
   seqOfShare: number,
@@ -26,23 +26,13 @@ export function LockerOfShare({ seqOfShare, dueDate, keyholders }: LockerOfShare
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label="M" color='primary' sx={{m:1}} />
+        <Chip label={"SN: " + longSnParser(seqOfShare.toString())} color='primary' sx={{m:1}} />
 
         <TextField 
-          variant='filled'
-          label='SeqOfShare'
-          inputProps={{readOnly: true}}
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          value={ longSnParser(seqOfShare.toString()) }
-        />
-
-        <TextField 
-          variant='filled'
+          variant='outlined'
           label='DueDate'
           inputProps={{readOnly: true}}
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -51,16 +41,17 @@ export function LockerOfShare({ seqOfShare, dueDate, keyholders }: LockerOfShare
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Keyholders'
           inputProps={{readOnly: true}}
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
           }}
           multiline
           rows={1}
-          value={ keyholders }
+          value={ splitStrArr(keyholders.map(v=> longSnParser(v.toString()))) }
         />
 
       </Stack>

@@ -14,7 +14,6 @@ import {
 import { HexType } from "../../../../interfaces";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { bigint } from "ethers";
 import { VoteCountingOfGm } from "../../gmm/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
@@ -24,6 +23,7 @@ import { SignSha } from "./SignSha";
 import { ProposeDocOfGm } from "../../gmm/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteForDocOfGm";
 import { ActivateSha } from "./ActivateSha";
+import { FinalizeSha } from "./FinalizeSha";
 
 interface ShaLifecycleProps {
   sha: HexType;
@@ -98,7 +98,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of SHA (only for Owner of SHA).
                   </Typography>
-                  <LockContents addr={ sha } setIsFinalized={setFinalized} setNextStep={ setActiveStep } />
+                  <FinalizeSha isSha={true} addr={ sha } setIsFinalized={setFinalized} setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>
@@ -155,7 +155,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                     Cast vote in General Meeting to approve SHA.
                   </Typography>
 
-                  {seqOfMotion && (
+                  {seqOfMotion?.toString() && (
                     <VoteForDocOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
                   )}
                 </StepContent>
@@ -171,7 +171,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                   <Typography>
                     Count vote result of SHA (only for Members).
                   </Typography>
-                  {seqOfMotion && (
+                  {seqOfMotion?.toString() && (
                     <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={setPassed} setNextStep={ setActiveStep } setOpen={()=>{}} getMotionsList={()=>{}}/>
                   )}
                 </StepContent>

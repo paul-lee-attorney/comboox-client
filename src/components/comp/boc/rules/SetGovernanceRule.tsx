@@ -125,7 +125,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
     <>
       <Button
         disabled={ !newGR }
-        variant="outlined"
+        variant={newGR && (newGR.establishedDate > 0) ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start'}}

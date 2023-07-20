@@ -1,7 +1,9 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
 import { accessControlABI } from "../generated";
-import { ATTORNEYS } from "../components/common/accessControl/RemoveAttorney";
+
+export const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
+
 
 export async function getOwner(addr: HexType): Promise<HexType> {
   let owner = await readContract({

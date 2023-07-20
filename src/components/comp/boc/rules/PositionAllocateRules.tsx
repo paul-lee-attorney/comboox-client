@@ -55,13 +55,6 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
 
   const [open, setOpen] = useState(false);
 
-  // const {
-  //   config: removeRuleConfig
-  // } = usePrepareShareholdersAgreementRemoveRule({
-  //   address: sha,
-  //   args: [BigInt(cp[cp.length - 1])],
-  // })
-
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
@@ -86,7 +79,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
   return (
     <>
       <Button
-        variant="outlined"
+        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      

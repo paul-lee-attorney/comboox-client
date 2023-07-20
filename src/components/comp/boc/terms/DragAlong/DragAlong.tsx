@@ -90,7 +90,8 @@ export function linkRuleCodifier(rule: LinkRule): HexType {
     rule.shareRatioThreshold.toString(16).padStart(4, '0') +
     rule.rate.toString(16).padStart(8, '0') +
     (rule.proRata ? '01' : '00') +
-    rule.typeOfFollowers.toString(16).padStart(2, '0')
+    rule.typeOfFollowers.toString(16).padStart(2, '0') +
+    '0'.padEnd(30, '0')
   }`;
   return out;
 }
@@ -110,17 +111,17 @@ export const defaultLink: AlongLink ={
 } 
 
 export const triggerTypes = [
-  'No Conditions', 'Control Changed', 'Control Changed With Higher Price', 'Control Changed With Higher ROE'
+  'NoCondition', 'CtrlChanged', 'CtrlChanged+Price', 'CtrlChanged+ROE'
 ]
 
-interface SetShaTermProps {
+export interface SetShaTermProps {
   sha: HexType,
   term: HexType,
   setTerms: Dispatch<SetStateAction<HexType[]>> ,
   isFinalized: boolean,
 }
 
-async function getLinks(da: HexType, dragers: readonly bigint[]): Promise<AlongLink[]> {
+export async function getLinks(addr: HexType, dragers: readonly bigint[]): Promise<AlongLink[]> {
   let len = dragers.length;
   let output: AlongLink[] = [];
 
@@ -129,14 +130,14 @@ async function getLinks(da: HexType, dragers: readonly bigint[]): Promise<AlongL
     let drager = dragers[len - 1];
 
     let linkRule = await readContract({
-      address: da,
+      address: addr,
       abi: dragAlongABI,
       functionName: 'linkRule',
       args: [ drager ],
     });
 
     let followers = await readContract({
-      address: da,
+      address: addr,
       abi: dragAlongABI,
       functionName: 'followers',
       args: [ drager ],
@@ -277,7 +278,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
     <>
       <Button
         disabled={ isFinalized && !term }
-        variant="outlined"
+        variant={term != AddrZero ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
@@ -297,13 +298,14 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
             <Box sx={{ width:1180 }}>
 
-              <Stack direction={'row'} sx={{ alignItems:'center' }}>
+              <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Toolbar>
                   <h4>Drag Along (Addr: {term} )</h4>
                 </Toolbar>
 
-                {term == undefined && !isFinalized && (
-                  <>
+                {term == AddrZero && !isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems:'center' }}>
+
                     <TextField 
                       variant='filled'
                       label='Version'
@@ -328,10 +330,10 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       Create
                     </Button>
 
-                  </>
+                  </Stack>
                 )}
 
-                {term && !isFinalized && (
+                {term != AddrZero && !isFinalized && (
                     <Button
                       disabled={ removeTermLoading }
                       variant="contained"
@@ -348,7 +350,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
               </Stack>
 
-              {term && !isFinalized && (
+              {term != AddrZero && !isFinalized && (
                 <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
                   <Stack direction='column' spacing={1} >
@@ -361,6 +363,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                           m:1,
                           minWidth: 218,
                         }} 
+                        size="small"
                         value={ dayjs.unix(rule.triggerDate) }
                         onChange={(date) => setRule((v) => ({
                           ...v,
@@ -372,6 +375,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       <TextField 
                         variant='filled'
                         label='EffectiveDays'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -386,6 +390,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       <TextField 
                         variant='filled'
                         label='ShareRatioThreshold'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -400,6 +405,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       <TextField 
                         variant='filled'
                         label='Rate'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -413,11 +419,12 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
                     </Stack>
 
-                    <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                    <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                       <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                        <InputLabel id="triggerType-label">TypeOfTrigger ?</InputLabel>
+                        <InputLabel id="triggerType-label">TypeOfTrigger</InputLabel>
                         <Select
+                          size="small"
                           labelId="triggerType-label"
                           id="triggerType-select"
                           value={ rule.triggerType }
@@ -437,6 +444,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         <Select
                           labelId="proRata-label"
                           id="proRata-select"
+                          size="small"
                           value={ rule.proRata ? '1' : '0' }
                           onChange={(e) => setRule((v) => ({
                             ...v,
@@ -453,6 +461,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         <Select
                           labelId="typeOfFollowers-label"
                           id="typeOfFollowers-select"
+                          size="small"
                           value={ rule.typeOfFollowers }
                           onChange={(e) => setRule((v) => ({
                             ...v,
@@ -468,7 +477,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
                   </Stack>
 
-                  <Divider flexItem />
+                  <Divider orientation="horizontal" sx={{ width:'100%', m:1 }} flexItem />
 
 
                   <Stack direction={'row'} sx={{ alignItems:'center' }}>      
@@ -491,6 +500,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                     <TextField 
                       variant='filled'
                       label='Drager'
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -533,6 +543,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                     <TextField 
                       variant='filled'
                       label='Follower'
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -559,13 +570,20 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                     </Tooltip>
 
                   </Stack>
-                
-                  <Divider flexItem />
+                </Paper>
+              )}
 
-                  {term && links?.map((v) => (
+              {term != AddrZero && (
+                <Paper elevation={3} sx={{ m:1, border:1, borderColor:'divider' }}>
+              
+                  <Toolbar>
+                    <h4>Drag-Alongs List</h4>
+                  </Toolbar>
+
+                  {links?.map((v) => (
                     <AlongLinks key={ v.drager } link={ v } />
                   ))}
-
+                
                 </Paper>
               )}
 

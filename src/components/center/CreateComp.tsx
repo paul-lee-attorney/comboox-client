@@ -19,14 +19,15 @@ export function CreateComp() {
   const { setGK } = useComBooxContext();
   const router = useRouter();
 
-  const [ dk, setDK ] = useState<HexType>(AddrZero);
+  const [ dk, setDK ] = useState<HexType>();
 
   const {
     isLoading: createCompLoading, 
     write: createComp,
   } = useRegCenterCreateComp({
     address: AddrOfRegCenter,
-    args: dk ? [dk] : undefined,
+    args: dk && dk != '0x' 
+      ? [dk] : undefined,
     onSuccess(data) {
       const initComp = async ()=>{
         let addrOfGK = await getDocAddr(data.hash);
@@ -52,7 +53,7 @@ export function CreateComp() {
               <Tooltip title={"Register My Company"} placement='right' arrow >
                 <span>
                   <IconButton
-                    disabled={ createCompLoading || !dk }
+                    disabled={ createCompLoading || dk == undefined || dk == '0x' }
                     color='primary'
                     onClick={ ()=>createComp?.() }
                     edge="end"
@@ -64,8 +65,8 @@ export function CreateComp() {
             </InputAdornment>
           }
           sx={{height: 40}}
-          onChange={(e) => setDK(`0x${e.target.value.substring(2)}`)}
-          value={ dk }
+          onChange={(e) => setDK(`0x${e.target.value}`)}
+          value={ dk?.substring(2) }
         />
       </FormControl>
 

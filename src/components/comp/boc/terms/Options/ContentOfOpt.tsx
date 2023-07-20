@@ -33,11 +33,12 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
     <>
       <Button
         variant="outlined"
+        // color={ opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'}
         startIcon={<ListAlt />}
-        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        sx={{ m:0.5, minWidth: 218, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
-        Content Of Option 
+        { opt.head.typeOfOpt % 2 == 0 ? 'Put' : 'Call' } Option 
       </Button>
 
       <Dialog
@@ -49,10 +50,31 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
 
         <DialogContent>
 
-          <Toolbar>
-            <h4> Head Of Option </h4>
-          </Toolbar>
+          <Stack direction="row" sx={{ width:'100%', alignItems:'center', justifyContent:'space-between' }} >
 
+            <Toolbar>
+              <h4> Head Of Option </h4>
+            </Toolbar>
+
+            <Chip
+              variant='filled'
+              label={ optStates[opt.body.state] }
+              sx={{
+                m:1,
+                minWidth: 168,
+              }}
+              color={
+                opt.body.state == 0
+                ? 'default'
+                : opt.body.state == 1
+                  ? 'info'
+                  : opt.body.state == 2
+                    ? 'primary'
+                    : 'success'
+              }
+            />
+
+           </Stack>
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
             <Stack direction='column' spacing={1} >
@@ -60,9 +82,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='TypeOfOption'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -71,9 +94,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='ClassOfShare'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -82,31 +106,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                 />
 
                 <TextField 
-                  variant='filled'
-                  label='RateOfOption'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser(opt.head.rate.toString()) }              
-                />
-
-                <TextField 
-                  variant='filled'
-                  label='Rightholder'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(opt.body.rightholder.toString()) }              
-                />
-
-                <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='Paid'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -115,9 +118,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='Par'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -125,14 +129,39 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                   value={ longDataParser(opt.body.par.toString()) }              
                 />
 
+                <TextField 
+                  variant='outlined'
+                  label='Rightholder'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longSnParser(opt.body.rightholder.toString()) }              
+                />
+
               </Stack>
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  label='RateOfOption'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser(opt.head.rate.toString()) }              
+                />
+
+                <TextField 
+                  variant='outlined'
                   label='IssueDate'
                   inputProps={{readOnly:true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -141,9 +170,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='TriggerDate'
                   inputProps={{readOnly:true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -152,9 +182,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='ExecDays'
                   inputProps={{readOnly:true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -163,9 +194,10 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='ClosingDays'
                   inputProps={{readOnly:true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -173,34 +205,18 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                   value={ opt.head.closingDays }              
                 />
 
-                <TextField 
-                  variant='filled'
+                {/* <TextField 
+                  variant='outlined'
                   label='ClosingDeadline'
                   inputProps={{readOnly:true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
                   value={ dateParser(opt.body.closingDeadline ?? '0') }
-                />
+                /> */}
 
-                <Chip
-                  variant='filled'
-                  label={ optStates[opt.body.state] }
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  color={
-                    opt.body.state == 0
-                    ? 'default'
-                    : opt.body.state == 1
-                      ? 'info'
-                      : opt.body.state == 2
-                        ? 'primary'
-                        : 'success'
-                  }
-                />
 
               </Stack>
 

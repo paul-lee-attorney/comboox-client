@@ -48,54 +48,53 @@ export function SetOwner({ addr }: ContractProps) {
   }, [data, addr]);
 
   return (
-    <>
-      <Stack direction={'row'}  sx={{ width: '100%' }} >
+    <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <FormControl sx={{ m: 1, width: 550 }} variant="outlined">
-          <InputLabel htmlFor="setOwner-input">SetOwner</InputLabel>
-          <OutlinedInput
-            id="setOwner-input"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  color="primary"
-                  disabled={ isLoading}
-                  onClick={ handleClick }
-                  edge="end"
-                >
-                  <Approval />
-                </IconButton>
-              </InputAdornment>
-            }
-            label='SetOwner'
-            sx={{ height:55 }}
-            onChange={(e) => setOwner(`0x${e.target.value}`)}
-          />
-        </FormControl>
-
-        <Collapse in={open} sx={{ width:218 }}>        
-          <Alert 
-            action={
+      <FormControl sx={{ m: 1, width: '50%' }} variant="outlined">
+        <InputLabel htmlFor="setOwner-input">SetOwner</InputLabel>
+        <OutlinedInput
+          id="setOwner-input"
+          endAdornment={
+            <InputAdornment position="end">
               <IconButton
-                aria-label="close"
-                size="small"
-                onClick={() => {
-                  setOpen(false);
-                }}
+                color="primary"
+                disabled={ owner == undefined || owner == '0x' || isLoading }
+                onClick={ handleClick }
+                edge="end"
               >
-                <Close fontSize="inherit" />
+                <Approval />
               </IconButton>
-            }
+            </InputAdornment>
+          }
+          label='SetOwner'
+          sx={{ height:55 }}
+          onChange={(e) => setOwner(`0x${e.target.value}`)}
+          value={ owner?.substring(2) }
+        />
+      </FormControl>
 
-            variant='outlined' 
-            severity='info' 
-            sx={{ m:1, height:55 }} 
-          >
-            Owner : { newOwner } 
-          </Alert>
-        </Collapse>
+      <Collapse in={open} sx={{ width:'50%' }}>        
+        <Alert 
+          action={
+            <IconButton
+              aria-label="close"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <Close fontSize="inherit" />
+            </IconButton>
+          }
 
-      </Stack>
-    </> 
+          variant='outlined' 
+          severity='info' 
+          sx={{ m:1, height:55 }} 
+        >
+          Owner: { newOwner?.substring(0, 6) + '...' + newOwner?.substring(38, 42) } 
+        </Alert>
+      </Collapse>
+
+    </Stack>
   )
 }

@@ -25,9 +25,9 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label="M" color='primary' sx={{m:1}} />
+        <Chip label={ 'Class: ' + `${classOfShare}` } color='primary' sx={{m:1}} />
 
-        <TextField 
+        {/* <TextField 
           variant='filled'
           label='ClassOfShare'
           inputProps={{readOnly: true}}
@@ -36,12 +36,13 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
             minWidth: 218,
           }}
           value={ classOfShare }
-        />
+        /> */}
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='FloorPrice'
           inputProps={{readOnly: true}}
+          size='small'
           sx={{
             m:1,
             minWidth: 218,
@@ -50,8 +51,9 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Obligors'
+          size='small'
           inputProps={{readOnly: true}}
           sx={{
             m:1,

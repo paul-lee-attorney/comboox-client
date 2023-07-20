@@ -9,24 +9,23 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
 import { ShaBodyTerms } from "../../../components/comp/boc/sha/ShaBodyTerms";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
-import { useEffect, useState } from "react";
-import { finalized } from "../../../queries/accessControl";
+import { useState } from "react";
 import { ShaLifecycle } from "../../../components/comp/boc/sha/ShaLifecycle";
+import { useAccessControlIsFinalized } from "../../../generated";
 
 function Sha() {
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
   const snOfDoc:string | undefined = query.snOfDoc?.toString();
 
-  const [ isFinalized, setIsFinalized ] = useState<boolean>();
+  const [ isFinalized, setIsFinalized ] = useState<boolean>(false);
 
-  useEffect(()=>{
-    if (sha != '0x')
-      finalized(sha).then(
-        flag => setIsFinalized(flag)
-      );    
-  }, [sha])
-
+  useAccessControlIsFinalized({
+    address: sha != '0x' ? sha : undefined,
+    onSuccess(flag) {
+      setIsFinalized(flag);
+    }
+  })
 
   return (
     <Stack direction='column' width='100%' height='100%' >
@@ -43,7 +42,7 @@ function Sha() {
             </Typography>
 
             <Typography sx={{ m:1 }} variant="body1">
-              Addr: ({sha})
+              Addr: ({ sha.toLowerCase() })
             </Typography>
 
             <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
@@ -63,8 +62,8 @@ function Sha() {
               </TabPanel>
 
               <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {sha != '0x' && (
-                  <AgrmtAccessControl agrmt={sha} />
+                {sha != '0x' && !isFinalized && (
+                  <AgrmtAccessControl isSha={true} agrmt={sha} />
                 )}
               </TabPanel>
 

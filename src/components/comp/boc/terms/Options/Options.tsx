@@ -35,12 +35,6 @@ import { readContract } from "@wagmi/core";
 import {
   useShareholdersAgreementCreateTerm,
   useShareholdersAgreementRemoveTerm,
-  tagAlongABI,
-  useTagAlongDragers,
-  useTagAlongCreateLink,
-  useTagAlongRemoveDrager,
-  useTagAlongAddFollower,
-  useTagAlongRemoveFollower,
   useOptionsGetAllOptions,
   useOptionsCreateOption,
   useOptionsDelOption,
@@ -53,8 +47,8 @@ import {
 import { getDocAddr } from "../../../../../queries/rc";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { AlongLinks } from "../DragAlong/AlongLinks";
 import { Opt } from "./Opt";
+import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 
 // ==== HeadOfOpt ====
 
@@ -216,26 +210,38 @@ export async function getObligors(term:HexType, seqOfOpt: number):Promise<number
 }
 
 export const typeOfOpts = [
-  'CallPrice', 'PutPrice', 'CallRoe', 'PutRoe', 
-  'CallPriceWithCnds', 'PutPriceWithCnds', 'CallRoeWithCnds', 'PutRoeWithCnds'
+  'Call @ Price', 'Put @ Price', 'Call @ ROE', 'Put @ ROE', 
+  'Call @ Price & Cnds', 'Put @ Price & Cnds', 'Call @ ROE & Cnds', 'Put @ ROE & Cnds'
 ]
 
 export const logOps = [
-  '_', '&&', '||', '&&_||', '||_&&', '==', '!=',
+  '(None)', '&& (And)', '|| (Or)', '&&_||', '||_&&', '== (Equal)', '!= (NotEqual)',
   '&&_&&_&&', '||_||_||', '&&_||_||', '||_&&_||', 
   '||_||_&&', '&&_&&_||', '&&_||_&&', '||_&&_&&',
   '==_==', '==_!=', '!=_==', '!=_!='
 ]
 
 export const comOps = [
-  '_', '==', '!=', '>', '<', '>=', '<=' 
+  'None', '==', '!=', '>', '<', '>=', '<=' 
 ]
 
-interface SetShaTermProps {
-  sha: HexType,
-  term: HexType,
-  setTerms: Dispatch<SetStateAction<HexType[]>> ,
-  isFinalized: boolean,
+async function refreshList(term: HexType, ls: readonly Omit<Option, 'obligors'>[] ): Promise<Option[]>{
+
+  let out:Option[] = [];
+  let len = ls.length;
+
+  while(len > 0) {
+    let item:Option = {
+      head: ls[len-1].head,
+      cond: ls[len-1].cond,
+      body: ls[len-1].body,
+      obligors: await getObligors(term, ls[len-1].head.seqOfOpt),
+    }
+    out.push(item);
+    len--;
+  }
+
+  return out;
 }
 
 
@@ -278,26 +284,19 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ opts, setOpts ] = useState<readonly Option[]>();
 
+  const [ open, setOpen ] = useState(false);
+
+
+
   const {
     refetch:getAllOpts 
   } = useOptionsGetAllOptions({
     address: term,
     onSuccess(ls) {
-      if (ls) {
-        let out:Option[] = [];
-        
-        ls.forEach(async v => {
-          let item:Option = {
-            head: v.head,
-            cond: v.cond,
-            body: v.body,
-            obligors: await getObligors(term, v.head.seqOfOpt),
-          }
-
-          out.push(item);
-        });
-        setOpts(out);
-      }
+      if (ls) 
+        refreshList(term, ls).then(
+          list => setOpts(list)
+        );
     }
   });
 
@@ -310,15 +309,14 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addOpt
   } = useOptionsCreateOption({
     address: term,
-    args: head && cond && body
-      ? [ 
+    args: 
+        [ 
           optHeadCodifier(head), 
           condCodifier(cond), 
           BigInt(body.rightholder),
           BigInt(body.paid),
           BigInt(body.par)
-        ] 
-      : undefined, 
+        ], 
     onSuccess() {
       getAllOpts();
     }
@@ -363,13 +361,12 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     }
   });
 
-  const [ open, setOpen ] = useState(false);
 
   return (
     <>
       <Button
         disabled={ isFinalized && !term }
-        variant="outlined"
+        variant={term != AddrZero ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
@@ -387,18 +384,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
         <DialogContent>
 
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-            <Box sx={{ width:1180 }}>
+            <Box sx={{ width:1380 }}>
 
-              <Stack direction={'row'} sx={{ alignItems:'center' }}>
+              <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Toolbar>
                   <h4>Put/Call Options (Addr: {term} )</h4>
                 </Toolbar>
 
-                {term == undefined && !isFinalized && (
-                  <>
+                {term == AddrZero && !isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems:'center' }}>
+
                     <TextField 
                       variant='filled'
                       label='Version'
+                      size="small"
                       sx={{
                         m:1,
                         ml:3,
@@ -412,6 +411,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       disabled={ createTermLoading }
                       variant="contained"
                       sx={{
+                        mr:5,
                         height: 40,
                       }}
                       endIcon={ <PlaylistAdd /> }
@@ -420,10 +420,10 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       Create
                     </Button>
 
-                  </>
+                  </Stack>
                 )}
 
-                {term && !isFinalized && (
+                {term != AddrZero && !isFinalized && (
                     <Button
                       disabled={ removeTermLoading }
                       variant="contained"
@@ -440,379 +440,427 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
               </Stack>
 
-              {term && !isFinalized && (
+              {term !=AddrZero && !isFinalized && (
                 <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-                  <Stack direction='column' spacing={1} >
+                  <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-                    <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                    <Toolbar sx={{ textDecoration:'underline' }}>
+                      <h4>Edit Panel</h4>
+                    </Toolbar>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                        <InputLabel id="optType-label">TypeOfOption</InputLabel>
-                        <Select
-                          labelId="optType-label"
-                          id="optType-select"
-                          value={ typeOfOpts[head.typeOfOpt] }
+                    <Stack direction='column' spacing={1} >
+
+                      <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                        <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                          <InputLabel id="optType-label">TypeOfOption</InputLabel>
+                          <Select
+                            labelId="optType-label"
+                            id="optType-select"
+                            size="small"
+                            value={ head.typeOfOpt }
+                            onChange={(e) => setHead((v) => ({
+                              ...v,
+                              typeOfOpt: Number(e.target.value),
+                            }))}
+                          >
+                            {typeOfOpts.map((v, i) => (
+                              <MenuItem key={i} value={ i } >{ v }</MenuItem>  
+                            ))}
+                          </Select>
+                        </FormControl>
+
+                        <TextField 
+                          variant='filled'
+                          label='ClassOfShare'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
                           onChange={(e) => setHead((v) => ({
                             ...v,
-                            typeOfOpt: Number(e.target.value),
+                            classOfShare: parseInt( e.target.value ?? '0'),
                           }))}
-                        >
-                          {typeOfOpts.map((v, i) => (
-                            <MenuItem key={i} value={ i } >{ v }</MenuItem>  
-                          ))}
-                        </Select>
-                      </FormControl>
-
-                      <TextField 
-                        variant='filled'
-                        label='ClassOfShare'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          classOfShare: parseInt( e.target.value ?? '0'),
-                        }))}
-                        value={ head.classOfShare }              
-                      />
-
-                      <TextField 
-                        variant='filled'
-                        label='RateOfOption'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          rate: parseInt( e.target.value ?? '0'),
-                        }))}
-                        value={ head.rate }              
-                      />
-
-                    </Stack>
-
-                    <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                      <DateTimeField
-                        label='TriggerDate'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }} 
-                        value={ dayjs.unix(head.triggerDate) }
-                        onChange={(date) => setHead((v) => ({
-                          ...v,
-                          triggerDate: date ? date.unix() : 0,
-                        }))}
-                        format='YYYY-MM-DD HH:mm:ss'
-                      />
-
-                      <TextField 
-                        variant='filled'
-                        label='ExecDays'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          execDays: parseInt(e.target.value ?? '0'),
-                        }))}
-                        value={ head.execDays }              
-                      />
-
-                      <TextField 
-                        variant='filled'
-                        label='ClosingDays'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          closingDays: parseInt(e.target.value ?? '0'),
-                        }))}
-                        value={ head.closingDays }              
-                      />
-
-                    </Stack>
-
-                    <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 68 }}>
-                        <InputLabel id="logicOperator-label">LogicOperator</InputLabel>
-                        <Select
-                          labelId="logicOperator-label"
-                          id="logicOperator-select"
-                          value={ logOps[cond.logicOpr] }
-                          onChange={(e) => setCond((v) => ({
-                            ...v,
-                            logicOpr: Number(e.target.value),
-                          }))}
-                        >
-                          {typeOfOpts.map((v, i) => (
-                            <MenuItem key={i} value={ i } >{ v }</MenuItem>  
-                          ))}
-                        </Select>
-                      </FormControl>
-
-                      {cond.logicOpr > 0 && (<>
-                    
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 68 }}>
-                          <InputLabel id="compOpr1-label">CompareOperator_1</InputLabel>
-                          <Select
-                            labelId="compOpr1-label"
-                            id="compOpr1-select"
-                            value={ comOps[cond.compOpr1] }
-                            onChange={(e) => setCond((v) => ({
-                              ...v,
-                              compOpr1: Number(e.target.value),
-                            }))}
-                          >
-                            {comOps.map((v, i) => (
-                              <MenuItem key={i} value={ i } >{ v }</MenuItem>  
-                            ))}
-                          </Select>
-                        </FormControl>
+                          value={ head.classOfShare }              
+                        />
 
                         <TextField 
                           variant='filled'
-                          label='Parameter_1'
+                          label='Paid'
+                          size="small"
                           sx={{
                             m:1,
                             minWidth: 218,
                           }}
-                          onChange={(e) => setCond((v) => ({
+                          onChange={(e) => setBody((v) => ({
                             ...v,
-                            para1: BigInt(e.target.value ?? '0'),
+                            paid: BigInt(e.target.value ?? '0'),
                           }))}
-                          value={ cond.para1 }              
+                          value={ body.paid.toString() }              
                         />
+
+                        <TextField 
+                          variant='filled'
+                          label='Par'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
+                          onChange={(e) => setBody((v) => ({
+                            ...v,
+                            par: BigInt(e.target.value ?? '0'),
+                          }))}
+                          value={ body.par.toString() }              
+                        />
+
+                        <TextField 
+                          variant='filled'
+                          label='Rightholder'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
+                          onChange={(e) => setBody((v) => ({
+                            ...v,
+                            rightholder: parseInt(e.target.value ?? '0'),
+                          }))}
+                          value={ body.rightholder }              
+                        />
+
+                      </Stack>
+
+                      <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                        <TextField 
+                          variant='filled'
+                          label='RateOfOption'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
+                          onChange={(e) => setHead((v) => ({
+                            ...v,
+                            rate: parseInt( e.target.value ?? '0'),
+                          }))}
+                          value={ head.rate }              
+                        />
+
+                        <DateTimeField
+                          label='TriggerDate'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }} 
+                          value={ dayjs.unix(head.triggerDate) }
+                          onChange={(date) => setHead((v) => ({
+                            ...v,
+                            triggerDate: date ? date.unix() : 0,
+                          }))}
+                          format='YYYY-MM-DD HH:mm:ss'
+                        />
+
+                        <TextField 
+                          variant='filled'
+                          label='ExecDays'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
+                          onChange={(e) => setHead((v) => ({
+                            ...v,
+                            execDays: parseInt(e.target.value ?? '0'),
+                          }))}
+                          value={ head.execDays }              
+                        />
+
+                        <TextField 
+                          variant='filled'
+                          label='ClosingDays'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
+                          onChange={(e) => setHead((v) => ({
+                            ...v,
+                            closingDays: parseInt(e.target.value ?? '0'),
+                          }))}
+                          value={ head.closingDays }              
+                        />
+
+                        <TextField 
+                          variant='filled'
+                          label='Obligor'
+                          size="small"
+                          sx={{
+                            m:1,
+                            minWidth: 218,
+                          }}
+                          onChange={(e) => setHead((v) => ({
+                            ...v,
+                            obligor: parseInt(e.target.value ?? '0'),
+                          }))}
+                          value={ head.obligor }              
+                        />
+
+                      </Stack>
+
+                      {head.typeOfOpt > 3 && (
+
+                        <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                            <InputLabel id="logicOperator-label">LogOpr</InputLabel>
+                            <Select
+                              labelId="logicOperator-label"
+                              id="logicOperator-select"
+                              size="small"
+                              value={ cond.logicOpr }
+                              onChange={(e) => setCond((v) => ({
+                                ...v,
+                                logicOpr: Number(e.target.value),
+                              }))}
+                            >
+                              {logOps.map((v, i) => (
+                                <MenuItem key={i} value={ i } >{ v }</MenuItem>  
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                        {cond.logicOpr > 0 && (<>
                       
-                      </>)}
+                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                            <InputLabel id="compOpr1-label">CompOpr_1</InputLabel>
+                            <Select
+                              labelId="compOpr1-label"
+                              id="compOpr1-select"
+                              size="small"
+                              value={ cond.compOpr1 }
+                              onChange={(e) => setCond((v) => ({
+                                ...v,
+                                compOpr1: Number(e.target.value),
+                              }))}
+                            >
+                              {comOps.map((v, i) => (
+                                <MenuItem key={i} value={ i } >{ v }</MenuItem>  
+                              ))}
+                            </Select>
+                          </FormControl>
 
-                      {cond.logicOpr > 2 && (<>
-
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 68 }}>
-                          <InputLabel id="compOpr2-label">CompareOperator_2</InputLabel>
-                          <Select
-                            labelId="compOpr2-label"
-                            id="compOpr2-select"
-                            value={ comOps[cond.compOpr2] }
+                          <TextField 
+                            variant='filled'
+                            label='Parameter_1'
+                            size="small"
+                            sx={{
+                              m:1,
+                              minWidth: 218,
+                            }}
                             onChange={(e) => setCond((v) => ({
                               ...v,
-                              compOpr2: Number(e.target.value),
+                              para1: BigInt(e.target.value ?? '0'),
                             }))}
-                          >
-                            {comOps.map((v, i) => (
-                              <MenuItem key={i} value={ i } >{ v }</MenuItem>  
-                            ))}
-                          </Select>
-                        </FormControl>
+                            value={ cond.para1.toString() }
+                          />
+                        
+                        </>)}
 
-                        <TextField 
-                          variant='filled'
-                          label='Parameter_2'
-                          sx={{
-                            m:1,
-                            minWidth: 218,
-                          }}
-                          onChange={(e) => setCond((v) => ({
-                            ...v,
-                            para2: BigInt(e.target.value ?? '0'),
-                          }))}
-                          value={ cond.para2 }              
-                        />
+                        {cond.logicOpr > 2 && (<>
 
-                      </>)}
+                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                            <InputLabel id="compOpr2-label">CompOpr_2</InputLabel>
+                            <Select
+                              labelId="compOpr2-label"
+                              id="compOpr2-select"
+                              size="small"
+                              value={ cond.compOpr2 }
+                              onChange={(e) => setCond((v) => ({
+                                ...v,
+                                compOpr2: Number(e.target.value),
+                              }))}
+                            >
+                              {comOps.map((v, i) => (
+                                <MenuItem key={i} value={ i } >{ v }</MenuItem>  
+                              ))}
+                            </Select>
+                          </FormControl>
 
-                      {cond.logicOpr > 6 && (<>
-
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 68 }}>
-                          <InputLabel id="compOpr3-label">CompareOperator_3</InputLabel>
-                          <Select
-                            labelId="compOpr3-label"
-                            id="compOpr3-select"
-                            value={ comOps[cond.compOpr3] }
+                          <TextField 
+                            variant='filled'
+                            label='Parameter_2'
+                            size="small"
+                            sx={{
+                              m:1,
+                              minWidth: 218,
+                            }}
                             onChange={(e) => setCond((v) => ({
                               ...v,
-                              compOpr3: Number(e.target.value),
+                              para2: BigInt(e.target.value ?? '0'),
                             }))}
-                          >
-                            {comOps.map((v, i) => (
-                              <MenuItem key={i} value={ i } >{ v }</MenuItem>  
-                            ))}
-                          </Select>
-                        </FormControl>
+                            value={ cond.para2.toString() }              
+                          />
 
-                        <TextField 
-                          variant='filled'
-                          label='Parameter_3'
-                          sx={{
-                            m:1,
-                            minWidth: 218,
-                          }}
-                          onChange={(e) => setCond((v) => ({
-                            ...v,
-                            para3: BigInt(e.target.value ?? '0'),
-                          }))}
-                          value={ cond.para3 }              
-                        />
+                        </>)}
 
-                      </>)}
+                        {cond.logicOpr > 6 && (<>
+
+                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                            <InputLabel id="compOpr3-label">CompOpr_3</InputLabel>
+                            <Select
+                              labelId="compOpr3-label"
+                              id="compOpr3-select"
+                              size="small"
+                              value={ cond.compOpr3 }
+                              onChange={(e) => setCond((v) => ({
+                                ...v,
+                                compOpr3: Number(e.target.value),
+                              }))}
+                            >
+                              {comOps.map((v, i) => (
+                                <MenuItem key={i} value={ i } >{ v }</MenuItem>  
+                              ))}
+                            </Select>
+                          </FormControl>
+
+                          <TextField 
+                            variant='filled'
+                            label='Parameter_3'
+                            size="small"
+                            sx={{
+                              m:1,
+                              minWidth: 218,
+                            }}
+                            onChange={(e) => setCond((v) => ({
+                              ...v,
+                              para3: BigInt(e.target.value ?? '0'),
+                            }))}
+                            value={ cond.para3.toString() }              
+                          />
+
+                        </>)}
+
+                        </Stack>
+
+                      )}
 
                     </Stack>
 
-                    <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                    <Divider flexItem />
+
+                    <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+
+                      <Tooltip
+                        title='Add Option'
+                        placement="top-start"
+                        arrow
+                      >
+                        <IconButton 
+                          disabled={ addOptLoading }
+                          sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                          onClick={ () => addOpt?.() }
+                          color="primary"
+                        >
+                          <AddCircle/>
+                        </IconButton>
+                      </Tooltip>
 
                       <TextField 
                         variant='filled'
-                        label='Rightholder'
+                        label='SeqOfOption'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setBody((v) => ({
+                        onChange={(e) => setHead(v=>({
                           ...v,
-                          rightholder: parseInt(e.target.value ?? '0'),
+                          seqOfOpt: parseInt(e.target.value ?? '0'),
                         }))}
-                        value={ body.rightholder }              
+                        value={ head.seqOfOpt }              
                       />
+
+                      <Tooltip
+                        title='Remove Option'
+                        placement="top-end"
+                        arrow
+                      >           
+                        <IconButton
+                          disabled={ removeOptLoading } 
+                          sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                          onClick={ () => removeOpt?.() }
+                          color="primary"
+                        >
+                          <RemoveCircle/>
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip
+                        title='Add Obligor'
+                        placement="top-start"
+                        arrow
+                      >
+                        <IconButton 
+                          disabled={ addObligorLoading }
+                          sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                          onClick={ () => addObligor?.() }
+                          color="primary"
+                        >
+                          <AddCircle/>
+                        </IconButton>
+
+                      </Tooltip>
 
                       <TextField 
                         variant='filled'
-                        label='Paid'
+                        label='Obligor'
+                        size="small"
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setBody((v) => ({
-                          ...v,
-                          paid: BigInt(e.target.value ?? '0'),
-                        }))}
-                        value={ body.paid }              
+                        onChange={(e) => setObligor(e.target.value ?? '0')}
+                        value={ obligor }              
                       />
 
-                      <TextField 
-                        variant='filled'
-                        label='Par'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setBody((v) => ({
-                          ...v,
-                          par: BigInt(e.target.value ?? '0'),
-                        }))}
-                        value={ body.par }              
-                      />
+                      <Tooltip
+                        title='Remove Obligor'
+                        placement="top-end"
+                        arrow
+                      >
+
+                        <IconButton
+                          disabled={ removeObligorLoading } 
+                          sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                          onClick={ () => removeObligor?.() }
+                          color="primary"
+                        >
+                          <RemoveCircle/>
+                        </IconButton>
+                      
+                      </Tooltip>
 
                     </Stack>
-
-                  </Stack>
-
-                  <Divider flexItem />
-
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>      
-
-                    <Tooltip
-                      title='Add Option'
-                      placement="top-start"
-                      arrow
-                    >
-                      <IconButton 
-                        disabled={ addOptLoading }
-                        sx={{width: 20, height: 20, m: 1, ml: 5 }} 
-                        onClick={ () => addOpt?.() }
-                        color="primary"
-                      >
-                        <AddCircle/>
-                      </IconButton>
-                    </Tooltip>
-
-                    <TextField 
-                      variant='filled'
-                      label='SeqOfOption'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setHead(v=>({
-                        ...v,
-                        seqOfOpt: parseInt(e.target.value ?? '0'),
-                      }))}
-                      value={ head.seqOfOpt }              
-                    />
-
-                    <Tooltip
-                      title='Remove Option'
-                      placement="top-end"
-                      arrow
-                    >           
-                      <IconButton
-                        disabled={ removeOptLoading } 
-                        sx={{width: 20, height: 20, m: 1, mr: 10, }} 
-                        onClick={ () => removeOpt?.() }
-                        color="primary"
-                      >
-                        <RemoveCircle/>
-                      </IconButton>
-                    </Tooltip>
-
-                    <Tooltip
-                      title='Add Obligor'
-                      placement="top-start"
-                      arrow
-                    >
-                      <IconButton 
-                        disabled={ addObligorLoading }
-                        sx={{width: 20, height: 20, m: 1, ml: 10,}} 
-                        onClick={ () => addObligor?.() }
-                        color="primary"
-                      >
-                        <AddCircle/>
-                      </IconButton>
-
-                    </Tooltip>
-
-                    <TextField 
-                      variant='filled'
-                      label='Obligor'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObligor(e.target.value ?? '0')}
-                      value={ obligor }              
-                    />
-
-                    <Tooltip
-                      title='Remove Obligor'
-                      placement="top-end"
-                      arrow
-                    >
-
-                      <IconButton
-                        disabled={ removeObligorLoading } 
-                        sx={{width: 20, height: 20, m: 1, mr: 10}} 
-                        onClick={ () => removeObligor?.() }
-                        color="primary"
-                      >
-                        <RemoveCircle/>
-                      </IconButton>
-                    
-                    </Tooltip>
-
-                  </Stack>
                 
-                  <Divider flexItem />
+                  </Paper>
 
-                  {term && opts?.map(v => (
-                    <Opt key={ v.head.seqOfOpt } opt={ v } />
-                  ))}
+                  <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
+
+                    <Toolbar sx={{ textDecoration:'underline' }}>
+                      <h4>Options List</h4>
+                    </Toolbar>
+
+
+                    {term != AddrZero && opts?.map(v => (
+                      <Opt key={ v.head.seqOfOpt } opt={ v } />
+                    ))}
+
+                  </Paper>
 
                 </Paper>
               )}

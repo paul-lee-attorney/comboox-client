@@ -40,6 +40,9 @@ import {
 
 import { getDocAddr } from "../../../../../queries/rc";
 import { LockerOfShare } from "./LockerOfShare";
+import { DateTimeField } from "@mui/x-date-pickers";
+import dayjs from "dayjs";
+import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 
 interface Locker {
   seqOfShare: number;
@@ -76,13 +79,6 @@ async function getLockers(lu: HexType, shares: number[]): Promise<Locker[]> {
   }
 
   return output;
-}
-
-interface SetShaTermProps {
-  sha: HexType,
-  term: HexType | undefined,
-  setTerms: Dispatch<SetStateAction<HexType[]>>,
-  isFinalized: boolean,
 }
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -140,7 +136,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   });
 
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
-  const [ dueDate, setDueDate ] = useState<string>();
+  const [ dueDate, setDueDate ] = useState<number>();
 
   const { 
     isLoading: addLockerLoading,
@@ -200,7 +196,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     <>
       <Button
         disabled={ isFinalized && !term }
-        variant="outlined"
+        variant={term != AddrZero ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
@@ -220,13 +216,14 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
             <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
               <Box sx={{ width:1180 }}>
 
-                <Stack direction={'row'} sx={{ alignItems:'center' }}>
+                <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                   <Toolbar>
                     <h4>Lock Up (Addr: { term })</h4>
                   </Toolbar>
 
-                  {term == undefined && !isFinalized && (
-                    <>
+                  {term == AddrZero && !isFinalized && (
+                    <Stack direction={'row'} sx={{ alignItems:'center' }}>
+
                       <TextField 
                         variant='filled'
                         label='Version'
@@ -251,10 +248,10 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         Create
                       </Button>
 
-                    </>
+                    </Stack>
                   )}
 
-                  {term && !isFinalized && (
+                  {term != AddrZero && !isFinalized && (
                       <Button
                         disabled={ removeTermLoading }
                         variant="contained"
@@ -271,7 +268,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                 </Stack>
 
-                {term && !isFinalized && (
+                {term != AddrZero && !isFinalized && (
                   <Stack direction={'row'} sx={{ alignItems:'center' }}>      
 
                     <Tooltip
@@ -292,6 +289,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     <TextField 
                       variant='filled'
                       label='SeqOfShare'
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -300,15 +298,16 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       value={ seqOfShare }              
                     />
 
-                    <TextField 
-                      variant='filled'
-                      label='DueDate'
+                    <DateTimeField
+                      label='TriggerDate'
                       sx={{
                         m:1,
                         minWidth: 218,
-                      }}
-                      onChange={(e) => setDueDate(e.target.value)}
-                      value={ dueDate }
+                      }} 
+                      size="small"
+                      value={ dayjs.unix(dueDate ?? 0) }
+                      onChange={(date) => setDueDate(date?.unix() ?? undefined)}
+                      format='YYYY-MM-DD HH:mm:ss'
                     />
 
                     <Tooltip

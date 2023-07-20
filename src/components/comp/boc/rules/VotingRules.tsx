@@ -24,7 +24,6 @@ import {
 import { SetVotingRule, VotingRule } from "./SetVotingRule";
 
 import { 
-  usePrepareShareholdersAgreementRemoveRule, 
   useShareholdersAgreementRemoveRule 
 } from "../../../../generated";
 
@@ -72,13 +71,6 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
 
   const [open, setOpen] = useState(false);
 
-  // const {
-  //   config: removeRuleConfig
-  // } = usePrepareShareholdersAgreementRemoveRule({
-  //   address: sha,
-  //   args: [BigInt(cp[cp.length - 1])]
-  // })
-
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
@@ -102,7 +94,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
   return (
     <>
       <Button
-        variant="outlined"
+        variant={ initSeqList && initSeqList?.length > 0 ? "contained" : "outlined"}
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      

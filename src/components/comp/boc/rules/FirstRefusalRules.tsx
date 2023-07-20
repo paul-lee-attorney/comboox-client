@@ -23,7 +23,6 @@ import {
 
 import { FirstRefusalRuleWrap, SetFirstRefusalRule } from "./SetFirstRefusalRule";
 import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
-import { bigint } from "ethers";
 
 interface FirstRefusalRulesProps {
   sha: HexType;
@@ -66,13 +65,6 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
 
   const [open, setOpen] = useState(false);
 
-  // const {
-  //   config: removeRuleConfig
-  // } = usePrepareShareholdersAgreementRemoveRule({
-  //   address: sha,
-  //   args: [BigInt(cp[cp.length - 1] ?? '513')]
-  // })
-
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
@@ -98,7 +90,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
   return (
     <>
       <Button
-        variant="outlined"
+        variant={ initSeqList && initSeqList?.length > 0 ? "contained" : "outlined"}
         startIcon={<ListAlt />}
         sx={{ m:0.5,minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      

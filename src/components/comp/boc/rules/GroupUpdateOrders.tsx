@@ -76,7 +76,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized}: GroupUpdateOr
 
       <Button
         // disabled={ !newGR }
-        variant="outlined"
+        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined"}
         startIcon={<ListAlt />}
         // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}

@@ -27,16 +27,17 @@ export function Opt({ opt }: OptProps) {
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label={ longSnParser(opt.head.seqOfOpt.toString()) } color='primary' sx={{m:1}} />
+        <Chip label={ longSnParser(opt.head.seqOfOpt.toString()) } color={ opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'} sx={{m:1, minWidth:128 }} />
 
         <ContentOfOpt opt={opt} />
 
         <TriggerCondition cond={opt.cond} />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Obligors'
           inputProps={{readOnly: true}}
+          size='small'
           sx={{
             m:1,
             minWidth: 218,

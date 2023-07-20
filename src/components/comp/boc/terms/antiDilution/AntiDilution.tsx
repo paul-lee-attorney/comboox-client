@@ -224,7 +224,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     <>
       <Button
         disabled={ isFinalized && !term }
-        variant="outlined"
+        variant={term != AddrZero ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -245,7 +245,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
             <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
               <Box sx={{ width:1180 }}>
 
-                <Stack direction={'row'} sx={{ alignItems:'center' }}>
+                <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                   <Toolbar>
                     <h4>AntiDilution (Addr: {term} )</h4>
                   </Toolbar>
@@ -296,8 +296,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
                 </Stack>
 
-                {term && !isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+                {term != AddrZero && !isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>      
 
                     <Tooltip
                       title='Add Benchmark'
@@ -398,7 +398,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                   </Stack>
                 )}
                 
-                {term && newMarks?.map((v) => (
+                {term != AddrZero && newMarks?.map((v) => (
                   <Benchmark 
                     key={v.classOfShare} 
                     classOfShare={v.classOfShare}

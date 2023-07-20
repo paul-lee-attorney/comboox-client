@@ -19,13 +19,15 @@ import {
 } from '../../../generated';
 
 import { ContractProps, HexType } from '../../../interfaces';
-import { hasRole } from '../../../queries/accessControl';
+import { ATTORNEYS, hasRole } from '../../../queries/accessControl';
 
-export const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 
 export function RemoveAttorney({ addr }: ContractProps) {
 
   const [acct, setAcct] = useState<HexType>();
+
+  const [ flag, setFlag ] = useState<boolean>();
+  const [ open, setOpen ] = useState(false);
 
   const {
     data,
@@ -33,74 +35,80 @@ export function RemoveAttorney({ addr }: ContractProps) {
     write,
   } = useAccessControlRevokeRole({
     address: addr,
-    args: acct ? [ATTORNEYS, acct] : undefined,    
+    args: acct && acct != '0x' 
+      ? [ATTORNEYS, acct] : undefined,
+    onSuccess() {
+      if (acct) 
+        hasRole(addr, ATTORNEYS, acct).then(flag => {
+          setFlag(flag);
+          setOpen(true);
+        });      
+    }
   });
-
-  const [ flag, setFlag ] = useState<boolean>();
-  const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
     write?.();
   }
 
-  useEffect(() => {
-    if (acct) 
-      hasRole(addr, ATTORNEYS, acct).then(flag => {
-        setFlag(flag);
-        setOpen(true);
-      });
-  }, [data, addr, acct]);
+  // useEffect(() => {
+  //   if (acct) 
+  //     hasRole(addr, ATTORNEYS, acct).then(flag => {
+  //       setFlag(flag);
+  //       setOpen(true);
+  //     });
+  // }, [data, addr, acct]);
 
   return (
-    <>
-      <Stack direction={'row'}  sx={{ width: '100%' }} >
+    
+    <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <FormControl sx={{ m: 1, width: 550 }} variant="outlined">
-          <InputLabel htmlFor="setAcct-input">RemoveAttorney</InputLabel>
-          <OutlinedInput
-            id="setAcct-input"
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  color='primary'
-                  disabled={ isLoading }
-                  onClick={ handleClick }
-                  edge="end"
-                >
-                  <PersonRemove />
-                </IconButton>
-              </InputAdornment>
-            }
-            label='RemoveAttorney'
-            sx={{height:55}}
-            onChange={(e) => setAcct(`0x${e.target.value}`)}
-          />
-        </FormControl>
-
-        <Collapse in={open} sx={{width:218}}>        
-          <Alert 
-            action={
+      <FormControl sx={{ m: 1, width: '50%' }} variant="outlined">
+        <InputLabel htmlFor="setAcct-input">RemoveAttorney</InputLabel>
+        <OutlinedInput
+          id="setAcct-input"
+          endAdornment={
+            <InputAdornment position="end">
               <IconButton
-                aria-label="close"
-                color="inherit"
-                size="small"
-                onClick={() => {
-                  setOpen(false);
-                }}
+                color='primary'
+                disabled={ isLoading || acct == undefined || acct == '0x' }
+                onClick={ handleClick }
+                edge="end"
               >
-                <Close fontSize="inherit" />
+                <PersonRemove />
               </IconButton>
-            }
+            </InputAdornment>
+          }
+          label='RemoveAttorney'
+          sx={{height:55}}
+          onChange={(e) => setAcct(`0x${e.target.value}`)}
+          value={ acct?.substring(2) }
+        />
+      </FormControl>
 
-            severity={ flag ? "success" : "warning" }
-            variant='outlined' 
-            sx={{ height: 55,  m: 1, }} 
-          >
-            { flag ? 'Is Attorney' : 'Not Attorney' } 
-          </Alert>
-        </Collapse>
+      <Collapse in={open} sx={{width:"50%"}}>        
+        <Alert 
+          action={
+            <IconButton
+              aria-label="close"
+              color="inherit"
+              size="small"
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              <Close fontSize="inherit" />
+            </IconButton>
+          }
 
-      </Stack>
-    </> 
+          severity={ flag ? "success" : "warning" }
+          variant='outlined' 
+          sx={{ height: 55,  m: 1, }} 
+        >
+          { flag ? 'Is Attorney' : 'Not Attorney' } 
+        </Alert>
+      </Collapse>
+
+    </Stack>
+    
   )
 }

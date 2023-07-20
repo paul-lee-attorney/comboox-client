@@ -11,7 +11,7 @@ export async function obtainRules(sha: HexType): Promise<number[]> {
   let list = await readContract({
     address: sha,
     abi: shareholdersAgreementABI,
-    functionName: 'rules',
+    functionName: 'getRules',
   });
 
   let output: number[] = [];
@@ -24,7 +24,7 @@ export async function obtainTitles(sha: HexType): Promise<number[]> {
   let list = await readContract({
     address: sha,
     abi: shareholdersAgreementABI,
-    functionName: 'titles',
+    functionName: 'getTitles',
   });
 
   return list.map(v => Number(v));

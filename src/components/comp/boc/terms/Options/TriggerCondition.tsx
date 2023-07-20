@@ -34,7 +34,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
       <Button
         variant="outlined"
         startIcon={<ListAlt />}
-        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        sx={{ m:0.5, minWidth: 218, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
         Trigger Condition 
@@ -55,100 +55,103 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
 
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-            <Stack direction='column' spacing={1} >
+            <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              <TextField 
+                variant='outlined'
+                label='LogOpr'
+                inputProps={{readOnly: true}}
+                size="small"
+                sx={{
+                  m:1,
+                  width: 128,
+                }}
+                value={ logOps[cond.logicOpr] }
+              />
+
+              {cond.logicOpr > 0 && (<>
 
                 <TextField 
-                  variant='filled'
-                  label='LogicOperator'
+                  variant='outlined'
+                  label='CompOpr_1'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
-                    minWidth: 68,
+                    width: 128,
                   }}
-                  value={ logOps[cond.logicOpr] }
+                  value={ comOps[cond.compOpr1] }
                 />
 
-                {cond.logicOpr > 0 && (<>
+                <TextField 
+                  variant='outlined'
+                  label='Parameter_1'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser(cond.para1.toString() ?? '0') }              
+                />
 
-                  <TextField 
-                    variant='filled'
-                    label='CompareOperator_1'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 68,
-                    }}
-                    value={ comOps[cond.compOpr1] }
-                  />
+              </>)}
 
-                  <TextField 
-                    variant='filled'
-                    label='Parameter_1'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longDataParser(cond.para1.toString() ?? '0') }              
-                  />
+              {cond.logicOpr > 2 && (<>
 
-                </>)}
+                <TextField 
+                  variant='outlined'
+                  label='CompOpr_2'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    width: 128,
+                  }}
+                  value={ comOps[cond.compOpr2] }
+                />
 
-                {cond.logicOpr > 2 && (<>
+                <TextField 
+                  variant='outlined'
+                  label='Parameter_2'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser(cond.para2.toString() ?? '0') }              
+                />
 
-                  <TextField 
-                    variant='filled'
-                    label='CompareOperator_2'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 68,
-                    }}
-                    value={ comOps[cond.compOpr2] }
-                  />
+              </>)}
 
-                  <TextField 
-                    variant='filled'
-                    label='Parameter_2'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longDataParser(cond.para2.toString() ?? '0') }              
-                  />
+              {cond.logicOpr > 6 && (<>
 
-                </>)}
+                <TextField 
+                  variant='outlined'
+                  label='CompOpr_3'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    width: 128,
+                  }}
+                  value={ comOps[cond.compOpr3] }
+                />
 
-                {cond.logicOpr > 6 && (<>
+                <TextField 
+                  variant='outlined'
+                  label='Parameter_3'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser(cond.para3.toString() ?? '0') }              
+                />
 
-                  <TextField 
-                    variant='filled'
-                    label='CompareOperator_3'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 68,
-                    }}
-                    value={ comOps[cond.compOpr3] }
-                  />
-
-                  <TextField 
-                    variant='filled'
-                    label='Parameter_3'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longDataParser(cond.para3.toString() ?? '0') }              
-                  />
-
-                </>)}
-
-              </Stack>
+              </>)}
 
             </Stack>
 
