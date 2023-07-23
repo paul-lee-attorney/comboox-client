@@ -33,12 +33,11 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
     <>
       <Button
         variant="outlined"
-        // color={ opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'}
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 218, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
-        { opt.head.typeOfOpt % 2 == 0 ? 'Put' : 'Call' } Option 
+        { opt.head.typeOfOpt % 2 == 0 ? 'Call' : 'Put' } Option 
       </Button>
 
       <Dialog

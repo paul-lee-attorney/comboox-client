@@ -45,7 +45,7 @@ export function AlongLinks({ link }: AlongLinksProps) {
           }}
           multiline
           rows={1}
-          value={ splitStrArr(link.followers.map(v => v.toString())) }
+          value={ splitStrArr(link.followers.map(v => longSnParser(v.toString()))) }
         />
 
       </Stack>

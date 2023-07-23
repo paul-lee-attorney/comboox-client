@@ -1,6 +1,9 @@
+import Smart from "../../../comboox/server/src/contracts/contracts-address.json";
 
 
-export const AddrOfRegCenter:HexType = "0x4C2F7092C2aE51D986bEFEe378e50BD4dB99C901";
+
+export const AddrOfRegCenter:HexType = `0x${Smart.RegCenter.substring(2)}`;
+// export const AddrOfRegCenter:HexType = "0xd6e1afe5cA8D00A2EFC01B89997abE2De47fdfAf";
 
 export const DocTypeOfGeneralKeeper: number = 20;
 

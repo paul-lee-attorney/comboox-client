@@ -47,6 +47,7 @@ import { getDocAddr } from "../../../../../queries/rc";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AlongLinks } from "./AlongLinks";
+import { AddTerm } from "../AddTerm";
 
 
 export interface LinkRule{
@@ -168,41 +169,6 @@ export async function getLinks(addr: HexType, dragers: readonly bigint[]): Promi
 
 export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
-  const [ version, setVersion ] = useState<string>('1');
-
-  const {
-    isLoading: createTermLoading,
-    write: createTerm,
-  } = useShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigInt('25'), BigInt(version)]: 
-      undefined,
-    onSuccess(data:any) {
-      getDocAddr(data.hash).
-        then(addr => setTerms(v => {
-          let out = [...v];
-          out[1] = addr;
-          return out;
-        }));      
-    }
-  });
-
-  const {
-    isLoading: removeTermLoading,
-    write: removeTerm,
-  } = useShareholdersAgreementRemoveTerm({
-    address: sha,
-    args: [BigInt('25')],
-    onSuccess() {
-      setTerms(v =>{
-        let out = [...v];
-        out[1] = AddrZero;
-        return out;
-      });
-    }
-  });
-
   const [ links, setLinks ] = useState<AlongLink[]>();
 
   const {
@@ -300,52 +266,11 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Toolbar>
-                  <h4>Drag Along (Addr: {term} )</h4>
+                  <h4>Drag Along (Addr: { term == AddrZero ? '-' : term } )</h4>
                 </Toolbar>
 
-                {term == AddrZero && !isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>
-
-                    <TextField 
-                      variant='filled'
-                      label='Version'
-                      sx={{
-                        m:1,
-                        ml:3,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setVersion(e.target.value)}
-                      value={ version }              
-                    />
-
-                    <Button
-                      disabled={ createTermLoading }
-                      variant="contained"
-                      sx={{
-                        height: 40,
-                      }}
-                      endIcon={ <PlaylistAdd /> }
-                      onClick={() => createTerm?.()}
-                    >
-                      Create
-                    </Button>
-
-                  </Stack>
-                )}
-
-                {term != AddrZero && !isFinalized && (
-                    <Button
-                      disabled={ removeTermLoading }
-                      variant="contained"
-                      sx={{
-                        height: 40,
-                        mr: 5,
-                      }}
-                      endIcon={ <Delete /> }
-                      onClick={() => removeTerm?.()}
-                    >
-                      Remove
-                    </Button>
+                {!isFinalized && (
+                  <AddTerm sha={ sha } typeOfDoc={ 25 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
 
               </Stack>
@@ -575,11 +500,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
               {term != AddrZero && (
                 <Paper elevation={3} sx={{ m:1, border:1, borderColor:'divider' }}>
-              
-                  <Toolbar>
-                    <h4>Drag-Alongs List</h4>
-                  </Toolbar>
-
+            
                   {links?.map((v) => (
                     <AlongLinks key={ v.drager } link={ v } />
                   ))}

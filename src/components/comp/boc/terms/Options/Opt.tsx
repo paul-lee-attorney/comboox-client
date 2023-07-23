@@ -44,7 +44,7 @@ export function Opt({ opt }: OptProps) {
           }}
           multiline
           rows={1}
-          value={ splitStrArr(opt.obligors.map(v => v.toString())) }
+          value={ splitStrArr(opt.obligors.map(v => longSnParser(v.toString()))) }
         />
 
       </Stack>

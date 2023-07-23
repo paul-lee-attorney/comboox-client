@@ -49,7 +49,9 @@ function Sha() {
 
               <TabList variant="solid" color="primary" sx={{ width: 980 }}  >
                 <Tab value={0}><b>Body Term</b></Tab>
-                <Tab value={1}><b>Access Control</b></Tab>
+                {!isFinalized && (
+                  <Tab value={1}><b>Access Control</b></Tab>
+                )}
                 <Tab value={2}><b>Signature Page</b></Tab>
                 <Tab value={3}><b>Sup Signature Page</b></Tab>
                 <Tab value={4}><b>Life Cycle</b></Tab>

@@ -16,7 +16,7 @@ import { useBookOfSharesGetDk } from "../../generated";
 
 function HomePage() {
   const { gk, boox } = useComBooxContext();
-  const [ activeStep, setActiveStep ] = useState<number>();
+  const [ activeStep, setActiveStep ] = useState<number>(0);
 
   useBookOfSharesGetDk({
     address: boox ? boox[10] : undefined,
@@ -25,7 +25,7 @@ function HomePage() {
         getKeeper(gk, 10).then(
           v => {
             if (v == dk) setActiveStep(4);
-            else setActiveStep(0);
+            // else setActiveStep(0);
           }
         )
     }

@@ -1,9 +1,7 @@
-import { useState } from "react";
 
-import { Alert, Box, Button, Stack, TextField } from "@mui/material";
+import { Button } from "@mui/material";
 import { 
   useGeneralKeeperActivateSha,
-  usePrepareGeneralKeeperActivateSha, 
 } from "../../../../generated";
 
 import { FileHistoryProps, } from "../../../../interfaces";
@@ -14,16 +12,9 @@ export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
 
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperActivateSha({
-  //   address: gk,
-  //   args: [ addr ],
-  // });
-
   const {
     isLoading,
-    write
+    write,
   } = useGeneralKeeperActivateSha({
     address: gk,
     args: [ addr ],

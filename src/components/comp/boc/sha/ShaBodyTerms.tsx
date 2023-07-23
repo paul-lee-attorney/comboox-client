@@ -57,19 +57,15 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
   useEffect(()=>{
     const setUpRules = async () => {
-      // console.log('enter time: ', new Date().getTime())
-      
+
       let rules = await getGroupOfRules(sha);
 
       setVrLs(rules[0]);
       setPrLs(rules[1]);
       setFrLs(rules[2]);
       setGuoLs(rules[3]);
-
-      // console.log('rules in Effect: ', rules);
-
-      // console.log('exit time: ', new Date().getTime())
     }
+    
     setUpRules();
   }, [sha]);
 

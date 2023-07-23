@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import {  
   Button,
@@ -13,78 +13,90 @@ import {
   IconButton,
 } from '@mui/material';
 
-import { ArrowBack, ArrowDownward, ArrowForward, ArrowUpward, Key }  from '@mui/icons-material';
+import { ArrowDownward, ArrowUpward, Key }  from '@mui/icons-material';
 
 
 import {
-  usePrepareBookOfSharesSetDirectKeeper,
   useBookOfSharesSetDirectKeeper,
-  usePrepareBookOfMembersSetDirectKeeper,
   useBookOfMembersSetDirectKeeper,
+  useGeneralKeeperGetKeeper,
+  useAccessControlGetDk,
+  useAccessControlSetDirectKeeper,
 } from '../../../generated';
 
 import { HexType } from '../../../interfaces';
 
-
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
-import { getKeeper } from '../../../queries/gk';
-import { getDK } from '../../../queries/accessControl';
 
 interface TurnKeyProps {
   nextStep: (next: number) => void;
 }
 
-export function TurnKey({nextStep}:TurnKeyProps) {
+export function TurnKey({ nextStep }:TurnKeyProps) {
   const { gk, boox } = useComBooxContext();
 
   const [bomKeeper, setBomKeeper] = useState<HexType>();
+
+  useGeneralKeeperGetKeeper({
+    address: gk,
+    args: [ BigInt(4) ],
+    onSuccess(res) {
+      setBomKeeper(res)
+    }
+  })
+
   const [dkOfBom, setDKOfBom] = useState<HexType>();
 
+  const {
+    refetch: getDkOfBom
+  } = useAccessControlGetDk({
+    address: boox ? boox[4] : undefined,
+    onSuccess(res) {
+      setDKOfBom(res)
+    }
+  })
+
   const [bosKeeper, setBosKeeper] = useState<HexType>();
+
+  useGeneralKeeperGetKeeper({
+    address: gk,
+    args: [ BigInt(10) ],
+    onSuccess(res) {
+      setBosKeeper(res)
+    }
+  })
+
   const [dkOfBos, setDKOfBos] = useState<HexType>();
 
-  useEffect(()=>{
-    const obtainKeepers = async ()=>{
-      if (gk && boox) {
-        setBomKeeper(await getKeeper(gk, 4));
-        setDKOfBom(await getDK(boox[4]));
-  
-        setBosKeeper(await getKeeper(gk, 10));
-        setDKOfBos(await getDK(boox[10]));
-      }
+  const {
+    refetch: getDkOfBos
+  } = useAccessControlGetDk({
+    address: boox ? boox[10] : undefined,
+    onSuccess(res) {
+      setDKOfBos(res)
     }
-    
-    obtainKeepers();
-  });
-
-  // const {
-  //   config: setBomDKConfig,
-  // } = usePrepareBookOfMembersSetDirectKeeper({
-  //   address: boox ? boox[4] : undefined,
-  //   args: bomKeeper ? [ bomKeeper ] : undefined,
-  // });
+  })
 
   const {
     isLoading: setBomDKLoading,
     write: setBomDK,
-  } = useBookOfMembersSetDirectKeeper({
+  } = useAccessControlSetDirectKeeper({
     address: boox ? boox[4] : undefined,
-    args: bomKeeper ? [ bomKeeper ] : undefined,    
+    args: bomKeeper ? [ bomKeeper ] : undefined,
+    onSuccess() {
+      getDkOfBom();
+    }
   });
-
-  // const {
-  //   config: setBosDKConfig,
-  // } = usePrepareBookOfSharesSetDirectKeeper({
-  //   address: boox ? boox[10] : undefined,
-  //   args: bosKeeper ? [ bosKeeper ] : undefined,
-  // });
 
   const {
     isLoading: setBosDKLoading,
     write: setBosDK
-  } = useBookOfSharesSetDirectKeeper({
+  } = useAccessControlSetDirectKeeper({
     address: boox ? boox[10] : undefined,
-    args: bosKeeper ? [ bosKeeper ] : undefined,    
+    args: bosKeeper ? [ bosKeeper ] : undefined,
+    onSuccess() {
+      getDkOfBos();
+    }  
   });
 
   return (
@@ -192,7 +204,7 @@ export function TurnKey({nextStep}:TurnKeyProps) {
           <Stack direction='row' sx={{m:1, p:1}}>
 
             <Button 
-              disabled = {!setBomDK || setBomDKLoading }
+              disabled = { !setBomDK || setBomDKLoading }
               sx={{ m: 1, mr: 5, minWidth: 120, height: 40 }} 
               variant="outlined" 
               color='primary'

@@ -17,41 +17,37 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   const { gk } = useComBooxContext();
   const [ executor, setExecutor ] = useState<string>('0');
 
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperProposeDocOfGm({
-  //   address: gk,
-  //   args: [addr, BigInt(seqOfVR), BigInt(executor) ],
-  // });
-
   const {
     isLoading,
     write
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: [addr, BigInt(seqOfVR), BigInt(executor) ],    
+    args: seqOfVR && executor 
+      ? [addr, BigInt(seqOfVR), BigInt(executor) ]
+      : undefined,    
     onSuccess() {
       setNextStep(4);
     }
   });
 
   return (
-    <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'center'}}>
+    <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'stretch'}}>
       <TextField 
-        variant='filled'
+        variant='outlined'
         label='Executor'
+        size="small"
         sx={{
           m:1,
           minWidth: 218,
         }}
-        onChange={(e)=>setExecutor(e.target.value)}
-        value={executor}
+        onChange={(e)=>setExecutor(e.target.value ?? '0')}
+        value={ executor }
       />      
       <Button
         disabled={!write || isLoading}
         variant="contained"
         endIcon={<EmojiPeople />}
-        sx={{ m:1, minWidth:218 }}
+        sx={{ m:1, minWidth:218, }}
         onClick={()=>write?.()}
       >
         Propose

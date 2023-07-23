@@ -43,6 +43,7 @@ import { LockerOfShare } from "./LockerOfShare";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
+import { AddTerm } from "../AddTerm";
 
 interface Locker {
   seqOfShare: number;
@@ -82,41 +83,6 @@ async function getLockers(lu: HexType, shares: number[]): Promise<Locker[]> {
 }
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
-
-  const [ version, setVersion ] = useState<string>();
-
-  const {
-    isLoading: createTermLoading,
-    write: createTerm,
-  } = useShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigInt('26'), BigInt(version)]: 
-      undefined,
-    onSuccess(data) {
-      getDocAddr(data.hash).
-        then(addr => setTerms(v => {
-          let out = [...v];
-          out[2] = addr;
-          return out;
-        }));      
-    }
-  });
-
-  const {
-    isLoading: removeTermLoading,
-    write: removeTerm,
-  } = useShareholdersAgreementRemoveTerm({
-    address: sha,
-    args: [BigInt('26')],
-    onSuccess() {
-      setTerms(v=>{
-        let out = [...v];
-        out[2] = AddrZero;
-        return out;
-      });
-    }
-  });
 
   const [ lockers, setLockers ] = useState<Locker[]>();
 
@@ -218,52 +184,11 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                 <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                   <Toolbar>
-                    <h4>Lock Up (Addr: { term })</h4>
+                    <h4>Lock Up (Addr: { term == AddrZero ? '-' : term })</h4>
                   </Toolbar>
 
-                  {term == AddrZero && !isFinalized && (
-                    <Stack direction={'row'} sx={{ alignItems:'center' }}>
-
-                      <TextField 
-                        variant='filled'
-                        label='Version'
-                        sx={{
-                          m:1,
-                          ml:3,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setVersion(e.target.value)}
-                        value={ version }              
-                      />
-
-                      <Button
-                        disabled={ createTermLoading }
-                        variant="contained"
-                        sx={{
-                          height: 40,
-                        }}
-                        endIcon={ <PlaylistAdd /> }
-                        onClick={() => createTerm?.()}
-                      >
-                        Create
-                      </Button>
-
-                    </Stack>
-                  )}
-
-                  {term != AddrZero && !isFinalized && (
-                      <Button
-                        disabled={ removeTermLoading }
-                        variant="contained"
-                        sx={{
-                          height: 40,
-                          mr: 5,
-                        }}
-                        endIcon={ <Delete /> }
-                        onClick={() => removeTerm?.()}
-                      >
-                        Remove
-                      </Button>
+                  { !isFinalized && (
+                    <AddTerm sha={ sha } typeOfDoc={ 26 } setTerms={ setTerms } isCreated={ term != AddrZero } />
                   )}
 
                 </Stack>

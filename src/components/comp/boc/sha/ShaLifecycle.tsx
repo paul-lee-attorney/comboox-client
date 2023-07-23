@@ -17,7 +17,6 @@ import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
-import { LockContents } from "../../../common/accessControl/LockContents";
 import { CirculateSha } from "./CirculateSha";
 import { SignSha } from "./SignSha";
 import { ProposeDocOfGm } from "../../gmm/ProposeDocOfGm";

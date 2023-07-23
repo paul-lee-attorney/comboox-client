@@ -99,19 +99,6 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
 
   const [ timing, setTiming ] = useState<TimingProps>();
 
-  // const {
-  //   config: setTimingConfig
-  // } = usePrepareSigPageSetTiming({
-  //   address: addr,
-  //   args: timing?.closingDays &&
-  //         timing?.signingDays 
-  //       ? [ initPage, 
-  //           BigInt(timing.signingDays), 
-  //           BigInt(timing.closingDays)
-  //         ] 
-  //       : undefined,
-  // });
-
   const {
     isLoading: setTimingIsLoading,
     write: writeSetTiming,
@@ -164,20 +151,6 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
   const [ isBuyer, setIsBuyer ] = useState(true);
   const [ acct, setAcct ] = useState<string>();
 
-  // const {
-  //   config: addBlankConfig
-  // } = usePrepareSigPageAddBlank({
-  //   address: addr,
-  //   args: isBuyer != undefined &&
-  //     acct ? 
-  //       [ initPage,
-  //         isBuyer, 
-  //         BigInt('1'), 
-  //         BigInt(acct)
-  //       ] : 
-  //       undefined,
-  // });
-
   const {
     isLoading: addBlankIsLoading,
     write: addBlank,
@@ -197,18 +170,6 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
       getBuyers();
     }
   });
-
-  // const {
-  //   config: removeBlankConfig
-  // } = usePrepareSigPageRemoveBlank({
-  //   address: addr,
-  //   args: acct ? 
-  //       [ initPage, 
-  //         BigInt('1'), 
-  //         BigInt(acct)
-  //       ] : 
-  //       undefined,
-  // });
 
   const {
     isLoading: removeBlankIsLoading,

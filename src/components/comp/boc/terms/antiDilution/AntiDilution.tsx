@@ -41,6 +41,7 @@ import {
 import { Benchmark } from "./Benchmark";
 import { splitStrArr } from "../../../../../scripts/toolsKit";
 import { getDocAddr } from "../../../../../queries/rc";
+import { AddTerm } from "../AddTerm";
 
 
 interface BenchmarkType {
@@ -100,42 +101,6 @@ export interface SetShaTermProps {
 }
 
 export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
-
-  const [ version, setVersion ] = useState<string>('1');
-
-  const {
-    data: createAdReceipt,
-    isLoading: createAdIsLoading,
-    write: createAd,
-  } = useShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigInt('24'), BigInt(version)]: 
-      undefined,
-    onSuccess(data:any) {
-      getDocAddr(data.hash).
-        then(addrOfAd => setTerms(v => {
-          let out = [...v];
-          out[0] = addrOfAd;
-          return out;
-        }));      
-    }
-  });
-
-  const {
-    isLoading: removeAdIsLoading,
-    write: removeAd,
-  } = useShareholdersAgreementRemoveTerm({
-    address: sha,
-    args: [BigInt('24')],
-    onSuccess() {
-      setTerms(v=>{
-        let out = [...v];
-        out[0] = AddrZero;
-        return out;
-      });
-    }
-  });
 
   const [ newMarks, setNewMarks ] = useState<BenchmarkType[]>();
 
@@ -247,52 +212,13 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
                 <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                   <Toolbar>
-                    <h4>AntiDilution (Addr: {term} )</h4>
+                    <h4>AntiDilution (Addr: { term == AddrZero ? '-' : term } )</h4>
                   </Toolbar>
 
-                  {term == AddrZero && !isFinalized && (
-                    <>
-                      <TextField 
-                        variant='filled'
-                        label='Version'
-                        sx={{
-                          m:1,
-                          ml:3,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setVersion(e.target.value)}
-                        value={ version }              
-                      />
-
-                      <Button
-                        disabled={ createAdIsLoading }
-                        variant="contained"
-                        sx={{
-                          height: 40,
-                        }}
-                        endIcon={ <PlaylistAdd /> }
-                        onClick={() => createAd?.()}
-                      >
-                        Create
-                      </Button>
-
-                    </>
+                  {!isFinalized && (
+                    <AddTerm sha={ sha } typeOfDoc={ 24 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                   )}
 
-                  {term != AddrZero && !isFinalized && (
-                      <Button
-                        disabled={ removeAdIsLoading }
-                        variant="contained"
-                        sx={{
-                          height: 40,
-                          mr: 5,
-                        }}
-                        endIcon={ <Delete /> }
-                        onClick={() => removeAd?.()}
-                      >
-                        Remove
-                      </Button>
-                  )}
 
                 </Stack>
 

@@ -49,6 +49,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Opt } from "./Opt";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
+import { AddTerm } from "../AddTerm";
 
 // ==== HeadOfOpt ====
 
@@ -215,7 +216,7 @@ export const typeOfOpts = [
 ]
 
 export const logOps = [
-  '(None)', '&& (And)', '|| (Or)', '&&_||', '||_&&', '== (Equal)', '!= (NotEqual)',
+  '(SoleCond)', '&& (And)', '|| (Or)', '&&_||', '||_&&', '== (Equal)', '!= (NotEqual)',
   '&&_&&_&&', '||_||_||', '&&_||_||', '||_&&_||', 
   '||_||_&&', '&&_&&_||', '&&_||_&&', '||_&&_&&',
   '==_==', '==_!=', '!=_==', '!=_!='
@@ -247,46 +248,9 @@ async function refreshList(term: HexType, ls: readonly Omit<Option, 'obligors'>[
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
-  const [ version, setVersion ] = useState<string>('1');
-
-  const {
-    isLoading: createTermLoading,
-    write: createTerm,
-  } = useShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigInt('27'), BigInt(version)]: 
-      undefined,
-    onSuccess(data:any) {
-      getDocAddr(data.hash).
-        then(addr => setTerms(v => {
-          let out = [...v];
-          out[1] = addr;
-          return out;
-        }));
-    }
-  });
-
-  const {
-    isLoading: removeTermLoading,
-    write: removeTerm,
-  } = useShareholdersAgreementRemoveTerm({
-    address: sha,
-    args: [BigInt('27')],
-    onSuccess() {
-      setTerms(v =>{
-        let out = [...v];
-        out[1] = AddrZero;
-        return out;
-      });
-    }
-  });
-
   const [ opts, setOpts ] = useState<readonly Option[]>();
 
   const [ open, setOpen ] = useState(false);
-
-
 
   const {
     refetch:getAllOpts 
@@ -388,55 +352,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Toolbar>
-                  <h4>Put/Call Options (Addr: {term} )</h4>
+                  <h4>Put/Call Options (Addr: { term == AddrZero ? '-' : term } )</h4>
                 </Toolbar>
 
-                {term == AddrZero && !isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>
+                  {!isFinalized && (
+                    <AddTerm sha={ sha } typeOfDoc={ 27 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
+                  )}
 
-                    <TextField 
-                      variant='filled'
-                      label='Version'
-                      size="small"
-                      sx={{
-                        m:1,
-                        ml:3,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setVersion(e.target.value)}
-                      value={ version }              
-                    />
-
-                    <Button
-                      disabled={ createTermLoading }
-                      variant="contained"
-                      sx={{
-                        mr:5,
-                        height: 40,
-                      }}
-                      endIcon={ <PlaylistAdd /> }
-                      onClick={() => createTerm?.()}
-                    >
-                      Create
-                    </Button>
-
-                  </Stack>
-                )}
-
-                {term != AddrZero && !isFinalized && (
-                    <Button
-                      disabled={ removeTermLoading }
-                      variant="contained"
-                      sx={{
-                        height: 40,
-                        mr: 5,
-                      }}
-                      endIcon={ <Delete /> }
-                      onClick={() => removeTerm?.()}
-                    >
-                      Remove
-                    </Button>
-                )}
 
               </Stack>
 
@@ -445,19 +367,16 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                   <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-                    <Toolbar sx={{ textDecoration:'underline' }}>
-                      <h4>Edit Panel</h4>
-                    </Toolbar>
-
                     <Stack direction='column' spacing={1} >
 
                       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                        <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
                           <InputLabel id="optType-label">TypeOfOption</InputLabel>
                           <Select
                             labelId="optType-label"
                             id="optType-select"
+                            label="TypeOfOption"
                             size="small"
                             value={ head.typeOfOpt }
                             onChange={(e) => setHead((v) => ({
@@ -472,7 +391,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         </FormControl>
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ClassOfShare'
                           size="small"
                           sx={{
@@ -487,7 +406,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='Paid'
                           size="small"
                           sx={{
@@ -502,7 +421,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='Par'
                           size="small"
                           sx={{
@@ -517,7 +436,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='Rightholder'
                           size="small"
                           sx={{
@@ -536,7 +455,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='RateOfOption'
                           size="small"
                           sx={{
@@ -566,7 +485,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ExecDays'
                           size="small"
                           sx={{
@@ -581,7 +500,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ClosingDays'
                           size="small"
                           sx={{
@@ -596,7 +515,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='Obligor'
                           size="small"
                           sx={{
@@ -616,12 +535,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                         <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                          <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                             <InputLabel id="logicOperator-label">LogOpr</InputLabel>
                             <Select
                               labelId="logicOperator-label"
                               id="logicOperator-select"
                               size="small"
+                              label="LogOpr"
                               value={ cond.logicOpr }
                               onChange={(e) => setCond((v) => ({
                                 ...v,
@@ -633,15 +553,14 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                               ))}
                             </Select>
                           </FormControl>
-
-                        {cond.logicOpr > 0 && (<>
                       
-                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                          <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                             <InputLabel id="compOpr1-label">CompOpr_1</InputLabel>
                             <Select
                               labelId="compOpr1-label"
                               id="compOpr1-select"
                               size="small"
+                              label="CompOpr_1"
                               value={ cond.compOpr1 }
                               onChange={(e) => setCond((v) => ({
                                 ...v,
@@ -655,7 +574,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           </FormControl>
 
                           <TextField 
-                            variant='filled'
+                            variant='outlined'
                             label='Parameter_1'
                             size="small"
                             sx={{
@@ -669,16 +588,15 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                             value={ cond.para1.toString() }
                           />
                         
-                        </>)}
+                        {cond.logicOpr > 0 && (<>
 
-                        {cond.logicOpr > 2 && (<>
-
-                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                          <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                             <InputLabel id="compOpr2-label">CompOpr_2</InputLabel>
                             <Select
                               labelId="compOpr2-label"
                               id="compOpr2-select"
                               size="small"
+                              label="CompOpr_2"
                               value={ cond.compOpr2 }
                               onChange={(e) => setCond((v) => ({
                                 ...v,
@@ -692,7 +610,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           </FormControl>
 
                           <TextField 
-                            variant='filled'
+                            variant='outlined'
                             label='Parameter_2'
                             size="small"
                             sx={{
@@ -710,12 +628,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                         {cond.logicOpr > 6 && (<>
 
-                          <FormControl variant="filled" sx={{ m: 1, minWidth: 128 }}>
+                          <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                             <InputLabel id="compOpr3-label">CompOpr_3</InputLabel>
                             <Select
                               labelId="compOpr3-label"
                               id="compOpr3-select"
                               size="small"
+                              label="CompOpr_3"
                               value={ cond.compOpr3 }
                               onChange={(e) => setCond((v) => ({
                                 ...v,
@@ -729,7 +648,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           </FormControl>
 
                           <TextField 
-                            variant='filled'
+                            variant='outlined'
                             label='Parameter_3'
                             size="small"
                             sx={{
@@ -771,7 +690,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       </Tooltip>
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='SeqOfOption'
                         size="small"
                         sx={{
@@ -817,7 +736,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       </Tooltip>
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='Obligor'
                         size="small"
                         sx={{
@@ -849,21 +768,12 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                 
                   </Paper>
 
-                  <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-
-                    <Toolbar sx={{ textDecoration:'underline' }}>
-                      <h4>Options List</h4>
-                    </Toolbar>
-
-
-                    {term != AddrZero && opts?.map(v => (
-                      <Opt key={ v.head.seqOfOpt } opt={ v } />
-                    ))}
-
-                  </Paper>
-
                 </Paper>
               )}
+
+              {term != AddrZero && opts && opts.length > 0 && opts.map(v => (
+                <Opt key={ v.head.seqOfOpt } opt={ v } />
+              ))}
 
             </Box>
           </Paper>

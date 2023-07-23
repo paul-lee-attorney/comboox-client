@@ -55,44 +55,10 @@ import dayjs from "dayjs";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../DragAlong/DragAlong";
 import { AlongLinks } from "../DragAlong/AlongLinks";
+import { AddTerm } from "../AddTerm";
 
 
 export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
-
-  const [ version, setVersion ] = useState<string>('1');
-
-  const {
-    isLoading: createTermLoading,
-    write: createTerm,
-  } = useShareholdersAgreementCreateTerm({
-    address: sha,
-    args: version ? 
-      [BigInt('28'), BigInt(version)]: 
-      undefined,
-    onSuccess(data:any) {
-      getDocAddr(data.hash).
-        then(addr => setTerms(v => {
-          let out = [...v];
-          out[4] = addr;
-          return out;
-        }));      
-    }
-  });
-
-  const {
-    isLoading: removeTermLoading,
-    write: removeTerm,
-  } = useShareholdersAgreementRemoveTerm({
-    address: sha,
-    args: [BigInt('28')],
-    onSuccess() {
-      setTerms(v =>{
-        let out = [...v];
-        out[4] = AddrZero;
-        return out;
-      });
-    }
-  });
 
   const [ links, setLinks ] = useState<AlongLink[]>();
 
@@ -191,53 +157,13 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Toolbar>
-                  <h4>Tag Along   (Addr: {term?.toLowerCase()} )</h4>
+                  <h4>Tag Along (Addr: { term == AddrZero ? '-' : term } )</h4>
                 </Toolbar>
 
-                {term == AddrZero && !isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>
-
-                    <TextField 
-                      variant='filled'
-                      label='Version'
-                      sx={{
-                        m:1,
-                        ml:3,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setVersion(e.target.value)}
-                      value={ version }              
-                    />
-
-                    <Button
-                      disabled={ createTermLoading }
-                      variant="contained"
-                      sx={{
-                        height: 40,
-                      }}
-                      endIcon={ <PlaylistAdd /> }
-                      onClick={() => createTerm?.()}
-                    >
-                      Create
-                    </Button>
-
-                  </Stack>
+                {!isFinalized && (
+                  <AddTerm sha={ sha } typeOfDoc={ 28 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
 
-                {term != AddrZero && !isFinalized && (
-                    <Button
-                      disabled={ removeTermLoading }
-                      variant="contained"
-                      sx={{
-                        height: 40,
-                        mr: 5,
-                      }}
-                      endIcon={ <Delete /> }
-                      onClick={() => removeTerm?.()}
-                    >
-                      Remove
-                    </Button>
-                )}
 
               </Stack>
 
@@ -250,11 +176,11 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
                       <DateTimeField
                         label='TriggerDate'
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
                         }} 
-                        size="small"
                         value={ dayjs.unix(rule.triggerDate) }
                         onChange={(date) => setRule((v) => ({
                           ...v,
@@ -264,7 +190,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='EffectiveDays'
                         size="small"
                         sx={{
@@ -279,7 +205,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='ShareRatioThreshold'
                         size="small"
                         sx={{
@@ -294,7 +220,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='Rate'
                         size="small"
                         sx={{
@@ -312,12 +238,13 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
                     <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="triggerType-label">TypeOfTrigger</InputLabel>
                         <Select
                           size="small"
                           labelId="triggerType-label"
                           id="triggerType-select"
+                          label="TypeOfTrigger"
                           value={ rule.triggerType }
                           onChange={(e) => setRule((v) => ({
                             ...v,
@@ -330,11 +257,12 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                         </Select>
                       </FormControl>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="proRata-label">ProRata ?</InputLabel>
                         <Select
                           labelId="proRata-label"
                           id="proRata-select"
+                          label="ProRata ?"
                           size="small"
                           value={ rule.proRata ? '1' : '0' }
                           onChange={(e) => setRule((v) => ({
@@ -347,11 +275,12 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                         </Select>
                       </FormControl>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="typeOfFollowers-label">TypeOfFollowers</InputLabel>
                         <Select
                           labelId="typeOfFollowers-label"
                           id="typeOfFollowers-select"
+                          label='TypeOfFollowers'
                           size="small"
                           value={ rule.typeOfFollowers }
                           onChange={(e) => setRule((v) => ({
@@ -389,7 +318,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                     </Tooltip>
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='Drager'
                       size="small"
                       sx={{
@@ -432,7 +361,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                     </Tooltip>
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='Follower'
                       size="small"
                       sx={{
@@ -465,11 +394,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
               )}
 
               {term != AddrZero && (
-                <Paper elevation={3} sx={{ m:1, border:1, borderColor:'divider' }}>  
-
-                  <Toolbar>
-                    <h4>Tag-Alongs List</h4>
-                  </Toolbar>
+                <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>  
 
                   {links?.map((v) => (
                     <AlongLinks key={ v.drager } link={ v } />
