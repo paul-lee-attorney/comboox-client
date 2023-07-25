@@ -8,10 +8,11 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
 import { useEffect, useState } from "react";
-import { finalized } from "../../../queries/accessControl";
+// import { finalized } from "../../../queries/accessControl";
 import IaBodyTerms from "../../../components/comp/boi/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/boi/ia/IaLifecycle";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
+import { useAccessControlIsFinalized } from "../../../generated";
 
 function Ia() {
   const { query } = useRouter();
@@ -20,12 +21,12 @@ function Ia() {
 
   const [ isFinalized, setIsFinalized ] = useState<boolean>();
 
-  useEffect(()=>{
-    if (ia != '0x')
-      finalized(ia).then(
-        flag => setIsFinalized(flag)
-      );    
-  }, [ia])
+  useAccessControlIsFinalized({
+    address: ia != '0x' ? ia : undefined,
+    onSuccess(flag) {
+      setIsFinalized(flag);
+    }
+  });
 
   return (
     <Stack direction='column' width='100%' height='100%' >
@@ -63,13 +64,13 @@ function Ia() {
 
               <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {ia != '0x' && (
-                  <AgrmtAccessControl agrmt={ia} />
+                  <AgrmtAccessControl isSha={false} agrmt={ia} />
                 )}
               </TabPanel>
 
               <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {ia != '0x' && isFinalized != undefined && (
-                  <Signatures addr={ia} initPage={true} isFinalized={isFinalized} />
+                  <Signatures addr={ia} initPage={true} isFinalized={isFinalized} isSha={ false }/>
                 )}
               </TabPanel>
 

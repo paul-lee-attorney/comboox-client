@@ -54,14 +54,6 @@ function BookOfConstitution() {
     },
   });
   
-  // useEffect(()=>{
-  //   if (boox) {
-  //     getFilesListWithInfo(boox[1]).then(
-  //       list => setFilesInfoList(list)
-  //     )
-  //   }
-  // }, [boox, createSha]);
-
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       <Stack direction='row' sx={{ alignContent:'space-between' }}>

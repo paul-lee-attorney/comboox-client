@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Paper, Toolbar, TextField } from "@mui/material";
 
@@ -7,7 +7,7 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../bom/MembersList";
-import { Position, getPosition } from "../../../queries/bod";
+import { Position, getDirectorsFullPosInfo, getPosition } from "../../../queries/bod";
 import { GetOfficersList } from "../bod/GetOfficersList";
 
 import { 
@@ -81,33 +81,38 @@ export function GeneralInfo() {
 
   const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
 
-  // const getDirectorsList = async ()=>{
-  //   if (boox) {
-  //     let list = await getDirectorsFullPosInfo(boox[2]);
-  //     setDirectorsList(list);  
-  //   }   
-  // };
-
-  const {
-    refetch: getDirectorsList
-  } = useBookOfDirectorsGetDirectorsPosList({
-    address: boox ? boox[2] : undefined,
-    onSuccess(list) {
-      let len = list.length;
-      let output: Position[] = [];
-      while (len > 0) {
-        if (boox) {
-          getPosition(boox[2], list[len-1]).then(
-            v => {
-              output.push(v);
-              len--;
-            }
-          )
-        }
-      }
-      setDirectorsList(output);
+  const getDirectorsList = async ()=>{
+    if (boox) {
+      let list = await getDirectorsFullPosInfo(boox[2]);
+      setDirectorsList(list);
     }
+  }
+
+  useEffect(()=>{
+    getDirectorsList();
   });
+
+
+  // const {
+  //   refetch: getDirectorsList
+  // } = useBookOfDirectorsGetDirectorsPosList({
+  //   address: boox ? boox[2] : undefined,
+  //   onSuccess(list) {
+  //     let len = list.length;
+  //     let output: Position[] = [];
+  //     while (len > 0) {
+  //       if (boox) {
+  //         getPosition(boox[2], list[len-1]).then(
+  //           v => {
+  //             output.push(v);
+  //           }
+  //         )
+  //         len--;
+  //       }
+  //     }
+  //     setDirectorsList(output);
+  //   }
+  // });
 
   return (
     <>
@@ -261,7 +266,7 @@ export function GeneralInfo() {
 
             <tr>
               <td colSpan={4}>
-                {directorsList && (
+                {directorsList && directorsList.length > 0 && (
                   <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />
                 )}
               </td>

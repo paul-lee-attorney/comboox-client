@@ -115,6 +115,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
       >
         <Button
           fullWidth
+          disabled={ voteCase.sumOfHead == 0 }
           onClick={ handleClick }
         >
 

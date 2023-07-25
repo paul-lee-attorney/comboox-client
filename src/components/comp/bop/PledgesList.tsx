@@ -43,7 +43,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'creditor', 
       headerName: 'Creditor',
-      valueGetter: p => longSnParser(p.row.body.creditor.toString()),
+      valueGetter: p => longSnParser(p.row.head.creditor.toString()),
       headerAlign: 'center',
       align:'center',
       width: 218,
@@ -59,7 +59,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'triggerDate', 
       headerName: 'TriggerDate',
-      valueGetter: p => dateParser(p.row.head.triggerDate),
+      valueGetter: p => dateParser(p.row.head.createDate + p.row.head.daysToMaturity * 86400),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -67,7 +67,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'expireDate', 
       headerName: 'ExpireDate',
-      valueGetter: p => dateParser(p.row.head.triggerDate + p.row.body.guaranteeDays * 86400),
+      valueGetter: p => dateParser(p.row.head.createDate + (p.row.head.daysToMaturity + p.row.body.guaranteeDays) * 86400),
       headerAlign: 'center',
       align:'center',
       width: 180,

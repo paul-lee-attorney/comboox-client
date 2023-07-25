@@ -4,6 +4,7 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
+import { longSnParser } from '../../../../../scripts/toolsKit';
 
 interface BenchmarkType {
   classOfShare: string,
@@ -26,17 +27,6 @@ export function Benchmark({ classOfShare, floorPrice, obligors }: BenchmarkType)
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
         <Chip label={ 'Class: ' + `${classOfShare}` } color='primary' sx={{m:1}} />
-
-        {/* <TextField 
-          variant='filled'
-          label='ClassOfShare'
-          inputProps={{readOnly: true}}
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          value={ classOfShare }
-        /> */}
 
         <TextField 
           variant='outlined'

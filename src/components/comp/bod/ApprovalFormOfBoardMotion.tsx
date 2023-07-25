@@ -16,6 +16,8 @@ import { CastVoteOfBm } from "./CastVoteOfBm";
 import { VoteCountingOfBoard } from "./VoteCountingOfBoard";
 import { TakePosition } from "./TakePosition";
 import { RemoveOfficer } from "./RemoveOfficer";
+import { useMeetingMinutes, useMeetingMinutesVoteEnded } from "../../../generated";
+import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
@@ -31,13 +33,13 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
 
   const { boox } = useComBooxContext();
 
-  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
-  useEffect(()=>{
-    getVoteResult(minutes, motion.head.seqOfMotion).then(
-      list => setVoteResult(list)
-    )
-  }, [minutes, motion]);
+  // useEffect(()=>{
+  //   getVoteResult(minutes, motion.head.seqOfMotion).then(
+  //     list => setVoteResult(list)
+  //   )
+  // }, [minutes, motion]);
 
   const [ addrOfDoc, setAddrOfDoc ]=useState<HexType>();
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
@@ -55,18 +57,27 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
 
   const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
 
-  useEffect(()=>{
-    if ( boox ) {
-      let minutes: HexType =
-      motion.votingRule.authority == 1
-      ? boox[5] : boox[3];
-      voteEnded(minutes, motion.head.seqOfMotion).then(
-        flag => {
-          setVoteIsEnd(flag);
-        }
-      ); 
+  const {
+    refetch: queryVoteEnded
+  } = useMeetingMinutesVoteEnded({
+    address: minutes,
+    args: [ motion.head.seqOfMotion ],
+    onSuccess(res) {
+      setVoteIsEnd(res)
     }
-  }, [motion, boox ])
+  })
+
+  useEffect(()=>{
+    queryVoteEnded();
+  }, [queryVoteEnded, motion.body.state])
+
+  // useEffect(()=>{
+  //   voteEnded(minutes, motion.head.seqOfMotion).then(
+  //     flag => {
+  //       setVoteIsEnd(flag);
+  //     }
+  //   ); 
+  // }, [ minutes, motion ])
 
   const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
 
@@ -179,8 +190,8 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                     <Link
                       href={{
                         pathname: motion.head.seqOfVR == 8
-                                ? '/comp/boh/Sha'
-                                : '/comp/boa/Ia'
+                                ? '/comp/boc/Sha'
+                                : '/comp/boi/Ia'
                         ,
                         query: {
                           addr: addrOfDoc,
@@ -188,8 +199,8 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                         }
                       }}
                       as={motion.head.seqOfVR == 8
-                          ? '/comp/boh/sha'
-                          : '/comp/boa/ia'}
+                          ? '/comp/boc/sha'
+                          : '/comp/boi/ia'}
                     >            
                       <Button
                         variant="outlined"
@@ -259,7 +270,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                 </tr>
               )}
 
-              {motion.body.state > 2 && voteResult && (
+              {/* {motion.body.state > 2 && voteResult && (
                 <tr>
                   <td>
                     <BallotsList 
@@ -289,7 +300,12 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                     />
                   </td>                  
                 </tr>
+              )} */}
+
+              {motion.body.state > 2 && (
+                <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
               )}
+
 
               {motion.body.state == 1 && (
                 <tr>

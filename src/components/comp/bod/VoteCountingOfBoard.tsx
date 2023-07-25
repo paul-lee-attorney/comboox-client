@@ -36,7 +36,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
     args: [ seqOfMotion ],
     onSuccess() {
       if (boox) {
-        isPassed(boox[2], seqOfMotion).then(
+        isPassed(boox[3], seqOfMotion).then(
           flag => {
             setResult(flag);
             setNextStep(1);

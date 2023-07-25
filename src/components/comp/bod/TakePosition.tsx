@@ -2,7 +2,6 @@ import { bigint } from "ethers";
 
 import { 
   useGeneralKeeperTakePosition, 
-  usePrepareGeneralKeeperTakePosition,
 } from "../../../generated";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
@@ -21,19 +20,12 @@ export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList}:Ta
 
   const { gk } = useComBooxContext();
   
-  // const {
-  //   config: takePositionConfig,
-  // } = usePrepareGeneralKeeperTakePosition({
-  //   address: gk,
-  //   args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
-  // })
-
   const {
     isLoading: takePositionLoading,
     write: takePosition,
   } = useGeneralKeeperTakePosition({
     address: gk,
-    args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
+    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(){
         getMotionsList();
         setOpen(false);

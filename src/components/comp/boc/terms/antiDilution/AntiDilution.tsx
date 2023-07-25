@@ -39,7 +39,7 @@ import {
 
 
 import { Benchmark } from "./Benchmark";
-import { splitStrArr } from "../../../../../scripts/toolsKit";
+import { longSnParser, splitStrArr } from "../../../../../scripts/toolsKit";
 import { getDocAddr } from "../../../../../queries/rc";
 import { AddTerm } from "../AddTerm";
 
@@ -75,7 +75,7 @@ async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkT
     let strObligors = '';
 
     obligors.map(v => {
-      strObligors += v.toString() + `\n`;
+      strObligors += longSnParser(v.toString()) + `\n`;
     });
 
     let item: BenchmarkType = {

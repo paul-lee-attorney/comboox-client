@@ -187,6 +187,12 @@ export interface VoteCase {
   voters: readonly bigint[];
 }
 
+export const defaultVoteCase: VoteCase = {
+  sumOfHead: 0,
+  sumOfWeight: BigInt(0),
+  voters: [BigInt(0)],
+}
+
 export async function isVoted(minutes: HexType, seqOfMotion: bigint, acct: bigint): Promise<boolean> {
   let flag:boolean = await readContract({
     address: minutes,

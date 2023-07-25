@@ -28,11 +28,12 @@ export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgePr
           <h4>Type Of Action:</h4>
         </Toolbar>
 
-        <FormControl variant="filled" sx={{ m: 1, minWidth: 168 }}>
+        <FormControl variant="outlined" sx={{ m: 1, minWidth: 168 }}>
           <InputLabel id="typeOfAction-label">TypeOfAction</InputLabel>
           <Select
             labelId="typeOfAction-label"
             id="typeOfAction-select"
+            label="TypeOfAction"
             value={ typeOfAction }
             onChange={(e) => setTypeOfAction(e.target.value)}
           >

@@ -3,31 +3,13 @@ import { useGeneralKeeperExtendPledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 
-interface ExtendPledgeProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen:(flag:boolean)=>void;
-  getAllPledges:()=>void;
-}
-
-export function ExtendPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:ExtendPledgeProps) {
+export function ExtendPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ days, setDays ] = useState<number>();
-
-  // const {
-  //   config: extendPledgeConfig
-  // } = usePrepareGeneralKeeperExtendPledge({
-  //   address: gk,
-  //   args: days
-  //     ? [ BigInt(seqOfShare), 
-  //         BigInt(seqOfPld), 
-  //         BigInt(days)
-  //       ]
-  //     : undefined,
-  // })
 
   const {
     isLoading: extendPledgeLoading,
@@ -35,8 +17,8 @@ export function ExtendPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:Exte
   } = useGeneralKeeperExtendPledge({
     address: gk,
     args: days
-      ? [ BigInt(seqOfShare), 
-          BigInt(seqOfPld), 
+      ? [ BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
           BigInt(days)
         ]
       : undefined,

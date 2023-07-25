@@ -38,15 +38,15 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
 
   const { gk, boox } = useComBooxContext();
 
-  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
-  useEffect(()=>{
-    if (boox) {
-      getVoteResult(boox[2], seqOfMotion).then(
-        list => setVoteResult(list)
-      )
-    }
-  }, [seqOfMotion, boox]);
+  // useEffect(()=>{
+  //   if (boox) {
+  //     getVoteResult(boox[3], seqOfMotion).then(
+  //       list => setVoteResult(list)
+  //     )
+  //   }
+  // }, [seqOfMotion, boox]);
 
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
@@ -68,10 +68,10 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
         : undefined,
     onSuccess() {
       if (boox) {
-        getVoteResult(boox[2], seqOfMotion).then(
-          list => setVoteResult(list)
-        );
-        getMotionsList(boox[2]);
+        // getVoteResult(boox[3], seqOfMotion).then(
+        //   list => setVoteResult(list)
+        // );
+        getMotionsList(boox[3]);
         setOpen(false);
       }
     }
@@ -146,8 +146,8 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
           </Button>
         </Stack>
 
-        {voteResult && boox && (
-          <VoteResult addr={boox[2]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
+        {boox && (
+          <VoteResult addr={boox[3]} seqOfMotion={seqOfMotion} />
         )}
 
       </Collapse>

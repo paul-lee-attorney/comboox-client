@@ -4,31 +4,16 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { LockOutlined, Start } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../interfaces";
+import { Pledge } from "../../../queries/bop";
+import { ActionsOfOptionProps } from "../boo/ActionsOfOption";
+import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 
-interface LockPledgeProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen:(flag:boolean)=>void;
-  getAllPledges:()=>void;
-}
 
-export function LockPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:LockPledgeProps) {
+export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
-
-  // const {
-  //   config: lockPledgeConfig
-  // } = usePrepareGeneralKeeperLockPledge({
-  //   address: gk,
-  //   args: hashLock
-  //     ? [ BigInt(seqOfShare), 
-  //         BigInt(seqOfPld), 
-  //         hashLock
-  //       ]
-  //     : undefined,
-  // })
 
   const {
     isLoading: lockPledgeLoading,
@@ -36,8 +21,8 @@ export function LockPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:LockPl
   } = useGeneralKeeperLockPledge({
     address: gk,
     args: hashLock
-      ? [ BigInt(seqOfShare), 
-          BigInt(seqOfPld), 
+      ? [ BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
           hashLock
         ]
       : undefined,

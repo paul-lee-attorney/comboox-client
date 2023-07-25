@@ -16,6 +16,7 @@ import { RemoveDirector } from "./RemoveDirector";
 import { ExecActionOfGm } from "./ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
+import { useMeetingMinutes } from "../../../generated";
 
 export interface ApprovalFormOfMotionProps{
   minutes: HexType;
@@ -181,8 +182,8 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                     <Link
                       href={{
                         pathname: motion.head.seqOfVR == 8
-                                ? '/comp/boh/Sha'
-                                : '/comp/boa/Ia'
+                                ? '/comp/boc/Sha'
+                                : '/comp/boi/Ia'
                         ,
                         query: {
                           addr: addrOfDoc,
@@ -190,8 +191,8 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                         }
                       }}
                       as={motion.head.seqOfVR == 8
-                          ? '/comp/boh/sha'
-                          : '/comp/boa/ia'}
+                          ? '/comp/boc/sha'
+                          : '/comp/boi/ia'}
                     >            
                       <Button
                         variant="outlined"

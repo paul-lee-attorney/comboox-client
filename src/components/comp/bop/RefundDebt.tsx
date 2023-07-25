@@ -1,18 +1,11 @@
 import { useState } from "react";
 import { useGeneralKeeperRefundDebt, usePrepareGeneralKeeperRefundDebt } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { bigint } from "ethers";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { VolunteerActivismOutlined } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 
-interface RefundDebtProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen:(flag:boolean)=>void;
-  getAllPledges:()=>void;
-}
-
-export function RefundDebt({seqOfShare, seqOfPld, setOpen, getAllPledges}:RefundDebtProps) {
+export function RefundDebt({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk, boox } = useComBooxContext();
   
@@ -36,8 +29,8 @@ export function RefundDebt({seqOfShare, seqOfPld, setOpen, getAllPledges}:Refund
   } = useGeneralKeeperRefundDebt({
     address: gk,
     args: amt
-      ? [ BigInt(seqOfShare), 
-          BigInt(seqOfPld), 
+      ? [ BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
           BigInt(amt)
         ]
       : undefined,

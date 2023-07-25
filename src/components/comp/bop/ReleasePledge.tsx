@@ -3,15 +3,9 @@ import { useGeneralKeeperReleasePledge, usePrepareGeneralKeeperReleasePledge } f
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Key } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 
-interface ReleasePledgeProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen:(flag:boolean)=>void;
-  getAllPledges:()=>void;
-}
-
-export function ReleasePledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:ReleasePledgeProps) {
+export function ReleasePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   

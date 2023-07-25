@@ -15,6 +15,19 @@ export interface Head {
   para: number,
 }
 
+export const defaultHead: Head = {
+  typeOfDeal: 0,
+  seqOfDeal: 0,
+  preSeq: 0,
+  classOfShare: 0,
+  seqOfShare: 0,
+  seller: 0,
+  priceOfPaid: 0,
+  priceOfPar: 0,
+  closingDeadline: 0,
+  para: 0,  
+}
+
 export interface Body {
   buyer: number,
   groupOfBuyer: number,
@@ -24,6 +37,17 @@ export interface Body {
   para: number,
   argu: number,
   flag: boolean,
+}
+
+export const defaultBody: Body = {
+  buyer: 0,
+  groupOfBuyer: 0,
+  paid: BigInt(0),
+  par: BigInt(0),
+  state: 0,
+  para: 0,
+  argu: 0,
+  flag: false,  
 }
 
 export interface Deal {

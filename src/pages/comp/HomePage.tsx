@@ -31,24 +31,6 @@ function HomePage() {
     }
   })
 
-
-  // useEffect(()=>{
-  //   const checkDirectKeepers = async ()=> {
-  //     if (gk && boox) {
-  //       let dkOfBom = await getDK(boox[4]);
-  //       let bomKeeper = await getKeeper(gk, 4);
-  //       let dkOfBos = await getDK(boox[10]);
-  //       let bosKeeper = await getKeeper(gk, 10);
-  
-  //       if (dkOfBom == bomKeeper && dkOfBos == bosKeeper)
-  //         setActiveStep(4);
-  //       else setActiveStep(0);
-  //     }
-  //   }
-
-  //   checkDirectKeepers();
-  // }, [gk, boox])
-
   return (
     <Stack direction='column' width='100%' height='100%' >
       <Box width={'100%'} height={'100%'} >

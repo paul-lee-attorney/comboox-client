@@ -13,12 +13,13 @@ import { dateParser, longDataParser, longSnParser } from "../../../scripts/tools
 import { Pledge } from "../../../queries/bop";
 import { StateOfPld } from "./PledgesList";
 import { ActionsOfPledge } from "./ActionsOfPledge";
+import { Dispatch, SetStateAction } from "react";
 
 export interface CertificateOfPledgeProps{
-  open: boolean,
-  pld: Pledge,
-  setOpen: (flag: boolean)=>void,
-  getAllPledges: ()=>void,
+  open: boolean;
+  pld: Pledge;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  getAllPledges: ()=>void;
 }
 
 export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: CertificateOfPledgeProps) {
@@ -36,20 +37,20 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
         </DialogTitle>
         <Chip
           sx={{ m:1, mr:5, width: 120 }} 
-          label={ StateOfPld[pld.body.state] } 
+          label={ StateOfPld[pld.head.state] } 
           variant='filled' 
           color={
-            pld.body.state == 0
+            pld.head.state == 0
             ? 'default'
-            : pld.body.state == 1
+            : pld.head.state == 1
               ? 'primary'
-              : pld.body.state == 2
+              : pld.head.state == 2
                 ? 'warning'
-                : pld.body.state == 3
+                : pld.head.state == 3
                   ? 'success'
-                  : pld.body.state == 4
+                  : pld.head.state == 4
                     ? 'info'
-                    : pld.body.state == 5
+                    : pld.head.state == 5
                       ? 'error'
                       : 'default'
           } 
@@ -110,7 +111,7 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
                     id="tfTriggerDate" 
                     label="TriggerDate" 
                     variant="outlined"
-                    value = { dateParser(pld.head.triggerDate) }
+                    value = { dateParser(pld.head.createDate + pld.head.daysToMaturity * 86400) }
                     size='small'
                   />                  
                 </td>
@@ -122,7 +123,7 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
                     id="tfExpireDate" 
                     label="ExpireDate" 
                     variant="outlined"
-                    value = { dateParser(pld.head.triggerDate + pld.body.guaranteeDays * 86400) }
+                    value = { dateParser(pld.head.createDate + (pld.head.daysToMaturity + pld.head.guaranteeDays) * 86400) }
                     size='small'
                   />                  
                 </td>
@@ -137,7 +138,7 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
                     id="tfCreditor" 
                     label="Creditor" 
                     variant="outlined"
-                    value = { longSnParser(pld.body.creditor.toString()) }
+                    value = { longSnParser(pld.head.creditor.toString()) }
                     size='small'
                   />
                 </td>
@@ -209,8 +210,7 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
               <tr>
                 <td colSpan={3}>
                   <ActionsOfPledge 
-                    seqOfShare={pld.head.seqOfShare} 
-                    seqOfPld={pld.head.seqOfPld} 
+                    pld={pld}
                     setOpen={setOpen} 
                     getAllPledges={getAllPledges} 
                   />

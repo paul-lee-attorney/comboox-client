@@ -23,6 +23,7 @@ import { LockContents } from "../../../common/accessControl/LockContents";
 import { CirculateIa } from "./CirculateIa";
 import { ProposeDocOfGm } from "../../gmm/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteForDocOfGm";
+import { useFilesFolder, useFilesFolderGetHeadOfFile, useInvestmentAgreement, useInvestmentAgreementGetTypeOfIa } from "../../../../generated";
 
 interface IaLifecycleProps {
   ia: HexType;
@@ -38,51 +39,89 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
   const [ typeOfIa, setTypeOfIa ] = useState<number>();
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 
-  useEffect(()=>{
-    const obtainTypeOfIa = async ()=>{
-      let typeOfIa = await getTypeOfIA(ia);
-      setTypeOfIa(typeOfIa);
-    };
-
-    obtainTypeOfIa();
+  useInvestmentAgreementGetTypeOfIa({
+    address: ia,
+    onSuccess(type) {
+      setTypeOfIa(type)
+    }
   })
 
-  useEffect(()=>{
-    const updateActiveStep = async () => {
+  // useEffect(()=>{
+  //   const obtainTypeOfIa = async ()=>{
+  //     let typeOfIa = await getTypeOfIA(ia);
+  //     setTypeOfIa(typeOfIa);
+  //   };
 
-      if (boox) {
+  //   obtainTypeOfIa();
+  // })
 
-        let head = await getHeadOfFile(boox[6], ia);
-        let fileState = head.state;
-        let seq = head.seqOfMotion;
-        let nextStep = 0;
-        
-        switch (fileState) {
+  useFilesFolderGetHeadOfFile({
+    address: boox ? boox[6] : undefined,
+    args: ia ? [ia] : undefined,
+    onSuccess(head) {
+      let seq = head.seqOfMotion;
+      if (seq) setSeqOfMotion(seq);
+
+      let fileState = head.state;
+
+      switch (fileState) {
           case 1: 
-            nextStep = finalized ? 1: 0;
+            setActiveStep(finalized ? 1: 0);
             break;
           case 4: 
-            let flag = await voteEnded(boox[5], seq);
-            nextStep = flag ? 5 : 4;
+            if (boox ) voteEnded(boox[5], seq).then(
+              flag => setActiveStep(flag ? 5 : 4)
+            );            
             break;
           case 5: 
-            nextStep = 6;
+            setActiveStep(6);
             break;
           case 6: // Rejected
-            nextStep = 8;
+            setActiveStep(8);
             break;
           default:
-            nextStep = fileState;
-        }
-  
-        setActiveStep( nextStep );
-  
-        if (seq) setSeqOfMotion(seq); 
+            setActiveStep(fileState);
       }
-    };
 
-    updateActiveStep();
-  }, [boox, ia, finalized]);
+    }
+  })
+
+  // useEffect(()=>{
+  //   const updateActiveStep = async () => {
+
+  //     if (boox) {
+
+  //       let head = await getHeadOfFile(boox[6], ia);
+  //       let fileState = head.state;
+  //       let seq = head.seqOfMotion;
+  //       let nextStep = 0;
+        
+  //       switch (fileState) {
+  //         case 1: 
+  //           nextStep = finalized ? 1: 0;
+  //           break;
+  //         case 4: 
+  //           let flag = await voteEnded(boox[5], seq);
+  //           nextStep = flag ? 5 : 4;
+  //           break;
+  //         case 5: 
+  //           nextStep = 6;
+  //           break;
+  //         case 6: // Rejected
+  //           nextStep = 8;
+  //           break;
+  //         default:
+  //           nextStep = fileState;
+  //       }
+  
+  //       setActiveStep( nextStep );
+  
+  //       if (seq) setSeqOfMotion(seq); 
+  //     }
+  //   };
+
+  //   updateActiveStep();
+  // }, [boox, ia, finalized]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >

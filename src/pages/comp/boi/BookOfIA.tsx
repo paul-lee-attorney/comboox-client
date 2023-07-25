@@ -6,6 +6,7 @@ import {
   Toolbar,
   TextField,
   Stack,
+  Typography,
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
@@ -18,6 +19,7 @@ import {
 
 import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
+import { AddrZero } from "../../../interfaces";
 
 function BookOfIA() {
   const { gk, boox } = useComBooxContext();
@@ -25,10 +27,7 @@ function BookOfIA() {
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
   const [ version, setVersion ] = useState<string>();
-  // const { config } = usePrepareGeneralKeeperCreateIa({
-  //   address: gk,
-  //   args: version ? [BigInt(version)] : undefined,
-  // });
+
   const {
     isLoading: createIaLoading, 
     write: createIa,
@@ -48,9 +47,17 @@ function BookOfIA() {
   return (
     <>
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-        <Toolbar>
-          <h3>BOA - Book Of Investment Agreements</h3>
-        </Toolbar>
+        <Stack direction='row' sx={{ alignContent:'space-between' }}>
+
+          <Toolbar sx={{ textDecoration:'underline' }}>
+            <h3>BOI - Book Of Investment Agreements</h3>
+          </Toolbar>
+
+          <Typography sx={{ ml: 10 }}>
+            <h4>(Addr: {(boox ? boox[6] : AddrZero).toLowerCase()})</h4>
+          </Typography>
+
+        </Stack>
 
         <table width={1680} >
           <thead />
@@ -96,8 +103,8 @@ function BookOfIA() {
                   <GetFilesList 
                     list={ filesInfoList } 
                     title="Investment Agreements List" 
-                    pathName="/comp/boa/Ia" 
-                    pathAs="/comp/boa/ia" 
+                    pathName="/comp/boi/Ia" 
+                    pathAs="/comp/boi/ia" 
                   />
                 )}
                                 

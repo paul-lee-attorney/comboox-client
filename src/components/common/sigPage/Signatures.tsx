@@ -76,10 +76,11 @@ interface SigPageProps {
   addr: HexType,
   initPage: boolean,
   isFinalized: boolean,
+  isSha: boolean,
 }
 
 
-export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
+export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps) {
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
 
   const {
@@ -371,8 +372,8 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
 
                     label="Role"
                   >
-                    <MenuItem value={'true'}>Investor</MenuItem>
-                    <MenuItem value={'false'}>Orignal Shareholders</MenuItem>
+                    <MenuItem value={'true'}>{isSha ? 'Investor' : 'Buyer'}</MenuItem>
+                    <MenuItem value={'false'}>{isSha? 'Shareholders' : 'Seller'}</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -418,7 +419,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
               
               <Chip
                 sx={{ minWidth:188, m:1, ml:3 }}
-                label="Original Shareholders" 
+                label={isSha ? 'Shareholders' : 'Sellers'} 
                 color="primary" 
               />
 
@@ -481,7 +482,7 @@ export function Signatures({ addr, initPage, isFinalized }: SigPageProps) {
               
               <Chip
                 sx={{ minWidth:188, m:1, ml:3 }}
-                label="Investors" 
+                label={isSha ? 'Investors' : 'Buyers'} 
                 color="success" 
               />
 

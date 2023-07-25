@@ -71,7 +71,7 @@ interface SetDealProps{
   isFinalized: boolean,
 }
 
-export function dealSnCodifier(head: Head): HexType {
+export function codifyHeadOfDeal(head: Head): HexType {
   let hexSn:HexType = `0x${
     (head.typeOfDeal.toString(16).padStart(2, '0')) +
     (head.seqOfDeal.toString(16).padStart(4, '0')) +
@@ -135,24 +135,12 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
     }
   })
 
-  // const {
-  //   config: addDealConfig,
-  // } = usePrepareInvestmentAgreementAddDeal({
-  //   address: ia,
-  //   args: [ dealSnCodifier(objSn),
-  //           BigInt(objBody.buyer),
-  //           BigInt(objBody.groupOfBuyer),
-  //           objBody.paid,
-  //           objBody.par            
-  //         ],
-  // });
-
   const {
     isLoading: addDealLoading,
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
     address: ia,
-    args: [ dealSnCodifier(objSn),
+    args: [ codifyHeadOfDeal(objSn),
             BigInt(objBody.buyer),
             BigInt(objBody.groupOfBuyer),
             objBody.paid,
@@ -162,13 +150,6 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
       getDeal()
     }
   });
-
-  // const {
-  //   config: configDelDeal
-  // } = usePrepareInvestmentAgreementDelDeal({
-  //   address: ia,
-  //   args: [ BigInt(seq) ],
-  // });
 
   const {
     isLoading: delDealLoading,
@@ -390,7 +371,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
 
               <TextField 
                 variant='filled'
-                label='ClosingDate'
+                label='ClosingDeadline'
                 inputProps={{readOnly: true}}
                 sx={{
                   m:1,
@@ -409,6 +390,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   <Select
                     labelId="typeOfDeal-label"
                     id="typeOfDeal-select"
+                    label="TypeOfDeal"
                     value={ objSn.typeOfDeal }
                     onChange={(e) => setObjSn((v) => ({
                       ...v,
@@ -479,7 +461,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                 />
 
                 <DateTimeField
-                  label='ClosingDate'
+                  label='ClosingDeadline'
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -487,7 +469,7 @@ export function SetDeal({ia, seq, isFinalized}: SetDealProps) {
                   value={ dayjs.unix(objSn?.closingDeadline) }
                   onChange={(date) => setObjSn((v) => ({
                     ...v,
-                    closingDate: date ? date.unix() : 0,
+                    closingDeadline: date ? date.unix() : 0,
                   }))}
                   format='YYYY-MM-DD HH:mm:ss'
                 />

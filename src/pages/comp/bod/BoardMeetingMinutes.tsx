@@ -70,7 +70,7 @@ function BoardMeetingMinutes() {
 
         {motion && boox && (
           <ApprovalFormOfBoardMotion 
-            minutes={boox[2]}  
+            minutes={boox[3]}  
             open={open} 
             motion={motion} 
             setOpen={setOpen} 

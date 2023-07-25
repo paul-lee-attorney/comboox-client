@@ -2,31 +2,18 @@ import { useGeneralKeeperRevokePledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Block } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 
-interface RevokePledgeProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen:(flag:boolean)=>void;
-  getAllPledges:()=>void;
-}
-
-export function RevokePledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:RevokePledgeProps) {
+export function RevokePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  // const {
-  //   config: revokePledgeConfig
-  // } = usePrepareGeneralKeeperRevokePledge({
-  //   address: gk,
-  //   args: [BigInt(seqOfShare), BigInt(seqOfPld)],
-  // })
-
   const {
     isLoading: revokePledgeLoading,
     write: revokePledge,
   } = useGeneralKeeperRevokePledge({
     address: gk,
-    args: [BigInt(seqOfShare), BigInt(seqOfPld)],
+    args: [BigInt(pld.head.seqOfShare), BigInt(pld.head.seqOfPld)],
     onSuccess(){
       getAllPledges();
       setOpen(false);
