@@ -2,13 +2,14 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } 
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { Share } from "../../../queries/bos";
+import { Dispatch, SetStateAction } from "react";
 
 
 export interface CertificateOfContributionProps{
-  open: boolean,
-  share: Share,
-  setOpen: (flag: boolean)=>void,
-  obtainSharesList: ()=>any,
+  open: boolean;
+  share: Share;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  obtainSharesList: ()=>void;
 }
 
 export function CertificateOfContribution({open, share, setOpen, obtainSharesList}: CertificateOfContributionProps) {
@@ -22,7 +23,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
       aria-labelledby="dialog-title" 
     >
       <DialogTitle id="dialog-title" >
-        {"Certificate Of Contribution"}
+        Certificate Of Contribution
       </DialogTitle>
       <DialogContent>
           <table width={1180} >

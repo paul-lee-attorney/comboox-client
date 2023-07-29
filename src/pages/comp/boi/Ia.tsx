@@ -7,7 +7,7 @@ import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 // import { finalized } from "../../../queries/accessControl";
 import IaBodyTerms from "../../../components/comp/boi/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/boi/ia/IaLifecycle";
@@ -50,7 +50,9 @@ function Ia() {
 
               <TabList variant="solid" color="primary" sx={{ width: 980 }}  >
                 <Tab value={0}><b>Body Term</b></Tab>
-                <Tab value={1}><b>Access Control</b></Tab>
+                {!isFinalized && (
+                  <Tab value={1}><b>Access Control</b></Tab>
+                )}
                 <Tab value={2}><b>Signature Page</b></Tab>
                 <Tab value={3}><b>Sup Signature Page</b></Tab>
                 <Tab value={4}><b>Life Cycle</b></Tab>
@@ -62,11 +64,13 @@ function Ia() {
                 )}
               </TabPanel>
 
-              <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {ia != '0x' && (
-                  <AgrmtAccessControl isSha={false} agrmt={ia} />
-                )}
-              </TabPanel>
+              {!isFinalized && (
+                <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
+                  {ia != '0x' && (
+                    <AgrmtAccessControl isSha={false} agrmt={ia} />
+                  )}
+                </TabPanel>
+              )}
 
               <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {ia != '0x' && isFinalized != undefined && (

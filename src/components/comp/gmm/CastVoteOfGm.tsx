@@ -92,9 +92,9 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
 
       <Collapse in={ !appear } >
 
-        <Stack direction="row" sx={{ alignItems:'center' }} >
+        <Stack direction="row" sx={{ alignItems:'stretch' }} >
 
-          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+          <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="attitude-lable">Attitude</InputLabel>
             <Select
               labelId="attitude-lable"
@@ -124,7 +124,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
             disabled={ !castVote || castVoteLoading }
             variant="contained"
             endIcon={<HowToVote />}
-            sx={{ m:1, minWidth:118 }}
+            sx={{ m:1, minWidth:128 }}
             onClick={()=>castVote?.()}
           >
             Vote
@@ -132,7 +132,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
         </Stack>
 
         {voteResult && boox && (
-          <VoteResult addr={boox[5]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
+          <VoteResult addr={boox[5]} seqOfMotion={seqOfMotion} />
         )}
 
       </Collapse>

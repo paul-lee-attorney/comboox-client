@@ -1,5 +1,5 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
+import { Bytes32Zero, HexType } from "../interfaces";
 import { investmentAgreementABI } from "../generated";
 
 export interface Head {
@@ -50,10 +50,16 @@ export const defaultBody: Body = {
   flag: false,  
 }
 
+export const defaultDeal: Deal ={
+  head: defaultHead,
+  body: defaultBody,
+  hashLock: Bytes32Zero,
+}
+
 export interface Deal {
-  head: Head,
-  body: Body,
-  hashLock: HexType,
+  head: Head;
+  body: Body;
+  hashLock: HexType;
 }
 
 export async function getTypeOfIA(ia: HexType):Promise<number>{
@@ -130,12 +136,12 @@ export async function getHashLockOfDeal(ia: HexType, seq:number):Promise<HexType
   return lock;
 }
 
-export async function getDeal(ia: HexType, seq:number):Promise<Deal>{
+export async function getDeal(ia: HexType, seq:bigint):Promise<Deal>{
   let deal = await readContract({
     address: ia,
     abi: investmentAgreementABI,
     functionName: 'getDeal',
-    args: [BigInt(seq)],
+    args: [seq],
   });
 
   return deal;

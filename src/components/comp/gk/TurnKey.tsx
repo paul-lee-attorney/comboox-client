@@ -56,15 +56,15 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     }
   })
 
-  const [bosKeeper, setBosKeeper] = useState<HexType>();
+  // const [bomKeeper, setBosKeeper] = useState<HexType>();
 
-  useGeneralKeeperGetKeeper({
-    address: gk,
-    args: [ BigInt(10) ],
-    onSuccess(res) {
-      setBosKeeper(res)
-    }
-  })
+  // useGeneralKeeperGetKeeper({
+  //   address: gk,
+  //   args: [ BigInt(4) ],
+  //   onSuccess(res) {
+  //     setBosKeeper(res)
+  //   }
+  // })
 
   const [dkOfBos, setDKOfBos] = useState<HexType>();
 
@@ -93,7 +93,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     write: setBosDK
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[10] : undefined,
-    args: bosKeeper ? [ bosKeeper ] : undefined,
+    args: bomKeeper ? [ bomKeeper ] : undefined,
     onSuccess() {
       getDkOfBos();
     }  
@@ -181,14 +181,14 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
                   />
 
                   <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
-                    {bosKeeper}
+                    {bomKeeper}
                   </Typography>
                 </Stack>
 
                 <Stack direction='row' >
                   <Chip
-                    variant={ dkOfBos == bosKeeper ? 'filled' : 'outlined' }
-                    color={ dkOfBos == bosKeeper ? 'success' : 'default' }
+                    variant={ dkOfBos == bomKeeper ? 'filled' : 'outlined' }
+                    color={ dkOfBos == bomKeeper ? 'success' : 'default' }
                     label='KeeperOfBos'
                     sx={{width:120}}
                   />
@@ -214,7 +214,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
               }}
               size='small'
             >
-              Turn Key of ROM
+              Turn Key of BOM
             </Button>
 
             <Button 

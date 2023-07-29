@@ -1,6 +1,8 @@
 import { readContract } from "@wagmi/core";
-import { AddrZero, HexType } from "../interfaces";
+import { AddrZero, Bytes32Zero, HexType } from "../interfaces";
 import { shareholdersAgreementABI } from "../generated";
+import { FirstRefusalRule, frParser } from "../components/comp/boc/rules/SetFirstRefusalRule";
+import { getSha } from "./boc";
 
 export const defaultTerms:HexType[] = [
   AddrZero, AddrZero, AddrZero,
@@ -53,4 +55,24 @@ export async function getTerm(addr: HexType, title: number): Promise<HexType> {
   return addrOfTerm;
 }
 
+export async function getFirstRefusalRules(sha: HexType): Promise<FirstRefusalRule[]> {
+
+  let out: FirstRefusalRule[] = [];
+  let strFr = await getRule(sha, 512);
+
+  if ( strFr != Bytes32Zero ) {
+    
+    let fr = frParser(strFr);
+    out.push(fr);
+    let len = fr.qtyOfSubRule;
+
+    while (len > 1) {
+      out.push(frParser(await getRule(sha, 511 + len)));
+      len--;
+    }
+
+  }
+
+  return out;
+}
 

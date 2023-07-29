@@ -3,33 +3,14 @@ import { useGeneralKeeperTransferPledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Create } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 
-interface TransferPledgeProps{
-  seqOfShare: number;
-  seqOfPld: number;
-  setOpen:(flag:boolean)=>void;
-  getAllPledges:()=>void;
-}
-
-export function TransferPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:TransferPledgeProps) {
+export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ buyer, setBuyer ] = useState<number>();
   const [ amt, setAmt ] = useState<number>();
-
-  // const {
-  //   config: transferPledgeConfig
-  // } = usePrepareGeneralKeeperTransferPledge({
-  //   address: gk,
-  //   args: buyer && amt
-  //     ? [ BigInt(seqOfShare), 
-  //         BigInt(seqOfPld), 
-  //         BigInt(buyer),
-  //         BigInt(amt)
-  //       ]
-  //     : undefined,
-  // })
 
   const {
     isLoading: transferPledgeLoading,
@@ -37,8 +18,8 @@ export function TransferPledge({seqOfShare, seqOfPld, setOpen, getAllPledges}:Tr
   } = useGeneralKeeperTransferPledge({
     address: gk,
     args: buyer && amt
-      ? [ BigInt(seqOfShare), 
-          BigInt(seqOfPld), 
+      ? [ BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
           BigInt(buyer),
           BigInt(amt)
         ]

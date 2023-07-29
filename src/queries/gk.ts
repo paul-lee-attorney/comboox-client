@@ -1,6 +1,17 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
+import { AddrZero, HexType } from "../interfaces";
 import { generalKeeperABI } from "../generated";
+import { getDK, getOwner } from "./accessControl";
+
+export const nameOfBooks = [
+  'GK', 'BOC', 'BOD', 'BMM', 'BOM', 'GMM', 
+  'BOI', 'BOO', 'BOP', 'ROS', 'BOS'
+]
+
+export const titleOfKeepers = [
+  'GK', 'BocKeeper', 'BodKeeper', 'BmmKeeper', 'BomKeeper', 'GmmKeeper', 
+  'BoiKeeer', 'BooKeeper', 'BopKeeper', 'RosKeeper', 'ShaKeeper'
+]
 
 export async function regNumOfCompany(addr: HexType):Promise<bigint> {
   let regNum: bigint = await readContract({
@@ -54,13 +65,68 @@ export async function getBook(addr: HexType, title: number):Promise<HexType> {
   return keeper;
 }
 
-export async function getBoox(gk: HexType): Promise<HexType[]>{
-  let books: HexType[] = [];
-  books.push(gk);
+export interface BookInfo {
+  title: number;
+  addr: HexType;
+  owner: HexType;
+  dk: HexType;
+}
+
+export async function getBoox(gk: HexType): Promise<BookInfo[]>{
+  let books: BookInfo[] = [];
+
+  books.push({
+    title: 0,
+    addr: gk,
+    owner: await getOwner(gk),
+    dk: await getDK(gk),
+  })
 
   for (let i = 1; i<11; i++) {
-    let temp: HexType = await getBook(gk, i);
-    books.push(temp);
+ 
+    let addr = await getBook(gk, i);
+    let owner = await getOwner(addr); 
+    let dk = await getDK(addr);
+ 
+    let item: BookInfo = {
+      title: i,
+      addr: addr,
+      owner: owner,
+      dk: dk,    
+    }
+
+    books.push(item);
   }
   return books;  
 }
+
+
+export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
+  let books: BookInfo[] = [];
+
+  books.push({
+    title: 0,
+    addr: gk,
+    owner: await getOwner(gk),
+    dk: await getDK(gk),
+  })
+
+  for (let i = 1; i<11; i++) {
+ 
+    let addr = await getKeeper(gk, i);
+    let owner = await getOwner(addr);
+    let dk = await getDK(addr);
+ 
+    let item: BookInfo = {
+      title: i,
+      addr: addr,
+      owner: owner,
+      dk: dk,    
+    }
+
+    books.push(item);
+  }
+  return books;  
+}
+
+

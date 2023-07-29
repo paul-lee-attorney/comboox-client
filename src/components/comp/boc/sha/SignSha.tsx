@@ -67,7 +67,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   });
 
   return (
-    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'stretch'}}>
 
       <TextField
         sx={{ m: 1, minWidth: 650 }} 

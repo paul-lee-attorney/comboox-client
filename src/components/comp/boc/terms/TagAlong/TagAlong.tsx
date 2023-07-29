@@ -56,6 +56,7 @@ import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../DragAlong/DragAlong";
 import { AlongLinks } from "../DragAlong/AlongLinks";
 import { AddTerm } from "../AddTerm";
+import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 
 
 export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -156,9 +157,14 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
             <Box sx={{ width:1180 }}>
 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
-                <Toolbar>
-                  <h4>Tag Along (Addr: { term == AddrZero ? '-' : term } )</h4>
-                </Toolbar>
+
+                <Stack direction='row'>
+                  <Toolbar>
+                    <h4>Tag Along</h4>
+                  </Toolbar>
+
+                  <CopyLongStrSpan title="Addr" size="body1" src={term} />
+                </Stack>
 
                 {!isFinalized && (
                   <AddTerm sha={ sha } typeOfDoc={ 28 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
@@ -297,8 +303,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
                   </Stack>
 
-                  <Divider orientation="horizontal" sx={{ width:'100%', m:1 }} flexItem />
-
+                  <Divider orientation="horizontal" sx={{ m:1 }} flexItem />
 
                   <Stack direction={'row'} sx={{ alignItems:'center' }}>      
 
@@ -393,15 +398,9 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                 </Paper>
               )}
 
-              {term != AddrZero && (
-                <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>  
-
-                  {links?.map((v) => (
-                    <AlongLinks key={ v.drager } link={ v } />
-                  ))}
-
-                </Paper>
-              )}
+              {links?.map((v) => (
+                <AlongLinks key={ v.drager } link={ v } />
+              ))}
 
             </Box>
           </Paper>
@@ -409,7 +408,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

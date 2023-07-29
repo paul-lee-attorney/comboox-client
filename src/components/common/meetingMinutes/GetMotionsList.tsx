@@ -5,7 +5,7 @@ import { Motion } from "../../../queries/meetingMinutes";
 
 const type = ['ElectOfficer', 'RemoveOfficer', 'ApproveDoc', 'ApproveAction'];
 
-const state = ['Created', 'Proposed', 'Passed', 'Rejected', 'Rejected_NotToBuy', 'Rejected_ToBuy', 'Executed'];
+export const statesOfMotion = ['Created', 'Proposed', 'Passed', 'Rejected', 'Rejected_NotToBuy', 'Rejected_ToBuy', 'Executed'];
 
 interface GetMotionsListProps {
   list: Motion[];
@@ -98,7 +98,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
     {
       field: 'state',
       headerName: 'State',
-      valueGetter: p => state[p.row.body.state - 1],
+      valueGetter: p => statesOfMotion[p.row.body.state - 1],
       renderCell: ({ value }) => (
         <Chip
           sx={{width: 168}} 

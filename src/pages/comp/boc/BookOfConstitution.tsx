@@ -22,6 +22,7 @@ import {
 import { InfoOfFile, getFilesInfoList, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { AddrZero } from "../../../interfaces";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function BookOfConstitution() {
   const { gk, boox } = useComBooxContext();
@@ -55,15 +56,20 @@ function BookOfConstitution() {
   });
   
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Stack direction='row' sx={{ alignContent:'space-between' }}>
+    <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+
+        <Stack direction='row' sx={{ alignItems:'center' }}>
+
           <Toolbar sx={{ textDecoration:'underline' }}>
             <h3>BOC - Book Of Constitution </h3> 
           </Toolbar>
-          <Typography sx={{ ml: 10 }}>
-            <h4>(Addr: {(boox ? boox[1] : AddrZero).toLowerCase()})</h4>
-          </Typography>
-      </Stack>
+
+          {boox && (
+              <CopyLongStrSpan size="h6" title="Addr" src={boox[1].toLowerCase()} />
+          )}
+
+        </Stack>
+
       <table width={1680} >
         <thead />
         

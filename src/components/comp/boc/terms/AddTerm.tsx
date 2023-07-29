@@ -61,8 +61,9 @@ export function AddTerm({sha, typeOfDoc, setTerms, isCreated}: AddTermProps) {
       { !isCreated && (
         <Stack direction={'row'} sx={{ alignItems:'center' }}>
           <TextField 
-            variant='filled'
+            variant='outlined'
             label='Version'
+            size='small'
             sx={{
               m:1,
               ml:3,

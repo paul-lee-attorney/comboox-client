@@ -89,6 +89,9 @@ export function InitBos({nextStep}: InitBosProps) {
         : undefined,
   })
 
+  
+
+
   useEffect(()=>{
     if (boox) {
       getShareNumbersList(boox[4]).then(

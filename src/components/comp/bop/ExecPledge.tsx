@@ -5,7 +5,7 @@ import { PlayArrow, Send } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "./ActionsOfPledge";
 import { useEffect, useState } from "react";
 import { Body, Head, defaultBody, defaultHead } from "../../../queries/ia";
-import { codifyHeadOfDeal } from "../boi/deals/SetDeal";
+import { codifyHeadOfDeal } from "../boi/deals/CreateDeal";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 

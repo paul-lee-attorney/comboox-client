@@ -15,6 +15,7 @@ import { Pledge } from "../../../queries/bop";
 import { PledgesList } from "../../../components/comp/bop/PledgesList";
 import { CertificateOfPledge } from "../../../components/comp/bop/CertificateOfPledge";
 import { CreatePledge } from "../../../components/comp/bop/CreatePledge";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function BookOfPledges() {
   const { boox } = useComBooxContext();
@@ -35,9 +36,18 @@ function BookOfPledges() {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
-      <Toolbar>
-        <h3>BOP - Book Of Pledges (Addr: {boox ? boox[8] : ''})</h3>
-      </Toolbar>
+
+      <Stack direction="row" >
+
+        <Toolbar sx={{ textDecoration:'underline' }} >
+          <h3>BOO - Book Of Options</h3>
+        </Toolbar>
+
+        {boox && (
+          <CopyLongStrSpan title="Addr" size="body1" src={ boox[8].toLowerCase() } />
+        )}
+
+      </Stack>
 
       <Stack direction='column' sx={{m:1, p:1}} >
 

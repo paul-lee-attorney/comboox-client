@@ -27,7 +27,6 @@ import {
   useShareholdersAgreementRemoveRule 
 } from "../../../../generated";
 
-import { bigint } from "ethers";
 
 export interface VotingRuleWrap {
   subTitle: string,
@@ -94,7 +93,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
   return (
     <>
       <Button
-        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined"}
+        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      

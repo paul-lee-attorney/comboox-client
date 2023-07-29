@@ -6,7 +6,7 @@ import {
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
-import { Handshake, } from "@mui/icons-material";
+import { HandshakeOutlined, } from "@mui/icons-material";
 import { HexType } from "../../../interfaces";
 
 interface EntrustDelegaterForBmProps {
@@ -64,7 +64,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, getMotio
       <Button
         disabled={ !entrustDelegaterForBm || entrustDelegaterForBmLoading }
         variant="contained"
-        endIcon={<Handshake />}
+        endIcon={<HandshakeOutlined />}
         sx={{ m:1, minWidth:118 }}
         onClick={()=>entrustDelegaterForBm?.()}
       >

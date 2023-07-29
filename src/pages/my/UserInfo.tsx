@@ -1,29 +1,25 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AddrOfRegCenter, AddrZero } from "../../interfaces";
-import { Locker, User, getOwner, getLocker, getUser } from "../../queries/rc";
+import { Locker, User, getLocker } from "../../queries/rc";
 import { Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser } from "../../scripts/toolsKit";
 import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetOwner, useRegCenterGetUser } from "../../generated";
 import { SetBackupKey } from "../../components/center/SetBackupKey";
-import { useAccount, useContractRead, useWalletClient } from "wagmi";
+import { useContractRead, useWalletClient } from "wagmi";
 import { MintTools } from "../../components/center/MintTools";
 import { LockersList } from "../../components/center/LockersList";
 import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
 import { TransferTools } from "../../components/center/TransferTools";
 import { LockConsideration } from "../../components/center/LockConsideration";
 import { useComBooxContext } from "../../scripts/ComBooxContext";
+import { CopyLongStrTF } from "../../components/common/utils/CopyLongStr";
 
 
 function UserInfo() {
 
-
   const { userNo } = useComBooxContext();
 
   const [ user, setUser ] = useState<User>();
-
-  // const obtainUser = async ()=>{
-  //   setUser( await getUser());
-  // }
 
   const { data: signer } = useWalletClient();
 
@@ -41,11 +37,6 @@ function UserInfo() {
   })
     
   const [ isOwner, setIsOwner ] = useState(false);
-
-  // const checkOwner = async ()=>{
-  //   let owner = await getOwner(AddrOfRegCenter);
-  //   setIsOwner(signer ? signer.account.address == owner : false);
-  // }
 
   useRegCenterGetOwner({
     address: AddrOfRegCenter,
@@ -81,11 +72,6 @@ function UserInfo() {
     }
   });
 
-  // useEffect(()=>{
-  //   // obtainUser();
-  //   checkOwner();
-  // });
-
   const [ open, setOpen ] = useState(false);
   const [ locker, setLocker ] = useState<Locker>();
 
@@ -94,7 +80,6 @@ function UserInfo() {
   const [ showList, setShowList ] = useState(false);
 
   return (
-    // <Collapse in={isConnected} >
     <>
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:1, border:1, borderColor:'divider' }} >
         <Toolbar sx={{ textDecoration:'underline' }} >
@@ -111,7 +96,7 @@ function UserInfo() {
             <td>
               <TextField 
                 size="small"
-                variant='filled'
+                variant='outlined'
                 label='BalanceAmt'
                 inputProps={{readOnly: true}}
                 sx={{
@@ -124,7 +109,7 @@ function UserInfo() {
             <td colSpan={2}>
               <TextField 
                 size="small"
-                variant='filled'
+                variant='outlined'
                 label='CounterOfVerification'
                 inputProps={{readOnly: true}}
                 sx={{
@@ -137,7 +122,7 @@ function UserInfo() {
             <td>
               <TextField 
                 size="small"
-                variant='filled'
+                variant='outlined'
                 label='TypeOfAcct'
                 inputProps={{readOnly: true}}
                 sx={{
@@ -152,22 +137,12 @@ function UserInfo() {
 
             <tr>
               <td>
-                <TextField 
-                  size="small"
-                  variant='filled'
-                  label='PrimeKey'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 456,
-                  }}
-                  value={ user?.primeKey.pubKey.toLowerCase() ?? '-' }
-                />
+                <CopyLongStrTF title='PrimeKey' src={user?.primeKey.pubKey.toLowerCase() ?? '-'} />
               </td>
               <td>
                 <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='SeqOfKey'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -180,7 +155,7 @@ function UserInfo() {
               <td>
                 <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='DataOfKey'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -193,7 +168,7 @@ function UserInfo() {
               <td>
                 <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='DateOfKey'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -207,9 +182,10 @@ function UserInfo() {
 
             <tr>
               <td>
-                <TextField 
+                <CopyLongStrTF title='BackupKey' src={ user?.backupKey.pubKey.toLowerCase() ?? '-' } />
+                {/* <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='BackupKey'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -217,12 +193,12 @@ function UserInfo() {
                     minWidth: 456,
                   }}
                   value={ user?.backupKey.pubKey.toLowerCase() ?? '-' }
-                />
+                /> */}
               </td>
               <td>
                 <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='SeqOfKey'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -235,7 +211,7 @@ function UserInfo() {
               <td>
                 <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='DataOfKey'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -248,7 +224,7 @@ function UserInfo() {
               <td>
                 <TextField 
                   size="small"
-                  variant='filled'
+                  variant='outlined'
                   label='DateOfKey'
                   inputProps={{readOnly: true}}
                   sx={{

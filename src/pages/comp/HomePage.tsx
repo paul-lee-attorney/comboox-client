@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/material";
 
@@ -9,23 +9,21 @@ import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers"
 import { InitBos } from "../../components/comp/bos/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
-import { getDK } from "../../queries/accessControl";
 import { getKeeper } from "../../queries/gk";
-import { useBookOfSharesGetDk } from "../../generated";
+import { useAccessControlGetDk, useBookOfSharesGetDk } from "../../generated";
 
 
 function HomePage() {
   const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(0);
 
-  useBookOfSharesGetDk({
+  useAccessControlGetDk({
     address: boox ? boox[10] : undefined,
     onSuccess(dk) {
       if (gk)
-        getKeeper(gk, 10).then(
+        getKeeper(gk, 4).then(
           v => {
             if (v == dk) setActiveStep(4);
-            // else setActiveStep(0);
           }
         )
     }

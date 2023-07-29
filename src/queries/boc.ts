@@ -3,9 +3,9 @@ import { HexType } from "../interfaces";
 import { bookOfConstitutionABI } from "../generated";
 
 
-export async function getSha(boh: HexType): Promise<HexType> {
+export async function getSha(boc: HexType): Promise<HexType> {
   let sha = readContract({
-    address: boh,
+    address: boc,
     abi: bookOfConstitutionABI,
     functionName: "pointer",
   });

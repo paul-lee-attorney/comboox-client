@@ -66,7 +66,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
         variant="outlined"
         startIcon={<ListAlt />}
         fullWidth={true}
-        sx={{ m:1 }}
+        sx={{ m:1, height:40 }}
         onClick={()=>setOpen(true)}      
       >
         Seq Of VotingRule: {seq}
@@ -102,9 +102,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                   {objVr && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='Authority'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -115,9 +116,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.headRatio > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='HeadRatio'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -128,9 +130,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.amountRatio > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='AmountRatio'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -144,9 +147,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
                     label='OnlyAttendance ?'
                     inputProps={{readOnly: true}}
+                    size="small"
                     sx={{
                       m:1,
                       minWidth: 218,
@@ -156,9 +160,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.impliedConsent && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='ImpliedConsent ?'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -168,9 +173,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                   )}
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
                     label='PartyAsConsent ?'
                     inputProps={{readOnly: true}}
+                    size="small"
                     sx={{
                       m:1,
                       minWidth: 218,
@@ -180,9 +186,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.againstShallBuy && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='AgainstShallBuy ?'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -196,9 +203,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                   {objVr.vetoers[0] > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='Vetoer_1'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -209,9 +217,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.vetoers[1] > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='Vetoer_2'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -226,9 +235,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.shaExecDays > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='ShaExecDays'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -239,9 +249,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.shaConfirmDays > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='ReviewDays'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -252,9 +263,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.reconsiderDays > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='ReconsiderDays'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -269,9 +281,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.votePrepareDays > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='VotePrepareDays'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -281,9 +294,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                   )}
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
                     label='VotingDays'
                     inputProps={{readOnly: true}}
+                    size="small"
                     sx={{
                       m:1,
                       minWidth: 218,
@@ -293,9 +307,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                   {objVr.execDaysForPutOpt > 0 && (
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
                       label='ExecDaysForPutOpt'
                       inputProps={{readOnly: true}}
+                      size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -313,7 +328,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={()=>setOpen(false)}>Close</Button>
+            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
           </DialogActions>
     
         </Dialog>

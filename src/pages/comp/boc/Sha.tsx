@@ -12,6 +12,7 @@ import { Signatures } from "../../../components/common/sigPage/Signatures";
 import { useState } from "react";
 import { ShaLifecycle } from "../../../components/comp/boc/sha/ShaLifecycle";
 import { useAccessControlIsFinalized } from "../../../generated";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function Sha() {
   const { query } = useRouter();
@@ -41,9 +42,7 @@ function Sha() {
               SnOfDoc: ({snOfDoc})
             </Typography>
 
-            <Typography sx={{ m:1 }} variant="body1">
-              Addr: ({ sha.toLowerCase() })
-            </Typography>
+            <CopyLongStrSpan size='body1' title='Addr' src={sha.toLowerCase()} />
 
             <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
 

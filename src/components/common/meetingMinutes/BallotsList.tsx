@@ -110,7 +110,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
           boxShadow: 'sm',
           borderColor: 'neutral.500',
           width:'100%',
-          mx:1, px:1,
+          m:1, px:1,
         }}
       >
         <Button
@@ -181,7 +181,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant="outlined" sx={{ m:1, mx:2, }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

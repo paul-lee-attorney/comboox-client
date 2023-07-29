@@ -30,13 +30,6 @@ export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
     }
   })
 
-  // const {
-  //   config
-  // } = usePrepareInvestmentAgreementSetTypeOfIa({
-  //   address: ia,
-  //   args: type ? [BigInt(type)] : undefined,
-  // })
-
   const {
     isLoading: setTypeOfIaLoading,
     write: setTypeOfIa,
@@ -59,7 +52,7 @@ export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
           m:1,
           minWidth: 218,
         }}
-        value={ strTypeOfIa[newType-1] }
+        value={ strTypeOfIa[newType-1] ?? 'EXT' }
       />
 
       <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>

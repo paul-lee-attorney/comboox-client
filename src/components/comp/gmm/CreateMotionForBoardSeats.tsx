@@ -86,7 +86,7 @@ export function CreateMotionForBoardSeats({ getMotionsList }:CreateMotionForBoar
         </Tooltip>
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='SeqOfPos'
           sx={{
             m:1,
@@ -98,7 +98,7 @@ export function CreateMotionForBoardSeats({ getMotionsList }:CreateMotionForBoar
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Candidate'
           sx={{
             m:1,

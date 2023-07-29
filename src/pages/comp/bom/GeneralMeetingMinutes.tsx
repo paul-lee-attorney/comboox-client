@@ -1,16 +1,12 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 import { CreateMotionOfGm } from "../../../components/comp/gmm/CreateMotionOfGm";
 import { Motion, getMotion } from "../../../queries/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
 import { ApprovalFormOfMotion } from "../../../components/comp/gmm/ApprovalFormOfMotion";
-import { Tabs, Tab, TabList, TabPanel } from "@mui/joy";
-import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
-import { Position, getDirectorsFullPosInfo } from "../../../queries/bod";
-import { MembersEquityList } from "../../../components/comp/bom/MembersList";
-import { ApprovalFormOfBoardMotion } from "../../../components/comp/bod/ApprovalFormOfBoardMotion";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function GeneralMeetingMinutes() {
 
@@ -54,9 +50,18 @@ function GeneralMeetingMinutes() {
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
-      <Toolbar sx={{m:1, p:1}}>
-        <h3>GMM - General Meeting Minutes (Addr: {boox ? boox[5] : undefined})</h3>
-      </Toolbar>
+
+      <Stack direction="row" >
+
+        <Toolbar sx={{m:1, p:1}}>
+          <h3>GMM - General Meeting Minutes</h3>
+        </Toolbar>
+
+        {boox && (
+          <CopyLongStrSpan title="Addr" size="body1" src={ boox[5].toLowerCase() }  />
+        )}
+
+      </Stack>
 
       <CreateMotionOfGm  getMotionsList={obtainSeqList} />
 

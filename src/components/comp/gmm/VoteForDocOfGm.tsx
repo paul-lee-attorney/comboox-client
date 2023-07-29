@@ -51,9 +51,9 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
   return (
     <Stack direction='column' sx={{m:1, p:1, justifyContent:'center'}} >
 
-      <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+      <Stack direction={'row'} sx={{m:1, p:1, alignItems:'stretch'}}>
 
-        <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+        <FormControl variant="outlined" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="attitude-lable">Attitude</InputLabel>
           <Select
             labelId="attitude-lable"

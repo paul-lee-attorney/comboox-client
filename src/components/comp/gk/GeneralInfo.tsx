@@ -1,17 +1,18 @@
 import { useEffect, useState } from "react";
 
-import { Paper, Toolbar, TextField } from "@mui/material";
+import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../bom/MembersList";
-import { Position, getDirectorsFullPosInfo, getPosition } from "../../../queries/bod";
+import { Position, getDirectorsFullPosInfo } from "../../../queries/bod";
 import { GetOfficersList } from "../bod/GetOfficersList";
 
 import { 
-  useBookOfDirectorsGetDirectorsPosList, 
+  useAccessControl,
+  useAccessControlGetDk,
   useBookOfMembersControllor, 
   useBookOfMembersOwnersEquity, 
   useBookOfMembersVotesOfController, 
@@ -19,11 +20,13 @@ import {
   useGeneralKeeperRegNumOfCompany, 
   useGeneralKeeperSymbolOfCompany 
 } from "../../../generated";
+import { ConfigSetting } from "./ConfigSetting";
+import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
 
-  const [ compName, setCompName ] = useState<string>();
+  const [ compName, setCompName ] = useState<string>('');
 
   useGeneralKeeperNameOfCompany({
     address: gk,
@@ -32,7 +35,7 @@ export function GeneralInfo() {
     }
   })
 
-  const [ regNum, setRegNum ] = useState<string>();
+  const [ regNum, setRegNum ] = useState<string>('');
 
   useGeneralKeeperRegNumOfCompany({
     address: gk,
@@ -41,12 +44,21 @@ export function GeneralInfo() {
     }
   })
 
-  const [ symbol, setSymbol ] = useState<string>();
+  const [ symbol, setSymbol ] = useState<string>('');
 
   useGeneralKeeperSymbolOfCompany({
     address: gk,
     onSuccess(res) {
       setSymbol(res)
+    }
+  })
+
+  const [ dk, setDK ] = useState<string>('');
+
+  useAccessControlGetDk({
+    address: gk,
+    onSuccess(res) {
+      setDK(res)
     }
   })
 
@@ -92,42 +104,25 @@ export function GeneralInfo() {
     getDirectorsList();
   });
 
-
-  // const {
-  //   refetch: getDirectorsList
-  // } = useBookOfDirectorsGetDirectorsPosList({
-  //   address: boox ? boox[2] : undefined,
-  //   onSuccess(list) {
-  //     let len = list.length;
-  //     let output: Position[] = [];
-  //     while (len > 0) {
-  //       if (boox) {
-  //         getPosition(boox[2], list[len-1]).then(
-  //           v => {
-  //             output.push(v);
-  //           }
-  //         )
-  //         len--;
-  //       }
-  //     }
-  //     setDirectorsList(output);
-  //   }
-  // });
-
   return (
     <>
       <Paper elevation={3} 
         sx={{
           alignContent:'center', 
           justifyContent:'center', 
-          p:1, m:1, border:1, 
+          m:1, p:1, border:1, 
           borderColor:'divider' 
         }} 
       >
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>General Info</h3>
-        </Toolbar>
+        <Stack direction='row' >
+          
+          <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
+            <h3>General Info</h3>
+          </Toolbar>
 
+          <ConfigSetting companyName={ compName } symbol={symbol}  />
+
+        </Stack>
         <table width={1680}>
           <thead>
 
@@ -136,11 +131,12 @@ export function GeneralInfo() {
                 {compName && (
                   <TextField 
                     value={ compName } 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="NameOfCompany" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1, p:1
+                      m:1,
                     }}
                     fullWidth
                   />
@@ -153,12 +149,13 @@ export function GeneralInfo() {
                 {regNum && (
                   <TextField 
                     value={ longSnParser(regNum) } 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="RegNum" 
                     inputProps={{readOnly: true}}
                     sx={{
                       minWidth: 120,
-                      m:1, p:1
+                      m:1,
                     }}
                     fullWidth
                   />
@@ -169,29 +166,26 @@ export function GeneralInfo() {
                 {symbol && (
                   <TextField 
                     value={symbol} 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="SymbolOfCompany" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1, p:1
+                      m:1,
                     }}
                     fullWidth
                   />
                 )}
               </td>
 
-              <td colSpan={2} >
+              <td >
                 {gk && (
-                  <TextField 
-                    value={gk} 
-                    variant='filled' 
-                    label="AddressOfCompany" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1, p:1
-                    }}
-                    fullWidth
-                  />
+                  <CopyLongStrTF title="AddressOfCompany" src={gk} size="h4" />
+                )}
+              </td>
+              <td >
+                {dk && (
+                  <CopyLongStrTF title="BoardSecretary" src={dk} size="h4" />
                 )}
               </td>
             </tr>
@@ -204,11 +198,12 @@ export function GeneralInfo() {
                 {controllor && (
                   <TextField 
                     value={ longSnParser(controllor) } 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="ActualControllor" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1, p:1
+                      m:1,
                     }}
                     fullWidth
                   />
@@ -218,11 +213,12 @@ export function GeneralInfo() {
                 {votesOfController && (
                   <TextField 
                     value={ longDataParser(votesOfController) } 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="VotesOfController" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1, p:1
+                      m:1,
                     }} 
                     fullWidth
                   />
@@ -232,11 +228,12 @@ export function GeneralInfo() {
                 {par && (
                   <TextField 
                     value={ longDataParser(par)} 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="RegisteredCapital" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m:1, p:1
+                      m:1,
                     }}
                     fullWidth
                   />
@@ -246,11 +243,12 @@ export function GeneralInfo() {
                 {paid && (
                   <TextField 
                     value={ longDataParser(paid) } 
-                    variant='filled' 
+                    variant='outlined'
+                    size='small' 
                     label="PaidInCapital" 
                     inputProps={{readOnly: true}}
                     sx={{
-                      m: 1, p:1
+                      m: 1,
                     }}
                     fullWidth
                   />

@@ -1,9 +1,10 @@
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { useEffect, useState } from "react";
-import { Paper, Toolbar } from "@mui/material";
+import { Paper, Stack, Toolbar } from "@mui/material";
 
 import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo } from "../../../queries/bod";
 import { GetOfficersList } from "../../../components/comp/bod/GetOfficersList";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function BookOfDirectors() {
 
@@ -24,9 +25,17 @@ function BookOfDirectors() {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth: 1680, border:1, borderColor:'divider' }} >
-      <Toolbar>
-        <h3>BOD - Book Of Directors (Addr: {boox ? boox[2]: undefined}) </h3>
-      </Toolbar>
+
+      <Stack direction='row' >
+        <Toolbar sx={{ textDecoration:'underline' }}>
+          <h3>BOD - Book Of Directors</h3>
+        </Toolbar>
+
+        {boox && (
+          <CopyLongStrSpan title="Addr" size="body1" src={boox[2].toLowerCase()} />
+        )}
+
+      </Stack>
 
       {directorsList && (
         <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />

@@ -44,6 +44,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { AddTerm } from "../AddTerm";
+import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 
 interface Locker {
   seqOfShare: number;
@@ -183,9 +184,14 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
               <Box sx={{ width:1180 }}>
 
                 <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
-                  <Toolbar>
-                    <h4>Lock Up (Addr: { term == AddrZero ? '-' : term })</h4>
-                  </Toolbar>
+
+                  <Stack direction={'row'} >
+                    <Toolbar>
+                      <h4>Lock Up</h4>
+                    </Toolbar>
+
+                    <CopyLongStrSpan title="Addr" size="body1" src={term} />
+                  </Stack>
 
                   { !isFinalized && (
                     <AddTerm sha={ sha } typeOfDoc={ 26 } setTerms={ setTerms } isCreated={ term != AddrZero } />
@@ -194,107 +200,112 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                 </Stack>
 
                 {term != AddrZero && !isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+                  <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-                    <Tooltip
-                      title='Add Locker'
-                      placement="top-start"
-                      arrow
-                    >
-                      <IconButton 
-                        disabled={ addLockerLoading }
-                        sx={{width: 20, height: 20, m: 1, ml: 5 }} 
-                        onClick={ () => addLocker?.() }
-                        color="primary"
+                    <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+
+                      <Tooltip
+                        title='Add Locker'
+                        placement="top-start"
+                        arrow
                       >
-                        <AddCircle/>
-                      </IconButton>
-                    </Tooltip>
+                        <IconButton 
+                          disabled={ addLockerLoading }
+                          sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                          onClick={ () => addLocker?.() }
+                          color="primary"
+                        >
+                          <AddCircle/>
+                        </IconButton>
+                      </Tooltip>
 
-                    <TextField 
-                      variant='filled'
-                      label='SeqOfShare'
-                      size="small"
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setSeqOfShare(e.target.value)}
-                      value={ seqOfShare }              
-                    />
+                      <TextField 
+                        variant='outlined'
+                        label='SeqOfShare'
+                        size="small"
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        onChange={(e) => setSeqOfShare(e.target.value)}
+                        value={ seqOfShare }              
+                      />
 
-                    <DateTimeField
-                      label='TriggerDate'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }} 
-                      size="small"
-                      value={ dayjs.unix(dueDate ?? 0) }
-                      onChange={(date) => setDueDate(date?.unix() ?? undefined)}
-                      format='YYYY-MM-DD HH:mm:ss'
-                    />
+                      <DateTimeField
+                        label='TriggerDate'
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }} 
+                        size="small"
+                        value={ dayjs.unix(dueDate ?? 0) }
+                        onChange={(date) => setDueDate(date?.unix() ?? undefined)}
+                        format='YYYY-MM-DD HH:mm:ss'
+                      />
 
-                    <Tooltip
-                      title='Remove Locker'
-                      placement="top-end"
-                      arrow
-                    >           
-                      <IconButton
-                        disabled={ removeLockerLoading } 
-                        sx={{width: 20, height: 20, m: 1, mr: 10, }} 
-                        onClick={ () => removeLocker?.() }
-                        color="primary"
+                      <Tooltip
+                        title='Remove Locker'
+                        placement="top-end"
+                        arrow
+                      >           
+                        <IconButton
+                          disabled={ removeLockerLoading } 
+                          sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                          onClick={ () => removeLocker?.() }
+                          color="primary"
+                        >
+                          <RemoveCircle/>
+                        </IconButton>
+                      </Tooltip>
+
+                      <Tooltip
+                        title='Add Keyholder'
+                        placement="top-start"
+                        arrow
                       >
-                        <RemoveCircle/>
-                      </IconButton>
-                    </Tooltip>
+                        <IconButton 
+                          disabled={ addKeyholderLoading }
+                          sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                          onClick={ () => addKeyholder?.() }
+                          color="primary"
+                        >
+                          <AddCircle/>
+                        </IconButton>
 
-                    <Tooltip
-                      title='Add Keyholder'
-                      placement="top-start"
-                      arrow
-                    >
-                      <IconButton 
-                        disabled={ addKeyholderLoading }
-                        sx={{width: 20, height: 20, m: 1, ml: 10,}} 
-                        onClick={ () => addKeyholder?.() }
-                        color="primary"
+                      </Tooltip>
+
+                      <TextField 
+                        variant='outlined'
+                        label='Keyholder'
+                        size="small"
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        onChange={(e) => setKeyholder(e.target.value)}
+                        value={ keyholder }              
+                      />
+
+                      <Tooltip
+                        title='Remove Keyholder'
+                        placement="top-end"
+                        arrow
                       >
-                        <AddCircle/>
-                      </IconButton>
 
-                    </Tooltip>
+                        <IconButton
+                          disabled={ removeKeyholderLoading } 
+                          sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                          onClick={ () => removeKeyholder?.() }
+                          color="primary"
+                        >
+                          <RemoveCircle/>
+                        </IconButton>
+                      
+                      </Tooltip>
 
-                    <TextField 
-                      variant='filled'
-                      label='Keyholder'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setKeyholder(e.target.value)}
-                      value={ keyholder }              
-                    />
-
-                    <Tooltip
-                      title='Remove Keyholder'
-                      placement="top-end"
-                      arrow
-                    >
-
-                      <IconButton
-                        disabled={ removeKeyholderLoading } 
-                        sx={{width: 20, height: 20, m: 1, mr: 10}} 
-                        onClick={ () => removeKeyholder?.() }
-                        color="primary"
-                      >
-                        <RemoveCircle/>
-                      </IconButton>
-                    
-                    </Tooltip>
-
-                  </Stack>
+                    </Stack>
+                  
+                  </Paper>
                 )}
                 
                 {term && lockers?.map((v) => (
@@ -313,7 +324,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
 
           <DialogActions>
-            <Button onClick={()=>setOpen(false)}>Close</Button>
+            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
           </DialogActions>
 
       </Dialog>

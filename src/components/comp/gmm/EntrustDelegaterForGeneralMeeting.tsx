@@ -7,7 +7,7 @@ import {
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
-import { Handshake, } from "@mui/icons-material";
+import { HandshakeOutlined, } from "@mui/icons-material";
 import { HexType } from "../../../interfaces";
 
 interface EntrustDelegaterOfMemberProps {
@@ -48,10 +48,10 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMot
   });
 
   return (
-    <Stack direction="row" sx={{ alignItems:'center' }} >
+    <Stack direction="row" sx={{ alignItems:'stretch' }} >
 
       <TextField 
-        variant='filled'
+        variant='outlined'
         label='Delegater'
         sx={{
           m:1,
@@ -65,8 +65,8 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMot
       <Button
         disabled={ !entrustDelegaterOfMember || entrustDelegaterOfMemberLoading }
         variant="contained"
-        endIcon={<Handshake />}
-        sx={{ m:1, minWidth:118 }}
+        endIcon={<HandshakeOutlined />}
+        sx={{ m:1, minWidth:128 }}
         onClick={()=>entrustDelegaterOfMember?.()}
       >
         Entrust

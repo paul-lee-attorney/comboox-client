@@ -35,19 +35,6 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();
 
-  // const {
-  //   config: execActionConfig,
-  // } = usePrepareGeneralKeeperExecActionOfGm({
-  //   address: gk,
-  //   args: seqOfVr && desHash && seqOfMotion
-  //       ? [BigInt(seqOfVr), 
-  //         actions.map(v => (v.target)), 
-  //         actions.map(v => (BigInt(v.value))),
-  //         actions.map(v => (v.params)),
-  //         desHash, BigInt(seqOfMotion)]
-  //       : undefined,
-  // });
-
   const {
     isLoading: execActionLoading,
     write: execAction,
@@ -120,7 +107,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
       </Tooltip>
 
       <TextField 
-        variant='filled'
+        variant='outlined'
         label='DesHash / CID in IPFS'
         sx={{
           m:1,
@@ -150,7 +137,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
         </Typography>
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Address'
           sx={{
             m:1,
@@ -166,7 +153,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Value'
           sx={{
             m:1,
@@ -182,7 +169,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Params'
           sx={{
             m:1,

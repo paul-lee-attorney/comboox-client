@@ -124,7 +124,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         </Tooltip>
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='SeqOfVR'
           sx={{
             m:1,
@@ -135,7 +135,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Executor'
           sx={{
             m:1,
@@ -146,7 +146,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='DocHash / CID in IPFS'
           sx={{
             m:1,
@@ -176,7 +176,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         </Typography>
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Address'
           sx={{
             m:1,
@@ -192,7 +192,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Value'
           sx={{
             m:1,
@@ -208,7 +208,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Params'
           sx={{
             m:1,

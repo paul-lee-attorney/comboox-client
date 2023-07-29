@@ -2,7 +2,6 @@ import {
   useState, 
   useEffect, 
   ChangeEvent,
-  MouseEvent,
 } from 'react';
 
 import { 
@@ -13,8 +12,6 @@ import {
   Switch,
   FormControlLabel,
   FormGroup,
-  MenuItem,
-  Menu,
   CssBaseline,
   Drawer,
   styled,
@@ -26,6 +23,7 @@ import {
   ListItemIcon,
   ListItemText,
   Tooltip,
+  Stack,
 } from '@mui/material';
 
 import Link from '../../scripts/Link';
@@ -36,7 +34,6 @@ const drawerWidth = 180;
 
 import { 
   AccountCircle, 
-  ChevronLeft, 
   AssuredWorkload, 
   ListAlt, 
   ContentCopyOutlined, 
@@ -47,12 +44,13 @@ import {
   PaymentsOutlined,
   HomeOutlined,
   Diversity1Outlined,
-  QuizOutlined
+  QuizOutlined,
+  ChevronLeft
 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
-import { useAccount, useConnect, useContractEvent, useContractRead, useDisconnect, useWalletClient } from 'wagmi';
+import { useAccount, useConnect, useDisconnect, } from 'wagmi';
 
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 
@@ -60,11 +58,7 @@ import { getBoox, regNumOfCompany, symbolOfCompany } from '../../queries/gk';
 import { longSnParser } from '../../scripts/toolsKit';
 import { AcctPage } from './AcctPage';
 import { useRouter } from 'next/router';
-import { AddrOfRegCenter } from '../../interfaces';
-import { regCenterABI } from '../../generated';
-import { Signer, ethers, providers } from 'ethers';
-import { getMyUserNo } from '../../queries/rc';
-import { watchAccount } from '@wagmi/core';
+import { CopyLongStrSpan } from '../common/utils/CopyLongStr';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -110,7 +104,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
   justifyContent: 'flex-end',
 }));
@@ -121,7 +114,7 @@ type ComBooxAppBarType = {
 
 
 export function ComBooxAppBar({ children }: ComBooxAppBarType) {
-  const { userNo, setUserNo, gk, setGK, boox, setBoox } = useComBooxContext();
+  const { setUserNo, gk, setGK, setBoox } = useComBooxContext();
   const [ regNum, setRegNum ] = useState<number>();
   const [ symbol, setSymbol ] = useState<string>();
 
@@ -136,7 +129,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   useEffect(() => {
     if (gk) {
       getBoox(gk).then(
-        (res) => setBoox(res)
+        (res) => setBoox(res.map(v=>(v.addr)))
       );
       regNumOfCompany(gk).then(
         res => setRegNum(Number(res))
@@ -194,42 +187,69 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={ appBarOpen }>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={ handleDrawerOpen }
-            edge="start"
-            sx={{ mr: 2, ...(appBarOpen && { display: 'none' }) }}
-          >
-            <MenuIcon />
-          </IconButton>
+        <Toolbar >
+          <Box sx={{ width:'100%' }} >
 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            ComBoox
-          </Typography>
+            <Stack direction="row" sx={{ alignItems:'center', justifyContent:'center', alignContent:'space-between' }} >
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={ handleDrawerOpen }
+                edge="start"
+                sx={{ mr: 2, ...(appBarOpen && { display: 'none' }) }}
+              >
+                <MenuIcon />
+              </IconButton>
+            
+              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                ComBoox
+              </Typography>
 
-          <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            { gk != undefined ? symbol + ' (' + longSnParser(regNum ? regNum.toString() : '') + ') : ' + gk : '' } 
-          </Typography>
+              <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >
 
-          <FormGroup sx={{
-            width: 120,
-          }}>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isConnected}
-                  onChange={ handleChange }
-                  aria-label="login switch"
-                  color='default'
-                />
-              }
-              label={isConnected ? 'Logout' : 'Login'}
-            />
-          </FormGroup>
+                {gk && symbol && (
+                  <Typography variant="h6" component="div" sx={{ mx:1 }} >
+                    { symbol } 
+                  </Typography>
+                )}
 
-          <AcctPage flag={ isConnected } />
+                {gk && regNum && (
+                  <Typography variant="h6" component="div" sx={{ mx:1 }} >
+                    ( { longSnParser(regNum.toString()) } )
+                  </Typography>
+                )}
+
+                {gk && (
+                  <CopyLongStrSpan size='h6' title='Addr' src={gk.toLowerCase()} />                       
+                )}
+              </Stack>
+
+              <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:1 }} >
+
+                <FormGroup sx={{
+                  ml:5,
+                  width: 120,
+                }}>
+                  <FormControlLabel
+                    control={
+                      <Switch
+                        checked={isConnected}
+                        onChange={ handleChange }
+                        aria-label="login switch"
+                        color='default'
+                      />
+                    }
+                    label={isConnected ? 'Logout' : 'Login'}
+                  />
+                </FormGroup>
+
+                <AcctPage flag={ isConnected } />
+
+              </Stack>
+
+            </Stack>
+
+          </Box>
 
         </Toolbar>
       </AppBar>

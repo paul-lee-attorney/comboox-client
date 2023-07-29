@@ -45,11 +45,12 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
 
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
 
-      <Stack direction="row" sx={{ alignItems:'center' }} >
+      <Stack direction="row" sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='AddressOfDoc'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -59,8 +60,9 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='SeqOfVR'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -70,8 +72,9 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Executor'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,

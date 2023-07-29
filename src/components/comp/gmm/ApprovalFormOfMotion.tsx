@@ -3,13 +3,13 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { GetVotingRule } from "../boc/rules/GetVotingRule";
 import { GetPosition } from "../bod/GetPosition";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HexType } from "../../../interfaces";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { ProposeMotionToGeneralMeeting } from "./ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "./CastVoteOfGm";
-import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
+import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
 import { VoteCountingOfGm } from "./VoteCountingOfGm";
 import { TakeSeat } from "./TakeSeat";
 import { RemoveDirector } from "./RemoveDirector";
@@ -17,13 +17,15 @@ import { ExecActionOfGm } from "./ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
 import { useMeetingMinutes } from "../../../generated";
+import { RequestToBuy } from "./RequestToBuy";
+import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
 
 export interface ApprovalFormOfMotionProps{
   minutes: HexType;
   open: boolean;
   motion: Motion;
-  setOpen: (flag: boolean)=>void;
-  obtainMotionsList: ()=>any;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  obtainMotionsList: ()=>void;
 }
 
 export const motionType = ['ElectOfficer', 'RemoveDirector', 'ApproveDocument', 'ApproveAction'];
@@ -153,6 +155,59 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
 
               </tr>
 
+              {motion.body.state > 1 && (
+                <tr>
+                  <td>
+                    <TextField 
+                      fullWidth={true}
+                      inputProps={{readOnly: true}}
+                      sx={{ m: 1 }} 
+                      id="tfShareRegDate" 
+                      label="ShareRegDate" 
+                      variant="outlined"
+                      value = { dateParser(motion.body.shareRegDate) }
+                      size='small'
+                    />
+                  </td>
+                  <td>
+                    <TextField 
+                      fullWidth={true}
+                      inputProps={{readOnly: true}}
+                      sx={{ m: 1 }} 
+                      id="tfVoteStartDate" 
+                      label="VoteStartDate" 
+                      variant="outlined"
+                      value = { dateParser(motion.body.voteStartDate) }
+                      size='small'
+                    />
+                  </td>
+                  <td>
+                    <TextField 
+                      fullWidth={true}
+                      inputProps={{readOnly: true}}
+                      sx={{ m: 1 }} 
+                      id="tfVoteEndDate" 
+                      label="VoteEndDate" 
+                      variant="outlined"
+                      value = { dateParser(motion.body.voteEndDate) }
+                      size='small'
+                    />
+                  </td>
+                  <td>
+                    <TextField 
+                      fullWidth={true}
+                      inputProps={{readOnly: true}}
+                      sx={{ m: 1 }} 
+                      id="tfStateOfMotion" 
+                      label="StateOfMotion" 
+                      variant="outlined"
+                      value = { statesOfMotion[motion.body.state - 1] }
+                      size='small'
+                    />
+                  </td>
+                </tr>
+              )}
+
               <tr>
                 <td>
                   <TextField 
@@ -198,7 +253,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                         variant="outlined"
                         fullWidth
                         startIcon={<Article />}
-                        sx={{ m:1 }}
+                        sx={{ m:1, height:40 }}
                       >
                         Doc: {addrOfDoc}
                       </Button>
@@ -220,47 +275,6 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
 
                 </td>
               </tr>
-
-              {motion.body.state > 1 && (
-                <tr>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfShareRegDate" 
-                      label="ShareRegDate" 
-                      variant="outlined"
-                      value = { dateParser(motion.body.shareRegDate) }
-                      size='small'
-                    />
-                  </td>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfVoteStartDate" 
-                      label="VoteStartDate" 
-                      variant="outlined"
-                      value = { dateParser(motion.body.voteStartDate) }
-                      size='small'
-                    />
-                  </td>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfVoteEndDate" 
-                      label="VoteEndDate" 
-                      variant="outlined"
-                      value = { dateParser(motion.body.voteEndDate) }
-                      size='small'
-                    />
-                  </td>
-                </tr>
-              )}
 
               {motion.body.state > 2 && voteResult && (
                 <tr>
@@ -348,13 +362,20 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 </tr>
               )}
 
+              {motion.body.state == 6 && (
+                <tr>
+                  <td colSpan={4}>
+                    <RequestToBuy seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                  </td>
+                </tr>
+              )}
 
             </tbody>
           </table>
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>setOpen(false)}>Close</Button>
+        <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
     </Dialog>
 

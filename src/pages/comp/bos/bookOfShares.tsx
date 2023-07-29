@@ -20,7 +20,7 @@ import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/bos/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
 import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/bos";
-import { AddrZero } from "../../../interfaces";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 
 function BookOfShares() {
@@ -76,9 +76,18 @@ function BookOfShares() {
   return (
     <>
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-        <Toolbar>
-          <h3>BOS - Book Of Shares (Addr: { boox ? boox[10] : AddrZero} )</h3>
-        </Toolbar>
+
+        <Stack direction="row" >
+
+          <Toolbar sx={{ textDecoration:'underline' }} >
+            <h3>BOO - Book Of Shares</h3>
+          </Toolbar>
+
+          {boox && (
+            <CopyLongStrSpan title="Addr" size="body1" src={ boox[10].toLowerCase() } />
+          )}
+
+        </Stack>
 
         <table width={1680} >
           <thead />

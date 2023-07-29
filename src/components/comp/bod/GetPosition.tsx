@@ -39,7 +39,7 @@ export function GetPosition({seq}: GetPositionProps) {
         variant="outlined"
         fullWidth={true}
         startIcon={<AssignmentInd />}
-        sx={{ m:1 }}
+        sx={{ m:1, height:40 }}
         onClick={()=>setOpen(true)}      
       >
         Seq Of Position: {seq}
@@ -82,9 +82,10 @@ export function GetPosition({seq}: GetPositionProps) {
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='UserNo.'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     width: 450,
@@ -96,9 +97,10 @@ export function GetPosition({seq}: GetPositionProps) {
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='Nominator'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -107,9 +109,10 @@ export function GetPosition({seq}: GetPositionProps) {
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
                   label='TitleOfNominator'
                   inputProps={{readOnly: true}}
+                  size="small"
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -123,9 +126,10 @@ export function GetPosition({seq}: GetPositionProps) {
                 
                 {pos && (
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
                     label='StartDate.'
                     inputProps={{readOnly: true}}
+                    size="small"
                     sx={{
                       m:1,
                       minWidth: 218,
@@ -136,9 +140,10 @@ export function GetPosition({seq}: GetPositionProps) {
 
                 {pos && (
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
                     label='EndDate'
                     inputProps={{readOnly: true}}
+                    size="small"
                     sx={{
                       m:1,
                       minWidth: 218,
@@ -148,7 +153,7 @@ export function GetPosition({seq}: GetPositionProps) {
                 )}
 
               </Stack>
-              <Stack direction={'row'} sx={{ m:1, p:1, alignItems: 'center' }} >
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                 {pos && (
                   <GetVotingRule seq={pos.seqOfVR} />
                 )}
@@ -163,7 +168,7 @@ export function GetPosition({seq}: GetPositionProps) {
         <DialogActions>
           <QuitPosition seq={seq} setOpen={setOpen} refreshPosition={getPosition} />          
           <Button 
-            sx={{m:1, ml:5, p:1, minWidth:128 }}
+            sx={{m:1, mx:3, p:1, minWidth:128 }}
             variant="outlined"
             onClick={()=>setOpen(false)}
           >

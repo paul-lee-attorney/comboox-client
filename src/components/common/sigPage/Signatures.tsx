@@ -194,353 +194,375 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
     <Stack direction="column" sx={{width:'100%'}} >
       <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-          <Stack direction={'row'} sx={{ alignItems:'center' }} >
-            <Toolbar sx={{ textDecoration:'underline'}}>
-              <h4>Props of SigPage</h4>
-            </Toolbar>
+        <Stack direction={'row'} sx={{ alignItems:'center' }} >
+          <Toolbar sx={{ textDecoration:'underline'}}>
+            <h4>Props of SigPage</h4>
+          </Toolbar>
 
-            {!isFinalized && (
-              <>
-                <TextField 
-                  variant='filled'
-                  label='SigningDays'
-                  sx={{
-                    m:1,
-                    ml: 10,
-                    minWidth: 218,
-                  }}
-                  onChange={(e) => setTiming((v) => ({
-                    ...v,
-                    signingDays: e.target.value,
-                  }))}
-                  value={ timing?.signingDays }              
-                />
+          {!isFinalized && (
+            <>
+              <TextField 
+                variant='outlined'
+                size='small'
+                label='SigningDays'
+                sx={{
+                  m:1,
+                  ml: 10,
+                  minWidth: 218,
+                }}
+                onChange={(e) => setTiming((v) => ({
+                  ...v,
+                  signingDays: e.target.value,
+                }))}
+                value={ timing?.signingDays }              
+              />
 
-                <TextField 
-                  variant='filled'
-                  label='ClosingDays'
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  onChange={(e) => setTiming((v) => ({
-                    ...v,
-                    closingDays: e.target.value,
-                  }))}
-                  value={ timing?.closingDays }                                      
-                />
+              <TextField 
+                variant='outlined'
+                    size='small'
+                label='ClosingDays'
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                onChange={(e) => setTiming((v) => ({
+                  ...v,
+                  closingDays: e.target.value,
+                }))}
+                value={ timing?.closingDays }                                      
+              />
 
-                <Button
-                  disabled={ setTimingIsLoading }
-                  variant="contained"
-                  sx={{
-                    height: 40,
-                    m: 1,
-                  }}
-                  endIcon={ <Update /> }
-                  onClick={() => writeSetTiming?.()}
-                >
-                  Update
-                </Button>
-              
-              </>
+              <Button
+                disabled={ setTimingIsLoading }
+                variant="contained"
+                sx={{
+                  height: 40,
+                  m: 1,
+                }}
+                endIcon={ <Update /> }
+                onClick={() => writeSetTiming?.()}
+              >
+                Update
+              </Button>
+            
+            </>
+          )}
+
+        </Stack>
+
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
+          
+          <Stack direction={'row'} >    
+            {parasOfPage && (
+              <TextField 
+                variant='outlined'
+                  size='small'
+                label='CirculateDate'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ dateParser(parasOfPage.circulateDate) }
+              />
+            )}
+
+            {parasOfPage && (
+              <TextField 
+                variant='outlined'
+                  size='small'
+                label='SigningDays'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ parasOfPage.signingDays }
+              />
+            )}
+
+            {parasOfPage && (
+              <TextField 
+                variant='outlined'
+                  size='small'
+                label='ClosingDays'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ parasOfPage.closingDays }
+              />
+            )}
+
+            {parasOfPage && (
+              <TextField 
+                variant='outlined'
+                  size='small'
+                label='CounterOfBlanks'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ parasOfPage.counterOfBlanks }
+              />
+            )}
+
+            {parasOfPage && (
+              <TextField 
+                variant='outlined'
+                  size='small'
+                label='CounterOfSigs'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ parasOfPage.counterOfSigs }
+              />
+            )}
+
+            {parasOfPage && (
+              <TextField 
+                variant='outlined'
+                  size='small'
+                label='Established'
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                value={ parasOfPage.established ? 'True' : 'False' }
+              />
             )}
 
           </Stack>
 
-          <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-            
-            <Stack direction={'row'} >    
-              {parasOfPage && (
-                <TextField 
-                  variant='filled'
-                  label='CirculateDate'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ dateParser(parasOfPage.circulateDate) }
-                />
-              )}
-
-              {parasOfPage && (
-                <TextField 
-                  variant='filled'
-                  label='SigningDays'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ parasOfPage.signingDays }
-                />
-              )}
-
-              {parasOfPage && (
-                <TextField 
-                  variant='filled'
-                  label='ClosingDays'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ parasOfPage.closingDays }
-                />
-              )}
-
-              {parasOfPage && (
-                <TextField 
-                  variant='filled'
-                  label='CounterOfBlanks'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ parasOfPage.counterOfBlanks }
-                />
-              )}
-
-              {parasOfPage && (
-                <TextField 
-                  variant='filled'
-                  label='CounterOfSigs'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ parasOfPage.counterOfSigs }
-                />
-              )}
-
-              {parasOfPage && (
-                <TextField 
-                  variant='filled'
-                  label='Established'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ parasOfPage.established ? 'True' : 'False' }
-                />
-              )}
-
-            </Stack>
-
-          </Paper>
+        </Paper>
 
       </Paper>
 
       <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
 
-          <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }} >
-            <Toolbar sx={{ textDecoration:'underline' }}>
-              <h4>Signatures of Doc</h4>
-            </Toolbar>
+        <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }} >
+          <Toolbar sx={{ textDecoration:'underline' }}>
+            <h4>Signatures of Doc</h4>
+          </Toolbar>
 
-            {!isFinalized && (
-              <Stack direction={'row'} sx={{ alignItems:'center' }} >
+          {!isFinalized && (
+            <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
-                <Tooltip
-                  title='Add Party'
-                  placement="top-start"
-                  arrow
+              <Tooltip
+                title='Add Party'
+                placement="top-start"
+                arrow
+              >
+                <span>
+                <IconButton 
+                  disabled={ addBlankIsLoading }
+                  sx={{width: 20, height: 20, m: 1 }} 
+                  onClick={ () => addBlank?.() }
+                  color="primary"
                 >
-                  <span>
-                  <IconButton 
-                    disabled={ addBlankIsLoading }
-                    sx={{width: 20, height: 20, m: 1 }} 
-                    onClick={ () => addBlank?.() }
+                  < PersonAdd />
+                </IconButton>
+                </span>
+              </Tooltip>
+
+              <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                <InputLabel id="isBuyer-label">Role</InputLabel>
+                <Select
+                  labelId="isBuyer-label"
+                  id="isBuyer-select"
+                  value={ isBuyer ? 'true' : 'false' }
+                  onChange={(e) => setIsBuyer(e.target.value == 'true')}
+                  label="Role"
+                >
+                  <MenuItem value={'true'}>{isSha ? 'Investor' : 'Buyer'}</MenuItem>
+                  <MenuItem value={'false'}>{isSha? 'Shareholders' : 'Seller'}</MenuItem>
+                </Select>
+              </FormControl>
+
+              <TextField
+                variant='outlined'
+                size='small'
+                label='UserNo.'
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                onChange={(e) => setAcct(e.target.value)}
+                value={ acct }                                      
+              />
+
+              <Tooltip
+                title='Remove Party'
+                placement="top-end"
+                arrow
+              >           
+                <span>
+                <IconButton
+                  disabled={ removeBlankIsLoading } 
+                  sx={{width: 20, height: 20, m: 1, mr:2 }} 
+                  onClick={ () => removeBlank?.() }
+                  color="primary"
+                >
+                  <PersonRemove/>
+                </IconButton>
+                </span>
+
+              </Tooltip>
+
+            </Stack>
+          )}
+
+        </Stack>
+
+        <Divider sx={{ m:1 }} flexItem />
+
+        <Stack direction="row" >
+
+          <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
+            
+            <Chip
+              sx={{ minWidth:168, m:1, ml:4, p:1 }}
+              label={isSha ? 'Shareholders' : 'Sellers'} 
+              color="primary" 
+            />
+
+            {sellerSigs?.map(v => (
+              <Paper elevation={3} key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
+            
+                <Stack  direction={'row'} sx={{ alignItems:'center', justifyContent:'center' }} > 
+
+                  <Chip
+                    sx={{minWidth: 168, height: 35,
+                      m:1, p:1, justifyContent:'start' }}
+                    icon={<Face />}
+                    size="small"
+                    variant={v.sigDate > 0 
+                      ? 'filled' 
+                      : 'outlined'
+                    }
                     color="primary"
-                  >
-                    < PersonAdd />
-                  </IconButton>
-                  </span>
-                </Tooltip>
+                    label={ longSnParser(v.signer.toString()) }
+                  />
 
-                <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
-                  <InputLabel id="isBuyer-label">Role</InputLabel>
-                  <Select
-                    labelId="isBuyer-label"
-                    id="isBuyer-select"
-                    value={ isBuyer ? 'true' : 'false' }
-                    onChange={(e) => setIsBuyer(e.target.value == 'true')}
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='SigDate'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ dateParser(v.sigDate) }
+                  />
 
-                    label="Role"
-                  >
-                    <MenuItem value={'true'}>{isSha ? 'Investor' : 'Buyer'}</MenuItem>
-                    <MenuItem value={'false'}>{isSha? 'Shareholders' : 'Seller'}</MenuItem>
-                  </Select>
-                </FormControl>
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='Blocknumber'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(v.blocknumber) }
+                  />
 
-                <TextField
-                  variant='filled'
-                  label='UserNo.'
+                </Stack>
+
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='SigHash'
+                  inputProps={{readOnly: true}}
                   sx={{
                     m:1,
-                    minWidth: 218,
+                    minWidth: 645,
                   }}
-                  onChange={(e) => setAcct(e.target.value)}
-                  value={ acct }                                      
+                  value={ v.sigHash }
                 />
 
-                <Tooltip
-                  title='Remove Party'
-                  placement="top-end"
-                  arrow
-                >           
-                  <span>
-                  <IconButton
-                    disabled={ removeBlankIsLoading } 
-                    sx={{width: 20, height: 20, m: 1, mr:2 }} 
-                    onClick={ () => removeBlank?.() }
-                    color="primary"
-                  >
-                    <PersonRemove/>
-                  </IconButton>
-                  </span>
+              </Paper>
+            ))}
 
-                </Tooltip>
+          </Paper>
 
-              </Stack>
-            )}
+          <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
+            
+            <Chip
+              sx={{ minWidth:168, m:1, ml:4, p:1 }}
+              label={isSha ? 'Investors' : 'Buyers'} 
+              color="success" 
+            />
 
-          </Stack>
+            {buyerSigs?.map(v => (
+              <Paper elevation={3} key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
 
-          <Divider />
+                <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'center' }} > 
 
-          <Stack direction="row" >
-
-            <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
-              
-              <Chip
-                sx={{ minWidth:188, m:1, ml:3 }}
-                label={isSha ? 'Shareholders' : 'Sellers'} 
-                color="primary" 
-              />
-
-              {sellerSigs?.map(v => (
-                <Paper elevation={3} key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
-              
-                  <Stack  direction={'row'} sx={{ alignItems:'center' }} > 
-
-                    <Chip
-                      sx={{minWidth: 218, height:40, 
-                        m:1, mt:3, p:1, justifyContent:'start' }}
-                      icon={<Face />}
-                      variant={v.sigDate > 0 ? 'filled' : 'outlined'}
-                      color="primary"
-                      label={ longSnParser(v.signer.toString()) }
-                    />
-
-                    <TextField 
-                      variant='filled'
-                      label='SigDate'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ dateParser(v.sigDate) }
-                    />
-
-                    <TextField 
-                      variant='filled'
-                      label='Blocknumber'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ longSnParser(v.blocknumber) }
-                    />
-
-                  </Stack>
+                  <Chip
+                    sx={{minWidth: 168, height:35, 
+                      m:1, p:1, justifyContent:'start' }}
+                    icon={<Face />}
+                    size="small"
+                    variant={v.sigDate > 0 
+                      ? 'filled' 
+                      : 'outlined'
+                    }
+                    color="success"
+                    label={ longSnParser(v.signer.toString()) }
+                  />
 
                   <TextField 
-                    variant='filled'
-                    label='SigHash'
+                    variant='outlined'
+                    size='small'
+                    label='SigDate'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
-                      minWidth: 688,
+                      minWidth: 218,
                     }}
-                    
-                    value={ v.sigHash }
+                    value={ dateParser(v.sigDate) }
                   />
 
-                </Paper>
-              ))}
-
-            </Paper>
-
-            <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
-              
-              <Chip
-                sx={{ minWidth:188, m:1, ml:3 }}
-                label={isSha ? 'Investors' : 'Buyers'} 
-                color="success" 
-              />
-
-              {buyerSigs?.map(v => (
-                <Paper elevation={3} key={ v.signer } sx={{m:1, p:1, border:1, borderColor:'divider'}}>
-
-                  <Stack direction={'row'} sx={{ alignItems:'center' }} > 
-                    <Chip
-                      sx={{minWidth: 218, height:40, 
-                        m:1, mt:3, p:1, justifyContent:'start' }}
-                      icon={<Face />}
-                      variant={v.sigDate > 0 ? 'filled' : 'outlined'}
-                      color="success"
-                      label={ longSnParser(v.signer.toString()) }
-                    />
-
-                    <TextField 
-                      variant='filled'
-                      label='SigDate'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ dateParser(v.sigDate) }
-                    />
-
-                    <TextField 
-                      variant='filled'
-                      label='Blocknumber'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ longSnParser(v.blocknumber) }
-                    />
-
-                  </Stack>
-
                   <TextField 
-                    variant='filled'
-                    label='SigHash'
+                    variant='outlined'
+                    size='small'
+                    label='Blocknumber'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
-                      minWidth: 688,
+                      minWidth: 218,
                     }}
-                    value={ v.sigHash }
+                    value={ longSnParser(v.blocknumber) }
                   />
 
-                </Paper>
+                </Stack>
 
-              ))}
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='SigHash'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 645,
+                  }}
+                  value={ v.sigHash }
+                />
 
-            </Paper>
+              </Paper>
 
-          </Stack>
+            ))}
+
+          </Paper>
+
+        </Stack>
 
       </Paper>
     </Stack>

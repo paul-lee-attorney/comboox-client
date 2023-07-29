@@ -17,6 +17,7 @@ import { HexType } from "../../../interfaces";
 import { readContract } from "@wagmi/core";
 import { OptionsList } from "../../../components/comp/boo/OptionsList";
 import { CertificateOfOption } from "../../../components/comp/boo/CertificateOfOption";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 export async function getObligors(addr: HexType, seqOfOpt: number): Promise<number[]> {
 
@@ -64,9 +65,18 @@ function BookOfOptions() {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
-      <Toolbar>
-        <h3>BOO - Book Of Options (Addr: {boox ? boox[7] : ''})</h3>
-      </Toolbar>
+
+      <Stack direction="row" >
+
+        <Toolbar sx={{ textDecoration:'underline' }} >
+          <h3>BOO - Book Of Options</h3>
+        </Toolbar>
+
+        {boox && (
+          <CopyLongStrSpan title="Addr" size="body1" src={ boox[7].toLowerCase() } />
+        )}
+
+      </Stack>
 
       <Stack direction='column' sx={{m:1, p:1}} >
 
