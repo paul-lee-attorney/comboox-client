@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { useGeneralKeeperLockPledge } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useGeneralKeeperLockPledge } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { LockOutlined, Start } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../interfaces";
-import { Pledge } from "../../../queries/bop";
-import { ActionsOfOptionProps } from "../boo/ActionsOfOption";
-import { ActionsOfPledgeProps } from "./ActionsOfPledge";
+import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { Pledge } from "../../../../queries/bop";
+import { ActionsOfOptionProps } from "../../boo/ActionsOfOption";
+import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
 
 export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
@@ -34,14 +34,14 @@ export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Lock Pledge</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' sx={{ alignItems:'center' }} >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='HashLock'
           sx={{
             m:1,

@@ -60,9 +60,9 @@ export async function getDirectorsPosList(addr:HexType):Promise<readonly bigint[
   return list;
 }
 
-export async function getDirectorsFullPosInfo(addr:HexType):Promise<readonly Position[]>{
+export async function getFullPosInfo(addr:HexType, list: readonly bigint[]):Promise<readonly Position[]>{
 
-  let list = await getDirectorsPosList(addr);
+  // let list = await getDirectorsPosList(addr);
   let len = list.length;
   let output:Position[] = [];
 

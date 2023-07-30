@@ -6,7 +6,7 @@ import { SearchPledge } from "./SearchPledge";
 
 
 
-export const StateOfPld = [
+export const statesOfPld = [
   'Pending',
   'Issued',
   'Locked',
@@ -67,7 +67,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'expireDate', 
       headerName: 'ExpireDate',
-      valueGetter: p => dateParser(p.row.head.createDate + (p.row.head.daysToMaturity + p.row.body.guaranteeDays) * 86400),
+      valueGetter: p => dateParser(p.row.head.createDate + (p.row.head.daysToMaturity + p.row.head.guaranteeDays) * 86400),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -83,10 +83,10 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'state', 
       headerName: 'State',
-      valueGetter: p => p.row.body.state,
+      valueGetter: p => p.row.head.state,
       renderCell: ({ value }) => (
         <Chip 
-          label={ StateOfPld[value] } 
+          label={ statesOfPld[ value ] } 
           variant='filled'
           sx={{ width:120 }} 
           color={

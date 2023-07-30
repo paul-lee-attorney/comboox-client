@@ -19,7 +19,7 @@ import {
 import { Option, typeOfOpts } from "./Options";
 import { dateParser, longDataParser, longSnParser } from "../../../../../scripts/toolsKit";
 
-export const optStates = ['Pending', 'Issued', 'Executed', 'Closed'];
+export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
 
 interface ContentOfOptProps {
   opt: Option; 
@@ -57,7 +57,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
 
             <Chip
               variant='filled'
-              label={ optStates[opt.body.state] }
+              label={ statesOfOpt[opt.body.state] }
               sx={{
                 m:1,
                 minWidth: 168,

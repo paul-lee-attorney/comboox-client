@@ -1,27 +1,26 @@
-import { ActionsOfOptionProps } from "./ActionsOfOption";
-import { useGeneralKeeperLockSwapOrder } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { ActionsOfOptionProps } from "../ActionsOfOption";
+import { useGeneralKeeperReleaseSwapOrder } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { Lock } from "@mui/icons-material";
+import { LockOpen } from "@mui/icons-material";
 import { useState } from "react";
-import { Bytes32Zero, HexType } from "../../../interfaces";
 
-export function LockSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function ReleaseSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfBrf, setSeqOfBrf ] = useState<string>('0');
-  const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
+  const [ hashKey, setHashKey ] = useState<string>('');
 
   const {
-    isLoading: lockSwapOrderLoading,
-    write: lockSwapOrder,
-  } = useGeneralKeeperLockSwapOrder({
+    isLoading: releaseSwapOrderLoading,
+    write: releaseSwapOrder,
+  } = useGeneralKeeperReleaseSwapOrder({
     address: gk,
     args: seqOfBrf
       ? [ BigInt(seqOfOpt), 
           BigInt(seqOfBrf),
-          hashLock]
+          hashKey]
       : undefined,
     onSuccess() {
       getAllOpts();
@@ -31,14 +30,14 @@ export function LockSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPro
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
-        <h4>Lock Swap Order</h4>
-      </Toolbar>
+      {/* <Toolbar>
+        <h4>Release Swap Order</h4>
+      </Toolbar> */}
 
-      <Stack direction='row' >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='seqOfBrf'
           sx={{
             m:1,
@@ -50,26 +49,26 @@ export function LockSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPro
         />
 
         <TextField 
-          variant='filled'
-          label='hashLock'
+          variant='outlined'
+          label='hashKey'
           sx={{
             m:1,
-            minWidth: 550,
+            minWidth: 685,
           }}
-          onChange={(e) => setHashLock(`0x${(e.target.value ?? '0').padStart(64, '0')}`)}
-          value={ hashLock.substring(2) }
+          onChange={(e) => setHashKey( e.target.value )}
+          value={ hashKey }
           size='small'
         />
 
         <Button 
-          disabled={ lockSwapOrderLoading }
+          disabled={ releaseSwapOrderLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
-          endIcon={ <Lock /> }
-          onClick={()=>lockSwapOrder?.() }
+          endIcon={ <LockOpen /> }
+          onClick={()=>releaseSwapOrder?.() }
           size='small'
         >
-          Lock
+          Release
         </Button>        
 
       </Stack>

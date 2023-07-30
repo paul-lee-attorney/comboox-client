@@ -1,12 +1,10 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
-import { LinearProgress, Typography } from "@mui/joy";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Typography } from "@mui/joy";
 
-import { dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/toolsKit";
-import { Bytes32Zero, HexType } from "../../../interfaces";
+import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Ballot, VoteCase, getBallotsList } from "../../../queries/meetingMinutes";
-import { CheckPoint, getAllOraclesOfOption, getLatestOracle, getOracleAtDate } from "../../../queries/boo";
+import { CheckPoint } from "../../../queries/boo";
 
 const columns: GridColDef[] = [
   { 
@@ -42,30 +40,23 @@ const columns: GridColDef[] = [
 ];
 
 interface OraclesListProps{
-  addr: HexType;
+  list: readonly CheckPoint[];
   seqOfOpt: number;
 }
 
-export function OraclesList({ addr, seqOfOpt }: OraclesListProps) {
+export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
 
-  const [ list, setList ] = useState<readonly CheckPoint[]>();
   const [ open, setOpen ] = useState(false);
   const [ oracle, setOracle ] = useState<CheckPoint>();
 
   useEffect(()=>{
-    getLatestOracle(addr, seqOfOpt).then(
-      v => {
-        if (v) setOracle(v);
-      }
-    )
-  })
+    let len = list.length;
+    if (len > 0)
+      setOracle(list[len-1]);
+  }, [list])
 
-  const handleClick = async () => {
-    let ls = await getAllOraclesOfOption(addr, seqOfOpt);
-    if (ls) {
-      setList(ls);
-      setOpen(true);
-    }
+  const handleClick = ()=>{
+    setOpen(true);
   }
 
   return (
@@ -78,9 +69,9 @@ export function OraclesList({ addr, seqOfOpt }: OraclesListProps) {
           textColor="common.white"
           sx={{ mixBlendMode: 'difference' }}
         >
-          Para_1 { longDataParser(oracle ? oracle.paid.toString(): '0')}
-          Para_2 { longDataParser(oracle ? oracle.par.toString(): '0')}
-          Para_3 { longDataParser(oracle ? oracle.cleanPaid.toString(): '0')}
+          p1: { longDataParser(oracle ? oracle.paid.toString(): '0')} 
+          p2: { longDataParser(oracle ? oracle.par.toString(): '0')}
+          p3: { longDataParser(oracle ? oracle.cleanPaid.toString(): '0')}
         </Typography>            
 
       </Button>
@@ -115,7 +106,7 @@ export function OraclesList({ addr, seqOfOpt }: OraclesListProps) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

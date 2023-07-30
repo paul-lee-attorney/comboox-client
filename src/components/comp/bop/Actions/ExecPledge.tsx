@@ -1,11 +1,11 @@
-import { useBookOfShares, useBookOfSharesGetShare, useGeneralKeeperExecPledge, usePrepareGeneralKeeperExecPledge } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { PlayArrow, Send } from "@mui/icons-material";
-import { ActionsOfPledgeProps } from "./ActionsOfPledge";
-import { useEffect, useState } from "react";
-import { Body, Head, defaultBody, defaultHead } from "../../../queries/ia";
-import { codifyHeadOfDeal } from "../boi/deals/CreateDeal";
+import { useBookOfSharesGetShare, useGeneralKeeperExecPledge } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Button, Paper, Stack, TextField } from "@mui/material";
+import { DoneOutline } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "../ActionsOfPledge";
+import { useState } from "react";
+import { Body, Head, defaultBody, defaultHead } from "../../../../queries/ia";
+import { codifyHeadOfDeal } from "../../boi/deals/CreateDeal";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
@@ -53,11 +53,11 @@ export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Exercise Pledge</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' sx={{ alignItems:'center' }} >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
           variant='outlined'
@@ -130,7 +130,6 @@ export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
             ...v,
             closingDeadline: date ? date.unix() : 0,
           }))}
-
           format='YYYY-MM-DD HH:mm:ss'
           size="small"
         />
@@ -139,11 +138,11 @@ export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
           disabled={ execPledgeLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
-          endIcon={ <Send /> }
+          endIcon={ <DoneOutline /> }
           onClick={()=>execPledge?.() }
           size='small'
         >
-          Execute
+          Exercise
         </Button>        
 
       </Stack>

@@ -1,8 +1,8 @@
-import { useGeneralKeeperRevokePledge } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useGeneralKeeperRevokePledge } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Block } from "@mui/icons-material";
-import { ActionsOfPledgeProps } from "./ActionsOfPledge";
+import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
 export function RevokePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
@@ -22,11 +22,11 @@ export function RevokePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps)
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Revoke Pledge</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <Button 
           disabled={ !revokePledge || revokePledgeLoading }

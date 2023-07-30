@@ -1,8 +1,8 @@
-import { ActionsOfOptionProps } from "./ActionsOfOption";
-import { useGeneralKeeperExecOption } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { ActionsOfOptionProps } from "../ActionsOfOption";
+import { useGeneralKeeperExecOption } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, Toolbar } from "@mui/material";
-import { Approval } from "@mui/icons-material";
+import { Approval, DoneOutline } from "@mui/icons-material";
 
 export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
 
@@ -22,9 +22,9 @@ export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Exercise Right Of Option</h4>
-      </Toolbar>
+      </Toolbar> */}
 
       <Stack direction='row' >
 
@@ -32,7 +32,7 @@ export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
           disabled={ execOptLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
-          endIcon={ <Approval /> }
+          endIcon={ <DoneOutline /> }
           onClick={()=>execOpt?.() }
           size='small'
         >

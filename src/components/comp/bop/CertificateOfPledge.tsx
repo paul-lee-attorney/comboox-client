@@ -11,7 +11,7 @@ import {
 
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { Pledge } from "../../../queries/bop";
-import { StateOfPld } from "./PledgesList";
+import { statesOfPld } from "./PledgesList";
 import { ActionsOfPledge } from "./ActionsOfPledge";
 import { Dispatch, SetStateAction } from "react";
 
@@ -32,12 +32,12 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
       aria-labelledby="dialog-title" 
     >
       <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between' }} >
-        <DialogTitle id="dialog-title" sx={{ ml:1, textDecoration:'underline' }} >
-          {"Certificate Of Pledge"} 
+        <DialogTitle id="dialog-title" sx={{ m:1, textDecoration:'underline' }} >
+          <b>Certificate Of Pledge</b> 
         </DialogTitle>
         <Chip
           sx={{ m:1, mr:5, width: 120 }} 
-          label={ StateOfPld[pld.head.state] } 
+          label={ statesOfPld[pld.head.state] } 
           variant='filled' 
           color={
             pld.head.state == 0
@@ -86,7 +86,16 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
                   />
                 </td>
                 <td>
-
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfStateOfPld" 
+                    label="StateOfPld" 
+                    variant="outlined"
+                    value = { statesOfPld[pld.head.state] }
+                    size='small'
+                  />
                 </td>
               </tr>
 
@@ -222,7 +231,7 @@ export function CertificateOfPledge({open, pld, setOpen, getAllPledges}: Certifi
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>setOpen(false)}>Close</Button>
+        <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
     </Dialog>
 

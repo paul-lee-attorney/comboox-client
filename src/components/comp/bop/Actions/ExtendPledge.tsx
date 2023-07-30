@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useGeneralKeeperExtendPledge } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useGeneralKeeperExtendPledge } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
-import { ActionsOfPledgeProps } from "./ActionsOfPledge";
+import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
 export function ExtendPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
@@ -30,14 +30,14 @@ export function ExtendPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps)
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Extend Pledge</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' sx={{ alignItems:'center' }} >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='ExtensionDays'
           sx={{
             m:1,

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { useGeneralKeeperTransferPledge } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useGeneralKeeperTransferPledge } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { Create } from "@mui/icons-material";
-import { ActionsOfPledgeProps } from "./ActionsOfPledge";
+import { Create, CurrencyExchange } from "@mui/icons-material";
+import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
 export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
@@ -32,14 +32,14 @@ export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProp
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Transfer Pledge</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' sx={{ alignItems:'center' }} >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Buyer'
           sx={{
             m:1,
@@ -51,7 +51,7 @@ export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProp
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Amount'
           sx={{
             m:1,
@@ -66,7 +66,7 @@ export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProp
           disabled={ !transferPledge || transferPledgeLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
-          endIcon={ <Create /> }
+          endIcon={ <CurrencyExchange /> }
           onClick={()=>transferPledge?.() }
           size='small'
         >

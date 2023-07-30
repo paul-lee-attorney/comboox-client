@@ -1,20 +1,20 @@
-import { Dispatch, SetStateAction, useState } from "react";
-import { ActionsOfOptionProps } from "./ActionsOfOption";
-import { useGeneralKeeperUpdateOracle } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { LockOutlined, Update } from "@mui/icons-material";
+import { useState } from "react";
+import { ActionsOfOptionProps } from "../ActionsOfOption";
+import { useGeneralKeeperUpdateOracle } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Update } from "@mui/icons-material";
 
 interface Paras {
-  p1: bigint;
-  p2: bigint;
-  p3: bigint;
+  p1: string;
+  p2: string;
+  p3: string;
 }
 
-const defaultParas = {
-  p1: BigInt(0),
-  p2: BigInt(0),
-  p3: BigInt(0),
+const defaultParas:Paras = {
+  p1: '0',
+  p2: '0',
+  p3: '0',
 }
 
 export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
@@ -27,7 +27,7 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
     write: updateOracle,
   } = useGeneralKeeperUpdateOracle({
     address: gk,
-    args: [seqOfOpt, paras.p1, paras.p2, paras.p3],
+    args: [seqOfOpt, BigInt(paras.p1), BigInt(paras.p2), BigInt(paras.p3)],
     onSuccess() {
       getAllOpts();
       setOpen(false);
@@ -36,14 +36,14 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Update Oracle</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Parameter_1'
           sx={{
             m:1,
@@ -51,14 +51,14 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
           }}
           onChange={(e) => setParas(v =>({
             ...v,
-            para1: BigInt(e.target.value ?? '0'),
+            p1: e.target.value ?? '0',
           }))}
-          value={ paras.p1.toString() }
+          value={ paras.p1 }
           size='small'
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Parameter_2'
           sx={{
             m:1,
@@ -66,14 +66,14 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
           }}
           onChange={(e) => setParas(v =>({
             ...v,
-            para1: BigInt(e.target.value ?? '0'),
+            p2: e.target.value ?? '0',
           }))}
-          value={ paras.p2.toString() }
+          value={ paras.p2 }
           size='small'
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Parameter_3'
           sx={{
             m:1,
@@ -81,9 +81,9 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
           }}
           onChange={(e) => setParas(v =>({
             ...v,
-            para1: BigInt(e.target.value ?? '0'),
+            p3: e.target.value ?? '0',
           }))}
-          value={ paras.p3.toString() }
+          value={ paras.p3 }
           size='small'
         />
 

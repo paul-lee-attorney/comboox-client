@@ -19,7 +19,7 @@ import {
 import { Cond, comOps, logOps } from "./Options";
 import { longDataParser, } from "../../../../../scripts/toolsKit";
 
-export const optStates = ['Pending', 'Issued', 'Executed', 'Closed'];
+export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
 
 interface TriggerConditionProps {
   cond: Cond; 

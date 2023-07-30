@@ -94,28 +94,29 @@ const columns: GridColDef[] = [
 ];
 
 interface BriefsListProps{
-  addr: HexType;
+  list: readonly Brief[];
   seqOfOpt: number;
 }
 
-export function BriefsList({ addr, seqOfOpt }: BriefsListProps) {
+export function BriefsList({ list, seqOfOpt }: BriefsListProps) {
 
-  const [ qtyOfBrfs, setQtyOfBrfs ] = useState<number>(0);
-  const [ list, setList ] = useState<readonly Brief[]>();
+  // const [ qtyOfBrfs, setQtyOfBrfs ] = useState<number>(0);
+  // const [ list, setList ] = useState<readonly Brief[]>();
   const [ open, setOpen ] = useState(false);
 
-  useEffect(()=>{
-    counterOfBriefs(addr, seqOfOpt).then(
-      v => setQtyOfBrfs(v)
-    )
-  });
+  // useEffect(()=>{
+  //   let len = list.length;
+  //   if (len > 0) {
+  //     setQtyOfBrfs(len);
+  //   }
+  // }, [list]);
 
   const handleClick = async () => {
-    let ls = await getAllBriefsOfOption(addr, seqOfOpt);
-    if (ls) {
-      setList(ls);
-      setOpen(true);
-    }
+    // let ls = await getAllBriefsOfOption(addr, seqOfOpt);
+    // if (ls) {
+    //   setList(ls);
+    setOpen(true);
+    // }
   }
 
   return (
@@ -128,7 +129,7 @@ export function BriefsList({ addr, seqOfOpt }: BriefsListProps) {
           textColor="common.white"
           sx={{ mixBlendMode: 'difference' }}
         >
-          Breifs List (QTY: {qtyOfBrfs})
+          Breifs List (QTY: {list.length})
         </Typography>            
 
       </Button>

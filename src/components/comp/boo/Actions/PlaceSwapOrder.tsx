@@ -1,8 +1,8 @@
-import { ActionsOfOptionProps } from "./ActionsOfOption";
-import { useGeneralKeeperPlaceSwapOrder } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { ActionsOfOptionProps } from "../ActionsOfOption";
+import { useGeneralKeeperPlaceSwapOrder } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { Approval } from "@mui/icons-material";
+import { Approval, SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
 
 export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
@@ -32,14 +32,14 @@ export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPr
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Exercise Right Of Option</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='seqOfConsider'
           sx={{
             m:1,
@@ -51,7 +51,7 @@ export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPr
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='paidOfConsider'
           sx={{
             m:1,
@@ -63,7 +63,7 @@ export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPr
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='seqOfTarget'
           sx={{
             m:1,
@@ -78,11 +78,11 @@ export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPr
           disabled={ placeSwapOrderLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
-          endIcon={ <Approval /> }
+          endIcon={ <SwapHorizOutlined /> }
           onClick={()=>placeSwapOrder?.() }
           size='small'
         >
-          Place Order
+          Place Swap
         </Button>        
 
       </Stack>

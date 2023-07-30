@@ -12,12 +12,12 @@ import {
   bookOfOptionsABI,
   useBookOfOptionsGetAllOptions,
 } from "../../../generated";
-import { Option, defaultOpt } from "../../../components/comp/boc/terms/Options/Options";
 import { HexType } from "../../../interfaces";
 import { readContract } from "@wagmi/core";
 import { OptionsList } from "../../../components/comp/boo/OptionsList";
 import { CertificateOfOption } from "../../../components/comp/boo/CertificateOfOption";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
+import { OptWrap, defaultOptWrap } from "../../../queries/boo";
 
 export async function getObligors(addr: HexType, seqOfOpt: number): Promise<number[]> {
 
@@ -34,7 +34,7 @@ export async function getObligors(addr: HexType, seqOfOpt: number): Promise<numb
 function BookOfOptions() {
   const { boox } = useComBooxContext();
 
-  const [ optsList, setOptsList ] = useState<readonly Option[]>([]);
+  const [ optsList, setOptsList ] = useState<readonly OptWrap[]>([defaultOptWrap]);
 
   const {
     refetch: getAllOpts,
@@ -42,26 +42,37 @@ function BookOfOptions() {
     address: boox ? boox[7] : undefined,
     onSuccess(ls) {
       if (ls && boox) {
-        let out:Option[] = [];
+
+        setOptsList(ls.map(v=>({
+          opt: v,
+          obligors: [0],
+        })));
+
+        let len = ls.length;
+
+        while (len > 0) {
+          let opt = ls[len-1];
+          
+          getObligors(boox[7], opt.head.seqOfOpt).then(
+            obligors => {
+              setOptsList(v => (v.map(k=>{
+                if (k.opt.head.seqOfOpt == opt.head.seqOfOpt)
+                  k.obligors = obligors;
+                return k;
+              })))
+            }
+          );
+
+          len--;
+
+        }
         
-        ls.forEach(async v => {
-          let item:Option = {
-            head: v.head,
-            cond: v.cond,
-            body: v.body,
-            obligors: await getObligors(boox[7], v.head.seqOfOpt),
-          }
-
-          out.push(item);
-        });
-
-        setOptsList(out);        
       }
     }
   })
 
   const [ open, setOpen ] = useState<boolean>(false);
-  const [ opt, setOpt ] = useState<Option>(defaultOpt);
+  const [ opt, setOpt ] = useState<OptWrap>( defaultOptWrap );
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
@@ -87,7 +98,7 @@ function BookOfOptions() {
         />
       
         {opt && (
-          <CertificateOfOption open={open} opt={opt} setOpen={setOpen} getAllOpts={getAllOpts} />
+          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} getAllOpts={getAllOpts} />
         )}
 
       </Stack>

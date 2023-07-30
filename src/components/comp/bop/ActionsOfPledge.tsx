@@ -1,12 +1,12 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
-import { RefundDebt } from "./RefundDebt";
-import { ExtendPledge } from "./ExtendPledge";
-import { LockPledge } from "./LockPledge";
-import { ReleasePledge } from "./ReleasePledge";
-import { ExecPledge } from "./ExecPledge";
-import { RevokePledge } from "./RevokePledge";
-import { TransferPledge } from "./TransferPledge";
+import { RefundDebt } from "./Actions/RefundDebt";
+import { ExtendPledge } from "./Actions/ExtendPledge";
+import { LockPledge } from "./Actions/LockPledge";
+import { ReleasePledge } from "./Actions/ReleasePledge";
+import { ExecPledge } from "./Actions/ExecPledge";
+import { RevokePledge } from "./Actions/RevokePledge";
+import { TransferPledge } from "./Actions/TransferPledge";
 import { Pledge } from "../../../queries/bop";
 
 
@@ -20,6 +20,21 @@ export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgePr
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
+  const actionsOfPledge = [
+    'Refund Debt', 'Extend Pledge', 'Lock Pledge', 'Release Pledge', 
+    'Exercise Pledge', 'Revoke Pledge', 'Transfer Pledge'
+  ]
+
+  const compsOfAction = [
+    <RefundDebt key={0} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />, 
+    <ExtendPledge key={1} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
+    <LockPledge key={2} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
+    <ReleasePledge key={3} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
+    <ExecPledge key={4} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />, 
+    <RevokePledge key={5} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
+    <TransferPledge key={6} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
+  ]
+
   return(
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
       <Stack direction={'row'} sx={{ alignItems:'center', color:'black' }} >
@@ -28,7 +43,7 @@ export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgePr
           <h4>Type Of Action:</h4>
         </Toolbar>
 
-        <FormControl variant="outlined" sx={{ m: 1, minWidth: 168 }}>
+        <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 168 }}>
           <InputLabel id="typeOfAction-label">TypeOfAction</InputLabel>
           <Select
             labelId="typeOfAction-label"
@@ -37,45 +52,19 @@ export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgePr
             value={ typeOfAction }
             onChange={(e) => setTypeOfAction(e.target.value)}
           >
-            <MenuItem value={ '0' } > Refund Debt </MenuItem>
-            <MenuItem value={ '1' } > Extend Pledge </MenuItem>
-            <MenuItem value={ '2' } > Lock Pledge </MenuItem>
-            <MenuItem value={ '3' } > Release Pledge </MenuItem>
-            <MenuItem value={ '4' } > Exercise Pledge </MenuItem>
-            <MenuItem value={ '5' } > Revoke Pledge </MenuItem>
-            <MenuItem value={ '6' } > Transfer Pledge </MenuItem>
+            {actionsOfPledge.map((v, i) => (
+              <MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>
+            ))}
           </Select>
         </FormControl>
 
       </Stack>
 
-      <Collapse in={ typeOfAction == '0' } >
-        <RefundDebt pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
-
-      <Collapse in={ typeOfAction == '1' } >
-        <ExtendPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
-
-      <Collapse in={ typeOfAction == '2' } >
-        <LockPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
-
-      <Collapse in={ typeOfAction == '3' } >
-        <ReleasePledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
-
-      <Collapse in={ typeOfAction == '4' } >
-        <ExecPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
-
-      <Collapse in={ typeOfAction == '5' } >
-        <RevokePledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
-
-      <Collapse in={ typeOfAction == '6' } >
-        <TransferPledge pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
-      </Collapse>
+      { compsOfAction.map((v,i)=>(
+        <Collapse key={i} in={ typeOfAction == i.toString() } >
+          {v}
+        </Collapse>
+      )) }
 
     </Paper>
   );

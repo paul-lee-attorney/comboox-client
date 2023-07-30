@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
@@ -7,12 +7,12 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../bom/MembersList";
-import { Position, getDirectorsFullPosInfo } from "../../../queries/bod";
+import { Position, getFullPosInfo } from "../../../queries/bod";
 import { GetOfficersList } from "../bod/GetOfficersList";
 
 import { 
-  useAccessControl,
   useAccessControlGetDk,
+  useBookOfDirectorsGetDirectorsPosList,
   useBookOfMembersControllor, 
   useBookOfMembersOwnersEquity, 
   useBookOfMembersVotesOfController, 
@@ -93,16 +93,18 @@ export function GeneralInfo() {
 
   const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
 
-  const getDirectorsList = async ()=>{
-    if (boox) {
-      let list = await getDirectorsFullPosInfo(boox[2]);
-      setDirectorsList(list);
+  const {
+    refetch: getDirectorsList
+  } = useBookOfDirectorsGetDirectorsPosList({
+    address: boox ? boox[2] : undefined,
+    onSuccess(res) {
+      if (boox)
+        getFullPosInfo(boox[2], res).then(
+          list => setDirectorsList(list)
+        );
     }
-  }
+  })
 
-  useEffect(()=>{
-    getDirectorsList();
-  });
 
   return (
     <>

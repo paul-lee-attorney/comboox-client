@@ -40,7 +40,7 @@ function BookOfPledges() {
       <Stack direction="row" >
 
         <Toolbar sx={{ textDecoration:'underline' }} >
-          <h3>BOO - Book Of Options</h3>
+          <h3>BOP - Book Of Pledges</h3>
         </Toolbar>
 
         {boox && (

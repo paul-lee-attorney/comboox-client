@@ -39,19 +39,6 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
 
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 
-  // const {
-  //   config: proposeActionConfig,
-  // } = usePrepareGeneralKeeperCreateActionOfGm({
-  //   address: gk,
-  //   args: seqOfVr && desHash && executor
-  //       ? [BigInt(seqOfVr), 
-  //         actions.map(v => (v.target)), 
-  //         actions.map(v => (BigInt(v.value))),
-  //         actions.map(v => (v.params)),
-  //         desHash, BigInt(executor)]
-  //       : undefined,
-  // });
-
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
@@ -126,6 +113,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         <TextField 
           variant='outlined'
           label='SeqOfVR'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -137,6 +125,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         <TextField 
           variant='outlined'
           label='Executor'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -148,6 +137,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         <TextField 
           variant='outlined'
           label='DocHash / CID in IPFS'
+          size="small"
           sx={{
             m:1,
             minWidth: 630,
@@ -178,6 +168,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         <TextField 
           variant='outlined'
           label='Address'
+          size="small"
           sx={{
             m:1,
             minWidth: 450,
@@ -194,6 +185,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         <TextField 
           variant='outlined'
           label='Value'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -210,6 +202,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
         <TextField 
           variant='outlined'
           label='Params'
+          size="small"
           sx={{
             m:1,
             minWidth: 630,

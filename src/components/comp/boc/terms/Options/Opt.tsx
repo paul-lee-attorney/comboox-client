@@ -5,15 +5,15 @@ import {
   Chip,
 } from '@mui/material';
 import { longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
-import { Option } from './Options';
+import { OptWrap } from './Options';
 import { ContentOfOpt } from './ContentOfOpt';
 import { TriggerCondition } from './TriggerCondition';
 
 interface OptProps {
-  opt: Option;
+  optWrap: OptWrap;
 }
 
-export function Opt({ opt }: OptProps) {
+export function Opt({ optWrap }: OptProps) {
 
   return (
     <Paper elevation={3} 
@@ -27,11 +27,11 @@ export function Opt({ opt }: OptProps) {
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label={ longSnParser(opt.head.seqOfOpt.toString()) } color={ opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'} sx={{m:1, minWidth:128 }} />
+        <Chip label={ longSnParser(optWrap.opt.head.seqOfOpt.toString()) } color={ optWrap.opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'} sx={{m:1, minWidth:128 }} />
 
-        <ContentOfOpt opt={opt} />
+        <ContentOfOpt opt={optWrap.opt} />
 
-        <TriggerCondition cond={opt.cond} />
+        <TriggerCondition cond={optWrap.opt.cond} />
 
         <TextField 
           variant='outlined'
@@ -44,7 +44,7 @@ export function Opt({ opt }: OptProps) {
           }}
           multiline
           rows={1}
-          value={ splitStrArr(opt.obligors.map(v => longSnParser(v.toString()))) }
+          value={ splitStrArr(optWrap.obligors.map(v => longSnParser(v.toString()))) }
         />
 
       </Stack>

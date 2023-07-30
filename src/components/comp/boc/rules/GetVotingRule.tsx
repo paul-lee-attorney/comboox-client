@@ -3,8 +3,7 @@ import { readContract } from "@wagmi/core";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { HexType } from "../../../../interfaces";
-import { bookOfConstitutionABI, useShareholdersAgreementGetRule } from "../../../../generated";
-import { bigint } from "ethers";
+import { bookOfConstitutionABI, useBookOfConstitution, useBookOfConstitutionPointer, useShareholdersAgreementGetRule } from "../../../../generated";
 import { VotingRule, authorities, vrParser } from "./SetVotingRule";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { ListAlt } from "@mui/icons-material";
@@ -23,20 +22,29 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
   // const [ sha, setSha ] = useState<HexType>();
 
   const [ objVr, setObjVr] = useState<VotingRule>();
-
-  useEffect(() => {
-
-    const obtainVR = async ()=>{
-      if (boox) {
-        let sha: HexType = await getSha(boox[1]);
-        let hexVr: HexType = await getRule(sha, seq);
-        setObjVr(vrParser(hexVr));
-      }
+  
+  useBookOfConstitutionPointer({
+    address: boox ? boox[1] : undefined,
+    onSuccess(res) {
+      getRule(res, seq).then(
+        rule => setObjVr(vrParser(rule))
+      )
     }
-    
-    obtainVR();
+  })
 
-  });
+  // useEffect(() => {
+
+    // const obtainVR = async ()=>{
+    //   if (boox) {
+    //     let sha: HexType = await getSha(boox[1]);
+    //     let hexVr: HexType = await getRule(sha, seq);
+    //     setObjVr(vrParser(hexVr));
+    //   }
+    // }
+    
+  //   obtainVR();
+
+  // });
 
   // const [ hexVr, setHexVr ] = useState<HexType>();
 
@@ -54,10 +62,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
   const [ open, setOpen ] = useState(false);
 
-  // const handleClick = async ()=> {
+  const handleClick = async ()=> {
     // await obtainVR();
-    // setOpen(true);
-  // }
+    setOpen(true);
+  }
 
   return (
     <>
@@ -67,7 +75,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:1, height:40 }}
-        onClick={()=>setOpen(true)}      
+        onClick={ handleClick }      
       >
         Seq Of VotingRule: {seq}
       </Button>

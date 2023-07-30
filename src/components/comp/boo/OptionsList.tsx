@@ -1,16 +1,16 @@
 import { Chip, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
-import { Option, typeOfOpts } from "../boc/terms/Options/Options";
 import { Dispatch, SetStateAction } from "react";
-import { optStates } from "../boc/terms/Options/ContentOfOpt";
+import { statesOfOpt } from "../boc/terms/Options/ContentOfOpt";
 import { SearchOption } from "./SearchOption";
+import { OptWrap, typeOfOpts } from "../../../queries/boo";
 
 
 
 interface OptionsListProps {
-  list: readonly Option[],
-  setOpt: Dispatch<SetStateAction<Option>>,
+  list: readonly OptWrap[],
+  setOpt: Dispatch<SetStateAction<OptWrap>>,
   setOpen: Dispatch<SetStateAction<boolean>>,
 }
 
@@ -19,8 +19,8 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
   const columns: GridColDef[] = [
     {
       field: 'seqOfOpt',
-      headerName: 'SeqOfOption',
-      valueGetter: p => longSnParser(p.row.head.seqOfOpt.toString()),
+      headerName: 'SeqOfOpt',
+      valueGetter: p => longSnParser(p.row.opt.head.seqOfOpt.toString()),
       headerAlign: 'left',
       align:'left',      
       width: 218,
@@ -28,31 +28,39 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     {
       field: 'typeOfOpt',
       headerName: 'typeOfOpt',
-      valueGetter: p => typeOfOpts[p.row.head.typeOfOpt],
-      headerAlign: 'center',
-      align:'center',
-      width: 100,
-    },
-    { 
-      field: 'classOfShare', 
-      headerName: 'ClassOfShare',
-      valueGetter: p => p.row.head.classOfShare.toString(),
-      headerAlign: 'center',
-      align:'center',
-      width: 80,
-    },
-    { 
-      field: 'Rightholder', 
-      headerName: 'Rightholder',
-      valueGetter: p => longSnParser(p.row.body.rightholder.toString()),
+      valueGetter: p => typeOfOpts[p.row.opt.head.typeOfOpt],
       headerAlign: 'center',
       align:'center',
       width: 128,
     },
     { 
+      field: 'classOfShare', 
+      headerName: 'Class',
+      valueGetter: p => p.row.opt.head.classOfShare.toString(),
+      headerAlign: 'center',
+      align:'center',
+      width: 88,
+      renderCell:({value}) => {
+        return (
+          <Chip 
+            variant="filled"
+            label={ value }
+          />
+        )
+      }
+    },
+    { 
+      field: 'Rightholder', 
+      headerName: 'Rightholder',
+      valueGetter: p => longSnParser(p.row.opt.body.rightholder.toString()),
+      headerAlign: 'center',
+      align:'center',
+      width: 218,
+    },
+    { 
       field: 'triggerDate', 
       headerName: 'TriggerDate',
-      valueGetter: p => dateParser(p.row.head.triggerDate),
+      valueGetter: p => dateParser(p.row.opt.head.triggerDate),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -60,7 +68,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'execDeadline', 
       headerName: 'ExecDeadline',
-      valueGetter: p => dateParser(p.row.head.triggerDate + p.row.head.execDays * 86400),
+      valueGetter: p => dateParser(p.row.opt.head.triggerDate + p.row.opt.head.execDays * 86400),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -68,7 +76,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'closingDeadline', 
       headerName: 'ClosingDeadline',
-      valueGetter: p => dateParser(p.row.body.closingDeadline),
+      valueGetter: p => dateParser(p.row.opt.body.closingDeadline),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -76,18 +84,18 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'paid', 
       headerName: 'Paid',
-      valueGetter: p => longDataParser(p.row.body.paid.toString()),
+      valueGetter: p => longDataParser(p.row.opt.body.paid.toString()),
       headerAlign: 'right',
       align:'right',
-      width: 330,
+      width: 240,
     },
     { 
       field: 'state', 
       headerName: 'State',
-      valueGetter: p => p.row.body.state,
+      valueGetter: p => p.row.opt.body.state,
       renderCell: ({ value }) => (
         <Chip 
-          label={ optStates[value] } 
+          label={ statesOfOpt[value] } 
           variant='filled'
           sx={{ width:120 }} 
           color={
@@ -103,15 +111,13 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
       ),
       headerAlign: 'center',
       align: 'center',
-      width: 180,  
+      width: 128,  
     },
   ];
 
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
     setOpt({
-      head: p.row.head, 
-      cond: p.row.cond,
-      body: p.row.body,
+      opt: p.row.opt, 
       obligors: p.row.obligors, 
     });
     setOpen(true);
@@ -128,7 +134,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
         pageSizeOptions={[5, 10, 15, 20]} 
-        getRowId={row => (longSnParser(row.head.seqOfOpt.toString()))} 
+        getRowId={row => (longSnParser(row.opt.head.seqOfOpt.toString()))} 
         rows={ list } 
         columns={ columns }
         disableRowSelectionOnClick

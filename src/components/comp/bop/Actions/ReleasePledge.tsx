@@ -1,27 +1,15 @@
 import { useState } from "react";
-import { useGeneralKeeperReleasePledge, usePrepareGeneralKeeperReleasePledge } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useGeneralKeeperReleasePledge, usePrepareGeneralKeeperReleasePledge } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Key } from "@mui/icons-material";
-import { ActionsOfPledgeProps } from "./ActionsOfPledge";
+import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
 export function ReleasePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ key, setKey ] = useState<string>();
-
-  // const {
-  //   config: releasePledgeConfig
-  // } = usePrepareGeneralKeeperReleasePledge({
-  //   address: gk,
-  //   args: key
-  //     ? [ BigInt(seqOfShare), 
-  //         BigInt(seqOfPld), 
-  //         key
-  //       ]
-  //     : undefined,
-  // })
 
   const {
     isLoading: releasePledgeLoading,
@@ -42,14 +30,14 @@ export function ReleasePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar>
+      {/* <Toolbar>
         <h4>Release Pledge</h4>
-      </Toolbar>
+      </Toolbar> */}
 
-      <Stack direction='row' sx={{ alignItems:'center' }} >
+      <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='HashKey'
           sx={{
             m:1,
