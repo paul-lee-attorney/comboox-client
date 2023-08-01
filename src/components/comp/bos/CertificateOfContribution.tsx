@@ -22,8 +22,8 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
       onClose={()=>setOpen(false)}
       aria-labelledby="dialog-title" 
     >
-      <DialogTitle id="dialog-title" >
-        Certificate Of Contribution
+      <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
+        <b>Certificate Of Contribution</b>
       </DialogTitle>
       <DialogContent>
           <table width={1180} >
@@ -270,7 +270,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
 
       </DialogContent>
       <DialogActions>
-        <Button onClick={()=>setOpen(false)}>Close</Button>
+        <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
     </Dialog>
 

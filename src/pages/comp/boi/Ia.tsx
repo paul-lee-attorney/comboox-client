@@ -13,6 +13,7 @@ import IaBodyTerms from "../../../components/comp/boi/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/boi/ia/IaLifecycle";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
 import { useAccessControlIsFinalized } from "../../../generated";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function Ia() {
   const { query } = useRouter();
@@ -42,9 +43,11 @@ function Ia() {
               SnOfDoc: ({snOfDoc})
             </Typography>
 
-            <Typography sx={{ m:1 }} variant="body1">
+            {/* <Typography sx={{ m:1 }} variant="body1">
               Addr: ({ia})
-            </Typography>
+            </Typography> */}
+
+            <CopyLongStrSpan size='body1' title='Addr' src={ia.toLowerCase()} />
 
             <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
 

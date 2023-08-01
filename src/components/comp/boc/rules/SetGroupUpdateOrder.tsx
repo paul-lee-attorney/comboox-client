@@ -19,6 +19,8 @@ import { AddRule } from './AddRule';
 
 import { longSnParser } from '../../../../scripts/toolsKit';
 import { getRule } from '../../../../queries/sha';
+import { SetRuleProps } from './SetVotingRule';
+import { useShareholdersAgreementGetRule } from '../../../../generated';
 
 export interface GroupUpdateOrder {
   seqOfRule: number;
@@ -66,13 +68,13 @@ export function guoParser(hexOrder: HexType): GroupUpdateOrder {
   return order;
 }
 
-interface SetGroupUpdateOrderProps {
-  sha: HexType;
-  seq: number;
-  isFinalized: boolean;
-}
+// interface SetGroupUpdateOrderProps {
+//   sha: HexType;
+//   seq: number;
+//   isFinalized: boolean;
+// }
 
-export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrderProps) {
+export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetRuleProps) {
 
   const defaultOrder: GroupUpdateOrder = {
     seqOfRule: seq,
@@ -89,32 +91,44 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
   const [ newGuo, setNewGuo ] = useState<GroupUpdateOrder>(defaultOrder);
 
   const [ editable, setEditable ] = useState<boolean>(false);
-  
-  const obtainRule = async ()=>{
-    let hexRule = await getRule(sha, objGuo.seqOfRule);
-    let objRule: GroupUpdateOrder = guoParser(hexRule);
-    setNewGuo(objRule);
-  }
 
-  useEffect(()=>{
-    const obtainInitRule = async ()=>{
-      let hexRule = await getRule(sha, seq);
-      let objRule: GroupUpdateOrder = guoParser(hexRule);
-      setNewGuo(objRule);
+  const {
+    refetch: obtainRule
+  } = useShareholdersAgreementGetRule({
+    address: sha,
+    args: [ BigInt(seq) ],
+    onSuccess(res) {
+      setNewGuo(guoParser(res))
     }
-  
-    obtainInitRule();
   })
+
+  // const obtainRule = async ()=>{
+  //   let hexRule = await getRule(sha, objGuo.seqOfRule);
+  //   let objRule: GroupUpdateOrder = guoParser(hexRule);
+  //   setNewGuo(objRule);
+  // }
+
+  // useEffect(()=>{
+  //   const obtainInitRule = async ()=>{
+  //     let hexRule = await getRule(sha, seq);
+  //     let objRule: GroupUpdateOrder = guoParser(hexRule);
+  //     setNewGuo(objRule);
+  //   }
+  
+  //   obtainInitRule();
+  // })
 
   return (
     <>
-      <Paper elevation={3} sx={{
-        alignContent:'center', 
-        justifyContent:'center', 
-        p:1, m:1, 
-        border: 1, 
-        borderColor:'divider' 
-        }} 
+      <Paper 
+        elevation={3} 
+        sx={{
+          alignContent:'center', 
+          justifyContent:'center', 
+          p:1, m:1, 
+          border: 1, 
+          borderColor:'divider' 
+          }} 
       >
         <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
           <Box sx={{ minWidth:600 }} >
@@ -139,9 +153,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='SeqOfRule'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -150,9 +165,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='QtyOfSubRule'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -161,9 +177,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='SeqOfSubRule'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -172,9 +189,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='AddMember ?'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -183,9 +201,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='GroupRep'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -199,8 +218,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='SeqOfRule'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -213,8 +233,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
               />
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='QtyOfSubRule'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -227,8 +248,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
               />
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='SeqOfSubRule'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -240,11 +262,12 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
                 value={ objGuo.seqOfSubRule }
               />
 
-              <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+              <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
                 <InputLabel id="addMember-label">AddMember ?</InputLabel>
                 <Select
                   labelId="addMember-label"
                   id="addMember-select"
+                  label="AddMember ?"
                   value={ objGuo.addMember ? '1' : '0' }
                   onChange={(e) => setObjGuo((v) => ({
                     ...v,
@@ -257,8 +280,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
               </FormControl>
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='GroupRep'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -276,9 +300,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='Members_1'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -287,9 +312,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='Members_2'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -298,9 +324,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='Members_3'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -309,9 +336,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             />
 
             <TextField 
-              variant='filled'
+              variant='outlined'
               label='Members_4'
               inputProps={{readOnly: true}}
+              size="small"
               sx={{
                 m:1,
                 minWidth: 218,
@@ -325,8 +353,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='Members_1'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -343,8 +372,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
               />
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='Members_2'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -361,8 +391,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
               />
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='Members_3'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -379,8 +410,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetGroupUpdateOrd
               />
 
               <TextField 
-                variant='filled'
+                variant='outlined'
                 label='Members_4'
+                size="small"
                 sx={{
                   m:1,
                   minWidth: 218,

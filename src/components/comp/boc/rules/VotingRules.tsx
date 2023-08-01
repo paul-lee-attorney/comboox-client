@@ -26,6 +26,7 @@ import { SetVotingRule, VotingRule } from "./SetVotingRule";
 import { 
   useShareholdersAgreementRemoveRule 
 } from "../../../../generated";
+import { RulesEditProps } from "./SetGovernanceRule";
 
 
 export interface VotingRuleWrap {
@@ -33,13 +34,7 @@ export interface VotingRuleWrap {
   votingRule: VotingRule,
 }
 
-interface VotingRulesProps {
-  sha: HexType;
-  initSeqList: number[] | undefined;
-  isFinalized: boolean;
-}
-
-export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
+export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
   const mandatoryRules: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
 
@@ -93,10 +88,10 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
   return (
     <>
       <Button
-        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined" }
+        variant={ initSeqList && (initSeqList.length > 0) ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
-        onClick={()=>setOpen(true)}      
+        onClick={()=>setOpen(true)} 
       >
         Voting Rules 
       </Button>
@@ -104,7 +99,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={()=>setOpen(false)}
+        onClose={ getRules }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>
@@ -143,7 +138,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
 
                 {cp.map(v=> (
                   <Grid key={ v } item xs={3} >
-                      <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } />
                   </Grid>
                 ))}
 
@@ -155,7 +150,7 @@ export function VotingRules({sha, initSeqList, isFinalized}: VotingRulesProps) {
         </DialogContent>
 
         <DialogActions>
-            <Button onClick={()=>setOpen(false)}>Close</Button>
+            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={ ()=>setOpen(false) }>Close</Button>
         </DialogActions>
 
       </Dialog>

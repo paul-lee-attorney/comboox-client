@@ -9,11 +9,8 @@ import {
 import { 
   Box, 
   Button, 
-  Checkbox, 
-  Collapse, 
   Divider, 
   FormControl, 
-  FormControlLabel, 
   InputLabel, 
   MenuItem, 
   Paper, 
@@ -25,13 +22,13 @@ import {
 
 import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
-import dayjs, { Dayjs } from 'dayjs';
+import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
 import { Body, Deal, Head } from "../../../../queries/ia";
-import { getHeadOfFile } from "../../../../queries/filesFolder";
 import { getShare } from "../../../../queries/bos";
+import { SetTypeOfIa } from "./SetTypeOfIa";
+import { isFinalized } from "../../../../queries/accessControl";
 
 const defaultHead: Head = {
   typeOfDeal: 2,
@@ -167,7 +164,12 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
             <h4>Create Deal</h4>
           </Toolbar>
         </Box>
+        
+        <SetTypeOfIa ia={ia} />
+
       </Stack>
+
+      <Divider sx={{ m:1 }} flexItem />
 
       <Stack direction='row' sx={{ alignItems:'center' }} >
 
@@ -187,7 +189,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
                   typeOfDeal: parseInt(e.target.value.toString()),
                 }))}
               >
-                {TypeOfDeal.map((v,i) => (
+                {TypeOfDeal.slice(0,3).map((v,i) => (
                   <MenuItem key={v} value={i+1}>{v}</MenuItem>
                 ))}
               </Select>
@@ -271,22 +273,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
               format='YYYY-MM-DD HH:mm:ss'
             />
 
-            {/* <TextField 
-              variant='outlined'
-              size="small"
-              label='Seller'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => setHead((v) => ({
-                ...v,
-                seller: parseInt(e.target.value),
-                }))
-              }
-              value={ head.seller }
-            /> */}
-
             <TextField 
               variant='outlined'
               size="small"
@@ -300,7 +286,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
                 buyer: parseInt(e.target.value),
                 }))
               }
-              
               value={ body.buyer }
             />
 
@@ -317,7 +302,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
                 groupOfBuyer: parseInt(e.target.value),
                 }))
               }
-              
               value={ body.groupOfBuyer }
             />
 
@@ -334,7 +318,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
                 paid: BigInt(e.target.value),
                 }))
               }
-              
               value={ body.paid.toString() }
             />
 
@@ -351,7 +334,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
                 par: BigInt(e.target.value),
                 }))
               }
-              
               value={ body.par.toString() }
             />
 
@@ -363,7 +345,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
 
         <Button 
           disabled = {!addDeal || addDealLoading}
-
           sx={{ m:1, mr:5, p:1, minWidth: 120, height: 40 }} 
           variant="contained" 
           endIcon={<AddCircle />}

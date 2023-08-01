@@ -29,7 +29,7 @@ function BookOfConstitution() {
 
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
-  const [ version, setVersion ] = useState<string>();
+  const [ version, setVersion ] = useState<string>('1');
 
   const {
     refetch: getFilesList     
@@ -90,7 +90,7 @@ function BookOfConstitution() {
                       setVersion(e.target.value);
                     }
                     }
-                    // value = { version }
+                    value = { version }
                     size='small'
                   />
 

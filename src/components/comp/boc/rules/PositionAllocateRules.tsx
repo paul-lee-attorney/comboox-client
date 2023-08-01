@@ -26,14 +26,10 @@ import {
 } from "../../../../generated";
 
 import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
+import { RulesEditProps } from "./SetGovernanceRule";
+import { getRule } from "../../../../queries/sha";
 
-interface PositionAllocateRulesProps {
-  sha: HexType;
-  initSeqList: number[] | undefined;
-  isFinalized: boolean;
-}
-
-export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionAllocateRulesProps) {
+export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
   const mandatoryRules = [256];
   
@@ -90,7 +86,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={()=>setOpen(false)}
+        onClose={ getRules }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>      
@@ -141,7 +137,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized}: PositionA
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

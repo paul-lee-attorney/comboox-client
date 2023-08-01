@@ -44,6 +44,7 @@ import {
 
 import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../queries/sigPage";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
+import { AcceptSha } from "../../comp/boc/sha/AcceptSha";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
 
@@ -125,9 +126,9 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
     refetch: getBuyers
   } = useSigPageGetBuyers({
     address: addr,
-    args: [true],
+    args: [ initPage ],
     onSuccess(buyers) {
-      getSigsOfRole(addr, true, buyers).
+      getSigsOfRole(addr, initPage, buyers).
         then(sigs => setBuyerSigs(sigs));
     }
   });
@@ -140,9 +141,9 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
     refetch: getSellers
   } = useSigPageGetSellers ({
     address: addr,
-    args: [true],
+    args: [ initPage ],
     onSuccess(sellers) {
-      getSigsOfRole(addr, true, sellers).
+      getSigsOfRole(addr, initPage, sellers).
         then(sigs => setSellerSigs(sigs));
     }
   });
@@ -157,14 +158,13 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
     write: addBlank,
   } = useSigPageAddBlank({
     address: addr,
-    args: isBuyer != undefined &&
-      acct ? 
-        [ initPage,
+    args: isBuyer != undefined && acct 
+      ? [ initPage,
           isBuyer, 
           BigInt('1'), 
           BigInt(acct)
-        ] : 
-        undefined,
+        ] 
+      : undefined,
     onSuccess() {
       getParasOfPage();
       getSellers();
@@ -177,12 +177,12 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
     write: removeBlank,
   } = useSigPageRemoveBlank({
     address: addr,
-    args: acct ? 
-        [ initPage, 
+    args: acct 
+      ? [ initPage, 
           BigInt('1'), 
           BigInt(acct)
-        ] : 
-        undefined,
+        ] 
+      : undefined,
     onSuccess() {
       getParasOfPage();
       getSellers();
@@ -192,156 +192,148 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
 
   return (
     <Stack direction="column" sx={{width:'100%'}} >
-      <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
+      {initPage && (
+        <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-        <Stack direction={'row'} sx={{ alignItems:'center' }} >
-          <Toolbar sx={{ textDecoration:'underline'}}>
-            <h4>Props of SigPage</h4>
-          </Toolbar>
+          <Stack direction={'row'} sx={{ alignItems:'center' }} >
+            <Toolbar sx={{ textDecoration:'underline'}}>
+              <h4>Props of SigPage</h4>
+            </Toolbar>
 
-          {!isFinalized && (
-            <>
-              <TextField 
-                variant='outlined'
-                size='small'
-                label='SigningDays'
-                sx={{
-                  m:1,
-                  ml: 10,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setTiming((v) => ({
-                  ...v,
-                  signingDays: e.target.value,
-                }))}
-                value={ timing?.signingDays }              
-              />
-
-              <TextField 
-                variant='outlined'
-                    size='small'
-                label='ClosingDays'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setTiming((v) => ({
-                  ...v,
-                  closingDays: e.target.value,
-                }))}
-                value={ timing?.closingDays }                                      
-              />
-
-              <Button
-                disabled={ setTimingIsLoading }
-                variant="contained"
-                sx={{
-                  height: 40,
-                  m: 1,
-                }}
-                endIcon={ <Update /> }
-                onClick={() => writeSetTiming?.()}
-              >
-                Update
-              </Button>
-            
-            </>
-          )}
-
-        </Stack>
-
-        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-          
-          <Stack direction={'row'} >    
-            {parasOfPage && (
-              <TextField 
-                variant='outlined'
+            {!isFinalized && (
+              <>
+                <TextField 
+                  variant='outlined'
                   size='small'
-                label='CirculateDate'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ dateParser(parasOfPage.circulateDate) }
-              />
-            )}
+                  label='SigningDays'
+                  sx={{
+                    m:1,
+                    ml: 10,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setTiming((v) => ({
+                    ...v,
+                    signingDays: e.target.value,
+                  }))}
+                  value={ timing?.signingDays }              
+                />
 
-            {parasOfPage && (
-              <TextField 
-                variant='outlined'
-                  size='small'
-                label='SigningDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ parasOfPage.signingDays }
-              />
-            )}
+                <TextField 
+                  variant='outlined'
+                      size='small'
+                  label='ClosingDays'
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setTiming((v) => ({
+                    ...v,
+                    closingDays: e.target.value,
+                  }))}
+                  value={ timing?.closingDays }                                      
+                />
 
-            {parasOfPage && (
-              <TextField 
-                variant='outlined'
-                  size='small'
-                label='ClosingDays'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ parasOfPage.closingDays }
-              />
-            )}
-
-            {parasOfPage && (
-              <TextField 
-                variant='outlined'
-                  size='small'
-                label='CounterOfBlanks'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ parasOfPage.counterOfBlanks }
-              />
-            )}
-
-            {parasOfPage && (
-              <TextField 
-                variant='outlined'
-                  size='small'
-                label='CounterOfSigs'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ parasOfPage.counterOfSigs }
-              />
-            )}
-
-            {parasOfPage && (
-              <TextField 
-                variant='outlined'
-                  size='small'
-                label='Established'
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                value={ parasOfPage.established ? 'True' : 'False' }
-              />
+                <Button
+                  disabled={ setTimingIsLoading }
+                  variant="contained"
+                  sx={{
+                    height: 40,
+                    m: 1,
+                  }}
+                  endIcon={ <Update /> }
+                  onClick={() => writeSetTiming?.()}
+                >
+                  Update
+                </Button>
+              
+              </>
             )}
 
           </Stack>
 
-        </Paper>
+          {parasOfPage && (
+            <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
 
-      </Paper>
+              <Stack direction={'row'} >    
+                  <TextField 
+                    variant='outlined'
+                      size='small'
+                    label='CirculateDate'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ dateParser(parasOfPage.circulateDate) }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                      size='small'
+                    label='SigningDays'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ parasOfPage.signingDays }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                      size='small'
+                    label='ClosingDays'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ parasOfPage.closingDays }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                      size='small'
+                    label='CounterOfBlanks'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ parasOfPage.counterOfBlanks }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                      size='small'
+                    label='CounterOfSigs'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ parasOfPage.counterOfSigs }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                      size='small'
+                    label='Established'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ parasOfPage.established ? 'True' : 'False' }
+                  />
+
+              </Stack>
+
+            </Paper>
+          )}
+
+        </Paper>
+      )}
 
       <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
 
@@ -349,6 +341,10 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
           <Toolbar sx={{ textDecoration:'underline' }}>
             <h4>Signatures of Doc</h4>
           </Toolbar>
+
+          {!initPage && isFinalized && (
+            <AcceptSha getBuyers={ getBuyers } getSellers={ getSellers } />
+          )}
 
           {!isFinalized && (
             <Stack direction={'row'} sx={{ alignItems:'center' }} >
@@ -423,7 +419,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
 
         <Stack direction="row" >
 
-          <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
+          <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:700}} >
             
             <Chip
               sx={{ minWidth:168, m:1, ml:4, p:1 }}
@@ -492,7 +488,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
 
           </Paper>
 
-          <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:'50%'}} >
+          <Paper elevation={3} sx={{m:1, border:1, borderColor:'divider', width:700}} >
             
             <Chip
               sx={{ minWidth:168, m:1, ml:4, p:1 }}

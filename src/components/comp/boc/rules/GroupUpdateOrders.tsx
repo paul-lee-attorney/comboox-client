@@ -21,14 +21,16 @@ import {
 } from "@mui/icons-material"
 
 import { SetGroupUpdateOrder } from "./SetGroupUpdateOrder";
+import { SetRuleProps } from "./SetVotingRule";
+import { RulesEditProps } from "./SetGovernanceRule";
 
-interface GroupUpdateOrdersProps {
-  sha: HexType;
-  initSeqList: number[] | undefined;
-  isFinalized: boolean;
-}
+// interface GroupUpdateOrdersProps {
+//   sha: HexType;
+//   initSeqList: number[] | undefined;
+//   isFinalized: boolean;
+// }
 
-export function GroupUpdateOrders({sha, initSeqList, isFinalized}: GroupUpdateOrdersProps) {
+export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
 
   const mandatoryRule: number[] = isFinalized ? [] : [768];
 
@@ -88,13 +90,13 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized}: GroupUpdateOr
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={()=>setOpen(false)}
+        onClose={ getRules }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>
 
           <Paper elevation={3} sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
-            <Box sx={{ width:1180 }}>
+            <Box sx={{ width:1280 }}>
 
               <Stack direction={'row'} sx={{ alignItems:'center' }}>
                 <Toolbar>
@@ -132,7 +134,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized}: GroupUpdateOr
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>        

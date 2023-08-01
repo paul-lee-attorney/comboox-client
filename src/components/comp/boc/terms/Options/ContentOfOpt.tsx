@@ -16,8 +16,8 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { Option, typeOfOpts } from "./Options";
 import { dateParser, longDataParser, longSnParser } from "../../../../../scripts/toolsKit";
+import { Option, typeOfOpts } from "../../../../../queries/boo";
 
 export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
 
@@ -226,7 +226,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={ ()=>setOpen(false) }>Close</Button>
         </DialogActions>
 
       </Dialog>

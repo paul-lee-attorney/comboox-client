@@ -23,23 +23,24 @@ import { LockUp } from "../terms/LockUp/LockUp";
 import { DragAlong } from "../terms/DragAlong/DragAlong";
 import { Options } from "../terms/Options/Options";
 import { TagAlong } from "../terms/TagAlong/TagAlong";
+import { useShareholdersAgreement, useShareholdersAgreementGetRules, useShareholdersAgreementGetTitles } from "../../../../generated";
 
-export async function getGroupOfRules(addr: HexType): Promise<number[][]>{
+export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
 
-  let arrRules = await obtainRules(addr);
+  let arrRules = bigRules.map(v => Number(v));
+  // console.log('arrRules: ', arrRules);
 
-  let rules:number[][] = Array.from(Array(4), ()=>new Array<number>());
+  let rules:number[][] = Array.from(Array(5), ()=>new Array<number>());
 
   arrRules.forEach( v => {
-    if (v > 0) {
-      if (v < 256) rules[0].push(v);
-      else if (v < 512) rules[1].push(v);
-      else if (v < 768) rules[2].push(v);
-      else if (v < 1024) rules[3].push(v);     
-    }
+      if (v == 0) rules[0].push(v);
+      else if (v < 256) rules[1].push(v);
+      else if (v < 512) rules[2].push(v);
+      else if (v < 768) rules[3].push(v);
+      else if (v < 1024) rules[4].push(v);
   })
 
-  // console.log('rules before return: ', rules);
+  // console.log('rules: ', rules);
   return rules;
 }
 
@@ -50,41 +51,85 @@ interface ShaBodyTermsProps {
 
 export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
+  const [ grLs, setGrLs ] = useState<number[]>();
   const [ vrLs, setVrLs ] = useState<number[]>();
   const [ prLs, setPrLs ] = useState<number[]>();
   const [ frLs, setFrLs ] = useState<number[]>();
   const [ guoLs, setGuoLs ] = useState<number[]>();
 
-  useEffect(()=>{
-    const setUpRules = async () => {
 
-      let rules = await getGroupOfRules(sha);
+  const {
+    refetch: getRules
+  } = useShareholdersAgreementGetRules({
+    address: sha,
+    onSuccess(res) {
+      // console.log('sha: ', sha);
+      // console.log('res: ', res);
 
-      setVrLs(rules[0]);
-      setPrLs(rules[1]);
-      setFrLs(rules[2]);
-      setGuoLs(rules[3]);
+      groupingRules(res).then(
+        rules => {
+          setGrLs(rules[0]);
+          setVrLs(rules[1]);
+          setPrLs(rules[2]);
+          setFrLs(rules[3]);
+          setGuoLs(rules[4]);
+
+          // console.log('rules: ', rules);
+        }
+      )
     }
+  })
+
+
+  // useEffect(()=>{
+  //   const setUpRules = async () => {
+
+  //     let rules = await getGroupOfRules(sha);
+
+  //     setVrLs(rules[0]);
+  //     setPrLs(rules[1]);
+  //     setFrLs(rules[2]);
+  //     setGuoLs(rules[3]);
+  //   }
     
-    setUpRules();
-  }, [sha]);
+  //   setUpRules();
+  // }, [sha]);
 
   const [ terms, setTerms ] = useState<HexType[]>(defaultTerms);
 
-  useEffect(()=>{
-    const getTitles = async () => {
-      let titles = await obtainTitles(sha);
+
+  const {
+    refetch: getTitles
+  } = useShareholdersAgreementGetTitles({
+    address: sha,
+    onSuccess(res) {
+      let titles = res.map(v=>Number(v));
       titles.forEach(async v => {
-        let res = await getTerm(sha, v);
-        setTerms((k) => {          
+        let term = await getTerm(sha, v);
+        setTerms(k => {
           let out = [...k];
-          out[v-24] = res;
+          out[v-24] = term;
           return out;
-        });
-      });
+        })
+      })
     }
-    getTitles();
-  }, [sha]);
+  })
+
+
+  // useEffect(()=>{
+  //   const getTitles = async () => {
+  //     let titles = await obtainTitles(sha);
+  //     titles.forEach(async v => {
+  //       let res = await getTerm(sha, v);
+  //       setTerms((k) => {          
+  //         let out = [...k];
+  //         out[v-24] = res;
+  //         return out;
+  //       });
+  //     });
+  //   }
+  //   getTitles();
+  // }, [sha]);
 
   return (
     // <Box width={1180} >
@@ -99,15 +144,15 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
             <Divider />
 
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              <SetGovernanceRule addr={ sha } isFinalized={ isFinalized } />
-              <VotingRules sha={ sha } initSeqList={ vrLs } isFinalized={ isFinalized } />
+              <SetGovernanceRule sha={ sha } initSeqList={ grLs } isFinalized={ isFinalized } getRules={ getRules } />
+              <VotingRules sha={ sha } initSeqList={ vrLs } isFinalized={ isFinalized } getRules={ getRules } />
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              <PositionAllocateRules sha={ sha } initSeqList={ prLs } isFinalized={ isFinalized } />
-              <FirstRefusalRules sha={ sha } initSeqList={ frLs } isFinalized={ isFinalized } />
+              <PositionAllocateRules sha={ sha } initSeqList={ prLs } isFinalized={ isFinalized } getRules={ getRules } />
+              <FirstRefusalRules sha={ sha } initSeqList={ frLs } isFinalized={ isFinalized } getRules={ getRules } />
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              {(!isFinalized || (isFinalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={isFinalized} />)}
+              {(!isFinalized || (isFinalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={isFinalized} getRules={ getRules } />)}
             </Stack>
 
           </Paper>

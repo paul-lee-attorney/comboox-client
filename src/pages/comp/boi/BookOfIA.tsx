@@ -20,13 +20,14 @@ import {
 import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { AddrZero } from "../../../interfaces";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 function BookOfIA() {
   const { gk, boox } = useComBooxContext();
 
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
-  const [ version, setVersion ] = useState<string>();
+  const [ version, setVersion ] = useState<string>('1');
 
   const {
     isLoading: createIaLoading, 
@@ -53,9 +54,14 @@ function BookOfIA() {
             <h3>BOI - Book Of Investment Agreements</h3>
           </Toolbar>
 
-          <Typography sx={{ ml: 10 }}>
+          {/* <Typography sx={{ ml: 10 }}>
             <h4>(Addr: {(boox ? boox[6] : AddrZero).toLowerCase()})</h4>
-          </Typography>
+          </Typography> */}
+
+          {boox && (
+            <CopyLongStrSpan title="Addr" size="body1" src={boox[6].toLowerCase()} />
+          )}
+
 
         </Stack>
 

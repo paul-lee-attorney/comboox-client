@@ -23,10 +23,10 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { ContractEditProps, HexType } from '../../../../interfaces';
+import { HexType } from '../../../../interfaces';
 import { dateParser, toPercent } from '../../../../scripts/toolsKit';
-import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
+import { useShareholdersAgreementGetRule } from '../../../../generated';
 
 export interface GovernanceRule {
   basedOnPar: boolean ;
@@ -53,7 +53,7 @@ const defaultGR: GovernanceRule = {
   proposeHeadRatioOfDirectorsInBoard: 1000,
   maxQtyOfMembers: 50,
   quorumOfGM: 5000,
-  maxNumOfDirectors: 7,
+  maxNumOfDirectors: 5,
   tenureMonOfBoard: 36,
   quorumOfBoardMeeting: 5000,
   establishedDate: 0,
@@ -105,21 +105,44 @@ export function grParser(hexRule: HexType): GovernanceRule {
   return rule;
 }
 
-export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
+export interface RulesEditProps {
+  sha: HexType;
+  initSeqList: number[] | undefined;
+  isFinalized: boolean;
+  getRules: ()=>void;
+}
+
+export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRule>(defaultGR);
   const [ newGR, setNewGR ] = useState<GovernanceRule>();
+
   const [ editable, setEditable ] = useState<boolean>(false); 
   const [ open, setOpen ] = useState(false);
 
-  const obtainRule = async () => {
-    let hexRule = await getRule(addr, 0);
-    let objRule: GovernanceRule = grParser(hexRule);
-    setNewGR(objRule);
-  }
-  
-  useEffect(()=>{
-    obtainRule();
+  const {
+    refetch: getGr
+  } = useShareholdersAgreementGetRule({
+    address: sha,
+    args: [ BigInt(0) ],
+    onSuccess(res) {
+      setNewGR(grParser(res))
+    }
   })
+
+  // const obtainRule = async () => {
+  //   let hexRule = await getRule(sha, 0);
+  //   let objRule: GovernanceRule = grParser(hexRule);
+  //   setNewGR(objRule);
+  // }
+  
+  // useEffect(()=>{
+  //   obtainRule();
+  // })
+
+  // const handleClose = ()=>{
+  //   getRules();
+  //   setOpen(false);
+  // }
 
   return (
     <>
@@ -138,7 +161,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
         <Dialog
           maxWidth={false}
           open={open}
-          onClose={()=>setOpen(false)}
+          onClose={ getRules }
           aria-labelledby="dialog-title"        
         >
 
@@ -169,9 +192,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                     </Box>
 
                     <AddRule 
-                      sha={ addr }
+                      sha={ sha }
                       rule={ grCodifier(objGR) }
-                      refreshRule={ obtainRule }
+                      refreshRule={ getGr }
                       editable={ editable }
                       setEditable={ setEditable }
                       isFinalized={ isFinalized }
@@ -186,9 +209,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
 
                     <Stack direction={'row'} sx={{ alignItems: 'center', }} >
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='BasedOnPar ?'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -197,9 +221,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='ProposeWeightRatioOfGM'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -208,9 +233,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='ProposeHeadRatioOfMembers'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -219,9 +245,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='ProposeHeadRatioOfDirectorsInGM'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -230,9 +257,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='ProposeHeadRatioOfDirectorsInBM'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -245,7 +273,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                     <Collapse in={ editable && !isFinalized }>
                       <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
                           
-                        <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                        <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                           <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
                           <Select
                             labelId="basedOnPar-label"
@@ -255,7 +283,6 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                               ...v,
                               proRata: e.target.value == '01',
                             }))}
-
                             label="BasedOnPar ?"
                           >
                             <MenuItem value={'1'}>True</MenuItem>
@@ -264,8 +291,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         </FormControl>
                       
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ProposeWeightRatioOfGM'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -278,8 +306,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ProposeHeadRatioOfMembers'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -292,8 +321,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ProposeHeadRatioOfDirectorsInGM'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -306,8 +336,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='ProposeHeadRatioOfDirectorsInBM'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -325,9 +356,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                     <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='MaxQtyOfMembers'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -336,9 +368,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='QuorumOfGM'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -347,9 +380,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='MaxNumOfDirectors'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -358,9 +392,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='TenureMonOfBoard'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -369,9 +404,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='QuorumOfBoardMeeting'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -385,8 +421,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='MaxQtyOfMembers'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -399,8 +436,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='QuorumOfGM'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -413,8 +451,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='MaxNumOfDirectors'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -428,8 +467,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='TenureMonOfBoard'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -442,8 +482,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='QuorumOfBoardMeeting'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -460,9 +501,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
 
                     <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='EstablishedDate'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -471,9 +513,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='BusinessTermInYears'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -482,9 +525,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='TypeOfComp'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -493,9 +537,10 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
                         label='LatePenaltyRate'
                         inputProps={{readOnly: true}}
+                        size='small'
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -510,6 +555,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
 
                         <DateTimeField
                           label='EstablishedDate'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -523,8 +569,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='BusinessTermInYears'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth:218,
@@ -537,8 +584,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='TypeOfComp'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth:218,
@@ -551,8 +599,9 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
                         />
 
                         <TextField 
-                          variant='filled'
+                          variant='outlined'
                           label='LatePenaltyRate'
+                          size='small'
                           sx={{
                             m:1,
                             minWidth:218,
@@ -576,7 +625,7 @@ export function SetGovernanceRule({ addr, isFinalized }: ContractEditProps) {
           </DialogContent>
 
           <DialogActions>
-            <Button onClick={()=>setOpen(false)}>Close</Button>
+            <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={ ()=>setOpen(false) }>Close</Button>
           </DialogActions>
 
         </Dialog>        

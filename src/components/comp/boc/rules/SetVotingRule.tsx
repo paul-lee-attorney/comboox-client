@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { 
   Stack,
@@ -22,8 +22,8 @@ import { AddRule } from './AddRule';
 
 import { HexType } from '../../../../interfaces';
 import { longSnParser, toPercent } from '../../../../scripts/toolsKit';
-import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
+import { useShareholdersAgreementGetRule } from '../../../../generated';
 
 export interface VotingRule {
   seqOfRule: number;
@@ -125,8 +125,8 @@ const defaultRules: VotingRule[] = [
     partyAsConsent: true,
     againstShallBuy: false,
     shaExecDays: 15,
-    shaConfirmDays: 15,
-    reconsiderDays: 14,
+    shaConfirmDays: 14,
+    reconsiderDays: 0,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -144,8 +144,8 @@ const defaultRules: VotingRule[] = [
     partyAsConsent: false,
     againstShallBuy: true,
     shaExecDays: 15,
-    shaConfirmDays: 15,
-    reconsiderDays: 14,
+    shaConfirmDays: 14,
+    reconsiderDays: 0,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -182,8 +182,8 @@ const defaultRules: VotingRule[] = [
     partyAsConsent: true,
     againstShallBuy: false,
     shaExecDays: 15,
-    shaConfirmDays: 15,
-    reconsiderDays: 14,
+    shaConfirmDays: 14,
+    reconsiderDays: 0,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -201,8 +201,8 @@ const defaultRules: VotingRule[] = [
     partyAsConsent: false,
     againstShallBuy: true,
     shaExecDays: 15,
-    shaConfirmDays: 15,
-    reconsiderDays: 14,
+    shaConfirmDays: 14,
+    reconsiderDays: 0,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -220,8 +220,8 @@ const defaultRules: VotingRule[] = [
     partyAsConsent: true,
     againstShallBuy: false,
     shaExecDays: 15,
-    shaConfirmDays: 15,
-    reconsiderDays: 14,
+    shaConfirmDays: 14,
+    reconsiderDays: 0,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -239,8 +239,8 @@ const defaultRules: VotingRule[] = [
     partyAsConsent: true,
     againstShallBuy: false,
     shaExecDays: 15,
-    shaConfirmDays: 15,
-    reconsiderDays: 14,
+    shaConfirmDays: 14,
+    reconsiderDays: 0,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -259,7 +259,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 0,
     shaConfirmDays: 0,
-    reconsiderDays: 14,
+    reconsiderDays: 29,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -278,7 +278,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 0,
     shaConfirmDays: 0,
-    reconsiderDays: 14,
+    reconsiderDays: 29,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -297,7 +297,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 0,
     shaConfirmDays: 0,
-    reconsiderDays: 14,
+    reconsiderDays: 29,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -316,7 +316,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 0,
     shaConfirmDays: 0,
-    reconsiderDays: 8,
+    reconsiderDays: 9,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -335,7 +335,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 0,
     shaConfirmDays: 0,
-    reconsiderDays: 8,
+    reconsiderDays: 9,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -344,13 +344,13 @@ const defaultRules: VotingRule[] = [
   }
 ]
 
-interface SetVotingRuleProps {
+export interface SetRuleProps {
   sha: HexType;
   seq: number;
   isFinalized: boolean;
 }
 
-export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
+export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
 
   const defVR: VotingRule =
       { seqOfRule: seq, 
@@ -384,20 +384,30 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
   const [ open, setOpen ] = useState(false);
 
 
-  const obtainRule = async ()=>{
-    let hexRule:HexType = await getRule(sha, objVR.seqOfRule);
-    let objRule:VotingRule = vrParser(hexRule);
-    setNewVR(objRule);
-  }
-
-  useEffect(()=>{
-    const obtainInitRule = async () => {
-      let hexRule:HexType = await getRule(sha, seq);
-      let objRule:VotingRule = vrParser(hexRule);
-      setNewVR(objRule);
+  const {
+    refetch: obtainRule
+  } = useShareholdersAgreementGetRule({
+    address: sha,
+    args: [ BigInt(seq) ],
+    onSuccess(res) {
+      setNewVR(vrParser(res))
     }
-    obtainInitRule();
   })
+
+  // const obtainRule = async ()=>{
+  //   let hexRule:HexType = await getRule(sha, objVR.seqOfRule);
+  //   let objRule:VotingRule = vrParser(hexRule);
+  //   setNewVR(objRule);
+  // }
+
+  // useEffect(()=>{
+  //   const obtainInitRule = async () => {
+  //     let hexRule:HexType = await getRule(sha, seq);
+  //     let objRule:VotingRule = vrParser(hexRule);
+  //     setNewVR(objRule);
+  //   }
+  //   obtainInitRule();
+  // })
 
   return (
     <>
@@ -456,7 +466,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
 
                   <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='SeqOfRule'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -467,7 +478,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='QtyOfSubRule'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -478,7 +490,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='Authority'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -490,7 +503,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='HeadRatio'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -501,7 +515,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='AmountRatio'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -517,7 +532,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='SeqOfRule'
                         sx={{
                           m:1,
@@ -533,7 +549,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='QtyOfSubRule'
                         sx={{
                           m:1,
@@ -546,11 +563,12 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                         value={ objVR.qtyOfSubRule } 
                       />
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="authority-label">Authority</InputLabel>
                         <Select
                           labelId="authority-label"
                           id="authority-select"
+                          label="Authority"
                           value={ objVR.authority }
                           onChange={(e) => setObjVR((v) => ({
                             ...v,
@@ -563,7 +581,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       </FormControl>
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='HeadRaio'
                         sx={{
                           m:1,
@@ -577,7 +596,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='AmountRatio'
                         sx={{
                           m:1,
@@ -596,7 +616,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                   <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='OnlyAttendance ?'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -607,7 +628,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='ImpliedConsent ?'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -618,7 +640,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='PartyAsConsent ?'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -629,7 +652,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='AgainstShallBuy ?'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -640,7 +664,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='Vetoer_1'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -651,7 +676,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='Vetoer_2'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -666,11 +692,12 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                   <Collapse in={ editable && !isFinalized } >
                     <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="onlyAttendance-label">OnlyAttendance ?</InputLabel>
                         <Select
                           labelId="onlyAttendance-label"
                           id="onlyAttendance-select"
+                          label="OnlyAttendance ?"
                           value={ objVR.onlyAttendance ? '1' : '0' }
                           onChange={(e) => setObjVR((v) => ({
                             ...v,
@@ -682,11 +709,12 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                         </Select>
                       </FormControl>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="impliedConsent-label">ImpliedConsent ?</InputLabel>
                         <Select
                           labelId="impliedConsent-label"
                           id="impliedConsent-select"
+                          label="ImpliedConsent ?"
                           value={ objVR.impliedConsent ? '1' : '0' }
                           onChange={(e) => setObjVR((v) => ({
                             ...v,
@@ -698,11 +726,12 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                         </Select>
                       </FormControl>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="partyAsConsent-label">PartyAsConsent ?</InputLabel>
                         <Select
                           labelId="partyAsConsent-label"
                           id="partyAsConsent-select"
+                          label="PartyAsConsent ?"
                           value={ objVR.partyAsConsent ? '1' : '0' }
                           onChange={(e) => setObjVR((v) => ({
                             ...v,
@@ -714,11 +743,12 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                         </Select>
                       </FormControl>
 
-                      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="againstShallBuy-label">AgainstShallBuy ?</InputLabel>
                         <Select
                           labelId="againstShallBuy-label"
                           id="againstShallBuy-select"
+                          label="AgainstShallBuy ?"
                           value={ objVR.againstShallBuy ? '1' : '0' }
                           onChange={(e) => setObjVR((v) => ({
                             ...v,
@@ -731,7 +761,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       </FormControl>
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='Vetoer_1'
                         sx={{
                           m:1,
@@ -746,7 +777,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='Vetoer_2'
                         sx={{
                           m:1,
@@ -766,7 +798,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                   <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='ShaExecDays'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -777,7 +810,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='ShaConfirmDays'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -788,7 +822,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='ReconsiderDays'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -799,7 +834,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='VotePrepareDays'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -810,7 +846,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     />
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='VotingDays'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -822,7 +859,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
 
 
                     <TextField 
-                      variant='filled'
+                      variant='outlined'
+                      size='small'
                       label='ExecDaysForPutOpt'
                       inputProps={{readOnly: true}}
                       sx={{
@@ -838,7 +876,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                     <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='ShaExecDays'
                         sx={{
                           m:1,
@@ -852,7 +891,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='ShaConfirmDays'
                         sx={{
                           m:1,
@@ -866,7 +906,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='ReconsiderDays'
                         sx={{
                           m:1,
@@ -880,7 +921,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='VotePrepareDays'
                         sx={{
                           m:1,
@@ -894,7 +936,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='VotingDays'
                         sx={{
                           m:1,
@@ -908,7 +951,8 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
                       />
 
                       <TextField 
-                        variant='filled'
+                        variant='outlined'
+                        size='small'
                         label='ExecDaysForPutOpt'
                         sx={{
                           m:1,
@@ -932,7 +976,7 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetVotingRuleProps) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

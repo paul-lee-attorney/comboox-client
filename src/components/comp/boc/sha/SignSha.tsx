@@ -44,15 +44,6 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
 
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperSignSha({
-  //   address: gk,
-  //   args: sigHash 
-  //       ? [addr, sigHash]
-  //       : undefined,
-  // });
-
   const {
     isLoading,
     write
@@ -67,7 +58,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   });
 
   return (
-    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'stretch'}}>
+    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
 
       <TextField
         sx={{ m: 1, minWidth: 650 }} 
@@ -83,7 +74,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         disabled={isLoading}
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
-        sx={{ m:1, minWidth:218 }}
+        sx={{ m:1, height:40, minWidth:218 }}
         onClick={()=>write?.()}
       >
         Sign Sha
@@ -93,7 +84,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         <Box sx={{ width:280 }} >        
           <Alert 
             variant='outlined' 
-            severity='info' 
+            severity='info'
             sx={{ height: 55,  m: 1 }} 
           >
             Sigers / Parties: { parasOfPage?.counterOfSigs +'/'+ parasOfPage?.counterOfBlanks } 

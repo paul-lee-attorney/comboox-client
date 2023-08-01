@@ -1,4 +1,4 @@
-import { useBookOfSharesDecreaseCapital, usePrepareBookOfSharesDecreaseCapital } from "../../../generated";
+import { useBookOfSharesDecreaseCapital } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { useEffect, useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
@@ -24,15 +24,6 @@ export function DelShare ({getList}:DelShareProps) {
       )
     }
   }, [seq, boox]);
-
-  // const {
-  //   config: delShareConfig
-  // } = usePrepareBookOfSharesDecreaseCapital({
-  //   address: boox ? boox[9] : undefined,
-  //   args: seq && share
-  //       ? [BigInt(seq), share.body.paid, share.body.par]
-  //       : undefined,
-  // })
 
   const {
     isLoading: delShareLoading,

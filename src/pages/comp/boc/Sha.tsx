@@ -74,6 +74,12 @@ function Sha() {
                 )}
               </TabPanel>
 
+              <TabPanel value={3} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
+                {sha != '0x' && isFinalized != undefined && (
+                  <Signatures addr={sha} initPage={false} isFinalized={isFinalized} isSha={ true } />
+                )}
+              </TabPanel>
+
               <TabPanel value={4} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {sha != '0x' && isFinalized != undefined && (
                   <ShaLifecycle sha={sha} isFinalized={isFinalized} />

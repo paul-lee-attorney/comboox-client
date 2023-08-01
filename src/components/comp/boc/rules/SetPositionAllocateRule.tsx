@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import dayjs from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers';
@@ -23,10 +23,11 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { dateParser, longSnParser } from '../../../../scripts/toolsKit';
-import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
+import { SetRuleProps } from './SetVotingRule';
+import { useShareholdersAgreementGetRule } from '../../../../generated';
+import { HexType } from '../../../../interfaces';
 
 export interface PosAllocateRule {
   seqOfRule: number ;
@@ -83,13 +84,7 @@ export function prParser(hexRule: HexType): PosAllocateRule {
   return rule;
 }
 
-interface SetPositionAllocateRuleProps {
-  sha: HexType;
-  seq: number;
-  isFinalized: boolean;
-}
-
-export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAllocateRuleProps) {
+export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetRuleProps ) {
 
   const defaultRule: PosAllocateRule = {
     seqOfRule: seq, 
@@ -114,22 +109,14 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
   const [ editable, setEditable ] = useState<boolean>(false); 
   const [ open, setOpen ] = useState(false);
 
-
-  const obtainRule = async ()=>{
-    let hexRule = await getRule(sha, objPR.seqOfRule);
-    let objRule: PosAllocateRule = prParser(hexRule);
-    setNewPR(objRule);    
-  }
-
-  useEffect(()=>{
-    const obtainInitRule = async ()=>{
-      let hexRule = await getRule(sha, seq);
-      if (hexRule != Bytes32Zero) {
-        let objRule: PosAllocateRule = prParser(hexRule);
-        setNewPR(objRule);    
-      }
+  const {
+    refetch: obtainRule
+  } = useShareholdersAgreementGetRule({
+    address: sha,
+    args: [ BigInt(seq) ],
+    onSuccess(res) {
+      setNewPR(prParser(res))
     }
-    obtainInitRule();
   })
 
   return (
@@ -189,7 +176,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                   
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='SeqOfRule'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -200,7 +188,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='QtyOfSubRule'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -211,7 +200,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='RemovePos ?'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -222,7 +212,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='SeqOfPosition'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -233,7 +224,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='TitleOfPos'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -244,7 +236,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='EndDate'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -260,7 +253,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
+                    size='small'
                     label='SeqOfRule'
                     sx={{
                       m:1,
@@ -274,7 +268,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                   />
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
+                    size='small'
                     label='QtyOfSubRule'
                     sx={{
                       m:1,
@@ -287,11 +282,12 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     value={ objPR.qtyOfSubRule }              
                   />
 
-                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="removePos-label">RemovePos ?</InputLabel>
                     <Select
                       labelId="removePos-label"
                       id="removePos-select"
+                      label="RemovePos ?"
                       value={ objPR.removePos ? '1' : '0' }
                       onChange={(e) => setObjPR((v) => ({
                         ...v,
@@ -304,7 +300,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                   </FormControl>
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
+                    size='small'
                     label='SeqOfPos'
                     sx={{
                       m:1,
@@ -317,11 +314,12 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     value={ objPR.seqOfPos }              
                   />
 
-                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
                     <Select
                       labelId="titleOfPos-label"
                       id="titleOfPos-select"
+                      label="TitleOfPos"
                       value={ objPR.titleOfPos }
                       onChange={(e) => setObjPR((v) => ({
                         ...v,
@@ -355,7 +353,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='Nominator'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -366,18 +365,20 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 />
 
                 <TextField 
-                  variant='filled'
-                  label='titleOfNominator'
+                  variant='outlined'
+                  size='small'
+                  label='TitleOfNominator'
                   inputProps={{readOnly: true}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfPositions[(newPR.titleOfNominator ?? 1) - 1]}
+                  value={ titleOfPositions[newPR.titleOfNominator - 1]}
                 />
 
                 <TextField 
-                  variant='filled'
+                  variant='outlined'
+                  size='small'
                   label='SeqOfVR'
                   inputProps={{readOnly: true}}
                   sx={{
@@ -393,7 +394,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
+                    size='small'
                     label='Nominator'
                     sx={{
                       m:1,
@@ -406,12 +408,13 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                     value={ objPR.nominator }                                        
                   />
 
-                  <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
                     <Select
                       labelId="titleOfNominator-label"
                       id="titleOfNominator-select"
-                      value={ objPR.titleOfNominator == undefined ? '' : objPR.titleOfNominator }
+                      label="TitleOfNominator"
+                      value={ !objPR ? '1' : objPR.titleOfNominator }
                       onChange={(e) => setObjPR((v) => ({
                         ...v,
                         titleOfNominator: parseInt(e.target.value.toString()),
@@ -425,7 +428,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
                   </FormControl>
 
                   <TextField 
-                    variant='filled'
+                    variant='outlined'
+                    size='small'
                     label='seqOfVR'
                     sx={{
                       m:1,
@@ -447,7 +451,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetPositionAl
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

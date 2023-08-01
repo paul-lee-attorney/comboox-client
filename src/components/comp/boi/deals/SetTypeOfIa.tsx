@@ -2,21 +2,18 @@ import { HexType } from "../../../../interfaces";
 import { 
   useInvestmentAgreementGetTypeOfIa, 
   useInvestmentAgreementSetTypeOfIa,  
-  usePrepareInvestmentAgreementSetTypeOfIa 
 } from "../../../../generated";
 
 import { useState } from "react";
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField, } from "@mui/material";
+import { Button, Chip, Divider, FormControl, InputLabel, MenuItem, Select, Stack, TextField, } from "@mui/material";
 import { EditNote } from "@mui/icons-material";
-
-export const strTypeOfIa = ['CI', 'EXT', 'INT', 'CI & INT', 'EXT & INT', 'CI & EXT & INT'];
+import { TypeOfIa } from "./CreateDeal";
 
 interface SetTypeOfIaProps{
   ia: HexType,
-  isFinalized: boolean,
 }
 
-export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
+export function SetTypeOfIa({ia}: SetTypeOfIaProps) {
 
   const [ type, setType ] = useState<number>(2);
   const [ newType, setNewType ] = useState<number>(2);
@@ -42,45 +39,43 @@ export function SetTypeOfIa({ia, isFinalized}: SetTypeOfIaProps) {
   })
 
   return (
-    <Stack direction={'row'} sx={{ alignItems:'center'}} >
+    <Stack direction={'row'} sx={{ mx:7.6, alignItems:'center'}} >
 
-      <TextField 
-        variant='filled'
-        label='UpdatedTypeOfIA'
-        inputProps={{ readOnly: true }}
-        sx={{
-          m:1,
-          minWidth: 218,
-        }}
-        value={ strTypeOfIa[newType-1] ?? 'EXT' }
-      />
+      {newType > 0 && (
+        <Chip 
+          variant="outlined"
+          color="primary"
+          sx={{ m:1, height:40, minWidth:218, }}
+          label={ TypeOfIa[ newType ] }
+        />
+      )}
 
-      <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>
+      <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
         <InputLabel id="typeOfIa-label">TypeOfIA</InputLabel>
         <Select
           labelId="typeOfIA-label"
           id="typeOfIA-select"
+          label="TypeOfIA"
           value={ type }
           onChange={(e) => setType(parseInt(e.target.value.toString()))}
         >
-          {
-            strTypeOfIa.map((v, i) => (
+          {TypeOfIa.slice(1, 7).map((v, i) => (
               <MenuItem key={v} value={i+1}>{v}</MenuItem>
-            ))
-          }
+          ))}
         </Select>
       </FormControl>
 
+      <Divider orientation="vertical" sx={{ m:1 }} flexItem />
+
       <Button 
         disabled = {!setTypeOfIa || setTypeOfIaLoading}
-
         sx={{ m:1, mr:5, p:1, minWidth: 120, height: 40 }} 
         variant="contained" 
-        startIcon={<EditNote />}
+        endIcon={<EditNote />}
         onClick={()=> setTypeOfIa?.()}
         size='small'
       >
-        Set
+        Set Type
       </Button>
 
     </Stack>

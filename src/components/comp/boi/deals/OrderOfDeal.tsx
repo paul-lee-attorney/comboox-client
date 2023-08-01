@@ -276,7 +276,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={()=>setOpen(false)} sx={{ mr:5 }}>Close</Button>
+        <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
 
     </Dialog>

@@ -23,11 +23,6 @@ export type ContractProps = {
   addr: HexType
 }
 
-export interface ContractEditProps {
-  addr: HexType,
-  isFinalized: boolean,
-}
-
 export interface SigPageProps {
   addr: HexType,
   initPage: boolean,

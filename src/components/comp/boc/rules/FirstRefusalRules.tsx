@@ -23,14 +23,15 @@ import {
 
 import { FirstRefusalRuleWrap, SetFirstRefusalRule } from "./SetFirstRefusalRule";
 import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
+import { RulesEditProps } from "./SetGovernanceRule";
 
-interface FirstRefusalRulesProps {
-  sha: HexType;
-  initSeqList: number[] | undefined;
-  isFinalized: boolean;
-}
+// interface FirstRefusalRulesProps {
+//   sha: HexType;
+//   initSeqList: number[] | undefined;
+//   isFinalized: boolean;
+// }
 
-export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalRulesProps) {
+export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
   const mandatoryRules = [512, 513];
 
@@ -101,7 +102,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={()=>setOpen(false)}
+        onClose={ getRules }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>
@@ -153,7 +154,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized}: FirstRefusalR
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>
