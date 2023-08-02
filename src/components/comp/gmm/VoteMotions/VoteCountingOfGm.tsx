@@ -2,11 +2,11 @@
 import { Button, Paper, Stack } from "@mui/material";
 import { 
   useGeneralKeeperVoteCountingOfGm, 
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
-import { isPassed } from "../../../queries/meetingMinutes";
+import { isPassed } from "../../../../queries/meetingMinutes";
 
 
 interface VoteCountingOfGmProps {

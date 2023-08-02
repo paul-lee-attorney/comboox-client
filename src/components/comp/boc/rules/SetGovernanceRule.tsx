@@ -129,21 +129,6 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
     }
   })
 
-  // const obtainRule = async () => {
-  //   let hexRule = await getRule(sha, 0);
-  //   let objRule: GovernanceRule = grParser(hexRule);
-  //   setNewGR(objRule);
-  // }
-  
-  // useEffect(()=>{
-  //   obtainRule();
-  // })
-
-  // const handleClose = ()=>{
-  //   getRules();
-  //   setOpen(false);
-  // }
-
   return (
     <>
       <Button

@@ -14,16 +14,16 @@ import {
 import { HexType } from "../../../../interfaces";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { VoteCountingOfGm } from "../../gmm/VoteCountingOfGm";
+import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
-import { getHeadOfFile } from "../../../../queries/filesFolder";
 import { SignIa } from "./SignIa";
-import { getTypeOfIA } from "../../../../queries/ia";
-import { LockContents } from "../../../common/accessControl/LockContents";
 import { CirculateIa } from "./CirculateIa";
-import { ProposeDocOfGm } from "../../gmm/ProposeDocOfGm";
-import { VoteForDocOfGm } from "../../gmm/VoteForDocOfGm";
-import { useFilesFolder, useFilesFolderGetHeadOfFile, useInvestmentAgreement, useInvestmentAgreementGetTypeOfIa } from "../../../../generated";
+import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
+import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
+import { useFilesFolderGetHeadOfFile, useInvestmentAgreementGetTypeOfIa } from "../../../../generated";
+import { FinalizeIa } from "./FinalizeIa";
+import { getTypeOfIA } from "../../../../queries/ia";
+
 
 interface IaLifecycleProps {
   ia: HexType;
@@ -39,21 +39,18 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
   const [ typeOfIa, setTypeOfIa ] = useState<number>();
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 
-  useInvestmentAgreementGetTypeOfIa({
-    address: ia,
-    onSuccess(type) {
-      setTypeOfIa(type)
-    }
-  })
-
-  // useEffect(()=>{
-  //   const obtainTypeOfIa = async ()=>{
-  //     let typeOfIa = await getTypeOfIA(ia);
-  //     setTypeOfIa(typeOfIa);
-  //   };
-
-  //   obtainTypeOfIa();
+  // useInvestmentAgreementGetTypeOfIa({
+  //   address: ia,
+  //   onSuccess(type) {
+  //     setTypeOfIa(type)
+  //   }
   // })
+
+  useEffect(()=>{
+    getTypeOfIA(ia).then(
+      res => setTypeOfIa(res)
+    )
+  }, [ia, activeStep])
 
   useFilesFolderGetHeadOfFile({
     address: boox ? boox[6] : undefined,
@@ -86,42 +83,6 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
     }
   })
 
-  // useEffect(()=>{
-  //   const updateActiveStep = async () => {
-
-  //     if (boox) {
-
-  //       let head = await getHeadOfFile(boox[6], ia);
-  //       let fileState = head.state;
-  //       let seq = head.seqOfMotion;
-  //       let nextStep = 0;
-        
-  //       switch (fileState) {
-  //         case 1: 
-  //           nextStep = finalized ? 1: 0;
-  //           break;
-  //         case 4: 
-  //           let flag = await voteEnded(boox[5], seq);
-  //           nextStep = flag ? 5 : 4;
-  //           break;
-  //         case 5: 
-  //           nextStep = 6;
-  //           break;
-  //         case 6: // Rejected
-  //           nextStep = 8;
-  //           break;
-  //         default:
-  //           nextStep = fileState;
-  //       }
-  
-  //       setActiveStep( nextStep );
-  
-  //       if (seq) setSeqOfMotion(seq); 
-  //     }
-  //   };
-
-  //   updateActiveStep();
-  // }, [boox, ia, finalized]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -146,7 +107,9 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of IA (only for Owner of IA).
                   </Typography>
-                  <LockContents addr={ ia } setIsFinalized={setFinalized} setNextStep={ setActiveStep } />
+                  {/* <LockContents addr={ ia } setIsFinalized={setFinalized} setNextStep={ setActiveStep } /> */}
+
+                  <FinalizeIa addr={ ia } setIsFinalized={ setFinalized } setNextStep={ setActiveStep }  />
                 </StepContent>
 
               </Step>

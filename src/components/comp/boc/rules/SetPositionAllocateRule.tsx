@@ -45,7 +45,11 @@ export interface PosAllocateRule {
   data: number; 
 }
 
-export const titleOfPositions: string[] = ['Shareholder', 'Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 'SeniorManager', 'Manager', 'ViceManager'];
+export const titleOfPositions: string[] = [
+  'Shareholder', 'Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 
+  'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 
+  'SeniorManager', 'Manager', 'ViceManager'
+];
 
 export function prCodifier(rule: PosAllocateRule): HexType {
   let hexRule: HexType = `0x${
@@ -232,7 +236,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetRuleProps 
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfPositions[newPR.titleOfPos - 1] }
+                  value={ titleOfPositions[newPR.titleOfPos - 1] ?? 'Director' }
                 />
 
                 <TextField 
@@ -373,7 +377,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetRuleProps 
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ titleOfPositions[newPR.titleOfNominator - 1]}
+                  value={ titleOfPositions[newPR.titleOfNominator - 1] ?? 'Shareholder'}
                 />
 
                 <TextField 

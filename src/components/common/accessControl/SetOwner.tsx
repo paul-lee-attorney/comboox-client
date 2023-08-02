@@ -20,6 +20,7 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 import { getOwner } from '../../../queries/accessControl';
+import { HexParser } from '../../../scripts/toolsKit';
 
 export function SetOwner({ addr }: ContractProps) {
   const [owner, setOwner] = useState<HexType>();
@@ -68,8 +69,8 @@ export function SetOwner({ addr }: ContractProps) {
           }
           label='SetOwner'
           sx={{ height:55 }}
-          onChange={(e) => setOwner(`0x${e.target.value}`)}
-          value={ owner?.substring(2) }
+          onChange={(e) => setOwner( HexParser(e.target.value) )}
+          value={ owner }
         />
       </FormControl>
 

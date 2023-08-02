@@ -51,3 +51,15 @@ export function splitPayload(input: string):string[]{
   }
   return out;
 }
+
+export function HexParser(input: string):HexType {
+  
+  let prefix = input.substring(0,2);
+
+  let output: HexType;
+
+  if (prefix == '0x') output = `0x${input.substring(2)}`;
+  else output = `0x${input}`;
+
+  return output;
+}

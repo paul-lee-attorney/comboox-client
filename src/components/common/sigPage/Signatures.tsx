@@ -208,7 +208,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
                   label='SigningDays'
                   sx={{
                     m:1,
-                    ml: 10,
+                    ml: 11.2,
                     minWidth: 218,
                   }}
                   onChange={(e) => setTiming((v) => ({
@@ -342,11 +342,11 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
             <h4>Signatures of Doc</h4>
           </Toolbar>
 
-          {!initPage && isFinalized && (
+          {!initPage && isFinalized && isSha && (
             <AcceptSha getBuyers={ getBuyers } getSellers={ getSellers } />
           )}
 
-          {!isFinalized && (
+          {!isFinalized && initPage && (
             <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
               <Tooltip

@@ -3,11 +3,9 @@ import { Deal } from "../../../../queries/ia";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { StateOfDeal, TypeOfDeal } from "./CreateDeal";
 import { dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
-import { Delete } from "@mui/icons-material";
 import { DeleteDeal } from "./DeleteDeal";
 import { HexType } from "../../../../interfaces";
 import { ActionsOfDeal } from "./ActionsOfDeal";
-import { AcceptAlongDeal } from "./Actions/AcceptAlongDeal";
 import { GetDTClaims } from "../GetDTClaims";
 
 

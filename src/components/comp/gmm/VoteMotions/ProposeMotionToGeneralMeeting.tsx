@@ -2,13 +2,13 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperProposeMotionToGeneralMeeting, 
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
-import { HexType } from "../../../interfaces";
+import { HexType } from "../../../../interfaces";
 
 interface ProposeMotionToGmProps {
   seqOfMotion: bigint,
@@ -34,7 +34,9 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotions
     address: gk,
     args: [BigInt(seqOfMotion)],
     onSuccess(){
-      getMotionsList(boox[5]);
+      if (boox) {
+        getMotionsList(boox[5]);
+      }
       setOpen(false);
     }
   });

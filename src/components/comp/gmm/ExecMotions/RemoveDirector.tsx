@@ -1,6 +1,6 @@
-import { useGeneralKeeperRemoveDirector } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { HexType } from "../../../interfaces";
+import { useGeneralKeeperRemoveDirector } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { HexType } from "../../../../interfaces";
 import { Button, Paper } from "@mui/material";
 import { Chair, FollowTheSigns } from "@mui/icons-material";
 
@@ -17,13 +17,6 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:
 
   const {gk, boox} = useComBooxContext();
   
-  // const {
-  //   config: removeDirectorConfig,
-  // } = usePrepareGeneralKeeperRemoveDirector({
-  //   address: gk,
-  //   args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
-  // })
-
   const {
     isLoading: removeDirectorLoading,
     write: removeDirector,

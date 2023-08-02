@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { AddrZero, HexType } from "../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { AddrZero, HexType } from "../../../../interfaces";
 
 import { 
   useGeneralKeeperExecActionOfGm, 
-} from "../../../generated";
+} from "../../../../generated";
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export interface Action {
   target: HexType;
@@ -113,8 +114,8 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
           m:1,
           minWidth: 630,
         }}
-        onChange={(e) => setDesHash(`0x${e.target.value}`)}
-        value={ desHash?.substring(2) }
+        onChange={(e) => setDesHash(HexParser( e.target.value ))}
+        value={ desHash }
       />
 
       <Button
@@ -146,10 +147,10 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
           onChange={(e) => setActions(a => {
             let arr:Action[] = [];
             arr = [...a];
-            a[i].target = `0x${e.target.value}`;
+            a[i].target = HexParser( e.target.value );
             return arr;
           })}
-          value={ actions[i].target.substring(2) }
+          value={ actions[i].target }
         />
 
         <TextField 
@@ -178,10 +179,10 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
           onChange={(e) => setActions(a => {
             let arr:Action[] = [];
             arr = [...a];
-            arr[i].params = `0x${e.target.value}`;
+            arr[i].params = HexParser( e.target.value );
             return arr;
           })}
-          value={ actions[i].params.substring(2) }
+          value={ actions[i].params }
         />
 
       </Stack>

@@ -1,57 +1,36 @@
 import { Alert, Box, Button, Stack, TextField, } from "@mui/material";
-import { useGeneralKeeperSignIa, useSigPageGetParasOfPage } from "../../../../generated";
+import { useGeneralKeeperSignIa, useSigPageEstablished, useSigPageGetParasOfPage } from "../../../../generated";
 import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useState } from "react";
-
-interface StrParasOfSigPageType {
-  circulateDate: number,
-  established: boolean,
-  counterOfBlanks: string,
-  counterOfSigs: string,
-  signingDays: string,
-  closingDays: string,
-}
-
-function parseParasOfPage(data: any): StrParasOfSigPageType {
-  let output: StrParasOfSigPageType = {
-    circulateDate: data.sigDate,
-    established: data.flag,
-    counterOfBlanks: data.para.toString(),
-    counterOfSigs: data.arg.toString(),
-    signingDays: data.seq.toString(),
-    closingDays: data.attr.toString(),
-  }
-  return output;
-}
+import { ParasOfSigPage, parseParasOfPage } from "../../../../queries/sigPage";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export function SignIa({ addr, setNextStep }: FileHistoryProps) {
-  const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
+  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
 
   const {
     refetch: getParasOfPage
   } = useSigPageGetParasOfPage({
     address: addr,
     args: [true],
-    onSuccess(data) {
-      setParasOfPage(parseParasOfPage(data));
-      if (data.flag)
-        setNextStep(3);
+    onSuccess(res) {
+      setParasOfPage(parseParasOfPage(res));
+    }
+  })
+
+  const {
+    refetch: isEstablished
+  } = useSigPageEstablished({
+    address: addr,
+    onSuccess(res) {
+      if (res) setNextStep(3);
     }
   })
 
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
-
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperSignIa({
-  //   address: gk,
-  //   args: sigHash
-  //     ? [addr, sigHash]
-  //     : undefined,
-  // });
 
   const {
     isLoading,
@@ -63,6 +42,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
       : undefined,
     onSuccess() {
       getParasOfPage();
+      isEstablished();
     }
   });
 
@@ -74,8 +54,8 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
         id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
-        onChange={e => setSigHash(`0x${e.target.value}`)}
-        value = { sigHash.substring(2) }
+        onChange={e => setSigHash(HexParser( e.target.value ))}
+        value = { sigHash }
         size='small'
       />                                            
 
@@ -83,7 +63,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
         disabled={!write || isLoading}
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
-        sx={{ m:1, minWidth:218 }}
+        sx={{ m:1, minWidth:218, height:40 }}
         onClick={()=>write?.()}
       >
         Sign Ia
@@ -94,7 +74,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
           <Alert 
             variant='outlined' 
             severity='info' 
-            sx={{ height: 55,  m: 1 }} 
+            sx={{ height: 45, p:0.5 }} 
           >
             Sigers / Parties: { parasOfPage?.counterOfSigs +'/'+ parasOfPage?.counterOfBlanks } 
           </Alert>

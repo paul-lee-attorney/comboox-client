@@ -4,6 +4,7 @@ import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces"
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
 
@@ -11,13 +12,6 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const [ docUrl, setDocUrl ] = useState<HexType>(Bytes32Zero);
   const [ docHash, setDocHash ] = useState<HexType>(Bytes32Zero);
-
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperCirculateSha({
-  //   address: gk,
-  //   args: [addr, docUrl, docHash],
-  // });
 
   const {
     isLoading,
@@ -40,8 +34,8 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocOfUrl" 
           label="DocOfUrl / CID in IPFS" 
           variant="outlined"
-          onChange={e => setDocUrl(`0x${e.target.value}`)}
-          value = { docUrl.substring(2) }
+          onChange={e => setDocUrl( HexParser( e.target.value ) )}
+          value = { docUrl }
           size='small'
         />                                            
 
@@ -50,14 +44,14 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocHash" 
           label="DocHash" 
           variant="outlined"
-          onChange={e => setDocHash(`0x${e.target.value}`)}
-          value = { docHash.substring(2) }
+          onChange={e => setDocHash(HexParser( e.target.value ))}
+          value = { docHash }
           size='small'
         />                                            
 
       </Stack>
       
-      <Divider orientation="vertical" />
+      <Divider orientation="vertical" sx={{ m:1 }} flexItem />
       
       <Button
         disabled={!write || isLoading}

@@ -98,7 +98,7 @@ export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }} >
 
-      <Toolbar>
+      <Toolbar sx={{ textDecoration:'underline' }} >
         <h4>Shares List</h4>
       </Toolbar>
       <DataGrid 

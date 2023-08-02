@@ -9,7 +9,7 @@ import {
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType } from '../../interfaces';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { selectorCodifier } from '../../scripts/toolsKit';
+import { HexParser, selectorCodifier } from '../../scripts/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { BodyOfLocker, HeadOfLocker, defaultHeadOfLocker, defaultBodyOfLocker } from '../../queries/rc';
@@ -186,8 +186,8 @@ export function LockConsideration({refreshList, getUser}:LockConsiderationProps)
                   m:1,
                   minWidth: 685,
                 }}
-                value={ hashLock.substring(2) }
-                onChange={e => setHashLock(`0x${e.target.value ?? ''}`)}
+                value={ hashLock }
+                onChange={e => setHashLock( HexParser(e.target.value) )}
               />
             </Stack>
 
@@ -201,8 +201,8 @@ export function LockConsideration({refreshList, getUser}:LockConsiderationProps)
                   m:1,
                   minWidth: 450,
                 }}
-                value={ counterLocker.substring(2) }
-                onChange={e => setCounterLocker(`0x${e.target.value ?? ''}`)}
+                value={ counterLocker }
+                onChange={e => setCounterLocker( HexParser(e.target.value) )}
               />
 
               <FormControl variant="filled" sx={{ m: 1, minWidth: 218 }}>

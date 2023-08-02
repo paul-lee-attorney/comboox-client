@@ -1,43 +1,33 @@
 import { Alert, Box, Button, Stack, TextField } from "@mui/material";
-import { useGeneralKeeperSignSha, useSigPageGetParasOfPage } from "../../../../generated";
+import { useGeneralKeeperSignSha, useSigPageEstablished, useSigPageGetParasOfPage } from "../../../../generated";
 import { Bytes32Zero, FileHistoryProps, HexType } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline, Fingerprint } from "@mui/icons-material";
 import { useState } from "react";
+import { ParasOfSigPage, parseParasOfPage } from "../../../../queries/sigPage";
+import { HexParser } from "../../../../scripts/toolsKit";
 
-interface StrParasOfSigPageType {
-  circulateDate: number,
-  established: boolean,
-  counterOfBlanks: string,
-  counterOfSigs: string,
-  signingDays: string,
-  closingDays: string,
-}
-
-function parseParasOfPage(data: any): StrParasOfSigPageType {
-  let output: StrParasOfSigPageType = {
-    circulateDate: data.sigDate,
-    established: data.flag,
-    counterOfBlanks: data.para.toString(),
-    counterOfSigs: data.arg.toString(),
-    signingDays: data.seq.toString(),
-    closingDays: data.attr.toString(),
-  }
-  return output;
-}
 
 export function SignSha({ addr, setNextStep }: FileHistoryProps) {
-  const [ parasOfPage, setParasOfPage ] = useState<StrParasOfSigPageType>();
 
+  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
+  
   const {
-    refetch: refetchParasOfPage
+    refetch: getParasOfPage
   } = useSigPageGetParasOfPage({
     address: addr,
     args: [true],
-    onSuccess(data) {
-      setParasOfPage(parseParasOfPage(data));
-      if (data.flag)
-        setNextStep(3);
+    onSuccess(res) {
+      setParasOfPage(parseParasOfPage(res));
+    }
+  })
+
+  const {
+    refetch: isEstablished
+  } = useSigPageEstablished({
+    address: addr,
+    onSuccess(res) {
+      if (res) setNextStep(3);
     }
   })
 
@@ -53,7 +43,8 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         ? [addr, sigHash]
         : undefined,
     onSuccess() {
-      refetchParasOfPage();
+      getParasOfPage();
+      isEstablished();
     }
   });
 
@@ -65,8 +56,8 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
-        onChange={e => setSigHash(`0x${e.target.value}`)}
-        value = { sigHash.substring(2) }
+        onChange={e => setSigHash(HexParser( e.target.value ))}
+        value = { sigHash }
         size='small'
       />                                            
 
@@ -81,11 +72,11 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
       </Button>
 
       {parasOfPage && (
-        <Box sx={{ width:280 }} >        
+        <Box sx={{ width:280, m:1 }} >        
           <Alert 
             variant='outlined' 
             severity='info'
-            sx={{ height: 55,  m: 1 }} 
+            sx={{ height: 45,  p:0.5 }} 
           >
             Sigers / Parties: { parasOfPage?.counterOfSigs +'/'+ parasOfPage?.counterOfBlanks } 
           </Alert>

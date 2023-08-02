@@ -14,7 +14,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Share } from "../../../queries/bos";
 import { Locker, HeadOfLocker,  defaultHeadOfLocker } from "../../../queries/rc";
-import { splitPayload } from "../../../scripts/toolsKit";
+import { HexParser, splitPayload } from "../../../scripts/toolsKit";
 
 
 interface LockerOfPayInCapProps {
@@ -208,8 +208,8 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
               m:1,
               minWidth: 618,
             }}
-            onChange={(e) => setHashLock(`0x${e.target.value}`)}
-            value={ hashLock?.substring(2) }
+            onChange={(e) => setHashLock(HexParser( e.target.value ))}
+            value={ hashLock }
             size="small"
           />
 

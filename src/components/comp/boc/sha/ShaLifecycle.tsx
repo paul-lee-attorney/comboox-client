@@ -14,13 +14,13 @@ import {
 import { HexType } from "../../../../interfaces";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { VoteCountingOfGm } from "../../gmm/VoteCountingOfGm";
+import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
 import { voteEnded } from "../../../../queries/meetingMinutes";
 import { getHeadOfFile } from "../../../../queries/filesFolder";
 import { CirculateSha } from "./CirculateSha";
 import { SignSha } from "./SignSha";
-import { ProposeDocOfGm } from "../../gmm/ProposeDocOfGm";
-import { VoteForDocOfGm } from "../../gmm/VoteForDocOfGm";
+import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
+import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
 import { ActivateSha } from "./ActivateSha";
 import { FinalizeSha } from "./FinalizeSha";
 

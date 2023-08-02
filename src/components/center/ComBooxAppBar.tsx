@@ -59,6 +59,7 @@ import { longSnParser } from '../../scripts/toolsKit';
 import { AcctPage } from './AcctPage';
 import { useRouter } from 'next/router';
 import { CopyLongStrSpan } from '../common/utils/CopyLongStr';
+import { GetTimestamp } from '../common/utils/GetTimestamp';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -224,7 +225,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                 )}
               </Stack>
 
-              <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:1 }} >
+              <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:0.1 }} >
+
 
                 <FormGroup sx={{
                   ml:5,
@@ -244,6 +246,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                 </FormGroup>
 
                 <AcctPage flag={ isConnected } />
+
+                <GetTimestamp />
 
               </Stack>
 

@@ -11,6 +11,7 @@ import Link from '../../../scripts/Link';
 import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { InfoOfFile } from '../../../queries/filesFolder';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { CopyLongStrSpan } from '../utils/CopyLongStr';
 
 interface GetFilesListProps {
   list: InfoOfFile[],
@@ -70,12 +71,31 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
       align: 'center',
     },
     {
+      field: 'circulateDate',
+      headerName: 'CirculateDate',
+      valueGetter: p => dateParser(p.row.head.circulateDate),
+      width: 218,
+      headerAlign:'center',
+      align: 'center',
+    },
+    {
+      field: 'closingDeadline',
+      headerName: 'ClosingDeadline',
+      valueGetter: p => dateParser(p.row.head.circulateDate + (p.row.head.closingDays * 86400)),
+      width: 218,
+      headerAlign:'center',
+      align: 'center',
+    },
+    {
       field: 'addr',
       headerName: 'Address',
       valueGetter: p => p.row.addr,
-      width: 550,
+      width: 218,
       headerAlign:'center',
       align: 'center',
+      renderCell:({value})=>(
+        <CopyLongStrSpan title='Addr' size='body1' src={value} />
+      )
     },
     {
       field: 'state',

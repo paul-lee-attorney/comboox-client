@@ -20,6 +20,7 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 import { ATTORNEYS, hasRole } from '../../../queries/accessControl';
+import { HexParser } from '../../../scripts/toolsKit';
 
 
 export function RemoveAttorney({ addr }: ContractProps) {
@@ -50,14 +51,6 @@ export function RemoveAttorney({ addr }: ContractProps) {
     write?.();
   }
 
-  // useEffect(() => {
-  //   if (acct) 
-  //     hasRole(addr, ATTORNEYS, acct).then(flag => {
-  //       setFlag(flag);
-  //       setOpen(true);
-  //     });
-  // }, [data, addr, acct]);
-
   return (
     
     <Stack direction={'row'}  sx={{ width: '100%' }} >
@@ -80,8 +73,8 @@ export function RemoveAttorney({ addr }: ContractProps) {
           }
           label='RemoveAttorney'
           sx={{height:55}}
-          onChange={(e) => setAcct(`0x${e.target.value}`)}
-          value={ acct?.substring(2) }
+          onChange={(e) => setAcct( HexParser( e.target.value ) )}
+          value={ acct }
         />
       </FormControl>
 

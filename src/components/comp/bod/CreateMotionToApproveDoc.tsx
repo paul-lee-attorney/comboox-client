@@ -8,6 +8,7 @@ import {
 
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
+import { HexParser } from "../../../scripts/toolsKit";
 
 interface CreateMotionToApproveDoc {
   getMotionsList: () => any;
@@ -56,8 +57,8 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setDoc(`0x${e.target.value}`)}
-          value={ doc?.substring(2) }
+          onChange={(e) => setDoc(HexParser( e.target.value ))}
+          value={ doc }
         />
 
         <TextField 

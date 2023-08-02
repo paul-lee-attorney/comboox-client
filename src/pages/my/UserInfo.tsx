@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AddrOfRegCenter, AddrZero } from "../../interfaces";
 import { Locker, User, getLocker } from "../../queries/rc";
-import { Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser } from "../../scripts/toolsKit";
 import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetOwner, useRegCenterGetUser } from "../../generated";
 import { SetBackupKey } from "../../components/center/SetBackupKey";
@@ -94,11 +94,21 @@ function UserInfo() {
             <>
             <tr>
             <td>
+              {/* <Button
+                variant="outlined"
+                fullWidth
+                sx={{ m:1 }}
+                onClick={()=> obtainUser()}
+              >
+                Balance: {longDataParser(user?.balance.toString() ?? '0')}
+              </Button> */}
+
               <TextField 
                 size="small"
                 variant='outlined'
                 label='BalanceAmt'
                 inputProps={{readOnly: true}}
+                fullWidth
                 sx={{
                   m:1,
                   minWidth: 456,
@@ -112,6 +122,7 @@ function UserInfo() {
                 variant='outlined'
                 label='CounterOfVerification'
                 inputProps={{readOnly: true}}
+                fullWidth
                 sx={{
                   m:1,
                   minWidth: 465,
@@ -125,6 +136,7 @@ function UserInfo() {
                 variant='outlined'
                 label='TypeOfAcct'
                 inputProps={{readOnly: true}}
+                fullWidth
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -137,7 +149,7 @@ function UserInfo() {
 
             <tr>
               <td>
-                <CopyLongStrTF title='PrimeKey' src={user?.primeKey.pubKey.toLowerCase() ?? '-'} />
+                <CopyLongStrTF size="body1" title='PrimeKey' src={user?.primeKey.pubKey.toLowerCase() ?? '-'} />
               </td>
               <td>
                 <TextField 
@@ -145,6 +157,7 @@ function UserInfo() {
                   variant='outlined'
                   label='SeqOfKey'
                   inputProps={{readOnly: true}}
+                  fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -158,6 +171,7 @@ function UserInfo() {
                   variant='outlined'
                   label='DataOfKey'
                   inputProps={{readOnly: true}}
+                  fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -171,6 +185,7 @@ function UserInfo() {
                   variant='outlined'
                   label='DateOfKey'
                   inputProps={{readOnly: true}}
+                  fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -182,7 +197,7 @@ function UserInfo() {
 
             <tr>
               <td>
-                <CopyLongStrTF title='BackupKey' src={ user?.backupKey.pubKey.toLowerCase() ?? '-' } />
+                <CopyLongStrTF size="body1" title='BackupKey' src={ user?.backupKey.pubKey.toLowerCase() ?? '-' } />
                 {/* <TextField 
                   size="small"
                   variant='outlined'
@@ -201,6 +216,7 @@ function UserInfo() {
                   variant='outlined'
                   label='SeqOfKey'
                   inputProps={{readOnly: true}}
+                  fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -214,6 +230,7 @@ function UserInfo() {
                   variant='outlined'
                   label='DataOfKey'
                   inputProps={{readOnly: true}}
+                  fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -227,6 +244,7 @@ function UserInfo() {
                   variant='outlined'
                   label='DateOfKey'
                   inputProps={{readOnly: true}}
+                  fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -238,7 +256,7 @@ function UserInfo() {
 
             <tr>
               <td colSpan={4} >
-                <Divider />
+                <Divider orientation="horizontal" sx={{ m:1 }} flexItem />
               </td>
             </tr>
             </>

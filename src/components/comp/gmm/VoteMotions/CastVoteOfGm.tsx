@@ -3,15 +3,16 @@ import { useEffect, useState } from "react";
 import { 
   useGeneralKeeperCastVoteOfGm,
   usePrepareGeneralKeeperCastVoteOfGm, 
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import { HowToVote, } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../interfaces";
+import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
-import { VoteResult } from "../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
+import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
+import { VoteCase, getVoteResult } from "../../../../queries/meetingMinutes";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 interface ProposeMotionProps {
   seqOfMotion: bigint,
@@ -115,8 +116,8 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
             id="tfHashOfAction" 
             label="SigHash / CID in IPFS" 
             variant="outlined"
-            onChange={e => setSigHash(`0x${e.target.value}`)}
-            value = { sigHash.substring(2) }
+            onChange={e => setSigHash(HexParser( e.target.value ))}
+            value = { sigHash }
             size='small'
           />                                            
 

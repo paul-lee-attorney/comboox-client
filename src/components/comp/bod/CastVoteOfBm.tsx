@@ -27,6 +27,7 @@ import { Bytes32Zero, HexType } from "../../../interfaces";
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
+import { HexParser } from "../../../scripts/toolsKit";
 
 interface CastVoteOfBmProps {
   seqOfMotion: bigint,
@@ -130,8 +131,8 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
             id="tfSigHash" 
             label="SigHash / CID in IPFS" 
             variant="outlined"
-            onChange={e => setSigHash(`0x${e.target.value}`)}
-            value = { sigHash.substring(2) }
+            onChange={e => setSigHash(HexParser( e.target.value ))}
+            value = { sigHash }
             size='small'
           />                                            
 

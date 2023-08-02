@@ -7,9 +7,9 @@ import {
   Stack, Toolbar, 
 } from "@mui/material";
 
-import { CreateMotionForBoardSeats } from "./CreateMotionForBoardSeats";
-import { CreateMotionForDoc } from "./CreateMotionForDoc";
-import { CreateMotionForAction } from "./CreateMotionForAction";
+import { CreateMotionForBoardSeats } from "./CreateMotions/CreateMotionForBoardSeats";
+import { CreateMotionForDoc } from "./CreateMotions/CreateMotionForDoc";
+import { CreateMotionForAction } from "./CreateMotions/CreateMotionForAction";
 
 interface CreateMotionProps {
   getMotionsList: () => any,

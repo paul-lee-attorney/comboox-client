@@ -23,6 +23,7 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 import { ATTORNEYS, hasRole } from '../../../queries/accessControl';
+import { HexParser } from '../../../scripts/toolsKit';
 
 export function AppointAttorney({ addr }: ContractProps) {
 
@@ -73,8 +74,8 @@ export function AppointAttorney({ addr }: ContractProps) {
             }
             label='AppointAttorney'
             sx={{ height:55 }}
-            onChange={(e) => setAcct(`0x${e.target.value}`)}
-            value={ acct?.substring(2) }
+            onChange={(e) => setAcct( HexParser(e.target.value) )}
+            value={ acct }
           />
         </FormControl>
 

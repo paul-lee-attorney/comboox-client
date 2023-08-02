@@ -14,6 +14,7 @@ import {
 import { useComBooxContext } from '../../scripts/ComBooxContext';
 import { getDocAddr } from '../../queries/rc';
 import { useState } from 'react';
+import { HexParser } from '../../scripts/toolsKit';
 
 export function CreateComp() {
   const { setGK } = useComBooxContext();
@@ -65,8 +66,8 @@ export function CreateComp() {
             </InputAdornment>
           }
           sx={{height: 40}}
-          onChange={(e) => setDK(`0x${e.target.value}`)}
-          value={ dk?.substring(2) }
+          onChange={(e) => setDK( HexParser(e.target.value) )}
+          value={ dk }
         />
       </FormControl>
 

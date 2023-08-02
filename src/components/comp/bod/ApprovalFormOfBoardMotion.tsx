@@ -8,7 +8,7 @@ import { HexType } from "../../../interfaces";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
-import { ExecActionOfGm } from "../gmm/ExecActionOfGm";
+import { ExecActionOfGm } from "../gmm/ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
 import { ProposeMotionToBoardMeeting } from "./ProposeMotionToBoardMeeting";

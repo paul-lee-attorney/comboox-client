@@ -60,7 +60,7 @@ export function MintPoints({getUser}:MintPointsProps) {
 
         <TextField 
           size="small"
-          variant='filled'
+          variant="outlined"
           label='To'
           sx={{
             m:1,
@@ -72,7 +72,7 @@ export function MintPoints({getUser}:MintPointsProps) {
 
         <TextField 
           size="small"
-          variant='filled'
+          variant="outlined"
           label='Amount'
           sx={{
             m:1,
@@ -89,7 +89,7 @@ export function MintPoints({getUser}:MintPointsProps) {
             mintPoints?.()
           }}
           variant='contained'
-          sx={{ m:1, mx:2, minWidth:128 }} 
+          sx={{ m:1, mx:2, minWidth:128, height:40 }} 
           endIcon={<Flare />}       
         >
           {mintPointsLoading ? 'Loading...' : 'Mint'}
@@ -110,7 +110,7 @@ export function MintPoints({getUser}:MintPointsProps) {
               </IconButton>
             }
 
-            variant='outlined' 
+            variant="outlined" 
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >

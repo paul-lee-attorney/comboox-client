@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { HexType } from "../../../interfaces";
-import { useGeneralKeeperProposeDocOfGm } from "../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { HexType } from "../../../../interfaces";
+import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 
 
@@ -55,8 +56,8 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setDoc(`0x${e.target.value}`)}
-          value={ doc?.substring(2) }
+          onChange={(e) => setDoc(HexParser( e.target.value ))}
+          value={ doc }
         />
 
         <TextField 

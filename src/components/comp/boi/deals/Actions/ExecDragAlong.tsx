@@ -7,6 +7,7 @@ import {  AgricultureOutlined, DirectionsRun, SellOutlined } from "@mui/icons-ma
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../interfaces";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
+import { HexParser } from "../../../../../scripts/toolsKit";
 
 export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
@@ -109,8 +110,8 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
                   m:1,
                   minWidth: 685,
                 }}
-                value={ sigHash.substring(2) }
-                onChange={(e)=>setSigHash(`0x${e.target.value}`)}
+                value={ sigHash }
+                onChange={(e)=>setSigHash(HexParser( e.target.value ))}
               />
             </Stack>
 

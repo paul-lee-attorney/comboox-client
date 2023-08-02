@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 
 import { 
   useGeneralKeeperCreateMotionToRemoveDirector, 
   useGeneralKeeperNominateDirector, 
-} from "../../../generated";
+} from "../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";

@@ -8,6 +8,7 @@ import {
 import { AddrOfRegCenter, HexType } from '../../interfaces';
 import { BorderColor, Create } from '@mui/icons-material';
 import { useState } from 'react';
+import { HexParser } from '../../scripts/toolsKit';
 
 interface SetBackupKeyProps {
   getUser: () => void,
@@ -50,8 +51,8 @@ export function SetBackupKey({ getUser }:SetBackupKeyProps) {
               m:1,
               minWidth: 456,
             }}
-            value={ key?.substring(2) }
-            onChange={e => setKey(`0x${e.target.value ?? ''}`)}
+            value={ key }
+            onChange={e => setKey( HexParser( e.target.value ))}
           />
 
           <Button 

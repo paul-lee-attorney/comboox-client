@@ -126,7 +126,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 15,
     shaConfirmDays: 14,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -145,7 +145,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: true,
     shaExecDays: 15,
     shaConfirmDays: 14,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -164,7 +164,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 0,
     shaConfirmDays: 0,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 0,
     votingDays: 0,
     execDaysForPutOpt: 0,
@@ -183,7 +183,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 15,
     shaConfirmDays: 14,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -202,7 +202,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: true,
     shaExecDays: 15,
     shaConfirmDays: 14,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -221,7 +221,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 15,
     shaConfirmDays: 14,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -240,7 +240,7 @@ const defaultRules: VotingRule[] = [
     againstShallBuy: false,
     shaExecDays: 15,
     shaConfirmDays: 14,
-    reconsiderDays: 0,
+    reconsiderDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -393,21 +393,6 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
       setNewVR(vrParser(res))
     }
   })
-
-  // const obtainRule = async ()=>{
-  //   let hexRule:HexType = await getRule(sha, objVR.seqOfRule);
-  //   let objRule:VotingRule = vrParser(hexRule);
-  //   setNewVR(objRule);
-  // }
-
-  // useEffect(()=>{
-  //   const obtainInitRule = async () => {
-  //     let hexRule:HexType = await getRule(sha, seq);
-  //     let objRule:VotingRule = vrParser(hexRule);
-  //     setNewVR(objRule);
-  //   }
-  //   obtainInitRule();
-  // })
 
   return (
     <>

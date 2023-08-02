@@ -1,6 +1,6 @@
-import { useGeneralKeeperTakeSeat, usePrepareGeneralKeeperTakeSeat } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { HexType } from "../../../interfaces";
+import { useGeneralKeeperTakeSeat, usePrepareGeneralKeeperTakeSeat } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { HexType } from "../../../../interfaces";
 import { Button, Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
 

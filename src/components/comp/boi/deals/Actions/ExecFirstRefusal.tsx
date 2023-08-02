@@ -8,7 +8,7 @@ import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FirstRefusalRule } from "../../../boc/rules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../queries/sha";
-import { longSnParser } from "../../../../../scripts/toolsKit";
+import { HexParser, longSnParser } from "../../../../../scripts/toolsKit";
 
 export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:ActionsOfDealProps) {
 
@@ -106,8 +106,8 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
                 m:1,
                 minWidth: 685,
               }}
-              onChange={(e) => setSigHash(`0x${e.target.value}`)}
-              value={ sigHash.substring(2) }
+              onChange={(e) => setSigHash(HexParser( e.target.value ))}
+              value={ sigHash }
             />
 
 

@@ -1,14 +1,15 @@
 import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { 
   useGeneralKeeperCastVoteOfGm,
-} from "../../../generated";
+} from "../../../../generated";
 
-import { Bytes32Zero, HexType } from "../../../interfaces";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { HowToVote } from "@mui/icons-material";
 import { useState } from "react";
-import { VoteResult } from "../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
+import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
+import { VoteCase, getVoteResult } from "../../../../queries/meetingMinutes";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 interface VoteForDocOfGmProps {
   seqOfMotion: bigint ;
@@ -74,8 +75,8 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
           id="tfHashOfAction" 
           label="SigHash / CID in IPFS" 
           variant="outlined"
-          onChange={e => setSigHash(`0x${e.target.value}`)}
-          value = { sigHash.substring(2) }
+          onChange={e => setSigHash(HexParser( e.target.value ))}
+          value = { sigHash }
           size='small'
         />                                            
 

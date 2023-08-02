@@ -43,10 +43,6 @@ function Ia() {
               SnOfDoc: ({snOfDoc})
             </Typography>
 
-            {/* <Typography sx={{ m:1 }} variant="body1">
-              Addr: ({ia})
-            </Typography> */}
-
             <CopyLongStrSpan size='body1' title='Addr' src={ia.toLowerCase()} />
 
             <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
@@ -78,6 +74,12 @@ function Ia() {
               <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {ia != '0x' && isFinalized != undefined && (
                   <Signatures addr={ia} initPage={true} isFinalized={isFinalized} isSha={ false }/>
+                )}
+              </TabPanel>
+
+              <TabPanel value={3} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
+                {ia != '0x' && isFinalized != undefined && (
+                  <Signatures addr={ia} initPage={false} isFinalized={isFinalized} isSha={ false } />
                 )}
               </TabPanel>
 

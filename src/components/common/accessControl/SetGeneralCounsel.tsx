@@ -21,6 +21,7 @@ import {
 
 import { ContractProps, HexType } from '../../../interfaces';
 import { ATTORNEYS } from '../../../queries/accessControl';
+import { HexParser } from '../../../scripts/toolsKit';
 
 export function SetGeneralCounsel({ addr }: ContractProps) {
 
@@ -56,13 +57,6 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
     setRoleAdmin?.();
   }
 
-  // useEffect(() => { 
-  //   getGeneralCounsel(addr).then(gc => {
-  //     setNewGC(gc);
-  //     setOpen(true);
-  //   });
-  // }, [setRoleAdmin, addr]);
-
   return (
     <>
       <Stack direction={'row'} >
@@ -85,8 +79,8 @@ export function SetGeneralCounsel({ addr }: ContractProps) {
             }
             label='SetGeneralCounsel'
             sx={{height: 55}}
-            onChange={(e) => setGC(`0x${e.target.value}`)}
-            value={ gc?.substring(2) }
+            onChange={(e) => setGC( HexParser(e.target.value) )}
+            value={ gc }
           />
         </FormControl>
 

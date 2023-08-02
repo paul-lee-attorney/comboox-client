@@ -4,6 +4,7 @@ import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useState } from "react";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 interface AcceptShaProps {
   getBuyers:()=>void;
@@ -35,8 +36,8 @@ export function AcceptSha({getBuyers, getSellers}:AcceptShaProps) {
         id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
-        onChange={e => setSigHash(`0x${e.target.value}`)}
-        value = { sigHash.substring(2) }
+        onChange={e => setSigHash( HexParser( e.target.value ) )}
+        value = { sigHash }
         size='small'
       />                                            
 

@@ -6,6 +6,7 @@ import { useGeneralKeeperAcceptFirstRefusal, useGeneralKeeperCloseDeal } from ".
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HandshakeOutlined, LockOpen } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../../../interfaces";
+import { HexParser } from "../../../../../scripts/toolsKit";
 
 
 
@@ -55,8 +56,8 @@ export function AcceptFirstRefusal({ ia, deal, setOpen, setDeal, refreshDealsLis
               m:1,
               minWidth: 680,
             }}
-            value={ sigHash.substring(2) }
-            onChange={(e)=>setSigHash(`0x${e.target.value}`)}
+            value={ sigHash }
+            onChange={(e)=>setSigHash(HexParser( e.target.value ))}
           />
 
           <Button 

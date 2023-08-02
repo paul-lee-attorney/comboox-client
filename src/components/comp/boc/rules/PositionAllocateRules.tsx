@@ -27,7 +27,6 @@ import {
 
 import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
 import { RulesEditProps } from "./SetGovernanceRule";
-import { getRule } from "../../../../queries/sha";
 
 export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 

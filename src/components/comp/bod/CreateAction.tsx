@@ -8,6 +8,7 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
+import { HexParser } from "../../../scripts/toolsKit";
 
 
 export interface Action {
@@ -150,8 +151,8 @@ export function CreateAction({getMotionsList}:CreateActionProps) {
             m:1,
             minWidth: 630,
           }}
-          onChange={(e) => setDesHash(`0x${e.target.value}`)}
-          value={ desHash?.substring(2) }
+          onChange={(e) => setDesHash(HexParser( e.target.value ))}
+          value={ desHash }
         />
 
         <Button
@@ -183,10 +184,10 @@ export function CreateAction({getMotionsList}:CreateActionProps) {
           onChange={(e) => setActions(a => {
             let arr:Action[] = [];
             arr = [...a];
-            a[i].target = `0x${e.target.value}`;
+            a[i].target = HexParser( e.target.value );
             return arr;
           })}
-          value={ actions[i].target.substring(2) }
+          value={ actions[i].target }
         />
 
         <TextField 
@@ -215,10 +216,10 @@ export function CreateAction({getMotionsList}:CreateActionProps) {
           onChange={(e) => setActions(a => {
             let arr:Action[] = [];
             arr = [...a];
-            arr[i].params = `0x${e.target.value}`;
+            arr[i].params = HexParser( e.target.value );
             return arr;
           })}
-          value={ actions[i].params.substring(2) }
+          value={ actions[i].params }
         />
 
       </Stack>

@@ -3,15 +3,19 @@ import {
   TableContainer, 
   Paper, 
   Toolbar, 
-  Chip
+  Chip,
+  Stack
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { Deal } from '../../../../queries/ia';
 import { dateParser, longDataParser, longSnParser } from '../../../../scripts/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
+import { HexType } from '../../../../interfaces';
 
 interface DealsListProps {
+  ia: HexType;
+  isFinalized: boolean;
   list: Deal[];
   setDeal: Dispatch<SetStateAction<Deal>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -19,19 +23,19 @@ interface DealsListProps {
 
 const dealState = ['Drafting', 'Locked', 'Cleared', 'Closed', 'Terminated'];
 
-export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
+export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListProps ) {
   
   const columns: GridColDef[] = [
     {
       field: 'seqOfDeal', 
       headerName: 'Seq',
       valueGetter: p => p.row.head.seqOfDeal.toString(),
-      width: 68,
+      width: 58,
       renderCell: ({ value }) => (
         <Chip
           variant="outlined"
           color='primary'
-          sx={{ minWidth: 58 }}
+          // sx={{ minWidth: 58 }}
           label={ value } 
         />
       )
@@ -112,7 +116,6 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     },
   ];
   
-
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
     setDeal({head: p.row.head, body: p.row.body, hashLock: p.row.hashLock});
     setOpen(true);
@@ -120,9 +123,16 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-      <Toolbar sx={{ textDecoration:'underline' }}>
-        <h4>Deals List</h4>
-      </Toolbar>
+
+      <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+
+        <Toolbar sx={{ textDecoration:'underline' }}>
+          <h4>Deals List</h4>
+        </Toolbar>
+
+        {/* <SetTypeOfIa ia={ia} isFinalized={isFinalized} /> */}
+
+      </Stack>
 
       {list && (
         <DataGrid

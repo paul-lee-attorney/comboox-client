@@ -8,6 +8,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { LockClock } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
+import { HexParser } from "../../../../../scripts/toolsKit";
 
 
 
@@ -59,8 +60,8 @@ export function PushToCoffer({ia, deal, setOpen, setDeal, refreshDealsList}:Acti
               m:1,
               minWidth: 685,
             }}
-            onChange={(e) => setHashLock(`0x${e.target.value}`)}
-            value={ hashLock.substring(2) }
+            onChange={(e) => setHashLock(HexParser( e.target.value ))}
+            value={ hashLock }
           />
 
           <DateTimeField

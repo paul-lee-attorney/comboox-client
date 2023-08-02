@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Update } from "@mui/icons-material";
 import { useAccessControlSetOwner } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../interfaces";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export interface AccessControlProps{
   docAddr: HexType;
@@ -46,8 +47,8 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
               m:1,
               minWidth: 480,
             }}
-            value={ docAddr.substring(2) }
-            onChange={(e)=>setDocAddr(`0x${e.target.value}`)}
+            value={ docAddr }
+            onChange={(e)=>setDocAddr(HexParser( e.target.value ))}
           />
 
           <TextField 
@@ -58,8 +59,8 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
               m:1,
               minWidth: 480,
             }}
-            value={ owner.substring(2) }
-            onChange={(e)=>setOwner(`0x${e.target.value}`)}
+            value={ owner }
+            onChange={(e)=>setOwner(HexParser( e.target.value ))}
           />
 
         </Stack>

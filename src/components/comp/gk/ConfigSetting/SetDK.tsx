@@ -4,6 +4,7 @@ import { Update } from "@mui/icons-material";
 import { useAccessControlSetDirectKeeper, useAccessControlSetOwner } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../interfaces";
 import { AccessControlProps } from "./SetOwner";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
@@ -41,8 +42,8 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
               m:1,
               minWidth: 480,
             }}
-            value={ docAddr.substring(2) }
-            onChange={(e)=>setDocAddr(`0x${e.target.value}`)}
+            value={ docAddr }
+            onChange={(e)=>setDocAddr(HexParser( e.target.value ))}
           />
 
           <TextField 
@@ -53,8 +54,8 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
               m:1,
               minWidth: 480,
             }}
-            value={ keeper.substring(2) }
-            onChange={(e)=>setKeeper(`0x${e.target.value}`)}
+            value={ keeper }
+            onChange={(e)=>setKeeper(HexParser( e.target.value ))}
           />
 
         </Stack>

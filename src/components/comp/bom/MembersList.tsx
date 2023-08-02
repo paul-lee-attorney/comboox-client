@@ -19,7 +19,7 @@ const columns: GridColDef[] = [
     field: 'lastUpdate',
     headerName: 'LastUpdate',
     valueGetter: (p) => dateParser(p.row.clip.timestamp),
-    width: 330,
+    width: 218,
     headerAlign: 'right',
     align: 'right',
   },

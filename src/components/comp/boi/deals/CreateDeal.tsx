@@ -27,7 +27,6 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Body, Deal, Head } from "../../../../queries/ia";
 import { getShare } from "../../../../queries/bos";
-import { SetTypeOfIa } from "./SetTypeOfIa";
 import { isFinalized } from "../../../../queries/accessControl";
 
 const defaultHead: Head = {
@@ -62,8 +61,8 @@ const defaultDeal: Deal = {
 
 export const TypeOfDeal = [
   'CapitalIncrease', 
-  'ShareTransferExternal', 
-  'ShareTransferInternal', 
+  'ShareTransfer(External)', 
+  'ShareTransfer(Internal)', 
   'PreEmptive', 
   'TagAlong', 
   'DragAlong', 
@@ -74,8 +73,8 @@ export const TypeOfDeal = [
 export const TypeOfIa = [
   'NaN',
   'CapitalIncrease',
-  'ShareTransferExternal',
-  'ShareTransferInternal',
+  'ShareTransfer(External)',
+  'ShareTransfer(Internal)',
   'CI & STint',
   'SText & STint',
   'CI & SText & STint',
@@ -158,18 +157,18 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
   return (
     <Paper elevation={3} sx={{p:1, m:1, border: 1, borderColor:'divider' }} >
 
-      <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
-        <Box sx={{ minWidth:600 }} >
+      {/* <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >         */}
+        {/* <Box sx={{ minWidth:600 }} > */}
           <Toolbar sx={{ textDecoration:'underline' }}>
             <h4>Create Deal</h4>
           </Toolbar>
-        </Box>
+        {/* </Box> */}
         
-        <SetTypeOfIa ia={ia} />
+        {/* <SetTypeOfIa ia={ia} /> */}
 
-      </Stack>
+      {/* </Stack> */}
 
-      <Divider sx={{ m:1 }} flexItem />
+      {/* <Divider sx={{ m:1 }} flexItem /> */}
 
       <Stack direction='row' sx={{ alignItems:'center' }} >
 

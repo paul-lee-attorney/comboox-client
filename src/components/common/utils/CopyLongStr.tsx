@@ -19,7 +19,7 @@ export function CopyLongStrTF({size, title, src}:CopyLongStrProps) {
   const [ flag, setFlag ] = useState<boolean>(false);
 
   const handleClick = ()=>{
-    if (copy(src?.substring(2) ?? '')) 
+    if (copy(src)) 
       setFlag(true);
   }
 

@@ -6,6 +6,7 @@ import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  DirectionsRun, SellOutlined, SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../interfaces";
+import { HexParser } from "../../../../../scripts/toolsKit";
 
 export interface TargetShare {
   seqOfShare: number;
@@ -120,8 +121,8 @@ export function ExecTagAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: Ac
                   m:1,
                   minWidth: 685,
                 }}
-                value={ sigHash.substring(2) }
-                onChange={(e)=>setSigHash(`0x${e.target.value}`)}
+                value={ sigHash }
+                onChange={(e)=>setSigHash(HexParser( e.target.value ))}
               />
             </Stack>
 

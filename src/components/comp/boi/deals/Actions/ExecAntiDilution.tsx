@@ -8,6 +8,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { LocalDrinkOutlined, LockClock, WaterDropOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
+import { HexParser } from "../../../../../scripts/toolsKit";
 
 
 
@@ -69,8 +70,8 @@ export function ExecAntiDilution({ia, deal, setOpen, setDeal, refreshDealsList}:
               m:1,
               minWidth: 685,
             }}
-            onChange={(e) => setSigHash(`0x${e.target.value}`)}
-            value={ sigHash.substring(2) }
+            onChange={(e) => setSigHash(HexParser( e.target.value ))}
+            value={ sigHash }
           />
 
           <Button 

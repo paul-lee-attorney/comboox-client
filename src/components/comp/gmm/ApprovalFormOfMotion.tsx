@@ -7,17 +7,17 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HexType } from "../../../interfaces";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { ProposeMotionToGeneralMeeting } from "./ProposeMotionToGeneralMeeting";
-import { CastVoteOfGm } from "./CastVoteOfGm";
+import { ProposeMotionToGeneralMeeting } from "./VoteMotions/ProposeMotionToGeneralMeeting";
+import { CastVoteOfGm } from "./VoteMotions/CastVoteOfGm";
 import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
-import { VoteCountingOfGm } from "./VoteCountingOfGm";
-import { TakeSeat } from "./TakeSeat";
-import { RemoveDirector } from "./RemoveDirector";
-import { ExecActionOfGm } from "./ExecActionOfGm";
+import { VoteCountingOfGm } from "./VoteMotions/VoteCountingOfGm";
+import { TakeSeat } from "./ExecMotions/TakeSeat";
+import { RemoveDirector } from "./ExecMotions/RemoveDirector";
+import { ExecActionOfGm } from "./ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
 import { useMeetingMinutes } from "../../../generated";
-import { RequestToBuy } from "./RequestToBuy";
+import { RequestToBuy } from "./ExecMotions/RequestToBuy";
 import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
 
 export interface ApprovalFormOfMotionProps{
@@ -49,7 +49,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
     setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
-                          ? boox[1] : boox[5];
+                          ? boox[1] : boox[6];
       getSnOfFile(folder, addrOfDoc).then(
         sn => setSnOfDoc(sn)
       );

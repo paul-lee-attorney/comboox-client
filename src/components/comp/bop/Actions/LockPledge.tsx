@@ -7,6 +7,7 @@ import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { Pledge } from "../../../../queries/bop";
 import { ActionsOfOptionProps } from "../../boo/ActionsOfOption";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 
 export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
@@ -47,8 +48,8 @@ export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
             m:1,
             minWidth: 618,
           }}
-          onChange={(e) => setHashLock(`0x${e.target.value}`)}
-          value={ hashLock?.substring(2) }
+          onChange={(e) => setHashLock(HexParser( e.target.value ))}
+          value={ hashLock }
           size='small'
         />
 

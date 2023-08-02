@@ -6,6 +6,7 @@ import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { HexType } from "../../../../interfaces";
 import { RegBookProps } from "./RegBook";
 import { titleOfKeepers } from "../../../../queries/gk";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();
@@ -57,8 +58,8 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
               m:1,
               minWidth: 480,
             }}
-            value={ book.substring(2) }
-            onChange={(e)=>setBook(`0x${e.target.value}`)}
+            value={ book }
+            onChange={(e)=>setBook(HexParser( e.target.value ))}
           />
 
           <Button 

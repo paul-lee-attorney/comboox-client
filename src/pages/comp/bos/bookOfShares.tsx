@@ -80,7 +80,7 @@ function BookOfShares() {
         <Stack direction="row" >
 
           <Toolbar sx={{ textDecoration:'underline' }} >
-            <h3>BOO - Book Of Shares</h3>
+            <h3>BOS - Book Of Shares</h3>
           </Toolbar>
 
           {boox && (

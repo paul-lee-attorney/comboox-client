@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperAcceptAlongDeal } from "../../../generated";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { HexParser, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { ActionsOfDealProps } from "./deals/ActionsOfDeal";
 import { DTClaim, getDTClaimsForDeal } from "../../../queries/boi";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
@@ -124,16 +124,18 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
 
   return (
     <>
-      <Button
-        disabled={ !claims }
-        variant="outlined"
-        fullWidth={true}
-        startIcon={<ListAltOutlined />}
-        sx={{ m:1 }}
-        onClick={handleClick}
-      >
-        DT Claims ({claims?.length})
-      </Button>
+      {claims && (
+        <Button
+          // disabled={ !claims }
+          variant="outlined"
+          fullWidth={true}
+          startIcon={<ListAltOutlined />}
+          sx={{ m:1 }}
+          onClick={handleClick}
+        >
+          DT Claims ({claims?.length})
+        </Button>
+      )}
 
       <Dialog
         maxWidth={false}
@@ -180,8 +182,8 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
                     m:1,
                     minWidth: 685,
                   }}
-                  value={ sigHash.substring(2) }
-                  onChange={(e)=>setSigHash(`0x${e.target.value}`)}
+                  value={ sigHash }
+                  onChange={(e)=>setSigHash(HexParser( e.target.value ))}
                 />              
 
                 <Button 

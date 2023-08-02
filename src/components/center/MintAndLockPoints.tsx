@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { HeadOfLocker, defaultHeadOfLocker } from '../../queries/rc';
+import { HexParser } from '../../scripts/toolsKit';
 
 
 interface MintAndLockPointsProps{
@@ -107,8 +108,8 @@ export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps)
                 m:1,
                 minWidth: 685,
               }}
-              value={ hashLock.substring(2) }
-              onChange={e => setHashLock(`0x${e.target.value ?? ''}`)}
+              value={ hashLock }
+              onChange={e => setHashLock( HexParser( e.target.value ) )}
             />
           </Stack>
 

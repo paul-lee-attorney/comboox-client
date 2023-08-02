@@ -55,7 +55,7 @@ function IaBodyTerms({ia, isFinalized}: IaBodyTermsProps) {
       )}
       
       {dealsList && (
-        <DealsList list={dealsList} setDeal={ setDeal } setOpen={ setOpen } />
+        <DealsList ia={ia} isFinalized={isFinalized} list={dealsList} setDeal={ setDeal } setOpen={ setOpen } />
       )}
 
       {open && (

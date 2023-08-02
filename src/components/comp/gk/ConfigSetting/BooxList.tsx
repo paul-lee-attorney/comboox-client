@@ -60,7 +60,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
-        <CopyLongStrSpan title='Addr' size='body-1' src={value} />
+        <CopyLongStrSpan title='Addr' size='body1' src={value} />
       )
     },
     {
@@ -71,7 +71,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
-        <CopyLongStrSpan title='Owner' size='body-1' src={value} />
+        <CopyLongStrSpan title='Owner' size='body1' src={value} />
       )
     },
     {
@@ -82,7 +82,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
-        <CopyLongStrSpan title='DK' size='body-1' src={value} />
+        <CopyLongStrSpan title='DK' size='body1' src={value} />
       )
     },
   ];
