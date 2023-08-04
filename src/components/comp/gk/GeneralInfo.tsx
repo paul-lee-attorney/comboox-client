@@ -6,16 +6,16 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
 import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
 
-import { MembersEquityList } from "../bom/MembersList";
-import { Position, getFullPosInfo } from "../../../queries/bod";
-import { GetOfficersList } from "../bod/GetOfficersList";
+import { MembersEquityList } from "../rom/MembersList";
+import { Position, getFullPosInfo } from "../../../queries/rod";
+import { GetOfficersList } from "../rod/GetOfficersList";
 
 import { 
   useAccessControlGetDk,
-  useBookOfDirectorsGetDirectorsPosList,
-  useBookOfMembersControllor, 
-  useBookOfMembersOwnersEquity, 
-  useBookOfMembersVotesOfController, 
+  useRegisterOfDirectorsGetDirectorsPosList,
+  useRegisterOfMembersControllor, 
+  useRegisterOfMembersOwnersEquity, 
+  useRegisterOfMembersVotesOfController, 
   useGeneralKeeperNameOfCompany, 
   useGeneralKeeperRegNumOfCompany, 
   useGeneralKeeperSymbolOfCompany 
@@ -64,7 +64,7 @@ export function GeneralInfo() {
 
   const [ controllor, setControllor ] = useState<string>();
 
-  useBookOfMembersControllor({
+  useRegisterOfMembersControllor({
     address: boox ? boox[4] : undefined,
     onSuccess(res) {
       setControllor(res.toString())
@@ -73,7 +73,7 @@ export function GeneralInfo() {
 
   const [ votesOfController, setVotesOfController ] = useState<string>();
 
-  useBookOfMembersVotesOfController({
+  useRegisterOfMembersVotesOfController({
     address: boox ? boox[4] : undefined,
     onSuccess(res) {
       setVotesOfController(res.toString())
@@ -83,7 +83,7 @@ export function GeneralInfo() {
   const [ par, setPar ] = useState<string>();
   const [ paid, setPaid ] = useState<string>();
 
-  useBookOfMembersOwnersEquity({
+  useRegisterOfMembersOwnersEquity({
     address: boox ? boox[4] : undefined,
     onSuccess(res) {
       setPar(res.par.toString());
@@ -95,7 +95,7 @@ export function GeneralInfo() {
 
   const {
     refetch: getDirectorsList
-  } = useBookOfDirectorsGetDirectorsPosList({
+  } = useRegisterOfDirectorsGetDirectorsPosList({
     address: boox ? boox[2] : undefined,
     onSuccess(res) {
       if (boox)

@@ -10,21 +10,24 @@ import Link from '../../../scripts/Link';
 
 import { dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { InfoOfFile } from '../../../queries/filesFolder';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { CopyLongStrSpan } from '../utils/CopyLongStr';
+import { Dispatch, SetStateAction } from 'react';
 
 interface GetFilesListProps {
   list: InfoOfFile[],
   title: string,
   pathName: string,
   pathAs: string,
+  setFile: Dispatch<SetStateAction<InfoOfFile | undefined>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const labState = ['Created', 'Circulated', 'Established', 
+export const labState = ['Created', 'Circulated', 'Established', 
 'Proposed', 'Approved', 'Rejected', 'Closed', 'Terminated'];
 
 
-export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps ) {
+export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }:GetFilesListProps ) {
 
   
   const columns: GridColDef[] = [
@@ -133,6 +136,10 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
     },
   ];
   
+  const handleRowClick: GridEventListener<'rowClick'> = (p) => {
+    setFile({addr: p.row.addr, sn: p.row.sn, head: p.row.head, ref: p.row.ref});
+    setOpen(true);
+  }
 
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
@@ -148,6 +155,7 @@ export function GetFilesList({ list, title, pathName, pathAs }:GetFilesListProps
           columns={ columns }
           getRowId={(row:InfoOfFile | undefined) => (row?.sn.substring(6, 26) ?? '0') } 
           disableRowSelectionOnClick
+          onRowClick={ handleRowClick }
         />
       )}
 

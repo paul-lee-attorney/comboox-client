@@ -167,16 +167,15 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
   const items = [
     {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: false},
-    {href: '/comp/boc/BookOfConstitution', label: 'BOC', tip: 'Book of Constitution', icon: <ListAlt />, divider: false},
-    {href: '/comp/boi/BookOfIA', label: 'BOI', tip:'Book of Investment Agreements', icon: <ContentCopyOutlined />, divider: true},
-    {href: '/comp/bod/BookOfDirectors', label: 'BOD', tip:'Book of Directors', icon: <BadgeOutlined />, divider: false},  
-    {href: '/comp/bod/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    // {href: '/comp/bod/BookOfOfficers', label: 'BOO', tip:'Book of Officers', icon: <BadgeOutlined />, divider: true},  
-    {href: '/comp/bom/BookOfMembers', label: 'BOM', tip:'Book of Members', icon: <Diversity1Outlined />, divider: false},  
-    {href: '/comp/bom/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/comp/roc/RegisterOfConstitution', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
+    {href: '/comp/roa/RegisterOfAgreements', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
+    {href: '/comp/rod/RegisterOfDirectors', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
+    {href: '/comp/rod/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/comp/rom/RegisterOfMembers', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
+    {href: '/comp/rom/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
     {href: '/comp/bos/BookOfShares', label: 'BOS', tip:'Book of Shares', icon: <PaymentsOutlined />, divider: false},
-    {href: '/comp/bop/BookOfPledges', label: 'BOP', tip:'Book of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
-    {href: '/comp/boo/BookOfOptions', label: 'BOO', tip:'Book of Options', icon: <QuizOutlined />, divider: false},
+    {href: '/comp/rop/RegisterOfPledges', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
+    {href: '/comp/roo/RegisterOfOptions', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: false},
   ]
 
   const backToCenter = () => {

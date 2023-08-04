@@ -9,7 +9,7 @@ import { SetGeneralCounsel } from "./SetGeneralCounsel";
 import { AppointAttorney } from "./AppointAttorney";
 import { RemoveAttorney } from "./RemoveAttorney";
 import { QuitAttorney } from "./QuitAttorney";
-import { FinalizeSha } from "../../comp/boc/sha/FinalizeSha";
+import { FinalizeSha } from "../../comp/roc/sha/FinalizeSha";
 
 interface AgrmtAccessControlProps{
   isSha: boolean;

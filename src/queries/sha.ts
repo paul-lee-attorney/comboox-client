@@ -1,8 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { AddrZero, Bytes32Zero, HexType } from "../interfaces";
 import { shareholdersAgreementABI } from "../generated";
-import { FirstRefusalRule, frParser } from "../components/comp/boc/rules/SetFirstRefusalRule";
-import { getSha } from "./boc";
+import { FirstRefusalRule, frParser } from "../components/comp/roc/rules/SetFirstRefusalRule";
 
 export const defaultTerms:HexType[] = [
   AddrZero, AddrZero, AddrZero,

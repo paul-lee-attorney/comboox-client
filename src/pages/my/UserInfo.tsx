@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { AddrOfRegCenter, AddrZero } from "../../interfaces";
 import { Locker, User, getLocker } from "../../queries/rc";
-import { Button, Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
+import { Checkbox, Collapse, Divider, FormControlLabel, Paper, Radio, RadioGroup, Stack, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser } from "../../scripts/toolsKit";
 import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetOwner, useRegCenterGetUser } from "../../generated";
 import { SetBackupKey } from "../../components/center/SetBackupKey";

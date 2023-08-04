@@ -14,11 +14,11 @@ import { Search, Send } from "@mui/icons-material";
 
 import { 
   useBookOfSharesGetShare,
-  useBookOfMembersSharesList,
+  useRegisterOfMembersSharesList,
 } from "../../../generated";
 import { LoadingButton } from "@mui/lab";
-import { SharesList } from "../../../components/comp/bos/SharesList";
-import { CertificateOfContribution } from "../../../components/comp/bos/CertificateOfContribution";
+import { SharesList } from "../../../components/comp/ros/SharesList";
+import { CertificateOfContribution } from "../../../components/comp/ros/CertificateOfContribution";
 import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/bos";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
@@ -32,7 +32,7 @@ function BookOfShares() {
 
   const {
     refetch: obtainSharesList,
-  } = useBookOfMembersSharesList ({
+  } = useRegisterOfMembersSharesList ({
     address: boox ? boox[4] : undefined,
     onSuccess(data) {
       if (boox && data.length > 0) {

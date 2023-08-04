@@ -1,46 +1,45 @@
 import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/GetVotingRule";
-import { GetPosition } from "../rod/GetPosition";
+import { GetPosition } from "./GetPosition";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HexType } from "../../../interfaces";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { ProposeMotionToGeneralMeeting } from "./VoteMotions/ProposeMotionToGeneralMeeting";
-import { CastVoteOfGm } from "./VoteMotions/CastVoteOfGm";
-import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
-import { VoteCountingOfGm } from "./VoteMotions/VoteCountingOfGm";
-import { TakeSeat } from "./ExecMotions/TakeSeat";
-import { RemoveDirector } from "./ExecMotions/RemoveDirector";
-import { ExecActionOfGm } from "./ExecMotions/ExecActionOfGm";
+import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
+import { ExecActionOfGm } from "../gmm/ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
-import { useMeetingMinutes } from "../../../generated";
-import { RequestToBuy } from "./ExecMotions/RequestToBuy";
-import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
+import { ProposeMotionToBoardMeeting } from "./ProposeMotionToBoardMeeting";
+import { CastVoteOfBm } from "./CastVoteOfBm";
+import { VoteCountingOfBoard } from "./VoteCountingOfBoard";
+import { TakePosition } from "./TakePosition";
+import { RemoveOfficer } from "./RemoveOfficer";
+import { useMeetingMinutes, useMeetingMinutesVoteEnded } from "../../../generated";
+import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 
-export interface ApprovalFormOfMotionProps{
+export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
   open: boolean;
   motion: Motion;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  obtainMotionsList: ()=>void;
+  setOpen: (flag: boolean)=>void;
+  obtainMotionsList: ()=>any;
 }
 
-export const motionType = ['ElectOfficer', 'RemoveDirector', 'ApproveDocument', 'ApproveAction'];
+export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
-export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMotionsList}: ApprovalFormOfMotionProps) {
+export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtainMotionsList }: ApprovalFormOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
-  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
 
-  useEffect(()=>{
-    getVoteResult(minutes, motion.head.seqOfMotion).then(
-      list => setVoteResult(list)
-    )
-  }, [minutes, motion]);
+  // useEffect(()=>{
+  //   getVoteResult(minutes, motion.head.seqOfMotion).then(
+  //     list => setVoteResult(list)
+  //   )
+  // }, [minutes, motion]);
 
   const [ addrOfDoc, setAddrOfDoc ]=useState<HexType>();
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
@@ -49,7 +48,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
     setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
-                          ? boox[1] : boox[6];
+                          ? boox[1] : boox[5];
       getSnOfFile(folder, addrOfDoc).then(
         sn => setSnOfDoc(sn)
       );
@@ -58,18 +57,27 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
 
   const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
 
-  useEffect(()=>{
-    if ( boox ) {
-      let minutes: HexType =
-      motion.votingRule.authority == 1
-      ? boox[5] : boox[3];
-      voteEnded(minutes, motion.head.seqOfMotion).then(
-        flag => {
-          setVoteIsEnd(flag);
-        }
-      ); 
+  const {
+    refetch: queryVoteEnded
+  } = useMeetingMinutesVoteEnded({
+    address: minutes,
+    args: [ motion.head.seqOfMotion ],
+    onSuccess(res) {
+      setVoteIsEnd(res)
     }
-  }, [motion, boox ])
+  })
+
+  useEffect(()=>{
+    queryVoteEnded();
+  }, [queryVoteEnded, motion.body.state])
+
+  // useEffect(()=>{
+  //   voteEnded(minutes, motion.head.seqOfMotion).then(
+  //     flag => {
+  //       setVoteIsEnd(flag);
+  //     }
+  //   ); 
+  // }, [ minutes, motion ])
 
   const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
 
@@ -91,7 +99,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
               <tr>
                 <td colSpan={2}>
                   <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h4> Motion Of General Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
+                    <h4> Motion Of Board Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
                   </Toolbar>
                 </td>
                 <td colSpan={2}>
@@ -155,6 +163,72 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
 
               </tr>
 
+              <tr>
+                <td>
+                  <TextField 
+                    fullWidth
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfExectuor" 
+                    label={ motion.head.typeOfMotion == 1 ? "Candidate" : "Executor" } 
+                    variant="outlined"
+                    value = { longSnParser(motion.head.executor.toString()) }
+                    size='small'
+                  />
+                </td>
+
+                <td>
+                  <GetVotingRule seq={motion.head.seqOfVR} />
+                </td>
+
+                <td colSpan={2}>
+                  {motion.head.typeOfMotion < 3 && (
+                    <GetPosition seq={Number(motion.contents)} />
+                  )}
+
+                  {motion.head.typeOfMotion == 3 && snOfDoc && (
+                    <Link
+                      href={{
+                        pathname: motion.head.seqOfVR == 8
+                                ? '/comp/roc/Sha'
+                                : '/comp/roa/Ia'
+                        ,
+                        query: {
+                          addr: addrOfDoc,
+                          snOfDoc: snOfDoc.substring(6, 26),
+                        }
+                      }}
+                      as={motion.head.seqOfVR == 8
+                          ? '/comp/roc/sha'
+                          : '/comp/roa/ia'}
+                    >            
+                      <Button
+                        variant="outlined"
+                        fullWidth
+                        startIcon={<Article />}
+                        sx={{ m:1 }}
+                      >
+                        Doc: {addrOfDoc}
+                      </Button>
+                    </Link>
+                  )}
+
+                  {motion.head.typeOfMotion == 4 && (
+                    <TextField 
+                      fullWidth
+                      inputProps={{readOnly: true}}
+                      sx={{ m: 1 }} 
+                      id="tfHashOfAction" 
+                      label="HashOfAction" 
+                      variant="outlined"
+                      value = { motion.contents.toString(16) }
+                      size='small'
+                    />                                            
+                  )}
+
+                </td>
+              </tr>
+
               {motion.body.state > 1 && (
                 <tr>
                   <td>
@@ -193,90 +267,10 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                       size='small'
                     />
                   </td>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfStateOfMotion" 
-                      label="StateOfMotion" 
-                      variant="outlined"
-                      value = { statesOfMotion[motion.body.state - 1] }
-                      size='small'
-                    />
-                  </td>
                 </tr>
               )}
 
-              <tr>
-                <td>
-                  <TextField 
-                    fullWidth
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfExectuor" 
-                    label={ motion.head.typeOfMotion == 1 ? "Candidate" : "Executor" } 
-                    variant="outlined"
-                    value = { longSnParser(motion.head.executor.toString()) }
-                    size='small'
-                  />
-                </td>
-
-                <td>
-                  <GetVotingRule seq={motion.head.seqOfVR} />
-                </td>
-
-                <td colSpan={2}>
-                  {motion.head.typeOfMotion < 3 && (
-                    <GetPosition 
-                      seq={Number(motion.contents)} 
-                    />
-                  )}
-
-                  {motion.head.typeOfMotion == 3 && snOfDoc && (
-                    <Link
-                      href={{
-                        pathname: motion.head.seqOfVR == 8
-                                ? '/comp/roc/Sha'
-                                : '/comp/roa/Ia'
-                        ,
-                        query: {
-                          addr: addrOfDoc,
-                          snOfDoc: snOfDoc.substring(6, 26),
-                        }
-                      }}
-                      as={motion.head.seqOfVR == 8
-                          ? '/comp/roc/sha'
-                          : '/comp/roa/ia'}
-                    >            
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<Article />}
-                        sx={{ m:1, height:40 }}
-                      >
-                        Doc: {addrOfDoc}
-                      </Button>
-                    </Link>
-                  )}
-
-                  {motion.head.typeOfMotion == 4 && (
-                    <TextField 
-                      fullWidth
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfHashOfAction" 
-                      label="HashOfAction" 
-                      variant="outlined"
-                      value = { motion.contents.toString(16) }
-                      size='small'
-                    />                                            
-                  )}
-
-                </td>
-              </tr>
-
-              {motion.body.state > 2 && voteResult && (
+              {/* {motion.body.state > 2 && voteResult && (
                 <tr>
                   <td>
                     <BallotsList 
@@ -306,12 +300,17 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                     />
                   </td>                  
                 </tr>
+              )} */}
+
+              {motion.body.state > 2 && (
+                <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
               )}
+
 
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -320,10 +319,10 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 <tr>
                   <td colSpan={4}>
                     <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                     </Collapse>
                   </td>
                 </tr>
@@ -332,11 +331,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
               {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <TakeSeat 
-                      seqOfMotion={motion.head.seqOfMotion.toString()} 
-                      seqOfPos={Number(motion.contents)} 
-                      setOpen={setOpen} getMotionsList={obtainMotionsList}
-                    />
+                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={Number(motion.contents)} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -344,12 +339,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
               {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
                 <tr>
                   <td colSpan={4}>
-                    <RemoveDirector 
-                      seqOfMotion={motion.head.seqOfMotion.toString()} 
-                      seqOfPos={Number(motion.contents)} 
-                      setOpen={setOpen} 
-                      getMotionsList={obtainMotionsList}
-                    />
+                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={Number(motion.contents)} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
               )}
@@ -362,20 +352,13 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 </tr>
               )}
 
-              {motion.body.state == 6 && (
-                <tr>
-                  <td colSpan={4}>
-                    <RequestToBuy seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
-                  </td>
-                </tr>
-              )}
 
             </tbody>
           </table>
         </Paper>
       </DialogContent>
       <DialogActions>
-        <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+        <Button onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
     </Dialog>
 

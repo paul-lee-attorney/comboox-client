@@ -6,7 +6,7 @@ import { useComBooxContext } from "../../scripts/ComBooxContext";
 
 import { SetCompId } from "../../components/comp/gk/SetCompId";
 import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers";
-import { InitBos } from "../../components/comp/bos/InitBos";
+import { InitBos } from "../../components/comp/ros/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
 import { getKeeper } from "../../queries/gk";
@@ -68,7 +68,7 @@ function HomePage() {
               <Step index={2} >
 
                 <StepLabel>
-                  <h3>Book Of Shares</h3>
+                  <h3>Register Of Shares</h3>
                 </StepLabel>
 
                 <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >

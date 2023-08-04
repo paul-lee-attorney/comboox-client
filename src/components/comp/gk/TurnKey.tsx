@@ -18,7 +18,7 @@ import { ArrowDownward, ArrowUpward, Key }  from '@mui/icons-material';
 
 import {
   useBookOfSharesSetDirectKeeper,
-  useBookOfMembersSetDirectKeeper,
+  useRegisterOfMembersSetDirectKeeper,
   useGeneralKeeperGetKeeper,
   useAccessControlGetDk,
   useAccessControlSetDirectKeeper,
@@ -35,13 +35,13 @@ interface TurnKeyProps {
 export function TurnKey({ nextStep }:TurnKeyProps) {
   const { gk, boox } = useComBooxContext();
 
-  const [bomKeeper, setBomKeeper] = useState<HexType>();
+  const [romKeeper, setRomKeeper] = useState<HexType>();
 
   useGeneralKeeperGetKeeper({
     address: gk,
     args: [ BigInt(4) ],
     onSuccess(res) {
-      setBomKeeper(res)
+      setRomKeeper(res)
     }
   })
 
@@ -56,13 +56,13 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     }
   })
 
-  // const [bomKeeper, setBosKeeper] = useState<HexType>();
+  // const [romKeeper, setRosKeeper] = useState<HexType>();
 
   // useGeneralKeeperGetKeeper({
   //   address: gk,
   //   args: [ BigInt(4) ],
   //   onSuccess(res) {
-  //     setBosKeeper(res)
+  //     setRosKeeper(res)
   //   }
   // })
 
@@ -82,7 +82,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     write: setBomDK,
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[4] : undefined,
-    args: bomKeeper ? [ bomKeeper ] : undefined,
+    args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess() {
       getDkOfBom();
     }
@@ -93,7 +93,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     write: setBosDK
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[10] : undefined,
-    args: bomKeeper ? [ bomKeeper ] : undefined,
+    args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess() {
       getDkOfBos();
     }  
@@ -148,20 +148,20 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
                   <Chip
                     variant='filled'
                     color='primary'
-                    label='BomKeeper'
+                    label='RomKeeper'
                     sx={{width:120}}
                   />
 
                   <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
-                    {bomKeeper}
+                    {romKeeper}
                   </Typography>
                 </Stack>
 
                 <Stack direction='row' >
                   <Chip
-                    variant={ dkOfBom == bomKeeper ? 'filled' : 'outlined' }
-                    color={ dkOfBom == bomKeeper ? 'primary' : 'default' }
-                    label='KeeperOfBom'
+                    variant={ dkOfBom == romKeeper ? 'filled' : 'outlined' }
+                    color={ dkOfBom == romKeeper ? 'primary' : 'default' }
+                    label='KeeperOfRom'
                     sx={{width:120}}
                   />
 
@@ -176,20 +176,20 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
                   <Chip
                     variant='filled'
                     color='success'
-                    label='BosKeeper'
+                    label='RosKeeper'
                     sx={{width:120}}
                   />
 
                   <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
-                    {bomKeeper}
+                    {romKeeper}
                   </Typography>
                 </Stack>
 
                 <Stack direction='row' >
                   <Chip
-                    variant={ dkOfBos == bomKeeper ? 'filled' : 'outlined' }
-                    color={ dkOfBos == bomKeeper ? 'success' : 'default' }
-                    label='KeeperOfBos'
+                    variant={ dkOfBos == romKeeper ? 'filled' : 'outlined' }
+                    color={ dkOfBos == romKeeper ? 'success' : 'default' }
+                    label='KeeperOfRos'
                     sx={{width:120}}
                   />
 
@@ -214,7 +214,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
               }}
               size='small'
             >
-              Turn Key of BOM
+              Turn Key of ROM
             </Button>
 
             <Button 
@@ -228,7 +228,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
               }}
               size='small'
             >
-              Turn Key of BOS
+              Turn Key of ROS
             </Button>
 
           </Stack>

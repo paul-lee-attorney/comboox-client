@@ -16,8 +16,8 @@ import {
 import { ArrowDownward, ArrowUpward, Update }  from '@mui/icons-material';
 
 import {
-  useBookOfMembersMaxQtyOfMembers,
-  useBookOfMembersSetMaxQtyOfMembers,
+  useRegisterOfMembersMaxQtyOfMembers,
+  useRegisterOfMembersSetMaxQtyOfMembers,
 } from '../../../generated';
 
 
@@ -36,7 +36,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   const {
     refetch: getMaxQty
-  } = useBookOfMembersMaxQtyOfMembers({
+  } = useRegisterOfMembersMaxQtyOfMembers({
     address: boox ? boox[4] : undefined,
     onSuccess(max) {
       setMax(max.toString());
@@ -46,7 +46,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 
-  } = useBookOfMembersSetMaxQtyOfMembers({
+  } = useRegisterOfMembersSetMaxQtyOfMembers({
     address: boox ? boox[4] : undefined,
     args: [BigInt(inputMax)],
     onSuccess() {

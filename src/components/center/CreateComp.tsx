@@ -44,11 +44,11 @@ export function CreateComp() {
 
 
       <FormControl size='small' sx={{ m: 1, width: 488 }} variant="outlined">
-        <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of General Keeper</InputLabel>
+        <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of Board Secretary</InputLabel>
         <OutlinedInput
           size='small'
           id="setGC-input"
-          label='PrimeKey Of General Keeper'
+          label='PrimeKey Of Board Secretary'
           endAdornment={
             <InputAdornment position="end">
               <Tooltip title={"Register My Company"} placement='right' arrow >

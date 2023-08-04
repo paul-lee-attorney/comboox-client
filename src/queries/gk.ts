@@ -4,13 +4,13 @@ import { generalKeeperABI } from "../generated";
 import { getDK, getOwner } from "./accessControl";
 
 export const nameOfBooks = [
-  'GK', 'BOC', 'BOD', 'BMM', 'BOM', 'GMM', 
-  'BOI', 'BOO', 'BOP', 'ROS', 'BOS'
+  'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 
+  'ROA', 'ROO', 'ROP', 'BOS', 'ROS'
 ]
 
 export const titleOfKeepers = [
-  'GK', 'BocKeeper', 'BodKeeper', 'BmmKeeper', 'BomKeeper', 'GmmKeeper', 
-  'BoiKeeer', 'BooKeeper', 'BopKeeper', 'RosKeeper', 'ShaKeeper'
+  'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 'GmmKeeper', 
+  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'RosKeeper', 'ShaKeeper'
 ]
 
 export async function regNumOfCompany(addr: HexType):Promise<bigint> {
