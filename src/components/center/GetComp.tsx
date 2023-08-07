@@ -16,7 +16,6 @@ export interface Head {
   createDate: number,
   para: number,
   argu: number,
-  data: number,
   state: number,
 }
 

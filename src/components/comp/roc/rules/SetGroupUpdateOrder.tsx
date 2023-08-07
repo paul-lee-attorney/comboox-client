@@ -18,7 +18,6 @@ import { Bytes32Zero, HexType } from '../../../../interfaces';
 import { AddRule } from './AddRule';
 
 import { longSnParser } from '../../../../scripts/toolsKit';
-import { getRule } from '../../../../queries/sha';
 import { SetRuleProps } from './SetVotingRule';
 import { useShareholdersAgreementGetRule } from '../../../../generated';
 
@@ -101,22 +100,6 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetRuleProps) {
       setNewGuo(guoParser(res))
     }
   })
-
-  // const obtainRule = async ()=>{
-  //   let hexRule = await getRule(sha, objGuo.seqOfRule);
-  //   let objRule: GroupUpdateOrder = guoParser(hexRule);
-  //   setNewGuo(objRule);
-  // }
-
-  // useEffect(()=>{
-  //   const obtainInitRule = async ()=>{
-  //     let hexRule = await getRule(sha, seq);
-  //     let objRule: GroupUpdateOrder = guoParser(hexRule);
-  //     setNewGuo(objRule);
-  //   }
-  
-  //   obtainInitRule();
-  // })
 
   return (
     <>

@@ -106,13 +106,15 @@ export function SetCompId({nextStep}: SetCompIdProps) {
         <Stack direction='column' sx={{ height:'100%' }} >
 
           <Tooltip title='Prev Step' placement='left' arrow >
-            <IconButton
-              size='large'
-              color='primary'
-              disabled
-            >
-              <ArrowUpward />
-            </IconButton>
+            <span>
+              <IconButton
+                size='large'
+                color='primary'
+                disabled
+              >
+                <ArrowUpward />
+              </IconButton>
+            </span>
           </Tooltip>
 
           <Divider flexItem />

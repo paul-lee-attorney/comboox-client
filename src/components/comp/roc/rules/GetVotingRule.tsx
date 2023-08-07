@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { readContract } from "@wagmi/core";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { HexType } from "../../../../interfaces";
+import { AddrZero, HexType } from "../../../../interfaces";
 import { registerOfConstitutionABI, useRegisterOfConstitution, useRegisterOfConstitutionPointer, useShareholdersAgreementGetRule } from "../../../../generated";
 import { VotingRule, authorities, vrParser } from "./SetVotingRule";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
@@ -26,39 +26,12 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
   useRegisterOfConstitutionPointer({
     address: boox ? boox[1] : undefined,
     onSuccess(res) {
-      getRule(res, seq).then(
-        rule => setObjVr(vrParser(rule))
-      )
+      if (res != AddrZero)
+        getRule(res, seq).then(
+          rule => setObjVr(vrParser(rule))
+        )
     }
   })
-
-  // useEffect(() => {
-
-    // const obtainVR = async ()=>{
-    //   if (boox) {
-    //     let sha: HexType = await getSha(boox[1]);
-    //     let hexVr: HexType = await getRule(sha, seq);
-    //     setObjVr(vrParser(hexVr));
-    //   }
-    // }
-    
-  //   obtainVR();
-
-  // });
-
-  // const [ hexVr, setHexVr ] = useState<HexType>();
-
-  // useShareholdersAgreementGetRule({
-  //   address: sha,
-  //   args: [BigInt(seq)],
-  //   onSuccess(data) {
-  //     setHexVr(data);
-  //   } 
-  // });
-
-  // let objVr: VotingRule | undefined = hexVr 
-  //       ? vrParser(hexVr)
-  //       : undefined;
 
   const [ open, setOpen ] = useState(false);
 
@@ -69,16 +42,18 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
   return (
     <>
-      <Button
-        disabled={ !objVr }
-        variant="outlined"
-        startIcon={<ListAlt />}
-        fullWidth={true}
-        sx={{ m:1, height:40 }}
-        onClick={ handleClick }      
-      >
-        Seq Of VotingRule: {seq}
-      </Button>
+      {objVr && (
+        <Button
+          // disabled={ !objVr }
+          variant="outlined"
+          startIcon={<ListAlt />}
+          fullWidth={true}
+          sx={{ m:1, height:40 }}
+          onClick={ handleClick }      
+        >
+          Seq Of VotingRule: {seq}
+        </Button>
+      )}
 
       {objVr && (
         <Dialog

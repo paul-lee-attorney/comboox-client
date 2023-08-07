@@ -1,37 +1,36 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
+import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
 
 import { 
-  useRegCenterMintPoints, 
-} from '../../generated';
+  useRegCenterMintPoints,
+  useRegCenterTransferPoints, 
+} from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../interfaces';
-import { Close, Flare } from '@mui/icons-material';
+import { AddrOfRegCenter, HexType } from '../../../interfaces';
+import { ArrowCircleRight, ArrowCircleRightOutlined, BorderColor, Close, Create } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../queries/common';
-import { longDataParser, longSnParser } from '../../scripts/toolsKit';
-import { TransactionReceipt } from 'viem';
+import { getReceipt } from '../../../queries/common';
+import { longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { ActionsOfUserProps } from '../ActionsOfUser';
 
 interface Receipt{
+  from: string;
   to: string;
   amt: string;
 }
 
-interface MintPointsProps {
-  getUser: ()=>void;
-}
-
-export function MintPoints({getUser}:MintPointsProps) {
+export function TransferPoints({ refreshList, getUser }: ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<string>();
   const [ amt, setAmt ] = useState<string>();
+
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
 
   const {
-    isLoading: mintPointsLoading,
-    write: mintPoints
-  } = useRegCenterMintPoints({
+    isLoading: transferPointsLoading,
+    write: transferPoints
+  } = useRegCenterTransferPoints({
     address: AddrOfRegCenter,
     args: to && amt
       ? [BigInt(to), BigInt(amt)]
@@ -41,8 +40,9 @@ export function MintPoints({getUser}:MintPointsProps) {
         r => {
           if (r) {
             let rpt:Receipt = {
-              to: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
-              amt: longDataParser(r.logs[0].topics[2]?.toString())
+              from: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
+              to: longSnParser(BigInt(r.logs[0].topics[2]).toString()),
+              amt: longDataParser(r.logs[0].topics[3]?.toString())
             }
             setReceipt(rpt);
             setOpen(true);
@@ -60,7 +60,7 @@ export function MintPoints({getUser}:MintPointsProps) {
 
         <TextField 
           size="small"
-          variant="outlined"
+          variant='outlined'
           label='To'
           sx={{
             m:1,
@@ -72,7 +72,7 @@ export function MintPoints({getUser}:MintPointsProps) {
 
         <TextField 
           size="small"
-          variant="outlined"
+          variant='outlined'
           label='Amount'
           sx={{
             m:1,
@@ -83,16 +83,15 @@ export function MintPoints({getUser}:MintPointsProps) {
         />
 
         <Button 
-          size='small'
-          disabled={ !mintPoints || mintPointsLoading } 
+          disabled={ transferPointsLoading } 
           onClick={() => {
-            mintPoints?.()
+            transferPoints?.()
           }}
           variant='contained'
-          sx={{ m:1, mx:2, minWidth:128, height:40 }} 
-          endIcon={<Flare />}       
+          sx={{ m:1, mx:2, minWidth:128 }} 
+          endIcon={<ArrowCircleRightOutlined />}       
         >
-          {mintPointsLoading ? 'Loading...' : 'Mint'}
+          {transferPointsLoading ? 'Loading...' : 'Transfer'}
         </Button>
 
         <Collapse in={ open } sx={{ m:1 }} >
@@ -110,11 +109,11 @@ export function MintPoints({getUser}:MintPointsProps) {
               </IconButton>
             }
 
-            variant="outlined" 
+            variant='outlined' 
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt} Points minted to User ({receipt?.to})
+            {receipt?.amt} points transfered to User ({receipt?.to})
           </Alert>          
         </Collapse>
 

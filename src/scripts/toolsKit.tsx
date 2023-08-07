@@ -63,3 +63,32 @@ export function HexParser(input: string):HexType {
 
   return output;
 }
+
+export function toStr(input: number): string {
+
+  let hex = input.toString(16);
+  if (hex.length % 2 != 0) hex = '0' + hex;
+  let len = hex.length;
+  let i=0;
+  let str = '';
+
+  while (i <= len) {
+    let charHex = `0x${hex.substring(0, 2)}`;
+    str += String.fromCharCode(Number(charHex));
+    hex = hex.substring(2);
+    i += 2;
+  }
+
+  return str;
+}
+
+export function toAscii(input: string): string {
+  let str = '';
+  
+  input.split('').forEach(
+    v => str += v.charCodeAt(0).toString(16).padStart(2,'0')
+  );
+
+  return str;
+}
+

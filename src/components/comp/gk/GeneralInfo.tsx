@@ -18,10 +18,12 @@ import {
   useRegisterOfMembersVotesOfController, 
   useGeneralKeeperNameOfCompany, 
   useGeneralKeeperRegNumOfCompany, 
-  useGeneralKeeperSymbolOfCompany 
+  useGeneralKeeperSymbolOfCompany, 
+  useGeneralKeeperGetCompUser
 } from "../../../generated";
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
+import { User } from "../../../queries/rc";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
@@ -105,6 +107,16 @@ export function GeneralInfo() {
     }
   })
 
+  const [ compUser, setCompUser ] = useState<User>();
+
+  const{
+    refetch: getCompUser
+  } = useGeneralKeeperGetCompUser({
+    address: gk,
+    onSuccess(res) {
+      setCompUser(res);
+    }
+  })
 
   return (
     <>

@@ -3,15 +3,15 @@ import { Button, Divider, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterLockPoints,
-} from '../../generated';
+} from '../../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../interfaces';
+import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../../interfaces';
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../queries/rc';
-import { HexParser } from '../../scripts/toolsKit';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
+import { HexParser } from '../../../scripts/toolsKit';
 
 interface LockPointsProps{
   refreshList: ()=>void;
@@ -22,20 +22,6 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
-
-  // const {
-  //   config: lockPointsConfig
-  // } = usePrepareRegCenterLockPoints({
-  //   address: AddrOfRegCenter,
-  //   args: head.to && head.value && head.expireDate && hashLock
-  //       ? [ 
-  //           BigInt(head.to),
-  //           BigInt(head.value),
-  //           BigInt(head.expireDate),
-  //           hashLock
-  //         ]
-  //       : undefined,
-  // })
 
   const {
     isLoading: lockPointsLoading,
@@ -66,7 +52,7 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
 
             <TextField 
               size="small"
-              variant='filled'
+              variant='outlined'
               label='To'
               sx={{
                 m:1,
@@ -81,7 +67,7 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
 
             <TextField 
               size="small"
-              variant='filled'
+              variant='outlined'
               label='Amount'
               sx={{
                 m:1,
@@ -114,7 +100,7 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
           <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
             <TextField 
               size="small"
-              variant='filled'
+              variant='outlined'
               label='HashLock'
               sx={{
                 m:1,
@@ -130,7 +116,6 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
         <Divider orientation='vertical' flexItem />
 
         <Button 
-          size='small'
           disabled={ !lockPoints || lockPointsLoading } 
           onClick={() => {
             lockPoints?.()

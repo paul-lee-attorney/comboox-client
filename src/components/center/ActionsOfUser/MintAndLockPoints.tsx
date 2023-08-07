@@ -3,28 +3,21 @@ import { Button, Divider, Paper, Stack, TextField, } from '@mui/material';
 
 import { 
   useRegCenterMintAndLockPoints,
-} from '../../generated';
+} from '../../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../interfaces';
+import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../../interfaces';
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../queries/rc';
-import { HexParser } from '../../scripts/toolsKit';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
+import { HexParser } from '../../../scripts/toolsKit';
+import { ActionsOfUserProps } from '../ActionsOfUser';
 
-
-interface MintAndLockPointsProps{
-  refreshList: ()=>void;
-  getUser: ()=>void;
-}
-
-export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps) {
+export function MintAndLockPoints({refreshList, getUser}:ActionsOfUserProps) {
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
-
-  const [ open, setOpen ] = useState(false);
 
   const {
     isLoading: mintAndLockPointsLoading,
@@ -54,7 +47,7 @@ export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps)
           <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
             <TextField 
               size="small"
-              variant='filled'
+              variant='outlined'
               label='To'
               sx={{
                 m:1,
@@ -69,13 +62,13 @@ export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps)
 
             <TextField 
               size="small"
-              variant='filled'
+              variant='outlined'
               label='Amount'
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              value={ head.value }
+              value={ head.value.toString() }
               onChange={e => setHead(v=>({
                 ...v,
                 value: BigInt(e.target.value ?? '0'),
@@ -102,7 +95,7 @@ export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps)
           <Stack direction='row' sx={{ alignItems:'center', justifyContent:'start'}} >
             <TextField 
               size="small"
-              variant='filled'
+              variant='outlined'
               label='HashLock'
               sx={{
                 m:1,
@@ -115,10 +108,9 @@ export function MintAndLockPoints({refreshList, getUser}:MintAndLockPointsProps)
 
         </Stack>
 
-        <Divider orientation='vertical' flexItem />
+        <Divider orientation='vertical' sx={{ m:1 }} flexItem />
 
         <Button 
-          size='small'
           disabled={ mintAndLockPointsLoading } 
           onClick={() => {
             mintAndLockPoints?.()

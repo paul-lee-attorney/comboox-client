@@ -21,7 +21,6 @@ import {
 import { AddRule } from './AddRule'
 
 import { Bytes32Zero, HexType } from '../../../../interfaces';
-import { getRule } from '../../../../queries/sha';
 import { ListAlt } from '@mui/icons-material';
 import { longSnParser } from '../../../../scripts/toolsKit';
 import { SetRuleProps } from './SetVotingRule';

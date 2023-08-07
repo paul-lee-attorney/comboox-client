@@ -73,7 +73,7 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
               <TextField 
                 variant='outlined'
                 size="small"
-                label='PaidOfTargetShare'
+                label='Paid'
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -88,14 +88,14 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
               <TextField 
                 variant='outlined'
                 size="small"
-                label='ParOfTargetShare'
+                label='Par'
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
                 onChange={ e => setTargetShare(v => ({
                   ...v,
-                  paid: (e.target.value ?? '0'),
+                  par: (e.target.value ?? '0'),
                 }))}
                 value={ targetShare.par } 
               />

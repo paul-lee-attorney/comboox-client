@@ -1,27 +1,20 @@
 
-import { Button, Paper, Stack, TextField, Toolbar } from '@mui/material';
+import { Button, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetBackupKey
-} from '../../generated';
+} from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../../interfaces';
 import { BorderColor, Create } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../scripts/toolsKit';
+import { HexParser } from '../../../scripts/toolsKit';
+import { ActionsOfUserProps } from '../ActionsOfUser';
 
-interface SetBackupKeyProps {
-  getUser: () => void,
-}
 
-export function SetBackupKey({ getUser }:SetBackupKeyProps) {
+export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
 
   const [ key, setKey ] = useState<HexType>();
-
-  // const { config: setBackupKeyConfig } = usePrepareRegCenterSetBackupKey({
-  //   address: AddrOfRegCenter,
-  //   args: key ? [key] : undefined,
-  // })  
 
   const {
     isLoading: setBackupKeyLoading,
@@ -31,31 +24,27 @@ export function SetBackupKey({ getUser }:SetBackupKeyProps) {
     args: key ? [key] : undefined,
     onSuccess() {
       getUser();
+      refreshList();
     }
   })
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Toolbar sx={{ color:'black' }} >
-        <h4>Set Backup Key</h4>
-      </Toolbar>
-
-      <Stack direction='row' sx={{m:1, p:1, alignItems:'center', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'stretch', justifyContent:'start'}} >
 
         <TextField 
           size="small"
-          variant='filled'
+          variant='outlined'
           label='BackupKey'
           sx={{
             m:1,
             minWidth: 456,
           }}
           value={ key }
-          onChange={e => setKey( HexParser( e.target.value ) )}
+          onChange={e => setKey( HexParser( e.target.value ))}
         />
 
         <Button 
-          size='small'
           disabled={ setBackupKeyLoading } 
           onClick={() => {
             setBackupKey?.()

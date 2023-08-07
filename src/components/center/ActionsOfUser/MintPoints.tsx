@@ -1,47 +1,35 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
+import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterMintPoints,
-  useRegCenterTransferPoints, 
-} from '../../generated';
+  useRegCenterMintPoints, 
+} from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../interfaces';
-import { ArrowCircleRight, ArrowCircleRightOutlined, BorderColor, Close, Create } from '@mui/icons-material';
+import { AddrOfRegCenter, HexType } from '../../../interfaces';
+import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
-import { bigint } from 'ethers';
-import { getReceipt } from '../../queries/common';
-import { longDataParser, longSnParser } from '../../scripts/toolsKit';
+import { getReceipt } from '../../../queries/common';
+import { longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { TransactionReceipt } from 'viem';
+import { ActionsOfUserProps } from '../ActionsOfUser';
 
 interface Receipt{
-  from: string;
   to: string;
   amt: string;
 }
 
-interface TransferPointsProps {
-  getUser: ()=> void;
-}
 
-export function TransferPoints({ getUser }: TransferPointsProps) {
+export function MintPoints({getUser}:ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<string>();
   const [ amt, setAmt ] = useState<string>();
-
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
 
-  // const { config: transferPointsConfig } = usePrepareRegCenterTransferPoints({
-  //   address: AddrOfRegCenter,
-  //   args: to && amt
-  //     ? [BigInt(to), BigInt(amt)]
-  //     : undefined,
-  // })  
-
   const {
-    isLoading: transferPointsLoading,
-    write: transferPoints
-  } = useRegCenterTransferPoints({
+    isLoading: mintPointsLoading,
+    write: mintPoints
+  } = useRegCenterMintPoints({
     address: AddrOfRegCenter,
     args: to && amt
       ? [BigInt(to), BigInt(amt)]
@@ -51,9 +39,8 @@ export function TransferPoints({ getUser }: TransferPointsProps) {
         r => {
           if (r) {
             let rpt:Receipt = {
-              from: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
-              to: longSnParser(BigInt(r.logs[0].topics[2]).toString()),
-              amt: longDataParser(r.logs[0].topics[3]?.toString())
+              to: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
+              amt: longDataParser(r.logs[0].topics[2]?.toString())
             }
             setReceipt(rpt);
             setOpen(true);
@@ -68,10 +55,9 @@ export function TransferPoints({ getUser }: TransferPointsProps) {
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
       <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
-
         <TextField 
           size="small"
-          variant='filled'
+          variant="outlined"
           label='To'
           sx={{
             m:1,
@@ -83,7 +69,7 @@ export function TransferPoints({ getUser }: TransferPointsProps) {
 
         <TextField 
           size="small"
-          variant='filled'
+          variant="outlined"
           label='Amount'
           sx={{
             m:1,
@@ -95,15 +81,15 @@ export function TransferPoints({ getUser }: TransferPointsProps) {
 
         <Button 
           size='small'
-          disabled={ transferPointsLoading } 
+          disabled={ !mintPoints || mintPointsLoading } 
           onClick={() => {
-            transferPoints?.()
+            mintPoints?.()
           }}
           variant='contained'
-          sx={{ m:1, mx:2, minWidth:128 }} 
-          endIcon={<ArrowCircleRightOutlined />}       
+          sx={{ m:1, mx:2, minWidth:128, height:40 }} 
+          endIcon={<Flare />}       
         >
-          {transferPointsLoading ? 'Loading...' : 'Transfer'}
+          {mintPointsLoading ? 'Loading...' : 'Mint'}
         </Button>
 
         <Collapse in={ open } sx={{ m:1 }} >
@@ -121,11 +107,11 @@ export function TransferPoints({ getUser }: TransferPointsProps) {
               </IconButton>
             }
 
-            variant='outlined' 
+            variant="outlined" 
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt} points transfered to User ({receipt?.to})
+            {receipt?.amt} Points minted to User ({receipt?.to})
           </Alert>          
         </Collapse>
 

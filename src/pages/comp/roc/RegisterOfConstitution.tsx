@@ -69,7 +69,7 @@ function RegisterOfConstitution() {
           </Toolbar>
 
           {boox && (
-              <CopyLongStrSpan size="h6" title="Addr" src={boox[1].toLowerCase()} />
+              <CopyLongStrSpan size="body1" title="Addr" src={boox[1].toLowerCase()} />
           )}
 
         </Stack>

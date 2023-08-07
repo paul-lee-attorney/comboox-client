@@ -1,6 +1,7 @@
 import { readContract, getWalletClient, getContract, getPublicClient, waitForTransaction } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../interfaces";
 import { regCenterABI } from "../generated";
+import { toAscii, toStr } from "../scripts/toolsKit";
 
 // ==== Locker ====
 
@@ -62,9 +63,18 @@ export const defaultBodyOfLocker:BodyOfLocker = {
 
 export interface Key {
   pubKey: HexType;
-  seqOfKey: number;
-  dataOfKey: number;
-  dateOfKey: number;
+  refund: number;
+  discount: number;
+  gift: number;
+  coupon: number;
+}
+
+export const defaultKey:Key = {
+  pubKey: AddrZero,
+  refund: 0,
+  discount: 0,
+  gift: 0,
+  coupon: 0,
 }
 
 export interface User {
@@ -75,17 +85,17 @@ export interface User {
   backupKey: Key;
 }
 
-
 // ==== RegCenter ====
 
-export interface Reward {
+export interface Rule {
   eoaRewards: number;
   coaRewards: number;
-  offAmt: number;
-  discRate: number;
-  refundRatio: number;
-  ceiling: bigint;
-  floor: bigint;
+  ceiling: number;
+  floor: number;
+  rate: number;
+  para: number;
+  argu: number;
+  seq: number;
 }
 
 // ==== Doc ====
@@ -98,7 +108,6 @@ export interface HeadOfDoc {
   createDate: number;
   para: number;
   argu: number;
-  data: number;
   state: number;        
 }
 
@@ -107,6 +116,38 @@ export interface Doc {
   body: HexType;
 }
 
+export function codifyUserInfo(info: string):HexType {
+  let sn = '0'.padStart(40, '0') + toAscii(info);
+
+  let len = sn.length;
+
+  if (len < 64) sn = sn.padEnd(64, '0');
+  else sn = sn.substring(0, 64);
+
+  let out: HexType = `0x${sn}`;
+
+  return out;
+}
+
+export function parseUserInfo(info: Key): string {
+  let out = '';
+  out = toStr(info.refund) + toStr(info.discount) 
+      + toStr(info.gift) + toStr(info.coupon);
+
+  return out;
+}
+
+export function codifyRoyaltyRule(rule: Key):HexType {
+  let out: HexType = `0x${
+    '0'.padEnd(40, '0') +
+    rule.refund.toString(16).padStart(4, '0') +
+    rule.discount.toString(16).padStart(4, '0') +
+    rule.gift.toString(16).padStart(8, '0') +
+    rule.coupon.toString(16).padStart(8, '0')
+  }`;
+
+  return out;
+}
 
 // ==== Options ====
 
@@ -130,11 +171,11 @@ export async function getBookeeper(addr: HexType): Promise<HexType>{
   return res;
 }
 
-export async function getRewardSetting(addr: HexType): Promise<Reward>{
+export async function getPlatformRule(): Promise<Rule>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
-    functionName: 'getRewardSetting'
+    functionName: 'getPlatformRule'
   });
 
   return res;
@@ -142,23 +183,12 @@ export async function getRewardSetting(addr: HexType): Promise<Reward>{
 
 // ==== User ====
 
-export async function isKey(addr: HexType, key: HexType): Promise<boolean>{
+export async function isKey(key: HexType): Promise<boolean>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'isKey',
     args: [key],
-  });
-
-  return res;
-}
-
-export async function isCOA(addr: HexType, acct: string): Promise<boolean>{
-  let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'isCOA',
-    args: [BigInt(acct)],
   });
 
   return res;
@@ -177,14 +207,6 @@ export async function getUser(): Promise<User>{
   let res = await rc.read.getUser();    
 
   return res;
-
-  // let res = await readContract({
-  //   address: addr,
-  //   abi: regCenterABI,
-  //   functionName: 'getUser'
-  // });
-
-  // return res;
 }
 
 export async function getMyUserNo(): Promise<number>{
@@ -202,13 +224,6 @@ export async function getMyUserNo(): Promise<number>{
   let res = await rc.read.getMyUserNo();    
 
   return res;
-
-
-  // let res = await readContract({
-  //   address: addr,
-  //   abi: regCenterABI,
-  //   functionName: 'getMyUserNo'
-  // });
 }
 
 // ==== Docs ====
@@ -235,43 +250,11 @@ export async function counterOfDocs(addr: HexType, typeOfDoc: string, version: s
   return res;
 }
 
-export async function getDocKeeper(addr: HexType): Promise<HexType>{
-  let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'getDocKeeper'
-  });
-
-  return res;
-}
-
 // ==== SingleCheck ====
 
-export async function getTemplate(addr: HexType, snOfDoc: HexType): Promise<Doc>{
+export async function getDoc(snOfDoc: HexType): Promise<Doc>{
   let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'getTemplate',
-    args: [ snOfDoc ]
-  });
-
-  return res;
-}
-
-export async function docExist(addr: HexType, snOfDoc: HexType): Promise<boolean>{
-  let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'docExist',
-    args: [ snOfDoc ]
-  });
-
-  return res;
-}
-
-export async function getDoc(addr: HexType, snOfDoc: HexType): Promise<Doc>{
-  let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDoc',
     args: [ snOfDoc ]
@@ -280,9 +263,9 @@ export async function getDoc(addr: HexType, snOfDoc: HexType): Promise<Doc>{
   return res;
 }
 
-export async function getDocByUserNo(addr: HexType, acct: string): Promise<Doc>{
+export async function getDocByUserNo(acct: string): Promise<Doc>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDocByUserNo',
     args: [ BigInt(acct) ]
@@ -316,57 +299,22 @@ export async function getDocAddr(hash: HexType): Promise<HexType> {
   return out; 
 }
 
-
-// ==== BatchQueries ====
-
-export async function getAllDocsSN(addr: HexType): Promise<readonly HexType[]>{
+export async function getDocsList(snOfDoc: HexType): Promise<readonly Doc[]>{
   let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'getAllDocsSN',
-  });
-
-  return res;
-}
-
-export async function getBodiesList(addr: HexType, typeOfDoc: string, version:string): Promise<readonly HexType[]>{
-  let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'getBodiesList',
-    args: [ BigInt(typeOfDoc), BigInt(version) ]
-  });
-
-  return res;
-}
-
-export async function getSNList(addr: HexType, typeOfDoc: string, version:string): Promise<readonly HexType[]>{
-  let res = await readContract({
-    address: addr,
-    abi: regCenterABI,
-    functionName: 'getSNList',
-    args: [ BigInt(typeOfDoc), BigInt(version) ]
-  });
-
-  return res;
-}
-
-export async function getDocsList(addr: HexType, typeOfDoc: string, version:string): Promise<readonly Doc[]>{
-  let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDocsList',
-    args: [ BigInt(typeOfDoc), BigInt(version) ]
+    args: [ snOfDoc ]
   });
 
   return res;
 }
 
-export async function getTempsList(addr: HexType, typeOfDoc: string): Promise<readonly Doc[]>{
+export async function getVersionsList(typeOfDoc: string): Promise<readonly Doc[]>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
-    functionName: 'getTempsList',
+    functionName: 'getVersionsList',
     args: [ BigInt(typeOfDoc) ]
   });
 
