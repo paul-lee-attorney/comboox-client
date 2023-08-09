@@ -34,7 +34,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'sn', 
       headerName: 'Sn',
-      valueGetter: p => p.row.sn.substring(6, 26),
+      valueGetter: p => p.row.sn.substring(10, 34),
       width: 218,
       renderCell: ( p ) => (
         <Link
@@ -42,19 +42,19 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
             pathname: pathName,
             query: {
               addr: p.row.addr,
-              snOfDoc: p.row.sn.substring(6, 26),
+              snOfDoc: p.row.sn.substring(10, 34),
             }
           }}
           as={ pathAs }
         >
-          { p.row.sn.substring(6, 26) }
+          { p.row.sn.substring(10, 34) }
         </Link>
       )
     },
     {
       field: 'creator',
       headerName: 'Creator',
-      valueGetter: p => longSnParser(parseInt(`0x${p.row.sn.substring(26, 36)}`).toString()),
+      valueGetter: p => longSnParser(parseInt(`0x${p.row.sn.substring(34, 44)}`).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -68,7 +68,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'createDate',
       headerName: 'CreateDate',
-      valueGetter: p => dateParser(parseInt(p.row.sn.substring(36, 48), 16)),
+      valueGetter: p => dateParser(parseInt(`0x${p.row.sn.substring(44, 56)}`)),
       width: 218,
       headerAlign:'center',
       align: 'center',

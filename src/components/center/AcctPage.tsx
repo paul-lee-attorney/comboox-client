@@ -48,9 +48,9 @@ export function AcctPage({ flag }:AcctPageProps) {
     {userNo && (
       <Link    
         href={{
-          pathname: flag ? `/my/UserInfo` : '/' ,
+          pathname: flag ? `/center/UserInfo` : '/' ,
         }}
-        as={`/my/UserInfo`}
+        as={`/center/UserInfo`}
       >
 
         <Button

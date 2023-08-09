@@ -167,7 +167,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                 </Stack>
 
                 {!isFinalized && (
-                  <AddTerm sha={ sha } typeOfDoc={ 28 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
+                  <AddTerm sha={ sha } title={ 4 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
 
 

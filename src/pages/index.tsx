@@ -9,7 +9,6 @@ function FrontPage() {
     <Stack 
       direction={'column'} 
       sx={{
-        m:1, p:1, 
         alignItems:'center', 
         width:'100%',
       }} 

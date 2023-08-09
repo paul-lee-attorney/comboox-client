@@ -49,6 +49,7 @@ export function CreateComp() {
           size='small'
           id="setGC-input"
           label='PrimeKey Of Board Secretary'
+          sx={{ height:40 }}
           endAdornment={
             <InputAdornment position="end">
               <Tooltip title={"Register My Company"} placement='right' arrow >
@@ -65,7 +66,6 @@ export function CreateComp() {
               </Tooltip>
             </InputAdornment>
           }
-          sx={{height: 40}}
           onChange={(e) => setDK( HexParser(e.target.value) )}
           value={ dk }
         />

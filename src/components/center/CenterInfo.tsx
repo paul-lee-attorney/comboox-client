@@ -1,0 +1,222 @@
+import { useState } from "react";
+import { AddrOfRegCenter, AddrZero, HexType } from "../../interfaces";
+import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetOwner, useRegCenterGetPlatformRule } from "../../generated";
+import { Rule, defaultRule } from "../../queries/rc";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
+import { CopyLongStrTF } from "../common/utils/CopyLongStr";
+import { longDataParser, toPercent } from "../../scripts/toolsKit";
+import { ActionsOfOwner } from "./ActionsOfOwner";
+import { Settings } from "@mui/icons-material";
+import { useWalletClient } from "wagmi";
+
+
+export function CenterInfo() {
+  
+  const { data:signer } = useWalletClient();
+
+  const [ owner, setOwner ] = useState<HexType>(AddrZero);
+
+  const {
+    refetch: getOwner,
+  } = useRegCenterGetOwner({
+    address: AddrOfRegCenter,
+    onSuccess(res) {
+      setOwner(res)
+    }
+  })
+
+  const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
+
+  const {
+    refetch: getKeeper,
+  } = useRegCenterGetBookeeper({
+    address: AddrOfRegCenter,
+    onSuccess(res) {
+      setKeeper(res)
+    }
+  })
+
+  const [ platformRule, setPlatformRule ] = useState<Rule>(defaultRule);
+
+  const {
+    refetch: getPlatformRule,
+  } = useRegCenterGetPlatformRule({
+    address: AddrOfRegCenter,
+    onSuccess(res) {
+      setPlatformRule(res);
+    }
+  })
+
+  const refreshPage = ()=>{
+    getOwner();
+    getKeeper();
+    getPlatformRule();
+  }
+
+  const [ counterOfUsers, setCounterOfUsers ] = useState<number>(0);
+
+  useRegCenterCounterOfUsers({
+    address: AddrOfRegCenter,
+    onSuccess(res) {
+      setCounterOfUsers(res);
+    }
+  })
+
+  const [ open, setOpen ] = useState(false);
+
+  const handleClick = ()=> {
+    setOpen(true);
+  }
+
+  return(
+    <>
+      <Button
+        variant="outlined"
+        startIcon={<Settings />}
+        sx={{ m:3, width:488, height:40 }}
+        onClick={ handleClick }      
+      >
+        Registration Center Info
+      </Button>
+
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"
+      >
+        <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
+          <h3>RegCenter Info</h3>
+        </DialogTitle>
+
+        <DialogContent>
+
+          <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:1, border:1, borderColor:'divider' }} >
+            {/* <Toolbar sx={{ textDecoration:'underline' }} >
+              <h3>Management of RegCenter</h3>
+            </Toolbar> */}
+            <table>
+              <thead />
+
+              <tbody>
+
+                <tr>
+                  <td>
+                    <CopyLongStrTF size="body1" title='Owner' src={owner.toLowerCase() ?? '-'} />
+                  </td>
+                  <td>
+                    <CopyLongStrTF size="body1" title='Keeper' src={keeper.toLowerCase() ?? '-'} />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='CounterOfUsers'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(counterOfUsers.toString() ?? '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='RateOfCommission'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ toPercent(platformRule.rate ?? 0) }
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='EOA_Rewards'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.eoaRewards.toString() ?? '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='COA_Rewards'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.coaRewards.toString() ?? '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='CeilingOfRoyalty'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.ceiling.toString() ?? '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='FloorOfRoyalty'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.floor.toString() ?? '0') }
+                    />
+                  </td>
+                </tr>
+
+                {signer && (signer.account.address == owner || signer.account.address == keeper) && (
+                  <tr>
+                    <td colSpan={4}>
+                      <ActionsOfOwner refreshPage={refreshPage} />
+                    </td>
+                  </tr>
+                )}
+
+              </tbody>
+            </table>
+
+          </Paper>
+
+          </DialogContent>
+
+          <DialogActions>
+            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+          </DialogActions>
+
+
+        </Dialog>
+    </>
+  );
+}

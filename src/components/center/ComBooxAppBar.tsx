@@ -148,7 +148,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     if ( isConnected ) {
       setUserNo(undefined);
       disconnect();
-      if (pathname == '/my/UserInfo') router.push('/');
+      if (pathname == '/center/UserInfo') router.push('/');
     } else {
       connect({ connector: connectors[0] });
     }

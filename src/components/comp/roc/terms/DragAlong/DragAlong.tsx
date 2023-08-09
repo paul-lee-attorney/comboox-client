@@ -275,7 +275,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                 </Stack>
 
                 {!isFinalized && (
-                  <AddTerm sha={ sha } typeOfDoc={ 25 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
+                  <AddTerm sha={ sha } title={ 3 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
 
               </Stack>

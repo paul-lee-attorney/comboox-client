@@ -11,7 +11,7 @@ import { GetVotingRule } from "../../comp/roc/rules/GetVotingRule";
 import { labState } from "./GetFilesList";
 
 export interface IndexCardProps{
-  file: InfoOfFile | undefined;
+  file: InfoOfFile;
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -43,7 +43,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                   <Chip 
                     variant='filled'
                     label={ 
-                      labState[file.head.state - 1]
+                      labState[(file.head.state ?? 1) - 1]
                     } 
                     sx={{width: 128}}
                     color={

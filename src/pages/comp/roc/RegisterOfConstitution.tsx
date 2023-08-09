@@ -39,7 +39,10 @@ function RegisterOfConstitution() {
     onSuccess(ls) {
       if (boox)
         getFilesInfoList(boox[1], ls).then(
-          list => setFilesInfoList(list)
+          list => {
+            console.log('list: ', list);
+            setFilesInfoList(list);
+          }
         )
     }
   })

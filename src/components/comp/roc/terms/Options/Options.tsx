@@ -195,7 +195,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                 </Stack>
 
                 {!isFinalized && (
-                  <AddTerm sha={ sha } typeOfDoc={ 27 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
+                  <AddTerm sha={ sha } title={ 5 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
 
               </Stack>

@@ -35,8 +35,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
   const [ open, setOpen ] = useState(false);
 
-  const handleClick = async ()=> {
-    // await obtainVR();
+  const handleClick = ()=> {
     setOpen(true);
   }
 

@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { readContract } from '@wagmi/core';
+import { CenterInfo } from './CenterInfo';
 
 export interface Head {
   typeOfDoc: number,
@@ -50,6 +51,7 @@ export function GetComp() {
     if ( regNum ) {
       getDocByUserNo(regNum).then(
         (doc:Doc) => {
+          console.log('doc: ', doc);
           if (doc.body != AddrZero) {
             setOpen(false);
             setGK(doc.body);
@@ -80,7 +82,7 @@ export function GetComp() {
 
         <Button 
           sx={{ m:1, ml:3, width: 218, height: 40 }} 
-          variant="contained" 
+          variant="outlined" 
           endIcon={ <Search /> }
           onClick={ handleClick }
           size='small'
@@ -89,7 +91,7 @@ export function GetComp() {
         </Button>
       </Stack>
 
-      {doc && (
+      {!open && doc && (
         
         <Link
           
@@ -111,7 +113,7 @@ export function GetComp() {
 
           underline='hover'
         >
-          <Button variant='contained' sx={{m:3, width: 488, height:40}} endIcon={<DriveFileMove />} >
+          <Button variant='outlined' sx={{m:3, width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +
                   doc?.head.version.toString(16).padStart(4, '0') +
                   doc?.head.seqOfDoc.toString(16).padStart(16, '0')
@@ -121,7 +123,7 @@ export function GetComp() {
         
       )}
 
-      <Collapse in={ open } sx={{ m:3, width:488 }} >        
+      {open && !doc && (
         <Alert 
           action={
             <IconButton
@@ -138,11 +140,15 @@ export function GetComp() {
 
           variant='outlined' 
           severity='info' 
-          sx={{ height: 40, p:0.25, px:1, }} 
+          sx={{ m:3, height: 40, width:488, p:0.25, px:1, }} 
         >
           No Records. 
         </Alert>
-      </Collapse>
+      )}
+
+      {!open && !doc && (
+        <CenterInfo />
+      )}
         
     </Stack>
   )

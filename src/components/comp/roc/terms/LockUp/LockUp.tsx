@@ -194,7 +194,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                   </Stack>
 
                   { !isFinalized && (
-                    <AddTerm sha={ sha } typeOfDoc={ 26 } setTerms={ setTerms } isCreated={ term != AddrZero } />
+                    <AddTerm sha={ sha } title={ 2 } setTerms={ setTerms } isCreated={ term != AddrZero } />
                   )}
 
                 </Stack>

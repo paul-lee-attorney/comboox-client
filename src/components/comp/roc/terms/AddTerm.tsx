@@ -13,12 +13,12 @@ import { Delete, PlaylistAdd } from "@mui/icons-material";
 
 interface AddTermProps {
   sha: HexType;
-  typeOfDoc: number;
+  title: number;
   setTerms: Dispatch<SetStateAction<HexType[]>>;
   isCreated: boolean;
 }
 
-export function AddTerm({sha, typeOfDoc, setTerms, isCreated}: AddTermProps) {
+export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
 
   const [ version, setVersion ] = useState<string>('1');
 
@@ -28,13 +28,13 @@ export function AddTerm({sha, typeOfDoc, setTerms, isCreated}: AddTermProps) {
   } = useShareholdersAgreementCreateTerm({
     address: sha,
     args: version 
-      ? [BigInt(typeOfDoc), BigInt(version)]
+      ? [BigInt(title), BigInt(version)]
       : undefined,
     onSuccess(data:any) {
       getDocAddr(data.hash).
         then(addrOfTerm => setTerms(v => {
           let out = [...v];
-          out[typeOfDoc - 24] = addrOfTerm;
+          out[title] = addrOfTerm;
           return out;
         }));      
     }
@@ -45,11 +45,11 @@ export function AddTerm({sha, typeOfDoc, setTerms, isCreated}: AddTermProps) {
     write: removeTerm,
   } = useShareholdersAgreementRemoveTerm({
     address: sha,
-    args: [BigInt(typeOfDoc)],
+    args: [BigInt(title)],
     onSuccess() {
       setTerms(v=>{
         let out = [...v];
-        out[typeOfDoc - 24] = AddrZero;
+        out[title] = AddrZero;
         return out;
       });
     }
