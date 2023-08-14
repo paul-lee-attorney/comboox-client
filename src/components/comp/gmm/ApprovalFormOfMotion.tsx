@@ -15,10 +15,11 @@ import { TakeSeat } from "./ExecMotions/TakeSeat";
 import { RemoveDirector } from "./ExecMotions/RemoveDirector";
 import { ExecActionOfGm } from "./ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
-import { getSnOfFile } from "../../../queries/filesFolder";
+// import { getSnOfFile } from "../../../queries/filesFolder";
 import { useMeetingMinutes } from "../../../generated";
 import { RequestToBuy } from "./ExecMotions/RequestToBuy";
 import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
+import { getFile } from "../../../queries/filesFolder";
 
 export interface ApprovalFormOfMotionProps{
   minutes: HexType;
@@ -50,8 +51,8 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
                           ? boox[1] : boox[6];
-      getSnOfFile(folder, addrOfDoc).then(
-        sn => setSnOfDoc(sn)
+      getFile(folder, addrOfDoc).then(
+        file => setSnOfDoc(file.snOfDoc)
       );
     }
   }, [motion, addrOfDoc, boox]);
@@ -246,8 +247,8 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                         }
                       }}
                       as={motion.head.seqOfVR == 8
-                          ? '/comp/roc/sha'
-                          : '/comp/roa/ia'}
+                          ? '/comp/roc/Sha'
+                          : '/comp/roa/Ia'}
                     >            
                       <Button
                         variant="outlined"

@@ -33,7 +33,7 @@ export interface ParasOfSigPage {
 export function parseParasOfPage(sig: Sig): ParasOfSigPage {
   let output: ParasOfSigPage = {
     circulateDate: sig.sigDate,
-    established: sig.flag,
+    established: sig.para == sig.arg,
     counterOfBlanks: sig.para,
     counterOfSigs: sig.arg,
     signingDays: sig.seq,

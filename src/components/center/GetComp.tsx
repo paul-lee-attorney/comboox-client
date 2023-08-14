@@ -51,7 +51,6 @@ export function GetComp() {
     if ( regNum ) {
       getDocByUserNo(regNum).then(
         (doc:Doc) => {
-          console.log('doc: ', doc);
           if (doc.body != AddrZero) {
             setOpen(false);
             setGK(doc.body);

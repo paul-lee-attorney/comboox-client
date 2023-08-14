@@ -98,7 +98,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}
         >
-          {setRoyaltyRuleLoading ? 'Loading...' : 'Set'}
+          Set
         </Button>
 
       </Stack>

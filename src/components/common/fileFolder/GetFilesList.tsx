@@ -23,9 +23,8 @@ interface GetFilesListProps {
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export const labState = ['Created', 'Circulated', 'Established', 
-'Proposed', 'Approved', 'Rejected', 'Closed', 'Terminated'];
-
+export const labState = ['Created', 'Circulated',  'Proposed', 'Approved', 
+'Rejected', 'Closed', 'Terminated'];
 
 export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }:GetFilesListProps ) {
 
@@ -117,17 +116,17 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
           } 
           sx={{width: 128}}
           color={
-            value == 7
+            value == 6
             ? 'success'
-            : value == 6
+            : value == 5
               ? 'error'
-              : value == 5
+              : value == 4
                 ? 'info'
-                : value == 4
+                : value == 3
                   ? 'secondary'
-                  : value == 3
+                  : value == 2
                     ? 'primary'
-                    : value == 2
+                    : value == 1
                       ? 'warning'
                       : 'default'
           }
@@ -153,7 +152,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
           pageSizeOptions={[5, 10, 15, 20]} 
           rows={ list } 
           columns={ columns }
-          getRowId={(row:InfoOfFile | undefined) => (row?.sn.substring(6, 26) ?? '0') } 
+          getRowId={(row:InfoOfFile | undefined) => (row?.sn.substring(10, 34) ?? '0') } 
           disableRowSelectionOnClick
           onRowClick={ handleRowClick }
         />

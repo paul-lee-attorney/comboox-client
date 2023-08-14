@@ -44,7 +44,21 @@ import { Opt } from "./Opt";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
-import { BodyOfOpt, Cond, HeadOfOpt, OptWrap, Option, comOps, condCodifier, defaultBodyOfOpt, defaultCond, defaultHeadOfOpt, logOps, optHeadCodifier, typeOfOpts } from "../../../../../queries/roo";
+import { 
+  BodyOfOpt, 
+  Cond, 
+  HeadOfOpt, 
+  OptWrap, 
+  Option, 
+  comOps, 
+  condCodifier, 
+  defaultBodyOfOpt, 
+  defaultCond, 
+  defaultHeadOfOpt, 
+  logOps, 
+  optHeadCodifier, 
+  typeOfOpts 
+} from "../../../../../queries/roo";
 
 // ==== HeadOfOpt ====
 

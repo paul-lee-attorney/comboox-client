@@ -36,9 +36,10 @@ export interface VotingRule {
   impliedConsent: boolean;
   partyAsConsent: boolean;
   againstShallBuy: boolean;
-  shaExecDays: number;
-  shaConfirmDays: number;
-  reconsiderDays: number;
+  frExecDays: number;
+  dtExecDays: number;
+  dtConfirmDays: number;
+  invExitDays: number;
   votePrepareDays: number;
   votingDays: number;
   execDaysForPutOpt: number;
@@ -51,16 +52,17 @@ export function vrParser(hexVr: HexType):VotingRule {
     seqOfRule: parseInt(hexVr.substring(2, 6), 16), 
     qtyOfSubRule: parseInt(hexVr.substring(6, 8), 16),
     seqOfSubRule: parseInt(hexVr.substring(8, 10), 16),
-    authority: parseInt(hexVr.substring(10, 14), 16),
-    headRatio: parseInt(hexVr.substring(14, 18), 16),
-    amountRatio: parseInt(hexVr.substring(18, 22), 16),
-    onlyAttendance: hexVr.substring(22, 24) === '01',
-    impliedConsent: hexVr.substring(24, 26) === '01',
-    partyAsConsent: hexVr.substring(26, 28) === '01',
-    againstShallBuy: hexVr.substring(28, 30) === '01',
-    shaExecDays: parseInt(hexVr.substring(30, 32), 16),
-    shaConfirmDays: parseInt(hexVr.substring(32, 34), 16),
-    reconsiderDays: parseInt(hexVr.substring(34, 36), 16),
+    authority: parseInt(hexVr.substring(10, 12), 16),
+    headRatio: parseInt(hexVr.substring(12, 16), 16),
+    amountRatio: parseInt(hexVr.substring(16, 20), 16),
+    onlyAttendance: hexVr.substring(20, 22) === '01',
+    impliedConsent: hexVr.substring(22, 24) === '01',
+    partyAsConsent: hexVr.substring(24, 26) === '01',
+    againstShallBuy: hexVr.substring(26, 28) === '01',
+    frExecDays: parseInt(hexVr.substring(28, 30), 16),
+    dtExecDays: parseInt(hexVr.substring(30, 32), 16),
+    dtConfirmDays: parseInt(hexVr.substring(32, 34), 16),
+    invExitDays: parseInt(hexVr.substring(34, 36), 16),
     votePrepareDays: parseInt(hexVr.substring(36, 38), 16),
     votingDays: parseInt(hexVr.substring(38, 40), 16),
     execDaysForPutOpt: parseInt(hexVr.substring(40, 42), 16),
@@ -75,16 +77,17 @@ export function vrCodifier(objVr: VotingRule ): HexType {
     (objVr.seqOfRule.toString(16).padStart(4, '0')) +
     (objVr.qtyOfSubRule.toString(16).padStart(2, '0')) +
     (objVr.seqOfSubRule.toString(16).padStart(2, '0')) +
-    (objVr.authority.toString(16).padStart(4, '0')) +
+    (objVr.authority.toString(16).padStart(2, '0')) +
     (objVr.headRatio.toString(16).padStart(4, '0')) +
     (objVr.amountRatio.toString(16).padStart(4, '0')) +
     (objVr.onlyAttendance ? '01' : '00' )+
     (objVr.impliedConsent ? '01' : '00' )+
     (objVr.partyAsConsent ? '01' : '00' )+
     (objVr.againstShallBuy ? '01' : '00' )+
-    (objVr.shaExecDays.toString(16).padStart(2, '0')) +
-    (objVr.shaConfirmDays.toString(16).padStart(2, '0')) +
-    (objVr.reconsiderDays.toString(16).padStart(2, '0')) +
+    (objVr.frExecDays.toString(16).padStart(2, '0')) +
+    (objVr.dtExecDays.toString(16).padStart(2, '0')) +
+    (objVr.dtConfirmDays.toString(16).padStart(2, '0')) +
+    (objVr.invExitDays.toString(16).padStart(2, '0')) +
     (objVr.votePrepareDays.toString(16).padStart(2, '0')) +
     (objVr.votingDays.toString(16).padStart(2, '0')) +
     (objVr.execDaysForPutOpt.toString(16).padStart(2, '0')) +
@@ -124,9 +127,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: true,
     againstShallBuy: false,
-    shaExecDays: 15,
-    shaConfirmDays: 14,
-    reconsiderDays: 14,
+    frExecDays: 15,
+    dtExecDays: 8,
+    dtConfirmDays: 7,
+    invExitDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -143,9 +147,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: true,
     partyAsConsent: false,
     againstShallBuy: true,
-    shaExecDays: 15,
-    shaConfirmDays: 14,
-    reconsiderDays: 14,
+    frExecDays: 15,
+    dtExecDays: 8,
+    dtConfirmDays: 7,
+    invExitDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -162,11 +167,12 @@ const defaultRules: VotingRule[] = [
     impliedConsent: true,
     partyAsConsent: true,
     againstShallBuy: false,
-    shaExecDays: 0,
-    shaConfirmDays: 0,
-    reconsiderDays: 14,
+    frExecDays: 0,
+    dtExecDays: 0,
+    dtConfirmDays: 1,
+    invExitDays: 0,
     votePrepareDays: 0,
-    votingDays: 0,
+    votingDays: 1,
     execDaysForPutOpt: 0,
     vetoers: [0, 0],
     para: 0,
@@ -181,9 +187,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: true,
     againstShallBuy: false,
-    shaExecDays: 15,
-    shaConfirmDays: 14,
-    reconsiderDays: 14,
+    frExecDays: 15,
+    dtExecDays: 8,
+    dtConfirmDays: 7,
+    invExitDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -200,9 +207,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: true,
     partyAsConsent: false,
     againstShallBuy: true,
-    shaExecDays: 15,
-    shaConfirmDays: 14,
-    reconsiderDays: 14,
+    frExecDays: 15,
+    dtExecDays: 8,
+    dtConfirmDays: 7,
+    invExitDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -219,9 +227,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: true,
     againstShallBuy: false,
-    shaExecDays: 15,
-    shaConfirmDays: 14,
-    reconsiderDays: 14,
+    frExecDays: 15,
+    dtExecDays: 8,
+    dtConfirmDays: 7,
+    invExitDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -238,9 +247,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: true,
     againstShallBuy: false,
-    shaExecDays: 15,
-    shaConfirmDays: 14,
-    reconsiderDays: 14,
+    frExecDays: 15,
+    dtExecDays: 8,
+    dtConfirmDays: 7,
+    invExitDays: 14,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -257,9 +267,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: true,
     againstShallBuy: false,
-    shaExecDays: 0,
-    shaConfirmDays: 0,
-    reconsiderDays: 29,
+    frExecDays: 0,
+    dtExecDays: 0,
+    dtConfirmDays: 0,
+    invExitDays: 29,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -276,9 +287,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: false,
     againstShallBuy: false,
-    shaExecDays: 0,
-    shaConfirmDays: 0,
-    reconsiderDays: 29,
+    frExecDays: 0,
+    dtExecDays: 0,
+    dtConfirmDays: 0,
+    invExitDays: 29,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -295,9 +307,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: false,
     againstShallBuy: false,
-    shaExecDays: 0,
-    shaConfirmDays: 0,
-    reconsiderDays: 29,
+    frExecDays: 0,
+    dtExecDays: 0,
+    dtConfirmDays: 0,
+    invExitDays: 29,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -314,9 +327,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: false,
     againstShallBuy: false,
-    shaExecDays: 0,
-    shaConfirmDays: 0,
-    reconsiderDays: 9,
+    frExecDays: 0,
+    dtExecDays: 0,
+    dtConfirmDays: 0,
+    invExitDays: 9,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -333,9 +347,10 @@ const defaultRules: VotingRule[] = [
     impliedConsent: false,
     partyAsConsent: false,
     againstShallBuy: false,
-    shaExecDays: 0,
-    shaConfirmDays: 0,
-    reconsiderDays: 9,
+    frExecDays: 0,
+    dtExecDays: 0,
+    dtConfirmDays: 0,
+    invExitDays: 9,
     votePrepareDays: 1,
     votingDays: 1,
     execDaysForPutOpt: 0,
@@ -363,9 +378,10 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
         impliedConsent: false,
         partyAsConsent: true,
         againstShallBuy: false,
-        shaExecDays: 0,
-        shaConfirmDays: 0,
-        reconsiderDays: 0,
+        frExecDays: 0,
+        dtExecDays: 0,
+        dtConfirmDays: 0,
+        invExitDays: 0,
         votePrepareDays: 0,
         votingDays: 0,
         execDaysForPutOpt: 0,
@@ -511,6 +527,18 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                       value={toPercent(newVR.amountRatio)}
                     />
 
+                    <TextField 
+                      variant='outlined'
+                      size='small'
+                      label='ExecDaysForPutOpt'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={newVR.execDaysForPutOpt.toString()}
+                    />
+
                   </Stack>
 
                   <Collapse in={ editable && !isFinalized } >
@@ -593,7 +621,24 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                           amountRatio: parseInt( e.target.value),
                         }))}
                         value={ objVR.amountRatio }
+                        
                       />
+
+                      <TextField 
+                        variant='outlined'
+                        size='small'
+                        label='ExecDaysForPutOpt'
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        onChange={(e) => setObjVR((v) => ({
+                          ...v,
+                          execDaysForPutOpt: parseInt(e.target.value),
+                        }))}
+                        value={ objVR.execDaysForPutOpt}                                        
+                      />
+
 
                     </Stack>
                   </Collapse>
@@ -785,37 +830,49 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                     <TextField 
                       variant='outlined'
                       size='small'
-                      label='ShaExecDays'
+                      label='FRExecDays'
                       inputProps={{readOnly: true}}
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newVR.shaExecDays.toString()}
+                      value={newVR.frExecDays.toString()}
                     />
 
                     <TextField 
                       variant='outlined'
                       size='small'
-                      label='ShaConfirmDays'
+                      label='DTExecDays'
                       inputProps={{readOnly: true}}
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newVR.shaConfirmDays.toString()}
+                      value={newVR.dtExecDays.toString()}
                     />
 
                     <TextField 
                       variant='outlined'
                       size='small'
-                      label='ReconsiderDays'
+                      label='DTConfirmDays'
                       inputProps={{readOnly: true}}
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newVR.reconsiderDays.toString()}
+                      value={newVR.dtConfirmDays.toString()}
+                    />
+
+                    <TextField 
+                      variant='outlined'
+                      size='small'
+                      label='InvExitDays'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={newVR.invExitDays.toString()}
                     />
 
                     <TextField 
@@ -842,19 +899,6 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                       value={newVR.votingDays.toString()}
                     />
 
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='ExecDaysForPutOpt'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={newVR.execDaysForPutOpt.toString()}
-                    />
-
                   </Stack>
 
                   <Collapse in={ editable && !isFinalized } >
@@ -863,46 +907,61 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                       <TextField 
                         variant='outlined'
                         size='small'
-                        label='ShaExecDays'
+                        label='FRExecDays'
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          shaExecDays: parseInt(e.target.value),
+                          frExecDays: parseInt(e.target.value),
                         }))}
-                        value={ objVR.shaExecDays}                                        
+                        value={ objVR.frExecDays}                                        
                       />
 
                       <TextField 
                         variant='outlined'
                         size='small'
-                        label='ShaConfirmDays'
+                        label='DTExecDays'
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          shaConfirmDays: parseInt(e.target.value),
+                          dtExecDays: parseInt(e.target.value),
                         }))}
-                        value={ objVR.shaConfirmDays}                                        
+                        value={ objVR.dtExecDays}                                        
                       />
 
                       <TextField 
                         variant='outlined'
                         size='small'
-                        label='ReconsiderDays'
+                        label='DTConfirmDays'
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          reconsiderDays: parseInt(e.target.value),
+                          dtConfirmDays: parseInt(e.target.value),
                         }))}
-                        value={ objVR.reconsiderDays}                                        
+                        value={ objVR.dtConfirmDays}                                        
+                      />
+
+                      <TextField 
+                        variant='outlined'
+                        size='small'
+                        label='InvExitDays'
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        onChange={(e) => setObjVR((v) => ({
+                          ...v,
+                          invExitDays: parseInt(e.target.value),
+                        }))}
+                        value={ objVR.invExitDays}                                        
                       />
 
                       <TextField 
@@ -933,21 +992,6 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                           votingDays: parseInt(e.target.value),
                         }))}
                         value={ objVR.votingDays}                                        
-                      />
-
-                      <TextField 
-                        variant='outlined'
-                        size='small'
-                        label='ExecDaysForPutOpt'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjVR((v) => ({
-                          ...v,
-                          execDaysForPutOpt: parseInt(e.target.value),
-                        }))}
-                        value={ objVR.execDaysForPutOpt}                                        
                       />
 
                     </Stack>

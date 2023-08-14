@@ -319,7 +319,7 @@ export function LockConsideration({refreshList, getUser}:LockConsiderationProps)
           sx={{ m:1, minWidth:128 }} 
           endIcon={<LockClockOutlined />}       
         >
-          {lockConsiderationLoading ? 'Loading...' : 'Lock'}
+          Lock
         </Button>
 
       </Stack>

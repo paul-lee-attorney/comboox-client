@@ -34,7 +34,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
       getDocAddr(data.hash).
         then(addrOfTerm => setTerms(v => {
           let out = [...v];
-          out[title] = addrOfTerm;
+          out[title-1] = addrOfTerm;
           return out;
         }));      
     }
@@ -49,7 +49,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     onSuccess() {
       setTerms(v=>{
         let out = [...v];
-        out[title] = AddrZero;
+        out[title-1] = AddrZero;
         return out;
       });
     }

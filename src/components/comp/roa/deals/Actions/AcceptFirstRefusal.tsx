@@ -2,7 +2,7 @@ import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
 import { useState } from "react";
 import { defaultDeal } from "../../../../../queries/ia";
-import { useGeneralKeeperAcceptFirstRefusal, useGeneralKeeperCloseDeal } from "../../../../../generated";
+import { useGeneralKeeperComputeFirstRefusal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HandshakeOutlined, LockOpen } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../../../interfaces";
@@ -24,9 +24,9 @@ export function AcceptFirstRefusal({ ia, deal, setOpen, setDeal, refreshDealsLis
   }
 
   const {
-    isLoading: acceptFirstRefusalLoading,
-    write: acceptFirstRefusal
-  } = useGeneralKeeperAcceptFirstRefusal({
+    isLoading: computeFirstRefusalLoading,
+    write: computeFirstRefusal
+  } = useGeneralKeeperComputeFirstRefusal({
     address: gk,
     args: [ia, BigInt(deal.head.seqOfDeal), sigHash],
     onSuccess() {
@@ -42,37 +42,33 @@ export function AcceptFirstRefusal({ ia, deal, setOpen, setDeal, refreshDealsLis
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Pickup Share</h4>
-        </Toolbar> */}
+      <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <TextField 
+          variant='outlined'
+          label='SigHash'
+          size="small"
+          sx={{
+            m:1,
+            minWidth: 680,
+          }}
+          value={ sigHash }
+          onChange={(e)=>setSigHash(HexParser( e.target.value ))}
+        />
 
-          <TextField 
-            variant='outlined'
-            label='SigHash'
-            size="small"
-            sx={{
-              m:1,
-              minWidth: 680,
-            }}
-            value={ sigHash }
-            onChange={(e)=>setSigHash(HexParser( e.target.value ))}
-          />
+        <Button 
+          disabled = {computeFirstRefusalLoading }
 
-          <Button 
-            disabled = {acceptFirstRefusalLoading }
+          sx={{ m: 1, minWidth: 218, height: 40 }} 
+          variant="contained" 
+          endIcon={<HandshakeOutlined />}
+          onClick={()=> computeFirstRefusal?.()}
+          size='small'
+        >
+          Accept First Refusal
+        </Button>
 
-            sx={{ m: 1, minWidth: 218, height: 40 }} 
-            variant="contained" 
-            endIcon={<HandshakeOutlined />}
-            onClick={()=> acceptFirstRefusal?.()}
-            size='small'
-          >
-            Accept First Refusal
-          </Button>
-
-        </Stack>
+      </Stack>
 
     </Paper>
 

@@ -124,7 +124,7 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
           sx={{ m:1, minWidth:128 }} 
           endIcon={<LockClockOutlined />}       
         >
-          {lockPointsLoading ? 'Loading...' : 'Lock'}
+          Lock
         </Button>
 
       </Stack>

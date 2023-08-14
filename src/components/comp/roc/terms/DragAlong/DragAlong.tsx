@@ -32,18 +32,14 @@ import {
 import { readContract } from "@wagmi/core";
 
 import {
-  useShareholdersAgreementCreateTerm,
-  useShareholdersAgreementRemoveTerm,
-  dragAlongABI,
-  useDragAlongDragers,
-  useDragAlongCreateLink,
-  useDragAlongRemoveDrager,
-  useDragAlongAddFollower,
-  useDragAlongRemoveFollower, 
+  alongsABI,
+  useAlongsAddDragger,
+  useAlongsRemoveDragger,
+  useAlongsAddFollower,
+  useAlongsRemoveFollower,
+  useAlongsGetDraggers, 
 } from "../../../../../generated";
 
-
-import { getDocAddr } from "../../../../../queries/rc";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { AlongLinks } from "./AlongLinks";
@@ -58,7 +54,11 @@ export interface LinkRule{
   shareRatioThreshold: number;
   rate: number;
   proRata: boolean;
-  typeOfFollowers: number;
+  seq: number;
+  para: number;
+  argu: number;
+  ref: number;
+  data: bigint;
 }
 
 export const defaultLinkRule: LinkRule = {
@@ -68,7 +68,11 @@ export const defaultLinkRule: LinkRule = {
   shareRatioThreshold: 0,
   rate: 0,
   proRata: false,
-  typeOfFollowers: 0
+  seq: 0,
+  para: 0,
+  argu: 0,
+  ref: 0,
+  data: BigInt(0)
 }
 
 export function linkRuleSnParser(sn: HexType): LinkRule {
@@ -79,7 +83,11 @@ export function linkRuleSnParser(sn: HexType): LinkRule {
     shareRatioThreshold: parseInt(sn.substring(20, 24), 16),
     rate: parseInt(sn.substring(24, 32), 16),
     proRata: parseInt(sn.substring(32, 34), 16) == 1,
-    typeOfFollowers: parseInt(sn.substring(34, 36), 16),
+    seq: 0,
+    para: 0,
+    argu: 0,
+    ref: 0,
+    data: BigInt(0)
   }
   return out;
 }
@@ -92,8 +100,7 @@ export function linkRuleCodifier(rule: LinkRule): HexType {
     rule.shareRatioThreshold.toString(16).padStart(4, '0') +
     rule.rate.toString(16).padStart(8, '0') +
     (rule.proRata ? '01' : '00') +
-    rule.typeOfFollowers.toString(16).padStart(2, '0') +
-    '0'.padEnd(30, '0')
+    '0'.padEnd(32, '0')
   }`;
   return out;
 }
@@ -123,25 +130,25 @@ export interface SetShaTermProps {
   isFinalized: boolean,
 }
 
-export async function getLinks(addr: HexType, dragers: readonly bigint[]): Promise<AlongLink[]> {
-  let len = dragers.length;
+export async function getLinks(addr: HexType, draggers: readonly bigint[]): Promise<AlongLink[]> {
+  let len = draggers.length;
   let output: AlongLink[] = [];
 
   while (len > 0) {
 
-    let drager = dragers[len - 1];
+    let drager = draggers[len - 1];
 
     let linkRule = await readContract({
       address: addr,
-      abi: dragAlongABI,
-      functionName: 'linkRule',
+      abi: alongsABI,
+      functionName: 'getLinkRule',
       args: [ drager ],
     });
 
     let followers = await readContract({
       address: addr,
-      abi: dragAlongABI,
-      functionName: 'followers',
+      abi: alongsABI,
+      functionName: 'getFollowers',
       args: [ drager ],
     });
     
@@ -154,7 +161,11 @@ export async function getLinks(addr: HexType, dragers: readonly bigint[]): Promi
         shareRatioThreshold: linkRule.shareRatioThreshold,
         rate: linkRule.rate,
         proRata: linkRule.proRata,
-        typeOfFollowers: linkRule.typeOfFollowers
+        seq: linkRule.seq,
+        para: linkRule.para,
+        argu: linkRule.argu,
+        ref: linkRule.ref,
+        data: linkRule.data
       },
       followers: followers.map(v=>Number(v)),
     }
@@ -174,7 +185,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
   const {
     refetch:getDragers 
-  } = useDragAlongDragers({
+  } = useAlongsGetDraggers({
     address: term,
     onSuccess(ls) {
       if (term)
@@ -189,7 +200,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
   const { 
     isLoading: addLinkLoading,
     write: addLink 
-  } = useDragAlongCreateLink({
+  } = useAlongsAddDragger({
     address: term,
     args: rule && drager
       ? [ linkRuleCodifier(rule) , BigInt(drager)] 
@@ -202,7 +213,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
   const { 
     isLoading: removeLinkLoading, 
     write: removeLink, 
-  } = useDragAlongRemoveDrager({
+  } = useAlongsRemoveDragger({
     address: term,
     args: drager ? [BigInt(drager)] : undefined, 
     onSuccess() {
@@ -215,7 +226,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
   const { 
     isLoading: addFollowerLoading, 
     write: addFollower, 
-  } = useDragAlongAddFollower({
+  } = useAlongsAddFollower({
     address: term,
     args: drager && follower
       ? [ BigInt(drager),
@@ -229,7 +240,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
   const { 
     isLoading: removeFollowerLoading, 
     write: removeFollower 
-  } = useDragAlongRemoveFollower({
+  } = useAlongsRemoveFollower({
     address: term,
     args: drager && follower 
       ? [ BigInt(drager), BigInt(follower)] 
@@ -332,21 +343,6 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         value={ rule.shareRatioThreshold }              
                       />
 
-                      <TextField 
-                        variant='outlined'
-                        label='Rate'
-                        size="small"
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setRule((v) => ({
-                          ...v,
-                          rate: parseInt(e.target.value ?? '0'),
-                        }))}
-                        value={ rule.rate }              
-                      />
-
                     </Stack>
 
                     <Stack direction={'row'} sx={{ alignItems: 'center' }} >
@@ -370,6 +366,21 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         </Select>
                       </FormControl>
 
+                      <TextField 
+                        variant='outlined'
+                        label='Rate'
+                        size="small"
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        onChange={(e) => setRule((v) => ({
+                          ...v,
+                          rate: parseInt(e.target.value ?? '0'),
+                        }))}
+                        value={ rule.rate }              
+                      />
+
                       <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="proRata-label">ProRata ?</InputLabel>
                         <Select
@@ -387,24 +398,6 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                           <MenuItem value={ '0' } > False </MenuItem>  
                         </Select>
                       </FormControl>
-
-                      <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
-                        <InputLabel id="typeOfFollowers-label">TypeOfFollowers</InputLabel>
-                        <Select
-                          labelId="typeOfFollowers-label"
-                          id="typeOfFollowers-select"
-                          label="TypeOfFollowers"
-                          size="small"
-                          value={ rule.typeOfFollowers }
-                          onChange={(e) => setRule((v) => ({
-                            ...v,
-                            typeOfFollowers: Number(e.target.value),
-                          }))}
-                        >
-                          <MenuItem value={ '1' } >Rest All Members</MenuItem>  
-                          <MenuItem value={ '0' } >Specified Members</MenuItem>  
-                        </Select>
-                      </FormControl>                      
 
                     </Stack>
 

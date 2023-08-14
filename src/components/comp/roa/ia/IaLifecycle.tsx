@@ -23,6 +23,7 @@ import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
 import { useFilesFolderGetHeadOfFile, useInvestmentAgreementGetTypeOfIa } from "../../../../generated";
 import { FinalizeIa } from "./FinalizeIa";
 import { getTypeOfIA } from "../../../../queries/ia";
+import { established } from "../../../../queries/sigPage";
 
 
 interface IaLifecycleProps {
@@ -60,24 +61,30 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
       if (seq) setSeqOfMotion(seq);
 
       let fileState = head.state;
+      let flag = false;
 
       switch (fileState) {
           case 1: 
             setActiveStep(finalized ? 1: 0);
             break;
-          case 4: 
+          case 2:
+            established(ia).then(
+              flag => setActiveStep(flag ? 3 : 2)
+            )
+            break;
+          case 3: 
             if (boox ) voteEnded(boox[5], seq).then(
               flag => setActiveStep(flag ? 5 : 4)
             );            
             break;
-          case 5: 
+          case 4: 
             setActiveStep(6);
             break;
-          case 6: // Rejected
+          case 5: // Rejected
             setActiveStep(8);
             break;
           default:
-            setActiveStep(fileState);
+            setActiveStep(fileState + 1);
       }
 
     }

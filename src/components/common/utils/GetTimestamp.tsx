@@ -15,7 +15,6 @@ export function GetTimestamp() {
     let block = await provider.getBlock();
     setTimestamp( block.timestamp );
     setOpen(true);
-    console.log('date: ',  dateParser(Number(timestamp)));
   }
 
   return (

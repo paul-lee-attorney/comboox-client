@@ -129,4 +129,12 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
   return books;  
 }
 
+export async function getSHA(gk: HexType):Promise<HexType>{
+  return await readContract({
+    address: gk,
+    abi: generalKeeperABI,
+    functionName: 'getSHA'
+  });
+}
+
 

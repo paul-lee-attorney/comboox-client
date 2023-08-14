@@ -7,10 +7,11 @@ export interface Head {
   signingDays: number;
   closingDays: number;
   seqOfVR: number;
-  shaExecDays: number;
-  shaConfirmDays: number;
+  frExecDays: number;
+  dtExecDays: number;
+  dtConfirmDays: number;
   proposeDate: number;
-  reconsiderDays: number;
+  invExitDays: number;
   votePrepareDays: number;
   votingDays: number;
   execDaysForPutOpt: number;
@@ -58,11 +59,22 @@ export async function closingDeadline(folder: HexType, body: HexType):Promise<nu
   return deadline;
 }
 
-export async function shaExecDeadline(folder: HexType, body: HexType):Promise<number>{
+export async function frExecDeadline(folder: HexType, body: HexType):Promise<number>{
   let deadline: number = await readContract({
     address: folder,
     abi: filesFolderABI,
-    functionName: 'shaExecDeadline',
+    functionName: 'frExecDeadline',
+    args: [ body ],
+  })
+
+  return deadline;
+}
+
+export async function dtExecDeadline(folder: HexType, body: HexType):Promise<number>{
+  let deadline: number = await readContract({
+    address: folder,
+    abi: filesFolderABI,
+    functionName: 'dtExecDeadline',
     args: [ body ],
   })
 
@@ -134,17 +146,6 @@ export async function isRegistered(folder: HexType, body: HexType):Promise<boole
   return flag;
 }
 
-export async function getSnOfFile(folder: HexType, body: HexType):Promise<HexType>{
-  let sn: HexType = await readContract({
-    address: folder,
-    abi: filesFolderABI,
-    functionName: 'getSNOfFile',
-    args: [ body ],
-  })
-
-  return sn;
-}
-
 export async function getHeadOfFile(folder: HexType, addrOfFile: HexType): Promise<Head> {
 
   let res = await readContract({
@@ -155,18 +156,6 @@ export async function getHeadOfFile(folder: HexType, addrOfFile: HexType): Promi
   })
 
   return res;
-}
-
-export async function getRefOfFile(folder: HexType, addrOfFile: HexType): Promise<Ref> {
-
-  let ref = await readContract({
-    address: folder,
-    abi: filesFolderABI,
-    functionName: 'getRefOfFile',
-    args: [ addrOfFile ],
-  })
-
-  return ref;
 }
 
 export async function getFilesListWithInfo(addr: HexType):Promise<InfoOfFile[]>{
@@ -196,8 +185,6 @@ export async function getFilesListWithInfo(addr: HexType):Promise<InfoOfFile[]>{
 }
 
 export async function getFilesInfoList(addr: HexType, ls: readonly HexType[]):Promise<InfoOfFile[]>{
-
-  // let ls = await getFilesList(addr);
 
   let list: InfoOfFile[] = [];
   let len: number = ls.length;

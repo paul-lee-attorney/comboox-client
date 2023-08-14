@@ -28,8 +28,6 @@ import { useShareholdersAgreement, useShareholdersAgreementGetRules, useSharehol
 export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
 
   let arrRules = bigRules.map(v => Number(v));
-  // console.log('arrRules: ', arrRules);
-
   let rules:number[][] = Array.from(Array(5), ()=>new Array<number>());
 
   arrRules.forEach( v => {
@@ -40,7 +38,6 @@ export async function groupingRules(bigRules: readonly bigint[]): Promise<number
       else if (v < 1024) rules[4].push(v);
   })
 
-  // console.log('rules: ', rules);
   return rules;
 }
 
@@ -63,9 +60,6 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
   } = useShareholdersAgreementGetRules({
     address: sha,
     onSuccess(res) {
-      // console.log('sha: ', sha);
-      // console.log('res: ', res);
-
       groupingRules(res).then(
         rules => {
           setGrLs(rules[0]);
@@ -73,8 +67,6 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
           setPrLs(rules[2]);
           setFrLs(rules[3]);
           setGuoLs(rules[4]);
-
-          // console.log('rules: ', rules);
         }
       )
     }
@@ -108,7 +100,7 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
         let term = await getTerm(sha, v);
         setTerms(k => {
           let out = [...k];
-          out[v-24] = term;
+          out[v-1] = term;
           return out;
         })
       })
@@ -169,14 +161,14 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
               <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={isFinalized} />
-              <LockUp sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <LockUp sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
-              <DragAlong sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
-              <TagAlong sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <DragAlong sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <TagAlong sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>                      
-              <Options sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={isFinalized} />
+              <Options sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>
 
           </Paper>

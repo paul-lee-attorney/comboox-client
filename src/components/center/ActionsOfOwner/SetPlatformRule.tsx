@@ -114,7 +114,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}
         >
-          {setPlatformRuleLoading ? 'Loading...' : 'Set'}
+          Set
         </Button>
 
       </Stack>

@@ -89,7 +89,7 @@ export function MintPoints({getUser}:ActionsOfUserProps) {
           sx={{ m:1, mx:2, minWidth:128, height:40 }} 
           endIcon={<Flare />}       
         >
-          {mintPointsLoading ? 'Loading...' : 'Mint'}
+          Mint
         </Button>
 
         <Collapse in={ open } sx={{ m:1 }} >

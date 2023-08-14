@@ -53,7 +53,7 @@ export function HandoverCenterKey({refreshPage}:ActionsOfOwnerProps) {
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       
         >
-          {handoverCenterKeyLoading ? 'Loading...' : 'Set'}
+          Set
         </Button>
 
       </Stack>

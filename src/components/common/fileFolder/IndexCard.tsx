@@ -6,7 +6,7 @@ import { dateParser, longDataParser, longSnParser } from "../../../scripts/tools
 
 import { InfoOfFile } from "../../../queries/filesFolder";
 
-import { CopyLongStrTF } from "../utils/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../utils/CopyLongStr";
 import { GetVotingRule } from "../../comp/roc/rules/GetVotingRule";
 import { labState } from "./GetFilesList";
 
@@ -26,18 +26,20 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
       aria-labelledby="dialog-title"
       sx={{m:1, p:1}} 
     >
-      {/* <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
-        <h4>{"Index Card"}</h4>
-      </DialogTitle> */}
       <DialogContent>
-        <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
-          <table width={1580} >
+        <Paper elevation={3} sx={{m:1, p:1, }} >
+          <table width={880} >
             <thead> 
               <tr>
-                <td colSpan={3}>
+                <td >
                   <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
                     <h4>Index Card of File</h4>
                   </Toolbar>
+                </td>
+                <td>
+                  <CopyLongStrSpan size="body1" title="Addr" src={file.addr}  />
+                </td>
+                <td>
                 </td>
                 <td>
                   <Chip 
@@ -47,17 +49,17 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     } 
                     sx={{width: 128}}
                     color={
-                      file.head.state == 7
+                      file.head.state == 6
                       ? 'success'
-                      : file.head.state == 6
+                      : file.head.state == 5
                         ? 'error'
-                        : file.head.state == 5
+                        : file.head.state == 4
                           ? 'info'
-                          : file.head.state == 4
+                          : file.head.state == 3
                             ? 'secondary'
-                            : file.head.state == 3
+                            : file.head.state == 2
                               ? 'primary'
-                              : file.head.state == 2
+                              : file.head.state == 1
                                 ? 'warning'
                                 : 'default'
                     }
@@ -69,9 +71,6 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
             <tbody>
               <tr>
                 <td>
-                  <CopyLongStrTF size="body1" title="Addr:" src={file.addr}  />
-                </td>            
-                <td>
                   <CopyLongStrTF size="body1" title="Sn:" src={file.sn} />
                 </td>            
                 <td>
@@ -80,9 +79,6 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                 <td>
                   <CopyLongStrTF size="body1" title="Hash:" src={file.ref.docHash} />
                 </td>
-              </tr>
-
-              <tr>
                 <td>
                   <TextField 
                     fullWidth
@@ -95,6 +91,9 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     size='small'
                   />
                 </td>
+              </tr>
+
+              <tr>
                 <td>
                   <TextField 
                     fullWidth
@@ -112,10 +111,10 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     fullWidth
                     inputProps={{readOnly: true}}
                     sx={{ m:1 }} 
-                    id="tfShaExecDeadline" 
-                    label="ShaExecDeadline" 
+                    id="tfFrExecDeadline" 
+                    label="FirstRefusal Claim Deadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.shaExecDays) * 86400) }
+                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.frExecDays) * 86400) }
                     size='small'
                   />
                 </td>
@@ -124,10 +123,24 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     fullWidth
                     inputProps={{readOnly: true}}
                     sx={{ m:1 }} 
-                    id="tfShaConfirmDeadline" 
-                    label="ShaConfirmDeadline" 
+                    id="tfDtExecDeadline" 
+                    label="Drag/Tag Deadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.shaExecDays + file.head.shaConfirmDays) * 86400) }
+                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.frExecDays 
+                      + file.head.dtExecDays) * 86400) }
+                    size='small'
+                  />
+                </td>
+                <td>
+                  <TextField 
+                    fullWidth
+                    inputProps={{readOnly: true}}
+                    sx={{ m:1 }} 
+                    id="tfDtConfirmDeadline" 
+                    label="FR/DT Confirm Deadline" 
+                    variant="outlined"
+                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.frExecDays 
+                      + file.head.dtExecDays + file.head.dtConfirmDays) * 86400) }
                     size='small'
                   />
                 </td>
@@ -154,7 +167,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfShareRegDate" 
                     label="ShareRegDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + file.head.reconsiderDays * 86400) }
+                    value = { dateParser(file.head.proposeDate + file.head.invExitDays * 86400) }
                     size='small'
                   />
                 </td>
@@ -166,7 +179,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfVoteStartDate" 
                     label="VoteStartDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + (file.head.reconsiderDays + file.head.votePrepareDays) * 86400) }
+                    value = { dateParser(file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays) * 86400) }
                     size='small'
                   />
                 </td>
@@ -178,7 +191,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfVoteEndDate" 
                     label="VoteEndDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + (file.head.reconsiderDays + file.head.votePrepareDays + file.head.votingDays) * 86400) }
+                    value = { dateParser(file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays + file.head.votingDays) * 86400) }
                     size='small'
                   />
                 </td>
@@ -208,7 +221,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfPutOptionDeadline" 
                     label="PutOptionDeadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + (file.head.reconsiderDays + file.head.votePrepareDays + file.head.votingDays + file.head.execDaysForPutOpt) * 86400) }
+                    value = { dateParser(file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays + file.head.votingDays + file.head.execDaysForPutOpt) * 86400) }
                     size='small'
                   />
                 </td>

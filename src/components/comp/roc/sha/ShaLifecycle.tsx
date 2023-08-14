@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { HexType } from "../../../../interfaces";
+import { AddrZero, HexType } from "../../../../interfaces";
 
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
@@ -23,6 +23,8 @@ import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
 import { ActivateSha } from "./ActivateSha";
 import { FinalizeSha } from "./FinalizeSha";
+import { established } from "../../../../queries/sigPage";
+import { getSHA } from "../../../../queries/gk";
 
 interface ShaLifecycleProps {
   sha: HexType;
@@ -31,7 +33,7 @@ interface ShaLifecycleProps {
 
 export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
 
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>();
   const [ seqOfMotion, setSeqOfMotion ] = useState<bigint>();
   const [ passed, setPassed ] = useState<boolean>(false);
@@ -40,29 +42,42 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
   useEffect(()=>{
     const updateActiveStep = async () => {
 
-      if (boox) {
+      if (gk && boox) {
 
+        let shaInForce = await getSHA(gk);
         let head = await getHeadOfFile(boox[1], sha);
         let fileState = head.state;
         let seq = head.seqOfMotion;
         let nextStep = 0;
+        let flag = false;
         
         switch (fileState) {
           case 1: 
             nextStep = finalized ? 1: 0;
             break;
-          case 4: 
-            let flag = await voteEnded(boox[5], seq);
+          case 2:
+            flag = await established(sha);
+            nextStep = flag 
+              ? shaInForce == AddrZero
+                ? 6 : 3
+              : 2;
+            break;
+          case 3: 
+            flag = await voteEnded(boox[5], seq);
             nextStep = flag ? 5 : 4;
             break;
-          case 5: 
+          case 4: 
             nextStep = 6;
             break;
-          case 6: // Rejected
+          case 5: // Rejected
             nextStep = 8;
             break;
-          default:
-            nextStep = fileState;
+          case 6: // Closed
+            nextStep = 7;
+            break;
+          case 7: // Revoked
+            nextStep = 8;
+            break;
         }
   
         setActiveStep( nextStep );

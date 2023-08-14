@@ -91,7 +91,7 @@ export function TransferPoints({ refreshList, getUser }: ActionsOfUserProps) {
           sx={{ m:1, mx:2, minWidth:128 }} 
           endIcon={<ArrowCircleRightOutlined />}       
         >
-          {transferPointsLoading ? 'Loading...' : 'Transfer'}
+          Transfer
         </Button>
 
         <Collapse in={ open } sx={{ m:1 }} >

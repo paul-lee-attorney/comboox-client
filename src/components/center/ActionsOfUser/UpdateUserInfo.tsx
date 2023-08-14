@@ -50,7 +50,7 @@ export function UpdateUserInfo({ refreshList, getUser }:ActionsOfUserProps) {
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<Update />}       
         >
-          {updateUserInfoLoading ? 'Loading...' : 'Update'}
+          Update
         </Button>
 
       </Stack>

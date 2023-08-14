@@ -119,7 +119,7 @@ export function MintAndLockPoints({refreshList, getUser}:ActionsOfUserProps) {
           sx={{ m:1, minWidth:128 }} 
           endIcon={<LockClockOutlined />}       
         >
-          {mintAndLockPointsLoading ? 'Loading...' : 'Mint & Lock'}
+          Mint & Lock
         </Button>
 
       </Stack>

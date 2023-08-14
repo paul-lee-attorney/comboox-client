@@ -51,7 +51,7 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
           sx={{ m:1, minWidth:128 }} 
           endIcon={<Undo />}       
         >
-          {withdrawPointsLoading ? 'Loading...' : 'Withdraw Points'}
+          Withdraw Points
         </Button>
 
       </Stack>

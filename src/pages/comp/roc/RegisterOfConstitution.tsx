@@ -40,7 +40,6 @@ function RegisterOfConstitution() {
       if (boox)
         getFilesInfoList(boox[1], ls).then(
           list => {
-            console.log('list: ', list);
             setFilesInfoList(list);
           }
         )
@@ -125,7 +124,7 @@ function RegisterOfConstitution() {
                   list={ filesInfoList } 
                   title="SHA List" 
                   pathName="/comp/roc/Sha" 
-                  pathAs="/comp/roc/sha" 
+                  pathAs="/comp/roc/Sha" 
                   setFile={setFile}
                   setOpen={setOpen}
                 />

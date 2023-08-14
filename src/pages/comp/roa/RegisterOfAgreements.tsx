@@ -58,10 +58,6 @@ function RegisterOfAgreements() {
             <h3>ROA - Register Of Agreements</h3>
           </Toolbar>
 
-          {/* <Typography sx={{ ml: 10 }}>
-            <h4>(Addr: {(boox ? boox[6] : AddrZero).toLowerCase()})</h4>
-          </Typography> */}
-
           {boox && (
             <CopyLongStrSpan title="Addr" size="body1" src={boox[6].toLowerCase()} />
           )}
@@ -109,12 +105,12 @@ function RegisterOfAgreements() {
 
             <tr>
               <td colSpan={4}>
-                {filesInfoList && filesInfoList.length > 0 && (
+                {filesInfoList && (
                   <GetFilesList 
                     list={ filesInfoList } 
                     title="Agreements List" 
                     pathName="/comp/roa/Ia" 
-                    pathAs="/comp/roa/ia" 
+                    pathAs="/comp/roa/Ia" 
                     setFile={setFile}
                     setOpen={setOpen}
                   />

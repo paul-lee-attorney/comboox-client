@@ -6,7 +6,7 @@ import { dateParser, longDataParser, longSnParser } from "../../../../scripts/to
 import { DeleteDeal } from "./DeleteDeal";
 import { HexType } from "../../../../interfaces";
 import { ActionsOfDeal } from "./ActionsOfDeal";
-import { GetDTClaims } from "../GetDTClaims";
+import { GetDTClaims } from "./GetDTClaims";
 
 
 

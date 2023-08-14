@@ -66,7 +66,7 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
           sx={{ m:1, minWidth:128 }} 
           endIcon={<Redo />}       
         >
-          {pickupPointsLoading ? 'Loading...' : 'Pickup Points'}
+          Pickup Points
         </Button>
 
       </Stack>

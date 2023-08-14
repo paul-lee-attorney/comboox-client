@@ -239,8 +239,6 @@ export async function getMyUserNo(): Promise<number>{
 
   const walletClient = await getWalletClient();
 
-  console.log('walletClient: ', walletClient?.getAddresses());
-
   const rc = getContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,

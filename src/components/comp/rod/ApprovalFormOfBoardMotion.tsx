@@ -199,8 +199,8 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                         }
                       }}
                       as={motion.head.seqOfVR == 8
-                          ? '/comp/roc/sha'
-                          : '/comp/roa/ia'}
+                          ? '/comp/roc/Sha'
+                          : '/comp/roa/Ia'}
                     >            
                       <Button
                         variant="outlined"

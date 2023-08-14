@@ -52,7 +52,7 @@ export function TransferOwnership({refreshPage}:ActionsOfOwnerProps) {
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       
         >
-          {transferOwnershipLoading ? 'Loading...' : 'Set'}
+          Set
         </Button>
 
       </Stack>

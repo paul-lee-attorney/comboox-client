@@ -31,21 +31,7 @@ import {
 
 import { readContract } from "@wagmi/core";
 
-import {
-  useShareholdersAgreementCreateTerm,
-  useShareholdersAgreementRemoveTerm,
-  dragAlongABI,
-  useDragAlongDragers,
-  useDragAlongCreateLink,
-  useDragAlongRemoveDrager,
-  useDragAlongAddFollower,
-  useDragAlongRemoveFollower,
-  useTagAlongCreateLink,
-  useTagAlongRemoveDrager,
-  useTagAlongAddFollower,
-  useTagAlongRemoveFollower,
-  useTagAlongDragers, 
-} from "../../../../../generated";
+import { useAlongsAddDragger, useAlongsAddFollower, useAlongsGetDraggers, useAlongsRemoveDragger, useAlongsRemoveFollower } from "../../../../../generated";
 
 
 import { getDocAddr } from "../../../../../queries/rc";
@@ -65,7 +51,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
 
   const {
     refetch:getDragers 
-  } = useTagAlongDragers({
+  } = useAlongsGetDraggers({
     address: term,
     onSuccess(ls) {
       if (term)
@@ -80,7 +66,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   const { 
     isLoading: addLinkLoading,
     write: addLink 
-  } = useTagAlongCreateLink({
+  } = useAlongsAddDragger({
     address: term,
     args: rule && drager
       ? [ linkRuleCodifier(rule) , BigInt(drager)] 
@@ -93,7 +79,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   const { 
     isLoading: removeLinkLoading, 
     write: removeLink, 
-  } = useTagAlongRemoveDrager({
+  } = useAlongsRemoveDragger({
     address: term,
     args: drager ? [BigInt(drager)] : undefined, 
     onSuccess() {
@@ -106,7 +92,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   const { 
     isLoading: addFollowerLoading, 
     write: addFollower, 
-  } = useTagAlongAddFollower({
+  } = useAlongsAddFollower({
     address: term,
     args: drager && follower
       ? [ BigInt(drager ?? '0'),
@@ -120,7 +106,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   const { 
     isLoading: removeFollowerLoading, 
     write: removeFollower 
-  } = useTagAlongRemoveFollower({
+  } = useAlongsRemoveFollower({
     address: term,
     args: drager && follower 
       ? [ BigInt(drager ?? '0'), BigInt(follower ?? '0')] 
@@ -225,21 +211,6 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                         value={ rule.shareRatioThreshold }              
                       />
 
-                      <TextField 
-                        variant='outlined'
-                        label='Rate'
-                        size="small"
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setRule((v) => ({
-                          ...v,
-                          rate: parseInt(e.target.value ?? '0'),
-                        }))}
-                        value={ rule.rate }              
-                      />
-
                     </Stack>
 
                     <Stack direction={'row'} sx={{ alignItems: 'center' }} >
@@ -263,6 +234,21 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                         </Select>
                       </FormControl>
 
+                      <TextField 
+                        variant='outlined'
+                        label='Rate'
+                        size="small"
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        onChange={(e) => setRule((v) => ({
+                          ...v,
+                          rate: parseInt(e.target.value ?? '0'),
+                        }))}
+                        value={ rule.rate }              
+                      />
+
                       <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="proRata-label">ProRata ?</InputLabel>
                         <Select
@@ -280,24 +266,6 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
                           <MenuItem value={ '0' } > False </MenuItem>  
                         </Select>
                       </FormControl>
-
-                      <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
-                        <InputLabel id="typeOfFollowers-label">TypeOfFollowers</InputLabel>
-                        <Select
-                          labelId="typeOfFollowers-label"
-                          id="typeOfFollowers-select"
-                          label='TypeOfFollowers'
-                          size="small"
-                          value={ rule.typeOfFollowers }
-                          onChange={(e) => setRule((v) => ({
-                            ...v,
-                            typeOfFollowers: Number(e.target.value),
-                          }))}
-                        >
-                          <MenuItem value={ '1' } >Rest All Members</MenuItem>  
-                          <MenuItem value={ '0' } >Specified Members</MenuItem>  
-                        </Select>
-                      </FormControl>                      
 
                     </Stack>
 

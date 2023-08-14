@@ -1,15 +1,16 @@
 import { useState } from "react";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
-import { useGeneralKeeperAcceptAlongDeal } from "../../../generated";
-import { HexParser, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
-import { ActionsOfDealProps } from "./deals/ActionsOfDeal";
-import { DTClaim, getDTClaimsForDeal } from "../../../queries/roa";
+import { useGeneralKeeperAcceptAlongDeal } from "../../../../generated";
+import { HexParser, dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
+import { ActionsOfDealProps } from "./ActionsOfDeal";
+import { DTClaim, getDTClaimsOfDeal } from "../../../../queries/roa";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Bytes32Zero, HexType } from "../../../interfaces";
-import { defaultDeal } from "../../../queries/ia";
+import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { defaultDeal } from "../../../../queries/ia";
+import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 
 export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps) {
   const { gk, boox } = useComBooxContext();
@@ -24,14 +25,22 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
   }
 
   const columns: GridColDef[] = [
-    { 
-      field: 'typeOfClaim', 
-      headerName: 'TypeOfClaim',
-      valueGetter: p => p.row.typeOfClaim == 1 ? 'DragAlong' : 'TagAlong',
+    {
+      field: 'type', 
+      headerName: 'Type',
+      valueGetter: p => p.row.typeOfClaim,
+      width: 88,
       headerAlign:'center',
-      align: 'center',
-      width: 68,
+      align:'center',
+      renderCell: ({ value }) => (
+        <Chip
+          variant="filled"
+          color={value == 0 ? 'primary' : 'success'}
+          label={ value == 0 ? 'Drag' : 'Tag' } 
+        />
+      )
     },
+
     { 
       field: 'seqOfShare', 
       headerName: 'SeqOfShare',
@@ -73,39 +82,31 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
       width: 218,
     },
     { 
-      field: 'accept', 
-      headerName: 'Accept',
-      valueGetter: p => p.row.seqOfShare,
+      field: 'sigHash', 
+      headerName: 'SigHash',
+      valueGetter: p => p.row.sigHash,
       headerAlign:'center',
       align: 'center',
       width: 218,
-      renderCell: ({value}) => (
-        <Button 
-          size="small"
-          onClick={()=>{
-            setSeqOfShare(value)
-          }}
-        >
-          Accept
-        </Button>
-      ),
-    },    
+      renderCell:({value})=>(
+        <CopyLongStrSpan title='Hash' size='body1' src={value} />
+      )
+    },
   ]
   
   const handleClick = async () => {
     if (boox) {
-      let ls = await getDTClaimsForDeal(boox[6], ia, deal.head.seqOfDeal);
+      let ls = await getDTClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal);
       setClaims(ls);
       setAppear(true);
     }
   }
 
-  const [ seqOfShare, setSeqOfShare ] = useState<number>();
+  // const [ seqOfShare, setSeqOfShare ] = useState<number>();
 
-  const handleRowClick = async (p:GridRowParams)=> {
-    setSeqOfShare(p.row.seqOfShare);
-    console.log('seq: ', seqOfShare);
-  }
+  // const handleRowClick = async (p:GridRowParams)=> {
+  //   setSeqOfShare(p.row.seqOfShare);
+  // }
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
@@ -114,9 +115,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
     write: acceptAlongDeal,
   } = useGeneralKeeperAcceptAlongDeal({
     address: gk,
-    args: seqOfShare 
-      ? [ ia, BigInt(deal.head.seqOfDeal), BigInt(seqOfShare), sigHash]
-      : undefined,
+    args: [ ia, BigInt(deal.head.seqOfDeal), sigHash],
     onSuccess() {
       closeOrderOfDeal()
     }
@@ -124,7 +123,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
 
   return (
     <>
-      {claims && (
+      {/* {claims && ( */}
         <Button
           // disabled={ !claims }
           variant="outlined"
@@ -135,7 +134,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
         >
           DT Claims ({claims?.length})
         </Button>
-      )}
+      {/* )} */}
 
       <Dialog
         maxWidth={false}
@@ -150,7 +149,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
 
         <DialogContent>
 
-          <Box sx={{minWidth: '1280' }}>
+          <Box sx={{minWidth: '1680' }}>
             {claims && (
               <DataGrid 
                 initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
@@ -159,7 +158,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
                 rows={ claims } 
                 columns={ columns }
                 disableRowSelectionOnClick
-                onRowClick={handleRowClick}
+                // onRowClick={handleRowClick}
               />      
             )}
 
@@ -170,7 +169,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
               }} 
             >
               <Toolbar>
-               <h4>Accept TagAlong / DragAlong Claims</h4> 
+               <h4>Accept Tag/Drag Claim</h4> 
               </Toolbar>
               <Stack direction="row" sx={{ alignItems:'center' }} >
                 
@@ -180,7 +179,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
                   size="small"
                   sx={{
                     m:1,
-                    minWidth: 685,
+                    minWidth: 640,
                   }}
                   value={ sigHash }
                   onChange={(e)=>setSigHash(HexParser( e.target.value ))}

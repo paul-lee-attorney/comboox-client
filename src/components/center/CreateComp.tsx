@@ -1,7 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
-import { Create } from '@mui/icons-material';
+import { BorderColor, Create } from '@mui/icons-material';
 
 import { 
   useRegCenterCreateComp,
@@ -60,7 +60,7 @@ export function CreateComp() {
                     onClick={ ()=>createComp?.() }
                     edge="end"
                   >
-                    <Create />
+                    <BorderColor />
                   </IconButton>
                 </span>
               </Tooltip>

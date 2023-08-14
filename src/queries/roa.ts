@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../interfaces";
-import RegisterOfAgreements from "../pages/comp/roa/RegisterOfAgreements";
-import { bookOfIaABI } from "../generated";
+import { registerOfAgreementsABI } from "../generated";
 
 
 export interface DTClaim{
@@ -23,26 +22,26 @@ export interface FRClaim{
   sigHash: HexType;
 }
 
-export async function getDTClaimsForDeal(boi: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly DTClaim[]> {
+export async function getDTClaimsOfDeal(boi: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly DTClaim[]> {
 
-  let res = await readContract({
+  let flag = await readContract({
     address: boi,
-    abi: bookOfIaABI,
-    functionName: 'getDTClaimsForDeal',
+    abi: registerOfAgreementsABI,
+    functionName: 'hasDTClaims',
+    args: [ia, BigInt(seqOfDeal)],
+  })
+
+  let res: readonly DTClaim[] = [];
+
+  if (!flag) return res;
+
+  res = await readContract({
+    address: boi,
+    abi: registerOfAgreementsABI,
+    functionName: 'getDTClaimsOfDeal',
     args: [ia, BigInt(seqOfDeal)],
   })
 
   return res;
 }
 
-export async function claimsOfFR(boi: HexType, ia: HexType, seqOfDeal: number): Promise<readonly FRClaim[]>{
-
-  let res = await readContract({
-    address: boi,
-    abi: bookOfIaABI,
-    functionName: 'claimsOfFR',
-    args: [ia, BigInt(seqOfDeal)],
-  })
-
-  return res;
-}

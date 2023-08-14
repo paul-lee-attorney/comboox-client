@@ -19,7 +19,7 @@ export function CopyLongStrTF({size, title, src}:CopyLongStrProps) {
   const [ flag, setFlag ] = useState<boolean>(false);
 
   const handleClick = ()=>{
-    if (copy(src)) 
+    if (copy( parseHexType(src) )) 
       setFlag(true);
   }
 
@@ -67,12 +67,19 @@ export function CopyLongStrTF({size, title, src}:CopyLongStrProps) {
   );
 }
 
+function parseHexType(input: string): HexType {
+  let out: HexType;
+  out = input.substring(0, 2) == '0x' ? `0x${input.substring(2)}` : `0x${input}`;
+  return out;
+}
+
+
 export function CopyLongStrSpan({size, title, src}:CopyLongStrProps) {
 
   const [ flag, setFlag ] = useState<boolean>(false);
 
   const handleClick = ()=>{
-    if (copy(src?.substring(2) ?? '')) 
+    if (copy( parseHexType(src) )) 
       setFlag(true);
   }
 

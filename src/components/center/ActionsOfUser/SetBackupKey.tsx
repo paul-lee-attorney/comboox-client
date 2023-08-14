@@ -53,7 +53,7 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       
         >
-          {setBackupKeyLoading ? 'Loading...' : 'Set'}
+          Set
         </Button>
 
       </Stack>
