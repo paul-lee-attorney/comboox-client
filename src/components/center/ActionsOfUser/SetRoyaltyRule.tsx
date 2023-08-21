@@ -34,21 +34,6 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='RefundRate'
-          sx={{
-            m:1,
-            minWidth: 128,
-          }}
-          value={ rule.refund }
-          onChange={e => setRule(v => ({
-            ...v,
-            refund: parseInt( e.target.value ?? '0'), 
-          }))}
-        />
-
-        <TextField 
-          size="small"
-          variant='outlined'
           label='DiscountRate'
           sx={{
             m:1,

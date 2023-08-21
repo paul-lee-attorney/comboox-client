@@ -4,13 +4,13 @@ import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/m
 
 import { useComBooxContext } from "../../scripts/ComBooxContext";
 
-import { SetCompId } from "../../components/comp/gk/SetCompId";
 import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers";
 import { InitBos } from "../../components/comp/ros/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
 import { getKeeper } from "../../queries/gk";
-import { useAccessControlGetDk, useBookOfSharesGetDk } from "../../generated";
+import { useAccessControlGetDk, useRegisterOfSharesGetDk } from "../../generated";
+import { SetCompInfo } from "../../components/comp/gk/SetCompInfo";
 
 
 function HomePage() {
@@ -18,7 +18,7 @@ function HomePage() {
   const [ activeStep, setActiveStep ] = useState<number>(0);
 
   useAccessControlGetDk({
-    address: boox ? boox[10] : undefined,
+    address: boox ? boox[9] : undefined,
     onSuccess(dk) {
       if (gk)
         getKeeper(gk, 4).then(
@@ -45,7 +45,7 @@ function HomePage() {
 
                 <StepContent sx={{ alignItems:'start', justifyContent:'start', justifyItems:'start'}} >
 
-                  <SetCompId nextStep={setActiveStep} />
+                  <SetCompInfo nextStep={setActiveStep} />
 
                 </StepContent>
 

@@ -3,7 +3,7 @@ import { AddrOfRegCenter } from "../../interfaces";
 import { Locker, User, getLocker } from "../../queries/rc";
 import { Divider, Paper, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser, toPercent, toStr } from "../../scripts/toolsKit";
-import { regCenterABI, useRegCenterGetLocksList, useRegCenterGetOwner } from "../../generated";
+import { regCenterABI, useRegCenterBalanceOf, useRegCenterGetLocksList, useRegCenterGetOwner } from "../../generated";
 import { useContractRead, useWalletClient } from "wagmi";
 import { LockersList } from "../../components/center/LockersList";
 import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
@@ -68,6 +68,18 @@ function UserInfo() {
     }
   });
 
+  const [ balance, setBalance ] = useState<string>('0');
+
+  const {
+    refetch: getBalanceOf
+  } = useRegCenterBalanceOf({
+    address: AddrOfRegCenter,
+    args: user ? [ user.primeKey.pubKey ] : undefined,
+    onSuccess(amt) {
+      setBalance(amt.toString());
+    }
+  })
+
   const [ open, setOpen ] = useState(false);
   const [ locker, setLocker ] = useState<Locker>();
 
@@ -86,47 +98,72 @@ function UserInfo() {
         {userNo && (
           <>
           <tr>
-          <td colSpan={2}>
-            <TextField 
-              size="small"
-              variant='outlined'
-              label='BalanceAmt'
-              inputProps={{readOnly: true}}
-              fullWidth
-              sx={{
-                m:1,
-              }}
-              value={ longDataParser(user?.balance.toString() ?? '0') }
-            />
-          </td>
-          <td colSpan={2}>
-            <TextField 
-              size="small"
-              variant='outlined'
-              label='CounterOfVerification'
-              inputProps={{readOnly: true}}
-              fullWidth
-              sx={{
-                m:1,
-              }}
-              value={ longDataParser(user?.counterOfV.toString() ?? '0') }
-            />
-          </td>
-          <td>
-            <TextField 
-              size="small"
-              variant='outlined'
-              label='TypeOfAcct'
-              inputProps={{readOnly: true}}
-              fullWidth
-              sx={{
-                m:1,
-                minWidth: 168,
-              }}
-              value={ user?.isCOA ? 'COA' : 'EOA' }
-            />
-          </td>
-
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceAmt (GCbp)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(balance.length > 27 ? balance.substring(0, balance.length - 27) : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceAmt (CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balance.length > 18 
+                  ? balance.length > 27
+                    ? balance.substring(balance.length - 27, balance.length - 18)
+                    : balance.substring(0, balance.length - 18) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceAmt (GLee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balance.length > 9 
+                  ? balance.length > 18
+                    ? balance.substring(balance.length - 18, balance.length - 9)
+                    : balance.substring(0, balance.length - 9) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceAmt (Lee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balance.length > 9
+                  ? balance.substring(balance.length - 9)
+                  : balance
+                )}
+              />
+            </td>
           </tr>
 
           <tr>
@@ -137,57 +174,42 @@ function UserInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='Info_1'
+                label='isCOA ?'
                 inputProps={{readOnly: true}}
                 fullWidth
                 sx={{
                   m:1,
-                  minWidth: 168,
+                  minWidth: 218,
                 }}
-                value={ toStr(user?.primeKey.refund ?? 0) }
+                value={ user?.primeKey.discount == 1 ? 'True' : 'False' }
               />
             </td>
             <td>
               <TextField 
                 size="small"
                 variant='outlined'
-                label='Info_2'
+                label='RegRewards(GLee)'
                 inputProps={{readOnly: true}}
                 fullWidth
                 sx={{
                   m:1,
-                  minWidth: 168,
+                  minWidth: 218,
                 }}
-                value={ toStr(user?.primeKey.discount ?? 0) }
+                value={ longDataParser(user?.primeKey.gift.toString() ?? '0') }
               />
             </td>
             <td>
               <TextField 
                 size="small"
                 variant='outlined'
-                label='Info_3'
+                label='CounterOfVerify'
                 inputProps={{readOnly: true}}
                 fullWidth
                 sx={{
                   m:1,
-                  minWidth: 168,
+                  minWidth: 218,
                 }}
-                value={ toStr( user?.primeKey.gift ?? 0 ) }
-              />
-            </td>
-
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Info_4'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                  minWidth: 168,
-                }}
-                value={ toStr( user?.primeKey.coupon ?? 0 ) }
+                value={ longDataParser( user?.primeKey.coupon.toString() ?? '0' ) }
               />
             </td>
 
@@ -201,28 +223,14 @@ function UserInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='RefundRate'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                  minWidth: 168,
-                }}
-                value={ toPercent(user?.backupKey.refund ?? 0) }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
                 label='DiscountRate'
                 inputProps={{readOnly: true}}
                 fullWidth
                 sx={{
                   m:1,
-                  minWidth: 168,
+                  minWidth: 218,
                 }}
-                value={ toPercent( user?.backupKey.discount ?? 0 ) }
+                value={ toPercent(user?.backupKey.discount ?? 0) }
               />
             </td>
             <td>
@@ -234,9 +242,9 @@ function UserInfo() {
                 fullWidth
                 sx={{
                   m:1,
-                  minWidth: 168,
+                  minWidth: 218,
                 }}
-                value={ longDataParser(user?.backupKey.discount.toString() ?? '0') }
+                value={ longDataParser(user?.backupKey.gift.toString() ?? '0') }
               />
             </td>
             <td>
@@ -248,7 +256,7 @@ function UserInfo() {
                 fullWidth
                 sx={{
                   m:1,
-                  minWidth: 168,
+                  minWidth: 218,
                 }}
                 value={ longDataParser(user?.backupKey.coupon.toString() ?? '0') }
               />
@@ -266,7 +274,7 @@ function UserInfo() {
           <tr>
             <td colSpan={ 5 }>
               {userNo && (
-                <ActionsOfUser user={user} isOwner={isOwner} showList={showList} setShowList={setShowList} refreshList={getLocksList} getUser={ obtainUser } />
+                <ActionsOfUser user={user} isOwner={isOwner} showList={showList} setShowList={setShowList} refreshList={getLocksList} getUser={ obtainUser } getBalanceOf={ getBalanceOf } />
               )}
             </td>
           </tr>
@@ -282,7 +290,7 @@ function UserInfo() {
           <tr>
             <td colSpan={ 5 }>
               {locker && userNo && (
-                <HashLockerOfPoints open={ open } locker={ locker } userNo={ userNo } setOpen={ setOpen } refreshList={ getLocksList } getUser={ obtainUser }  />
+                <HashLockerOfPoints open={ open } locker={ locker } userNo={ userNo } setOpen={ setOpen } refreshList={ getLocksList } getUser={ obtainUser } getBlanceOf={ getBalanceOf }  />
               )}
             </td>
           </tr>

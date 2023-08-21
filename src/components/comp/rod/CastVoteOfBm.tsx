@@ -39,25 +39,8 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
 
   const { gk, boox } = useComBooxContext();
 
-  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
-
-  // useEffect(()=>{
-  //   if (boox) {
-  //     getVoteResult(boox[3], seqOfMotion).then(
-  //       list => setVoteResult(list)
-  //     )
-  //   }
-  // }, [seqOfMotion, boox]);
-
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
-
-  // const {config} = usePrepareGeneralKeeperCastVote({
-  //   address: gk,
-  //   args: attitude 
-  //       ? [seqOfMotion, BigInt(attitude), sigHash]
-  //       : undefined,
-  // });
 
   const {
     isLoading: castVoteLoading,
@@ -69,9 +52,6 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
         : undefined,
     onSuccess() {
       if (boox) {
-        // getVoteResult(boox[3], seqOfMotion).then(
-        //   list => setVoteResult(list)
-        // );
         getMotionsList(boox[3]);
         setOpen(false);
       }

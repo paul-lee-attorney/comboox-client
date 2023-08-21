@@ -12,7 +12,7 @@ import { Box, Collapse, IconButton, Paper, Stack, Switch, TextField, Toolbar, To
 import { ExitToApp, IosShare, Output } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { Share } from "../../../queries/bos";
+import { Share } from "../../../queries/ros";
 import { Locker, HeadOfLocker,  defaultHeadOfLocker } from "../../../queries/rc";
 import { HexParser, splitPayload } from "../../../scripts/toolsKit";
 

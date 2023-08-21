@@ -2,15 +2,14 @@
 import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
 
 import { 
-  useRegCenterMintPoints,
-  useRegCenterTransferPoints, 
+  useRegCenterTransfer, 
 } from '../../../generated';
 
 import { AddrOfRegCenter, HexType } from '../../../interfaces';
-import { ArrowCircleRight, ArrowCircleRightOutlined, BorderColor, Close, Create } from '@mui/icons-material';
+import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../queries/common';
-import { longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { HexParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 
 interface Receipt{
@@ -19,9 +18,9 @@ interface Receipt{
   amt: string;
 }
 
-export function TransferPoints({ refreshList, getUser }: ActionsOfUserProps) {
+export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
 
-  const [ to, setTo ] = useState<string>();
+  const [ to, setTo ] = useState<HexType>();
   const [ amt, setAmt ] = useState<string>();
 
   const [ receipt, setReceipt ] = useState<Receipt>();
@@ -30,23 +29,23 @@ export function TransferPoints({ refreshList, getUser }: ActionsOfUserProps) {
   const {
     isLoading: transferPointsLoading,
     write: transferPoints
-  } = useRegCenterTransferPoints({
+  } = useRegCenterTransfer({
     address: AddrOfRegCenter,
     args: to && amt
-      ? [BigInt(to), BigInt(amt)]
+      ? [to, BigInt(amt) * BigInt(10**9)]
       : undefined,
     onSuccess(data:any) {
       getReceipt(data.hash).then(
         r => {
           if (r) {
             let rpt:Receipt = {
-              from: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
-              to: longSnParser(BigInt(r.logs[0].topics[2]).toString()),
-              amt: longDataParser(r.logs[0].topics[3]?.toString())
+              from: r.logs[0].topics[1],
+              to: r.logs[0].topics[2],
+              amt: r.logs[0].topics[3].toString()
             }
             setReceipt(rpt);
             setOpen(true);
-            getUser();
+            getBalanceOf();
           }
         }
       )
@@ -61,19 +60,19 @@ export function TransferPoints({ refreshList, getUser }: ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='To'
+          label='To (Addr)'
           sx={{
             m:1,
-            minWidth: 218,
+            minWidth: 550,
           }}
           value={ to }
-          onChange={e => setTo(e.target.value ?? '0')}
+          onChange={e => setTo( HexParser(e.target.value ?? '0'))}
         />
 
         <TextField 
           size="small"
           variant='outlined'
-          label='Amount'
+          label='Amount (GLee)' 
           sx={{
             m:1,
             minWidth: 218,
@@ -113,7 +112,7 @@ export function TransferPoints({ refreshList, getUser }: ActionsOfUserProps) {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt} points transfered to User ({receipt?.to})
+            {longDataParser((BigInt(receipt?.amt ?? '0')/BigInt(10 ** 9)).toString())} GigaLee Points transfered to Address ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
           </Alert>          
         </Collapse>
 

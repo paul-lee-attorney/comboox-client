@@ -13,6 +13,7 @@ import { HexParser, selectorCodifier } from '../../../scripts/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { BodyOfLocker, HeadOfLocker, defaultHeadOfLocker, defaultBodyOfLocker } from '../../../queries/rc';
+import { LockPointsProps } from './LockPoints';
 
 
 export interface Selector {
@@ -50,10 +51,10 @@ function constructPayload(func:string, paras:string[]):HexType {
   return `0x${selector.substring(2) + strParas + offSet +  mockKey}`;    
 }
 
-interface LockConsiderationProps{
-  refreshList: ()=>void;
-  getUser: ()=> void;
-}
+// interface LockConsiderationProps{
+//   refreshList: ()=>void;
+//   getUser: ()=> void;
+// }
 
 function calDefaultParas(hashLock:HexType, offSet:number):string[]{
 
@@ -66,7 +67,7 @@ function calDefaultParas(hashLock:HexType, offSet:number):string[]{
   return out;
 }
 
-export function LockConsideration({refreshList, getUser}:LockConsiderationProps) {
+export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPointsProps) {
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -95,6 +96,7 @@ export function LockConsideration({refreshList, getUser}:LockConsiderationProps)
     onSuccess() {
       refreshList();
       getUser();
+      getBalanceOf();
     }
   })
 

@@ -1,8 +1,8 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperExecOption } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { Button, Paper, Stack, Toolbar } from "@mui/material";
-import { Approval, DoneOutline } from "@mui/icons-material";
+import { Button, Paper, Stack } from "@mui/material";
+import { DoneOutline } from "@mui/icons-material";
 
 export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
 
@@ -22,9 +22,6 @@ export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Exercise Right Of Option</h4>
-      </Toolbar> */}
 
       <Stack direction='row' >
 

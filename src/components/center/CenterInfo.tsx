@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { AddrOfRegCenter, AddrZero, HexType } from "../../interfaces";
-import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetOwner, useRegCenterGetPlatformRule } from "../../generated";
+import { useIPriceConsumerGetFeedRegistryAddress, useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../generated";
 import { Rule, defaultRule } from "../../queries/rc";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { CopyLongStrTF } from "../common/utils/CopyLongStr";
 import { longDataParser, toPercent } from "../../scripts/toolsKit";
 import { ActionsOfOwner } from "./ActionsOfOwner";
-import { Settings } from "@mui/icons-material";
+import { Close, Refresh, Settings } from "@mui/icons-material";
 import { useWalletClient } from "wagmi";
 
 
@@ -47,20 +47,47 @@ export function CenterInfo() {
     }
   })
 
-  const refreshPage = ()=>{
-    getOwner();
-    getKeeper();
-    getPlatformRule();
-  }
-
   const [ counterOfUsers, setCounterOfUsers ] = useState<number>(0);
 
-  useRegCenterCounterOfUsers({
+  const {
+    refetch: getCounterOfUser
+  } = useRegCenterCounterOfUsers({
     address: AddrOfRegCenter,
     onSuccess(res) {
       setCounterOfUsers(res);
     }
   })
+
+  const [ totalSupply, setTotalSupply ] = useState<string>('0');
+
+  const {
+    refetch: getTotalSupply
+  } = useRegCenterTotalSupply({
+    address: AddrOfRegCenter,
+    onSuccess(res) {
+      setTotalSupply(res.toString());
+    }
+  })
+
+  const [ feedReg, setFeedReg ] = useState<HexType>(AddrZero);
+
+  const {
+    refetch: getFeedReg
+  } = useIPriceConsumerGetFeedRegistryAddress({
+    address: AddrOfRegCenter,
+    onSuccess(res) {
+      setFeedReg(res);
+    }
+  })
+
+  const refreshPage = ()=>{
+    getOwner();
+    getKeeper();
+    getCounterOfUser();
+    getTotalSupply();
+    getPlatformRule();
+    getFeedReg();
+  }
 
   const [ open, setOpen ] = useState(false);
 
@@ -107,6 +134,11 @@ export function CenterInfo() {
                   <td>
                     <CopyLongStrTF size="body1" title='Keeper' src={keeper.toLowerCase() ?? '-'} />
                   </td>
+
+                  <td>
+                    <CopyLongStrTF size="body1" title='FeedReg' src={feedReg.toLowerCase() ?? '-'} />
+                  </td>
+
                   <td>
                     <TextField
                       size="small"
@@ -121,6 +153,121 @@ export function CenterInfo() {
                       value={ longDataParser(counterOfUsers.toString() ?? '0') }
                     />
                   </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <TextField 
+                      size="small"
+                      variant='outlined'
+                      label='TotalSupply (Giga-CBP)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                      }}
+                      value={ longDataParser(totalSupply.length > 27 ? totalSupply.substring(0, totalSupply.length - 27) : '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField 
+                      size="small"
+                      variant='outlined'
+                      label='TotalSupply (CBP)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                      }}
+                      value={ longDataParser(
+                          totalSupply.length > 18 
+                        ? totalSupply.length > 27
+                          ? totalSupply.substring(totalSupply.length - 27, totalSupply.length - 18)
+                          : totalSupply.substring(0, totalSupply.length - 18) 
+                        : '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField 
+                      size="small"
+                      variant='outlined'
+                      label='TotalSupply (GLee)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                      }}
+                      value={ longDataParser(
+                          totalSupply.length > 9 
+                        ? totalSupply.length > 18
+                          ? totalSupply.substring(totalSupply.length - 18, totalSupply.length - 9)
+                          : totalSupply.substring(0, totalSupply.length - 9) 
+                        : '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField 
+                      size="small"
+                      variant='outlined'
+                      label='TotalSupply (Lee)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                      }}
+                      value={ longDataParser(
+                          totalSupply.length > 9
+                        ? totalSupply.substring(totalSupply.length - 9)
+                        : totalSupply
+                      )}
+                    />
+                  </td>
+                </tr>
+
+                <tr>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='EOA_Rewards(GLee)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.eoaRewards.toString() ?? '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='COA_Rewards(GLee)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.coaRewards.toString() ?? '0') }
+                    />
+                  </td>
+                  <td>
+                    <TextField
+                      size="small"
+                      variant='outlined'
+                      label='FloorOfRoyalty(GLee)'
+                      inputProps={{readOnly: true}}
+                      fullWidth
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      value={ longDataParser(platformRule.floor.toString() ?? '0') }
+                    />
+                  </td>
+
                   <td>
                     <TextField
                       size="small"
@@ -135,65 +282,7 @@ export function CenterInfo() {
                       value={ toPercent(platformRule.rate ?? 0) }
                     />
                   </td>
-                </tr>
 
-                <tr>
-                  <td>
-                    <TextField
-                      size="small"
-                      variant='outlined'
-                      label='EOA_Rewards'
-                      inputProps={{readOnly: true}}
-                      fullWidth
-                      sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      value={ longDataParser(platformRule.eoaRewards.toString() ?? '0') }
-                    />
-                  </td>
-                  <td>
-                    <TextField
-                      size="small"
-                      variant='outlined'
-                      label='COA_Rewards'
-                      inputProps={{readOnly: true}}
-                      fullWidth
-                      sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      value={ longDataParser(platformRule.coaRewards.toString() ?? '0') }
-                    />
-                  </td>
-                  <td>
-                    <TextField
-                      size="small"
-                      variant='outlined'
-                      label='CeilingOfRoyalty'
-                      inputProps={{readOnly: true}}
-                      fullWidth
-                      sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      value={ longDataParser(platformRule.ceiling.toString() ?? '0') }
-                    />
-                  </td>
-                  <td>
-                    <TextField
-                      size="small"
-                      variant='outlined'
-                      label='FloorOfRoyalty'
-                      inputProps={{readOnly: true}}
-                      fullWidth
-                      sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      value={ longDataParser(platformRule.floor.toString() ?? '0') }
-                    />
-                  </td>
                 </tr>
 
                 {signer && (signer.account.address == owner || signer.account.address == keeper) && (
@@ -212,7 +301,10 @@ export function CenterInfo() {
           </DialogContent>
 
           <DialogActions>
-            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+            <Stack direction='row' >
+              <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={refreshPage} endIcon={<Refresh/>}>Refresh</Button>
+              <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={()=>setOpen(false)} endIcon={<Close/>}>Close</Button>
+            </Stack>
           </DialogActions>
 
 

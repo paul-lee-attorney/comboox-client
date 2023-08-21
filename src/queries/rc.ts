@@ -63,7 +63,6 @@ export const defaultBodyOfLocker:BodyOfLocker = {
 
 export interface Key {
   pubKey: HexType;
-  refund: number;
   discount: number;
   gift: number;
   coupon: number;
@@ -71,7 +70,6 @@ export interface Key {
 
 export const defaultKey:Key = {
   pubKey: AddrZero,
-  refund: 0,
   discount: 0,
   gift: 0,
   coupon: 0,
@@ -80,19 +78,15 @@ export const defaultKey:Key = {
 export function codifyRoyaltyRule(rule: Key):HexType {
   let out: HexType = `0x${
     '0'.padEnd(40, '0') +
-    rule.refund.toString(16).padStart(4, '0') +
     rule.discount.toString(16).padStart(4, '0') +
-    rule.gift.toString(16).padStart(8, '0') +
-    rule.coupon.toString(16).padStart(8, '0')
+    rule.gift.toString(16).padStart(10, '0') +
+    rule.coupon.toString(16).padStart(10, '0')
   }`;
 
   return out;
 }
 
 export interface User {
-  isCOA: boolean;
-  counterOfV: number;
-  balance: bigint;
   primeKey: Key;
   backupKey: Key;
 }
@@ -102,33 +96,27 @@ export interface User {
 export interface Rule {
   eoaRewards: number;
   coaRewards: number;
-  ceiling: number;
   floor: number;
   rate: number;
   para: number;
-  argu: number;
-  seq: number;
 }
 
 export const defaultRule: Rule = {
   eoaRewards: 0,
   coaRewards: 0,
-  ceiling: 0,
   floor: 0,
   rate: 0,
   para: 0,
-  argu: 0,
-  seq: 0,
 }
 
 export function codifyPlatformRule(rule: Rule):HexType {
   let out: HexType = `0x${
-    rule.eoaRewards.toString(16).padStart(8, '0') +
-    rule.coaRewards.toString(16).padStart(8, '0') +
-    rule.ceiling.toString(16).padStart(8, '0') +
-    rule.floor.toString(16).padStart(8, '0') +
+    rule.eoaRewards.toString(16).padStart(10, '0') +
+    rule.coaRewards.toString(16).padStart(10, '0') +
+    rule.floor.toString(16).padStart(10, '0') +
     rule.rate.toString(16).padStart(4, '0') +
-    '0'.padEnd(28, '0')
+    rule.para.toString(16).padStart(4, '0') +
+    '0'.padEnd(26, '0')
   }`;
 
   return out;
@@ -153,26 +141,26 @@ export interface Doc {
   body: HexType;
 }
 
-export function codifyUserInfo(info: string):HexType {
-  let sn = '0'.padStart(40, '0') + toAscii(info);
+// export function codifyUserInfo(info: string):HexType {
+//   let sn = '0'.padStart(40, '0') + toAscii(info);
 
-  let len = sn.length;
+//   let len = sn.length;
 
-  if (len < 64) sn = sn.padEnd(64, '0');
-  else sn = sn.substring(0, 64);
+//   if (len < 64) sn = sn.padEnd(64, '0');
+//   else sn = sn.substring(0, 64);
 
-  let out: HexType = `0x${sn}`;
+//   let out: HexType = `0x${sn}`;
 
-  return out;
-}
+//   return out;
+// }
 
-export function parseUserInfo(info: Key): string {
-  let out = '';
-  out = toStr(info.refund) + toStr(info.discount) 
-      + toStr(info.gift) + toStr(info.coupon);
+// export function parseUserInfo(info: Key): string {
+//   let out = '';
+//   out = toStr(info.refund) + toStr(info.discount) 
+//       + toStr(info.gift) + toStr(info.coupon);
 
-  return out;
-}
+//   return out;
+// }
 
 
 // ==== Options ====

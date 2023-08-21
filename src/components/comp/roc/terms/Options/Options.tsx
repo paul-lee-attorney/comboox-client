@@ -196,7 +196,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
         <DialogContent>
 
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-            <Box sx={{ width:1380 }}>
+            <Box sx={{ width:1480 }}>
 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
 

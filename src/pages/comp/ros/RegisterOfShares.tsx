@@ -13,17 +13,17 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { Search, Send } from "@mui/icons-material";
 
 import { 
-  useBookOfSharesGetShare,
+  useRegisterOfSharesGetShare,
   useRegisterOfMembersSharesList,
 } from "../../../generated";
 import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/ros/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/ros/CertificateOfContribution";
-import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/bos";
+import { Share, codifyHeadOfShare, getSharesList } from "../../../queries/ros";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 
 
-function BookOfShares() {
+function RegisterOfShares() {
   const { boox } = useComBooxContext();
 
   const [ loading, setLoading ] = useState<boolean>();
@@ -36,7 +36,7 @@ function BookOfShares() {
     address: boox ? boox[4] : undefined,
     onSuccess(data) {
       if (boox && data.length > 0) {
-        getSharesList(boox[10], data).then(list => {
+        getSharesList(boox[9], data).then(list => {
           setSharesList(list);
         });
       }
@@ -51,8 +51,8 @@ function BookOfShares() {
 
   const { 
     refetch: getShareFunc, 
-  } = useBookOfSharesGetShare({
-    address: boox ? boox[10]: undefined,
+  } = useRegisterOfSharesGetShare({
+    address: boox ? boox[9]: undefined,
     args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
     onSuccess(data) {
       let share:Share = {
@@ -84,7 +84,7 @@ function BookOfShares() {
           </Toolbar>
 
           {boox && (
-            <CopyLongStrSpan title="Addr" size="body1" src={ boox[10].toLowerCase() } />
+            <CopyLongStrSpan title="Addr" size="body1" src={ boox[9].toLowerCase() } />
           )}
 
         </Stack>
@@ -164,4 +164,4 @@ function BookOfShares() {
   );
 } 
 
-export default BookOfShares;
+export default RegisterOfShares;

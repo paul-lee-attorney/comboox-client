@@ -7,7 +7,6 @@ import { SearchOption } from "./SearchOption";
 import { OptWrap, typeOfOpts } from "../../../queries/roo";
 
 
-
 interface OptionsListProps {
   list: readonly OptWrap[],
   setOpt: Dispatch<SetStateAction<OptWrap>>,

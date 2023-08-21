@@ -239,51 +239,63 @@ export async function getAllOraclesOfOption(addr: HexType, seqOfOpt: number): Pr
 
 // ==== Breifs ====
 
-export interface Brief{
-  seqOfBrf: number;
+export interface Swap{
   seqOfSwap: number;
-  rateOfSwap: number;
-  paidOfConsider: bigint;
+  seqOfPledge: number;
+  paidOfPledge: bigint;
+  seqOfTarget: number;
   paidOfTarget: bigint;
-  obligor: number;
+  priceOfDeal: number;
+  isPutOpt: boolean;
   state: number; 
 }
 
-export async function counterOfBriefs(addr: HexType, seqOfOpt: number): Promise<number>{
+export async function counterOfSwaps(addr: HexType, seqOfOpt: number): Promise<number>{
 
   let res = await readContract({
     address: addr,
     abi: registerOfOptionsABI,
-    functionName: 'counterOfBriefs',
+    functionName: 'counterOfSwaps',
     args: [ BigInt(seqOfOpt) ],
   })
 
   return Number(res);
 }
 
-export async function getBrief(addr: HexType, seqOfOpt: number, seqOfBrf: number): Promise<Brief>{
+export async function getSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<Swap>{
 
   let res = await readContract({
     address: addr,
     abi: registerOfOptionsABI,
-    functionName: 'getBrief',
-    args: [ BigInt(seqOfOpt), BigInt(seqOfBrf) ],
+    functionName: 'getSwap',
+    args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
   })
 
   return res;
 }
 
-export async function getAllBriefsOfOption(addr: HexType, seqOfOpt: number): Promise<readonly Brief[]>{
+export async function getAllWapsOfOption(addr: HexType, seqOfOpt: number): Promise<readonly Swap[]>{
 
   let res = await readContract({
     address: addr,
     abi: registerOfOptionsABI,
-    functionName: 'getAllBriefsOfOption',
+    functionName: 'getAllSwapsOfOption',
     args: [ BigInt(seqOfOpt) ],
   })
 
   return res;
 }
 
+export async function checkValueOfSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<bigint>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'checkValueOfSwap',
+    args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
+  })
+
+  return res;
+}
 
 

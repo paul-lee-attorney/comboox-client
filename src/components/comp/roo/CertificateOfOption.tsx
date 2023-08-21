@@ -17,9 +17,9 @@ import { statesOfOpt } from "../roc/terms/Options/ContentOfOpt";
 import { OraclesList } from "./OraclesList";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { ActionsOfOption } from "./ActionsOfOption";
-import { BriefsList } from "./BriefsList";
-import { Brief, CheckPoint, OptWrap, comOps, logOps, typeOfOpts } from "../../../queries/roo";
-import { useRegisterOfOptions, useRegisterOfOptionsGetAllBriefsOfOption, useRegisterOfOptionsGetAllOraclesOfOption } from "../../../generated";
+import { SwapsList } from "./SwapsList";
+import { Swap, CheckPoint, OptWrap, comOps, logOps, typeOfOpts } from "../../../queries/roo";
+import { useRegisterOfOptionsGetAllSwapsOfOption, useRegisterOfOptionsGetAllOraclesOfOption } from "../../../generated";
 
 export interface CertificateOfOptionProps{
   open: boolean;
@@ -45,16 +45,16 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
     }
   })
 
-  const [ briefs, setBriefs ] = useState<readonly Brief[]>();
+  const [ swaps, setSwaps ] = useState<readonly Swap[]>();
   
   const {
-    refetch: getAllBriefs
-  } = useRegisterOfOptionsGetAllBriefsOfOption({
+    refetch: getAllSwaps
+  } = useRegisterOfOptionsGetAllSwapsOfOption({
     address: boox ? boox[7] : undefined,
     args: [ BigInt(optWrap.opt.head.seqOfOpt) ],
     onSuccess(res) {
       if (res.length > 0)
-        setBriefs(res);
+        setSwaps(res);
     }
   })
 
@@ -351,16 +351,19 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
             </tr>
 
             <tr>
+
+              <td colSpan={2}>
+                {swaps && swaps.length > 0 && (
+                  <SwapsList list={ swaps } seqOfOpt={optWrap.opt.head.seqOfOpt} />
+                )}
+              </td>
+              
               <td colSpan={2}>
                 {oracles && oracles.length > 0 && (
                   <OraclesList list={ oracles }  seqOfOpt={optWrap.opt.head.seqOfOpt}  />
                 )}
               </td>
-              <td colSpan={2}>
-                {briefs && briefs.length > 0 && (
-                  <BriefsList list={ briefs } seqOfOpt={optWrap.opt.head.seqOfOpt} />
-                )}
-              </td>
+
             </tr>
 
             <tr>

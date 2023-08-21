@@ -7,7 +7,7 @@ import {
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
 import { dateParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
-import { Share } from '../../../queries/bos';
+import { Share } from '../../../queries/ros';
 
 const columns: GridColDef[] = [
   { 

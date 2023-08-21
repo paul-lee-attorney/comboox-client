@@ -2,16 +2,16 @@
 import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterMintPoints, 
+  useRegCenterMint, 
 } from '../../../generated';
 
 import { AddrOfRegCenter, HexType } from '../../../interfaces';
 import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../queries/common';
-import { longDataParser, longSnParser } from '../../../scripts/toolsKit';
-import { TransactionReceipt } from 'viem';
+
 import { ActionsOfUserProps } from '../ActionsOfUser';
+import { longDataParser } from '../../../scripts/toolsKit';
 
 interface Receipt{
   to: string;
@@ -19,7 +19,7 @@ interface Receipt{
 }
 
 
-export function MintPoints({getUser}:ActionsOfUserProps) {
+export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<string>();
   const [ amt, setAmt ] = useState<string>();
@@ -29,22 +29,23 @@ export function MintPoints({getUser}:ActionsOfUserProps) {
   const {
     isLoading: mintPointsLoading,
     write: mintPoints
-  } = useRegCenterMintPoints({
+  } = useRegCenterMint({
     address: AddrOfRegCenter,
     args: to && amt
-      ? [BigInt(to), BigInt(amt)]
+      ? [BigInt(to), BigInt(amt)*BigInt(10**9)]
       : undefined,
     onSuccess(data:any) {
       getReceipt(data.hash).then(
         r => {
           if (r) {
             let rpt:Receipt = {
-              to: longSnParser(BigInt(r.logs[0].topics[1]).toString()),
-              amt: longDataParser(r.logs[0].topics[2]?.toString())
+              to: r.logs[0].topics[2],
+              amt: r.logs[0].topics[3]
             }
             setReceipt(rpt);
             setOpen(true);
             getUser();
+            getBalanceOf();
           }
         }
       )
@@ -70,7 +71,7 @@ export function MintPoints({getUser}:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant="outlined"
-          label='Amount'
+          label='Amount (GLee)'
           sx={{
             m:1,
             minWidth: 218,
@@ -111,7 +112,7 @@ export function MintPoints({getUser}:ActionsOfUserProps) {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt} Points minted to User ({receipt?.to})
+            { longDataParser((BigInt(receipt?.amt ?? '0')/BigInt(10 ** 9)).toString())} GLee Points minted to Address ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
           </Alert>          
         </Collapse>
 

@@ -1,6 +1,6 @@
 import { HexType } from "../interfaces";
 import { readContract } from "@wagmi/core";
-import { bookOfSharesABI } from "../generated";
+import { registerOfSharesABI } from "../generated";
 
 export interface Head {
   seqOfShare: number; // 股票序列号
@@ -54,11 +54,11 @@ export function parseSnOfShare(sn: HexType): Head {
   return head
 }
 
-export async function getShare(bos: HexType, seq: number): Promise<Share> {
+export async function getShare(ros: HexType, seq: number): Promise<Share> {
 
   let share = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'getShare',
     args: [BigInt(seq)],
   });
@@ -72,7 +72,7 @@ export async function getShare(bos: HexType, seq: number): Promise<Share> {
   return shareWrap;
 }
 
-export async function getSharesList(bos: HexType, snList: readonly HexType[]): Promise<Share[]> {
+export async function getSharesList(ros: HexType, snList: readonly HexType[]): Promise<Share[]> {
 
   let list: Share[] = [];
   let len: number = snList.length;
@@ -82,40 +82,40 @@ export async function getSharesList(bos: HexType, snList: readonly HexType[]): P
 
     let seq: number = parseSnOfShare(snList[i]).seqOfShare;
 
-    list[i] = await getShare(bos, seq);
+    list[i] = await getShare(ros, seq);
     i++;
   }
 
   return list;
 }
 
-export async function counterOfShares(bos: HexType): Promise<number>{
+export async function counterOfShares(ros: HexType): Promise<number>{
 
   let counter = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'counterOfShares',
   })
 
   return counter;
 }
 
-export async function counterOfClasses(bos: HexType): Promise<number>{
+export async function counterOfClasses(ros: HexType): Promise<number>{
 
   let counter = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'counterOfClasses',
   })
 
   return counter;
 }
 
-export async function isShare(bos: HexType, seqOfShare: number): Promise<boolean>{
+export async function isShare(ros: HexType, seqOfShare: number): Promise<boolean>{
 
   let flag = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'isShare',
     args: [BigInt(seqOfShare)],
   })
@@ -123,11 +123,11 @@ export async function isShare(bos: HexType, seqOfShare: number): Promise<boolean
   return flag;
 }
 
-export async function getHeadOfShare(bos: HexType, seqOfShare: number): Promise<Head>{
+export async function getHeadOfShare(ros: HexType, seqOfShare: number): Promise<Head>{
 
   let head = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'getHeadOfShare',
     args: [BigInt(seqOfShare)],
   })
@@ -135,11 +135,11 @@ export async function getHeadOfShare(bos: HexType, seqOfShare: number): Promise<
   return head;
 }
 
-export async function getBodyOfShare(bos: HexType, seqOfShare: number): Promise<Body>{
+export async function getBodyOfShare(ros: HexType, seqOfShare: number): Promise<Body>{
 
   let body = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'getBodyOfShare',
     args: [BigInt(seqOfShare)],
   })
@@ -147,11 +147,11 @@ export async function getBodyOfShare(bos: HexType, seqOfShare: number): Promise<
   return body;
 }
 
-export async function getSharesOfClass(bos: HexType, classOfShare: number): Promise<number[]>{
+export async function getSharesOfClass(ros: HexType, classOfShare: number): Promise<number[]>{
 
   let seqList = await readContract({
-    address: bos,
-    abi: bookOfSharesABI,
+    address: ros,
+    abi: registerOfSharesABI,
     functionName: 'getSharesOfClass',
     args: [ BigInt(classOfShare) ],
   })

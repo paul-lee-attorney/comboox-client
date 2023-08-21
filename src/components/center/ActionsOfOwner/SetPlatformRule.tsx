@@ -3,14 +3,12 @@ import { Button, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetPlatformRule,
-  useRegCenterSetRoyaltyRule
 } from '../../../generated';
 
 import { AddrOfRegCenter } from '../../../interfaces';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { Key, Rule, codifyPlatformRule, codifyRoyaltyRule, defaultKey, defaultRule } from '../../../queries/rc';
-import { ActionsOfUserProps } from '../ActionsOfUser';
+import { Rule, codifyPlatformRule, defaultRule } from '../../../queries/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
@@ -35,7 +33,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='EOA_Rewards'
+          label='EOA_Rewards(GLee)'
           sx={{
             m:1,
             minWidth: 128,
@@ -50,7 +48,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='COA_Rewards'
+          label='COA_Rewards(GLee)'
           sx={{
             m:1,
             minWidth: 128,
@@ -65,22 +63,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='CeilingOfRoyalty'
-          sx={{
-            m:1,
-            minWidth: 128,
-          }}
-          value={ rule.ceiling }
-          onChange={e => setRule(v => ({
-            ...v,
-            ceiling: parseInt( e.target.value ?? '0'), 
-          }))}
-        />
-
-        <TextField 
-          size="small"
-          variant='outlined'
-          label='FloorOfRoyalty'
+          label='FloorOfRoyalty(GLee)'
           sx={{
             m:1,
             minWidth: 128,
@@ -95,7 +78,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='CommissionRate'
+          label='CommissionRate(BasePoint)'
           sx={{
             m:1,
             minWidth: 128,

@@ -1,18 +1,10 @@
-import { Checkbox, Collapse, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
-import { SetBackupKey } from "./ActionsOfUser/SetBackupKey";
-import { LockConsideration } from "./ActionsOfUser/LockConsideration";
-import { UpdateUserInfo } from "./ActionsOfUser/UpdateUserInfo";
-import { MintPoints } from "./ActionsOfUser/MintPoints";
-import { LockPoints } from "./ActionsOfUser/LockPoints";
-import { TransferPoints } from "./ActionsOfUser/TransferPoints";
-import { MintAndLockPoints } from "./ActionsOfUser/MintAndLockPoints";
-import { SetRoyaltyRule } from "./ActionsOfUser/SetRoyaltyRule";
-import { User } from "../../queries/rc";
-import { AddrZero } from "../../interfaces";
+import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
+import { useState } from "react";
+
 import { SetPlatformRule } from "./ActionsOfOwner/SetPlatformRule";
 import { TransferOwnership } from "./ActionsOfOwner/TransferOwnership";
 import { HandoverCenterKey } from "./ActionsOfOwner/HandoverCenterKey";
+import { SetFeedRegistry } from "./ActionsOfOwner/SetFeedRegitry";
 
 export interface ActionsOfOwnerProps{
   refreshPage: ()=>void;
@@ -23,13 +15,14 @@ export function ActionsOfOwner({ refreshPage}: ActionsOfOwnerProps) {
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
   const actionsOfUser = [
-    'Set Platform Rule', 'Transfer Ownership', 'Handover Center Key' 
+    'Set Platform Rule', 'Set Price Feed Registry', 'Transfer Ownership', 'Handover Center Key' 
   ]
 
   const compsOfAction = [
     <SetPlatformRule key={0} refreshPage={refreshPage} />,
-    <TransferOwnership key={1} refreshPage={refreshPage} />,
-    <HandoverCenterKey key={2} refreshPage={refreshPage} />
+    <SetFeedRegistry key={1} refreshPage={refreshPage} />,
+    <TransferOwnership key={2} refreshPage={refreshPage} />,
+    <HandoverCenterKey key={3} refreshPage={refreshPage} />
   ]
 
   return( 

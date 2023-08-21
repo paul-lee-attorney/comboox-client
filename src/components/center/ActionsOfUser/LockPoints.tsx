@@ -13,12 +13,13 @@ import dayjs from 'dayjs';
 import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
 import { HexParser } from '../../../scripts/toolsKit';
 
-interface LockPointsProps{
+export interface LockPointsProps{
   refreshList: ()=>void;
   getUser: ()=>void;
+  getBalanceOf: ()=>void;
 }
 
-export function LockPoints({refreshList, getUser}:LockPointsProps) {
+export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps) {
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -39,6 +40,7 @@ export function LockPoints({refreshList, getUser}:LockPointsProps) {
     onSuccess() {
       refreshList();
       getUser();
+      getBalanceOf();
     }
   })
 

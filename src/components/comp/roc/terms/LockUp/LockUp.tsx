@@ -232,7 +232,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       />
 
                       <DateTimeField
-                        label='TriggerDate'
+                        label='ExpireDate'
                         sx={{
                           m:1,
                           minWidth: 218,

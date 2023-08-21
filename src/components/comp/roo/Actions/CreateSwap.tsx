@@ -1,28 +1,28 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
-import { useGeneralKeeperPlaceSwapOrder } from "../../../../generated";
+import { useGeneralKeeperCreateSwap } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Approval, SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
 
-export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function CreateSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
-  const [ seqOfConsider, setSeqOfConsider ] = useState<string>();
-  const [ paidOfConsider, setPaidOfConsider ] = useState<string>();
   const [ seqOfTarget, setSeqOfTarget ] = useState<string>();
+  const [ paidOfTarget, setPaidOfTarget ] = useState<string>();
+  const [ seqOfPledge, setSeqOfPledge ] = useState<string>();
 
   const {
-    isLoading: placeSwapOrderLoading,
-    write: placeSwapOrder,
-  } = useGeneralKeeperPlaceSwapOrder({
+    isLoading: createSwapLoading,
+    write: createSwap,
+  } = useGeneralKeeperCreateSwap({
     address: gk,
-    args: seqOfConsider && paidOfConsider && seqOfTarget
+    args: seqOfTarget && paidOfTarget && seqOfPledge
       ? [ BigInt(seqOfOpt), 
-          BigInt(seqOfConsider), 
-          BigInt(paidOfConsider), 
-          BigInt(seqOfTarget)]
+          BigInt(seqOfTarget), 
+          BigInt(paidOfTarget), 
+          BigInt(seqOfPledge)]
       : undefined,
     onSuccess() {
       getAllOpts();
@@ -32,35 +32,8 @@ export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPr
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Exercise Right Of Option</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
-
-        <TextField 
-          variant='outlined'
-          label='seqOfConsider'
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={(e) => setSeqOfConsider(e.target.value ?? '0')}
-          value={ seqOfConsider }
-          size='small'
-        />
-
-        <TextField 
-          variant='outlined'
-          label='paidOfConsider'
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={(e) => setPaidOfConsider(e.target.value ?? '0')}
-          value={ paidOfConsider }
-          size='small'
-        />
 
         <TextField 
           variant='outlined'
@@ -74,15 +47,39 @@ export function PlaceSwapOrder({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPr
           size='small'
         />
 
+        <TextField 
+          variant='outlined'
+          label='paidOfTarget'
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={(e) => setPaidOfTarget(e.target.value ?? '0')}
+          value={ paidOfTarget }
+          size='small'
+        />
+
+        <TextField 
+          variant='outlined'
+          label='seqOfPledge'
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={(e) => setSeqOfPledge(e.target.value ?? '0')}
+          value={ seqOfPledge }
+          size='small'
+        />
+
         <Button 
-          disabled={ placeSwapOrderLoading }
+          disabled={ createSwapLoading }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <SwapHorizOutlined /> }
-          onClick={()=>placeSwapOrder?.() }
+          onClick={()=>createSwap?.() }
           size='small'
         >
-          Place Swap
+          Create Swap
         </Button>        
 
       </Stack>

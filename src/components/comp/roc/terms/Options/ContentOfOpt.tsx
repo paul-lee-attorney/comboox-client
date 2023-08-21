@@ -16,7 +16,7 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { dateParser, longDataParser, longSnParser } from "../../../../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser, toPercent } from "../../../../../scripts/toolsKit";
 import { Option, typeOfOpts } from "../../../../../queries/roo";
 
 export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
@@ -203,19 +203,6 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                   }}
                   value={ opt.head.closingDays }              
                 />
-
-                {/* <TextField 
-                  variant='outlined'
-                  label='ClosingDeadline'
-                  inputProps={{readOnly:true}}
-                  size="small"
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ dateParser(opt.body.closingDeadline ?? '0') }
-                /> */}
-
 
               </Stack>
 

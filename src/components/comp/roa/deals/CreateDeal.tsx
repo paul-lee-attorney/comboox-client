@@ -26,7 +26,7 @@ import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Body, Deal, Head } from "../../../../queries/ia";
-import { getShare } from "../../../../queries/bos";
+import { getShare } from "../../../../queries/ros";
 import { isFinalized } from "../../../../queries/accessControl";
 
 const defaultHead: Head = {

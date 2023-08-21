@@ -14,7 +14,7 @@ import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
 import { HexParser } from '../../../scripts/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 
-export function MintAndLockPoints({refreshList, getUser}:ActionsOfUserProps) {
+export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOfUserProps) {
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -35,6 +35,7 @@ export function MintAndLockPoints({refreshList, getUser}:ActionsOfUserProps) {
     onSuccess() {
       refreshList();
       getUser();
+      getBalanceOf();
     }
   })
 

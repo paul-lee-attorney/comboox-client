@@ -45,7 +45,7 @@ function RegisterOfOptions() {
 
         setOptsList(ls.map(v=>({
           opt: v,
-          obligors: [0],
+          obligors: [],
         })));
 
         let len = ls.length;
@@ -98,7 +98,7 @@ function RegisterOfOptions() {
         />
       
         {opt && (
-          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} getAllOpts={getAllOpts} />
+          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} getAllOpts={()=>getAllOpts()} />
         )}
 
       </Stack>

@@ -5,9 +5,9 @@ import {
   Chip,
 } from '@mui/material';
 import { longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
-import { OptWrap } from './Options';
 import { ContentOfOpt } from './ContentOfOpt';
 import { TriggerCondition } from './TriggerCondition';
+import { OptWrap } from '../../../../../queries/roo';
 
 interface OptProps {
   optWrap: OptWrap;

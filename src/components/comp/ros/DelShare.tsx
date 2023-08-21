@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { useEffect, useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
 import { RemoveCircle } from "@mui/icons-material";
-import { Share, getShare } from "../../../queries/bos";
+import { Share, getShare } from "../../../queries/ros";
 
 interface DelShareProps {
   getList: ()=>any;

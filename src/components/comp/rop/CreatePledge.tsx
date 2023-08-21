@@ -5,7 +5,7 @@ import { Body, Head, codifyHeadOfPledge, defaultBody, defaultHead } from "../../
 import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { getShare } from "../../../queries/bos";
+import { getShare } from "../../../queries/ros";
 import { Create } from "@mui/icons-material";
 import { HexType } from "../../../interfaces";
 

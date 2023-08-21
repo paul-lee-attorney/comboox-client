@@ -12,89 +12,68 @@ import {
   Divider,
   Paper,
   IconButton,
-  Tooltip,  
+  Tooltip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,  
 } from '@mui/material';
 
 
-import { Update, ArrowForward, ArrowCircleUpOutlined, ArrowCircleUp, ArrowCircleDown, ArrowUpward, ArrowDownward }  from '@mui/icons-material';
+import { Update, ArrowUpward, ArrowDownward }  from '@mui/icons-material';
 
 import { 
+  useGeneralKeeperGetCompInfo,
   useGeneralKeeperSetCompInfo,
-  useGeneralKeeperRegNumOfCompany,
-  useGeneralKeeperNameOfCompany,
-  useGeneralKeeperSymbolOfCompany,
 } from '../../../generated';
+import { CompInfo } from '../../../queries/gk';
+import { dateParser, longDataParser, toAscii, toStr } from '../../../scripts/toolsKit';
+import { currencies } from './GeneralInfo';
 
-
-interface CompId {
-  regNum: string;
-  symbol: string;
-  name: string;
-}
 
 interface SetCompIdProps {
   nextStep: (next: number) => void;
 }
 
-export function SetCompId({nextStep}: SetCompIdProps) {
+export function SetCompInfo({nextStep}: SetCompIdProps) {
 
-  const defaultId: CompId = {
-    regNum: '0',
+  const defaultInfo: CompInfo = {
+    regNum: 0,
+    regDate: 0,
+    currency: 0,
     symbol: '',
     name: '',
   };
 
-  const [inputId, setInputId] = useState<CompId>(defaultId);
-  
-  const [newId, setNewId] = useState<CompId>(defaultId);
+  const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
+  const [ newInfo, setNewInfo] = useState<CompInfo>(defaultInfo);
 
   const { gk } = useComBooxContext();
 
   const {
-    refetch: getRegNum
-  } = useGeneralKeeperRegNumOfCompany({
+    refetch: getCompInfo
+  } = useGeneralKeeperGetCompInfo({
     address: gk,
-    onSuccess(data) {
-      setNewId(v => ({
-        ...v,
-        regNum: data.toString(),
-      }));
+    onSuccess(res) {
+      let info:CompInfo = {
+        regNum: res.regNum,
+        regDate: res.regDate,
+        currency: res.currency,
+        symbol: toStr(Number(res.symbol)),
+        name: res.name
+      }
+      setNewInfo(info);
     },
   });
 
   const {
-    refetch: getSymbol
-  } = useGeneralKeeperSymbolOfCompany({
-    address: gk,
-    onSuccess(data) {
-      setNewId(v => ({
-        ...v,
-        symbol: data,
-      }));
-    }
-  })
-  
-  const {
-    refetch: getName
-  } = useGeneralKeeperNameOfCompany({
-    address: gk,
-    onSuccess(data) {
-      setNewId(v => ({
-        ...v,
-        name: data,
-      }))
-    }
-  });
-
-  const {
-    isLoading: setCompInfoLoading,
-    write: setCompInfo, 
+    isLoading: setInfoLoading,
+    write: setInfo, 
    } = useGeneralKeeperSetCompInfo({
     address: gk,
-    args:  [ inputId.name, inputId.symbol ],
+    args: [ compInfo.currency, `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, compInfo.name ],
     onSuccess() {
-      getSymbol();
-      getName();
+      getCompInfo();
     }
   });
 
@@ -144,31 +123,38 @@ export function SetCompId({nextStep}: SetCompIdProps) {
           <Card variant='outlined' sx={{m:1, mr:3, width:'100%' }}>
             <CardContent>
               <Typography variant="body1" sx={{ m:1 }} >
-                RegNum: { newId.regNum }
+                RegNum: { longDataParser(newInfo.regNum.toString()) }
               </Typography>
               <Typography variant="body1" sx={{ m:1 }} >
-                Name: { newId.name }
+                RegDate: {  dateParser(newInfo.regDate) }
               </Typography>
               <Typography variant="body1" sx={{ m:1 }} >
-                Symbol: { newId.symbol }
+                Name: { newInfo.name }
               </Typography>
+              <Typography variant="body1" sx={{ m:1 }} >
+                Symbol: {  newInfo.symbol }
+              </Typography>
+              <Typography variant="body1" sx={{ m:1 }} >
+                BookingCurrency: { currencies[ newInfo.currency ] }
+              </Typography>
+
             </CardContent>
           </Card>
 
           <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
             <TextField 
-              sx={{ m: 1, minWidth: 120 }} 
+              sx={{ m: 1, minWidth: 218 }} 
               id="tfNameOfComp" 
-              label="NameOfCompany" 
+              label="CompanyName" 
               variant="outlined"
               helperText="string (e.g. 'Comboox Inc.')"
               onChange={(e) => {
-                setInputId((v) => ({
+                setCompInfo((v) => ({
                   ...v,
                   name: (e.target.value ?? ''),
                 }))
               }}
-              value = {inputId.name}
+              value = { compInfo.name }
               size='small'
             />
 
@@ -179,23 +165,41 @@ export function SetCompId({nextStep}: SetCompIdProps) {
               variant="outlined"
               helperText="string (e.g. 'COMBOOX')"
               onChange={(e) => {
-                setInputId((v) => ({
+                setCompInfo((v) => ({
                   ...v,
                   symbol: (e.target.value ?? ''),
                 }))
               }}
 
-              value = {inputId.symbol}
+              value = { compInfo.symbol }
               size='small'
             />
 
+            <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+              <InputLabel id="bookingCurrency-label">BookingCurrency</InputLabel>
+              <Select
+                labelId="bookingCurrency-label"
+                id="bookingCurrency-select"
+                label="BookingCurrency"
+                value={ compInfo.currency.toString() }
+                onChange={(e) => setCompInfo((v) => ({
+                  ...v,
+                  currency: Number(e.target.value) ,
+                }))}
+              >
+                {currencies.map((v, i) => (
+                  <MenuItem key={i} value={i.toString()}>{v}</MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
             <Button 
-              disabled = {!setCompInfo || setCompInfoLoading}
+              disabled = { setInfoLoading }
 
               sx={{ m: 1, minWidth: 120, height: 40 }} 
               variant="contained" 
               endIcon={<Update />}
-              onClick={()=> setCompInfo?.()}
+              onClick={()=> setInfo?.()}
               size='small'
             >
               Update

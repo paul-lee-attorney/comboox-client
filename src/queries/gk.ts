@@ -2,6 +2,7 @@ import { readContract } from "@wagmi/core";
 import { AddrZero, HexType } from "../interfaces";
 import { generalKeeperABI } from "../generated";
 import { getDK, getOwner } from "./accessControl";
+import { toStr } from "../scripts/toolsKit";
 
 export const nameOfBooks = [
   'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 
@@ -10,38 +11,8 @@ export const nameOfBooks = [
 
 export const titleOfKeepers = [
   'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 'GmmKeeper', 
-  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'RosKeeper', 'ShaKeeper'
+  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper'
 ]
-
-export async function regNumOfCompany(addr: HexType):Promise<bigint> {
-  let regNum: bigint = await readContract({
-    address: addr,
-    abi: generalKeeperABI,
-    functionName: 'regNumOfCompany',
-  })
-
-  return regNum;
-}
-
-export async function nameOfCompany(addr: HexType):Promise<string> {
-  let name: string = await readContract({
-    address: addr,
-    abi: generalKeeperABI,
-    functionName: 'nameOfCompany',
-  })
-
-  return name;
-}
-
-export async function symbolOfCompany(addr: HexType):Promise<string> {
-  let symbol: string = await readContract({
-    address: addr,
-    abi: generalKeeperABI,
-    functionName: 'symbolOfCompany',
-  })
-
-  return symbol;
-}
 
 export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
   let keeper: HexType = await readContract({
@@ -82,7 +53,7 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<11; i++) {
+  for (let i = 1; i<10; i++) {
  
     let addr = await getBook(gk, i);
     let owner = await getOwner(addr); 
@@ -135,6 +106,33 @@ export async function getSHA(gk: HexType):Promise<HexType>{
     abi: generalKeeperABI,
     functionName: 'getSHA'
   });
+}
+
+export interface CompInfo {
+  regNum: number;
+  regDate: number;
+  currency: number;
+  symbol: string;
+  name: string;
+}
+
+export async function getCompInfo(gk: HexType):Promise<CompInfo>{
+
+  let res = await readContract({
+    address: gk,
+    abi: generalKeeperABI,
+    functionName: 'getCompInfo',
+  })
+
+  let info:CompInfo = {
+    regNum: res.regNum,
+    regDate: res.regDate,
+    currency: res.currency,
+    symbol: toStr(Number(res.symbol)),
+    name: res.name    
+  }
+
+  return info;
 }
 
 

@@ -4,7 +4,7 @@ import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
-import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser, toStr } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
 import { Position, getFullPosInfo } from "../../../queries/rod";
@@ -16,42 +16,39 @@ import {
   useRegisterOfMembersControllor, 
   useRegisterOfMembersOwnersEquity, 
   useRegisterOfMembersVotesOfController, 
-  useGeneralKeeperNameOfCompany, 
-  useGeneralKeeperRegNumOfCompany, 
-  useGeneralKeeperSymbolOfCompany, 
-  useGeneralKeeperGetCompUser
+  useGeneralKeeperGetCompUser,
+  useGeneralKeeperGetCompInfo
 } from "../../../generated";
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
 import { User } from "../../../queries/rc";
+import { HexType } from "../../../interfaces";
+import { CompInfo } from "../../../queries/gk";
+
+
+export const currencies:string[] = [
+  'USD', 'GBP', 'EUR', 'JPY', 'KRW', 'CNY',
+  'AUD', 'CAD', 'CHF', 'ARS', 'PHP', 'NZD', 
+  'SGD', 'NGN', 'ZAR', 'RUB', 'INR', 'BRL'
+]
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
 
-  const [ compName, setCompName ] = useState<string>('');
+  const [ compInfo, setCompInfo ] = useState<CompInfo>();
 
-  useGeneralKeeperNameOfCompany({
-    address: gk,
-    onSuccess(name) {
-      setCompName(name)
-    }
-  })
-
-  const [ regNum, setRegNum ] = useState<string>('');
-
-  useGeneralKeeperRegNumOfCompany({
-    address: gk,
-    onSuccess(num) {
-      setRegNum( num.toString() )
-    }
-  })
-
-  const [ symbol, setSymbol ] = useState<string>('');
-
-  useGeneralKeeperSymbolOfCompany({
+  useGeneralKeeperGetCompInfo({
     address: gk,
     onSuccess(res) {
-      setSymbol(res)
+
+      let info:CompInfo = {
+        regNum: res.regNum,
+        regDate: res.regDate,
+        currency: res.currency,
+        symbol: toStr(Number(res.symbol)),
+        name: res.name
+      }
+      setCompInfo(info);
     }
   })
 
@@ -134,17 +131,20 @@ export function GeneralInfo() {
             <h3>General Info</h3>
           </Toolbar>
 
-          <ConfigSetting companyName={ compName } symbol={symbol}  />
+          {compInfo && (
+            <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol }  />
+          )}
+
 
         </Stack>
         <table width={1680}>
           <thead>
 
             <tr>        
-              <td colSpan={4}>
-                {compName && (
+              <td colSpan={2}>
+                {compInfo && (
                   <TextField 
-                    value={ compName } 
+                    value={ compInfo.name } 
                     variant='outlined'
                     size='small' 
                     label="NameOfCompany" 
@@ -156,13 +156,42 @@ export function GeneralInfo() {
                   />
                 )}
               </td>
+
+              <td>
+                <TextField 
+                  value={ currencies[ compInfo?.currency ?? 0 ] } 
+                  variant='outlined'
+                  size='small' 
+                  label="BookingCurrency" 
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                  }}
+                  fullWidth
+                />
+              </td>
+
+              <td>
+                <TextField 
+                  value={ dateParser(compInfo?.regDate ?? 0) } 
+                  variant='outlined'
+                  size='small' 
+                  label="RegDate" 
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                  }}
+                  fullWidth
+                />
+              </td>
+
             </tr>
 
             <tr>        
               <td >
-                {regNum && (
+                {compInfo && (
                   <TextField 
-                    value={ longSnParser(regNum) } 
+                    value={ longSnParser(compInfo.regNum.toString()) } 
                     variant='outlined'
                     size='small' 
                     label="RegNum" 
@@ -177,9 +206,9 @@ export function GeneralInfo() {
               </td>
 
               <td >
-                {symbol && (
+                {compInfo && (
                   <TextField 
-                    value={symbol} 
+                    value={compInfo.symbol} 
                     variant='outlined'
                     size='small' 
                     label="SymbolOfCompany" 

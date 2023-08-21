@@ -17,7 +17,7 @@ import { ArrowDownward, ArrowUpward, Key }  from '@mui/icons-material';
 
 
 import {
-  useBookOfSharesSetDirectKeeper,
+  useRegisterOfSharesSetDirectKeeper,
   useRegisterOfMembersSetDirectKeeper,
   useGeneralKeeperGetKeeper,
   useAccessControlGetDk,
@@ -56,22 +56,12 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     }
   })
 
-  // const [romKeeper, setRosKeeper] = useState<HexType>();
-
-  // useGeneralKeeperGetKeeper({
-  //   address: gk,
-  //   args: [ BigInt(4) ],
-  //   onSuccess(res) {
-  //     setRosKeeper(res)
-  //   }
-  // })
-
   const [dkOfBos, setDKOfBos] = useState<HexType>();
 
   const {
     refetch: getDkOfBos
   } = useAccessControlGetDk({
-    address: boox ? boox[10] : undefined,
+    address: boox ? boox[9] : undefined,
     onSuccess(res) {
       setDKOfBos(res)
     }
@@ -92,7 +82,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     isLoading: setBosDKLoading,
     write: setBosDK
   } = useAccessControlSetDirectKeeper({
-    address: boox ? boox[10] : undefined,
+    address: boox ? boox[9] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess() {
       getDkOfBos();

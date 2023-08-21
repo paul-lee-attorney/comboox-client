@@ -2,8 +2,7 @@ import { Checkbox, Collapse, FormControl, FormControlLabel, InputLabel, MenuItem
 import { Dispatch, SetStateAction, useState } from "react";
 import { SetBackupKey } from "./ActionsOfUser/SetBackupKey";
 import { LockConsideration } from "./ActionsOfUser/LockConsideration";
-import { UpdateUserInfo } from "./ActionsOfUser/UpdateUserInfo";
-import { MintPoints } from "./ActionsOfUser/MintPoints";
+import { MintPoints } from "./ActionsOfUser/Mint";
 import { LockPoints } from "./ActionsOfUser/LockPoints";
 import { TransferPoints } from "./ActionsOfUser/TransferPoints";
 import { MintAndLockPoints } from "./ActionsOfUser/MintAndLockPoints";
@@ -14,6 +13,7 @@ import { AddrZero } from "../../interfaces";
 export interface ActionsOfUserProps{
   refreshList: ()=>void;
   getUser: ()=>void;
+  getBalanceOf: ()=>void;
 }
 
 interface ActionsOfUserPanelProps extends ActionsOfUserProps {
@@ -23,24 +23,23 @@ interface ActionsOfUserPanelProps extends ActionsOfUserProps {
   setShowList: Dispatch<SetStateAction<boolean>>;
 }
 
-export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshList, getUser}: ActionsOfUserPanelProps) {
+export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshList, getUser, getBalanceOf}: ActionsOfUserPanelProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('1');
   
   const actionsOfUser = [
-    'Set Backup Key', 'Update User Info', 'Set Royalty Rule', 'Mint Points', 
+    'Set Backup Key', 'Set Royalty Rule', 'Mint Points', 
     'Mint & Lock Points', 'Transfer Points', 'Lock Points', 'Lock Consideration' 
   ]
 
   const compsOfAction = [
-    <SetBackupKey key={0} refreshList={refreshList} getUser={ getUser } />,
-    <UpdateUserInfo key={1} refreshList={refreshList} getUser={ getUser } />,
-    <SetRoyaltyRule key={2} refreshList={refreshList} getUser={ getUser } />,
-    <MintPoints key={3} refreshList={refreshList} getUser={ getUser } />,
-    <MintAndLockPoints key={4} refreshList={refreshList} getUser={ getUser } />,
-    <TransferPoints key={5} refreshList={refreshList} getUser={ getUser } />,
-    <LockPoints key={6} refreshList={refreshList} getUser={ getUser } />,       
-    <LockConsideration key={7} refreshList={refreshList} getUser={ getUser } />
+    <SetBackupKey key={0} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
+    <SetRoyaltyRule key={1} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
+    <MintPoints key={2} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
+    <MintAndLockPoints key={3} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
+    <TransferPoints key={4} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
+    <LockPoints key={5} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,       
+    <LockConsideration key={6} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />
   ]
 
   return( 

@@ -15,8 +15,8 @@ import { AddCircle, ArrowDownward, ArrowUpward, RemoveCircle }  from '@mui/icons
 
 
 import {
-  useBookOfSharesIssueShare,
-  useBookOfSharesDecreaseCapital,
+  useRegisterOfSharesIssueShare,
+  useRegisterOfSharesDecreaseCapital,
 } from '../../../generated';
 
 
@@ -27,7 +27,7 @@ import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
-import { Share, codifyHeadOfShare, getSharesList, } from '../../../queries/bos';
+import { Share, codifyHeadOfShare, getSharesList, } from '../../../queries/ros';
 import { getShareNumbersList } from '../../../queries/rom';
 
 
@@ -64,8 +64,8 @@ export function InitBos({nextStep}: InitBosProps) {
   const {
     isLoading: issueShareLoading,
     write: issueShare,
-  } = useBookOfSharesIssueShare({
-    address: boox ? boox[10] : undefined,
+  } = useRegisterOfSharesIssueShare({
+    address: boox ? boox[9] : undefined,
     args: share.head.class && share.head.issueDate &&
           share.head.shareholder && share.head.priceOfPaid && 
           share.head.priceOfPar && share.body.payInDeadline &&
@@ -80,8 +80,8 @@ export function InitBos({nextStep}: InitBosProps) {
   const {
     isLoading: delShareLoading,
     write: delShare
-  } = useBookOfSharesDecreaseCapital({
-    address: boox ? boox[10] : undefined,
+  } = useRegisterOfSharesDecreaseCapital({
+    address: boox ? boox[9] : undefined,
     args: share.head.seqOfShare > 0
         ? [ BigInt(share.head.seqOfShare), 
             share.body.paid, 
@@ -89,13 +89,11 @@ export function InitBos({nextStep}: InitBosProps) {
         : undefined,
   })
 
-  
-
 
   useEffect(()=>{
     if (boox) {
       getShareNumbersList(boox[4]).then(
-        list => getSharesList(boox[10], list).then(
+        list => getSharesList(boox[9], list).then(
             ls => setSharesList(ls)
       ))
     }
