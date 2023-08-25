@@ -13,8 +13,6 @@ import {
   Grid,
 } from "@mui/material";
 
-import { HexType } from "../../../../interfaces";
-
 import {
   AddCircle,
   ListAlt,
@@ -124,7 +122,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
 
                 {cp.map((v)=> (
                   <Grid key={v} item xs={3}>
-                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
                   </Grid>
                 ))}
 

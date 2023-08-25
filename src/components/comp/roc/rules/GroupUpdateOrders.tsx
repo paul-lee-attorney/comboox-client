@@ -12,8 +12,6 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { HexType, ShaRuleInputProps } from "../../../../interfaces";
-
 import {
   AddCircle,
   ListAlt,
@@ -21,14 +19,7 @@ import {
 } from "@mui/icons-material"
 
 import { SetGroupUpdateOrder } from "./SetGroupUpdateOrder";
-import { SetRuleProps } from "./SetVotingRule";
 import { RulesEditProps } from "./SetGovernanceRule";
-
-// interface GroupUpdateOrdersProps {
-//   sha: HexType;
-//   initSeqList: number[] | undefined;
-//   isFinalized: boolean;
-// }
 
 export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
 
@@ -125,7 +116,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
               </Stack>
 
               {cp.map((v)=> (
-                <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} />
+                <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} getRules={ getRules } />
               ))}
             
             </Box>

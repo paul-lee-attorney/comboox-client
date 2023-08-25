@@ -363,9 +363,10 @@ export interface SetRuleProps {
   sha: HexType;
   seq: number;
   isFinalized: boolean;
+  getRules: ()=>void;
 }
 
-export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
+export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps) {
 
   const defVR: VotingRule =
       { seqOfRule: seq, 
@@ -456,6 +457,7 @@ export function SetVotingRule({ sha, seq, isFinalized }: SetRuleProps) {
                     editable={ editable } 
                     setEditable={ setEditable } 
                     isFinalized={ isFinalized }
+                    getRules={ getRules }
                   />
                   
                 </Stack>

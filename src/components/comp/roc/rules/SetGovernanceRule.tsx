@@ -185,6 +185,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                       editable={ editable }
                       setEditable={ setEditable }
                       isFinalized={ isFinalized }
+                      getRules = { getRules }
                     />
                     
                   </Stack>

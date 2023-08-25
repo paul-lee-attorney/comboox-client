@@ -85,6 +85,7 @@ export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList, tim
         if (deal.body.state == 1) {
 
           if (deal.head.typeOfDeal == 1) activeSteps = [ 4, 5, 7 ];
+          else if (deal.head.typeOfDeal == 8) activeSteps = [ 11 ];
           else activeSteps = [ 4, 6, 7 ];
 
         } else if (deal.body.state == 2) {
@@ -101,7 +102,8 @@ export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList, tim
       } 
 
   } else if ( timestamp >= timeline.closingDeadline && timeline.stateOfFile > 1 ) {
-    activeSteps = [10, 11];
+    activeSteps = [10];
+    if (deal.head.typeOfDeal == 8) activeSteps.push(11);
   } 
   
   return(

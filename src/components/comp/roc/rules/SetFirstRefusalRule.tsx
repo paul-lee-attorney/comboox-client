@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { 
   Stack,
@@ -20,7 +20,7 @@ import {
 
 import { AddRule } from './AddRule'
 
-import { Bytes32Zero, HexType } from '../../../../interfaces';
+import { HexType } from '../../../../interfaces';
 import { ListAlt } from '@mui/icons-material';
 import { longSnParser } from '../../../../scripts/toolsKit';
 import { SetRuleProps } from './SetVotingRule';
@@ -126,13 +126,7 @@ const defaultRules: FirstRefusalRule[] = [
 
 export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
-// interface SetFirstRefusalRuleProps {
-//   sha: HexType;
-//   seq: number;
-//   isFinalized: boolean;
-// }
-
-export function SetFirstRefusalRule({ sha, seq, isFinalized }: SetRuleProps) {
+export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRuleProps) {
 
   const defFR: FirstRefusalRule = 
       { seqOfRule: seq, 
@@ -211,6 +205,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized }: SetRuleProps) {
                 editable = { editable }
                 setEditable={ setEditable }
                 isFinalized={isFinalized}
+                getRules={getRules}
               />
             </Stack>
 

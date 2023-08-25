@@ -21,14 +21,10 @@ interface AddRuleProps {
   editable: boolean,
   setEditable: (flag: boolean) => void,
   isFinalized: boolean,
+  getRules: () => void,
 }
 
-export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinalized }: AddRuleProps) {
-
-  // const { config } = usePrepareShareholdersAgreementAddRule({
-  //   address: sha,
-  //   args: [rule],
-  // });
+export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinalized, getRules }: AddRuleProps) {
 
   const {
     data,
@@ -39,6 +35,7 @@ export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinal
     args: [rule],
     onSuccess() {
       refreshRule();
+      getRules();
     }
   });
 

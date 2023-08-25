@@ -215,51 +215,65 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  {objVr.shaExecDays > 0 && (
+                  {objVr.frExecDays > 0 && (
                     <TextField 
                       variant='outlined'
-                      label='ShaExecDays'
+                      label='FRExecDays'
                       inputProps={{readOnly: true}}
                       size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.shaExecDays.toString()}
+                      value={objVr.frExecDays.toString()}
                     />
                   )}
 
-                  {objVr.shaConfirmDays > 0 && (
+                  {objVr.dtExecDays > 0 && (
                     <TextField 
                       variant='outlined'
-                      label='ReviewDays'
+                      label='DTExecDays'
                       inputProps={{readOnly: true}}
                       size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.shaConfirmDays.toString()}
+                      value={objVr.dtExecDays.toString()}
                     />
                   )}
 
-                  {objVr.reconsiderDays > 0 && (
+                  {objVr.dtConfirmDays > 0 && (
                     <TextField 
                       variant='outlined'
-                      label='ReconsiderDays'
+                      label='DTConfirmDays'
                       inputProps={{readOnly: true}}
                       size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.reconsiderDays.toString()}
+                      value={objVr.dtConfirmDays.toString()}
                     />
                   )}
 
                 </Stack>
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                  {objVr.invExitDays > 0 && (
+                    <TextField 
+                      variant='outlined'
+                      label='InvExitEays'
+                      inputProps={{readOnly: true}}
+                      size="small"
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={objVr.invExitDays.toString()}
+                    />
+                  )}
 
                   {objVr.votePrepareDays > 0 && (
                     <TextField 

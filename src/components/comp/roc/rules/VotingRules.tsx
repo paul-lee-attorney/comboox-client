@@ -138,7 +138,7 @@ export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEdit
 
                 {cp.map(v=> (
                   <Grid key={ v } item xs={3} >
-                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
                   </Grid>
                 ))}
 

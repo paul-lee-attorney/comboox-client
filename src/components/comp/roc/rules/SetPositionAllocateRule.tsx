@@ -88,7 +88,7 @@ export function prParser(hexRule: HexType): PosAllocateRule {
   return rule;
 }
 
-export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetRuleProps ) {
+export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: SetRuleProps ) {
 
   const defaultRule: PosAllocateRule = {
     seqOfRule: seq, 
@@ -169,6 +169,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized }: SetRuleProps 
                 editable={editable} 
                 setEditable={setEditable} 
                 isFinalized={isFinalized}
+                getRules={ getRules }
               />
             </Stack>
 

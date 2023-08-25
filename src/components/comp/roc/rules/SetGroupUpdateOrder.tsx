@@ -67,13 +67,7 @@ export function guoParser(hexOrder: HexType): GroupUpdateOrder {
   return order;
 }
 
-// interface SetGroupUpdateOrderProps {
-//   sha: HexType;
-//   seq: number;
-//   isFinalized: boolean;
-// }
-
-export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetRuleProps) {
+export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRuleProps) {
 
   const defaultOrder: GroupUpdateOrder = {
     seqOfRule: seq,
@@ -127,9 +121,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized }: SetRuleProps) {
             editable={ editable }
             setEditable={ setEditable }
             isFinalized={isFinalized}
+            getRules={ getRules }
           />
         </Stack>
-
 
         <Stack direction={'column'} spacing={1} >
 

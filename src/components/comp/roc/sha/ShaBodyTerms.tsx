@@ -1,9 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
-  Box,
   Divider,
-  Grid,
   Paper,
   Stack,
   Toolbar,
@@ -13,7 +11,7 @@ import { HexType } from "../../../../interfaces";
 
 import { AntiDilution } from "../terms/AntiDilution/AntiDilution";
 
-import { defaultTerms, getTerm, obtainRules, obtainTitles } from "../../../../queries/sha";
+import { defaultTerms, getTerm } from "../../../../queries/sha";
 import { SetGovernanceRule } from "../rules/SetGovernanceRule";
 import { VotingRules } from "../rules/VotingRules";
 import { PositionAllocateRules } from "../rules/PositionAllocateRules";
@@ -23,7 +21,7 @@ import { LockUp } from "../terms/LockUp/LockUp";
 import { DragAlong } from "../terms/DragAlong/DragAlong";
 import { Options } from "../terms/Options/Options";
 import { TagAlong } from "../terms/TagAlong/TagAlong";
-import { useShareholdersAgreement, useShareholdersAgreementGetRules, useShareholdersAgreementGetTitles } from "../../../../generated";
+import { useShareholdersAgreementGetRules, useShareholdersAgreementGetTitles } from "../../../../generated";
 
 export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
 
@@ -72,21 +70,6 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
     }
   })
 
-
-  // useEffect(()=>{
-  //   const setUpRules = async () => {
-
-  //     let rules = await getGroupOfRules(sha);
-
-  //     setVrLs(rules[0]);
-  //     setPrLs(rules[1]);
-  //     setFrLs(rules[2]);
-  //     setGuoLs(rules[3]);
-  //   }
-    
-  //   setUpRules();
-  // }, [sha]);
-
   const [ terms, setTerms ] = useState<HexType[]>(defaultTerms);
 
 
@@ -106,22 +89,6 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
       })
     }
   })
-
-
-  // useEffect(()=>{
-  //   const getTitles = async () => {
-  //     let titles = await obtainTitles(sha);
-  //     titles.forEach(async v => {
-  //       let res = await getTerm(sha, v);
-  //       setTerms((k) => {          
-  //         let out = [...k];
-  //         out[v-24] = res;
-  //         return out;
-  //       });
-  //     });
-  //   }
-  //   getTitles();
-  // }, [sha]);
 
   return (
     // <Box width={1180} >
