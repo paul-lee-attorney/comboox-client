@@ -53,7 +53,7 @@ function GeneralMeetingMinutes() {
 
       <Stack direction="row" >
 
-        <Toolbar sx={{m:1, p:1}}>
+        <Toolbar sx={{m:1, p:1, textDecoration:'underline'}}>
           <h3>GMM - General Meeting Minutes</h3>
         </Toolbar>
 

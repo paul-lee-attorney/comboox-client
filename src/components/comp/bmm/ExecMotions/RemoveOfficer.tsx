@@ -1,8 +1,8 @@
 import { 
   useGeneralKeeperRemoveOfficer, 
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 
@@ -19,13 +19,6 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:R
 
   const {gk, boox} = useComBooxContext();
   
-  // const {
-  //   config: removeOfficerConfig,
-  // } = usePrepareGeneralKeeperRemoveOfficer({
-  //   address: gk,
-  //   args: [BigInt(seqOfMotion), BigInt(seqOfPos)]
-  // })
-
   const {
     isLoading: removeOfficerLoading,
     write: removeOfficer,

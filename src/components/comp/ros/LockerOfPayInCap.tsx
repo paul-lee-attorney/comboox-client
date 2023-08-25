@@ -53,7 +53,7 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
   const {
     refetch: getLocker,
   } = useBookOfSharesGetLocker({
-    address: boox ? boox[10] : undefined,
+    address: boox ? boox[9] : undefined,
     args: hashLock ? [ hashLock ] : undefined,
     onSuccess(locker) {
       if (hashLock) {

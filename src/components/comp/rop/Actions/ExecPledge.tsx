@@ -1,4 +1,4 @@
-import { useBookOfSharesGetShare, useGeneralKeeperExecPledge } from "../../../../generated";
+import { useGeneralKeeperExecPledge, useRegisterOfSharesGetShare } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
@@ -17,8 +17,8 @@ export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
   const [ body, setBody ] = useState<Body>(defaultBody);
   const [ version, setVersion ] = useState<number>(1);
   
-  useBookOfSharesGetShare({
-    address: boox ? boox[10] : undefined,
+  useRegisterOfSharesGetShare({
+    address: boox ? boox[9] : undefined,
     args: [BigInt(pld.head.seqOfShare)],
     onSuccess(res) {
       setHead(v => ({

@@ -2,9 +2,9 @@ import { bigint } from "ethers";
 
 import { 
   useGeneralKeeperTakePosition, 
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
 

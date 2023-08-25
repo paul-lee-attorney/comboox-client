@@ -267,7 +267,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         anchor="left"
         open={ appBarOpen }
       >
-        <DrawerHeader>
+        <DrawerHeader sx={{ height: 72 }}>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeft />
           </IconButton>

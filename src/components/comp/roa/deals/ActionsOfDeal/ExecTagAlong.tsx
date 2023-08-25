@@ -1,15 +1,26 @@
 import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
 import { defaultDeal } from "../../../../../queries/ia";
-import { useGeneralKeeperExecDragAlong, useGeneralKeeperExecTagAlong } from "../../../../../generated";
+import { useGeneralKeeperExecTagAlong } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import {  AgricultureOutlined, DirectionsRun, SellOutlined } from "@mui/icons-material";
+import {  DirectionsRun, SellOutlined, SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../interfaces";
-import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
 import { HexParser } from "../../../../../scripts/toolsKit";
 
-export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export interface TargetShare {
+  seqOfShare: number;
+  paid: string;
+  par: string;
+}
+
+export const defaultTargetShare: TargetShare = {
+  seqOfShare: 0,
+  paid: '0',
+  par: '0',
+}
+
+export function ExecTagAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
@@ -22,9 +33,9 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
   }
 
   const {
-    isLoading: execDragAlongLoading,
-    write: execDragAlong,
-  } = useGeneralKeeperExecDragAlong({
+    isLoading: execTagAlongLoading,
+    write: execTagAlong,
+  } = useGeneralKeeperExecTagAlong({
     address: gk,
     args: [ ia, 
             BigInt(deal.head.seqOfDeal), 
@@ -46,10 +57,6 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Exercise Drag Along</h4>
-        </Toolbar> */}
-
         <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
           <Stack direction="column" >
@@ -73,7 +80,7 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
               <TextField 
                 variant='outlined'
                 size="small"
-                label='Paid'
+                label='Paid (Cent)'
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -88,7 +95,7 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
               <TextField 
                 variant='outlined'
                 size="small"
-                label='Par'
+                label='Par (Cent)'
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -120,14 +127,15 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
           <Divider orientation="vertical" flexItem />
 
           <Button 
-            disabled = { execDragAlongLoading }
+            disabled = { execTagAlongLoading }
+
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
-            endIcon={<AgricultureOutlined />}
-            onClick={()=> execDragAlong?.()}
+            endIcon={<SurfingOutlined />}
+            onClick={()=> execTagAlong?.()}
             size='small'
           >
-            Drag Along
+            Tag Along
           </Button>
 
         </Stack>

@@ -15,7 +15,7 @@ import { BookInfo } from '../../../../queries/gk';
 
 interface BooxListProps {
   title: string;
-  list: BookInfo[];
+  list: BookInfo[] | undefined;
   names: string[];
   setTitle: Dispatch<SetStateAction<number>>;
   setAddr: Dispatch<SetStateAction<HexType>>;

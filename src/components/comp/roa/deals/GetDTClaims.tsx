@@ -3,19 +3,19 @@ import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
-import { useGeneralKeeperAcceptAlongDeal } from "../../../../generated";
-import { HexParser, dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
-import { ActionsOfDealProps } from "./ActionsOfDeal";
+import { useGeneralKeeperAcceptAlongDeal, useRegisterOfAgreementsHasDtClaims, } from "../../../../generated";
+import { HexParser, centToDollar, dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
+import { ActionsOfDealCenterProps, ActionsOfDealProps } from "./ActionsOfDeal";
 import { DTClaim, getDTClaimsOfDeal } from "../../../../queries/roa";
 import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
 import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { defaultDeal } from "../../../../queries/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 
-export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps) {
+export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
 
-  const [ claims, setClaims ] = useState<readonly DTClaim[]>();
+  const [ claims, setClaims ] = useState<readonly DTClaim[]>([]);
   const [ appear, setAppear ] = useState(false);
 
   const closeOrderOfDeal = ()=>{
@@ -52,7 +52,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
     { 
       field: 'paid', 
       headerName: 'Paid',
-      valueGetter: p => longDataParser(p.row.paid.toString()) ,
+      valueGetter: p => centToDollar(p.row.paid.toString()) ,
       headerAlign:'right',
       align: 'right',
       width: 218,
@@ -60,7 +60,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
     { 
       field: 'par', 
       headerName: 'Par',
-      valueGetter: p => longDataParser(p.row.par.toString()) ,
+      valueGetter: p => centToDollar(p.row.par.toString()) ,
       headerAlign:'right',
       align: 'right',
       width: 218,
@@ -92,21 +92,28 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
         <CopyLongStrSpan title='Hash' size='body1' src={value} />
       )
     },
-  ]
+  ];
   
-  const handleClick = async () => {
-    if (boox) {
-      let ls = await getDTClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal);
-      setClaims(ls);
-      setAppear(true);
+  const {
+    refetch: getDTClaims,
+  } = useRegisterOfAgreementsHasDtClaims({
+    address: boox ? boox[6] : undefined,
+    args: [ia, BigInt(deal.head.seqOfDeal)],
+    onSuccess(flag) {
+      if (flag && boox)
+        getDTClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal).
+          then(v => setClaims(v));
     }
+  })
+
+
+  const handleClick = async () => {
+    // if (boox) {
+    //   let ls = await getDTClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal);
+    //   setClaims(ls);
+      setAppear(true);
+    // }
   }
-
-  // const [ seqOfShare, setSeqOfShare ] = useState<number>();
-
-  // const handleRowClick = async (p:GridRowParams)=> {
-  //   setSeqOfShare(p.row.seqOfShare);
-  // }
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
@@ -123,18 +130,16 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
 
   return (
     <>
-      {/* {claims && ( */}
-        <Button
-          // disabled={ !claims }
-          variant="outlined"
-          fullWidth={true}
-          startIcon={<ListAltOutlined />}
-          sx={{ m:1 }}
-          onClick={handleClick}
-        >
-          DT Claims ({claims?.length})
-        </Button>
-      {/* )} */}
+      <Button
+        // disabled={ !claims }
+        variant="outlined"
+        fullWidth
+        startIcon={<ListAltOutlined />}
+        sx={{ m:1, height:40 }}
+        onClick={ handleClick }
+      >
+        DT Claims ({claims?.length})
+      </Button>
 
       <Dialog
         maxWidth={false}
@@ -144,7 +149,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
       >
 
         <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }} >
-          <b>DragAlong / TagAlong Claims - {deal.head.seqOfDeal}</b>
+          <b>DragAlong / TagAlong Claims</b>
         </DialogTitle>
 
         <DialogContent>
@@ -162,42 +167,45 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList}: Acti
               />      
             )}
 
-            <Paper elevation={3} sx={{
-              m:1, p:1, 
-              border: 1, 
-              borderColor:'divider' 
-              }} 
-            >
-              <Toolbar>
-               <h4>Accept Tag/Drag Claim</h4> 
-              </Toolbar>
-              <Stack direction="row" sx={{ alignItems:'center' }} >
-                
-                <TextField
-                  variant='outlined'
-                  label='SigHash'
-                  size="small"
-                  sx={{
-                    m:1,
-                    minWidth: 640,
-                  }}
-                  value={ sigHash }
-                  onChange={(e)=>setSigHash(HexParser( e.target.value ))}
-                />              
+            {timestamp >= timeline.dtDeadline && timestamp < timeline.terminateStart && (
+              <Paper elevation={3} sx={{
+                m:1, p:1, 
+                border: 1, 
+                borderColor:'divider' 
+                }} 
+              >
+                <Toolbar>
+                <h4>Accept Tag/Drag Claim</h4> 
+                </Toolbar>
+                <Stack direction="row" sx={{ alignItems:'center' }} >
+                  
+                  <TextField
+                    variant='outlined'
+                    label='SigHash'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 640,
+                    }}
+                    value={ sigHash }
+                    onChange={(e)=>setSigHash(HexParser( e.target.value ))}
+                  />              
 
-                <Button 
-                  disabled = { acceptAlongDealLoading }
-                  sx={{ m: 1, minWidth: 218, height: 40 }} 
-                  variant="contained" 
-                  endIcon={<HandshakeOutlined />}
-                  onClick={()=> acceptAlongDeal?.()}
-                  size='small'
-                >
-                  Accept
-                </Button>
+                  <Button 
+                    disabled = { acceptAlongDealLoading }
+                    sx={{ m: 1, minWidth: 218, height: 40 }} 
+                    variant="contained" 
+                    endIcon={<HandshakeOutlined />}
+                    onClick={()=> acceptAlongDeal?.()}
+                    size='small'
+                  >
+                    Accept
+                  </Button>
 
-              </Stack>
-            </Paper>
+                </Stack>
+              </Paper>
+            )}
+
             
           </Box>
 

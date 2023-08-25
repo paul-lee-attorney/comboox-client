@@ -135,7 +135,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <Box sx={{width: '100%', color: 'black' }} >
-        <Toolbar>
+        <Toolbar sx={{textDecoration:'underline'}}>
           <h3>{ title }</h3>
         </Toolbar>
         <DataGrid 

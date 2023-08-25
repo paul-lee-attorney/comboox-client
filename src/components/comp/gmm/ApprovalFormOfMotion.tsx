@@ -16,8 +16,8 @@ import { RemoveDirector } from "./ExecMotions/RemoveDirector";
 import { ExecActionOfGm } from "./ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 // import { getSnOfFile } from "../../../queries/filesFolder";
-import { useMeetingMinutes } from "../../../generated";
-import { RequestToBuy } from "./ExecMotions/RequestToBuy";
+// import { useMeetingMinutes } from "../../../generated";
+// import { RequestToBuy } from "./ExecMotions/RequestToBuy";
 import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
 import { getFile } from "../../../queries/filesFolder";
 
@@ -363,13 +363,13 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 </tr>
               )}
 
-              {motion.body.state == 6 && (
+              {/* {motion.body.state == 6 && (
                 <tr>
                   <td colSpan={4}>
                     <RequestToBuy seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
                   </td>
                 </tr>
-              )}
+              )} */}
 
             </tbody>
           </table>

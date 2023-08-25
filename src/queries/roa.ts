@@ -13,30 +13,10 @@ export interface DTClaim{
   sigHash: HexType;
 }
 
-export interface FRClaim{
-  seqOfDeal: number;
-  rightholder: number;
-  weight: bigint;
-  ratio: bigint;
-  sigDate: number;
-  sigHash: HexType;
-}
+export async function getDTClaimsOfDeal(boa: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly DTClaim[]> {
 
-export async function getDTClaimsOfDeal(boi: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly DTClaim[]> {
-
-  let flag = await readContract({
-    address: boi,
-    abi: registerOfAgreementsABI,
-    functionName: 'hasDTClaims',
-    args: [ia, BigInt(seqOfDeal)],
-  })
-
-  let res: readonly DTClaim[] = [];
-
-  if (!flag) return res;
-
-  res = await readContract({
-    address: boi,
+  let res = await readContract({
+    address: boa,
     abi: registerOfAgreementsABI,
     functionName: 'getDTClaimsOfDeal',
     args: [ia, BigInt(seqOfDeal)],
@@ -44,4 +24,28 @@ export async function getDTClaimsOfDeal(boi: HexType, ia: HexType, seqOfDeal: nu
 
   return res;
 }
+
+export interface FRClaim{
+  seqOfDeal: number;
+  claimer: number;
+  weight: bigint;
+  ratio: bigint;
+  sigDate: number;
+  sigHash: HexType;
+}
+
+export async function getFRClaimsOfDeal(boa: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly FRClaim[]> {
+
+  let res = await readContract({
+    address: boa,
+    abi: registerOfAgreementsABI,
+    functionName: 'getFRClaimsOfDeal',
+    args: [ia, BigInt(seqOfDeal)],
+  })
+
+  return res;
+}
+
+
+
 

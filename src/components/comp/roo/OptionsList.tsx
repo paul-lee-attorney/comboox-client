@@ -125,7 +125,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       <Toolbar sx={{ textDecoration:'underline' }}>
-        <h4>Options List</h4>
+        <h3>Options List</h3>
       </Toolbar>
       
       <SearchOption setOpt={setOpt} setOpen={setOpen} />

@@ -113,6 +113,17 @@ export async function qtyOfFiles(folder: HexType, body: HexType):Promise<BigInt>
   return qty;
 }
 
+export async function getSnOfFile(folder: HexType, body: HexType):Promise<HexType>{
+  let file: File = await readContract({
+    address: folder,
+    abi: filesFolderABI,
+    functionName: 'getFile',
+    args: [ body ],
+  })
+
+  return file.snOfDoc;
+}
+
 export async function getFile(folder: HexType, body: HexType):Promise<File>{
   let file: File = await readContract({
     address: folder,

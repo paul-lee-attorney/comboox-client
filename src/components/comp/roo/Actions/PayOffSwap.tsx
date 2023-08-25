@@ -35,7 +35,7 @@ export function PayOffSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
 
         <TextField 
           variant='outlined'
-          label='seqOfSwap'
+          label='SeqOfSwap'
           sx={{
             m:1,
             minWidth: 218,
@@ -47,7 +47,7 @@ export function PayOffSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
 
         <TextField 
           variant='outlined'
-          label='amtOfETH (Gwei)'
+          label='AmtOfETH (Gwei)'
           sx={{
             m:1,
             minWidth: 218,

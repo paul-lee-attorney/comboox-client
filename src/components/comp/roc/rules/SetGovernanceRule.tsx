@@ -16,7 +16,6 @@ import {
   MenuItem,
   Button,
   Dialog,
-  DialogTitle,
   DialogContent,
   DialogActions,
 } from '@mui/material';
@@ -29,6 +28,7 @@ import { ListAlt } from '@mui/icons-material';
 import { useShareholdersAgreementGetRule } from '../../../../generated';
 
 export interface GovernanceRule {
+  fundApprovalThreshold: number;
   basedOnPar: boolean ;
   proposeWeightRatioOfGM: number ;
   proposeHeadRatioOfMembers: number ;
@@ -46,6 +46,7 @@ export interface GovernanceRule {
 }
 
 const defaultGR: GovernanceRule = {
+  fundApprovalThreshold: 0,
   basedOnPar: false,
   proposeWeightRatioOfGM: 1000,
   proposeHeadRatioOfMembers: 0,
@@ -64,21 +65,21 @@ const defaultGR: GovernanceRule = {
 
 export function grCodifier(rule: GovernanceRule): HexType {
   let hexGR: HexType = `0x${
-    '0000' + '01' + '01' +
-    (rule.basedOnPar ? '01' : '00' ) +
-    (rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') ) +
-    (rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') ) + 
-    (rule.proposeHeadRatioOfDirectorsInGM.toString(16).padStart(4, '0') ) + 
-    (rule.proposeHeadRatioOfDirectorsInBoard.toString(16).padStart(4, '0') ) + 
-    (rule.maxQtyOfMembers.toString(16).padStart(4, '0') ) +       
-    (rule.quorumOfGM.toString(16).padStart(4, '0') ) +       
-    (rule.maxNumOfDirectors.toString(16).padStart(2, '0') ) +       
-    (rule.tenureMonOfBoard.toString(16).padStart(4, '0') ) +       
-    (rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') ) +       
-    (rule.establishedDate.toString(16).padStart(12, '0') ) + 
-    (rule.businessTermInYears.toString(16).padStart(2, '0') ) +                 
-    (rule.typeOfComp.toString(16).padStart(2, '0')) +                 
-    (rule.annualPenaltyRateForLatePayInCap.toString(16).padStart(4, '0'))                 
+    rule.fundApprovalThreshold.toString(16).padStart(8, '0') +
+    (rule.basedOnPar ? '01' : '00') +
+    rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') +
+    rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') + 
+    rule.proposeHeadRatioOfDirectorsInGM.toString(16).padStart(4, '0') + 
+    rule.proposeHeadRatioOfDirectorsInBoard.toString(16).padStart(4, '0') + 
+    rule.maxQtyOfMembers.toString(16).padStart(4, '0') +       
+    rule.quorumOfGM.toString(16).padStart(4, '0') +       
+    rule.maxNumOfDirectors.toString(16).padStart(2, '0') +       
+    rule.tenureMonOfBoard.toString(16).padStart(4, '0') +       
+    rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') +       
+    rule.establishedDate.toString(16).padStart(12, '0') + 
+    rule.businessTermInYears.toString(16).padStart(2, '0') +                 
+    rule.typeOfComp.toString(16).padStart(2, '0')+                 
+    rule.annualPenaltyRateForLatePayInCap.toString(16).padStart(4, '0')                 
   }`;
 
   return hexGR;
@@ -86,6 +87,7 @@ export function grCodifier(rule: GovernanceRule): HexType {
 
 export function grParser(hexRule: HexType): GovernanceRule {
   let rule: GovernanceRule = {
+    fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16),
     basedOnPar: hexRule.substring(10, 12) === '01',
     proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16),
     proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16),
@@ -533,6 +535,18 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         value={ toPercent(newGR.annualPenaltyRateForLatePayInCap ?? 0)}
                       />
 
+                      <TextField 
+                        variant='outlined'
+                        label='FundThreshold (CBP/ETH)'
+                        inputProps={{readOnly: true}}
+                        size='small'
+                        sx={{
+                          m:1,
+                          minWidth: 218,
+                        }}
+                        value={newGR.fundApprovalThreshold.toString() ?? '0'}
+                      />
+
                     </Stack>
 
                     <Collapse in={ editable && !isFinalized }>
@@ -596,6 +610,21 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                             annualPenaltyRateForLatePayInCap: parseInt(e.target.value),
                           }))}
                           value={ objGR.annualPenaltyRateForLatePayInCap }
+                        />
+
+                        <TextField 
+                          variant='outlined'
+                          label='FundThreshold  (CBP/ETH)'
+                          size='small'
+                          sx={{
+                            m:1,
+                            minWidth:218,
+                          }}
+                          onChange={(e) => setObjGR((v) => ({
+                            ...v,
+                            fundApprovalThreshold: parseInt(e.target.value ?? '0'),
+                          }))}
+                          value={ objGR.fundApprovalThreshold }
                         />
 
                       </Stack>

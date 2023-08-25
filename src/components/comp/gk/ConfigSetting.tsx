@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { SettingsOutlined } from "@mui/icons-material";
 import { AddrZero, HexType } from "../../../interfaces";
 import { ActionsOfSetting } from "./ActionsOfSetting";
@@ -42,12 +42,22 @@ export function ConfigSetting({companyName, symbol}:ConfigSettingProps) {
 
   return (
     <>
-      <IconButton
-        size="large"
-        onClick={handleClick}      
+      <Tooltip 
+        title='Config Setting' 
+        placement='left' 
+        arrow 
       >
-        <SettingsOutlined />
-      </IconButton>
+        <span>
+          <IconButton
+            sx={{ml:3, mr:1}}
+            size="large"
+            color="primary"
+            onClick={handleClick}      
+          >
+            <SettingsOutlined />
+          </IconButton>
+        </span>
+      </Tooltip>
 
       <Dialog
         maxWidth={false}

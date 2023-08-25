@@ -19,9 +19,8 @@ import {
   useGeneralKeeperCreateSha,
 } from "../../../generated";
 
-import { InfoOfFile, getFilesInfoList, getFilesListWithInfo } from "../../../queries/filesFolder";
+import { InfoOfFile, getFilesInfoList, } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
-import { AddrZero } from "../../../interfaces";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 
@@ -66,7 +65,7 @@ function RegisterOfConstitution() {
 
         <Stack direction='row' sx={{ alignItems:'center' }}>
 
-          <Toolbar sx={{ textDecoration:'underline' }}>
+          <Toolbar sx={{ textDecoration:'underline', mr:2 }}>
             <h3>ROC - Register Of Constitution </h3> 
           </Toolbar>
 

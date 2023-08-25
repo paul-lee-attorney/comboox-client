@@ -1,38 +1,31 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { PanToolOutlined } from "@mui/icons-material";
-import { useGeneralKeeperRequestToBuy } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useGeneralKeeperRequestToBuy } from "../../../../../generated";
+import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { ActionsOfDealProps } from "../ActionsOfDeal";
 
-interface RequestToBuyProps {
-  seqOfMotion: bigint;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  getMotionsList: ()=>void;
-}
 
-export function RequestToBuy({seqOfMotion, setOpen, getMotionsList}:RequestToBuyProps) {
+export function RequestToBuy({ia, deal, setOpen, refreshDealsList}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
-  const [ seqOfDeal, setSeqOfDeal ] = useState<number>(0);
-  const [ seqOfTarget, setSeqOfTarget ] = useState<number>(0);
-
-  const closeFormOfMotion = ()=>{
-    getMotionsList();
-    setOpen(false);    
-  }
+  const [ paidOfTarget, setPaidOfTarget ] = useState<number>(0);
+  const [ seqOfPledge, setSeqOfPledge ] = useState<number>(0);
 
   const {
     isLoading: requestToBuyLoading,
     write: requestToBuy,
   } = useGeneralKeeperRequestToBuy({
     address: gk,
-    args: [ seqOfMotion, 
-            BigInt(seqOfDeal), 
-            BigInt(seqOfTarget)
+    args: [ ia,
+            BigInt(deal.head.seqOfDeal), 
+            BigInt(paidOfTarget), 
+            BigInt(seqOfPledge)
           ],
     onSuccess() {
-      closeFormOfMotion();
+      refreshDealsList();
+      setOpen(false);
     }
   })
 
@@ -44,34 +37,30 @@ export function RequestToBuy({seqOfMotion, setOpen, getMotionsList}:RequestToBuy
       borderColor:'divider' 
       }} 
     >
-      <Toolbar sx={{ textDecoration:'underline' }} >
-        <h4>Request To Buy</h4>
-      </Toolbar>
-
         <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
           <TextField 
             variant='outlined'
-            label='SeqOfDeal'
+            label='PaidOfTarget'
             size="small"
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={(e) => setSeqOfDeal(parseInt(e.target.value ?? '0'))}
-            value={ seqOfDeal.toString() }
+            onChange={(e) => setPaidOfTarget(parseInt(e.target.value ?? '0'))}
+            value={ paidOfTarget.toString() }
           />
 
           <TextField 
             variant='outlined'
-            label='SeqOfTarget'
+            label='SeqOfPledge'
             size="small"
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={(e) => setSeqOfTarget(parseInt(e.target.value ?? '0'))}
-            value={ seqOfTarget.toString() }
+            onChange={(e) => setSeqOfPledge(parseInt(e.target.value ?? '0'))}
+            value={ seqOfPledge.toString() }
           />
 
           <Button 
@@ -88,8 +77,6 @@ export function RequestToBuy({seqOfMotion, setOpen, getMotionsList}:RequestToBuy
         </Stack>
 
     </Paper>
-
-
 
   );
   

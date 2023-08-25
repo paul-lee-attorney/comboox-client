@@ -31,19 +31,21 @@ import { dateParser, longDataParser, toAscii, toStr } from '../../../scripts/too
 import { currencies } from './GeneralInfo';
 
 
+export const defaultInfo: CompInfo = {
+  regNum: 0,
+  regDate: 0,
+  currency: 0,
+  symbol: '',
+  name: '',
+};
+
+
 interface SetCompIdProps {
   nextStep: (next: number) => void;
 }
 
 export function SetCompInfo({nextStep}: SetCompIdProps) {
 
-  const defaultInfo: CompInfo = {
-    regNum: 0,
-    regDate: 0,
-    currency: 0,
-    symbol: '',
-    name: '',
-  };
 
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
   const [ newInfo, setNewInfo] = useState<CompInfo>(defaultInfo);
@@ -141,13 +143,12 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
             </CardContent>
           </Card>
 
-          <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
+          <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
             <TextField 
               sx={{ m: 1, minWidth: 218 }} 
               id="tfNameOfComp" 
               label="CompanyName" 
               variant="outlined"
-              helperText="string (e.g. 'Comboox Inc.')"
               onChange={(e) => {
                 setCompInfo((v) => ({
                   ...v,
@@ -163,7 +164,6 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
               id="tfSymbolOfComp" 
               label="SymbolOfCompany" 
               variant="outlined"
-              helperText="string (e.g. 'COMBOOX')"
               onChange={(e) => {
                 setCompInfo((v) => ({
                   ...v,

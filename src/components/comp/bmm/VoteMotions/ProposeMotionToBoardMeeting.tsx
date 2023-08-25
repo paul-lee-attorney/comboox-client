@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperProposeMotionToBoard,
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { HexType } from "../../../interfaces";
+import { HexType } from "../../../../interfaces";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 
 interface ProposeMotionToBoardProps {

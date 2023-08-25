@@ -61,7 +61,7 @@ export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshLis
           >
             {actionsOfUser.map((v, i) => {
               if (i==0 && user?.backupKey.pubKey != AddrZero) return null;
-              if ((i==3 || i==4) && !isOwner ) return null;
+              if ((i==2 || i==3) && !isOwner ) return null;
               
 
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
@@ -91,7 +91,7 @@ export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshLis
 
       { compsOfAction.map((v,i)=>{
         if (i==0 && user?.backupKey.pubKey != AddrZero) return null;
-        if ((i==3 || i==4) && !isOwner ) return null;
+        if ((i==2 || i==3) && !isOwner ) return null;
 
         return (
           <Collapse key={i} in={ typeOfAction == i.toString() } >

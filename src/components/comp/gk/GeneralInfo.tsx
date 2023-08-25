@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
-import { dateParser, longDataParser, longSnParser, toStr } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, getGWeiPart, getWeiPart, longDataParser, longSnParser, toStr } from "../../../scripts/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
 import { Position, getFullPosInfo } from "../../../queries/rod";
@@ -17,13 +17,16 @@ import {
   useRegisterOfMembersOwnersEquity, 
   useRegisterOfMembersVotesOfController, 
   useGeneralKeeperGetCompUser,
-  useGeneralKeeperGetCompInfo
+  useGeneralKeeperGetCompInfo,
+  useRegCenterBalanceOf
 } from "../../../generated";
+
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
 import { User } from "../../../queries/rc";
-import { HexType } from "../../../interfaces";
-import { CompInfo } from "../../../queries/gk";
+import { AddrOfRegCenter, HexType } from "../../../interfaces";
+import { CompInfo, balanceOfGwei } from "../../../queries/gk";
+import { PickupDeposit } from "./PickupDeposit";
 
 
 export const currencies:string[] = [
@@ -115,6 +118,28 @@ export function GeneralInfo() {
     }
   })
 
+  const [ balanceOfCBP, setBalanceOfCBP ] = useState<string>('0');
+
+  const [ balanceOfETH, setBalanceOfETH ] = useState<string>('0');
+
+  const getGwei = async () => {
+    if (gk) {
+      let gwei = await balanceOfGwei(gk);
+      setBalanceOfETH(gwei.toString());
+    }
+  }
+
+  const {
+    refetch: getBalanceOf
+  } = useRegCenterBalanceOf({
+    address: AddrOfRegCenter,
+    args: gk ? [ gk ] : undefined,
+    onSuccess(amt) {
+      setBalanceOfCBP(amt.toString());
+      getGwei();
+    }
+  })
+
   return (
     <>
       <Paper elevation={3} 
@@ -125,7 +150,7 @@ export function GeneralInfo() {
           borderColor:'divider' 
         }} 
       >
-        <Stack direction='row' >
+        <Stack direction='row' sx={{ alignItems:'center' }} >
           
           <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
             <h3>General Info</h3>
@@ -135,6 +160,7 @@ export function GeneralInfo() {
             <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol }  />
           )}
 
+          <PickupDeposit getBalanceOf={getBalanceOf} />
 
         </Stack>
         <table width={1680}>
@@ -255,7 +281,7 @@ export function GeneralInfo() {
               <td>
                 {votesOfController && (
                   <TextField 
-                    value={ longDataParser(votesOfController) } 
+                    value={ centToDollar(votesOfController) } 
                     variant='outlined'
                     size='small' 
                     label="VotesOfController" 
@@ -270,7 +296,7 @@ export function GeneralInfo() {
               <td>
                 {par && (
                   <TextField 
-                    value={ longDataParser(par)} 
+                    value={ centToDollar(par)} 
                     variant='outlined'
                     size='small' 
                     label="RegisteredCapital" 
@@ -285,7 +311,7 @@ export function GeneralInfo() {
               <td>
                 {paid && (
                   <TextField 
-                    value={ longDataParser(paid) } 
+                    value={ centToDollar(paid) } 
                     variant='outlined'
                     size='small' 
                     label="PaidInCapital" 
@@ -298,6 +324,137 @@ export function GeneralInfo() {
                 )}
               </td>
             </tr>
+
+            <tr>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (Giga CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(balanceOfCBP.length > 27 ? balanceOfCBP.substring(0, balanceOfCBP.length - 27) : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfCBP.length > 18 
+                  ? balanceOfCBP.length > 27
+                    ? balanceOfCBP.substring(balanceOfCBP.length - 27, balanceOfCBP.length - 18)
+                    : balanceOfCBP.substring(0, balanceOfCBP.length - 18) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (GLee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGWeiPart(balanceOfCBP) }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (Lee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getWeiPart(balanceOfCBP)}
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (Giga ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(balanceOfETH.length > 27 ? balanceOfETH.substring(0, balanceOfETH.length - 27) : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfETH.length > 18 
+                  ? balanceOfETH.length > 27
+                    ? balanceOfETH.substring(balanceOfETH.length - 27, balanceOfETH.length - 18)
+                    : balanceOfETH.substring(0, balanceOfETH.length - 18) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (GWei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfETH.length > 9 
+                  ? balanceOfETH.length > 18
+                    ? balanceOfETH.substring(balanceOfETH.length - 18, balanceOfETH.length - 9)
+                    : balanceOfETH.substring(0, balanceOfETH.length - 9) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (Wei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfETH.length > 9
+                  ? balanceOfETH.substring(balanceOfETH.length - 9)
+                  : balanceOfETH
+                )}
+              />
+            </td>
+          </tr>
+
+
 
             <tr>
               <td colSpan={4}>

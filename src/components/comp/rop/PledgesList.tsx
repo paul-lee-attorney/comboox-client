@@ -1,7 +1,7 @@
 import { Chip, Paper, Toolbar } from "@mui/material";
 import { Pledge } from "../../../queries/rop";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { SearchPledge } from "./SearchPledge";
 
 
@@ -75,7 +75,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'pledgedPaid', 
       headerName: 'PledgedPaid',
-      valueGetter: p => longDataParser(p.row.body.paid.toString()),
+      valueGetter: p => centToDollar(p.row.body.paid.toString()),
       headerAlign: 'right',
       align:'right',
       width: 330,
@@ -120,7 +120,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       <Toolbar sx={{ textDecoration:'underline' }}>
-        <h4>Pledges List</h4>
+        <h3>Pledges List</h3>
       </Toolbar>
       
       <SearchPledge setPld={setPledge} setOpen={setOpen} />

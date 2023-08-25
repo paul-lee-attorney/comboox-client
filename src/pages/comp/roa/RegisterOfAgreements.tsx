@@ -19,7 +19,6 @@ import {
 
 import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
-import { AddrZero } from "../../../interfaces";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 

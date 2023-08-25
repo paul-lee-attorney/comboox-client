@@ -40,10 +40,6 @@ export function PickupShare({ ia, deal, setOpen, setDeal, refreshDealsList}: Act
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Pickup Share</h4>
-        </Toolbar> */}
-
         <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
           <TextField 

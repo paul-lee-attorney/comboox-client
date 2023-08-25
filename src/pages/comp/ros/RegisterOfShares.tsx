@@ -80,7 +80,7 @@ function RegisterOfShares() {
         <Stack direction="row" >
 
           <Toolbar sx={{ textDecoration:'underline' }} >
-            <h3>BOS - Book Of Shares</h3>
+            <h3>ROS - Register Of Shares</h3>
           </Toolbar>
 
           {boox && (

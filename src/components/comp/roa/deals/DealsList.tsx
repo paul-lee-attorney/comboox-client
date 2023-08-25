@@ -9,7 +9,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { Deal } from '../../../../queries/ia';
-import { longDataParser, longSnParser } from '../../../../scripts/toolsKit';
+import { centToDollar, longDataParser, longSnParser } from '../../../../scripts/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
 import { HexType } from '../../../../interfaces';
 
@@ -67,7 +67,7 @@ export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListP
     {
       field: 'paid',
       headerName: 'Paid',
-      valueGetter: p => longDataParser(p.row.body.paid.toString()),
+      valueGetter: p => centToDollar(p.row.body.paid.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
@@ -75,7 +75,7 @@ export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListP
     {
       field: 'par',
       headerName: 'Par',
-      valueGetter: p => longDataParser(p.row.body.par.toString()),
+      valueGetter: p => centToDollar(p.row.body.par.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
@@ -83,7 +83,7 @@ export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListP
     {
       field: 'priceOfPaid',
       headerName: 'Price',
-      valueGetter: p => longDataParser(p.row.head.priceOfPaid.toString()),
+      valueGetter: p => centToDollar(p.row.head.priceOfPaid.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
@@ -129,8 +129,6 @@ export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListP
         <Toolbar sx={{ textDecoration:'underline' }}>
           <h4>Deals List</h4>
         </Toolbar>
-
-        {/* <SetTypeOfIa ia={ia} isFinalized={isFinalized} /> */}
 
       </Stack>
 

@@ -203,7 +203,7 @@ export function InitBos({nextStep}: InitBosProps) {
                 <TextField 
                   sx={{ m: 1, minWidth: 120 }} 
                   id="tfPriceOfPaid" 
-                  label="PriceOfPaid" 
+                  label="PriceOfPaid (Cent)" 
                   variant="outlined"
                   helperText="Integer < 2^32 (e.g. '12345')"
                   onChange={(e) => {
@@ -223,7 +223,7 @@ export function InitBos({nextStep}: InitBosProps) {
                 <TextField 
                   sx={{ m: 1, minWidth: 120 }} 
                   id="tfPriceOfPar" 
-                  label="PriceOfPar" 
+                  label="PriceOfPar (Cent)" 
                   variant="outlined"
                   helperText="Integer < 2^32 (e.g. '12345')"
                   onChange={(e) => {
@@ -281,7 +281,7 @@ export function InitBos({nextStep}: InitBosProps) {
                 <TextField 
                   sx={{ m: 1, minWidth: 120 }} 
                   id="tfPaidAmount" 
-                  label="PaidAmount" 
+                  label="PaidAmount (Cent)" 
                   variant="outlined"
                   helperText="Number < 2^64 (e.g. '18000')"
                   onChange={(e) => {
@@ -301,7 +301,7 @@ export function InitBos({nextStep}: InitBosProps) {
                 <TextField 
                   sx={{ m: 1, minWidth: 120 }} 
                   id="tfPar" 
-                  label="ParAmount" 
+                  label="ParAmount (Cent)" 
                   variant="outlined"
                   helperText="Number < 2^64 (e.g, '18000')"
                   onChange={(e) => {

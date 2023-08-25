@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { AddrZero, HexType } from "../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { AddrZero, HexType } from "../../../../interfaces";
 
 import { 
   useGeneralKeeperExecAction,
-} from "../../../generated";
+} from "../../../../generated";
 
 import { 
   Button, 
@@ -21,7 +21,7 @@ import {
   RemoveCircle, 
   Surfing 
 } from "@mui/icons-material";
-import { HexParser } from "../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 export interface Action {
   target: HexType;
@@ -48,19 +48,6 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecA
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();
-
-  // const {
-  //   config: execActionConfig,
-  // } = usePrepareGeneralKeeperExecAction({
-  //   address: gk,
-  //   args: seqOfVr && desHash && seqOfMotion
-  //       ? [BigInt(seqOfVr), 
-  //         actions.map(v => (v.target)), 
-  //         actions.map(v => (BigInt(v.value))),
-  //         actions.map(v => (v.params)),
-  //         desHash, BigInt(seqOfMotion)]
-  //       : undefined,
-  // });
 
   const {
     isLoading: execActionLoading,

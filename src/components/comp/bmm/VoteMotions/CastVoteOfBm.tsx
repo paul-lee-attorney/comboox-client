@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 
 import { 
   useGeneralKeeperCastVote,
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 
 import { 
   Box, 
@@ -23,11 +23,11 @@ import {
 } from "@mui/material";
 
 import { HowToVote, } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../interfaces";
-import { VoteResult } from "../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../queries/meetingMinutes";
+import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
+import { VoteCase, getVoteResult } from "../../../../queries/meetingMinutes";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { HexParser } from "../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 interface CastVoteOfBmProps {
   seqOfMotion: bigint,

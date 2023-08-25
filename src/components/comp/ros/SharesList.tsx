@@ -6,7 +6,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
-import { dateParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
 import { Share } from '../../../queries/ros';
 
 const columns: GridColDef[] = [
@@ -44,7 +44,7 @@ const columns: GridColDef[] = [
   { 
     field: 'par', 
     headerName: 'Par',
-    valueGetter: p => longDataParser(p.row.body.par.toString()),
+    valueGetter: p => centToDollar(p.row.body.par.toString()),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -52,7 +52,7 @@ const columns: GridColDef[] = [
   { 
     field: 'paid', 
     headerName: 'Paid',
-    valueGetter: p => longDataParser(p.row.body.paid.toString()),
+    valueGetter: p => centToDollar(p.row.body.paid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -60,7 +60,7 @@ const columns: GridColDef[] = [
   { 
     field: 'clean', 
     headerName: 'CleanPaid',
-    valueGetter: p => longDataParser(p.row.body.cleanPaid.toString()),
+    valueGetter: p => centToDollar(p.row.body.cleanPaid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -99,7 +99,7 @@ export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }} >
 
       <Toolbar sx={{ textDecoration:'underline' }} >
-        <h4>Shares List</h4>
+        <h3>Shares List</h3>
       </Toolbar>
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 

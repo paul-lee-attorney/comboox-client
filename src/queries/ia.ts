@@ -72,70 +72,6 @@ export async function getTypeOfIA(ia: HexType):Promise<number>{
   return typeOfIa;
 }
 
-export async function counterOfDeal(ia: HexType):Promise<number>{
-  let counter = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'counterOfDeal',
-  });
-
-  return counter;
-}
-
-export async function counterOfClosedDeal(ia: HexType):Promise<number>{
-  let counter = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'counterOfClosedDeal',
-  });
-
-  return counter;
-}
-
-export async function isDeal(ia: HexType, seq:number):Promise<boolean>{
-  let flag = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'isDeal',
-    args: [BigInt(seq)],
-  });
-
-  return flag;
-}
-
-export async function getHeadOfDeal(ia: HexType, seq:number):Promise<Head>{
-  let head = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'getHeadOfDeal',
-    args: [BigInt(seq)],
-  });
-
-  return head;
-}
-
-export async function getBodyOfDeal(ia: HexType, seq:number):Promise<Body>{
-  let body = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'getBodyOfDeal',
-    args: [BigInt(seq)],
-  });
-
-  return body;
-}
-
-export async function getHashLockOfDeal(ia: HexType, seq:number):Promise<HexType>{
-  let lock = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'getHashLockOfDeal',
-    args: [BigInt(seq)],
-  });
-
-  return lock;
-}
-
 export async function getDeal(ia: HexType, seq:bigint):Promise<Deal>{
   let deal = await readContract({
     address: ia,
@@ -157,3 +93,13 @@ export async function getSeqList(ia: HexType):Promise<readonly bigint[]>{
   return list;
 }
 
+export async function checkValueOfSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number): Promise<bigint> {
+  let res = await readContract({
+    address: ia,
+    abi: investmentAgreementABI,
+    functionName: 'checkValueOfSwap',
+    args: [BigInt(seqOfDeal), BigInt(seqOfSwap)],
+  });
+
+  return res;
+}

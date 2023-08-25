@@ -34,7 +34,7 @@ export function ActionsOfOption({seqOfOpt, setOpen, getAllOpts}: ActionsOfOption
 
       <Stack direction={'row'} sx={{ alignItems:'center', color:'black' }} >
 
-        <Toolbar>
+        <Toolbar sx={{ textDecoration:'underline' }}>
           <h4>Type Of Action:</h4>
         </Toolbar>
 

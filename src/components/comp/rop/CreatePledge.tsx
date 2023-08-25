@@ -46,7 +46,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       <Toolbar sx={{ textDecoration:'underline' }} >
-        <h4>Create Pledge</h4>
+        <h3>Create Pledge</h3>
       </Toolbar>
 
       <Stack direction='row' sx={{m:1, p:1, alignItems:'center'}} >
@@ -70,7 +70,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
                     ...v,
                     seqOfShare: seq,
                   }));
-                  obtainPledgor(boox[10], seq).then(
+                  obtainPledgor(boox[9], seq).then(
                     pledgor => setHead(v => ({
                       ...v,
                       pledgor: pledgor,

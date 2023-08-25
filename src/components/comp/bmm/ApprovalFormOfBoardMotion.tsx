@@ -1,7 +1,7 @@
 import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/GetVotingRule";
-import { GetPosition } from "./GetPosition";
+import { GetPosition } from "../rod/GetPosition";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { HexType } from "../../../interfaces";
@@ -9,15 +9,16 @@ import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
 import { ExecActionOfGm } from "../gmm/ExecMotions/ExecActionOfGm";
-import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { getSnOfFile } from "../../../queries/filesFolder";
-import { ProposeMotionToBoardMeeting } from "./ProposeMotionToBoardMeeting";
-import { CastVoteOfBm } from "./CastVoteOfBm";
-import { VoteCountingOfBoard } from "./VoteCountingOfBoard";
-import { TakePosition } from "./TakePosition";
-import { RemoveOfficer } from "./RemoveOfficer";
-import { useMeetingMinutes, useMeetingMinutesVoteEnded } from "../../../generated";
+import { ProposeMotionToBoardMeeting } from "./VoteMotions/ProposeMotionToBoardMeeting";
+import { CastVoteOfBm } from "./VoteMotions/CastVoteOfBm";
+import { VoteCountingOfBoard } from "./VoteMotions/VoteCountingOfBoard";
+import { TakePosition } from "./ExecMotions/TakePosition";
+
+import { useMeetingMinutesVoteEnded } from "../../../generated";
+
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
+import { RemoveOfficer } from "./ExecMotions/RemoveOfficer";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
@@ -32,14 +33,6 @@ export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', '
 export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtainMotionsList }: ApprovalFormOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
-
-  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
-
-  // useEffect(()=>{
-  //   getVoteResult(minutes, motion.head.seqOfMotion).then(
-  //     list => setVoteResult(list)
-  //   )
-  // }, [minutes, motion]);
 
   const [ addrOfDoc, setAddrOfDoc ]=useState<HexType>();
   const [ snOfDoc, setSnOfDoc ] = useState<string>();
@@ -70,14 +63,6 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
   useEffect(()=>{
     queryVoteEnded();
   }, [queryVoteEnded, motion.body.state])
-
-  // useEffect(()=>{
-  //   voteEnded(minutes, motion.head.seqOfMotion).then(
-  //     flag => {
-  //       setVoteIsEnd(flag);
-  //     }
-  //   ); 
-  // }, [ minutes, motion ])
 
   const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
 
@@ -270,42 +255,9 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                 </tr>
               )}
 
-              {/* {motion.body.state > 2 && voteResult && (
-                <tr>
-                  <td>
-                    <BallotsList 
-                      addr={minutes}
-                      seqOfMotion={motion.head.seqOfMotion}
-                      attitude={ 1 }
-                      allVote={voteResult[0]}
-                      voteCase={voteResult[1]}
-                    />
-                  </td>
-                  <td>
-                    <BallotsList 
-                      addr={minutes}
-                      seqOfMotion={motion.head.seqOfMotion}
-                      attitude={ 3 }
-                      allVote={voteResult[0]}
-                      voteCase={voteResult[3]}
-                    />
-                  </td>
-                  <td>
-                    <BallotsList 
-                      addr={minutes}
-                      seqOfMotion={motion.head.seqOfMotion}
-                      attitude={ 2 }
-                      allVote={voteResult[0]}
-                      voteCase={voteResult[2]}
-                    />
-                  </td>                  
-                </tr>
-              )} */}
-
               {motion.body.state > 2 && (
                 <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
               )}
-
 
               {motion.body.state == 1 && (
                 <tr>
@@ -351,7 +303,6 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                   </td>
                 </tr>
               )}
-
 
             </tbody>
           </table>

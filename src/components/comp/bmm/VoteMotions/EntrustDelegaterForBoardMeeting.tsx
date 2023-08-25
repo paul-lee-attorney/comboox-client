@@ -2,12 +2,12 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperEntrustDelegaterForBoardMeeting,
-} from "../../../generated";
+} from "../../../../generated";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
-import { HexType } from "../../../interfaces";
+import { HexType } from "../../../../interfaces";
 
 interface EntrustDelegaterForBmProps {
   seqOfMotion: bigint,

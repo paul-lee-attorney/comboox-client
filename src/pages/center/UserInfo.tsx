@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AddrOfRegCenter } from "../../interfaces";
 import { Locker, User, getLocker } from "../../queries/rc";
 import { Divider, Paper, TextField, Toolbar } from "@mui/material";
@@ -10,6 +10,7 @@ import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
 import { useComBooxContext } from "../../scripts/ComBooxContext";
 import { CopyLongStrTF } from "../../components/common/utils/CopyLongStr";
 import { ActionsOfUser } from "../../components/center/ActionsOfUser";
+import { balanceOfGwei } from "../../queries/gk";
 
 
 function UserInfo() {
@@ -80,6 +81,22 @@ function UserInfo() {
     }
   })
 
+  const [ balanceOfETH, setBalanceOfETH ] = useState<string>('0');
+
+  useEffect(()=>{
+
+    const getGwei = async () => {
+      if (user) {
+        let gwei = await balanceOfGwei(user.primeKey.pubKey);
+        setBalanceOfETH(gwei.toString());
+      }
+    }
+
+    getGwei();
+  })  
+
+
+
   const [ open, setOpen ] = useState(false);
   const [ locker, setLocker ] = useState<Locker>();
 
@@ -97,75 +114,6 @@ function UserInfo() {
         <tbody>
         {userNo && (
           <>
-          <tr>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceAmt (GCbp)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(balance.length > 27 ? balance.substring(0, balance.length - 27) : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceAmt (CBP)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balance.length > 18 
-                  ? balance.length > 27
-                    ? balance.substring(balance.length - 27, balance.length - 18)
-                    : balance.substring(0, balance.length - 18) 
-                  : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceAmt (GLee)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balance.length > 9 
-                  ? balance.length > 18
-                    ? balance.substring(balance.length - 18, balance.length - 9)
-                    : balance.substring(0, balance.length - 9) 
-                  : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceAmt (Lee)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balance.length > 9
-                  ? balance.substring(balance.length - 9)
-                  : balance
-                )}
-              />
-            </td>
-          </tr>
-
           <tr>
             <td>
               <CopyLongStrTF size="body1" title='PrimeKey' src={user?.primeKey.pubKey.toLowerCase() ?? '-'} />
@@ -262,6 +210,146 @@ function UserInfo() {
               />
             </td>
           </tr>
+
+          <tr>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (Giga CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(balance.length > 27 ? balance.substring(0, balance.length - 27) : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balance.length > 18 
+                  ? balance.length > 27
+                    ? balance.substring(balance.length - 27, balance.length - 18)
+                    : balance.substring(0, balance.length - 18) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (GLee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balance.length > 9 
+                  ? balance.length > 18
+                    ? balance.substring(balance.length - 18, balance.length - 9)
+                    : balance.substring(0, balance.length - 9) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (Lee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balance.length > 9
+                  ? balance.substring(balance.length - 9)
+                  : balance
+                )}
+              />
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (Giga ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(balanceOfETH.length > 27 ? balanceOfETH.substring(0, balanceOfETH.length - 27) : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfETH.length > 18 
+                  ? balanceOfETH.length > 27
+                    ? balanceOfETH.substring(balanceOfETH.length - 27, balanceOfETH.length - 18)
+                    : balanceOfETH.substring(0, balanceOfETH.length - 18) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (GWei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfETH.length > 9 
+                  ? balanceOfETH.length > 18
+                    ? balanceOfETH.substring(balanceOfETH.length - 18, balanceOfETH.length - 9)
+                    : balanceOfETH.substring(0, balanceOfETH.length - 9) 
+                  : '0') }
+              />
+            </td>
+            <td>
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (Wei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                    balanceOfETH.length > 9
+                  ? balanceOfETH.substring(balanceOfETH.length - 9)
+                  : balanceOfETH
+                )}
+              />
+            </td>
+          </tr>
+
+
 
           <tr>
             <td colSpan={ 5 } >

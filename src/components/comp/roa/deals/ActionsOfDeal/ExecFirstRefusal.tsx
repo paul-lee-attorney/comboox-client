@@ -3,7 +3,7 @@ import { Bytes32Zero, HexType } from "../../../../../interfaces";
 import { defaultDeal } from "../../../../../queries/ia";
 import { useRegisterOfConstitutionPointer, useGeneralKeeperExecFirstRefusal } from "../../../../../generated";
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
-import { EmojiPeopleOutlined, LocalDrinkOutlined } from "@mui/icons-material";
+import { EmojiPeopleOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FirstRefusalRule } from "../../../roc/rules/SetFirstRefusalRule";
@@ -52,6 +52,8 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
     }
   })
 
+  const typesOfDeal = ['Capital Increase', 'Share Transfer (Ext)'];
+
   return (
 
     <Paper elevation={3} sx={{
@@ -66,17 +68,18 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
 
             <Stack direction='row' sx={{ alignItems:'center' }} >
 
-              <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+              <FormControl variant="outlined" size="small" sx={{ m: 1}}>
                 <InputLabel id="seqOfRule-label">SeqOfRule</InputLabel>
                 <Select
                   labelId="seqOfRule-label"
                   id="seqOfRule-select"
                   label="SeqOfRule"
+                  sx={{ minWidth: 258 }} 
                   value={ seqOfRule }
                   onChange={(e) => setSeqOfRule(Number(e.target.value))}
                 >
                   {rules && rules.map((v, i) => (
-                    <MenuItem key={v.seqOfRule} value={v.seqOfRule} > {v.seqOfRule} - {v.typeOfDeal} </MenuItem>
+                    <MenuItem key={v.seqOfRule} value={v.seqOfRule} > {v.seqOfRule} - { typesOfDeal[v.typeOfDeal - 1]} </MenuItem>
                   ))}
                 </Select>
               </FormControl>

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 
 import { 
   useGeneralKeeperCreateMotionToRemoveOfficer, 
   useGeneralKeeperNominateOfficer, 
-} from "../../../generated";
+} from "../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
@@ -20,15 +20,6 @@ export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficer
   const [ seqOfPos, setSeqOfPos ] = useState<number>();
   const [ candidate, setCandidate ] = useState<number>();
 
-  // const {
-  //   config: addOfficerConfig
-  // } = usePrepareGeneralKeeperNominateOfficer({
-  //   address: gk,
-  //   args: seqOfPos && candidate
-  //         ? [BigInt(seqOfPos), BigInt(candidate)]
-  //         : undefined,
-  // });
-
   const {
     isLoading: addOfficerLoading,
     write: addOfficer,
@@ -41,15 +32,6 @@ export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficer
       getMotionsList();
     }
   });
-
-  // const {
-  //   config: removeOfficerConfig
-  // } = usePrepareGeneralKeeperCreateMotionToRemoveOfficer({
-  //   address: gk,
-  //   args: seqOfPos 
-  //         ? [ BigInt(seqOfPos)]
-  //         : undefined,
-  // });
 
   const{
     isLoading: removeOfficerLoading,
@@ -86,19 +68,19 @@ export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficer
         </Tooltip>
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='SeqOfPos'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => setSeqOfPos(parseInt(e.target.value))}
           value={ seqOfPos }
-          size='small'
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Candidate'
           sx={{
             m:1,

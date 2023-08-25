@@ -1,5 +1,5 @@
-import { useGeneralKeeperQuitPosition } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useGeneralKeeperQuitPosition } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Button } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 
@@ -13,13 +13,6 @@ interface QuitPositionProps{
 export function QuitPosition({seq, setOpen, refreshPosition}: QuitPositionProps) {
 
   const { gk } = useComBooxContext();
-
-  // const {
-  //   config: quitPositionConfig
-  // } = usePrepareGeneralKeeperQuitPosition({
-  //   address: gk,
-  //   args: [BigInt(seq)],
-  // })
 
   const {
     isLoading: quitPositionLoading,

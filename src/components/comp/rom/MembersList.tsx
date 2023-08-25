@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Paper, Toolbar, Box } from '@mui/material';
 
 import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
-import { dateParser, longSnParser } from '../../../scripts/toolsKit';
+import { centToDollar, dateParser, longSnParser } from '../../../scripts/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MemberShareClip, getEquityList, getMembersList } from '../../../queries/rom';
 import { useRegisterOfMembersMembersList } from '../../../generated';
@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
   {
     field: 'par',
     headerName: 'Par',
-    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.clip.par.toString())),
+    valueGetter: (p) => centToDollar(p.row.clip.par.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',
@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
   {
     field: 'paid',
     headerName: 'Paid',
-    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.clip.paid.toString())),
+    valueGetter: (p) => centToDollar(p.row.clip.paid.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',
@@ -42,7 +42,7 @@ const columns: GridColDef[] = [
   {
     field: 'clean',
     headerName: 'CleanPaid',
-    valueGetter: (p) => (new Intl.NumberFormat().format(p.row.clip.cleanPaid.toString())),
+    valueGetter: (p) => centToDollar(p.row.clip.cleanPaid.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',
@@ -64,21 +64,6 @@ export function MembersEquityList() {
         )
     }
   })
-
-
-  // useEffect(()=>{
-  //   if (boox) {
-  //     getMembersList(boox[4]).then(
-  //       list => {
-  //         getEquityList(boox[4], list).then(
-  //           ls => {
-  //             setEquityList(ls);
-  //           }
-  //         )
-  //       }
-  //     )
-  //   }
-  // });
 
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >

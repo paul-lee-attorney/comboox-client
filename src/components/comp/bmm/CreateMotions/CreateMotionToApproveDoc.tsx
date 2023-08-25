@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { HexType } from "../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { HexType } from "../../../../interfaces";
 
 import { 
   useGeneralKeeperCreateMotionToApproveDoc, 
-} from "../../../generated";
+} from "../../../../generated";
 
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/toolsKit";
 
 interface CreateMotionToApproveDoc {
   getMotionsList: () => any;
@@ -21,15 +21,6 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
   const [ doc, setDoc ] = useState<HexType>();
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
-
-  // const {
-  //   config: proposeDocConfig,
-  // } = usePrepareGeneralKeeperCreateMotionToApproveDoc({
-  //   address: gk,
-  //   args: doc && seqOfVr && executor
-  //         ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
-  //         : undefined,
-  // });
 
   const {
     isLoading: proposeDocLoading,
@@ -51,8 +42,9 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
       <Stack direction="row" sx={{ alignItems:'center' }} >
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='AddressOfDoc'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -62,8 +54,9 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='SeqOfVR'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,
@@ -73,8 +66,9 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
         />
 
         <TextField 
-          variant='filled'
+          variant='outlined'
           label='Executor'
+          size="small"
           sx={{
             m:1,
             minWidth: 218,

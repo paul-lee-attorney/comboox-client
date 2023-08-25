@@ -138,7 +138,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
     let seq = parseInt(e.target.value ?? '0');
 
     if (seq > 0 && boox) {
-      getShare(boox[10], seq).then(
+      getShare(boox[9], seq).then(
         res => {
           if (res)
             setHead(v => ({
@@ -156,19 +156,9 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
 
   return (
     <Paper elevation={3} sx={{p:1, m:1, border: 1, borderColor:'divider' }} >
-
-      {/* <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >         */}
-        {/* <Box sx={{ minWidth:600 }} > */}
-          <Toolbar sx={{ textDecoration:'underline' }}>
-            <h4>Create Deal</h4>
-          </Toolbar>
-        {/* </Box> */}
-        
-        {/* <SetTypeOfIa ia={ia} /> */}
-
-      {/* </Stack> */}
-
-      {/* <Divider sx={{ m:1 }} flexItem /> */}
+      <Toolbar sx={{ textDecoration:'underline' }}>
+        <h4>Create Deal</h4>
+      </Toolbar>
 
       <Stack direction='row' sx={{ alignItems:'center' }} >
 
@@ -226,7 +216,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='PriceOfPaid'
+              label='PriceOfPaid (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,
@@ -241,7 +231,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='PriceOfPar'
+              label='PriceOfPar (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,
@@ -307,7 +297,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='QtyOfPaid'
+              label='Paid (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,
@@ -323,7 +313,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='QtyOfPar'
+              label='Par (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,

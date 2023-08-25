@@ -29,7 +29,7 @@ export function DelShare ({getList}:DelShareProps) {
     isLoading: delShareLoading,
     write: delShare
   } = useBookOfSharesDecreaseCapital({
-    address: boox ? boox[10] : undefined,
+    address: boox ? boox[9] : undefined,
     args: seq && share
         ? [BigInt(seq), share.body.paid, share.body.par]
         : undefined,

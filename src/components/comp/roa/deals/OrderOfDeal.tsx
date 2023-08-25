@@ -1,14 +1,19 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Deal } from "../../../../queries/ia";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { StateOfDeal, TypeOfDeal } from "./CreateDeal";
-import { dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
+import { centToDollar, dateParser, longSnParser } from "../../../../scripts/toolsKit";
 import { DeleteDeal } from "./DeleteDeal";
 import { HexType } from "../../../../interfaces";
 import { ActionsOfDeal } from "./ActionsOfDeal";
 import { GetDTClaims } from "./GetDTClaims";
-
-
+import { CheckValueOfDeal } from "./CheckValueOfDeal";
+import { GetFRClaims } from "./GetFRClaims";
+import { useFilesFolderClosingDeadline, useFilesFolderDtExecDeadline, useFilesFolderFrExecDeadline, useFilesFolderGetFile, useFilesFolderTerminateStartpoint, useFilesFolderVotingDeadline, useInvestmentAgreementGetAllSwaps } from "../../../../generated";
+import { Swap } from "../../../../queries/roo";
+import { SwapsList } from "./SwapsList";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { usePublicClient } from "wagmi";
 
 interface OrderOfDealProps {
   ia: HexType;
@@ -20,8 +25,123 @@ interface OrderOfDealProps {
   refreshDealsList: ()=>void;
 }
 
+export interface Timeline {
+  frDeadline: number;
+  dtDeadline: number;
+  terminateStart: number;
+  votingDeadline: number;
+  closingDeadline: number;
+  stateOfFile: number;
+}
+
+export const defaultTimeline: Timeline = {
+  frDeadline: 0,
+  dtDeadline: 0,
+  terminateStart: 0,
+  votingDeadline: 0,
+  closingDeadline: 0,
+  stateOfFile: 0,
+}
+
 export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, refreshDealsList}: OrderOfDealProps) {
 
+  const { boox } = useComBooxContext();
+
+  const [ swaps, setSwaps ] = useState<readonly Swap[]>();
+  
+  const {
+    refetch: getAllSwaps
+  } = useInvestmentAgreementGetAllSwaps({
+    address: ia,
+    args: [ BigInt(deal.head.seqOfDeal) ],
+    onSuccess(res) {
+      if (res.length > 0)
+        setSwaps(res);
+    }
+  })
+
+  const [ timeline, setTimeline ] = useState<Timeline>(defaultTimeline);
+
+  useFilesFolderFrExecDeadline({
+    address: boox ? boox[6]: undefined,
+    args: [ia],
+    onSuccess(res){
+      setTimeline(v => ({
+        ...v,
+        frDeadline: res,
+      }));
+    }
+  });
+
+  useFilesFolderDtExecDeadline({
+    address: boox ? boox[6]: undefined,
+    args: [ia],
+    onSuccess(res){
+      setTimeline(v => ({
+        ...v,
+        dtDeadline: res,
+      }));
+    }
+  });
+
+  useFilesFolderTerminateStartpoint({
+    address: boox ? boox[6]: undefined,
+    args: [ia],
+    onSuccess(res){
+      setTimeline(v => ({
+        ...v,
+        terminateStart: res,
+      }));
+    }
+  });
+
+  useFilesFolderVotingDeadline({
+    address: boox ? boox[6]: undefined,
+    args: [ia],
+    onSuccess(res){
+      setTimeline(v => ({
+        ...v,
+        votingDeadline: res,
+      }));
+    }
+  });
+
+  useFilesFolderClosingDeadline({
+    address: boox ? boox[6]: undefined,
+    args: [ia],
+    onSuccess(res){
+      setTimeline(v => ({
+        ...v,
+        closingDeadline: res,
+      }));
+    }
+  });
+
+  useFilesFolderGetFile({
+    address: boox ? boox[6]: undefined,
+    args: [ia],
+    onSuccess(res){
+      setTimeline(v => ({
+        ...v,
+        stateOfFile: res.head.state,
+      }));
+    }
+  });
+
+  const provider = usePublicClient();
+
+  const [ timestamp, setTimestamp ] = useState<number>(0);
+  
+  useEffect(()=>{
+    const getTimestamp = async () => {
+      let block = await provider.getBlock();
+      setTimestamp(Number(block.timestamp));
+    }
+
+    getTimestamp();
+  })
+
+  
   return (
     <Dialog
       maxWidth={false}
@@ -178,7 +298,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   sx={{
                     m:1,
                   }}
-                  value={ longDataParser(deal.head.priceOfPaid.toString()) }
+                  value={ centToDollar(deal.head.priceOfPaid.toString()) }
                 />
               </td>
               <td>
@@ -191,10 +311,10 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   sx={{
                     m:1,
                   }}
-                  value={ longDataParser(deal.head.priceOfPar.toString()) }
+                  value={ centToDollar(deal.head.priceOfPar.toString()) }
                 />
               </td>
-              <td rowSpan={2}>
+              <td rowSpan={ 2 }>
                 <TextField 
                   variant='outlined'
                   fullWidth
@@ -202,13 +322,13 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   inputProps={{readOnly: true}}
                   size="small"
                   multiline
-                  rows={3.5}
+                  rows={ 3.5 }
                   sx={{
                     m:1,
                   }}
-                  value={ longDataParser(
-                    ((deal.body.par - deal.body.paid) * BigInt(deal.head.priceOfPar) 
-                    + (deal.body.paid * BigInt(deal.head.priceOfPaid))).toString()  
+                  value={ centToDollar(
+                    (((deal.body.par - deal.body.paid) * BigInt(deal.head.priceOfPar) 
+                    + (deal.body.paid * BigInt(deal.head.priceOfPaid))) / BigInt(100)).toString()  
                   )}
                 />
               </td>
@@ -238,7 +358,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   sx={{
                     m:1,
                   }}
-                  value={ longDataParser(deal.body.paid.toString()) }
+                  value={ centToDollar(deal.body.paid.toString()) }
                 />
               </td>
               <td>
@@ -251,20 +371,31 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   sx={{
                     m:1,
                   }}
-                  value={ longDataParser(deal.body.par.toString()) }
+                  value={ centToDollar(deal.body.par.toString()) }
                 />
               </td>
             </tr>
 
             <tr>
-              <td colSpan={4}>
-                <GetDTClaims ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />
+              <td>
+                <GetDTClaims ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} timeline={timeline} timestamp={timestamp}/>
+              </td>
+              <td>
+                <GetFRClaims ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} timeline={timeline} timestamp={timestamp}/>
+              </td>
+              <td>
+                <SwapsList ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />
+              </td>
+              <td>
+                <CheckValueOfDeal ia={ia} deal={deal} />
               </td>
             </tr>
 
             <tr>
               <td colSpan={4}>
-                <ActionsOfDeal ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />
+                {deal.body.state > 0 && (
+                  <ActionsOfDeal ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} timeline={timeline} timestamp={timestamp} />
+                )}
               </td>
             </tr>
 

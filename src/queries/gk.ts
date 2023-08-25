@@ -1,4 +1,4 @@
-import { readContract } from "@wagmi/core";
+import { readContract, fetchBalance } from "@wagmi/core";
 import { AddrZero, HexType } from "../interfaces";
 import { generalKeeperABI } from "../generated";
 import { getDK, getOwner } from "./accessControl";
@@ -6,7 +6,7 @@ import { toStr } from "../scripts/toolsKit";
 
 export const nameOfBooks = [
   'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 
-  'ROA', 'ROO', 'ROP', 'BOS', 'ROS'
+  'ROA', 'ROO', 'ROP', 'ROS'
 ]
 
 export const titleOfKeepers = [
@@ -82,7 +82,7 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<11; i++) {
+  for (let i = 1; i<10; i++) {
  
     let addr = await getKeeper(gk, i);
     let owner = await getOwner(addr);
@@ -135,4 +135,12 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
   return info;
 }
 
+export async function balanceOfGwei(gk: HexType):Promise<bigint>{
+  let res = await fetchBalance({
+    address: gk,
+    formatUnits: 'gwei'
+  })
+
+  return res.value;
+}
 

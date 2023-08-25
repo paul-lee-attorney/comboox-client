@@ -92,3 +92,77 @@ export function toAscii(input: string): string {
   return str;
 }
 
+export function weiToEth(input: string): string {
+
+  let len = input.length;
+
+  let dec = len > 18
+          ? input.substring(len - 18, len - 9)
+          : len > 9
+            ? input.substring(0, len-9).padStart(9, '0')
+            : '-';
+
+  let int = len > 18
+          ? longDataParser(input.substring(0, len - 18))
+          : '0';
+
+  return int + '.' + dec;
+}
+
+export function getEthPart(input: string): string {
+  
+  let len = input.length;
+
+  let res = len > 18
+          ? longDataParser(input.substring(0, len - 18))
+          : '-'
+
+  return res;
+}
+
+export function getGWeiPart(input: string): string {
+  
+  let len = input.length;
+
+  let res = len > 9
+          ? len > 18
+            ? longDataParser(input.substring(len - 18, len - 9))
+            : longDataParser(input.substring(0, len - 9))
+          : '-'
+
+  return res;
+}
+
+export function getWeiPart(input: string): string {
+  let len = input.length;
+
+  let res = len > 9
+            ? longDataParser(input.substring(len - 9))
+            : longDataParser(input)
+
+  return res;
+}
+
+export function centToDollar(input: string): string {
+  let len = input.length;
+
+  let dec = len > 2
+          ? input.substring(len - 2)
+          : input.padStart(2, '0');
+
+  // if (dec == '00') dec = '-';
+
+  let int = len > 2
+          ? longDataParser(input.substring(0, len-2))
+          : '0'
+
+  return int + '.' + dec;
+}
+
+export function removeKiloSymbol(input: string): string {
+  let reg = new RegExp(",", "g");
+  let out = input.replace(reg, "");
+  return out;
+}
+
+

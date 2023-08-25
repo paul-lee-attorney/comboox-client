@@ -5,8 +5,8 @@ import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMot
 
 import { Motion, getMotion } from "../../../queries/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
-import { CreateMotionOfBoardMeeting } from "../../../components/comp/rod/CreateMotionOfBoardMeeting";
-import { ApprovalFormOfBoardMotion } from "../../../components/comp/rod/ApprovalFormOfBoardMotion";
+import { CreateMotionOfBoardMeeting } from "../../../components/comp/bmm/CreateMotionOfBoardMeeting";
+import { ApprovalFormOfBoardMotion } from "../../../components/comp/bmm/ApprovalFormOfBoardMotion";
 import { CopyLongStrSpan, CopyLongStrTF } from "../../../components/common/utils/CopyLongStr";
 
 
@@ -54,7 +54,7 @@ function BoardMeetingMinutes() {
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
       <Stack direction='row' >
-        <Toolbar>
+        <Toolbar sx={{ textDecoration:'underline' }} >
           <h3>BMM - Board Meeting Minutes </h3>
         </Toolbar>
         {boox && (

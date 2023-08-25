@@ -6,28 +6,26 @@ import {
   Paper, Radio, RadioGroup, 
   Stack, Toolbar, 
 } from "@mui/material";
-
-import { CreateMotionForBoardSeats } from "./CreateMotions/CreateMotionForBoardSeats";
-import { CreateMotionForDoc } from "./CreateMotions/CreateMotionForDoc";
-import { CreateMotionForAction } from "./CreateMotions/CreateMotionForAction";
+import { CreateMotionForOfficer } from "./CreateMotions/CreateMotionForOfficer";
+import { CreateMotionToApproveDoc } from "./CreateMotions/CreateMotionToApproveDoc";
+import { CreateAction } from "./CreateMotions/CreateAction";
 import { ProposeToTransferFund } from "./CreateMotions/ProposeToTransferFund";
 
 export interface CreateMotionProps {
   getMotionsList: () => any,
 }
 
+export function CreateMotionOfBoardMeeting({ getMotionsList }: CreateMotionProps) {
 
+  const nameOfTypes = ['Nominate/Remove Officer', 'Approve Document', 'Transfer Fund', 'Approve Action'];
 
-export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
-
-  const nameOfTypes = ['Nominate/Remove Director', 'Approve Document', 'Transfer Fund', 'Approve Action'];
   const compOfTypes = [
-    <CreateMotionForBoardSeats key={0} getMotionsList={getMotionsList} />,
-    <CreateMotionForDoc key={1} getMotionsList={getMotionsList} />,
+    <CreateMotionForOfficer key={0} getMotionsList={getMotionsList} />,
+    <CreateMotionToApproveDoc key={1} getMotionsList={getMotionsList} />,
     <ProposeToTransferFund key={2} getMotionsList={getMotionsList} />,
-    <CreateMotionForAction key={3} getMotionsList={getMotionsList} />,
+    <CreateAction key={3} getMotionsList={getMotionsList} />,
   ]
-  
+
   const [ typeOfMotion, setTypeOfMotion ] = useState<number>(0);
 
   return (
@@ -44,12 +42,13 @@ export function CreateMotionOfGm({ getMotionsList }: CreateMotionProps) {
           row
           aria-labelledby="createMotionRadioGrup"
           name="createMotionRadioGroup"
-          onChange={(e)=>(setTypeOfMotion(parseInt(e.target.value ?? '0')))}
+          onChange={(e)=>setTypeOfMotion(parseInt(e.target.value ?? '0'))}
           defaultValue={0}
         >
           {nameOfTypes.map((v,i) => (
             <FormControlLabel key={i} value={i} control={<Radio size='small' />} label={v} />
           ))}
+
         </RadioGroup>
 
       </Stack>

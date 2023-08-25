@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { AddrZero, Bytes32Zero, HexType } from "../../../../interfaces";
 
 import { 
-  useGeneralKeeperCreateActionOfGm, 
+  useGeneralKeeperCreateAction,
 } from "../../../../generated";
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
@@ -23,17 +23,16 @@ const defaultAction: Action = {
   params: `0x${'00'}`,
 }
 
-interface CreateMotionForDocProps {
+interface CreateActionProps {
   getMotionsList: () => any;
 }
 
-export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) {
+export function CreateAction({getMotionsList}:CreateActionProps) {
 
   const { gk, boox } = useComBooxContext();
 
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
-
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
 
@@ -42,7 +41,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
-  } = useGeneralKeeperCreateActionOfGm({
+  } = useGeneralKeeperCreateAction({
     address: gk,
     args: seqOfVr && desHash && executor
         ? [BigInt(seqOfVr), 
@@ -76,6 +75,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
 
       <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
+
         <Stack direction="row" sx={{ alignItems:'center' }} >
 
           <Tooltip
@@ -158,11 +158,13 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
           </Button>
 
         </Stack>
+
       </Paper>
 
       {actions.map((v, i)=>(
         <Paper key={i} elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-          <Stack  direction="row" sx={{ alignItems:'center' }} >
+
+          <Stack direction="row" sx={{ alignItems:'center' }} >
 
             <Typography color='black' sx={{ml:1, mr:2}}  >
               Step: {i+1}
@@ -220,6 +222,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
             />
 
           </Stack>
+        
         </Paper>
       ))}
 

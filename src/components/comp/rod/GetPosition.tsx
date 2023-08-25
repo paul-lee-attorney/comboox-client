@@ -7,7 +7,7 @@ import { useRegisterOfDirectorsGetPosition } from "../../../generated";
 import { dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { titleOfPositions } from "../roc/rules/SetPositionAllocateRule";
 import { Position } from "../../../queries/rod";
-import { QuitPosition } from "./QuitPosition";
+import { QuitPosition } from "../bmm/ExecMotions/QuitPosition";
 import { GetVotingRule } from "../roc/rules/GetVotingRule";
 
 

@@ -1,19 +1,24 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Deal } from "../../../../queries/ia";
 import { HexType } from "../../../../interfaces";
-import { PushToCoffer } from "./Actions/PushToCoffer";
-import { PickupShare } from "./Actions/PickupShare";
-import { IssueShare } from "./Actions/IssueShare";
-import { TransferShare } from "./Actions/TransferShare";
-import { TerminateDeal } from "./Actions/TerminateDeal";
-import { ExecDragAlong } from "./Actions/ExecDragAlong";
-import { ExecTagAlong } from "./Actions/ExecTagAlong";
-import { ExecAntiDilution } from "./Actions/ExecAntiDilution";
-import { ExecFirstRefusal } from "./Actions/ExecFirstRefusal";
-import { TakeGiftShares } from "./Actions/TakeGiftShares";
-import { AcceptFirstRefusal } from "./Actions/AcceptFirstRefusal";
+import { PushToCoffer } from "./ActionsOfDeal/PushToCoffer";
+import { PickupShare } from "./ActionsOfDeal/PickupShare";
+import { IssueShare } from "./ActionsOfDeal/IssueShare";
+import { TransferShare } from "./ActionsOfDeal/TransferShare";
+import { TerminateDeal } from "./ActionsOfDeal/TerminateDeal";
+import { ExecDragAlong } from "./ActionsOfDeal/ExecDragAlong";
+import { ExecTagAlong } from "./ActionsOfDeal/ExecTagAlong";
+import { ExecAntiDilution } from "./ActionsOfDeal/ExecAntiDilution";
+import { ExecFirstRefusal } from "./ActionsOfDeal/ExecFirstRefusal";
+import { TakeGiftShares } from "./ActionsOfDeal/TakeGiftShares";
+import { PayOffApprovedDeal } from "./ActionsOfDeal/PayOffApprovedDeal";
+import { RequestToBuy } from "./ActionsOfDeal/RequestToBuy";
+import { useFilesFolderClosingDeadline, useFilesFolderDtExecDeadline, useFilesFolderFrExecDeadline, useFilesFolderGetFile, useFilesFolderTerminateStartpoint, useFilesFolderVotingDeadline } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { usePublicClient } from "wagmi";
+import { Timeline } from "./OrderOfDeal";
 
 export interface ActionsOfDealProps{
   ia: HexType;
@@ -23,29 +28,82 @@ export interface ActionsOfDealProps{
   refreshDealsList: ()=>void;
 }
 
-export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps) {
+export interface ActionsOfDealCenterProps extends ActionsOfDealProps{
+  timeline: Timeline;
+  timestamp: number;
+}
+
+export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
   const actionsOfDeal = [
-    'PushToCoffer', 'PickupShare', 'IssueShare', 'TransferShare', 'TerminateDeal',
-    'DragAlong', 'TagAlong', 'AntiDilution', 'FirstRefusal', 'TakeGift', 'AcceptFirstRefusal'
+    'FirstRefusal', 'AntiDilution', 'DragAlong', 'TagAlong', 'PushToCoffer',
+    'IssueShare', 'TransferShare', 'PayOffApprovedDeal', 'RequestToBuy', 'PickupShare', 
+    'TerminateDeal', 'TakeGift',
   ]
 
   const compsOfAction = [
-    <PushToCoffer key={0} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <PickupShare key={1} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <IssueShare key={2} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <TransferShare key={3} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <TerminateDeal key={4} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecDragAlong key={5} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecTagAlong key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecAntiDilution key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecFirstRefusal key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <TakeGiftShares key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <AcceptFirstRefusal key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />
+    <ExecFirstRefusal key={0} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <ExecAntiDilution key={1} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <ExecDragAlong key={2} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <ExecTagAlong key={3} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <PushToCoffer key={4} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <IssueShare key={5} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <TransferShare key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <PayOffApprovedDeal key={7} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <RequestToBuy key={8} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <PickupShare key={9} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <TerminateDeal key={10} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <TakeGiftShares key={11} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
   ]
 
+  let activeSteps:number[] = [];
+      
+  if ( timestamp < timeline.frDeadline ) {
+
+      if (deal.head.typeOfDeal == 1) activeSteps = [ 0, 1 ];
+      else activeSteps = [ 0 ];
+
+  } else if ( timestamp < timeline.dtDeadline ) {
+
+      if (deal.head.typeOfDeal == 1) activeSteps = [ 1 ];
+      else activeSteps = [ 2, 3 ];
+
+  } else if ( timestamp < timeline.terminateStart ) {
+
+      if (deal.head.typeOfDeal == 1) activeSteps = [ 1 ];
+      else activeSteps = [];
+
+  } else if ( timestamp < timeline.votingDeadline && timeline.stateOfFile < 3 ) {
+      activeSteps = [ 10 ];
+
+  } else if ( timestamp < timeline.closingDeadline ) {
+
+      if (timeline.stateOfFile == 4) {
+        
+        if (deal.body.state == 1) {
+
+          if (deal.head.typeOfDeal == 1) activeSteps = [ 4, 5, 7 ];
+          else activeSteps = [ 4, 6, 7 ];
+
+        } else if (deal.body.state == 2) {
+
+          if (deal.head.typeOfDeal == 1) activeSteps = [ 5, 7, 9 ];
+          else activeSteps = [ 6, 7, 9 ];
+
+        } else activeSteps = [];
+
+      } else if (timeline.stateOfFile == 5) {
+        activeSteps = [ 10 ];
+        if (deal.head.typeOfDeal == 2 || deal.head.typeOfDeal == 3) 
+          activeSteps.push(8);
+      } 
+
+  } else if ( timestamp >= timeline.closingDeadline && timeline.stateOfFile > 1 ) {
+    activeSteps = [10, 11];
+  } 
+  
   return(
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
       <Stack direction={'row'} sx={{ alignItems:'center', color:'black' }} >
@@ -63,18 +121,19 @@ export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList}: Ac
             value={ typeOfAction }
             onChange={(e) => setTypeOfAction(e.target.value)}
           >
-            {actionsOfDeal.map((v, i) => (
-              <MenuItem key={v} value={i} > <b>{v}</b> </MenuItem>
+            {activeSteps && activeSteps.map((v, i) => (
+              <MenuItem key={i} value={ v } > <b>{ actionsOfDeal[ v ] }</b> </MenuItem>
             ))}
+
           </Select>
         </FormControl>
 
       </Stack>
 
-      {compsOfAction.map((v,i)=>(
-        <Collapse key={i} in={ typeOfAction == i.toString() } >
-          {v}
-        </Collapse>
+      {activeSteps && activeSteps.map((v, i) => (
+        <Collapse key={i} in={ typeOfAction == v.toString() } >
+          { compsOfAction[ v ] }
+        </Collapse>        
       ))}
 
     </Paper>

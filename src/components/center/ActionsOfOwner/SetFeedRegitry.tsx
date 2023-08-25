@@ -2,7 +2,7 @@
 import { Button, Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useGeneralKeeperSetFeedRegistry,
+  useRegCenterSetFeedRegistry,
 } from '../../../generated';
 
 import { AddrOfRegCenter, HexType } from '../../../interfaces';
@@ -22,7 +22,7 @@ export function SetFeedRegistry({refreshPage}:ActionsOfOwnerProps) {
   const {
     isLoading: setFeedRegLoading,
     write: setFeedReg
-  } = useGeneralKeeperSetFeedRegistry({
+  } = useRegCenterSetFeedRegistry({
     address: AddrOfRegCenter,
     args: newFeed ? [newFeed] : undefined,
     onSuccess() {
