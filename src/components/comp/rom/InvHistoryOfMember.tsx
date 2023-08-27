@@ -1,0 +1,102 @@
+import { Dispatch, SetStateAction, useState } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
+
+import { useComBooxContext } from '../../../scripts/ComBooxContext';
+
+import { centToDollar, dateParser, longSnParser } from '../../../scripts/toolsKit';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { ShareClip } from '../../../queries/rom';
+import { useRegisterOfMembersGetVotesHistory } from '../../../generated';
+
+const columns: GridColDef[] = [
+  {
+    field: 'timestamp',
+    headerName: 'timestamp',
+    valueGetter: (p) => dateParser(p.row.timestamp),
+    width: 218,
+  },
+  {
+    field: 'paid',
+    headerName: 'Paid',
+    valueGetter: (p) => centToDollar(p.row.paid.toString()),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+  {
+    field: 'par',
+    headerName: 'Par',
+    valueGetter: (p) => centToDollar(p.row.par.toString()),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+  {
+    field: 'clean',
+    headerName: 'CleanPaid',
+    valueGetter: (p) => centToDollar(p.row.cleanPaid.toString()),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+]
+
+interface InvHistoryOfMemberProps {
+  acct: number;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;  
+}
+
+export function InvHistoryOfMember({acct, open, setOpen}: InvHistoryOfMemberProps) {
+  const { boox } = useComBooxContext();
+
+  const [ invHistory, setInvHistory ] = useState<readonly ShareClip[]>();
+
+  const {
+    refetch: getVotesHistory
+  } = useRegisterOfMembersGetVotesHistory({
+    address: boox ? boox[4] : undefined,
+    args: acct ? [BigInt(acct)] : undefined,
+    onSuccess(res) {
+      if (res.length > 0)
+        setInvHistory(res);
+    }
+  })
+
+  return (
+
+    <Dialog
+      maxWidth={false}
+      open={open}
+      onClose={()=>setOpen(false)}
+      aria-labelledby="dialog-title" 
+    >
+      <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
+        <b>Investment History of Member - {longSnParser(acct.toString())}</b>
+      </DialogTitle>
+
+      <DialogContent>
+
+        {invHistory && (
+          <DataGrid
+            initialState={{pagination:{paginationModel:{pageSize: 5}}}}
+            pageSizeOptions={[5, 10, 15, 20]}
+            getRowId={row => row.timestamp.toString()}
+            rows={ invHistory }
+            columns={ columns }
+          />
+        )}
+
+      </DialogContent>
+
+      <DialogActions>
+        <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+      </DialogActions>
+
+    </Dialog>
+
+  )
+}
+
+
+

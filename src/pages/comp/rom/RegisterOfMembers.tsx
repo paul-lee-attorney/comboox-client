@@ -3,10 +3,15 @@ import { Paper, Stack, Toolbar } from "@mui/material";
 
 import { MembersEquityList } from "../../../components/comp/rom/MembersList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
+import { useState } from "react";
+import { InvHistoryOfMember } from "../../../components/comp/rom/InvHistoryOfMember";
 
 function RegisterOfMembers() {
 
   const {boox} = useComBooxContext();
+
+  const [ acct, setAcct ] = useState<number>(0);
+  const [ open, setOpen ] = useState(false);
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
@@ -21,7 +26,11 @@ function RegisterOfMembers() {
         )}
       </Stack>
 
-      <MembersEquityList />
+      <MembersEquityList setAcct={setAcct} setOpen={setOpen} />
+
+      {acct > 0 && open && (
+        <InvHistoryOfMember acct={ acct } open={ open } setOpen={ setOpen } />
+      )}
 
     </Paper>
   );

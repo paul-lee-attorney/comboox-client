@@ -42,6 +42,7 @@ export interface ShareClip {
 
 export interface MemberShareClip {
   acct: bigint;
+  sharesInHand: readonly HexType[];
   clip: ShareClip;
 }
 
@@ -76,6 +77,17 @@ export async function getShareClipOfMember(addr: HexType, acct: bigint): Promise
   return res;
 }
 
+export async function sharesInHand(addr: HexType, acct: bigint): Promise<readonly HexType[]> {
+  let res = await readContract({
+    address: addr,
+    abi: registerOfMembersABI,
+    functionName: 'sharesInHand',
+    args: [ acct ],
+  });
+
+  return res;
+}
+
 export async function getEquityList(rom: HexType, members: readonly bigint[]): Promise<MemberShareClip[]> {
 
   let list: MemberShareClip[] = [];
@@ -85,9 +97,11 @@ export async function getEquityList(rom: HexType, members: readonly bigint[]): P
   while(i < len) {
 
     let item: ShareClip = await getShareClipOfMember(rom, members[i]);
+    let shares = await sharesInHand(rom, members[i]); 
 
     list[i] = {
       acct: members[i],
+      sharesInHand: shares,
       clip: item,
     };
 

@@ -35,9 +35,6 @@ export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Lock Pledge</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
@@ -46,7 +43,7 @@ export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
           label='HashLock'
           sx={{
             m:1,
-            minWidth: 618,
+            minWidth: 688,
           }}
           onChange={(e) => setHashLock(HexParser( e.target.value ))}
           value={ hashLock }

@@ -17,8 +17,8 @@ export function ReleasePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps
   } = useGeneralKeeperReleasePledge({
     address: gk,
     args: key
-      ? [ BigInt(seqOfShare), 
-          BigInt(seqOfPld), 
+      ? [ BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
           key
         ]
       : undefined,
@@ -30,9 +30,6 @@ export function ReleasePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Release Pledge</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 

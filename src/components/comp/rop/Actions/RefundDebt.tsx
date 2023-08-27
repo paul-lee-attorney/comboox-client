@@ -30,15 +30,12 @@ export function RefundDebt({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Refund Debt</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
           variant='outlined'
-          label='Amount'
+          label='Amount (Cent)'
           size="small"
           sx={{
             m:1,
