@@ -1,4 +1,4 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { Bytes32Zero, HexType } from "../../../../interfaces";
 
@@ -7,7 +7,6 @@ import {
 } from "../../../../generated";
 
 import { 
-  Box, 
   Button, 
   Divider, 
   FormControl, 
@@ -27,7 +26,6 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/ComBooxContext";
 import { Body, Deal, Head } from "../../../../queries/ia";
 import { getShare } from "../../../../queries/ros";
-import { isFinalized } from "../../../../queries/accessControl";
 
 const defaultHead: Head = {
   typeOfDeal: 2,
@@ -157,7 +155,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
   return (
     <Paper elevation={3} sx={{p:1, m:1, border: 1, borderColor:'divider' }} >
       <Toolbar sx={{ textDecoration:'underline' }}>
-        <h4>Create Deal</h4>
+        <h3>Create Deal</h3>
       </Toolbar>
 
       <Stack direction='row' sx={{ alignItems:'center' }} >

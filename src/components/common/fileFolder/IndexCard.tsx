@@ -33,7 +33,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
               <tr>
                 <td >
                   <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h4>Index Card of File</h4>
+                    <h3>Index Card of File</h3>
                   </Toolbar>
                 </td>
                 <td>

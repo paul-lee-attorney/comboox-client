@@ -75,11 +75,11 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
                   id="seqOfRule-select"
                   label="SeqOfRule"
                   sx={{ minWidth: 258 }} 
-                  value={ seqOfRule }
-                  onChange={(e) => setSeqOfRule(Number(e.target.value))}
+                  value={ (seqOfRule - 512).toString() }
+                  onChange={(e) => setSeqOfRule(512 + Number(e.target.value))}
                 >
                   {rules && rules.map((v, i) => (
-                    <MenuItem key={v.seqOfRule} value={v.seqOfRule} > {v.seqOfRule} - { typesOfDeal[v.typeOfDeal - 1]} </MenuItem>
+                    <MenuItem key={i} value={i.toString()} > {v.seqOfRule} - {typesOfDeal[v.typeOfDeal - 1]} </MenuItem>
                   ))}
                 </Select>
               </FormControl>
@@ -90,11 +90,11 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
                   labelId="rightholder-label"
                   id="rightholder-select"
                   label="Rightholder"
-                  value={ seqOfRightholder }
-                  onChange={(e) => setSeqOfRightholder( Number(e.target.value) )}
+                  value={ seqOfRightholder.toString() }
+                  onChange={(e) => setSeqOfRightholder( Number(e.target.value ?? '0') )}
                 >
                   {rules && seqOfRule >= 512 && rules[ seqOfRule - 512 ].rightholders.map((v, i) => (
-                    <MenuItem key={i} value={i} > {longSnParser(v.toString())} </MenuItem>
+                    <MenuItem key={i} value={i.toString()} > {longSnParser(v.toString())} </MenuItem>
                   ))}
                 </Select>
               </FormControl>

@@ -78,7 +78,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='CommissionRate(BasePoint)'
+          label='CommissionRate (BP)'
           sx={{
             m:1,
             minWidth: 128,

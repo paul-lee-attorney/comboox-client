@@ -19,22 +19,17 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../interfaces";
+import { AddrZero } from "../../../../../interfaces";
 
 import {
   AddCircle,
   RemoveCircle,
-  PlaylistAdd,
-  Delete,
   ListAlt,
 } from "@mui/icons-material"
-
-import { readContract } from "@wagmi/core";
 
 import { useAlongsAddDragger, useAlongsAddFollower, useAlongsGetDraggers, useAlongsRemoveDragger, useAlongsRemoveFollower } from "../../../../../generated";
 
 
-import { getDocAddr } from "../../../../../queries/rc";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
@@ -145,8 +140,8 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
 
                 <Stack direction='row'>
-                  <Toolbar>
-                    <h4>Tag Along</h4>
+                  <Toolbar sx={{ textDecoration:'underline' }} >
+                    <h3>Tag Along</h3>
                   </Toolbar>
 
                   <CopyLongStrSpan title="Addr" size="body1" src={term} />

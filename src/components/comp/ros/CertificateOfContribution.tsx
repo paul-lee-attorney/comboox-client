@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, longSnParser } from "../../../scripts/toolsKit";
 import { Share } from "../../../queries/ros";
 import { Dispatch, SetStateAction } from "react";
 
@@ -137,7 +137,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPar" 
                     label="Par" 
                     variant="outlined"
-                    value = { longDataParser(share.body.par.toString()) }
+                    value = { centToDollar(share.body.par.toString()) }
                     size='small'
                   />                
                 </td>
@@ -150,7 +150,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPriceOfPar" 
                     label="PriceOfPar" 
                     variant="outlined"
-                    value = { longDataParser(share.head.priceOfPar.toString()) }
+                    value = { centToDollar(share.head.priceOfPar.toString()) }
                     size='small'
                   />                
                 </td>
@@ -163,7 +163,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValueOfParBalance" 
                     label="ValueOfParBalance" 
                     variant="outlined"
-                    value = { longDataParser(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar)).toString()) }
+                    value = { centToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar)).toString()) }
                     size='small'
                   />                
                 </td>
@@ -179,7 +179,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPaid" 
                     label="Paid" 
                     variant="outlined"
-                    value = { longDataParser(share.body.paid.toString()) }
+                    value = { centToDollar(share.body.paid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -192,7 +192,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfPriceOfPaid" 
                     label="PriceOfPaid" 
                     variant="outlined"
-                    value = { longDataParser(share.head.priceOfPaid.toString()) }
+                    value = { centToDollar(share.head.priceOfPaid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -205,7 +205,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValueOfPaid" 
                     label="ValueOfPaid" 
                     variant="outlined"
-                    value = { longDataParser((share.body.paid * BigInt(share.head.priceOfPaid)).toString()) }
+                    value = { centToDollar((share.body.paid * BigInt(share.head.priceOfPaid)/BigInt(100)).toString()) }
                     size='small'
                   />                
                 </td>
@@ -234,7 +234,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfCleanPaid" 
                     label="CleanPaid" 
                     variant="outlined"
-                    value = { longDataParser(share.body.cleanPaid.toString()) }
+                    value = { centToDollar(share.body.cleanPaid.toString()) }
                     size='small'
                   />                                
                 </td>
@@ -247,8 +247,8 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfValue" 
                     label="Value" 
                     variant="outlined"
-                    value = { longDataParser(((share.body.paid * BigInt(share.head.priceOfPaid)) + (
-                      (share.body.par - share.body.paid) * BigInt(share.head.priceOfPar))).toString())
+                    value = { centToDollar(((share.body.paid * BigInt(share.head.priceOfPaid) / BigInt(100)) + (
+                      (share.body.par - share.body.paid) * BigInt(share.head.priceOfPar) / BigInt(100))).toString())
                     }
                     size='small'
                   />                                

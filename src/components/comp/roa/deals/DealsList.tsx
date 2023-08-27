@@ -127,7 +127,7 @@ export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListP
       <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
 
         <Toolbar sx={{ textDecoration:'underline' }}>
-          <h4>Deals List</h4>
+          <h3>Deals List</h3>
         </Toolbar>
 
       </Stack>

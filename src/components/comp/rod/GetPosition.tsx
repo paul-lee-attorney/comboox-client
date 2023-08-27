@@ -37,12 +37,13 @@ export function GetPosition({seq}: GetPositionProps) {
       <Button
         disabled={ !pos }
         variant="outlined"
-        fullWidth={true}
+        fullWidth
+        size='small'
         startIcon={<AssignmentInd />}
         sx={{ m:1, height:40 }}
         onClick={()=>setOpen(true)}      
       >
-        Seq Of Position: {seq}
+        Position: No. {seq}
       </Button>
 
       <Dialog

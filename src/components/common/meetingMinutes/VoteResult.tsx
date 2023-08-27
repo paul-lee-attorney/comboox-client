@@ -72,35 +72,37 @@ export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
   return (
     // <Stack direction={'row'} sx={{ alignItems:'center', width:'100%' }}>
 
-    <tr>
-      <td>
-        <BallotsList 
-          addr={addr} 
-          seqOfMotion={seqOfMotion}
-          attitude={ 1 } 
-          allVote={voteResult[0]} 
-          voteCase={voteResult[1]} 
-        />
-      </td>
-      <td>
-        <BallotsList 
-          addr={addr} 
-          seqOfMotion={seqOfMotion}
-          attitude ={ 3 } 
-          allVote={voteResult[0]} 
-          voteCase={voteResult[3]} 
-        />
-      </td>
-      <td>
-        <BallotsList 
-          addr={addr} 
-          seqOfMotion={seqOfMotion}
-          attitude = { 2 } 
-          allVote={voteResult[0]} 
-          voteCase={voteResult[2]} 
-        />
-      </td>
-    </tr>
+    <table>
+      <tr>
+        <td>
+          <BallotsList 
+            addr={addr} 
+            seqOfMotion={seqOfMotion}
+            attitude={ 1 } 
+            allVote={voteResult[0]} 
+            voteCase={voteResult[1]} 
+          />
+        </td>
+        <td>
+          <BallotsList 
+            addr={addr} 
+            seqOfMotion={seqOfMotion}
+            attitude ={ 3 } 
+            allVote={voteResult[0]} 
+            voteCase={voteResult[3]} 
+          />
+        </td>
+        <td>
+          <BallotsList 
+            addr={addr} 
+            seqOfMotion={seqOfMotion}
+            attitude = { 2 } 
+            allVote={voteResult[0]} 
+            voteCase={voteResult[2]} 
+          />
+        </td>
+      </tr>
+    </table>
   )
 
 }

@@ -11,18 +11,29 @@ import { useState } from 'react';
 import { getReceipt } from '../../../queries/common';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { longDataParser } from '../../../scripts/toolsKit';
+import { getEthPart, getGEthPart, getGWeiPart, longDataParser, removeKiloSymbol } from '../../../scripts/toolsKit';
 
 interface Receipt{
   to: string;
-  amt: string;
+  amt: CBP;
 }
 
+export interface CBP{
+  gp: string;
+  cbp: string;
+  glee: string;
+}
+
+export const defaultCBP:CBP = {
+  gp: '0',
+  cbp: '0',
+  glee: '0',
+}
 
 export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<string>();
-  const [ amt, setAmt ] = useState<string>();
+  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
 
@@ -32,15 +43,22 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
   } = useRegCenterMint({
     address: AddrOfRegCenter,
     args: to && amt
-      ? [BigInt(to), BigInt(amt)*BigInt(10**9)]
+      ? [ BigInt(to), 
+          BigInt(amt.cbp) * BigInt(10 ** 18) 
+        + BigInt(amt.glee) * BigInt(10 ** 9)]
       : undefined,
     onSuccess(data:any) {
       getReceipt(data.hash).then(
         r => {
           if (r) {
+            let strAmt = BigInt(r.logs[0].topics[3]).toString();
             let rpt:Receipt = {
               to: r.logs[0].topics[2],
-              amt: r.logs[0].topics[3]
+              amt: {
+                gp: getGEthPart(strAmt),
+                cbp: getEthPart(strAmt),
+                glee: getGWeiPart(strAmt),
+              }
             }
             setReceipt(rpt);
             setOpen(true);
@@ -62,7 +80,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           label='To'
           sx={{
             m:1,
-            minWidth: 218,
+            minWidth: 128,
           }}
           value={ to }
           onChange={e => setTo(e.target.value ?? '0')}
@@ -71,13 +89,31 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant="outlined"
+          label='Amount (CBP)'
+          sx={{
+            m:1,
+            minWidth: 128,
+          }}
+          value={ amt.cbp }
+          onChange={e => setAmt(v => ({
+            ...v,
+            cbp: e.target.value ?? '0'
+          }))}
+        />
+
+        <TextField 
+          size="small"
+          variant="outlined"
           label='Amount (GLee)'
           sx={{
             m:1,
-            minWidth: 218,
+            minWidth: 128,
           }}
-          value={ amt }
-          onChange={e => setAmt(e.target.value ?? '0')}
+          value={ amt.glee }
+          onChange={e => setAmt(v => ({
+            ...v,
+            glee: e.target.value ?? '0'
+          }))}
         />
 
         <Button 
@@ -112,7 +148,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            { longDataParser((BigInt(receipt?.amt ?? '0')/BigInt(10 ** 9)).toString())} GLee Points minted to Address ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
+            {receipt?.amt.gp != '-' && receipt?.amt.gp + ' Giga-CBP '} {receipt?.amt.cbp != '-' && receipt?.amt.cbp + ' CBP ' } {receipt?.amt.glee != '-' && receipt?.amt.glee + ' GLee ' } minted to Address ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
           </Alert>          
         </Collapse>
 

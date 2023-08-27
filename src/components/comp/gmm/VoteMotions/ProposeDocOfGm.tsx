@@ -32,17 +32,20 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
 
   return (
     <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'stretch'}}>
-      <TextField 
-        variant='outlined'
-        label='Executor'
-        size="small"
-        sx={{
-          m:1,
-          minWidth: 218,
-        }}
-        onChange={(e)=>setExecutor(e.target.value ?? '0')}
-        value={ executor }
-      />      
+      {seqOfVR > 8 && (
+        <TextField 
+          variant='outlined'
+          label='Executor'
+          size="small"
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={(e)=>setExecutor(e.target.value ?? '0')}
+          value={ executor }
+        />
+      )}
+
       <Button
         disabled={!write || isLoading}
         variant="contained"

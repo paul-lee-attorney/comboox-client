@@ -2,7 +2,6 @@
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, Toolbar } from '@mui/material';
 
 import { 
-  usePrepareRegCenterLockConsideration,
   useRegCenterLockConsideration,
 } from '../../../generated';
 
@@ -14,6 +13,7 @@ import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { BodyOfLocker, HeadOfLocker, defaultHeadOfLocker, defaultBodyOfLocker } from '../../../queries/rc';
 import { LockPointsProps } from './LockPoints';
+import { CBP, defaultCBP } from './Mint';
 
 
 export interface Selector {
@@ -28,17 +28,13 @@ export interface Selectors {
 export const selectors: Selectors = {
   'requestPaidInCapital': {selector: selectorCodifier('requestPaidInCapital(bytes32,string)'), offSet: 0x40},
   'closeDeal': {selector: selectorCodifier('closeDeal(address,uint256,string)'), offSet: 0x60},
-  'releaseSwapOrder': {selector: selectorCodifier('releaseSwapOrder(uint256,uint256,string)'), offSet: 0x60},
   'releasePledge': {selector: selectorCodifier('releasePledge(uint256,uint256,string)'), offSet: 0x60},
-  'releaseSwap': {selector: selectorCodifier('releaseSwap(uint256,string)'), offSet: 0x40},
 }
 
 export const funcNames:string[] = [
   'requestPaidInCapital',
   'closeDeal',
-  'releaseSwapOrder',
   'releasePledge',
-  'releaseSwap'
 ]
 
 function constructPayload(func:string, paras:string[]):HexType {
@@ -46,15 +42,10 @@ function constructPayload(func:string, paras:string[]):HexType {
   let strParas:string = '';
   paras.forEach(v=>strParas = strParas.concat(v));
   let offSet = selectors[func].offSet.toString(16).padStart(64, '0');
-  let mockKey = '1'.padStart(64, '0') + '1'.padStart(64, '0');
+  // let mockKey = '1'.padStart(64, '0') + '1'.padStart(64, '0');
 
-  return `0x${selector.substring(2) + strParas + offSet +  mockKey}`;    
+  return `0x${selector.substring(2) + strParas + offSet }`;    
 }
-
-// interface LockConsiderationProps{
-//   refreshList: ()=>void;
-//   getUser: ()=> void;
-// }
 
 function calDefaultParas(hashLock:HexType, offSet:number):string[]{
 
@@ -68,6 +59,8 @@ function calDefaultParas(hashLock:HexType, offSet:number):string[]{
 }
 
 export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPointsProps) {
+
+  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -86,14 +79,15 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
           counterLocker && paras && hashLock
         ? [ 
             BigInt(head.to),
-            BigInt(head.value),
+            BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
             BigInt(head.expireDate),
             counterLocker,
             constructPayload(func, paras),
             hashLock
           ]
         : undefined,
-    onSuccess() {
+    onSettled() {
+      console.log('payloads: ', constructPayload(func, paras));
       refreshList();
       getUser();
       getBalanceOf();
@@ -127,15 +121,30 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
             <TextField 
               size="small"
               variant='outlined'
-              label='Amount'
+              label='Amount (CBP)'
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              value={ head.value }
-              onChange={e => setHead(v=>({
+              value={ amt.cbp }
+              onChange={e => setAmt(v=>({
                 ...v,
-                value: BigInt(e.target.value ?? '0'),
+                cbp: (e.target.value ?? '0'),
+              }))}
+            />
+
+            <TextField 
+              size="small"
+              variant='outlined'
+              label='Amount (GLee)'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ amt.glee }
+              onChange={e => setAmt(v=>({
+                ...v,
+                glee: (e.target.value ?? '0'),
               }))}
             />
 
@@ -215,7 +224,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   minWidth: 685,
                 }}
                 inputProps={{readOnly: true}}
-                value={ hashLock.substring(2) }
+                value={ HexParser(hashLock) }
               />
             </Stack>            
           )}
@@ -231,11 +240,11 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   m:1,
                   minWidth: 450,
                 }}
-                value={ paras[0].substring(0x18,0x40) }
+                value={ HexParser(paras[0].substring(24,64)) }
                 onChange={e => setParas(v => {
                   let out = [...v];
-                  let ia = e.target.value ?? '';
-                  out[0] = ia.padStart(0x40, '0');
+                  let ia = HexParser(e.target.value ?? '');
+                  out[0] = ia.substring(2).padStart(64, '0');
                   return out;
                 })}
               />
@@ -248,10 +257,10 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   m:1,
                   minWidth: 218,
                 }}
-                value={ parseInt(paras[1]?.substring(0x3c,0x40) ?? '0x00',0x10).toString()  }
+                value={ parseInt(paras[1]?.substring(60,64) ?? '0x00',16).toString()  }
                 onChange={e => setParas(v => {
                   let out = [...v];
-                  let seq = parseInt(e.target.value ?? '0').toString(16).padStart(0x40, '0');
+                  let seq = parseInt(e.target.value ?? '0').toString(16).padStart(64, '0');
                   out[1] = seq;
                   return out;
                 })}

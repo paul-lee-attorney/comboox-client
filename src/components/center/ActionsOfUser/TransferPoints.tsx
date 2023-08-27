@@ -1,5 +1,5 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Toolbar } from '@mui/material';
+import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterTransfer, 
@@ -9,19 +9,20 @@ import { AddrOfRegCenter, HexType } from '../../../interfaces';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../queries/common';
-import { HexParser, longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { HexParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, longSnParser } from '../../../scripts/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
+import { CBP, defaultCBP } from './Mint';
 
 interface Receipt{
   from: string;
   to: string;
-  amt: string;
+  amt: CBP;
 }
 
 export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<HexType>();
-  const [ amt, setAmt ] = useState<string>();
+  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
 
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
@@ -32,16 +33,22 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
   } = useRegCenterTransfer({
     address: AddrOfRegCenter,
     args: to && amt
-      ? [to, BigInt(amt) * BigInt(10**9)]
+      ? [ to, 
+          BigInt(amt.cbp) * BigInt(10 ** 18) + BigInt(amt.glee) * BigInt(10 ** 9)]
       : undefined,
     onSuccess(data:any) {
       getReceipt(data.hash).then(
         r => {
           if (r) {
+            let strAmt = BigInt(r.logs[0].topics[3]).toString();
             let rpt:Receipt = {
               from: r.logs[0].topics[1],
               to: r.logs[0].topics[2],
-              amt: r.logs[0].topics[3].toString()
+              amt: {
+                gp: getGEthPart(strAmt),
+                cbp: getEthPart(strAmt),
+                glee: getGWeiPart(strAmt),
+              }
             }
             setReceipt(rpt);
             setOpen(true);
@@ -72,13 +79,31 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
         <TextField 
           size="small"
           variant='outlined'
+          label='Amount (CBP)' 
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          value={ amt.cbp }
+          onChange={e => setAmt(v => ({
+            ...v,
+            cbp: (e.target.value ?? '0')
+          }))}
+        />
+
+        <TextField 
+          size="small"
+          variant='outlined'
           label='Amount (GLee)' 
           sx={{
             m:1,
             minWidth: 218,
           }}
-          value={ amt }
-          onChange={e => setAmt(e.target.value ?? '0')}
+          value={ amt.glee }
+          onChange={e => setAmt(v => ({
+            ...v,
+            glee: (e.target.value ?? '0')
+          }))}
         />
 
         <Button 
@@ -112,7 +137,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {longDataParser((BigInt(receipt?.amt ?? '0')/BigInt(10 ** 9)).toString())} GigaLee Points transfered to Address ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
+            {receipt?.amt.cbp != '-' && receipt?.amt.cbp + ' CBP, '} {receipt?.amt.glee != '-' && receipt?.amt.glee + ' GLee '} transfered to Addr ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
           </Alert>          
         </Collapse>
 

@@ -279,7 +279,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Stack direction={'row'}>
                   <Toolbar sx={{ textDecoration:'underline' }}>
-                    <h4>Drag Along</h4>
+                    <h3>Drag Along</h3>
                   </Toolbar>
 
                   <CopyLongStrSpan title="Addr" size="body1" src={term} />

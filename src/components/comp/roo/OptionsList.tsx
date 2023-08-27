@@ -1,6 +1,6 @@
 import { Chip, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
 import { Dispatch, SetStateAction } from "react";
 import { statesOfOpt } from "../roc/terms/Options/ContentOfOpt";
 import { SearchOption } from "./SearchOption";
@@ -83,7 +83,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'paid', 
       headerName: 'Paid',
-      valueGetter: p => longDataParser(p.row.opt.body.paid.toString()),
+      valueGetter: p => centToDollar(p.row.opt.body.paid.toString()),
       headerAlign: 'right',
       align:'right',
       width: 240,

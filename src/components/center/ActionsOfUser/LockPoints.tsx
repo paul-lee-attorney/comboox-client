@@ -12,6 +12,7 @@ import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
 import { HexParser } from '../../../scripts/toolsKit';
+import { CBP, defaultCBP } from './Mint';
 
 export interface LockPointsProps{
   refreshList: ()=>void;
@@ -20,6 +21,8 @@ export interface LockPointsProps{
 }
 
 export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps) {
+
+  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -32,7 +35,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     args: head.to && head.value && head.expireDate && hashLock
         ? [ 
             BigInt(head.to),
-            BigInt(head.value),
+            BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
             BigInt(head.expireDate),
             hashLock
           ]
@@ -70,15 +73,30 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
             <TextField 
               size="small"
               variant='outlined'
-              label='Amount'
+              label='Amount (CBP)'
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              value={ head.value }
-              onChange={e => setHead(v=>({
+              value={ amt.cbp }
+              onChange={e => setAmt(v=>({
                 ...v,
-                value: BigInt(e.target.value ?? '0'),
+                cbp: (e.target.value ?? '0'),
+              }))}
+            />
+
+            <TextField 
+              size="small"
+              variant='outlined'
+              label='Amount (GLee)'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ amt.glee }
+              onChange={e => setAmt(v=>({
+                ...v,
+                glee: (e.target.value ?? '0'),
               }))}
             />
 

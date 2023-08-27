@@ -34,7 +34,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='DiscountRate'
+          label='DiscountRate (BP)'
           sx={{
             m:1,
             minWidth: 128,
@@ -49,7 +49,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='GiftAmt'
+          label='GiftAmt (GLee)'
           sx={{
             m:1,
             minWidth: 128,
@@ -64,7 +64,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='CouponAmt'
+          label='CouponAmt (GLee)'
           sx={{
             m:1,
             minWidth: 128,

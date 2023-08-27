@@ -13,8 +13,11 @@ import dayjs from 'dayjs';
 import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
 import { HexParser } from '../../../scripts/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
+import { CBP, defaultCBP } from './Mint';
 
 export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOfUserProps) {
+
+  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -24,10 +27,10 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
     write: mintAndLockPoints,
   } = useRegCenterMintAndLockPoints({
     address: AddrOfRegCenter,
-    args: head.to && head.value && head.expireDate && hashLock
+    args: head.to && head.expireDate && hashLock
         ? [ 
             BigInt(head.to),
-            BigInt(head.value),
+            BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
             BigInt(head.expireDate),
             hashLock
           ]
@@ -64,15 +67,30 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
             <TextField 
               size="small"
               variant='outlined'
-              label='Amount'
+              label='Amount (CBP)'
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              value={ head.value.toString() }
-              onChange={e => setHead(v=>({
+              value={ amt.cbp }
+              onChange={e => setAmt(v=>({
                 ...v,
-                value: BigInt(e.target.value ?? '0'),
+                cbp: (e.target.value ?? '0'),
+              }))}
+            />
+
+            <TextField 
+              size="small"
+              variant='outlined'
+              label='Amount (GLee)'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              value={ amt.glee }
+              onChange={e => setAmt(v=>({
+                ...v,
+                glee: (e.target.value ?? '0'),
               }))}
             />
 

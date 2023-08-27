@@ -109,13 +109,28 @@ export function weiToEth(input: string): string {
   return int + '.' + dec;
 }
 
+
+export function getGEthPart(input: string): string {
+  
+  let len = input.length;
+
+  let res = len > 27
+          ? longDataParser(input.substring(0, len - 27).toString())
+          : '-';
+
+  return res;
+}
+
+
 export function getEthPart(input: string): string {
   
   let len = input.length;
 
   let res = len > 18
-          ? longDataParser(input.substring(0, len - 18))
-          : '-'
+          ? len > 27
+            ? longDataParser(Number(input.substring(len - 27, len - 18)).toString())
+            : longDataParser(Number(input.substring(0, len - 18)).toString())
+          : '-';
 
   return res;
 }
@@ -126,8 +141,8 @@ export function getGWeiPart(input: string): string {
 
   let res = len > 9
           ? len > 18
-            ? longDataParser(input.substring(len - 18, len - 9))
-            : longDataParser(input.substring(0, len - 9))
+            ? longDataParser(Number(input.substring(len - 18, len - 9)).toString())
+            : longDataParser(Number(input.substring(0, len - 9)).toString())
           : '-'
 
   return res;
@@ -137,8 +152,8 @@ export function getWeiPart(input: string): string {
   let len = input.length;
 
   let res = len > 9
-            ? longDataParser(input.substring(len - 9))
-            : longDataParser(input)
+          ? longDataParser(Number(input.substring(len - 9)).toString())
+          : longDataParser(input)
 
   return res;
 }

@@ -31,9 +31,10 @@ export function GetFullPosInfoInHand({userNo}:GetFullPosInfoInHandProps) {
   return (
     <>
       <Button
-        variant="text"
+        variant="outlined"
         fullWidth={true}
-        sx={{ m:1 }}
+        size='small'
+        sx={{ m:1, height:40 }}
         onClick={()=>setOpen(true)}      
       >
         { longSnParser(userNo.toString()) }

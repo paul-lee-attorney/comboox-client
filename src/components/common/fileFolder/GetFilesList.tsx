@@ -3,7 +3,9 @@ import {
   TableContainer, 
   Paper, 
   Toolbar, 
-  Chip
+  Chip,
+  Button,
+  Card
 } from '@mui/material';
 
 import Link from '../../../scripts/Link';
@@ -13,6 +15,7 @@ import { InfoOfFile } from '../../../queries/filesFolder';
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { CopyLongStrSpan } from '../utils/CopyLongStr';
 import { Dispatch, SetStateAction } from 'react';
+import { BookOutlined, CardGiftcard } from '@mui/icons-material';
 
 interface GetFilesListProps {
   list: InfoOfFile[],
@@ -34,20 +37,45 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
       field: 'sn', 
       headerName: 'Sn',
       valueGetter: p => p.row.sn.substring(10, 34),
-      width: 218,
+      width: 128,
       renderCell: ( p ) => (
         <Link
           href={{
             pathname: pathName,
             query: {
               addr: p.row.addr,
-              snOfDoc: p.row.sn.substring(10, 34),
+              // fileInfo: p.row,
+              // snOfDoc: p.row.sn.substring(10, 34),
             }
           }}
           as={ pathAs }
         >
-          { p.row.sn.substring(10, 34) }
+          { parseInt(p.row.sn.substring(10, 18)).toString().padStart(2, '0')} - {longSnParser(parseInt(p.row.sn.substring(18, 34)).toString())}
         </Link>
+      )
+    },
+    {
+      field: 'indexCard',
+      headerName: 'IndexCard',
+      valueGetter: p => p.row,
+      width: 128,
+      headerAlign:'center',
+      align: 'center',
+      renderCell:({value})=>(
+        <Button
+          variant='outlined'
+          size='small'
+          fullWidth
+          onClick={()=>{
+            setFile(value);
+            setOpen(true);
+          }}
+          startIcon={
+            <BookOutlined />
+          }
+        >
+          Index
+        </Button>
       )
     },
     {
@@ -135,11 +163,6 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     },
   ];
   
-  const handleRowClick: GridEventListener<'rowClick'> = (p) => {
-    setFile({addr: p.row.addr, sn: p.row.sn, head: p.row.head, ref: p.row.ref});
-    setOpen(true);
-  }
-
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
       <Toolbar sx={{ textDecoration:'underline' }}>
@@ -154,7 +177,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
           columns={ columns }
           getRowId={(row:InfoOfFile | undefined) => (row?.sn.substring(10, 34) ?? '0') } 
           disableRowSelectionOnClick
-          onRowClick={ handleRowClick }
+          // onRowClick={ handleRowClick }
         />
       )}
 

@@ -50,7 +50,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
           sx={{ m:1, height:40 }}
           onClick={ handleClick }      
         >
-          Seq Of VotingRule: {seq}
+          VotingRule: No. {seq}
         </Button>
       )}
 
@@ -264,7 +264,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                   {objVr.invExitDays > 0 && (
                     <TextField 
                       variant='outlined'
-                      label='InvExitEays'
+                      label='InvExitDays'
                       inputProps={{readOnly: true}}
                       size="small"
                       sx={{

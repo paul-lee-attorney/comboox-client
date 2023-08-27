@@ -378,7 +378,7 @@ function UserInfo() {
           <tr>
             <td colSpan={ 5 }>
               {locker && userNo && (
-                <HashLockerOfPoints open={ open } locker={ locker } userNo={ userNo } setOpen={ setOpen } refreshList={ getLocksList } getUser={ obtainUser } getBlanceOf={ getBalanceOf }  />
+                <HashLockerOfPoints open={ open } locker={ locker } userNo={ userNo } setOpen={ setOpen } refreshList={ getLocksList } getUser={ obtainUser } />
               )}
             </td>
           </tr>

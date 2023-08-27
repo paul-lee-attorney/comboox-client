@@ -170,7 +170,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='PledgedPaid'
+              label='PledgedPaid (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,
@@ -186,7 +186,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='PledgedPar'
+              label='PledgedPar (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,
@@ -202,7 +202,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='GuaranteedAmount'
+              label='GuaranteedAmount (Cent)'
               sx={{
                 m:1,
                 minWidth: 218,

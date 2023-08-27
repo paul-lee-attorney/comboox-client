@@ -3,10 +3,10 @@ import { Bytes32Zero, HexType } from "../../../interfaces";
 import { useComBooxContext } from "../../../scripts/ComBooxContext";
 
 import { 
-  useBookOfSharesGetLocker, 
   useGeneralKeeperRequestPaidInCapital, 
   useGeneralKeeperSetPayInAmt, 
-  useGeneralKeeperWithdrawPayInAmt, 
+  useGeneralKeeperWithdrawPayInAmt,
+  useRegisterOfSharesGetLocker, 
 } from "../../../generated";
 import { Box, Collapse, IconButton, Paper, Stack, Switch, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { ExitToApp, IosShare, Output } from "@mui/icons-material";
@@ -33,26 +33,10 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
 
   const [ newLocker, setNewLocker ] = useState<Locker>();
 
-  // useEffect(()=>{
-  //   if (share.head.seqOfShare && 
-  //     share.head.shareholder)      
-  //       setHeadOfLocker(v => ({
-  //         ...v,
-  //         from: share.head.seqOfShare,
-  //         to: share.head.shareholder,
-  //       }));  
-  // }, [share]);
-
-  // let snOfLocker: HexType = `0x${
-  //   locker.from.toString().padStart(13, '0') +
-  //   locker.to.toString().padStart(13, '0') +
-  //   locker.expireDate.toString(16).padStart(12, '0') +
-  //   locker.hashLock.substring(34)
-  // }`;
 
   const {
     refetch: getLocker,
-  } = useBookOfSharesGetLocker({
+  } = useRegisterOfSharesGetLocker({
     address: boox ? boox[9] : undefined,
     args: hashLock ? [ hashLock ] : undefined,
     onSuccess(locker) {
@@ -70,21 +54,6 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
       }
     }
   })
-
-  // const {
-  //   config: setPayInAmtConfig,
-  // } = usePrepareGeneralKeeperSetPayInAmt ({
-  //   address: gk,
-  //   args: headOfLocker && headOfLocker.from && 
-  //         headOfLocker.value && headOfLocker.expireDate && 
-  //         hashLock 
-  //       ? [ BigInt(headOfLocker.from), 
-  //           BigInt(headOfLocker.value), 
-  //           BigInt(headOfLocker.expireDate),
-  //           hashLock 
-  //         ]
-  //       : undefined,
-  // });
 
   const {
     isLoading: setPayInAmtLoading,
@@ -107,15 +76,6 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
 
   const [ key, setKey ] = useState<string>();
 
-  // const {
-  //   config: requestPaidInCapitalConfig
-  // } = usePrepareGeneralKeeperRequestPaidInCapital({
-  //   address: gk,
-  //   args: snOfLocker && key
-  //         ? [ snOfLocker, key ]
-  //         : undefined,
-  // })
-
   const {
     isLoading: requestPaidInCapitalLoading,
     write: requestPaidInCapital,
@@ -128,15 +88,6 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
       getLocker()
     }
   })
-
-  // const {
-  //   config: withdrawPayInAmtConfig,
-  // } = usePrepareGeneralKeeperWithdrawPayInAmt({
-  //   address: gk,
-  //   args: snOfLocker 
-  //         ? [snOfLocker]
-  //         : undefined,
-  // })
 
   const {
     isLoading: withdrawPayInAmtLoading,

@@ -19,32 +19,27 @@ import { AddrZero, HexType } from "../../../../../interfaces";
 import {
   AddCircle,
   RemoveCircle,
-  PlaylistAdd,
-  Delete,
   ListAlt,
 } from "@mui/icons-material"
 
 import { readContract } from "@wagmi/core";
 
 import {
-
   useShareholdersAgreementCreateTerm,
-  useShareholdersAgreementRemoveTerm,
-  useLockUpLockedShares,
   lockUpABI,
   useLockUpSetLocker,
   useLockUpRemoveKeyholder,
   useLockUpDelLocker,
-  useLockUpAddKeyholder, 
+  useLockUpAddKeyholder,
+  useLockUpLockedShares, 
 } from "../../../../../generated";
 
-import { getDocAddr } from "../../../../../queries/rc";
-import { LockerOfShare } from "./LockerOfShare";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
-import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
+import { AddTerm } from "../AddTerm";
+import { LockerOfShare } from "./LockerOfShare";
 
 interface Locker {
   seqOfShare: number;
@@ -186,8 +181,8 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                 <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
 
                   <Stack direction={'row'} >
-                    <Toolbar>
-                      <h4>Lock Up</h4>
+                    <Toolbar sx={{ textDecoration:'underline' }}>
+                      <h3>Lock Up</h3>
                     </Toolbar>
 
                     <CopyLongStrSpan title="Addr" size="body1" src={term} />

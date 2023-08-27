@@ -4,7 +4,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextF
 import { StateOfDeal, TypeOfDeal } from "./CreateDeal";
 import { centToDollar, dateParser, longSnParser } from "../../../../scripts/toolsKit";
 import { DeleteDeal } from "./DeleteDeal";
-import { HexType } from "../../../../interfaces";
+import { Bytes32Zero, HexType } from "../../../../interfaces";
 import { ActionsOfDeal } from "./ActionsOfDeal";
 import { GetDTClaims } from "./GetDTClaims";
 import { CheckValueOfDeal } from "./CheckValueOfDeal";
@@ -352,7 +352,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='QtyOfPaid'
+                  label='Paid (Dollar)'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
@@ -365,7 +365,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='QtyOfPar'
+                  label='Par (Dollar)'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
@@ -373,6 +373,24 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   }}
                   value={ centToDollar(deal.body.par.toString()) }
                 />
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={4}>
+                {deal.hashLock != Bytes32Zero && (
+                  <TextField 
+                    variant='outlined'
+                    fullWidth
+                    label='HashLock'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                    }}
+                    value={ deal.hashLock }
+                  />
+                )}
               </td>
             </tr>
 

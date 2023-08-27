@@ -4,21 +4,40 @@ import { useRouter } from "next/router";
 import { HexType } from "../../../interfaces";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
-import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
 import { useState } from "react";
-// import { finalized } from "../../../queries/accessControl";
 import IaBodyTerms from "../../../components/comp/roa/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/roa/ia/IaLifecycle";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
-import { useAccessControlIsFinalized } from "../../../generated";
-import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
+import { useAccessControlIsFinalized, useFilesFolderGetFile } from "../../../generated";
+import { InfoOfFile } from "../../../queries/filesFolder";
+import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
+import { BookOutlined } from "@mui/icons-material";
 
 function Ia() {
+  const { boox } = useComBooxContext();
   const { query } = useRouter();
   const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
-  const snOfDoc:string | undefined = query.snOfDoc?.toString();
+
+  const [ file, setFile ] = useState<InfoOfFile>();
+
+  useFilesFolderGetFile({
+    address: boox ? boox[6]: undefined,
+    args: ia ? [ia]: undefined,
+    onSuccess(res) {
+      setFile({
+        addr: ia,
+        sn: res.snOfDoc,
+        head: res.head,
+        ref: res.ref        
+      });
+    }
+  })
+
+  const [ open, setOpen ] = useState(false);
 
   const [ isFinalized, setIsFinalized ] = useState<boolean>();
 
@@ -35,16 +54,28 @@ function Ia() {
         <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider' }}>
           <Stack direction='column' justifyContent='center' alignItems='center' >
 
-            <Typography sx={{ mt: 5, mb:2, textDecoration:'underline' }} variant="h4" >
-              <b>Investment Agreement</b>
-            </Typography>
+            <Stack direction='row' sx={{ alignItems:'baseline' }} >
 
-            <Typography sx={{ mt:1 }} variant="body1">
-              SnOfDoc: ({snOfDoc})
-            </Typography>
+              <Typography sx={{ mt: 5, mb:2, mr:2, textDecoration:'underline' }} variant="h4" >
+                <b>Investment Agreement</b>
+              </Typography>
 
-            <CopyLongStrSpan size='body1' title='Addr' src={ia.toLowerCase()} />
+              {file && (
+                <IndexCard file={file} open={open} setOpen={setOpen} />
+              )}
 
+              <Tooltip title="IndexCard" placement="top" arrow >
+                <IconButton 
+                  size="large"
+                  color="primary"
+                  sx={{ mx:1 }}
+                  onClick={()=>setOpen(true)}
+                >
+                  <BookOutlined />
+                </IconButton>
+              </Tooltip>
+
+            </Stack>
             <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
 
               <TabList variant="solid" color="primary" sx={{ width: 980 }}  >

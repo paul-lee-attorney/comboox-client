@@ -201,8 +201,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
 
                 <Stack direction='row' >
-                  <Toolbar>
-                    <h4>Put/Call Options</h4>
+                  <Toolbar sx={{ textDecoration:'underline' }} >
+                    <h3>Put/Call Options</h3>
                   </Toolbar>
 
                   <CopyLongStrSpan title="Addr" size="body1" src={term} />

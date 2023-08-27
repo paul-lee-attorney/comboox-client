@@ -212,8 +212,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
                 <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                   <Stack direction={'row'} >
-                    <Toolbar>
-                      <h4>Anti Dilution</h4>
+                    <Toolbar sx={{ textDecoration:'underline' }}>
+                      <h3>Anti Dilution</h3>
                     </Toolbar>
 
                     <CopyLongStrSpan title="Addr" size="body1" src={term.toLowerCase()} />
