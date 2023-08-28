@@ -1,7 +1,7 @@
 
 import { useRouter } from "next/router";
 
-import { HexType } from "../../../interfaces";
+import { HexType, booxMap } from "../../../scripts/common";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
@@ -12,8 +12,8 @@ import IaBodyTerms from "../../../components/comp/roa/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/roa/ia/IaLifecycle";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
 import { useAccessControlIsFinalized, useFilesFolderGetFile } from "../../../generated";
-import { InfoOfFile } from "../../../queries/filesFolder";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { InfoOfFile } from "../../../scripts/common/filesFolder";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
 
@@ -25,7 +25,7 @@ function Ia() {
   const [ file, setFile ] = useState<InfoOfFile>();
 
   useFilesFolderGetFile({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: ia ? [ia]: undefined,
     onSuccess(res) {
       setFile({

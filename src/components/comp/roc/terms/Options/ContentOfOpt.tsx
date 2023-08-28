@@ -16,8 +16,8 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { dateParser, longDataParser, longSnParser, toPercent } from "../../../../../scripts/toolsKit";
-import { Option, typeOfOpts } from "../../../../../queries/roo";
+import { dateParser, longDataParser, longSnParser, toPercent } from "../../../../../scripts/common/toolsKit";
+import { Option, typeOfOpts } from "../../../../../scripts/comp/roo";
 
 export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
 

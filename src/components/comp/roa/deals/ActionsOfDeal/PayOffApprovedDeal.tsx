@@ -1,11 +1,11 @@
 import { Button, Paper, Stack, TextField } from "@mui/material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
-import { defaultDeal } from "../../../../../queries/ia";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { CurrencyExchange, Payment } from "@mui/icons-material";
 import { useState } from "react";
-import { removeKiloSymbol } from "../../../../../scripts/toolsKit";
+import { removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
 
 
 export function PayOffApprovedDeal({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {

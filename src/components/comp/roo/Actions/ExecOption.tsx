@@ -1,6 +1,6 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperExecOption } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
 

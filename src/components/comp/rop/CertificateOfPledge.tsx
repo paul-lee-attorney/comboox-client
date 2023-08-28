@@ -9,8 +9,8 @@ import {
   TextField 
 } from "@mui/material";
 
-import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
-import { Pledge } from "../../../queries/rop";
+import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { Pledge } from "../../../scripts/comp/rop";
 import { statesOfPld } from "./PledgesList";
 import { ActionsOfPledge } from "./ActionsOfPledge";
 import { Dispatch, SetStateAction } from "react";

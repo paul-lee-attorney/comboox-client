@@ -14,7 +14,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../interfaces";
+import { AddrZero, HexType } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -39,8 +39,8 @@ import {
 
 
 import { Benchmark } from "./Benchmark";
-import { longSnParser, splitStrArr } from "../../../../../scripts/toolsKit";
-import { getDocAddr } from "../../../../../queries/rc";
+import { longSnParser, splitStrArr } from "../../../../../scripts/common/toolsKit";
+import { getDocAddr } from "../../../../../scripts/comp/rc";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 

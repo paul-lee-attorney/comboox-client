@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Bytes32Zero, HexType } from "../../../../../interfaces";
-import { Deal, defaultDeal } from "../../../../../queries/ia";
+import { Bytes32Zero, HexType } from "../../../../../scripts/common";
+import { Deal, defaultDeal } from "../../../../../scripts/comp/ia";
 import dayjs, { Dayjs } from "dayjs";
 import { useGeneralKeeperExecAntiDilution, useGeneralKeeperPushToCoffer } from "../../../../../generated";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { LocalDrinkOutlined, LockClock, WaterDropOutlined } from "@mui/icons-material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { HexParser } from "../../../../../scripts/toolsKit";
+import { HexParser } from "../../../../../scripts/common/toolsKit";
 
 
 

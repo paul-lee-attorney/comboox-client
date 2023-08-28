@@ -1,7 +1,7 @@
 
 import { useRouter } from "next/router";
 
-import { HexType } from "../../../interfaces";
+import { HexType, booxMap } from "../../../scripts/common";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
@@ -13,8 +13,8 @@ import { useState } from "react";
 import { ShaLifecycle } from "../../../components/comp/roc/sha/ShaLifecycle";
 import { useAccessControlIsFinalized, useFilesFolderGetFile } from "../../../generated";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
-import { InfoOfFile } from "../../../queries/filesFolder";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
+import { InfoOfFile } from "../../../scripts/common/filesFolder";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
 
@@ -29,7 +29,7 @@ function Sha() {
   const [ file, setFile ] = useState<InfoOfFile>();
 
   useFilesFolderGetFile({
-    address: boox ? boox[1]: undefined,
+    address: boox ? boox[booxMap.ROC]: undefined,
     args: sha ? [sha]: undefined,
     onSuccess(res) {
       setFile({

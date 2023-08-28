@@ -6,18 +6,18 @@ import {
   Stack,
 } from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { 
   registerOfOptionsABI,
   useRegisterOfOptionsGetAllOptions,
 } from "../../../generated";
-import { HexType } from "../../../interfaces";
+import { HexType, booxMap } from "../../../scripts/common";
 import { readContract } from "@wagmi/core";
 import { OptionsList } from "../../../components/comp/roo/OptionsList";
 import { CertificateOfOption } from "../../../components/comp/roo/CertificateOfOption";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
-import { OptWrap, defaultOptWrap } from "../../../queries/roo";
+import { OptWrap, defaultOptWrap } from "../../../scripts/comp/roo";
 
 export async function getObligors(addr: HexType, seqOfOpt: number): Promise<number[]> {
 
@@ -39,7 +39,7 @@ function RegisterOfOptions() {
   const {
     refetch: getAllOpts,
   } = useRegisterOfOptionsGetAllOptions ({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[booxMap.ROO] : undefined,
     onSuccess(ls) {
       if (ls && boox) {
 
@@ -53,7 +53,7 @@ function RegisterOfOptions() {
         while (len > 0) {
           let opt = ls[len-1];
           
-          getObligors(boox[7], opt.head.seqOfOpt).then(
+          getObligors(boox[booxMap.ROO], opt.head.seqOfOpt).then(
             obligors => {
               setOptsList(v => (v.map(k=>{
                 if (k.opt.head.seqOfOpt == opt.head.seqOfOpt)
@@ -84,7 +84,7 @@ function RegisterOfOptions() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={ boox[7].toLowerCase() } />
+          <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.ROO].toLowerCase() } />
         )}
 
       </Stack>

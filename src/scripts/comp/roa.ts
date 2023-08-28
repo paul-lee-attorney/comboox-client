@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
-import { registerOfAgreementsABI } from "../generated";
+import { HexType } from "../common";
+import { registerOfAgreementsABI } from "../../generated";
 
 
 export interface DTClaim{

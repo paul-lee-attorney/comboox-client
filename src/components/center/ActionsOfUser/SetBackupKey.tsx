@@ -5,10 +5,10 @@ import {
   useRegCenterSetBackupKey
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../interfaces';
-import { BorderColor, Create } from '@mui/icons-material';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 
 

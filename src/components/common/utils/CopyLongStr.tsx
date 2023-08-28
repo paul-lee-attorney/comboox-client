@@ -4,7 +4,7 @@ import { Alert, Button, FormControl, IconButton, InputAdornment, InputLabel, Out
 import copy from 'copy-to-clipboard';
 
 import { useState } from "react";
-import { HexType } from '../../../interfaces';
+import { HexType } from '../../../scripts/common';
 
 
 

@@ -1,15 +1,15 @@
 import { useState } from "react";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperAcceptAlongDeal, useRegisterOfAgreementsHasDtClaims, } from "../../../../generated";
-import { HexParser, centToDollar, dateParser, longDataParser, longSnParser } from "../../../../scripts/toolsKit";
-import { ActionsOfDealCenterProps, ActionsOfDealProps } from "./ActionsOfDeal";
-import { DTClaim, getDTClaimsOfDeal } from "../../../../queries/roa";
-import { DataGrid, GridColDef, GridRowParams } from "@mui/x-data-grid";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { defaultDeal } from "../../../../queries/ia";
+import { HexParser, centToDollar, dateParser, longSnParser } from "../../../../scripts/common/toolsKit";
+import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
+import { DTClaim, getDTClaimsOfDeal } from "../../../../scripts/comp/roa";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
+import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 
 export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
@@ -97,22 +97,18 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
   const {
     refetch: getDTClaims,
   } = useRegisterOfAgreementsHasDtClaims({
-    address: boox ? boox[6] : undefined,
+    address: boox ? boox[booxMap.ROA] : undefined,
     args: [ia, BigInt(deal.head.seqOfDeal)],
     onSuccess(flag) {
       if (flag && boox)
-        getDTClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal).
+        getDTClaimsOfDeal(boox[booxMap.ROA], ia, deal.head.seqOfDeal).
           then(v => setClaims(v));
     }
   })
 
 
   const handleClick = async () => {
-    // if (boox) {
-    //   let ls = await getDTClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal);
-    //   setClaims(ls);
-      setAppear(true);
-    // }
+    setAppear(true);
   }
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);

@@ -1,4 +1,4 @@
-import { HexType } from "../../../../interfaces";
+import { HexType } from "../../../../scripts/common";
 import { 
   useInvestmentAgreementGetTypeOfIa, 
   useInvestmentAgreementSetTypeOfIa,  

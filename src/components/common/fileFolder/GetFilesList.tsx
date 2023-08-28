@@ -8,10 +8,10 @@ import {
   Card
 } from '@mui/material';
 
-import Link from '../../../scripts/Link';
+import Link from '../../../scripts/common/Link';
 
-import { dateParser, longSnParser } from '../../../scripts/toolsKit';
-import { InfoOfFile } from '../../../queries/filesFolder';
+import { dateParser, longSnParser } from '../../../scripts/common/toolsKit';
+import { InfoOfFile } from '../../../scripts/common/filesFolder';
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { CopyLongStrSpan } from '../utils/CopyLongStr';
 import { Dispatch, SetStateAction } from 'react';

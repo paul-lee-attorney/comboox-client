@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
 
-import { HexType } from "../../../../interfaces";
+import { HexType } from "../../../../scripts/common";
 
 
-import { Deal, defaultDeal, getDeal, getSeqList } from "../../../../queries/ia";
+import { Deal, defaultDeal, getDeal, getSeqList } from "../../../../scripts/comp/ia";
 
 import { useInvestmentAgreement, useInvestmentAgreementGetSeqList } from "../../../../generated";
 import { Paper } from "@mui/material";

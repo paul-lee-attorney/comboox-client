@@ -6,16 +6,17 @@ import {
   Stack,
 } from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { 
   useRegisterOfPledgesGetAllPledges,
 } from "../../../generated";
-import { Pledge } from "../../../queries/rop";
+import { Pledge } from "../../../scripts/comp/rop";
 import { PledgesList } from "../../../components/comp/rop/PledgesList";
 import { CertificateOfPledge } from "../../../components/comp/rop/CertificateOfPledge";
 import { CreatePledge } from "../../../components/comp/rop/CreatePledge";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
+import { booxMap } from "../../../scripts/common";
 
 function RegisterOfPledges() {
   const { boox } = useComBooxContext();
@@ -25,7 +26,7 @@ function RegisterOfPledges() {
   const {
     refetch: getAllPledges,
   } = useRegisterOfPledgesGetAllPledges ({
-    address: boox ? boox[8] : undefined,
+    address: boox ? boox[booxMap.ROP] : undefined,
     onSuccess(data) {
       setPldList(data);
     }
@@ -44,7 +45,7 @@ function RegisterOfPledges() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={ boox[8].toLowerCase() } />
+          <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.ROP].toLowerCase() } />
         )}
 
       </Stack>

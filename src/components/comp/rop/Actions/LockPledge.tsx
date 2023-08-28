@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useGeneralKeeperLockPledge } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { LockOutlined, Start } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { Pledge } from "../../../../queries/rop";
+import { Bytes32Zero, HexType } from "../../../../scripts/common";
+import { Pledge } from "../../../../scripts/comp/rop";
 import { ActionsOfOptionProps } from "../../roo/ActionsOfOption";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 
 export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {

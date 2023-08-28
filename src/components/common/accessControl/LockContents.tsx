@@ -9,7 +9,7 @@ import { Lock }  from '@mui/icons-material';
 import { 
   useAccessControlLockContents,
 } from '../../../generated';
-import { HexType } from '../../../interfaces';
+import { HexType } from '../../../scripts/common';
 
 interface LockContentsProps {
   addr: HexType;

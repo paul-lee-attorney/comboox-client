@@ -20,9 +20,9 @@ import {
 
 import { AddRule } from './AddRule'
 
-import { HexType } from '../../../../interfaces';
+import { HexType } from '../../../../scripts/common';
 import { ListAlt } from '@mui/icons-material';
-import { longSnParser } from '../../../../scripts/toolsKit';
+import { longSnParser } from '../../../../scripts/common/toolsKit';
 import { SetRuleProps } from './SetVotingRule';
 import { useShareholdersAgreementGetRule } from '../../../../generated';
 

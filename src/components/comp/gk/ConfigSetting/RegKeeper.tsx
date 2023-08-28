@@ -2,11 +2,11 @@ import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextFi
 import { useState } from "react";
 import { Create } from "@mui/icons-material";
 import { useGeneralKeeperRegKeeper } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { HexType } from "../../../../scripts/common";
 import { RegBookProps } from "./RegBook";
-import { titleOfKeepers } from "../../../../queries/gk";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { titleOfKeepers } from "../../../../scripts/comp/gk";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();

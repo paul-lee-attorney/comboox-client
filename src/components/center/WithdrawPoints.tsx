@@ -5,7 +5,7 @@ import {
   useRegCenterWithdrawPoints,
 } from '../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../scripts/common';
 import { Undo } from '@mui/icons-material';
 
 interface WithdrawPointsProps{

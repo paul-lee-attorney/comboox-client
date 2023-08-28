@@ -19,11 +19,12 @@ import {
   useAccessControlSetRoleAdmin,
 } from '../../../generated';
 
-import { ContractProps, HexType } from '../../../interfaces';
-import { ATTORNEYS } from '../../../queries/accessControl';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HexType } from '../../../scripts/common';
+import { ATTORNEYS } from '../../../scripts/common/accessControl';
+import { HexParser } from '../../../scripts/common/toolsKit';
+import { AccessControlProps } from './SetOwner';
 
-export function SetGeneralCounsel({ addr }: ContractProps) {
+export function SetGeneralCounsel({ addr }: AccessControlProps) {
 
   const [ newGC, setNewGC ] = useState<HexType>();
   const [ open, setOpen ] = useState(false);

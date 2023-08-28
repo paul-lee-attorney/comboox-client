@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { AddrZero, Bytes32Zero, HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { AddrZero, Bytes32Zero, HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperCreateAction,
@@ -8,7 +8,7 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 
 export interface Action {
@@ -29,7 +29,7 @@ interface CreateActionProps {
 
 export function CreateAction({getMotionsList}:CreateActionProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();

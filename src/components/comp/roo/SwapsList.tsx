@@ -1,11 +1,12 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Collapse, Stack, TextField, IconButton } from "@mui/material";
 import { Typography } from "@mui/joy";
 
-import { longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { Swap, checkValueOfSwap} from "../../../queries/roo";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { Swap, checkValueOfSwap} from "../../../scripts/comp/roo";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
+import { booxMap } from "../../../scripts/common";
 
 
 const statesOfSwap = [
@@ -42,7 +43,7 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
     if (boox) {
       let swapWrap:SwapWithValue = {
         seqOfSwap: p.row.seqOfSwap,
-        value: await checkValueOfSwap(boox[7], seqOfOpt, p.row.seqOfSwap),
+        value: await checkValueOfSwap(boox[booxMap.ROO], seqOfOpt, p.row.seqOfSwap),
       }
       setSwapWithValue(swapWrap);
       setShowValue(true);

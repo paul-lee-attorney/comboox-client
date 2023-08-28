@@ -5,11 +5,11 @@ import {
   useRegCenterTransfer, 
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../../queries/common';
-import { HexParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, longSnParser } from '../../../scripts/toolsKit';
+import { getReceipt } from '../../../scripts/common/common';
+import { HexParser, getEthPart, getGEthPart, getGWeiPart } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';
 

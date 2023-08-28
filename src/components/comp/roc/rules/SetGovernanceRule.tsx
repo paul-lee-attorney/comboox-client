@@ -22,8 +22,8 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { HexType } from '../../../../interfaces';
-import { dateParser, toPercent } from '../../../../scripts/toolsKit';
+import { HexType } from '../../../../scripts/common';
+import { dateParser, toPercent } from '../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { useShareholdersAgreementGetRule } from '../../../../generated';
 

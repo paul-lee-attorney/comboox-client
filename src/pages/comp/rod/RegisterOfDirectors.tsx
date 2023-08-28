@@ -1,11 +1,12 @@
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 
-import { Position, getFullPosInfo, } from "../../../queries/rod";
+import { Position, getFullPosInfo, } from "../../../scripts/comp/rod";
 import { GetOfficersList } from "../../../components/comp/rod/GetOfficersList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { useRegisterOfDirectorsGetDirectorsPosList, useRegisterOfDirectorsGetManagersPosList } from "../../../generated";
+import { booxMap } from "../../../scripts/common";
 
 function RegisterOfDirectors() {
 
@@ -16,10 +17,10 @@ function RegisterOfDirectors() {
   const {
     refetch: getDirectorsList
   } = useRegisterOfDirectorsGetDirectorsPosList({
-    address: boox ? boox[2] : undefined,
+    address: boox ? boox[booxMap.ROD] : undefined,
     onSuccess(res) {
       if (boox)
-        getFullPosInfo(boox[2], res).then(
+        getFullPosInfo(boox[booxMap.ROD], res).then(
           list => setDirectorsList(list)
         );
     }
@@ -30,10 +31,10 @@ function RegisterOfDirectors() {
   const {
     refetch: getOfficersList
   } = useRegisterOfDirectorsGetManagersPosList({
-    address: boox ? boox[2] : undefined,
+    address: boox ? boox[booxMap.ROD] : undefined,
     onSuccess(res) {
       if (boox)
-        getFullPosInfo(boox[2], res).then(
+        getFullPosInfo(boox[booxMap.ROD], res).then(
           list => setOfficersList(list)
         );
     }
@@ -48,7 +49,7 @@ function RegisterOfDirectors() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={boox[2].toLowerCase()} />
+          <CopyLongStrSpan title="Addr" size="body1" src={boox[booxMap.ROD].toLowerCase()} />
         )}
 
       </Stack>

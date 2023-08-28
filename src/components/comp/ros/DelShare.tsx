@@ -1,9 +1,10 @@
 import { useRegisterOfSharesDecreaseCapital } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { useEffect, useState } from "react";
 import { Button, Stack, TextField } from "@mui/material";
 import { RemoveCircle } from "@mui/icons-material";
-import { Share, getShare } from "../../../queries/ros";
+import { Share, getShare } from "../../../scripts/comp/ros";
+import { booxMap } from "../../../scripts/common";
 
 interface DelShareProps {
   getList: ()=>any;
@@ -19,7 +20,7 @@ export function DelShare ({getList}:DelShareProps) {
 
   useEffect(()=>{
     if (seq && boox){
-      getShare(boox[9], parseInt(seq)).then(
+      getShare(boox[booxMap.ROS], parseInt(seq)).then(
         target => setShare(target)
       )
     }
@@ -29,7 +30,7 @@ export function DelShare ({getList}:DelShareProps) {
     isLoading: delShareLoading,
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     args: seq && share
         ? [BigInt(seq), share.body.paid, share.body.par]
         : undefined,

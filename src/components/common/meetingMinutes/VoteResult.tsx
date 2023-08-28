@@ -1,8 +1,8 @@
 import { Box, Stack } from "@mui/material";
 
 import { BallotsList } from "./BallotsList";
-import { HexType } from "../../../interfaces";
-import { VoteCase, defaultVoteCase } from "../../../queries/meetingMinutes";
+import { HexType } from "../../../scripts/common";
+import { VoteCase, defaultVoteCase } from "../../../scripts/common/meetingMinutes";
 import { useMeetingMinutes, useMeetingMinutesGetCaseOfAttitude } from "../../../generated";
 import { useState } from "react";
 

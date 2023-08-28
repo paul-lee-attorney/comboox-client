@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { 
   useGeneralKeeperCreateMotionToRemoveOfficer, 

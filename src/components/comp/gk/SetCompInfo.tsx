@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 import { 
   TextField, 
@@ -26,8 +26,8 @@ import {
   useGeneralKeeperGetCompInfo,
   useGeneralKeeperSetCompInfo,
 } from '../../../generated';
-import { CompInfo } from '../../../queries/gk';
-import { dateParser, longDataParser, toAscii, toStr } from '../../../scripts/toolsKit';
+import { CompInfo } from '../../../scripts/comp/gk';
+import { dateParser, longDataParser, toAscii, toStr } from '../../../scripts/common/toolsKit';
 import { currencies } from './GeneralInfo';
 
 

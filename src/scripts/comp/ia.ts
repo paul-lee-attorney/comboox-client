@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { Bytes32Zero, HexType } from "../interfaces";
-import { investmentAgreementABI } from "../generated";
+import { Bytes32Zero, HexType } from "../common";
+import { investmentAgreementABI } from "../../generated";
 
 export interface Head {
   typeOfDeal: number,

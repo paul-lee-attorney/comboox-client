@@ -2,11 +2,11 @@ import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextFi
 import { Dispatch, SetStateAction, useState } from "react";
 import { Create, LockOpen, Update } from "@mui/icons-material";
 import { useGeneralKeeperRegBook, useGeneralKeeperSetCompInfo } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { ConfigSettingProps } from "./SetCompInfo";
-import { AddrZero, HexType } from "../../../../interfaces";
-import { nameOfBooks } from "../../../../queries/gk";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { AddrZero, HexType } from "../../../../scripts/common";
+import { nameOfBooks } from "../../../../scripts/comp/gk";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export interface RegBookProps{
   title: number;

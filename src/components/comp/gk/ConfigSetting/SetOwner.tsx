@@ -2,8 +2,8 @@ import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Update } from "@mui/icons-material";
 import { useAccessControlSetOwner } from "../../../../generated";
-import { AddrZero, HexType } from "../../../../interfaces";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { AddrZero, HexType } from "../../../../scripts/common";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export interface AccessControlProps{
   docAddr: HexType;

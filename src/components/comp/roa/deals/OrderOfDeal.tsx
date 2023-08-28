@@ -1,18 +1,18 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Deal } from "../../../../queries/ia";
+import { Deal } from "../../../../scripts/comp/ia";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { StateOfDeal, TypeOfDeal } from "./CreateDeal";
-import { centToDollar, dateParser, longSnParser } from "../../../../scripts/toolsKit";
+import { centToDollar, dateParser, longSnParser } from "../../../../scripts/common/toolsKit";
 import { DeleteDeal } from "./DeleteDeal";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { ActionsOfDeal } from "./ActionsOfDeal";
 import { GetDTClaims } from "./GetDTClaims";
 import { CheckValueOfDeal } from "./CheckValueOfDeal";
 import { GetFRClaims } from "./GetFRClaims";
 import { useFilesFolderClosingDeadline, useFilesFolderDtExecDeadline, useFilesFolderFrExecDeadline, useFilesFolderGetFile, useFilesFolderTerminateStartpoint, useFilesFolderVotingDeadline, useInvestmentAgreementGetAllSwaps } from "../../../../generated";
-import { Swap } from "../../../../queries/roo";
+import { Swap } from "../../../../scripts/comp/roo";
 import { SwapsList } from "./SwapsList";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { usePublicClient } from "wagmi";
 
 interface OrderOfDealProps {
@@ -63,7 +63,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
   const [ timeline, setTimeline ] = useState<Timeline>(defaultTimeline);
 
   useFilesFolderFrExecDeadline({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: [ia],
     onSuccess(res){
       setTimeline(v => ({
@@ -74,7 +74,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
   });
 
   useFilesFolderDtExecDeadline({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: [ia],
     onSuccess(res){
       setTimeline(v => ({
@@ -85,7 +85,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
   });
 
   useFilesFolderTerminateStartpoint({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: [ia],
     onSuccess(res){
       setTimeline(v => ({
@@ -96,7 +96,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
   });
 
   useFilesFolderVotingDeadline({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: [ia],
     onSuccess(res){
       setTimeline(v => ({
@@ -107,7 +107,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
   });
 
   useFilesFolderClosingDeadline({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: [ia],
     onSuccess(res){
       setTimeline(v => ({
@@ -118,7 +118,7 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
   });
 
   useFilesFolderGetFile({
-    address: boox ? boox[6]: undefined,
+    address: boox ? boox[booxMap.ROA]: undefined,
     args: [ia],
     onSuccess(res){
       setTimeline(v => ({

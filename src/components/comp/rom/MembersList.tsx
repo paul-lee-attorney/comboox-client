@@ -1,13 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Paper, Toolbar, Box, TextField, Button } from '@mui/material';
 
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { centToDollar, dateParser, longSnParser, splitStrArr } from '../../../scripts/toolsKit';
+import { centToDollar, dateParser, longSnParser, splitStrArr } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { MemberShareClip, getEquityList, getMembersList } from '../../../queries/rom';
+import { MemberShareClip, getEquityList, getMembersList } from '../../../scripts/comp/rom';
 import { useRegisterOfMembersMembersList } from '../../../generated';
-import { HexType } from '../../../interfaces';
+import { HexType, booxMap } from '../../../scripts/common';
 import { handleClientScriptLoad } from 'next/script';
 import { History } from '@mui/icons-material';
 
@@ -24,10 +24,10 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
   const {
     refetch: getMembersList
   } = useRegisterOfMembersMembersList({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(ls){
       if (boox)
-        getEquityList(boox[4], ls).then(
+        getEquityList(boox[booxMap.ROM], ls).then(
           list => setEquityList(list)
         )
     }

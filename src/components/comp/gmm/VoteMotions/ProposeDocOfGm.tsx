@@ -1,8 +1,8 @@
 
 import { Button, Stack, TextField } from "@mui/material";
 import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../../generated";
-import { HexType, } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { HexType, } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { useState } from "react";
 

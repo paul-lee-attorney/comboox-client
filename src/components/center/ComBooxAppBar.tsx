@@ -26,7 +26,7 @@ import {
   Stack,
 } from '@mui/material';
 
-import Link from '../../scripts/Link';
+import Link from '../../scripts/common/Link';
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
@@ -52,10 +52,10 @@ import MenuIcon from '@mui/icons-material/Menu';
 
 import { useAccount, useConnect, useDisconnect, } from 'wagmi';
 
-import { useComBooxContext } from '../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 
-import { CompInfo, getBoox, getCompInfo } from '../../queries/gk';
-import { longSnParser } from '../../scripts/toolsKit';
+import { CompInfo, getBoox, getCompInfo } from '../../scripts/comp/gk';
+import { longSnParser } from '../../scripts/common/toolsKit';
 import { AcctPage } from './AcctPage';
 import { useRouter } from 'next/router';
 import { CopyLongStrSpan } from '../common/utils/CopyLongStr';

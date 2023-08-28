@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { PanToolOutlined } from "@mui/icons-material";
 import { useGeneralKeeperRequestToBuy } from "../../../../../generated";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 
 

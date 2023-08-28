@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 
 import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
-import { centToDollar, dateParser, getGWeiPart, getWeiPart, longDataParser, longSnParser, toStr } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, getGWeiPart, getWeiPart, longDataParser, longSnParser, toStr } from "../../../scripts/common/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
-import { Position, getFullPosInfo } from "../../../queries/rod";
+import { Position, getFullPosInfo } from "../../../scripts/comp/rod";
 import { GetOfficersList } from "../rod/GetOfficersList";
 
 import { 
@@ -23,10 +23,11 @@ import {
 
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
-import { User } from "../../../queries/rc";
-import { AddrOfRegCenter, HexType } from "../../../interfaces";
-import { CompInfo, balanceOfGwei } from "../../../queries/gk";
+import { User } from "../../../scripts/comp/rc";
+import { AddrOfRegCenter, HexType, booxMap } from "../../../scripts/common";
+import { CompInfo, balanceOfGwei } from "../../../scripts/comp/gk";
 import { PickupDeposit } from "./PickupDeposit";
+import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";
 
 
 export const currencies:string[] = [
@@ -67,7 +68,7 @@ export function GeneralInfo() {
   const [ controllor, setControllor ] = useState<string>();
 
   useRegisterOfMembersControllor({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(res) {
       setControllor(res.toString())
     }
@@ -76,7 +77,7 @@ export function GeneralInfo() {
   const [ votesOfController, setVotesOfController ] = useState<string>();
 
   useRegisterOfMembersVotesOfController({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(res) {
       setVotesOfController(res.toString())
     }
@@ -86,7 +87,7 @@ export function GeneralInfo() {
   const [ paid, setPaid ] = useState<string>();
 
   useRegisterOfMembersOwnersEquity({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(res) {
       setPar(res.par.toString());
       setPaid(res.paid.toString());
@@ -98,10 +99,10 @@ export function GeneralInfo() {
   const {
     refetch: getDirectorsList
   } = useRegisterOfDirectorsGetDirectorsPosList({
-    address: boox ? boox[2] : undefined,
+    address: boox ? boox[booxMap.ROD] : undefined,
     onSuccess(res) {
       if (boox)
-        getFullPosInfo(boox[2], res).then(
+        getFullPosInfo(boox[booxMap.ROD], res).then(
           list => setDirectorsList(list)
         );
     }
@@ -139,6 +140,9 @@ export function GeneralInfo() {
       getGwei();
     }
   })
+
+  const [ acct, setAcct ] = useState<number>(0);
+  const [ open, setOpen ] = useState(false);
 
   return (
     <>
@@ -458,7 +462,12 @@ export function GeneralInfo() {
 
             <tr>
               <td colSpan={4}>
-                <MembersEquityList />
+                <MembersEquityList setAcct={setAcct} setOpen={setOpen} />
+
+                {acct > 0 && open && (
+                  <InvHistoryOfMember acct={ acct } open={ open } setOpen={ setOpen } />
+                )}
+
               </td>
             </tr>
 

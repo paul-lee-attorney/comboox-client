@@ -4,7 +4,7 @@ import {
   useGeneralKeeperCastVote,
 } from "../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { 
   Box, 
@@ -23,11 +23,10 @@ import {
 } from "@mui/material";
 
 import { HowToVote, } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../../queries/meetingMinutes";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 interface CastVoteOfBmProps {
   seqOfMotion: bigint,
@@ -52,7 +51,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
         : undefined,
     onSuccess() {
       if (boox) {
-        getMotionsList(boox[3]);
+        getMotionsList(boox[booxMap.BMM]);
         setOpen(false);
       }
     }
@@ -128,7 +127,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
         </Stack>
 
         {boox && (
-          <VoteResult addr={boox[3]} seqOfMotion={seqOfMotion} />
+          <VoteResult addr={boox[booxMap.BMM]} seqOfMotion={seqOfMotion} />
         )}
 
       </Collapse>

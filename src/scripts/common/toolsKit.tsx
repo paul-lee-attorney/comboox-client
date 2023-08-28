@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import { utils } from "ethers";
-import { HexType } from "../interfaces";
+import { HexType } from ".";
 
 export function toPercent(num: number): string {
   let percent = num == 0 ? '-' : Number(num / 100).toFixed(2) + '%';

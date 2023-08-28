@@ -1,10 +1,10 @@
 import { Button, Stack, TextField } from "@mui/material";
 import { useGeneralKeeperAcceptSha } from "../../../../generated";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Bytes32Zero, HexType } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useState } from "react";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 interface AcceptShaProps {
   getBuyers:()=>void;

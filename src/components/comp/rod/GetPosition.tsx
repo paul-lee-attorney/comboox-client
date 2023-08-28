@@ -1,14 +1,15 @@
 import { useState } from "react";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Typography } from "@mui/material";
 import { AssignmentInd } from "@mui/icons-material";
 import { useRegisterOfDirectorsGetPosition } from "../../../generated";
-import { dateParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { titleOfPositions } from "../roc/rules/SetPositionAllocateRule";
-import { Position } from "../../../queries/rod";
+import { Position } from "../../../scripts/comp/rod";
 import { QuitPosition } from "../bmm/ExecMotions/QuitPosition";
 import { GetVotingRule } from "../roc/rules/GetVotingRule";
+import { booxMap } from "../../../scripts/common";
 
 
 interface GetPositionProps{
@@ -23,7 +24,7 @@ export function GetPosition({seq}: GetPositionProps) {
   const {
     refetch: getPosition
   } = useRegisterOfDirectorsGetPosition({
-    address: boox ? boox[2]: undefined,
+    address: boox ? boox[booxMap.ROD]: undefined,
     args: [BigInt(seq)],
     onSuccess(data) {
       setPos(data);

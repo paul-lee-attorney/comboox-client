@@ -1,12 +1,13 @@
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 import { CreateMotionOfGm } from "../../../components/comp/gmm/CreateMotionOfGm";
-import { Motion, getMotion } from "../../../queries/meetingMinutes";
+import { Motion, getMotion } from "../../../scripts/common/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
 import { ApprovalFormOfMotion } from "../../../components/comp/gmm/ApprovalFormOfMotion";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
+import { booxMap } from "../../../scripts/common";
 
 function GeneralMeetingMinutes() {
 
@@ -17,7 +18,7 @@ function GeneralMeetingMinutes() {
   const {
     refetch: getSeqList
   } = useMeetingMinutesGetSeqList({
-    address: boox ? boox[5] : undefined,
+    address: boox ? boox[booxMap.GMM] : undefined,
     onSuccess(seqList) {
 
       const obtainMotionsList = async () => {
@@ -28,7 +29,7 @@ function GeneralMeetingMinutes() {
           let i = len >= 100 ? len - 100 : 0;
 
           while( i < len ) {
-            let motion = await getMotion(boox[5], seqList[i]);
+            let motion = await getMotion(boox[booxMap.GMM], seqList[i]);
             list.push(motion);
             i++;
           }
@@ -58,7 +59,7 @@ function GeneralMeetingMinutes() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={ boox[5].toLowerCase() }  />
+          <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.GMM].toLowerCase() }  />
         )}
 
       </Stack>
@@ -76,7 +77,7 @@ function GeneralMeetingMinutes() {
 
       {motion && boox && (
         <ApprovalFormOfMotion 
-          minutes={boox[5]}  
+          minutes={boox[booxMap.GMM]}  
           open={open} 
           motion={motion} 
           setOpen={setOpen} 

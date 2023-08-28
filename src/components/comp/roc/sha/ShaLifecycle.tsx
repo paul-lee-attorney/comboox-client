@@ -11,20 +11,20 @@ import {
   Typography,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../interfaces";
+import { AddrZero, HexType, booxMap } from "../../../../scripts/common";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
-import { voteEnded } from "../../../../queries/meetingMinutes";
-import { getHeadOfFile } from "../../../../queries/filesFolder";
+import { voteEnded } from "../../../../scripts/common/meetingMinutes";
+import { getHeadOfFile } from "../../../../scripts/common/filesFolder";
 import { CirculateSha } from "./CirculateSha";
 import { SignSha } from "./SignSha";
 import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
 import { ActivateSha } from "./ActivateSha";
 import { FinalizeSha } from "./FinalizeSha";
-import { established } from "../../../../queries/sigPage";
-import { getSHA } from "../../../../queries/gk";
+import { established } from "../../../../scripts/common/sigPage";
+import { getSHA } from "../../../../scripts/comp/gk";
 
 interface ShaLifecycleProps {
   sha: HexType;
@@ -45,7 +45,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
       if (gk && boox) {
 
         let shaInForce = await getSHA(gk);
-        let head = await getHeadOfFile(boox[1], sha);
+        let head = await getHeadOfFile(boox[booxMap.ROC], sha);
         let fileState = head.state;
         let seq = head.seqOfMotion;
         let nextStep = 0;
@@ -63,7 +63,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
               : 2;
             break;
           case 3: 
-            flag = await voteEnded(boox[5], seq);
+            flag = await voteEnded(boox[booxMap.GMM], seq);
             nextStep = flag ? 5 : 4;
             break;
           case 4: 

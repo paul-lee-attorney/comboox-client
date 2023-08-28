@@ -23,11 +23,11 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { dateParser, longSnParser } from '../../../../scripts/toolsKit';
+import { dateParser, longSnParser } from '../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { SetRuleProps } from './SetVotingRule';
 import { useShareholdersAgreementGetRule } from '../../../../generated';
-import { HexType } from '../../../../interfaces';
+import { HexType } from '../../../../scripts/common';
 
 export interface PosAllocateRule {
   seqOfRule: number ;

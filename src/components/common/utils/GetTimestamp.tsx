@@ -2,7 +2,7 @@ import { QueryBuilderOutlined } from "@mui/icons-material";
 import { IconButton, Snackbar, Stack } from "@mui/material";
 import { useState } from "react";
 import { usePublicClient } from "wagmi";
-import { dateParser } from "../../../scripts/toolsKit";
+import { dateParser } from "../../../scripts/common/toolsKit";
 
 export function GetTimestamp() {
 

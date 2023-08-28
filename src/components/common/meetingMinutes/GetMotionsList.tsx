@@ -1,7 +1,7 @@
 import { Box, Chip, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
-import { Motion } from "../../../queries/meetingMinutes";
+import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { Motion } from "../../../scripts/common/meetingMinutes";
 
 const type = ['ElectOfficer', 'RemoveOfficer', 'ApproveDoc', 'ApproveAction'];
 

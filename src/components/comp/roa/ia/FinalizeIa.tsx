@@ -10,7 +10,7 @@ import {
   useInvestmentAgreementFinalizeIa,
 } from '../../../../generated';
 
-import { HexType } from '../../../../interfaces';
+import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
 
 interface FinalizeIaProps {

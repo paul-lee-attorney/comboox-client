@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero } from "../../../../../interfaces";
+import { AddrZero } from "../../../../../scripts/common";
 
 import {
   AddCircle,

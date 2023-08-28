@@ -8,10 +8,10 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
-import { Deal } from '../../../../queries/ia';
-import { centToDollar, longDataParser, longSnParser } from '../../../../scripts/toolsKit';
+import { Deal } from '../../../../scripts/comp/ia';
+import { centToDollar, longDataParser, longSnParser } from '../../../../scripts/common/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
-import { HexType } from '../../../../interfaces';
+import { HexType } from '../../../../scripts/common';
 
 interface DealsListProps {
   ia: HexType;

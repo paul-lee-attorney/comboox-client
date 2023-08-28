@@ -5,17 +5,14 @@ import {
   useRegCenterSetFeedRegistry,
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
 
 
 export function SetFeedRegistry({refreshPage}:ActionsOfOwnerProps) {
-
-  // const { gk } = useComBooxContext();
 
   const [ newFeed, setNewFeed ] = useState<HexType>();
 

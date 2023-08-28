@@ -8,10 +8,10 @@ import {
 
 
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
-import { HexType } from '../../../../interfaces';
+import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction } from 'react';
 import { CopyLongStrSpan } from '../../../common/utils/CopyLongStr';
-import { BookInfo } from '../../../../queries/gk';
+import { BookInfo } from '../../../../scripts/comp/gk';
 
 interface BooxListProps {
   title: string;

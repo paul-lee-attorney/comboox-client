@@ -1,6 +1,6 @@
 import { useGeneralKeeperRemoveDirector } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { HexType, booxMap } from "../../../../scripts/common";
 import { Button, Paper } from "@mui/material";
 import { Chair, FollowTheSigns } from "@mui/icons-material";
 
@@ -25,7 +25,7 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:
     args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(){
       if (boox) {
-        getMotionsList(boox[5]);
+        getMotionsList(boox[booxMap.GMM]);
         setOpen(false);
       }
     }

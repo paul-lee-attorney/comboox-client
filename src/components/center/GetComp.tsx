@@ -1,8 +1,8 @@
 import { regCenterABI } from '../../generated';
-import { AddrOfRegCenter, AddrZero, HexType } from '../../interfaces';
-import Link from '../../scripts/Link';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../scripts/common';
+import Link from '../../scripts/common/Link';
 
-import { useComBooxContext } from '../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 import { useState } from 'react';
 import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';

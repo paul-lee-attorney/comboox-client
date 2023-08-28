@@ -1,20 +1,20 @@
 import { useRouter } from 'next/navigation';
 
-import { Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
-import { BorderColor, Create } from '@mui/icons-material';
+import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
+import { BorderColor } from '@mui/icons-material';
 
 import { 
   useRegCenterCreateComp,
 } from '../../generated';
 
 import { 
-  AddrOfRegCenter, AddrZero, HexType,
-} from '../../interfaces';
+  AddrOfRegCenter, HexType,
+} from '../../scripts/common';
 
-import { useComBooxContext } from '../../scripts/ComBooxContext';
-import { getDocAddr } from '../../queries/rc';
+import { useComBooxContext } from '../../scripts/common/ComBooxContext';
+import { getDocAddr } from '../../scripts/comp/rc';
 import { useState } from 'react';
-import { HexParser } from '../../scripts/toolsKit';
+import { HexParser } from '../../scripts/common/toolsKit';
 
 export function CreateComp() {
   const { setGK } = useComBooxContext();

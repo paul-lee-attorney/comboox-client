@@ -1,12 +1,13 @@
 
-import { Button, Paper, Stack } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { 
   useGeneralKeeperVoteCountingOfGm, 
 } from "../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
-import { isPassed } from "../../../../queries/meetingMinutes";
+import { isPassed } from "../../../../scripts/common/meetingMinutes";
+import { booxMap } from "../../../../scripts/common";
 
 
 interface VoteCountingOfGmProps {
@@ -21,13 +22,6 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen,
 
   const { gk, boox } = useComBooxContext();
 
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperVoteCountingOfGm({
-  //   address: gk,
-  //   args: [ seqOfMotion ],
-  // });
-
   const {
     isLoading,
     write
@@ -36,7 +30,7 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen,
     args: [ seqOfMotion ],
     onSuccess() {
       if (boox) {
-        isPassed(boox[5], seqOfMotion).then(
+        isPassed(boox[booxMap.GMM], seqOfMotion).then(
           flag => {
             setResult(flag);
             setNextStep(flag ? 6 : 8);

@@ -6,8 +6,8 @@ import {
 
 } from "../../../../generated";
 
-import { HexType } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { HexType, booxMap } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate, Outbox } from "@mui/icons-material";
 import { readContract } from "@wagmi/core";
 
@@ -34,13 +34,6 @@ export function VoteCounting({ seqOfMotion, sha, setNextStep }: VoteCountingProp
 
   const { gk, boox } = useComBooxContext();
 
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperVoteCountingOfGm({
-  //   address: gk,
-  //   args: seqOfMotion ? [ seqOfMotion ] : undefined,
-  // });
-
   const {
     isLoading,
     write
@@ -49,7 +42,7 @@ export function VoteCounting({ seqOfMotion, sha, setNextStep }: VoteCountingProp
     args: seqOfMotion ? [ seqOfMotion ] : undefined,
     onSuccess() {
       if (boox)
-        isPassed(boox[5], sha).then(
+        isPassed(boox[booxMap.GMM], sha).then(
           fileState => setNextStep( fileState )
         )
     },

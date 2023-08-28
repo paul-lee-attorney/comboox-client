@@ -20,7 +20,7 @@ import {
 } from "@mui/icons-material"
 
 import { LinkRule, triggerTypes } from "./DragAlong";
-import { dateParser, longDataParser, toPercent } from "../../../../../scripts/toolsKit";
+import { dateParser, longDataParser, toPercent } from "../../../../../scripts/common/toolsKit";
 
 interface LinkRuleProps {
   rule: LinkRule

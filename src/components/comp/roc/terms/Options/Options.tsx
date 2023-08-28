@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../interfaces";
+import { AddrZero, HexType } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -58,7 +58,7 @@ import {
   logOps, 
   optHeadCodifier, 
   typeOfOpts 
-} from "../../../../../queries/roo";
+} from "../../../../../scripts/comp/roo";
 
 // ==== HeadOfOpt ====
 

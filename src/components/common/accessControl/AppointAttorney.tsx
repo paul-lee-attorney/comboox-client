@@ -21,11 +21,12 @@ import {
   useAccessControlGrantRole,
 } from '../../../generated';
 
-import { ContractProps, HexType } from '../../../interfaces';
-import { ATTORNEYS, hasRole } from '../../../queries/accessControl';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HexType } from '../../../scripts/common';
+import { ATTORNEYS, hasRole } from '../../../scripts/common/accessControl';
+import { HexParser } from '../../../scripts/common/toolsKit';
+import { AccessControlProps } from './SetOwner';
 
-export function AppointAttorney({ addr }: ContractProps) {
+export function AppointAttorney({ addr }: AccessControlProps) {
 
   const [acct, setAcct] = useState<HexType>();
 

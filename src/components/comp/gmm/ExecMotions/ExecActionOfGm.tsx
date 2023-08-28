@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { AddrZero, HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { AddrZero, HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperExecActionOfGm, 
@@ -8,7 +8,7 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export interface Action {
   target: HexType;
@@ -31,7 +31,7 @@ interface ExecActionOfGmProps {
 
 export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecActionOfGmProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();

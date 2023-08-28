@@ -1,13 +1,14 @@
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 
-import { Motion, getMotion } from "../../../queries/meetingMinutes";
+import { Motion, getMotion } from "../../../scripts/common/meetingMinutes";
 import { useMeetingMinutesGetSeqList } from "../../../generated";
 import { CreateMotionOfBoardMeeting } from "../../../components/comp/bmm/CreateMotionOfBoardMeeting";
 import { ApprovalFormOfBoardMotion } from "../../../components/comp/bmm/ApprovalFormOfBoardMotion";
 import { CopyLongStrSpan, CopyLongStrTF } from "../../../components/common/utils/CopyLongStr";
+import { booxMap } from "../../../scripts/common";
 
 
 function BoardMeetingMinutes() {
@@ -19,7 +20,7 @@ function BoardMeetingMinutes() {
   const {
     refetch: getSeqList
   } = useMeetingMinutesGetSeqList({
-    address: boox ? boox[3] : undefined,
+    address: boox ? boox[booxMap.BMM] : undefined,
     onSuccess(seqList) {
 
       const obtainMotionsList = async () => {
@@ -30,7 +31,7 @@ function BoardMeetingMinutes() {
           let i = len >= 100 ? len - 100 : 0;
 
           while( i < len ) {
-            let motion = await getMotion(boox[3], seqList[i]);
+            let motion = await getMotion(boox[booxMap.BMM], seqList[i]);
             list.push(motion);
             i++;
           }
@@ -58,7 +59,7 @@ function BoardMeetingMinutes() {
           <h3>BMM - Board Meeting Minutes </h3>
         </Toolbar>
         {boox && (
-          <CopyLongStrSpan size="body1" title="Addr" src={ boox[2].toLowerCase() } />
+          <CopyLongStrSpan size="body1" title="Addr" src={ boox[booxMap.ROD].toLowerCase() } />
         )}
       </Stack>
       <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
@@ -76,7 +77,7 @@ function BoardMeetingMinutes() {
 
         {motion && boox && (
           <ApprovalFormOfBoardMotion 
-            minutes={boox[3]}  
+            minutes={boox[booxMap.BMM]}  
             open={open} 
             motion={motion} 
             setOpen={setOpen} 

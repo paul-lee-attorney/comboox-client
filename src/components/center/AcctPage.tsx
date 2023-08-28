@@ -2,19 +2,17 @@ import { AccountCircle, BorderColor } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 import Link from "next/link";
-import { longSnParser } from "../../scripts/toolsKit";
-import { useAccount, useContractRead, useWalletClient } from "wagmi";
-import { AddrOfRegCenter, HexType } from "../../interfaces";
+import { longSnParser } from "../../scripts/common/toolsKit";
+import { useContractRead, useWalletClient } from "wagmi";
+import { AddrOfRegCenter } from "../../scripts/common";
 import { regCenterABI, useRegCenterRegUser } from "../../generated";
-import { useComBooxContext } from "../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 
 interface AcctPageProps {
   flag: boolean;
 }
 
 export function AcctPage({ flag }:AcctPageProps) {
-
-  // const { address: acct, isConnected, isDisconnected } = useAccount();
 
   const { data: signer } = useWalletClient();
 

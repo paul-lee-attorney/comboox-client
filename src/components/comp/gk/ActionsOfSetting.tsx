@@ -1,6 +1,6 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
-import { HexType } from "../../../interfaces";
+import { HexType } from "../../../scripts/common";
 import { SetCompInfo } from "./ConfigSetting/SetCompInfo";
 import { SetOwner } from "./ConfigSetting/SetOwner";
 import { SetDK } from "./ConfigSetting/SetDK";

@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { AddrOfRegCenter } from "../../interfaces";
-import { Locker, User, getLocker } from "../../queries/rc";
+import { AddrOfRegCenter } from "../../scripts/common";
+import { Locker, User, getLocker } from "../../scripts/comp/rc";
 import { Divider, Paper, TextField, Toolbar } from "@mui/material";
-import { longDataParser, longSnParser, toPercent, toStr } from "../../scripts/toolsKit";
+import { longDataParser, longSnParser, toPercent, toStr } from "../../scripts/common/toolsKit";
 import { regCenterABI, useRegCenterBalanceOf, useRegCenterGetLocksList, useRegCenterGetOwner } from "../../generated";
 import { useContractRead, useWalletClient } from "wagmi";
 import { LockersList } from "../../components/center/LockersList";
 import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
-import { useComBooxContext } from "../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 import { CopyLongStrTF } from "../../components/common/utils/CopyLongStr";
 import { ActionsOfUser } from "../../components/center/ActionsOfUser";
-import { balanceOfGwei } from "../../queries/gk";
+import { balanceOfGwei } from "../../scripts/comp/gk";
 
 
 function UserInfo() {

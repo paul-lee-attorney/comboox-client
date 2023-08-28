@@ -1,12 +1,13 @@
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { centToDollar, dateParser, longSnParser } from '../../../scripts/toolsKit';
+import { centToDollar, dateParser, longSnParser } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ShareClip } from '../../../queries/rom';
+import { ShareClip } from '../../../scripts/comp/rom';
 import { useRegisterOfMembersGetVotesHistory } from '../../../generated';
+import { booxMap } from '../../../scripts/common';
 
 const columns: GridColDef[] = [
   {
@@ -55,7 +56,7 @@ export function InvHistoryOfMember({acct, open, setOpen}: InvHistoryOfMemberProp
   const {
     refetch: getVotesHistory
   } = useRegisterOfMembersGetVotesHistory({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     args: acct ? [BigInt(acct)] : undefined,
     onSuccess(res) {
       if (res.length > 0)

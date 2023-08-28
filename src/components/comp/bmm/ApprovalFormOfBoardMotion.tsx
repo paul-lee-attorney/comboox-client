@@ -1,15 +1,15 @@
 import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { HexType } from "../../../interfaces";
+import { HexType, booxMap } from "../../../scripts/common";
 import { Article } from "@mui/icons-material";
-import { dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
+import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { Motion } from "../../../scripts/common/meetingMinutes";
 import { ExecActionOfGm } from "../gmm/ExecMotions/ExecActionOfGm";
-import { getSnOfFile } from "../../../queries/filesFolder";
+import { getSnOfFile } from "../../../scripts/common/filesFolder";
 import { ProposeMotionToBoardMeeting } from "./VoteMotions/ProposeMotionToBoardMeeting";
 import { CastVoteOfBm } from "./VoteMotions/CastVoteOfBm";
 import { VoteCountingOfBoard } from "./VoteMotions/VoteCountingOfBoard";
@@ -41,7 +41,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
     setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
-                          ? boox[1] : boox[5];
+                          ? boox[booxMap.ROC] : boox[booxMap.GMM];
       getSnOfFile(folder, addrOfDoc).then(
         sn => setSnOfDoc(sn)
       );

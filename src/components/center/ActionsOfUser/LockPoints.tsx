@@ -5,13 +5,13 @@ import {
   useRegCenterLockPoints,
 } from '../../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../../interfaces';
+import { AddrOfRegCenter, Bytes32Zero, HexType } from '../../../scripts/common';
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../../queries/rc';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/comp/rc';
+import { HexParser } from '../../../scripts/common/toolsKit';
 import { CBP, defaultCBP } from './Mint';
 
 export interface LockPointsProps{

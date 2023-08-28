@@ -10,16 +10,17 @@ import {
   Typography
 } from "@mui/material";
 
-import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../../scripts/common/toolsKit";
 
 import { Dispatch, SetStateAction, useState } from "react";
 import { statesOfOpt } from "../roc/terms/Options/ContentOfOpt";
 import { OraclesList } from "./OraclesList";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { ActionsOfOption } from "./ActionsOfOption";
 import { SwapsList } from "./SwapsList";
-import { Swap, CheckPoint, OptWrap, comOps, logOps, typeOfOpts } from "../../../queries/roo";
+import { Swap, CheckPoint, OptWrap, comOps, logOps, typeOfOpts } from "../../../scripts/comp/roo";
 import { useRegisterOfOptionsGetAllSwapsOfOption, useRegisterOfOptionsGetAllOraclesOfOption } from "../../../generated";
+import { booxMap } from "../../../scripts/common";
 
 export interface CertificateOfOptionProps{
   open: boolean;
@@ -37,7 +38,7 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
   const {
     refetch: getAllOracles
   } = useRegisterOfOptionsGetAllOraclesOfOption({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[booxMap.ROO] : undefined,
     args: [ BigInt(optWrap.opt.head.seqOfOpt) ],
     onSuccess(res) {
       if (res.length > 0)
@@ -50,7 +51,7 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
   const {
     refetch: getAllSwaps
   } = useRegisterOfOptionsGetAllSwapsOfOption({
-    address: boox ? boox[7] : undefined,
+    address: boox ? boox[booxMap.ROO] : undefined,
     args: [ BigInt(optWrap.opt.head.seqOfOpt) ],
     onSuccess(res) {
       if (res.length > 0)

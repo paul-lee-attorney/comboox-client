@@ -7,11 +7,11 @@ import {
   Toolbar,
 } from "@mui/material";
 
-import { HexType } from "../../../../interfaces";
+import { HexType } from "../../../../scripts/common";
 
 import { AntiDilution } from "../terms/AntiDilution/AntiDilution";
 
-import { defaultTerms, getTerm } from "../../../../queries/sha";
+import { defaultTerms, getTerm } from "../../../../scripts/comp/sha";
 import { SetGovernanceRule } from "../rules/SetGovernanceRule";
 import { VotingRules } from "../rules/VotingRules";
 import { PositionAllocateRules } from "../rules/PositionAllocateRules";

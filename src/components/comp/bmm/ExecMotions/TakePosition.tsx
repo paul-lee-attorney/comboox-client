@@ -4,7 +4,7 @@ import {
   useGeneralKeeperTakePosition, 
 } from "../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
 

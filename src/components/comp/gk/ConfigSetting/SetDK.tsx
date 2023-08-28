@@ -2,9 +2,9 @@ import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Update } from "@mui/icons-material";
 import { useAccessControlSetDirectKeeper, useAccessControlSetOwner } from "../../../../generated";
-import { AddrZero, HexType } from "../../../../interfaces";
+import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 

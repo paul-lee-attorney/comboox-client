@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { registerOfOptionsABI } from "../generated";
-import { HexType } from "../interfaces";
+import { registerOfOptionsABI } from "../../generated";
+import { HexType } from "../common";
 
 export interface HeadOfOpt{
   seqOfOpt: number;

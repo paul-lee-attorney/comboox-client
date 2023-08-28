@@ -5,14 +5,14 @@ import {
   usePrepareGeneralKeeperCastVoteOfGm, 
 } from "../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
 import { HowToVote, } from "@mui/icons-material";
-import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../../queries/meetingMinutes";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 interface ProposeMotionProps {
   seqOfMotion: bigint,
@@ -28,7 +28,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
 
   useEffect(()=>{
     if (boox) {
-      getVoteResult(boox[5], seqOfMotion).then(
+      getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
         list => setVoteResult(list)
       )
     }
@@ -54,10 +54,10 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
         : undefined,
     onSuccess() {
       if (boox) {
-        getVoteResult(boox[5], seqOfMotion).then(
+        getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
           list => setVoteResult(list)
         );
-        getMotionsList(boox[5]);
+        getMotionsList(boox[booxMap.GMM]);
         setOpen(false);
       }
     }
@@ -133,7 +133,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
         </Stack>
 
         {voteResult && boox && (
-          <VoteResult addr={boox[5]} seqOfMotion={seqOfMotion} />
+          <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} />
         )}
 
       </Collapse>

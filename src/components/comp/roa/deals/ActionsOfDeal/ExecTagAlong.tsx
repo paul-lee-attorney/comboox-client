@@ -1,12 +1,12 @@
 import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
-import { defaultDeal } from "../../../../../queries/ia";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperExecTagAlong } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  DirectionsRun, SellOutlined, SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { Bytes32Zero, HexType } from "../../../../../interfaces";
-import { HexParser } from "../../../../../scripts/toolsKit";
+import { Bytes32Zero, HexType } from "../../../../../scripts/common";
+import { HexParser } from "../../../../../scripts/common/toolsKit";
 
 export interface TargetShare {
   seqOfShare: number;

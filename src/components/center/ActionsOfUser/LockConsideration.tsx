@@ -1,17 +1,17 @@
 
-import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, Toolbar } from '@mui/material';
+import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterLockConsideration,
 } from '../../../generated';
 
-import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType } from '../../../interfaces';
+import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, selectorCodifier } from '../../../scripts/toolsKit';
+import { HexParser, selectorCodifier } from '../../../scripts/common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { BodyOfLocker, HeadOfLocker, defaultHeadOfLocker, defaultBodyOfLocker } from '../../../queries/rc';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/comp/rc';
 import { LockPointsProps } from './LockPoints';
 import { CBP, defaultCBP } from './Mint';
 
@@ -42,7 +42,6 @@ function constructPayload(func:string, paras:string[]):HexType {
   let strParas:string = '';
   paras.forEach(v=>strParas = strParas.concat(v));
   let offSet = selectors[func].offSet.toString(16).padStart(64, '0');
-  // let mockKey = '1'.padStart(64, '0') + '1'.padStart(64, '0');
 
   return `0x${selector.substring(2) + strParas + offSet }`;    
 }

@@ -1,15 +1,14 @@
-import { useEffect, useState } from "react";
-import { readContract } from "@wagmi/core";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { AddrZero, HexType } from "../../../../interfaces";
-import { registerOfConstitutionABI, useRegisterOfConstitution, useRegisterOfConstitutionPointer, useShareholdersAgreementGetRule } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { AddrZero, booxMap } from "../../../../scripts/common";
+import { useRegisterOfConstitutionPointer, useShareholdersAgreementGetRule } from "../../../../generated";
 import { VotingRule, authorities, vrParser } from "./SetVotingRule";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { ListAlt } from "@mui/icons-material";
-import { toPercent } from "../../../../scripts/toolsKit";
-import { getSha } from "../../../../queries/roc";
-import { getRule } from "../../../../queries/sha";
+import { toPercent } from "../../../../scripts/common/toolsKit";
+import { getSha } from "../../../../scripts/comp/roc";
+import { getRule } from "../../../../scripts/comp/sha";
+import { useState } from "react";
 
 
 interface GetVotingRuleProps{
@@ -19,12 +18,10 @@ interface GetVotingRuleProps{
 export function GetVotingRule({seq}: GetVotingRuleProps) {
   const { boox } = useComBooxContext();
 
-  // const [ sha, setSha ] = useState<HexType>();
-
   const [ objVr, setObjVr] = useState<VotingRule>();
   
   useRegisterOfConstitutionPointer({
-    address: boox ? boox[1] : undefined,
+    address: boox ? boox[booxMap.ROC] : undefined,
     onSuccess(res) {
       if (res != AddrZero)
         getRule(res, seq).then(

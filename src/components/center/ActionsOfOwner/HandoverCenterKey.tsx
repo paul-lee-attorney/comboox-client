@@ -3,13 +3,12 @@ import { Button, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterHandoverCenterKey,
-  useRegCenterTransferOwnership
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor, Create } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 

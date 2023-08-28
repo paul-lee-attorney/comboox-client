@@ -1,11 +1,12 @@
 import { Alert, Box, Button, Stack, TextField } from "@mui/material";
 import { useGeneralKeeperSignSha, useSigPageEstablished, useSigPageGetParasOfPage } from "../../../../generated";
-import { Bytes32Zero, FileHistoryProps, HexType } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Bytes32Zero, HexType } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { DriveFileRenameOutline, Fingerprint } from "@mui/icons-material";
 import { useState } from "react";
-import { ParasOfSigPage, parseParasOfPage } from "../../../../queries/sigPage";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { ParasOfSigPage, parseParasOfPage } from "../../../../scripts/common/sigPage";
+import { HexParser } from "../../../../scripts/common/toolsKit";
+import { FileHistoryProps } from "./CirculateSha";
 
 
 export function SignSha({ addr, setNextStep }: FileHistoryProps) {

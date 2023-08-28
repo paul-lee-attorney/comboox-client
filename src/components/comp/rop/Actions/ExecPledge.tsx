@@ -1,13 +1,14 @@
 import { useGeneralKeeperExecPledge, useRegisterOfSharesGetShare } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { useState } from "react";
-import { Body, Head, defaultBody, defaultHead } from "../../../../queries/ia";
+import { Body, Head, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 import { codifyHeadOfDeal } from "../../roa/deals/CreateDeal";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { booxMap } from "../../../../scripts/common";
 
 export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
@@ -18,7 +19,7 @@ export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
   const [ version, setVersion ] = useState<number>(1);
   
   useRegisterOfSharesGetShare({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     args: [BigInt(pld.head.seqOfShare)],
     onSuccess(res) {
       setHead(v => ({

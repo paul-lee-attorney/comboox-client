@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { SettingsOutlined } from "@mui/icons-material";
-import { AddrZero, HexType } from "../../../interfaces";
+import { AddrZero, HexType } from "../../../scripts/common";
 import { ActionsOfSetting } from "./ActionsOfSetting";
-import { BookInfo, getBoox, getKeepers, nameOfBooks, titleOfKeepers } from "../../../queries/gk";
+import { BookInfo, getBoox, getKeepers, nameOfBooks, titleOfKeepers } from "../../../scripts/comp/gk";
 import { BooxList } from "./ConfigSetting/BooxList";
 
 interface ConfigSettingProps {
@@ -14,7 +14,7 @@ interface ConfigSettingProps {
 }
 
 export function ConfigSetting({companyName, symbol}:ConfigSettingProps) {
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   const [ title, setTitle ] = useState<number>(0);
   const [ addr, setAddr ] = useState<HexType>(AddrZero); 

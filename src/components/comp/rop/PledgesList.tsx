@@ -1,7 +1,7 @@
 import { Chip, Paper, Toolbar } from "@mui/material";
-import { Pledge } from "../../../queries/rop";
+import { Pledge } from "../../../scripts/comp/rop";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { SearchPledge } from "./SearchPledge";
 
 

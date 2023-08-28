@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { HexType } from "../../../../scripts/common";
 import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 
 
@@ -14,7 +14,7 @@ interface CreateMotionForDocProps {
 
 export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   const [ doc, setDoc ] = useState<HexType>();
   const [ seqOfVr, setSeqOfVr ] = useState<number>();

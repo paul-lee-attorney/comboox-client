@@ -1,7 +1,7 @@
 import { readContract, getWalletClient, getContract, getPublicClient, waitForTransaction } from "@wagmi/core";
-import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../interfaces";
-import { regCenterABI } from "../generated";
-import { toAscii, toStr } from "../scripts/toolsKit";
+import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../common";
+import { regCenterABI } from "../../generated";
+import { toAscii, toStr } from "../common/toolsKit";
 
 // ==== Locker ====
 

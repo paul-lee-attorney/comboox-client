@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useGeneralKeeperRefundDebt, usePrepareGeneralKeeperRefundDebt } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { VolunteerActivismOutlined } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
 export function RefundDebt({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
   
   const [ amt, setAmt ] = useState<number>();
 

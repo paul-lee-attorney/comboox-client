@@ -1,10 +1,10 @@
 import { Chip, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { Dispatch, SetStateAction } from "react";
 import { statesOfOpt } from "../roc/terms/Options/ContentOfOpt";
 import { SearchOption } from "./SearchOption";
-import { OptWrap, typeOfOpts } from "../../../queries/roo";
+import { OptWrap, typeOfOpts } from "../../../scripts/comp/roo";
 
 
 interface OptionsListProps {

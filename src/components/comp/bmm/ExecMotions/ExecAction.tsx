@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { AddrZero, HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { AddrZero, HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperExecAction,
@@ -21,7 +21,7 @@ import {
   RemoveCircle, 
   Surfing 
 } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export interface Action {
   target: HexType;

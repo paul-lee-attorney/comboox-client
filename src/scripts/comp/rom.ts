@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
-import { registerOfMembersABI } from "../generated";
+import { HexType } from "../common";
+import { registerOfMembersABI } from "../../generated";
 
 export async function getShareNumbersList(addr: HexType): Promise<readonly HexType[]> {
   let res = await readContract({

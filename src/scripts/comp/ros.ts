@@ -1,6 +1,6 @@
-import { HexType } from "../interfaces";
+import { HexType } from "../common";
 import { readContract } from "@wagmi/core";
-import { registerOfSharesABI } from "../generated";
+import { registerOfSharesABI } from "../../generated";
 
 export interface Head {
   seqOfShare: number; // 股票序列号

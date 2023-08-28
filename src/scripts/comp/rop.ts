@@ -1,6 +1,6 @@
-import { Bytes32Zero, HexType } from "../interfaces";
+import { Bytes32Zero, HexType } from "../common";
 import { readContract } from "@wagmi/core";
-import { registerOfPledgesABI } from "../generated";
+import { registerOfPledgesABI } from "../../generated";
 
 export interface Head {
   seqOfShare: number;

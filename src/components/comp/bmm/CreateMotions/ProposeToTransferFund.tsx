@@ -1,14 +1,14 @@
 import { useState } from "react";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
-import { AddrZero, HexType } from "../../../../interfaces";
+import { AddrZero, HexType } from "../../../../scripts/common";
 
 import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";

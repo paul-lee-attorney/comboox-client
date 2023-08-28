@@ -1,14 +1,14 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Stack, TextField } from "@mui/material";
 import { Typography } from "@mui/joy";
 
-import { longDataParser, longSnParser } from "../../../../scripts/toolsKit";
+import { longDataParser, longSnParser } from "../../../../scripts/common/toolsKit";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridEventListener, GridRowSelectionModel } from "@mui/x-data-grid";
-import { Swap } from "../../../../queries/roo";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Swap } from "../../../../scripts/comp/roo";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "./ActionsOfDeal";
 import { useInvestmentAgreement, useInvestmentAgreementGetAllSwaps } from "../../../../generated";
-import { checkValueOfSwap } from "../../../../queries/ia";
+import { checkValueOfSwap } from "../../../../scripts/comp/ia";
 import { ListAltOutlined } from "@mui/icons-material";
 
 

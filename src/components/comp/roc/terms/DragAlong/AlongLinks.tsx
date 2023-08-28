@@ -5,7 +5,7 @@ import {
   Chip,
 } from '@mui/material';
 import { AlongLink } from './DragAlong';
-import { longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
+import { longSnParser, splitStrArr } from '../../../../../scripts/common/toolsKit';
 import { LinkRule } from './LinkRule';
 
 interface AlongLinksProps {

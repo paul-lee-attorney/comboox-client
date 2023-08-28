@@ -4,9 +4,10 @@ import {
   useGeneralKeeperVoteCounting,
 } from "../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
-import { isPassed } from "../../../../queries/meetingMinutes";
+import { isPassed } from "../../../../scripts/common/meetingMinutes";
+import { booxMap } from "../../../../scripts/common";
 
 interface VoteCountingOfBoard {
   seqOfMotion: bigint;
@@ -36,7 +37,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
     args: [ seqOfMotion ],
     onSuccess() {
       if (boox) {
-        isPassed(boox[3], seqOfMotion).then(
+        isPassed(boox[booxMap.BMM], seqOfMotion).then(
           flag => {
             setResult(flag);
             setNextStep(1);

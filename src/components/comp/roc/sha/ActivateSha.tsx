@@ -4,9 +4,9 @@ import {
   useGeneralKeeperActivateSha,
 } from "../../../../generated";
 
-import { FileHistoryProps, } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { LightMode } from "@mui/icons-material";
+import { FileHistoryProps } from "./CirculateSha";
 
 export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 

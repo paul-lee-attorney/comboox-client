@@ -1,6 +1,6 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperCreateSwap } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Approval, SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";

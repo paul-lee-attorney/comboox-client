@@ -2,9 +2,9 @@ import { Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTit
 import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Article } from "@mui/icons-material";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 
-import { InfoOfFile } from "../../../queries/filesFolder";
+import { InfoOfFile } from "../../../scripts/common/filesFolder";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../utils/CopyLongStr";
 import { GetVotingRule } from "../../comp/roc/rules/GetVotingRule";

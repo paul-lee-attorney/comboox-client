@@ -3,7 +3,7 @@ import {
   Paper, Stack,
 } from "@mui/material";
 
-import { HexType } from "../../../interfaces";
+import { HexType } from "../../../scripts/common";
 import { SetOwner } from "./SetOwner";
 import { SetGeneralCounsel } from "./SetGeneralCounsel";
 import { AppointAttorney } from "./AppointAttorney";

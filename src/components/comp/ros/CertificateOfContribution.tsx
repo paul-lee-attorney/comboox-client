@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
-import { centToDollar, dateParser, longSnParser } from "../../../scripts/toolsKit";
-import { Share } from "../../../queries/ros";
+import { centToDollar, dateParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { Share } from "../../../scripts/comp/ros";
 import { Dispatch, SetStateAction } from "react";
 
 

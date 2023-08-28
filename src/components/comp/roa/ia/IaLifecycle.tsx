@@ -11,19 +11,19 @@ import {
   Typography,
 } from "@mui/material";
 
-import { HexType } from "../../../../interfaces";
+import { HexType, booxMap } from "../../../../scripts/common";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
-import { voteEnded } from "../../../../queries/meetingMinutes";
+import { voteEnded } from "../../../../scripts/common/meetingMinutes";
 import { SignIa } from "./SignIa";
 import { CirculateIa } from "./CirculateIa";
 import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
-import { useFilesFolderGetHeadOfFile, useInvestmentAgreementGetTypeOfIa } from "../../../../generated";
+import { useFilesFolderGetHeadOfFile } from "../../../../generated";
 import { FinalizeIa } from "./FinalizeIa";
-import { getTypeOfIA } from "../../../../queries/ia";
-import { established } from "../../../../queries/sigPage";
+import { getTypeOfIA } from "../../../../scripts/comp/ia";
+import { established } from "../../../../scripts/common/sigPage";
 
 
 interface IaLifecycleProps {
@@ -40,13 +40,6 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
   const [ typeOfIa, setTypeOfIa ] = useState<number>();
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 
-  // useInvestmentAgreementGetTypeOfIa({
-  //   address: ia,
-  //   onSuccess(type) {
-  //     setTypeOfIa(type)
-  //   }
-  // })
-
   useEffect(()=>{
     getTypeOfIA(ia).then(
       res => setTypeOfIa(res)
@@ -54,7 +47,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
   }, [ia, activeStep])
 
   useFilesFolderGetHeadOfFile({
-    address: boox ? boox[6] : undefined,
+    address: boox ? boox[booxMap.ROA] : undefined,
     args: ia ? [ia] : undefined,
     onSuccess(head) {
       let seq = head.seqOfMotion;
@@ -73,7 +66,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
             )
             break;
           case 3: 
-            if (boox ) voteEnded(boox[5], seq).then(
+            if (boox ) voteEnded(boox[booxMap.GMM], seq).then(
               flag => setActiveStep(flag ? 5 : 4)
             );            
             break;

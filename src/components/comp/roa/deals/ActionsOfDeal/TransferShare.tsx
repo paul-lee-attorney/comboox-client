@@ -1,6 +1,6 @@
 import { Button, Paper, Stack, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
-import { defaultDeal } from "../../../../../queries/ia";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperTransferTargetShare } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { CurrencyExchange } from "@mui/icons-material";

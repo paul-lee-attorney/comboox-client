@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { Pledge } from "../../../queries/rop";
-import { getPledge } from "../../../queries/rop";
+import { Pledge } from "../../../scripts/comp/rop";
+import { getPledge } from "../../../scripts/comp/rop";
+import { booxMap } from "../../../scripts/common";
 
 
 interface SearchPledgeProps{
@@ -19,7 +20,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
 
   const obtainPledge = async ()=>{
     if (boox && seqOfShare && seqOfPld) {
-      let pld = await getPledge(boox[8], seqOfShare, seqOfPld);
+      let pld = await getPledge(boox[booxMap.ROP], seqOfShare, seqOfPld);
       setPld(pld);
       setOpen(true);
     }

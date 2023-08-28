@@ -1,8 +1,8 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { Deal } from "../../../../queries/ia";
-import { HexType } from "../../../../interfaces";
+import { Deal } from "../../../../scripts/comp/ia";
+import { HexType } from "../../../../scripts/common";
 import { CheckValueOfSwap } from "./ActionsOfSwap/CheckValueOfSwap";
 
 export interface ActionsOfSwapProps{

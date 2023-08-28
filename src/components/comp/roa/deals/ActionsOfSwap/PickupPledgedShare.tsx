@@ -2,7 +2,7 @@ import { Button, Paper } from "@mui/material";
 import { LockOpen } from "@mui/icons-material";
 import { useGeneralKeeperPickupPledgedShare } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export function PickupPledgedShare({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 

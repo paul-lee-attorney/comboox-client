@@ -9,7 +9,7 @@ import {
   Typography,
 } from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { Create } from "@mui/icons-material";
 
@@ -17,10 +17,11 @@ import {
   useGeneralKeeperCreateIa, 
 } from "../../../generated";
 
-import { InfoOfFile, getFilesListWithInfo } from "../../../queries/filesFolder";
+import { InfoOfFile, getFilesListWithInfo } from "../../../scripts/common/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
+import { booxMap } from "../../../scripts/common";
 
 function RegisterOfAgreements() {
   const { gk, boox } = useComBooxContext();
@@ -39,7 +40,7 @@ function RegisterOfAgreements() {
 
   useEffect(()=>{
     if (boox) {
-      getFilesListWithInfo(boox[6]).then(
+      getFilesListWithInfo(boox[booxMap.ROA]).then(
         list => setFilesInfoList(list)
       )
     }
@@ -58,7 +59,7 @@ function RegisterOfAgreements() {
           </Toolbar>
 
           {boox && (
-            <CopyLongStrSpan title="Addr" size="body1" src={boox[6].toLowerCase()} />
+            <CopyLongStrSpan title="Addr" size="body1" src={boox[booxMap.ROA].toLowerCase()} />
           )}
 
 

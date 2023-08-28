@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
-import { AddrZero, HexType } from "../interfaces";
+import { AddrZero, HexType } from ".";
 
 interface ContextType {
   userNo: number | undefined,

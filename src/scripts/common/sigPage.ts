@@ -1,6 +1,6 @@
-import { HexType } from "../interfaces";
+import { HexType } from ".";
 import { readContract } from "@wagmi/core";
-import { sigPageABI } from "../generated";
+import { sigPageABI } from "../../generated";
 
 
 

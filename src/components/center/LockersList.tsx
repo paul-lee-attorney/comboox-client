@@ -3,8 +3,8 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
-import { dateParser, longDataParser, longSnParser } from '../../scripts/toolsKit';
-import { Locker } from '../../queries/rc';
+import { dateParser, longDataParser, longSnParser } from '../../scripts/common/toolsKit';
+import { Locker } from '../../scripts/comp/rc';
 import { LockerFinder } from './LockerFinder';
 
 

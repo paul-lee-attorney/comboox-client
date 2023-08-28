@@ -1,15 +1,16 @@
 import { useState } from "react";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Toolbar } from "@mui/material";
-import { Calculate, Handshake, ListAltOutlined } from "@mui/icons-material";
+import { Calculate, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperComputeFirstRefusal, useRegisterOfAgreementsHasFrClaims } from "../../../../generated";
-import { centToDollar, dateParser, longSnParser, toPercent } from "../../../../scripts/toolsKit";
-import { ActionsOfDealCenterProps, ActionsOfDealProps } from "./ActionsOfDeal";
-import { FRClaim, getFRClaimsOfDeal } from "../../../../queries/roa";
+import { centToDollar, dateParser, longSnParser, toPercent } from "../../../../scripts/common/toolsKit";
+import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
+import { FRClaim, getFRClaimsOfDeal } from "../../../../scripts/comp/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { defaultDeal } from "../../../../queries/ia";
+import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
+import { booxMap } from "../../../../scripts/common";
 
 export function GetFRClaims({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
@@ -81,11 +82,11 @@ export function GetFRClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
   const {
     refetch: getFRClaims,
   } = useRegisterOfAgreementsHasFrClaims({
-    address: boox ? boox[6] : undefined,
+    address: boox ? boox[booxMap.ROA] : undefined,
     args: [ia, BigInt(deal.head.seqOfDeal)],
     onSuccess(flag) {
       if (flag && boox)
-        getFRClaimsOfDeal(boox[6], ia, deal.head.seqOfDeal).
+        getFRClaimsOfDeal(boox[booxMap.ROA], ia, deal.head.seqOfDeal).
           then(v => setClaims(v));
     }
   })

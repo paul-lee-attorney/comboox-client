@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { HexType } from "../../../../interfaces";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperCreateMotionToApproveDoc, 
@@ -8,7 +8,7 @@ import {
 
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 interface CreateMotionToApproveDoc {
   getMotionsList: () => any;

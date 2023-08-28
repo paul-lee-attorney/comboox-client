@@ -1,8 +1,8 @@
 import { readContract, fetchBalance } from "@wagmi/core";
-import { AddrZero, HexType } from "../interfaces";
-import { generalKeeperABI } from "../generated";
-import { getDK, getOwner } from "./accessControl";
-import { toStr } from "../scripts/toolsKit";
+import { AddrZero, HexType } from "../common";
+import { generalKeeperABI } from "../../generated";
+import { getDK, getOwner } from "../common/accessControl";
+import { toStr } from "../common/toolsKit";
 
 export const nameOfBooks = [
   'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 

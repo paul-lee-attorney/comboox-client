@@ -18,11 +18,15 @@ import {
   useAccessControlSetOwner,
 } from '../../../generated';
 
-import { ContractProps, HexType } from '../../../interfaces';
-import { getOwner } from '../../../queries/accessControl';
-import { HexParser } from '../../../scripts/toolsKit';
+import { HexType } from '../../../scripts/common';
+import { getOwner } from '../../../scripts/common/accessControl';
+import { HexParser } from '../../../scripts/common/toolsKit';
 
-export function SetOwner({ addr }: ContractProps) {
+export interface AccessControlProps{
+  addr: HexType;
+}
+
+export function SetOwner({ addr }: AccessControlProps) {
   const [owner, setOwner] = useState<HexType>();
 
   const {

@@ -1,11 +1,11 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
 import { LinearProgress, Typography } from "@mui/joy";
 
-import { dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/toolsKit";
-import { Bytes32Zero, HexType } from "../../../interfaces";
+import { dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/common/toolsKit";
+import { Bytes32Zero, HexType } from "../../../scripts/common";
 import { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { Ballot, VoteCase, getBallotsList } from "../../../queries/meetingMinutes";
+import { Ballot, VoteCase, getBallotsList } from "../../../scripts/common/meetingMinutes";
 
 const columns: GridColDef[] = [
   { 

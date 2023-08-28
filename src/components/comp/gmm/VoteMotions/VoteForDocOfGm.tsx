@@ -3,13 +3,13 @@ import {
   useGeneralKeeperCastVoteOfGm,
 } from "../../../../generated";
 
-import { Bytes32Zero, HexType } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { HowToVote } from "@mui/icons-material";
 import { useState } from "react";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../../queries/meetingMinutes";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 interface VoteForDocOfGmProps {
   seqOfMotion: bigint ;
@@ -24,15 +24,6 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperCastVoteOfGm ({
-  //   address: gk,
-  //   args: attitude && sigHash
-  //       ? [ seqOfMotion, BigInt(attitude), sigHash ]
-  //       : undefined,
-  // });
-
   const {
     isLoading: castVoteLoading,
     write: castVote,
@@ -43,7 +34,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
         : undefined,
     onSuccess() {
       if (boox)
-        getVoteResult(boox[5], seqOfMotion).then(
+        getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
           list => setVoteResult(list)
         );
     }
@@ -93,7 +84,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
       </Stack>
 
       {voteResult && boox && (
-        <VoteResult addr={boox[5]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
+        <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
       )}
 
     </Stack>

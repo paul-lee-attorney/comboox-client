@@ -4,7 +4,7 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
-import { dateParser, longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
+import { dateParser, longSnParser, splitStrArr } from '../../../../../scripts/common/toolsKit';
 
 interface LockerOfShareProps {
   seqOfShare: number,

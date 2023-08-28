@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
-import { registerOfConstitutionABI } from "../generated";
+import { HexType } from "../common";
+import { registerOfConstitutionABI } from "../../generated";
 
 
 export async function getSha(boc: HexType): Promise<HexType> {

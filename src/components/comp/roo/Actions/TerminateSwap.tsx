@@ -1,6 +1,6 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperTerminateSwap } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";

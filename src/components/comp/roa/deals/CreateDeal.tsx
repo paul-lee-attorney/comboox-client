@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 
-import { Bytes32Zero, HexType } from "../../../../interfaces";
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 
 import { 
   useInvestmentAgreementAddDeal, 
@@ -23,9 +23,9 @@ import { AddCircle, RemoveCircle } from "@mui/icons-material";
 
 import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { Body, Deal, Head } from "../../../../queries/ia";
-import { getShare } from "../../../../queries/ros";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { Body, Deal, Head } from "../../../../scripts/comp/ia";
+import { getShare } from "../../../../scripts/comp/ros";
 
 const defaultHead: Head = {
   typeOfDeal: 2,
@@ -136,7 +136,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
     let seq = parseInt(e.target.value ?? '0');
 
     if (seq > 0 && boox) {
-      getShare(boox[9], seq).then(
+      getShare(boox[booxMap.ROS], seq).then(
         res => {
           if (res)
             setHead(v => ({

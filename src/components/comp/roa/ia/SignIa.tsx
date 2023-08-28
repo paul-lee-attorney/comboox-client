@@ -1,11 +1,11 @@
 import { Alert, Box, Button, Stack, TextField, } from "@mui/material";
 import { useGeneralKeeperSignIa, useSigPageEstablished, useSigPageGetParasOfPage } from "../../../../generated";
-import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useState } from "react";
-import { ParasOfSigPage, parseParasOfPage } from "../../../../queries/sigPage";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { ParasOfSigPage, parseParasOfPage } from "../../../../scripts/common/sigPage";
+import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();

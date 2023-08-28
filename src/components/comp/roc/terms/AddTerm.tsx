@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { AddrZero, HexType } from "../../../../interfaces";
+import { AddrZero, HexType } from "../../../../scripts/common";
 
 import { 
   useShareholdersAgreementCreateTerm, 
   useShareholdersAgreementRemoveTerm 
 } from "../../../../generated";
 
-import { getDocAddr } from "../../../../queries/rc";
+import { getDocAddr } from "../../../../scripts/comp/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
 

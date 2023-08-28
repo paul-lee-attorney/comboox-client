@@ -2,10 +2,10 @@ import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextFi
 import { Dispatch, SetStateAction, useState } from "react";
 import { Update } from "@mui/icons-material";
 import { useGeneralKeeperSetCompInfo } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
-import { CompInfo } from "../../../../queries/gk";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { CompInfo } from "../../../../scripts/comp/gk";
 import { defaultInfo } from "../SetCompInfo";
-import { toAscii } from "../../../../scripts/toolsKit";
+import { toAscii } from "../../../../scripts/common/toolsKit";
 import { currencies } from "../GeneralInfo";
 
 

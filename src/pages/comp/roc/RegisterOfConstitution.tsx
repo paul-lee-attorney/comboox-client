@@ -10,7 +10,7 @@ import {
   Box,
 } from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { Create } from "@mui/icons-material";
 
@@ -19,10 +19,11 @@ import {
   useGeneralKeeperCreateSha,
 } from "../../../generated";
 
-import { InfoOfFile, getFilesInfoList, } from "../../../queries/filesFolder";
+import { InfoOfFile, getFilesInfoList, } from "../../../scripts/common/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
+import { booxMap } from "../../../scripts/common";
 
 function RegisterOfConstitution() {
   const { gk, boox } = useComBooxContext();
@@ -34,10 +35,10 @@ function RegisterOfConstitution() {
   const {
     refetch: getFilesList     
   } = useFilesFolderGetFilesList({
-    address: boox ? boox[1] : undefined,
+    address: boox ? boox[booxMap.ROC] : undefined,
     onSuccess(ls) {
       if (boox)
-        getFilesInfoList(boox[1], ls).then(
+        getFilesInfoList(boox[booxMap.ROC], ls).then(
           list => {
             setFilesInfoList(list);
           }
@@ -70,7 +71,7 @@ function RegisterOfConstitution() {
           </Toolbar>
 
           {boox && (
-              <CopyLongStrSpan size="body1" title="Addr" src={boox[1].toLowerCase()} />
+              <CopyLongStrSpan size="body1" title="Addr" src={boox[booxMap.ROC].toLowerCase()} />
           )}
 
         </Stack>

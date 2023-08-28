@@ -1,8 +1,8 @@
 import { Box, Paper, Toolbar } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { titleOfPositions } from "../roc/rules/SetPositionAllocateRule";
-import { Position } from "../../../queries/rod";
+import { Position } from "../../../scripts/comp/rod";
 import { GetPosition } from "./GetPosition";
 import { GetFullPosInfoInHand } from "./GetFullPosInfoInHand";
 

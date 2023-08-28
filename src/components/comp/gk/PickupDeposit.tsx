@@ -1,6 +1,6 @@
 import { IconButton, Tooltip } from "@mui/material";
 import { useGeneralKeeperPickupDeposit } from "../../../generated";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Savings, SavingsOutlined } from "@mui/icons-material";
 
 

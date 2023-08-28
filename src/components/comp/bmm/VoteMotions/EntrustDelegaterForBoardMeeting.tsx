@@ -4,10 +4,10 @@ import {
   useGeneralKeeperEntrustDelegaterForBoardMeeting,
 } from "../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
-import { HexType } from "../../../../interfaces";
+import { HexType, booxMap } from "../../../../scripts/common";
 
 interface EntrustDelegaterForBmProps {
   seqOfMotion: bigint,
@@ -40,7 +40,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, getMotio
         : undefined ,
     onSuccess() {
       if (boox) {
-        getMotionsList(boox[2]);
+        getMotionsList(boox[booxMap.ROD]);
         setOpen(false);
       }
     },

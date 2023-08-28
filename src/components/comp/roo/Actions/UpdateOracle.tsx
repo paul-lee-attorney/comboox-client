@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperUpdateOracle } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 

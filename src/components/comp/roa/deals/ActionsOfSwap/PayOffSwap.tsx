@@ -3,7 +3,7 @@ import { Button, Paper } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useGeneralKeeperPayOffRejectedDeal } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export function PayOffSwap({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 

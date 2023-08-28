@@ -13,7 +13,7 @@ import {
   Grid,
 } from "@mui/material";
 
-import { HexType } from "../../../../interfaces";
+import { HexType } from "../../../../scripts/common";
 
 import {
   AddCircle,

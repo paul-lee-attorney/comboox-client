@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Bytes32Zero, HexType } from "../../../interfaces";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { Bytes32Zero, HexType, booxMap } from "../../../scripts/common";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { 
   useGeneralKeeperRequestPaidInCapital, 
@@ -12,9 +12,9 @@ import { Box, Collapse, IconButton, Paper, Stack, Switch, TextField, Toolbar, To
 import { ExitToApp, IosShare, Output } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { Share } from "../../../queries/ros";
-import { Locker, HeadOfLocker,  defaultHeadOfLocker } from "../../../queries/rc";
-import { HexParser, splitPayload } from "../../../scripts/toolsKit";
+import { Share } from "../../../scripts/comp/ros";
+import { Locker, HeadOfLocker,  defaultHeadOfLocker } from "../../../scripts/comp/rc";
+import { HexParser, splitPayload } from "../../../scripts/common/toolsKit";
 
 
 interface LockerOfPayInCapProps {
@@ -37,7 +37,7 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
   const {
     refetch: getLocker,
   } = useRegisterOfSharesGetLocker({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     args: hashLock ? [ hashLock ] : undefined,
     onSuccess(locker) {
       if (hashLock) {

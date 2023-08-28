@@ -4,10 +4,10 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
-import { longSnParser, splitStrArr } from '../../../../../scripts/toolsKit';
+import { longSnParser, splitStrArr } from '../../../../../scripts/common/toolsKit';
 import { ContentOfOpt } from './ContentOfOpt';
 import { TriggerCondition } from './TriggerCondition';
-import { OptWrap } from '../../../../../queries/roo';
+import { OptWrap } from '../../../../../scripts/comp/roo';
 
 interface OptProps {
   optWrap: OptWrap;

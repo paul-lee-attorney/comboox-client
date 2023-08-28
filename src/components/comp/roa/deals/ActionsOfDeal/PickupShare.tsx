@@ -1,7 +1,7 @@
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { useState } from "react";
-import { defaultDeal } from "../../../../../queries/ia";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperCloseDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { LockOpen } from "@mui/icons-material";

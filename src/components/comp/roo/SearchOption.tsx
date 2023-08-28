@@ -1,9 +1,10 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
-import { OptWrap, getOptWrap } from "../../../queries/roo";
+import { OptWrap, getOptWrap } from "../../../scripts/comp/roo";
+import { booxMap } from "../../../scripts/common";
 
 interface SearchOptionProps{
   setOpt: Dispatch<SetStateAction<OptWrap>>;
@@ -17,7 +18,7 @@ export function SearchOption({setOpt, setOpen}:SearchOptionProps) {
 
   const obtainOpt = async ()=>{
     if (boox && seqOfOpt) {
-      let opt = await getOptWrap(boox[7], seqOfOpt);
+      let opt = await getOptWrap(boox[booxMap.ROO], seqOfOpt);
       setOpt(opt);
       setOpen(true);
     }

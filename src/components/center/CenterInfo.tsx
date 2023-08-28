@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../interfaces";
+import { AddrOfRegCenter, AddrZero, HexType } from "../../scripts/common";
 import { useIPriceConsumerGetFeedRegistryAddress, useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../generated";
-import { Rule, defaultRule } from "../../queries/rc";
+import { Rule, defaultRule } from "../../scripts/comp/rc";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { CopyLongStrTF } from "../common/utils/CopyLongStr";
-import { longDataParser, toPercent } from "../../scripts/toolsKit";
+import { longDataParser, toPercent } from "../../scripts/common/toolsKit";
 import { ActionsOfOwner } from "./ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
 import { useWalletClient } from "wagmi";

@@ -18,7 +18,7 @@ import {
 
 import { 
   HexType,
-} from "../../../interfaces";
+} from "../../../scripts/common";
 
 import {
   Update,
@@ -42,8 +42,8 @@ import {
 } from "../../../generated";
 
 
-import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../queries/sigPage";
-import { dateParser, longSnParser } from "../../../scripts/toolsKit";
+import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../scripts/common/sigPage";
+import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/AcceptSha";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
@@ -73,7 +73,7 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
   return output;
 }
 
-interface SigPageProps {
+export interface SigPageProps {
   addr: HexType,
   initPage: boolean,
   isFinalized: boolean,

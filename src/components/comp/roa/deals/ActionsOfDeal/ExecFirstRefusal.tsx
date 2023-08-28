@@ -1,14 +1,14 @@
 import { useState } from "react";
-import { Bytes32Zero, HexType } from "../../../../../interfaces";
-import { defaultDeal } from "../../../../../queries/ia";
+import { Bytes32Zero, HexType, booxMap } from "../../../../../scripts/common";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useRegisterOfConstitutionPointer, useGeneralKeeperExecFirstRefusal } from "../../../../../generated";
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeopleOutlined } from "@mui/icons-material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FirstRefusalRule } from "../../../roc/rules/SetFirstRefusalRule";
-import { getFirstRefusalRules } from "../../../../../queries/sha";
-import { HexParser, longSnParser } from "../../../../../scripts/toolsKit";
+import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
+import { HexParser, longSnParser } from "../../../../../scripts/common/toolsKit";
 
 export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:ActionsOfDealProps) {
 
@@ -17,7 +17,7 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
   const [ rules, setRules ] = useState<FirstRefusalRule[]>();
 
   useRegisterOfConstitutionPointer({
-    address: boox ? boox[1] : undefined,
+    address: boox ? boox[booxMap.ROC] : undefined,
     onSuccess(sha) {
       getFirstRefusalRules(sha).then(
         list => setRules(list)

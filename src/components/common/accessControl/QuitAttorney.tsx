@@ -15,11 +15,12 @@ import {
   useAccessControlRenounceRole,
 } from '../../../generated';
 
-import { ContractProps, HexType } from '../../../interfaces';
+import { HexType } from '../../../scripts/common';
+import { AccessControlProps } from './SetOwner';
 
 const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 
-export function QuitAttorney({ addr }: ContractProps) {
+export function QuitAttorney({ addr }: AccessControlProps) {
 
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);

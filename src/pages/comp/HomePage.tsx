@@ -2,15 +2,16 @@ import { useState } from "react";
 
 import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/material";
 
-import { useComBooxContext } from "../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 
 import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers";
 import { InitBos } from "../../components/comp/ros/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
-import { getKeeper } from "../../queries/gk";
+import { getKeeper } from "../../scripts/comp/gk";
 import { useAccessControlGetDk, useRegisterOfSharesGetDk } from "../../generated";
 import { SetCompInfo } from "../../components/comp/gk/SetCompInfo";
+import { booxMap } from "../../scripts/common";
 
 
 function HomePage() {
@@ -18,7 +19,7 @@ function HomePage() {
   const [ activeStep, setActiveStep ] = useState<number>(0);
 
   useAccessControlGetDk({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     onSuccess(dk) {
       if (gk)
         getKeeper(gk, 4).then(

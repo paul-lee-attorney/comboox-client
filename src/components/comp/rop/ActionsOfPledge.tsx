@@ -7,7 +7,7 @@ import { ReleasePledge } from "./Actions/ReleasePledge";
 import { ExecPledge } from "./Actions/ExecPledge";
 import { RevokePledge } from "./Actions/RevokePledge";
 import { TransferPledge } from "./Actions/TransferPledge";
-import { Pledge } from "../../../queries/rop";
+import { Pledge } from "../../../scripts/comp/rop";
 
 
 export interface ActionsOfPledgeProps{

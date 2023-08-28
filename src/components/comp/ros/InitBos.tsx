@@ -20,15 +20,15 @@ import {
 } from '../../../generated';
 
 
-import { Bytes32Zero } from '../../../interfaces';
+import { Bytes32Zero, booxMap } from '../../../scripts/common';
 
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
-import { Share, codifyHeadOfShare, getSharesList, } from '../../../queries/ros';
-import { getShareNumbersList } from '../../../queries/rom';
+import { Share, codifyHeadOfShare, getSharesList, } from '../../../scripts/comp/ros';
+import { getShareNumbersList } from '../../../scripts/comp/rom';
 
 
 const defaultShare: Share = {
@@ -65,7 +65,7 @@ export function InitBos({nextStep}: InitBosProps) {
     isLoading: issueShareLoading,
     write: issueShare,
   } = useRegisterOfSharesIssueShare({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     args: share.head.class && share.head.issueDate &&
           share.head.shareholder && share.head.priceOfPaid && 
           share.head.priceOfPar && share.body.payInDeadline &&
@@ -81,7 +81,7 @@ export function InitBos({nextStep}: InitBosProps) {
     isLoading: delShareLoading,
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     args: share.head.seqOfShare > 0
         ? [ BigInt(share.head.seqOfShare), 
             share.body.paid, 
@@ -92,8 +92,8 @@ export function InitBos({nextStep}: InitBosProps) {
 
   useEffect(()=>{
     if (boox) {
-      getShareNumbersList(boox[4]).then(
-        list => getSharesList(boox[9], list).then(
+      getShareNumbersList(boox[booxMap.ROM]).then(
+        list => getSharesList(boox[booxMap.ROS], list).then(
             ls => setSharesList(ls)
       ))
     }

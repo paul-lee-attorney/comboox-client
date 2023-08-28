@@ -1,10 +1,11 @@
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Paper, Stack, Toolbar } from "@mui/material";
 
 import { MembersEquityList } from "../../../components/comp/rom/MembersList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { useState } from "react";
 import { InvHistoryOfMember } from "../../../components/comp/rom/InvHistoryOfMember";
+import { booxMap } from "../../../scripts/common";
 
 function RegisterOfMembers() {
 
@@ -22,7 +23,7 @@ function RegisterOfMembers() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={boox[4].toLowerCase()} />
+          <CopyLongStrSpan title="Addr" size="body1" src={boox[booxMap.ROM].toLowerCase()} />
         )}
       </Stack>
 

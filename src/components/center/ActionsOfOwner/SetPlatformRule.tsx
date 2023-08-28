@@ -5,10 +5,10 @@ import {
   useRegCenterSetPlatformRule,
 } from '../../../generated';
 
-import { AddrOfRegCenter } from '../../../interfaces';
+import { AddrOfRegCenter } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { Rule, codifyPlatformRule, defaultRule } from '../../../queries/rc';
+import { Rule, codifyPlatformRule, defaultRule } from '../../../scripts/comp/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {

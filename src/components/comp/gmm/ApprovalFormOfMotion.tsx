@@ -1,15 +1,15 @@
 import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../scripts/ComBooxContext";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { HexType } from "../../../interfaces";
+import { HexType, booxMap } from "../../../scripts/common";
 import { Article } from "@mui/icons-material";
-import { dateParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { ProposeMotionToGeneralMeeting } from "./VoteMotions/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "./VoteMotions/CastVoteOfGm";
-import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../queries/meetingMinutes";
+import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../scripts/common/meetingMinutes";
 import { VoteCountingOfGm } from "./VoteMotions/VoteCountingOfGm";
 import { TakeSeat } from "./ExecMotions/TakeSeat";
 import { RemoveDirector } from "./ExecMotions/RemoveDirector";
@@ -19,7 +19,7 @@ import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 // import { useMeetingMinutes } from "../../../generated";
 // import { RequestToBuy } from "./ExecMotions/RequestToBuy";
 import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
-import { getFile } from "../../../queries/filesFolder";
+import { getFile } from "../../../scripts/common/filesFolder";
 
 export interface ApprovalFormOfMotionProps{
   minutes: HexType;
@@ -50,7 +50,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
     setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
-                          ? boox[1] : boox[6];
+                          ? boox[booxMap.ROC] : boox[booxMap.ROA];
       getFile(folder, addrOfDoc).then(
         file => setSnOfDoc(file.snOfDoc)
       );
@@ -63,7 +63,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
     if ( boox ) {
       let minutes: HexType =
       motion.votingRule.authority == 1
-      ? boox[5] : boox[3];
+      ? boox[booxMap.GMM] : boox[booxMap.BMM];
       voteEnded(minutes, motion.head.seqOfMotion).then(
         flag => {
           setVoteIsEnd(flag);

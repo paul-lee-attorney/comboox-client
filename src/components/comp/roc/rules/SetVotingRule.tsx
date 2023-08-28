@@ -20,8 +20,8 @@ import {
 
 import { AddRule } from './AddRule';
 
-import { HexType } from '../../../../interfaces';
-import { longSnParser, toPercent } from '../../../../scripts/toolsKit';
+import { HexType } from '../../../../scripts/common';
+import { longSnParser, toPercent } from '../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { useShareholdersAgreementGetRule } from '../../../../generated';
 

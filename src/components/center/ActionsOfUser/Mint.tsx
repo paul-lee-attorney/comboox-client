@@ -5,13 +5,13 @@ import {
   useRegCenterMint, 
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../../queries/common';
+import { getReceipt } from '../../../scripts/common/common';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { getEthPart, getGEthPart, getGWeiPart, longDataParser, removeKiloSymbol } from '../../../scripts/toolsKit';
+import { getEthPart, getGEthPart, getGWeiPart } from '../../../scripts/common/toolsKit';
 
 interface Receipt{
   to: string;

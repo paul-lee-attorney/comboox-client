@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
-import { accessControlABI } from "../generated";
+import { HexType } from ".";
+import { accessControlABI } from "../../generated";
 
 export const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 

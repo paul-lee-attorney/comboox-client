@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../interfaces";
-import { registerOfDirectorsABI } from "../generated";
+import { HexType } from "../common";
+import { registerOfDirectorsABI } from "../../generated";
 
 export interface Position {
   title: number;

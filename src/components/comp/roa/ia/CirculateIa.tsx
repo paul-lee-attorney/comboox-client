@@ -1,10 +1,11 @@
 import { Button, Divider, Stack, TextField } from "@mui/material";
 import { useGeneralKeeperCirculateIa } from "../../../../generated";
-import { Bytes32Zero, FileHistoryProps, HexType, } from "../../../../interfaces";
-import { useComBooxContext } from "../../../../scripts/ComBooxContext";
+import { Bytes32Zero, HexType, } from "../../../../scripts/common";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
-import { HexParser } from "../../../../scripts/toolsKit";
+import { HexParser } from "../../../../scripts/common/toolsKit";
+import { FileHistoryProps } from "../../roc/sha/CirculateSha";
 
 export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
 

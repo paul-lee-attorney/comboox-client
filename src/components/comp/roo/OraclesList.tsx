@@ -1,10 +1,10 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { Typography } from "@mui/joy";
 
-import { dateParser, longDataParser, longSnParser } from "../../../scripts/toolsKit";
+import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { CheckPoint } from "../../../queries/roo";
+import { CheckPoint } from "../../../scripts/comp/roo";
 
 const columns: GridColDef[] = [
   { 

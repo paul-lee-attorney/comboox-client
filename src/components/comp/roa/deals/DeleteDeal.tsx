@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
-import { Deal, defaultDeal } from "../../../../queries/ia";
+import { Deal, defaultDeal } from "../../../../scripts/comp/ia";
 import { useInvestmentAgreement, useInvestmentAgreementDelDeal } from "../../../../generated";
-import { HexType } from "../../../../interfaces";
+import { HexType } from "../../../../scripts/common";
 import { Button } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 

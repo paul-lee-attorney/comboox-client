@@ -5,7 +5,7 @@ import {
   useRegCenterPickupPoints,
 } from '../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../interfaces';
+import { AddrOfRegCenter, HexType } from '../../scripts/common';
 import { Redo } from '@mui/icons-material';
 import { useState } from 'react';
 

@@ -5,7 +5,7 @@ import { WagmiConfig } from 'wagmi'
 
 import { config } from '../wagmi'
 
-import { ComBooxWrapper } from '../scripts/ComBooxContext'
+import { ComBooxWrapper } from '../scripts/common/ComBooxContext'
 
 import { LocalizationProvider } from '@mui/x-date-pickers'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'

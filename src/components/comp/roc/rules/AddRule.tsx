@@ -12,7 +12,7 @@ import {
   useShareholdersAgreementAddRule,
 } from '../../../../generated';
 
-import { HexType } from '../../../../interfaces';
+import { HexType } from '../../../../scripts/common';
 
 interface AddRuleProps {
   sha: HexType,

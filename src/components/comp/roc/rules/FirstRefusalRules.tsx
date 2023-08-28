@@ -13,8 +13,6 @@ import {
   Grid,
 } from "@mui/material";
 
-import { HexType, ShaRuleInputProps } from "../../../../interfaces";
-
 import {
   AddCircle,
   ListAlt,

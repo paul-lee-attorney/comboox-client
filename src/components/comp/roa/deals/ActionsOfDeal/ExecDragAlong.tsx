@@ -1,13 +1,13 @@
 import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
-import { defaultDeal } from "../../../../../queries/ia";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperExecDragAlong, useGeneralKeeperExecTagAlong } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  AgricultureOutlined, DirectionsRun, SellOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { Bytes32Zero, HexType } from "../../../../../interfaces";
+import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
-import { HexParser } from "../../../../../scripts/toolsKit";
+import { HexParser } from "../../../../../scripts/common/toolsKit";
 
 export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();

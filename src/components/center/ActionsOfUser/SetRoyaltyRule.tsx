@@ -5,10 +5,10 @@ import {
   useRegCenterSetRoyaltyRule
 } from '../../../generated';
 
-import { AddrOfRegCenter } from '../../../interfaces';
+import { AddrOfRegCenter } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { Key, codifyRoyaltyRule, defaultKey } from '../../../queries/rc';
+import { Key, codifyRoyaltyRule, defaultKey } from '../../../scripts/comp/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {

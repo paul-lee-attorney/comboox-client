@@ -1,6 +1,6 @@
 import { Button, Paper, Stack, Toolbar } from "@mui/material";
-import { useComBooxContext } from "../../../../../scripts/ComBooxContext";
-import { defaultDeal } from "../../../../../queries/ia";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperTerminateDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  DirectionsRun } from "@mui/icons-material";

@@ -21,7 +21,8 @@ import {
 } from '../../../generated';
 
 
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { booxMap } from '../../../scripts/common';
 
 interface SetMaxQtyOfMembersProps {
   nextStep: (next: number) => void;
@@ -37,7 +38,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const {
     refetch: getMaxQty
   } = useRegisterOfMembersMaxQtyOfMembers({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(max) {
       setMax(max.toString());
     }
@@ -47,7 +48,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 
   } = useRegisterOfMembersSetMaxQtyOfMembers({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     args: [BigInt(inputMax)],
     onSuccess() {
       getMaxQty();

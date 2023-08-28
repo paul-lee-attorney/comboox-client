@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useRegCenterGetLocker } from "../../generated";
-import { AddrOfRegCenter, HexType } from "../../interfaces";
-import { Locker, getLocker } from "../../queries/rc";
+import { AddrOfRegCenter, HexType } from "../../scripts/common";
+import { Locker, getLocker } from "../../scripts/comp/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { splitPayload } from "../../scripts/toolsKit";
+import { splitPayload } from "../../scripts/common/toolsKit";
 
 
 

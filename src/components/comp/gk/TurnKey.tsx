@@ -24,9 +24,9 @@ import {
   useAccessControlSetDirectKeeper,
 } from '../../../generated';
 
-import { HexType } from '../../../interfaces';
+import { HexType, booxMap } from '../../../scripts/common';
 
-import { useComBooxContext } from '../../../scripts/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 interface TurnKeyProps {
   nextStep: (next: number) => void;
@@ -50,7 +50,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
   const {
     refetch: getDkOfBom
   } = useAccessControlGetDk({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(res) {
       setDKOfBom(res)
     }
@@ -61,7 +61,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
   const {
     refetch: getDkOfBos
   } = useAccessControlGetDk({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     onSuccess(res) {
       setDKOfBos(res)
     }
@@ -71,7 +71,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     isLoading: setBomDKLoading,
     write: setBomDK,
   } = useAccessControlSetDirectKeeper({
-    address: boox ? boox[4] : undefined,
+    address: boox ? boox[booxMap.ROM] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess() {
       getDkOfBom();
@@ -82,7 +82,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
     isLoading: setBosDKLoading,
     write: setBosDK
   } = useAccessControlSetDirectKeeper({
-    address: boox ? boox[9] : undefined,
+    address: boox ? boox[booxMap.ROS] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess() {
       getDkOfBos();
