@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
 import { Typography } from "@mui/joy";
 
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
@@ -14,24 +14,24 @@ const columns: GridColDef[] = [
     width: 180,
   },
   { 
-    field: 'paid', 
-    headerName: 'Paid',
+    field: 'p1', 
+    headerName: 'Para-1',
     valueGetter: p => longDataParser(p.row.paid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 180,
   },
   { 
-    field: 'par', 
-    headerName: 'Par',
+    field: 'p2', 
+    headerName: 'Para-2',
     valueGetter: p => longDataParser(p.row.par.toString()),
     headerAlign: 'right',
     align:'right',
     width: 180,
   },  
   { 
-    field: 'cleanPaid', 
-    headerName: 'CleanPaid',
+    field: 'p3', 
+    headerName: 'Para-3',
     valueGetter: p => longDataParser(p.row.cleanPaid.toString()),
     headerAlign: 'right',
     align:'right',
@@ -61,17 +61,51 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
 
   return (
     <>
-      <Button fullWidth onClick={ handleClick } >
+      <Button 
+        variant="outlined" 
+        fullWidth
+        sx={{
+          m:1, height:40
+        }} 
+        onClick={ handleClick } 
+      >
 
         <Typography
           level="body3"
           fontWeight="xl"
-          textColor="common.white"
-          sx={{ mixBlendMode: 'difference' }}
+          color="primary"
         >
-          p1: { longDataParser(oracle ? oracle.paid.toString(): '0')} 
-          p2: { longDataParser(oracle ? oracle.par.toString(): '0')}
-          p3: { longDataParser(oracle ? oracle.cleanPaid.toString(): '0')}
+          Oracles : 
+        </Typography>
+
+        <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
+
+        <Typography
+          level="body3"
+          fontWeight="xl"
+          color="primary"
+        >
+          p1: {longDataParser(oracle ? oracle.paid.toString(): '0')}
+        </Typography>
+        
+        <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
+
+        <Typography
+          level="body3"
+          fontWeight="xl"
+          color="primary"
+        >
+          p2: {longDataParser(oracle ? oracle.par.toString(): '0')}
+        </Typography>
+
+        <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
+
+        <Typography
+          level="body3"
+          fontWeight="xl"
+          color="primary"
+        >        
+          p3: {longDataParser(oracle ? oracle.cleanPaid.toString(): '0')}
         </Typography>            
 
       </Button>
@@ -95,7 +129,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
               <DataGrid 
                 initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
                 pageSizeOptions={[5, 10, 15, 20]} 
-                getRowId={row => row.acct} 
+                getRowId={row => row.timestamp} 
                 rows={ list } 
                 columns={ columns }
                 disableRowSelectionOnClick

@@ -23,7 +23,7 @@ import {
 
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
-import { User } from "../../../scripts/comp/rc";
+import { User } from "../../../scripts/center/rc";
 import { AddrOfRegCenter, HexType, booxMap } from "../../../scripts/common";
 import { CompInfo, balanceOfGwei } from "../../../scripts/comp/gk";
 import { PickupDeposit } from "./PickupDeposit";

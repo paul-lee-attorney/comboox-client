@@ -148,7 +148,11 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt.gp != '-' && receipt?.amt.gp + ' Giga-CBP '} {receipt?.amt.cbp != '-' && receipt?.amt.cbp + ' CBP ' } {receipt?.amt.glee != '-' && receipt?.amt.glee + ' GLee ' } minted to Address ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
+            {(receipt?.amt.gp != '-' && receipt?.amt.gp != '0') && receipt?.amt.gp + ' Giga-CBP '} 
+            {(receipt?.amt.cbp != '-' && receipt?.amt.cbp != '0') && receipt?.amt.cbp + ' CBP ' } 
+            {(receipt?.amt.glee != '-' && receipt?.amt.glee != '0') && receipt?.amt.glee + ' GLee ' } 
+            minted to Address 
+            ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
           </Alert>          
         </Collapse>
 

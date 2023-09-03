@@ -192,15 +192,14 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
 
   return (
     <Stack direction="column" sx={{width:'100%'}} >
-      {initPage && (
+      
         <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-
           <Stack direction={'row'} sx={{ alignItems:'center' }} >
             <Toolbar sx={{ textDecoration:'underline'}}>
               <h4>Props of SigPage</h4>
             </Toolbar>
 
-            {!isFinalized && (
+            {!isFinalized && initPage && (
               <>
                 <TextField 
                   variant='outlined'
@@ -333,7 +332,6 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
           )}
 
         </Paper>
-      )}
 
       <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
 

@@ -41,6 +41,7 @@ const defaultShare: Share = {
     shareholder: 0,
     priceOfPaid: 100,
     priceOfPar: 100,
+    votingWeight: 100,
   },
   body: {
     payInDeadline: 0,
@@ -69,7 +70,7 @@ export function InitBos({nextStep}: InitBosProps) {
     args: share.head.class && share.head.issueDate &&
           share.head.shareholder && share.head.priceOfPaid && 
           share.head.priceOfPar && share.body.payInDeadline &&
-          share.body.paid && share.body.par 
+          share.body.paid && share.body.par && share.head.votingWeight
       ? [ codifyHeadOfShare(share.head),
           BigInt(share.body.payInDeadline),
           share.body.paid,
@@ -161,82 +162,78 @@ export function InitBos({nextStep}: InitBosProps) {
               <Stack direction={'row'} sx={{alignItems:'center' }}>
 
                 <TextField 
-                  sx={{ m: 1, minWidth: 120 }} 
+                  sx={{ m: 1, width: 188 }} 
                   id="tfClass" 
                   label="ClassOfShare" 
                   variant="outlined"
-                  helperText="Integer < 2^16 (e.g. '5')"
                   onChange={(e) => {
                     setShare(v => ({
                       sn: v.sn,
                       head: {
                         ...v.head,
-                        class: parseInt(e.target.value),
+                        class: parseInt(e.target.value ?? '0'),
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.class}
+                  value = {share.head.class.toString()}
                   size='small'
                 />
 
                 <TextField 
-                  sx={{ m: 1, minWidth: 120 }} 
+                  sx={{ m: 1, width: 188 }} 
                   id="tfShareholder" 
                   label="Shareholder" 
                   variant="outlined"
-                  helperText="Integer < 2^40 (e.g. '12345')"
                   onChange={(e) => {
                     setShare(v => ({
                       sn: v.sn,
                       head: {
                         ...v.head,
-                        shareholder: parseInt(e.target.value), 
+                        shareholder: parseInt(e.target.value ?? '0'), 
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.shareholder}
+                  value = {share.head.shareholder.toString()}
                   size='small'
                 />
 
                 <TextField 
-                  sx={{ m: 1, minWidth: 120 }} 
+                  sx={{ m: 1, width: 188 }} 
                   id="tfPriceOfPaid" 
                   label="PriceOfPaid (Cent)" 
                   variant="outlined"
-                  helperText="Integer < 2^32 (e.g. '12345')"
                   onChange={(e) => {
                     setShare(v => ({
                       sn: v.sn,
                       head: {
                         ...v.head,
-                        priceOfPaid: parseInt(e.target.value),
+                        priceOfPaid: parseInt(e.target.value ?? '0'),
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.priceOfPaid}
+                  value = {share.head.priceOfPaid.toString()}
                   size='small'
                 />
 
                 <TextField 
-                  sx={{ m: 1, minWidth: 120 }} 
+                  sx={{ m: 1, width: 188 }} 
                   id="tfPriceOfPar" 
                   label="PriceOfPar (Cent)" 
                   variant="outlined"
-                  helperText="Integer < 2^32 (e.g. '12345')"
                   onChange={(e) => {
                     setShare(v => ({
                       sn: v.sn,
                       head: {
                         ...v.head,
-                        priceOfPar: parseInt(e.target.value),
+                        priceOfPar: parseInt(e.target.value ?? '0'),
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.priceOfPar}
+                  value = {share.head.priceOfPar.toString()}
                   size='small'
                 />
 
@@ -246,8 +243,7 @@ export function InitBos({nextStep}: InitBosProps) {
 
                 <DateTimeField
                   label='IssueDate'
-                  sx={{m:1}}
-                  helperText="Date & Time in UTC"
+                  sx={{m:1, width:188 }}
                   value={ dayjs.unix(share.head.issueDate) }
                   onChange={(date) => setShare((v) => ({
                     sn: v.sn,
@@ -263,8 +259,7 @@ export function InitBos({nextStep}: InitBosProps) {
 
                 <DateTimeField
                   label='PayInDeadline'
-                  helperText="Date & Time in UTC"
-                  sx={{m:1}}
+                  sx={{m:1, width:188 }}
                   value={ dayjs.unix(share.body.payInDeadline) }
                   onChange={(date) => setShare((v) => ({
                     sn: v.sn,
@@ -279,18 +274,17 @@ export function InitBos({nextStep}: InitBosProps) {
                 />
 
                 <TextField 
-                  sx={{ m: 1, minWidth: 120 }} 
-                  id="tfPaidAmount" 
-                  label="PaidAmount (Cent)" 
+                  sx={{ m: 1, width: 188 }} 
+                  id="tfPaid" 
+                  label="Paid (Cent)" 
                   variant="outlined"
-                  helperText="Number < 2^64 (e.g. '18000')"
                   onChange={(e) => {
                     setShare(v => ({
                       sn: v.sn,
                       head: v.head,
                       body: {
                         ...v.body,
-                        paid: BigInt(e.target.value),
+                        paid: BigInt(e.target.value ?? '0'),
                       },
                     }));
                   }}
@@ -299,22 +293,40 @@ export function InitBos({nextStep}: InitBosProps) {
                 />
 
                 <TextField 
-                  sx={{ m: 1, minWidth: 120 }} 
+                  sx={{ m: 1, width: 188 }} 
                   id="tfPar" 
-                  label="ParAmount (Cent)" 
+                  label="Par (Cent)" 
                   variant="outlined"
-                  helperText="Number < 2^64 (e.g, '18000')"
                   onChange={(e) => {
                     setShare(v => ({
                       sn: v.sn,
                       head: v.head,
                       body: {
                         ...v.body,
-                        par: BigInt(e.target.value),
+                        par: BigInt(e.target.value ?? '0'),
                       },
                     }));
                   }}
                   value = {share.body.par.toString()}
+                  size='small'
+                />
+
+                <TextField 
+                  sx={{ m: 1, width: 188 }} 
+                  id="tfVotingWeight" 
+                  label="VotingWeight (%)" 
+                  variant="outlined"
+                  onChange={(e) => {
+                    setShare(v => ({
+                      sn: v.sn,
+                      head: {
+                        ...v.head,
+                        votingWeight: parseInt(e.target.value ?? '10000')
+                      },
+                      body: v.body,
+                    }));
+                  }}
+                  value = {share.head.votingWeight.toString()}
                   size='small'
                 />
 
@@ -331,13 +343,13 @@ export function InitBos({nextStep}: InitBosProps) {
                 label="SeqOfShare"
                 sx={{
                   m:1,
-                  minWidth: 218
+                  width: 188
                 }}
                 onChange={(e)=>setShare(v => ({
                   ...v,
                   head: {
                     ...v.head,
-                    seqOfShare: parseInt(e.target.value),
+                    seqOfShare: parseInt(e.target.value ?? '0'),
                   }
                 }))}
                 value={ share.head.seqOfShare.toString() }

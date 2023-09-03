@@ -261,39 +261,35 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
                     size='small'
                   />                
                 </td>
-                {optWrap.opt.cond.logicOpr > 0 && (
-                  <td >
-                      <TextField 
-                        fullWidth
-                        inputProps={{readOnly: true}}
-                        sx={{ m: 1 }} 
-                        id="tfCompOpr1" 
-                        label="CompareOperator_1" 
-                        variant="outlined"
-                        value = { comOps[optWrap.opt.cond.compOpr1] }
-                        size='small'
-                      />                
-                  </td>
-                )}
-                {optWrap.opt.cond.logicOpr > 0 && (
-                  <td >
-                    <TextField 
-                      fullWidth
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfPara1" 
-                      label="Parameter_1" 
-                      variant="outlined"
-                      value = { longDataParser(optWrap.opt.cond.para1.toString()) }
-                      size='small'
-                    />                
-                  </td>
-                )}                
+                <td >
+                  <TextField 
+                    fullWidth
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfCompOpr1" 
+                    label="CompareOperator_1" 
+                    variant="outlined"
+                    value = { comOps[optWrap.opt.cond.compOpr1] }
+                    size='small'
+                  />
+                </td>
+                <td >
+                  <TextField 
+                    fullWidth
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfPara1" 
+                    label="Parameter_1" 
+                    variant="outlined"
+                    value = { longDataParser(optWrap.opt.cond.para1.toString()) }
+                    size='small'
+                  />
+                </td>
               </tr>
             )}
 
             <tr>
-              {optWrap.opt.cond.logicOpr > 2 && (
+              {optWrap.opt.cond.logicOpr > 0 && (
                 <>
                   <td >
                     <TextField 
@@ -321,7 +317,7 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
                   </td>
                 </>                
               )}
-              {optWrap.opt.cond.logicOpr > 6 && (
+              {optWrap.opt.cond.logicOpr > 4 && (
                 <>
                   <td >
                       <TextField 

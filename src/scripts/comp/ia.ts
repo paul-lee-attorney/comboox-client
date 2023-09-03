@@ -2,6 +2,36 @@ import { readContract } from "@wagmi/core";
 import { Bytes32Zero, HexType } from "../common";
 import { investmentAgreementABI } from "../../generated";
 
+export const TypeOfDeal = [
+  'CapitalIncrease', 
+  'ShareTransfer(External)', 
+  'ShareTransfer(Internal)', 
+  'PreEmptive', 
+  'TagAlong', 
+  'DragAlong', 
+  'FirstRefusal', 
+  'FreeGift'
+];
+
+export const TypeOfIa = [
+  'NaN',
+  'CapitalIncrease',
+  'ShareTransfer(External)',
+  'ShareTransfer(Internal)',
+  'CI & STint',
+  'SText & STint',
+  'CI & SText & STint',
+  'CI & SText'
+]
+
+export const StateOfDeal = [
+  'Drafting',
+  'Locked',
+  'Cleared',
+  'Closed',
+  'Terminated'
+];
+
 export interface Head {
   typeOfDeal: number,
   seqOfDeal: number,
@@ -12,20 +42,20 @@ export interface Head {
   priceOfPaid: number,
   priceOfPar: number,
   closingDeadline: number,
-  para: number,
+  votingWeight: number,
 }
 
 export const defaultHead: Head = {
-  typeOfDeal: 0,
+  typeOfDeal: 2,
   seqOfDeal: 0,
   preSeq: 0,
   classOfShare: 0,
   seqOfShare: 0,
   seller: 0,
-  priceOfPaid: 0,
-  priceOfPar: 0,
+  priceOfPaid: 100,
+  priceOfPar: 100,
   closingDeadline: 0,
-  para: 0,  
+  votingWeight: 100,  
 }
 
 export interface Body {

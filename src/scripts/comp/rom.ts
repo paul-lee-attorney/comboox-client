@@ -35,6 +35,7 @@ export async function getVotesOfController(addr: HexType): Promise<bigint> {
 
 export interface ShareClip {
   timestamp: number;
+  votingWeight: number;
   paid: bigint;
   par: bigint;
   cleanPaid: bigint;

@@ -10,7 +10,7 @@ import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/comp/rc';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/center/rc';
 import { HexParser } from '../../../scripts/common/toolsKit';
 import { CBP, defaultCBP } from './Mint';
 
@@ -32,7 +32,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     write: lockPoints,
   } = useRegCenterLockPoints({
     address: AddrOfRegCenter,
-    args: head.to && head.value && head.expireDate && hashLock
+    args: head.to && (amt.cbp || amt.glee ) && head.expireDate && hashLock
         ? [ 
             BigInt(head.to),
             BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),

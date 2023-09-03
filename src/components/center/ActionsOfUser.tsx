@@ -7,7 +7,7 @@ import { LockPoints } from "./ActionsOfUser/LockPoints";
 import { TransferPoints } from "./ActionsOfUser/TransferPoints";
 import { MintAndLockPoints } from "./ActionsOfUser/MintAndLockPoints";
 import { SetRoyaltyRule } from "./ActionsOfUser/SetRoyaltyRule";
-import { User } from "../../scripts/comp/rc";
+import { User } from "../../scripts/center/rc";
 import { AddrZero } from "../../scripts/common";
 
 export interface ActionsOfUserProps{

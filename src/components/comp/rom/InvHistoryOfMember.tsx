@@ -3,7 +3,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { centToDollar, dateParser, longSnParser } from '../../../scripts/common/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser, toPercent } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ShareClip } from '../../../scripts/comp/rom';
 import { useRegisterOfMembersGetVotesHistory } from '../../../generated';
@@ -17,24 +17,32 @@ const columns: GridColDef[] = [
     width: 218,
   },
   {
-    field: 'paid',
-    headerName: 'Paid',
-    valueGetter: (p) => centToDollar(p.row.paid.toString()),
-    width: 330,
-    headerAlign: 'right',
-    align: 'right',
+    field: 'votingWeight',
+    headerName: 'VotingWeight (%)',
+    valueGetter: (p) => longDataParser(p.row.votingWeight.toString()),
+    width: 218,
+    headerAlign: 'center',
+    align: 'center',
   },
   {
     field: 'par',
-    headerName: 'Par',
+    headerName: 'Par (Dollar)',
     valueGetter: (p) => centToDollar(p.row.par.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',
   },
   {
+    field: 'paid',
+    headerName: 'Paid (Dollar)',
+    valueGetter: (p) => centToDollar(p.row.paid.toString()),
+    width: 330,
+    headerAlign: 'right',
+    align: 'right',
+  },
+  {
     field: 'clean',
-    headerName: 'CleanPaid',
+    headerName: 'CleanPaid (Dollar)',
     valueGetter: (p) => centToDollar(p.row.cleanPaid.toString()),
     width: 330,
     headerAlign: 'right',

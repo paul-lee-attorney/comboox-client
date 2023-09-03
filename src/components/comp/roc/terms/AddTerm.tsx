@@ -6,7 +6,7 @@ import {
   useShareholdersAgreementRemoveTerm 
 } from "../../../../generated";
 
-import { getDocAddr } from "../../../../scripts/comp/rc";
+import { getDocAddr } from "../../../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
 

@@ -40,7 +40,7 @@ import {
 
 import { Benchmark } from "./Benchmark";
 import { longSnParser, splitStrArr } from "../../../../../scripts/common/toolsKit";
-import { getDocAddr } from "../../../../../scripts/comp/rc";
+import { getDocAddr } from "../../../../../scripts/center/rc";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 

@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
-import { centToDollar, dateParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, toPercent } from "../../../scripts/common/toolsKit";
 import { Share } from "../../../scripts/comp/ros";
 import { Dispatch, SetStateAction } from "react";
 
@@ -26,11 +26,11 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
         <b>Certificate Of Contribution</b>
       </DialogTitle>
       <DialogContent>
-          <table width={1180} >
+          <table width={1280} >
             <thead />
             <tbody>
               <tr>
-                <td colSpan={3}>
+                <td colSpan={2}>
                   <TextField 
                     fullWidth={true}
                     inputProps={{readOnly: true}}
@@ -53,7 +53,20 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     value = { dateParser(share.head.issueDate) }
                     size='small'
                   />
-                </td>            
+                </td>
+                <td>
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfState" 
+                    label="State" 
+                    variant="outlined"
+                    value = { share.body.state == 0 ? 'Normal' : 'Freezed'}
+                    size='small'
+                  />
+                </td>
+                          
               </tr>
 
               <tr>
@@ -219,12 +232,12 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     fullWidth={true}
                     inputProps={{readOnly: true}}
                     sx={{ m: 1 }} 
-                    id="tfState" 
-                    label="State" 
+                    id="tfVotingWeight" 
+                    label="VotingWeight (%)" 
                     variant="outlined"
-                    value = { share.body.state == 0 ? 'Normal' : 'Freezed'}
+                    value = { longDataParser(share.head.votingWeight.toString()) }
                     size='small'
-                  />
+                  />                                                  
                 </td>
                 <td colSpan={2}>
                   <TextField 

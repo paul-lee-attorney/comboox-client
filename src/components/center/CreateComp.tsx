@@ -12,7 +12,7 @@ import {
 } from '../../scripts/common';
 
 import { useComBooxContext } from '../../scripts/common/ComBooxContext';
-import { getDocAddr } from '../../scripts/comp/rc';
+import { getDocAddr } from '../../scripts/center/rc';
 import { useState } from 'react';
 import { HexParser } from '../../scripts/common/toolsKit';
 

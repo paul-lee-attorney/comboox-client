@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Collapse, Stack, TextField, IconButton } from "@mui/material";
 import { Typography } from "@mui/joy";
 
-import { longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { centToDollar, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { Swap, checkValueOfSwap} from "../../../scripts/comp/roo";
@@ -12,8 +12,6 @@ import { booxMap } from "../../../scripts/common";
 const statesOfSwap = [
   'Pending', 'Issued', 'Closed', 'Terminated'
 ]
-
-
 
 interface SwapsListProps{
   list: readonly Swap[];
@@ -66,7 +64,7 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
     { 
       field: 'paidOfPledge', 
       headerName: 'PaidOfPledge',
-      valueGetter: p => longDataParser(p.row.paidOfPledge.toString()),
+      valueGetter: p =>  centToDollar(p.row.paidOfPledge.toString()),
       headerAlign: 'right',
       align:'right',
       width: 168,
@@ -83,7 +81,7 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
     { 
       field: 'paidOfTarget', 
       headerName: 'PaidOfTarget',
-      valueGetter: p => longDataParser(p.row.paidOfTarget.toString()),
+      valueGetter: p =>  centToDollar(p.row.paidOfTarget.toString()),
       headerAlign: 'right',
       align:'right',
       width: 168,
@@ -91,7 +89,7 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
     { 
       field: 'priceOfDeal', 
       headerName: 'PriceOfDeal',
-      valueGetter: p => longDataParser(p.row.priceOfDeal.toString()),
+      valueGetter: p => centToDollar(p.row.priceOfDeal.toString()),
       headerAlign: 'right',
       align:'right',
       width: 168,
@@ -146,10 +144,9 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
         <Typography
           level="body3"
           fontWeight="xl"
-          textColor="common.white"
-          sx={{ mixBlendMode: 'difference' }}
+          color="primary"
         >
-          Swaps List (QTY: {list.length})
+          Swaps List ({list.length})
         </Typography>            
 
       </Button>

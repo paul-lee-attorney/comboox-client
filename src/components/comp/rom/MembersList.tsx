@@ -3,9 +3,9 @@ import { Paper, Toolbar, Box, TextField, Button } from '@mui/material';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { centToDollar, dateParser, longSnParser, splitStrArr } from '../../../scripts/common/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, splitStrArr, toPercent } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { MemberShareClip, getEquityList, getMembersList } from '../../../scripts/comp/rom';
+import { MemberShareClip, getEquityList } from '../../../scripts/comp/rom';
 import { useRegisterOfMembersMembersList } from '../../../generated';
 import { HexType, booxMap } from '../../../scripts/common';
 import { handleClientScriptLoad } from 'next/script';
@@ -71,8 +71,16 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
       align: 'center',
     },
     {
+      field: 'votingWeight',
+      headerName: 'VotingWeight (%)',
+      valueGetter: (p) => longDataParser(p.row.clip.votingWeight.toString()),
+      width: 218,
+      headerAlign: 'center',
+      align: 'center',
+    },    
+    {
       field: 'par',
-      headerName: 'Par',
+      headerName: 'Par (Dollar)',
       valueGetter: (p) => centToDollar(p.row.clip.par.toString()),
       width: 218,
       headerAlign: 'center',
@@ -80,7 +88,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     },
     {
       field: 'paid',
-      headerName: 'Paid',
+      headerName: 'Paid (Dollar)',
       valueGetter: (p) => centToDollar(p.row.clip.paid.toString()),
       width: 218,
       headerAlign: 'center',
@@ -88,7 +96,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     },
     {
       field: 'clean',
-      headerName: 'CleanPaid',
+      headerName: 'CleanPaid (Dollar)',
       valueGetter: (p) => centToDollar(p.row.clip.cleanPaid.toString()),
       width: 218,
       headerAlign: 'center',

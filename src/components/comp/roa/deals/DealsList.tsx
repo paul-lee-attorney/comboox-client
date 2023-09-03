@@ -9,7 +9,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { Deal } from '../../../../scripts/comp/ia';
-import { centToDollar, longDataParser, longSnParser } from '../../../../scripts/common/toolsKit';
+import { centToDollar, longDataParser, longSnParser, ppToPercent, toPercent } from '../../../../scripts/common/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
 import { HexType } from '../../../../scripts/common';
 
@@ -65,28 +65,36 @@ export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListP
       align: 'right',
     },
     {
-      field: 'paid',
-      headerName: 'Paid',
-      valueGetter: p => centToDollar(p.row.body.paid.toString()),
-      width: 218,
-      headerAlign:'right',
-      align: 'right',
-    },
-    {
       field: 'par',
-      headerName: 'Par',
+      headerName: 'Par (Dollar)',
       valueGetter: p => centToDollar(p.row.body.par.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
     },
     {
+      field: 'paid',
+      headerName: 'Paid (Dollar)',
+      valueGetter: p => centToDollar(p.row.body.paid.toString()),
+      width: 218,
+      headerAlign:'right',
+      align: 'right',
+    },
+    {
       field: 'priceOfPaid',
-      headerName: 'Price',
+      headerName: 'PriceOfPaid (Dollar)',
       valueGetter: p => centToDollar(p.row.head.priceOfPaid.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
+    },
+    {
+      field: 'votingWeight',
+      headerName: 'VotingWeight (%)',
+      valueGetter: p => longDataParser(p.row.head.votingWeight.toString()),
+      width: 218,
+      headerAlign:'center',
+      align: 'center',
     },
     {
       field: 'state',

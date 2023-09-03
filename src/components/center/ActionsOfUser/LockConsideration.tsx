@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { HexParser, selectorCodifier } from '../../../scripts/common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/comp/rc';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/center/rc';
 import { LockPointsProps } from './LockPoints';
 import { CBP, defaultCBP } from './Mint';
 

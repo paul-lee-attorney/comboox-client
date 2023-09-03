@@ -1,8 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Deal } from "../../../../scripts/comp/ia";
+import { Deal, StateOfDeal, TypeOfDeal } from "../../../../scripts/comp/ia";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
-import { StateOfDeal, TypeOfDeal } from "./CreateDeal";
-import { centToDollar, dateParser, longSnParser } from "../../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, toPercent } from "../../../../scripts/common/toolsKit";
 import { DeleteDeal } from "./DeleteDeal";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { ActionsOfDeal } from "./ActionsOfDeal";
@@ -292,6 +291,19 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                 <TextField 
                   variant='outlined'
                   fullWidth
+                  label='PriceOfPar'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                  }}
+                  value={ centToDollar(deal.head.priceOfPar.toString()) }
+                />
+              </td>
+              <td>
+                <TextField 
+                  variant='outlined'
+                  fullWidth
                   label='PriceOfPaid'
                   inputProps={{readOnly: true}}
                   size="small"
@@ -305,31 +317,13 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='PriceOfPar'
+                  label='VotingWeight (%)'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
                     m:1,
                   }}
-                  value={ centToDollar(deal.head.priceOfPar.toString()) }
-                />
-              </td>
-              <td rowSpan={ 2 }>
-                <TextField 
-                  variant='outlined'
-                  fullWidth
-                  label='TotalAmount'
-                  inputProps={{readOnly: true}}
-                  size="small"
-                  multiline
-                  rows={ 3.5 }
-                  sx={{
-                    m:1,
-                  }}
-                  value={ centToDollar(
-                    (((deal.body.par - deal.body.paid) * BigInt(deal.head.priceOfPar) 
-                    + (deal.body.paid * BigInt(deal.head.priceOfPaid))) / BigInt(100)).toString()  
-                  )}
+                  value={ longDataParser(deal.head.votingWeight.toString()) }
                 />
               </td>
             </tr>
@@ -352,19 +346,6 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='Paid (Dollar)'
-                  inputProps={{readOnly: true}}
-                  size="small"
-                  sx={{
-                    m:1,
-                  }}
-                  value={ centToDollar(deal.body.paid.toString()) }
-                />
-              </td>
-              <td>
-                <TextField 
-                  variant='outlined'
-                  fullWidth
                   label='Par (Dollar)'
                   inputProps={{readOnly: true}}
                   size="small"
@@ -374,6 +355,38 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
                   value={ centToDollar(deal.body.par.toString()) }
                 />
               </td>
+              <td>
+                <TextField 
+                  variant='outlined'
+                  fullWidth
+                  label='Paid (Dollar)'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                  }}
+                  value={ centToDollar(deal.body.paid.toString()) }
+                />
+              </td>
+              <td >
+                <TextField 
+                  variant='outlined'
+                  fullWidth
+                  label='TotalAmount'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  // multiline
+                  // rows={ 3.5 }
+                  sx={{
+                    m:1,
+                  }}
+                  value={ centToDollar(
+                    (((deal.body.par - deal.body.paid) * BigInt(deal.head.priceOfPar) 
+                    + (deal.body.paid * BigInt(deal.head.priceOfPaid))) / BigInt(100)).toString()  
+                  )}
+                />
+              </td>
+
             </tr>
 
             <tr>

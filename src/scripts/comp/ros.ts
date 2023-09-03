@@ -10,6 +10,7 @@ export interface Head {
   shareholder: number; // 股东代码
   priceOfPaid: number; // 发行价格（实缴出资价）
   priceOfPar: number; // 发行价格（认缴出资价）
+  votingWeight: number; // 表决权重（基点）
 }
 
 export interface Body {
@@ -35,7 +36,8 @@ export function codifyHeadOfShare(head: Head): HexType {
     head.shareholder.toString(16).padStart(10, '0') +
     head.priceOfPaid.toString(16).padStart(8, '0') +
     head.priceOfPar.toString(16).padStart(8, '0') +
-    '0'.padStart(6, '0')
+    head.votingWeight.toString(16).padStart(4, '0') +
+    '00'
   }`;
   return sn;
 }
@@ -49,6 +51,7 @@ export function parseSnOfShare(sn: HexType): Head {
     shareholder: parseInt(sn.substring(34, 44), 16),
     priceOfPaid: parseInt(sn.substring(44, 52), 16),
     priceOfPar: parseInt(sn.substring(52, 60), 16),
+    votingWeight: parseInt(sn.substring(60, 64), 16)
   };
 
   return head

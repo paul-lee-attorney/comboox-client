@@ -19,73 +19,13 @@ import {
   Toolbar 
 } from "@mui/material";
 
-import { AddCircle, RemoveCircle } from "@mui/icons-material";
+import { AddCircle } from "@mui/icons-material";
 
 import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Body, Deal, Head } from "../../../../scripts/comp/ia";
+import { Body, Deal, Head, TypeOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
-
-const defaultHead: Head = {
-  typeOfDeal: 2,
-  seqOfDeal: 0,
-  preSeq: 0,
-  classOfShare: 0,
-  seqOfShare: 0,
-  seller: 0,
-  priceOfPaid: 100,
-  priceOfPar: 100,
-  closingDeadline: parseInt((new Date().getTime()/1000).toString()) + 90*86400,
-  para: 0,
-};
-
-const defaultBody: Body = {
-  buyer: 0,
-  groupOfBuyer: 0,
-  paid: BigInt(0),
-  par: BigInt(0),
-  state: 0,
-  para: 0,
-  argu: 0,
-  flag: false,
-};
-
-const defaultDeal: Deal = {
-  head: defaultHead,
-  body: defaultBody,
-  hashLock: Bytes32Zero,
-};
-
-export const TypeOfDeal = [
-  'CapitalIncrease', 
-  'ShareTransfer(External)', 
-  'ShareTransfer(Internal)', 
-  'PreEmptive', 
-  'TagAlong', 
-  'DragAlong', 
-  'FirstRefusal', 
-  'FreeGift'
-];
-
-export const TypeOfIa = [
-  'NaN',
-  'CapitalIncrease',
-  'ShareTransfer(External)',
-  'ShareTransfer(Internal)',
-  'CI & STint',
-  'SText & STint',
-  'CI & SText & STint',
-  'CI & SText'
-]
-
-export const StateOfDeal = [
-  'Drafting',
-  'Locked',
-  'Cleared',
-  'Closed',
-  'Terminated'
-];
 
 export function codifyHeadOfDeal(head: Head): HexType {
   let hexSn:HexType = `0x${
@@ -98,7 +38,7 @@ export function codifyHeadOfDeal(head: Head): HexType {
     (head.priceOfPaid.toString(16).padStart(8, '0')) +
     (head.priceOfPar.toString(16).padStart(8, '0')) +
     (head.closingDeadline.toString(16).padStart(12, '0')) + 
-    '0000'
+    (head.votingWeight.toString(16).padStart(4, '0'))
   }`;
   return hexSn;
 }
@@ -144,9 +84,18 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
               classOfShare: res.head.class,
               seqOfShare: seq,
               seller: res.head.shareholder,
+              votingWeight: res.head.votingWeight,
             }));
         }
-      )   
+      )
+    } else {
+      setHead(v => ({
+        ...v,
+        classOfShare: 0,
+        seqOfShare: 0,
+        seller: 0,
+        votingWeight: 100,
+      }));
     }
 
   }
@@ -210,6 +159,21 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
               value={ head.classOfShare }
             />
 
+            <TextField 
+              variant='outlined'
+              size="small"
+              label='PriceOfPar (Cent)'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setHead((v) => ({
+                ...v,
+                priceOfPar: parseInt(e.target.value),
+              }))}
+              value={ head.priceOfPar }
+            />
+
 
             <TextField 
               variant='outlined'
@@ -224,21 +188,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
                 priceOfPaid: parseInt(e.target.value),
               }))}
               value={ head.priceOfPaid }
-            />
-
-            <TextField 
-              variant='outlined'
-              size="small"
-              label='PriceOfPar (Cent)'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => setHead((v) => ({
-                ...v,
-                priceOfPar: parseInt(e.target.value),
-              }))}
-              value={ head.priceOfPar }
             />
 
           </Stack>
@@ -270,7 +219,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
               }}
               onChange={(e) => setBody((v) => ({
                 ...v,
-                buyer: parseInt(e.target.value),
+                buyer: parseInt(e.target.value ?? '0'),
                 }))
               }
               value={ body.buyer }
@@ -286,26 +235,10 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
               }}
               onChange={(e) => setBody((v) => ({
                 ...v,
-                groupOfBuyer: parseInt(e.target.value),
+                groupOfBuyer: parseInt(e.target.value ?? '0'),
                 }))
               }
               value={ body.groupOfBuyer }
-            />
-
-            <TextField 
-              variant='outlined'
-              size="small"
-              label='Paid (Cent)'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => setBody((v) => ({
-                ...v,
-                paid: BigInt(e.target.value),
-                }))
-              }
-              value={ body.paid.toString() }
             />
 
             <TextField 
@@ -318,10 +251,42 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
               }}
               onChange={(e) => setBody((v) => ({
                 ...v,
-                par: BigInt(e.target.value),
+                par: BigInt(e.target.value ?? '0'),
                 }))
               }
               value={ body.par.toString() }
+            />
+
+            <TextField 
+              variant='outlined'
+              size="small"
+              label='Paid (Cent)'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setBody((v) => ({
+                ...v,
+                paid: BigInt(e.target.value ?? '0'),
+                }))
+              }
+              value={ body.paid.toString() }
+            />
+
+            <TextField 
+              variant='outlined'
+              size="small"
+              label='VotingWeight (%)'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => setHead((v) => ({
+                ...v,
+                votingWeight: parseInt(e.target.value ?? '0'),
+                }))
+              }
+              value={ head.votingWeight.toString() }
             />
 
           </Stack>

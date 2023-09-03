@@ -6,7 +6,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
-import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, toPercent } from '../../../scripts/common/toolsKit';
 import { Share } from '../../../scripts/comp/ros';
 
 const columns: GridColDef[] = [
@@ -43,27 +43,35 @@ const columns: GridColDef[] = [
   },
   { 
     field: 'par', 
-    headerName: 'Par',
+    headerName: 'Par (Dollar)',
     valueGetter: p => centToDollar(p.row.body.par.toString()),
     headerAlign: 'right',
     align:'right',
-    width: 330,
+    width: 218,
   },
   { 
     field: 'paid', 
-    headerName: 'Paid',
+    headerName: 'Paid (Dollar)',
     valueGetter: p => centToDollar(p.row.body.paid.toString()),
     headerAlign: 'right',
     align:'right',
-    width: 330,
+    width: 288,
   },
   { 
     field: 'clean', 
-    headerName: 'CleanPaid',
+    headerName: 'CleanPaid (Dollar)',
     valueGetter: p => centToDollar(p.row.body.cleanPaid.toString()),
     headerAlign: 'right',
     align:'right',
-    width: 330,
+    width: 288,
+  },
+  { 
+    field: 'votingWeight', 
+    headerName: 'VotingWeight (%)',
+    valueGetter: p => longDataParser(p.row.head.votingWeight.toString()),
+    headerAlign: 'center',
+    align:'center',
+    width: 218,
   },
   { 
     field: 'state', 
@@ -78,7 +86,7 @@ const columns: GridColDef[] = [
     ),
     headerAlign: 'center',
     align: 'center',
-    width: 120,  
+    width: 128,  
   },
 ];
 

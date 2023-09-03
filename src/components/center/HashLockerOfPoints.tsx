@@ -1,5 +1,5 @@
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { Locker } from "../../scripts/comp/rc";
+import { Locker } from "../../scripts/center/rc";
 import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../scripts/common/toolsKit";
 import { AddrZero } from "../../scripts/common";
 import { PickupPoints } from "./PickupPoints";

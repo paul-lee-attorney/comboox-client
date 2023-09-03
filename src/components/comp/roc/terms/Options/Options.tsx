@@ -476,7 +476,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                       </>)}
 
-                      {cond.logicOpr > 6 && (<>
+                      {cond.logicOpr > 4 && (<>
 
                         <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                           <InputLabel id="compOpr3-label">CompOpr_3</InputLabel>

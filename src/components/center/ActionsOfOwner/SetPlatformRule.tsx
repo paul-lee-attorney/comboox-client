@@ -8,7 +8,7 @@ import {
 import { AddrOfRegCenter } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { Rule, codifyPlatformRule, defaultRule } from '../../../scripts/comp/rc';
+import { Rule, codifyPlatformRule, defaultRule } from '../../../scripts/center/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {

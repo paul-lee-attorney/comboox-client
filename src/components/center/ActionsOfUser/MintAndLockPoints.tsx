@@ -10,7 +10,7 @@ import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/comp/rc';
+import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/center/rc';
 import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';

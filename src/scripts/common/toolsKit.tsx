@@ -7,6 +7,11 @@ export function toPercent(num: number): string {
   return percent;
 }
 
+export function ppToPercent(num: number): string {
+  let percent = num == 0 ? '-' : num.toString() + '%';
+  return percent;
+}
+
 export function toBasePoint(percent: string): number {
   let strPercent = percent.replace('%', '').replace('.', '');
   let basePoint = parseInt(strPercent);
