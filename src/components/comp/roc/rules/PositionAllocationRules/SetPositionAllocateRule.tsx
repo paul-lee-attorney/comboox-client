@@ -180,7 +180,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                   
-                <TextField 
+                {/* <TextField 
                   variant='outlined'
                   size='small'
                   label='SeqOfRule'
@@ -190,7 +190,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     minWidth: 218,
                   }}
                   value={ newPR.seqOfRule.toString() }
-                />
+                /> */}
 
                 <TextField 
                   variant='outlined'
@@ -240,24 +240,12 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                   value={ titleOfPositions[newPR.titleOfPos - 1] ?? 'Director' }
                 />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='EndDate'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ dateParser(newPR.endDate) }
-                />
-
               </Stack>
 
               <Collapse in={ editable && !isFinalized } >
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-                  <TextField 
+                  {/* <TextField 
                     variant='outlined'
                     size='small'
                     label='SeqOfRule'
@@ -270,7 +258,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                       seqOfRule: parseInt( e.target.value ?? '0' ),
                     }))}
                     value={ objPR.seqOfRule }              
-                  />
+                  /> */}
 
                   <TextField 
                     variant='outlined'
@@ -338,20 +326,6 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     </Select>
                   </FormControl>
 
-                  <DateTimeField
-                    label='EndDate'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }} 
-                    value={ dayjs.unix(objPR.endDate) }
-                    onChange={(date) => setObjPR((v) => ({
-                      ...v,
-                      endDate: date ? date.unix() : 0,
-                    }))}
-                    format='YYYY-MM-DD HH:mm:ss'
-                  />
-
                 </Stack>
               </Collapse>
 
@@ -391,6 +365,18 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     minWidth: 218,
                   }}
                   value={newPR.seqOfVR.toString()}
+                />
+
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='EndDate'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ dateParser(newPR.endDate) }
                 />
 
               </Stack>
@@ -445,6 +431,21 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                       seqOfVR: parseInt(e.target.value ?? '0'),
                     }))}
                     value={ objPR.seqOfVR.toString() }                                        
+                  />
+
+                  <DateTimeField
+                    label='EndDate'
+                    size='small'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }} 
+                    value={ dayjs.unix(objPR.endDate) }
+                    onChange={(date) => setObjPR((v) => ({
+                      ...v,
+                      endDate: date ? date.unix() : 0,
+                    }))}
+                    format='YYYY-MM-DD HH:mm:ss'
                   />
 
                 </Stack>

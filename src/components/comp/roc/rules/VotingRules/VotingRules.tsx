@@ -71,11 +71,13 @@ export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEdit
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
     onSuccess() {
-      setCp(v => {
-        let arr = [...v];
-        arr.pop();      
-        return arr;
-      });
+      if (cp.length > 12) {
+        setCp(v => {
+          let arr = [...v];
+          arr.pop();      
+          return arr;
+        });
+      }
       setOpen(false);
     }
   })

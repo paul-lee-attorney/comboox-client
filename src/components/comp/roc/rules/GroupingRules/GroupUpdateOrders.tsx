@@ -20,6 +20,7 @@ import {
 
 import { SetGroupUpdateOrder } from "./SetGroupUpdateOrder";
 import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
+import { useShareholdersAgreementRemoveRule } from "../../../../../generated";
 
 export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
 
@@ -54,13 +55,31 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
     })
   }
 
-  const removeCp = () => {
-    setCp(v => {
-      let arr = [...v];
-      arr.pop();      
-      return arr;
-    })
-  }
+  const {
+    isLoading: removeRuleLoading,
+    write: removeRule,
+  } = useShareholdersAgreementRemoveRule({
+    address: sha,
+    args: [BigInt(cp[cp.length - 1])],
+    onSuccess() {
+      if (cp.length > 1) {
+        setCp(v => {
+          let arr = [...v];
+          arr.pop();
+          return arr;
+        });
+      }
+      setOpen(false);
+    }
+  })
+
+  // const removeCp = () => {
+  //   setCp(v => {
+  //     let arr = [...v];
+  //     arr.pop();      
+  //     return arr;
+  //   })
+  // }
 
   const [open, setOpen] = useState(false);
 
@@ -105,7 +124,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
                     <IconButton
                       disabled={ cp.length < 2 } 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
-                      onClick={ removeCp }
+                      onClick={ ()=>removeRule?.() }
                       color="primary"
                     >
                       <RemoveCircle/>

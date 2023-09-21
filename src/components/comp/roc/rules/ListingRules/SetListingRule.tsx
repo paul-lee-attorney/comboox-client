@@ -26,6 +26,8 @@ import { ListAlt } from '@mui/icons-material';
 import { useShareholdersAgreementGetRule } from '../../../../../generated';
 import { SetRuleProps } from '../VotingRules/SetVotingRule';
 import { titleOfPositions } from '../PositionAllocationRules/SetPositionAllocateRule';
+import { defaultRule } from '../../../../../scripts/center/rc';
+import { ListingRules } from './ListingRules';
 
 export interface ListingRule {
   seqOfRule: number;
@@ -41,18 +43,18 @@ export interface ListingRule {
   votingWeight: number;  
 }
 
-export const defaultLR: ListingRule = {
+export var defaultLR: ListingRule = {
   seqOfRule: 0,
-  titleOfIssuer: 0,
+  titleOfIssuer: 2,
   classOfShare: 0,
   maxTotalPar: BigInt(0),
-  titleOfVerifier: 0,
+  titleOfVerifier: 1,
   maxQtyOfInvestors: 0,
   ceilingPrice: 0,
   floorPrice: 0,
   lockupDays: 0,
   offPrice: 0,
-  votingWeight: 0,
+  votingWeight: 100,
 }
 
 export function lrParser(hexLr: HexType):ListingRule {
@@ -90,6 +92,8 @@ export function lrCodifier(objLr: ListingRule ): HexType {
 }
 
 export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps) {
+
+  defaultLR = {...defaultLR, seqOfRule: seq};
 
   const [ objLR, setObjLR ] = useState<ListingRule>(defaultLR); 
 
@@ -167,7 +171,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
+                  {/* <TextField 
                     variant='outlined'
                     size='small'
                     label='SeqOfRule'
@@ -177,7 +181,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                       minWidth: 218,
                     }}
                     value={ newLR.seqOfRule.toString() }
-                  />
+                  /> */}
 
                   <TextField 
                     variant='outlined'
@@ -200,13 +204,13 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ titleOfPositions[ newLR.titleOfIssuer ] }
+                    value={ titleOfPositions[ (newLR.titleOfIssuer < 1 ? 1 : newLR.titleOfIssuer) - 1 ] }
                   />
 
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='MaxTotalPar'
+                    label='MaxTotalPar (Cent)'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -224,15 +228,28 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ titleOfPositions[ newLR.titleOfVerifier ] }
+                    value={ titleOfPositions[ (newLR.titleOfVerifier < 1 ? 1 : newLR.titleOfVerifier) - 1 ] }
                   />
+
+                    <TextField 
+                      variant='outlined'
+                      size='small'
+                      label='MaxQtyOfInvestors'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ newLR.maxQtyOfInvestors }                                    
+                    />
+
 
                 </Stack>
 
                 <Collapse in={ editable && !isFinalized } >
                   <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-                    <TextField 
+                    {/* <TextField 
                       variant='outlined'
                       size='small'
                       label='SeqOfRule'
@@ -247,7 +264,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                       }
                       
                       value={ objLR.seqOfRule }
-                    />
+                    /> */}
 
                     <TextField 
                       variant='outlined'
@@ -276,9 +293,8 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                           titleOfIssuer: parseInt( e.target.value.toString() ),
                         }))}
                       >
-                    
                         {titleOfPositions.map((v, i) => (
-                          <MenuItem key={i} value={v}>{v}</MenuItem>
+                          <MenuItem key={i} value={i + 1}>{v}</MenuItem>
                         )) }
 
                       </Select>
@@ -287,7 +303,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                     <TextField 
                       variant='outlined'
                       size='small'
-                      label='MaxTotalPar'
+                      label='MaxTotalPar (Cent)'
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -296,7 +312,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                         ...v,
                         maxTotalPar: BigInt(e.target.value ?? '0'),
                       }))}
-                      value={ objLR.maxTotalPar }
+                      value={ objLR.maxTotalPar.toString() }
                     />
 
                     <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
@@ -313,7 +329,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                       >
                     
                         {titleOfPositions.map((v, i) => (
-                          <MenuItem key={i} value={v}>{v}</MenuItem>
+                          <MenuItem key={i} value={i + 1}>{v}</MenuItem>
                         )) }
 
                       </Select>
@@ -331,7 +347,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                         ...v,
                         maxQtyOfInvestors: parseInt( e.target.value ?? '0'),
                       }))}
-                      value={ objLR.maxQtyOfInvestors}                                        
+                      value={ objLR.maxQtyOfInvestors }                                        
                     />
 
                   </Stack>
@@ -467,7 +483,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                     <TextField 
                       variant='outlined'
                       size='small'
-                      label='VotingWeight'
+                      label='VotingWeight (%)'
                       sx={{
                         m:1,
                         minWidth: 218,

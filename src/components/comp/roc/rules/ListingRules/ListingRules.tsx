@@ -62,11 +62,13 @@ export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEdi
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
     onSuccess() {
-      setCp(v => {
-        let arr = [...v];
-        arr.pop();      
-        return arr;
-      });
+      if (cp.length > 1) {
+        setCp(v => {
+          let arr = [...v];
+          arr.pop();
+          return arr;
+        });
+      }
       setOpen(false);
     }
   })

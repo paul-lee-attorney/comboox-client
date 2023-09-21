@@ -116,7 +116,7 @@ export interface RulesEditProps {
 
 export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRule>(defaultGR);
-  const [ newGR, setNewGR ] = useState<GovernanceRule>();
+  const [ newGR, setNewGR ] = useState<GovernanceRule>(defaultGR);
 
   const [ editable, setEditable ] = useState<boolean>(false); 
   const [ open, setOpen ] = useState(false);
@@ -134,8 +134,8 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
   return (
     <>
       <Button
-        disabled={ !newGR }
-        variant={newGR && (newGR.establishedDate > 0) ? 'contained' : 'outlined'}
+        // disabled={ !newGR }
+        variant={newGR.establishedDate > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start'}}

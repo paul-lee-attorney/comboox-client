@@ -468,7 +468,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                 >
 
                   <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                    <TextField 
+                    {/* <TextField 
                       variant='outlined'
                       size='small'
                       label='SeqOfRule'
@@ -490,7 +490,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         minWidth: 218,
                       }}
                       value={ newVR.qtyOfSubRule.toString() }
-                    />
+                    /> */}
 
                     <TextField 
                       variant='outlined'
@@ -546,7 +546,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                   <Collapse in={ editable && !isFinalized } >
                     <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-                      <TextField 
+                      {/* <TextField 
                         variant='outlined'
                         size='small'
                         label='SeqOfRule'
@@ -576,7 +576,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                           qtyOfSubRule: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.qtyOfSubRule } 
-                      />
+                      /> */}
 
                       <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                         <InputLabel id="authority-label">Authority</InputLabel>

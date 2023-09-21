@@ -22,11 +22,12 @@ import { DragAlong } from "../terms/DragAlong/DragAlong";
 import { Options } from "../terms/Options/Options";
 import { TagAlong } from "../terms/TagAlong/TagAlong";
 import { useShareholdersAgreementGetRules, useShareholdersAgreementGetTitles } from "../../../../generated";
+import { ListingRules } from "../rules/ListingRules/ListingRules";
 
 export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
 
   let arrRules = bigRules.map(v => Number(v));
-  let rules:number[][] = Array.from(Array(5), ()=>new Array<number>());
+  let rules:number[][] = Array.from(Array(6), ()=>new Array<number>());
 
   arrRules.forEach( v => {
       if (v == 0) rules[0].push(v);
@@ -113,6 +114,7 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
             </Stack>
             <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
               {(!isFinalized || (isFinalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={isFinalized} getRules={ getRules } />)}
+              <ListingRules sha={ sha } initSeqList={ lrLs } isFinalized={ isFinalized } getRules={ getRules } />
             </Stack>
 
           </Paper>

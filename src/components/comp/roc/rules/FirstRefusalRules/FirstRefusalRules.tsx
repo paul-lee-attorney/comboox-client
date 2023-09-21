@@ -65,20 +65,16 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
     address: sha,
     args: [BigInt(cp[cp.length - 1] ?? '513')],
     onSuccess() {
-      setCp(v => {
-        let arr = [...v];
-        arr.pop();      
-        return arr;
-      });
+      if (cp.length > 2) {
+        setCp(v => {
+          let arr = [...v];
+          arr.pop();      
+          return arr;
+        });
+      }
       setOpen(false);
     }
   })
-
-
-  const removeCp = () => {
-    removeRule?.();
-  }
-
 
   return (
     <>
@@ -119,7 +115,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
                     <IconButton
                       disabled={ cp.length < 2 || removeRuleLoading || !removeRule } 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
-                      onClick={ removeCp }
+                      onClick={ () => removeRule?.() }
                       color="primary"
                     >
                       <RemoveCircle/>

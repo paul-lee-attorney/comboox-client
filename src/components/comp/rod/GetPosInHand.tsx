@@ -1,7 +1,7 @@
 import { Paper, } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
-import { titleOfPositions } from "../roc/rules/SetPositionAllocateRule";
+import { titleOfPositions } from "../roc/rules/PositionAllocationRules/SetPositionAllocateRule";
 import { Position } from "../../../scripts/comp/rod";
 
 interface GetPosInHandProps {

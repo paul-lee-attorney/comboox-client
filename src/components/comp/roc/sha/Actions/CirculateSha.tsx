@@ -36,8 +36,8 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
 
         <TextField 
           sx={{ m: 1, minWidth: 650 }} 
-          id="tfDocOfUrl" 
-          label="DocOfUrl / CID in IPFS" 
+          id="tfUrlOfDoc" 
+          label="UrlOfDoc / CID in IPFS" 
           variant="outlined"
           onChange={e => setDocUrl( HexParser( e.target.value ) )}
           value = { docUrl }

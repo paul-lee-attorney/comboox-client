@@ -129,7 +129,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
 
           <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-            <TextField 
+            {/* <TextField 
               variant='outlined'
               label='SeqOfRule'
               inputProps={{readOnly: true}}
@@ -139,7 +139,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
                 minWidth: 218,
               }}
               value={ newGuo.seqOfRule.toString() }
-            />
+            /> */}
 
             <TextField 
               variant='outlined'
@@ -153,7 +153,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
               value={ newGuo.qtyOfSubRule.toString() }
             />
 
-            <TextField 
+            {/* <TextField 
               variant='outlined'
               label='SeqOfSubRule'
               inputProps={{readOnly: true}}
@@ -163,7 +163,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
                 minWidth: 218,
               }}
               value={ newGuo.seqOfSubRule.toString() }
-            />
+            /> */}
 
             <TextField 
               variant='outlined'
@@ -194,7 +194,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
           <Collapse in={ editable && !isFinalized } >
             <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-              <TextField 
+              {/* <TextField 
                 variant='outlined'
                 label='SeqOfRule'
                 size="small"
@@ -207,7 +207,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
                   seqOfRule: parseInt(e.target.value),
                 }))}
                 value={ objGuo.seqOfRule }
-              />
+              /> */}
 
               <TextField 
                 variant='outlined'
@@ -224,7 +224,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
                 value={ objGuo.qtyOfSubRule }              
               />
 
-              <TextField 
+              {/* <TextField 
                 variant='outlined'
                 label='SeqOfSubRule'
                 size="small"
@@ -237,7 +237,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
                   seqOfSubRule: parseInt(e.target.value),
                 }))}
                 value={ objGuo.seqOfSubRule }
-              />
+              /> */}
 
               <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
                 <InputLabel id="addMember-label">AddMember ?</InputLabel>

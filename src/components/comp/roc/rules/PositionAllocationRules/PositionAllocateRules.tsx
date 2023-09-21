@@ -55,11 +55,13 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
     onSuccess() {
-      setCp(v => {
-        let arr = [...v];
-        arr.pop();      
-        return arr;
-      });
+      if (cp.length > 1) {
+        setCp(v => {
+          let arr = [...v];
+          arr.pop();      
+          return arr;
+        });
+      }
       setOpen(false);
     }
   })
@@ -106,7 +108,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule } 
+                      disabled={ removeRuleLoading || !removeRule } 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ removeCp }
                       color="primary"

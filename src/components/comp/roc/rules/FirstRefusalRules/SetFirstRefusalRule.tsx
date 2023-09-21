@@ -99,30 +99,30 @@ const subTitles: string[] = [
   '- Newly Added First Refusal Rule', 
 ]
 
-const defaultRules: FirstRefusalRule[] = [
-  { seqOfRule: 512, 
-    qtyOfSubRule: 2, 
-    seqOfSubRule: 1,
-    typeOfDeal: 1,
-    membersEqual: true,
-    proRata: true,
-    basedOnPar: false,
-    rightholders: [0,0,0,0],
-    para: 0,
-    argu: 0,
-  },
-  { seqOfRule: 513, 
-    qtyOfSubRule: 2, 
-    seqOfSubRule: 2,
-    typeOfDeal: 2,
-    membersEqual: true,
-    proRata: true,
-    basedOnPar: false,
-    rightholders: [0,0,0,0],
-    para: 0,
-    argu: 0,
-  }
-]
+// const defaultRules: FirstRefusalRule[] = [
+//   { seqOfRule: 512, 
+//     qtyOfSubRule: 2, 
+//     seqOfSubRule: 1,
+//     typeOfDeal: 1,
+//     membersEqual: true,
+//     proRata: true,
+//     basedOnPar: false,
+//     rightholders: [0,0,0,0],
+//     para: 0,
+//     argu: 0,
+//   },
+//   { seqOfRule: 513, 
+//     qtyOfSubRule: 2, 
+//     seqOfSubRule: 2,
+//     typeOfDeal: 2,
+//     membersEqual: true,
+//     proRata: true,
+//     basedOnPar: false,
+//     rightholders: [0,0,0,0],
+//     para: 0,
+//     argu: 0,
+//   }
+// ]
 
 export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
@@ -143,7 +143,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
 
   let subTitle: string = (seq < 514) ? subTitles[seq - 512] : subTitles[2]; 
 
-  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(seq < 514 ? defaultRules[seq - 512] : defFR); 
+  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(defFR); 
 
   const [ newFR, setNewFR ] = useState<FirstRefusalRule>(defFR);
 
@@ -216,7 +216,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
+                  {/* <TextField 
                     variant='outlined'
                     size='small'
                     label='SeqOfRule'
@@ -226,9 +226,9 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       minWidth: 218,
                     }}
                     value={ newFR.seqOfRule.toString() }
-                  />
+                  /> */}
 
-                  <TextField 
+                  {/* <TextField 
                     variant='outlined'
                     size='small'
                     label='QtyOfSubRule'
@@ -238,7 +238,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       minWidth: 218,
                     }}
                     value={ newFR.qtyOfSubRule.toString() }
-                  />
+                  /> */}
 
                   <TextField 
                     variant='outlined'
@@ -293,7 +293,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
               <Collapse in={ editable && !isFinalized } >
                 <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
-                  <TextField 
+                  {/* <TextField 
                     variant='outlined'
                     size='small'
                     label='SeqOfRule'
@@ -306,9 +306,9 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       seqOfRule: parseInt(e.target.value),
                     }))}
                     value={ objFR.seqOfRule }              
-                  />
+                  /> */}
 
-                  <TextField 
+                  {/* <TextField 
                     variant='outlined'
                     size='small'
                     label='QtyOfSubRule'
@@ -321,22 +321,26 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       qtyOfSubRule: parseInt(e.target.value),
                     }))}
                     value={ objFR.qtyOfSubRule }              
-                  />
+                  /> */}
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TypeOfDeal'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => ({
-                      ...v,
-                      typeOfDeal: parseInt(e.target.value),
-                    }))}
-                    value={ objFR.typeOfDeal }              
-                  />
+                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="typeOfDeal-label">TypeOfDeal</InputLabel>
+                    <Select
+                      labelId="typeOfDeal-label"
+                      id="typeOfDeal-select"
+                      label="TypeOfDeal"
+                      value={ objFR.typeOfDeal - 1 }
+                      onChange={(e) => setObjFR((v) => ({
+                        ...v,
+                        typeOfDeal: parseInt( e.target.value.toString() ),
+                      }))}
+                    >
+                      {typesOfDeal.map((v,i) => (
+                        <MenuItem key={i} value={i+1}>{v}</MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+
 
                   <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="membersEqual-label">MembersEqual ?</InputLabel>
