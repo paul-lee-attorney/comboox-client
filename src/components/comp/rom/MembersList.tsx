@@ -6,7 +6,7 @@ import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, splitStrArr, toPercent } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MemberShareClip, getEquityList } from '../../../scripts/comp/rom';
-import { useRegisterOfMembersMembersList } from '../../../generated';
+import { useRegisterOfMembersMembersList, useRegisterOfMembersSortedMembersList } from '../../../generated';
 import { HexType, booxMap } from '../../../scripts/common';
 import { handleClientScriptLoad } from 'next/script';
 import { History } from '@mui/icons-material';
@@ -23,7 +23,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
 
   const {
     refetch: getMembersList
-  } = useRegisterOfMembersMembersList({
+  } = useRegisterOfMembersSortedMembersList({
     address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(ls){
       if (boox)
@@ -43,7 +43,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     {
       field: 'sharesInHand',
       headerName: 'SharesInHand',
-      valueGetter: (p) => (p.row.sharesInHand.map((v:HexType) => longSnParser(parseInt(v.substring(2,10)).toString()))),
+      valueGetter: (p) => (p.row.sharesInHand.map((v:HexType) => longSnParser(parseInt(v.substring(6,14)).toString()))),
       width: 168,
       headerAlign: 'center',
       align: 'center',
@@ -125,7 +125,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
             setOpen(true);
           }}
         >
-          Get History
+          Inv History
         </Button>
       )
     },

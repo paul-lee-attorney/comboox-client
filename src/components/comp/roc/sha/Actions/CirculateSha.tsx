@@ -1,10 +1,10 @@
 import { Button, Divider, Stack, TextField } from "@mui/material";
-import { useGeneralKeeperCirculateSha } from "../../../../generated";
-import { Bytes32Zero, HexType } from "../../../../scripts/common";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { useGeneralKeeperCirculateSha } from "../../../../../generated";
+import { Bytes32Zero, HexType } from "../../../../../scripts/common";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { Recycling } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useState } from "react";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser } from "../../../../../scripts/common/toolsKit";
 
 export interface FileHistoryProps {
   addr: HexType,

@@ -20,7 +20,7 @@ import {
 } from '../../../generated';
 
 
-import { Bytes32Zero, booxMap } from '../../../scripts/common';
+import { booxMap } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
@@ -28,11 +28,9 @@ import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, codifyHeadOfShare, getSharesList, } from '../../../scripts/comp/ros';
-import { getShareNumbersList } from '../../../scripts/comp/rom';
 
 
 const defaultShare: Share = {
-  sn: Bytes32Zero,
   head: {
     seqOfShare: 0,
     preSeq: 0,
@@ -59,7 +57,7 @@ interface InitBosProps {
 export function InitBos({nextStep}: InitBosProps) {
   const { boox } = useComBooxContext();
 
-  const [sharesList, setSharesList] = useState<Share[]>();
+  const [sharesList, setSharesList] = useState<readonly Share[]>();
   const [share, setShare] = useState<Share>(defaultShare);
 
   const {
@@ -93,10 +91,9 @@ export function InitBos({nextStep}: InitBosProps) {
 
   useEffect(()=>{
     if (boox) {
-      getShareNumbersList(boox[booxMap.ROM]).then(
-        list => getSharesList(boox[booxMap.ROS], list).then(
-            ls => setSharesList(ls)
-      ))
+      getSharesList(boox[booxMap.ROS]).then(
+          ls => setSharesList(ls)
+      )
     }
   }, [boox, issueShare, delShare]);
 
@@ -168,7 +165,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: {
                         ...v.head,
                         class: parseInt(e.target.value ?? '0'),
@@ -187,7 +183,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: {
                         ...v.head,
                         shareholder: parseInt(e.target.value ?? '0'), 
@@ -206,7 +201,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: {
                         ...v.head,
                         priceOfPaid: parseInt(e.target.value ?? '0'),
@@ -225,7 +219,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: {
                         ...v.head,
                         priceOfPar: parseInt(e.target.value ?? '0'),
@@ -246,7 +239,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   sx={{m:1, width:188 }}
                   value={ dayjs.unix(share.head.issueDate) }
                   onChange={(date) => setShare((v) => ({
-                    sn: v.sn,
                     head: {
                       ...v.head,
                       issueDate: date ? date.unix() : 0,
@@ -262,7 +254,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   sx={{m:1, width:188 }}
                   value={ dayjs.unix(share.body.payInDeadline) }
                   onChange={(date) => setShare((v) => ({
-                    sn: v.sn,
                     head: v.head,
                     body: {
                       ...v.body,
@@ -280,7 +271,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: v.head,
                       body: {
                         ...v.body,
@@ -299,7 +289,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: v.head,
                       body: {
                         ...v.body,
@@ -318,7 +307,6 @@ export function InitBos({nextStep}: InitBosProps) {
                   variant="outlined"
                   onChange={(e) => {
                     setShare(v => ({
-                      sn: v.sn,
                       head: {
                         ...v.head,
                         votingWeight: parseInt(e.target.value ?? '10000')

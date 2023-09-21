@@ -19,7 +19,7 @@ import {
 } from "@mui/icons-material"
 
 import { SetGroupUpdateOrder } from "./SetGroupUpdateOrder";
-import { RulesEditProps } from "./SetGovernanceRule";
+import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
 
 export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
 

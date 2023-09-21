@@ -19,40 +19,24 @@ import {
   RemoveCircle,
 } from "@mui/icons-material"
 
-import { FirstRefusalRuleWrap, SetFirstRefusalRule } from "./SetFirstRefusalRule";
-import { usePrepareShareholdersAgreementRemoveRule, useShareholdersAgreementRemoveRule } from "../../../../generated";
-import { RulesEditProps } from "./SetGovernanceRule";
+import { 
+  useShareholdersAgreementRemoveRule 
+} from "../../../../../generated";
 
-// interface FirstRefusalRulesProps {
-//   sha: HexType;
-//   initSeqList: number[] | undefined;
-//   isFinalized: boolean;
-// }
+import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
+import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
 
-export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
+export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
-  const mandatoryRules = [512, 513];
-
-  const [ cp, setCp ] = useState(mandatoryRules);
+  const mandatoryRules = [256];
+  
+  const [ cp, setCp ] = useState<number[]>(mandatoryRules);
 
   useEffect(()=>{
-    if (initSeqList) {
-      if (!isFinalized) {
-        setCp(v => {
-          let setRules = new Set([...v]);
-          initSeqList.forEach(k => {
-            setRules.add(k)
-          });
-          let arrRules = Array.from(setRules).sort(
-            (a, b) => (a-b)
-          );
-          return arrRules;
-        })
-      } else {
-        setCp(initSeqList);
-      }
-    } 
-  }, [initSeqList, isFinalized]);
+    if (initSeqList && initSeqList.length > 0) {
+      setCp([...initSeqList]);
+    }
+  }, [initSeqList]);
 
   const addCp = () => {
     setCp(v => {
@@ -69,7 +53,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
-    args: [BigInt(cp[cp.length - 1] ?? '513')],
+    args: [BigInt(cp[cp.length - 1])],
     onSuccess() {
       setCp(v => {
         let arr = [...v];
@@ -85,16 +69,15 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
     removeRule?.();
   }
 
-
   return (
     <>
       <Button
-        variant={ initSeqList && initSeqList?.length > 0 ? "contained" : "outlined"}
+        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined" }
         startIcon={<ListAlt />}
-        sx={{ m:0.5,minWidth: 248, justifyContent:'start' }}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
-        First Refusal Rules 
+        Position Rules 
       </Button>
 
       <Dialog
@@ -103,16 +86,16 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
         onClose={ getRules }
         aria-labelledby="dialog-title"        
       >
-        <DialogContent>
+        <DialogContent>      
 
-          <Paper elevation={3} sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
-
-            <Box sx={{ width: 1180 }}>
+          <Paper elevation={3} sx={{ m:1, p:1, border: 1, borderColor:'divider' }}>
+            <Box sx={{ width:1180 }}>
 
               <Stack direction={'row'} sx={{ alignItems:'center' }}>
                 <Toolbar sx={{ textDecoration:'underline' }}>
-                  <h4>First Refusal Rules</h4>
+                  <h4>Position Allocate Rules</h4>
                 </Toolbar>
+
                 {!isFinalized && (
                   <>
                     <IconButton 
@@ -129,7 +112,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
                       color="primary"
                     >
                       <RemoveCircle/>
-                    </IconButton>
+                    </IconButton>            
                   </>
                 )}
 
@@ -138,21 +121,20 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
               <Grid container spacing={0.5} >
 
                 {cp.map((v)=> (
-                  <Grid key={ v } item xs={3}>
-                    <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } />
+                  <Grid key={v} item xs={3}>
+                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
                   </Grid>
                 ))}
 
               </Grid>
-              
-            </Box>
 
+            </Box>
           </Paper>
 
         </DialogContent>
 
         <DialogActions>
-          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

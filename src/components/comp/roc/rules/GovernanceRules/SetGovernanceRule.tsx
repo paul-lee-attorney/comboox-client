@@ -20,12 +20,12 @@ import {
   DialogActions,
 } from '@mui/material';
 
-import { AddRule } from './AddRule';
+import { AddRule } from '../AddRule';
 
-import { HexType } from '../../../../scripts/common';
-import { dateParser, toPercent } from '../../../../scripts/common/toolsKit';
+import { HexType } from '../../../../../scripts/common';
+import { dateParser, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { useShareholdersAgreementGetRule } from '../../../../generated';
+import { useShareholdersAgreementGetRule } from '../../../../../generated';
 
 export interface GovernanceRule {
   fundApprovalThreshold: number;

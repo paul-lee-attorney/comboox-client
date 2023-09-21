@@ -18,13 +18,13 @@ import {
   DialogActions,
 } from '@mui/material';
 
-import { AddRule } from './AddRule'
+import { AddRule } from '../AddRule'
 
-import { HexType } from '../../../../scripts/common';
+import { HexType } from '../../../../../scripts/common';
 import { ListAlt } from '@mui/icons-material';
-import { longSnParser } from '../../../../scripts/common/toolsKit';
-import { SetRuleProps } from './SetVotingRule';
-import { useShareholdersAgreementGetRule } from '../../../../generated';
+import { longSnParser } from '../../../../../scripts/common/toolsKit';
+import { SetRuleProps } from '../VotingRules/SetVotingRule';
+import { useShareholdersAgreementGetRule } from '../../../../../generated';
 
 
 export interface FirstRefusalRule {

@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { LockerOfPayInCap } from "./LockerOfPayInCap";
 import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, toPercent } from "../../../scripts/common/toolsKit";
-import { Share } from "../../../scripts/comp/ros";
+import { Share, codifyHeadOfShare } from "../../../scripts/comp/ros";
 import { Dispatch, SetStateAction } from "react";
 
 
@@ -13,7 +13,6 @@ export interface CertificateOfContributionProps{
 }
 
 export function CertificateOfContribution({open, share, setOpen, obtainSharesList}: CertificateOfContributionProps) {
-
 
   return (
     <Dialog
@@ -38,7 +37,7 @@ export function CertificateOfContribution({open, share, setOpen, obtainSharesLis
                     id="tfSnOfShare" 
                     label="Sn" 
                     variant="outlined"
-                    value = { share.sn }
+                    value = { codifyHeadOfShare(share.head) }
                     size='small'
                   />
                 </td>

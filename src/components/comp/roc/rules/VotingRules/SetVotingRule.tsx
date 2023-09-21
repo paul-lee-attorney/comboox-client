@@ -18,12 +18,12 @@ import {
   Dialog,
 } from '@mui/material';
 
-import { AddRule } from './AddRule';
+import { AddRule } from '../AddRule';
 
-import { HexType } from '../../../../scripts/common';
-import { longSnParser, toPercent } from '../../../../scripts/common/toolsKit';
+import { HexType } from '../../../../../scripts/common';
+import { longSnParser, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { useShareholdersAgreementGetRule } from '../../../../generated';
+import { useShareholdersAgreementGetRule } from '../../../../../generated';
 
 export interface VotingRule {
   seqOfRule: number;
@@ -556,7 +556,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          seqOfRule: parseInt(e.target.value),
+                          seqOfRule: parseInt(e.target.value ?? '0'),
                           }))
                         }
                         
@@ -573,7 +573,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          qtyOfSubRule: parseInt(e.target.value),
+                          qtyOfSubRule: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.qtyOfSubRule } 
                       />
@@ -605,7 +605,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          headRatio: parseInt(e.target.value),
+                          headRatio: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.headRatio }              
                       />
@@ -620,7 +620,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          amountRatio: parseInt( e.target.value),
+                          amountRatio: parseInt( e.target.value ?? '0'),
                         }))}
                         value={ objVR.amountRatio }
                         
@@ -636,7 +636,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          execDaysForPutOpt: parseInt(e.target.value),
+                          execDaysForPutOpt: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.execDaysForPutOpt}                                        
                       />
@@ -916,7 +916,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          frExecDays: parseInt(e.target.value),
+                          frExecDays: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.frExecDays}                                        
                       />
@@ -931,7 +931,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          dtExecDays: parseInt(e.target.value),
+                          dtExecDays: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.dtExecDays}                                        
                       />
@@ -946,7 +946,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          dtConfirmDays: parseInt(e.target.value),
+                          dtConfirmDays: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.dtConfirmDays}                                        
                       />
@@ -961,7 +961,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          invExitDays: parseInt(e.target.value),
+                          invExitDays: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.invExitDays}                                        
                       />
@@ -976,7 +976,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          votePrepareDays: parseInt(e.target.value),
+                          votePrepareDays: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.votePrepareDays}                                        
                       />
@@ -991,7 +991,7 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
                         }}
                         onChange={(e) => setObjVR((v) => ({
                           ...v,
-                          votingDays: parseInt(e.target.value),
+                          votingDays: parseInt(e.target.value ?? '0'),
                         }))}
                         value={ objVR.votingDays}                                        
                       />

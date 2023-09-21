@@ -1,6 +1,6 @@
 import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { GetVotingRule } from "../roc/rules/GetVotingRule";
+import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
 import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";

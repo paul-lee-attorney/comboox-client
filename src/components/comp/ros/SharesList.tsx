@@ -11,8 +11,8 @@ import { Share } from '../../../scripts/comp/ros';
 
 const columns: GridColDef[] = [
   { 
-    field: 'sn', 
-    headerName: 'Sn',
+    field: 'seq', 
+    headerName: 'Seq',
     valueGetter: p => longSnParser(p.row.head.seqOfShare.toString()),
     width: 120,
   },
@@ -91,7 +91,7 @@ const columns: GridColDef[] = [
 ];
 
 interface SharesListProps {
-  list: Share[],
+  list: readonly Share[],
   setShare: (share:Share)=>void,
   setOpen: (flag:boolean)=>void,
 }
@@ -99,7 +99,7 @@ interface SharesListProps {
 export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
 
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
-    setShare({sn: p.row.sn, head: p.row.head, body: p.row.body});
+    setShare({head: p.row.head, body: p.row.body});
     setOpen(true);
   }
 
@@ -112,7 +112,7 @@ export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
         pageSizeOptions={[5, 10, 15, 20]} 
-        getRowId={row => row.sn} 
+        getRowId={row => row.head.seqOfShare} 
         rows={ list } 
         columns={ columns }
         disableRowSelectionOnClick

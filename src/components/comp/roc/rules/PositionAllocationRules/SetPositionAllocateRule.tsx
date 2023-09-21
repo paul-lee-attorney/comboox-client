@@ -21,13 +21,13 @@ import {
   DialogActions,
 } from '@mui/material';
 
-import { AddRule } from './AddRule';
+import { AddRule } from './../AddRule';
 
-import { dateParser, longSnParser } from '../../../../scripts/common/toolsKit';
+import { dateParser, longSnParser } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { SetRuleProps } from './SetVotingRule';
-import { useShareholdersAgreementGetRule } from '../../../../generated';
-import { HexType } from '../../../../scripts/common';
+import { SetRuleProps } from './../VotingRules/SetVotingRule';
+import { useShareholdersAgreementGetRule } from '../../../../../generated';
+import { HexType } from '../../../../../scripts/common';
 
 export interface PosAllocateRule {
   seqOfRule: number ;
@@ -267,7 +267,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     }}
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
-                      seqOfRule: parseInt( e.target.value ),
+                      seqOfRule: parseInt( e.target.value ?? '0' ),
                     }))}
                     value={ objPR.seqOfRule }              
                   />
@@ -282,7 +282,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     }}
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
-                      qtyOfSubRule: parseInt(e.target.value),
+                      qtyOfSubRule: parseInt(e.target.value ?? '0'),
                     }))}
                     value={ objPR.qtyOfSubRule }              
                   />
@@ -314,7 +314,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     }}
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
-                      seqOfPos: parseInt(e.target.value),
+                      seqOfPos: parseInt(e.target.value ?? '0'),
                     }))}
                     value={ objPR.seqOfPos }              
                   />
@@ -408,7 +408,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     }}
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
-                      nominator: parseInt(e.target.value),
+                      nominator: parseInt(e.target.value ?? '0'),
                     }))}
                     value={ objPR.nominator }                                        
                   />
@@ -442,9 +442,9 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                     }}
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
-                      seqOfVR: parseInt(e.target.value),
+                      seqOfVR: parseInt(e.target.value ?? '0'),
                     }))}
-                    value={ objPR.seqOfVR }                                        
+                    value={ objPR.seqOfVR.toString() }                                        
                   />
 
                 </Stack>

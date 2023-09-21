@@ -17,12 +17,12 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
 import { voteEnded } from "../../../../scripts/common/meetingMinutes";
 import { getHeadOfFile } from "../../../../scripts/common/filesFolder";
-import { CirculateSha } from "./CirculateSha";
-import { SignSha } from "./SignSha";
+import { CirculateSha } from "./Actions/CirculateSha";
+import { SignSha } from "./Actions/SignSha";
 import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
-import { ActivateSha } from "./ActivateSha";
-import { FinalizeSha } from "./FinalizeSha";
+import { ActivateSha } from "./Actions/ActivateSha";
+import { FinalizeSha } from "./Actions/FinalizeSha";
 import { established } from "../../../../scripts/common/sigPage";
 import { getSHA } from "../../../../scripts/comp/gk";
 

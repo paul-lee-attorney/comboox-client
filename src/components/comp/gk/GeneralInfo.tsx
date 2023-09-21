@@ -15,7 +15,6 @@ import {
   useRegisterOfDirectorsGetDirectorsPosList,
   useRegisterOfMembersControllor, 
   useRegisterOfMembersOwnersEquity, 
-  useRegisterOfMembersVotesOfController, 
   useGeneralKeeperGetCompUser,
   useGeneralKeeperGetCompInfo,
   useRegCenterBalanceOf
@@ -28,6 +27,7 @@ import { AddrOfRegCenter, HexType, booxMap } from "../../../scripts/common";
 import { CompInfo, balanceOfGwei } from "../../../scripts/comp/gk";
 import { PickupDeposit } from "./PickupDeposit";
 import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";
+import { votesOfGroup } from "../../../scripts/comp/rom";
 
 
 export const currencies:string[] = [
@@ -66,20 +66,17 @@ export function GeneralInfo() {
   })
 
   const [ controllor, setControllor ] = useState<string>();
+  const [ votesOfController, setVotesOfController ] = useState<string>();
 
   useRegisterOfMembersControllor({
     address: boox ? boox[booxMap.ROM] : undefined,
     onSuccess(res) {
-      setControllor(res.toString())
-    }
-  })
-
-  const [ votesOfController, setVotesOfController ] = useState<string>();
-
-  useRegisterOfMembersVotesOfController({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(res) {
-      setVotesOfController(res.toString())
+      if (boox) {
+        setControllor(res.toString());
+        votesOfGroup(boox[booxMap.ROM], BigInt(res)).then(
+          votes => setVotesOfController(votes.toString())
+        );
+      }
     }
   })
 

@@ -8,7 +8,7 @@ import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { titleOfPositions } from "../roc/rules/SetPositionAllocateRule";
 import { Position } from "../../../scripts/comp/rod";
 import { QuitPosition } from "../bmm/ExecMotions/QuitPosition";
-import { GetVotingRule } from "../roc/rules/GetVotingRule";
+import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { booxMap } from "../../../scripts/common";
 
 

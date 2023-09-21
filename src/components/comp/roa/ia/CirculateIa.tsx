@@ -5,7 +5,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
 import { HexParser } from "../../../../scripts/common/toolsKit";
-import { FileHistoryProps } from "../../roc/sha/CirculateSha";
+import { FileHistoryProps } from "../../roc/sha/Actions/CirculateSha";
 
 export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
 

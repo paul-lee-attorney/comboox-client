@@ -7,7 +7,7 @@ import { dateParser, longDataParser, longSnParser } from "../../../scripts/commo
 import { InfoOfFile } from "../../../scripts/common/filesFolder";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../utils/CopyLongStr";
-import { GetVotingRule } from "../../comp/roc/rules/GetVotingRule";
+import { GetVotingRule } from "../../comp/roc/rules/VotingRules/GetVotingRule";
 import { labState } from "./GetFilesList";
 
 export interface IndexCardProps{

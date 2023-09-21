@@ -1,13 +1,12 @@
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { AddrZero, booxMap } from "../../../../scripts/common";
-import { useRegisterOfConstitutionPointer, useShareholdersAgreementGetRule } from "../../../../generated";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { AddrZero, booxMap } from "../../../../../scripts/common";
+import { useRegisterOfConstitutionPointer } from "../../../../../generated";
 import { VotingRule, authorities, vrParser } from "./SetVotingRule";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, } from "@mui/material";
 import { ListAlt } from "@mui/icons-material";
-import { toPercent } from "../../../../scripts/common/toolsKit";
-import { getSha } from "../../../../scripts/comp/roc";
-import { getRule } from "../../../../scripts/comp/sha";
+import { toPercent } from "../../../../../scripts/common/toolsKit";
+import { getRule } from "../../../../../scripts/comp/sha";
 import { useState } from "react";
 
 
@@ -40,7 +39,6 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
     <>
       {objVr && (
         <Button
-          // disabled={ !objVr }
           variant="outlined"
           startIcon={<ListAlt />}
           fullWidth={true}

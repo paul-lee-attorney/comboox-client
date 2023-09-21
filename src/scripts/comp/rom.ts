@@ -2,37 +2,6 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { registerOfMembersABI } from "../../generated";
 
-export async function getShareNumbersList(addr: HexType): Promise<readonly HexType[]> {
-  let res = await readContract({
-    address: addr,
-    abi: registerOfMembersABI,
-    functionName: 'sharesList',
-  });
-
-  return res;
-}
-
-export async function getControllor(addr: HexType): Promise<number> {
-  let acct:number = await readContract({
-    address: addr,
-    abi: registerOfMembersABI,
-    functionName: 'controllor',
-  });
-
-  return acct;
-}
-
-export async function getVotesOfController(addr: HexType): Promise<bigint> {
-  let res = await readContract({
-    address: addr,
-    abi: registerOfMembersABI,
-    functionName: 'votesOfController',
-  });
-
-  return res;
-}
-
-
 export interface ShareClip {
   timestamp: number;
   votingWeight: number;
@@ -67,11 +36,11 @@ export async function getMembersList(addr: HexType): Promise<readonly bigint[]> 
   return res;
 }
 
-export async function getShareClipOfMember(addr: HexType, acct: bigint): Promise<ShareClip> {
+export async function getEquityOfMember(addr: HexType, acct: bigint): Promise<ShareClip> {
   let res = await readContract({
     address: addr,
     abi: registerOfMembersABI,
-    functionName: 'sharesClipOfMember',
+    functionName: 'equityOfMember',
     args: [ acct ],
   });
 
@@ -97,7 +66,7 @@ export async function getEquityList(rom: HexType, members: readonly bigint[]): P
 
   while(i < len) {
 
-    let item: ShareClip = await getShareClipOfMember(rom, members[i]);
+    let item: ShareClip = await getEquityOfMember(rom, members[i]);
     let shares = await sharesInHand(rom, members[i]); 
 
     list[i] = {
@@ -113,7 +82,16 @@ export async function getEquityList(rom: HexType, members: readonly bigint[]): P
   return list;
 }
 
+export async function votesOfGroup(rom: HexType, acct: bigint): Promise<bigint>{
+  let res = await readContract({
+    address: rom,
+    abi: registerOfMembersABI,
+    functionName: 'votesOfGroup',
+    args: [ acct ],
+  });
 
+  return res;
+}
 
 
 

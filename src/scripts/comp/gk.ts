@@ -6,12 +6,12 @@ import { toStr } from "../common/toolsKit";
 
 export const nameOfBooks = [
   'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 
-  'ROA', 'ROO', 'ROP', 'ROS'
+  'ROA', 'ROO', 'ROP', 'ROS', 'LOO'
 ]
 
 export const titleOfKeepers = [
   'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 'GmmKeeper', 
-  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper'
+  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper', 'LooKeeper'
 ]
 
 export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
@@ -53,7 +53,7 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<10; i++) {
+  for (let i = 1; i<11; i++) {
  
     let addr = await getBook(gk, i);
     let owner = await getOwner(addr); 
@@ -82,7 +82,7 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<10; i++) {
+  for (let i = 1; i<11; i++) {
  
     let addr = await getKeeper(gk, i);
     let owner = await getOwner(addr);

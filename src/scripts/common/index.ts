@@ -13,7 +13,6 @@ export const DataZero:string = '0'.padEnd(16,'0');
 
 export type HexType = `0x${string}`;
 
-
 interface BooxMap {
   ROC: number;
   ROD: number;
@@ -24,6 +23,7 @@ interface BooxMap {
   ROO: number;
   ROP: number;
   ROS: number;
+  LOO: number;
 }
 
 export const booxMap:BooxMap = {
@@ -35,7 +35,8 @@ export const booxMap:BooxMap = {
   ROA: 6,
   ROO: 7,
   ROP: 8,
-  ROS: 9
+  ROS: 9,
+  LOO: 10,
 }
 
 

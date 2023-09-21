@@ -21,27 +21,34 @@ import {
 
 import { 
   useShareholdersAgreementRemoveRule 
-} from "../../../../generated";
+} from "../../../../../generated";
+import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
+import { SetListingRule } from "./SetListingRule";
 
-import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
-import { RulesEditProps } from "./SetGovernanceRule";
 
-export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
+export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
-  const mandatoryRules = [256];
-  
-  const [ cp, setCp ] = useState<number[]>(mandatoryRules);
+  const [ cp, setCp ] = useState([1024]);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
-      setCp([...initSeqList]);
+      setCp(v => {
+        let setRules = new Set([...v]);
+        initSeqList.forEach(k => {
+          setRules.add(k)
+        });
+        let arrRules = Array.from(setRules).sort(
+          (a, b) => (a-b)
+        );
+        return arrRules;
+      })
     }
   }, [initSeqList]);
 
   const addCp = () => {
     setCp(v => {
       let arr = [...v];
-      arr.push(v[v.length-1] + 1);
+      arr.push(v[v.length - 1]+1);
       return arr;
     })
   }
@@ -64,20 +71,15 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
     }
   })
 
-
-  const removeCp = () => {
-    removeRule?.();
-  }
-
   return (
     <>
       <Button
-        variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined" }
+        variant={ initSeqList && (initSeqList.length > 0) ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
-        onClick={()=>setOpen(true)}      
+        onClick={()=>setOpen(true)} 
       >
-        Position Rules 
+        Listing Rules 
       </Button>
 
       <Dialog
@@ -86,17 +88,17 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
         onClose={ getRules }
         aria-labelledby="dialog-title"        
       >
-        <DialogContent>      
+        <DialogContent>
 
-          <Paper elevation={3} sx={{ m:1, p:1, border: 1, borderColor:'divider' }}>
+          <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider' }}>
             <Box sx={{ width:1180 }}>
 
               <Stack direction={'row'} sx={{ alignItems:'center' }}>
                 <Toolbar sx={{ textDecoration:'underline' }}>
-                  <h4>Position Allocate Rules</h4>
+                  <h4>Listing Rules</h4>
                 </Toolbar>
 
-                {!isFinalized && (
+                {!isFinalized && cp && (
                   <>
                     <IconButton 
                       sx={{width: 20, height: 20, m: 1, p: 1}} 
@@ -105,14 +107,14 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
                     >
                       <AddCircle/>
                     </IconButton>
-                    <IconButton
-                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule } 
+                    <IconButton 
+                      disabled={ cp.length < 1 || removeRuleLoading || !removeRule }
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
-                      onClick={ removeCp }
+                      onClick={()=>removeRule?.() }
                       color="primary"
                     >
                       <RemoveCircle/>
-                    </IconButton>            
+                    </IconButton>
                   </>
                 )}
 
@@ -120,9 +122,9 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
 
               <Grid container spacing={0.5} >
 
-                {cp.map((v)=> (
-                  <Grid key={v} item xs={3}>
-                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
+                {cp.map(v=> (
+                  <Grid key={ v } item xs={3} >
+                    <SetListingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
                   </Grid>
                 ))}
 
@@ -134,11 +136,11 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
         </DialogContent>
 
         <DialogActions>
-          <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={ ()=>setOpen(false) }>Close</Button>
         </DialogActions>
 
       </Dialog>
-
+    
     </>
   );
 } 

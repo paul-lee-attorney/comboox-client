@@ -14,7 +14,7 @@ import { Search, Send } from "@mui/icons-material";
 
 import { 
   useRegisterOfSharesGetShare,
-  useRegisterOfMembersSharesList,
+  useRegisterOfSharesGetSharesList,
 } from "../../../generated";
 import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/ros/SharesList";
@@ -29,18 +29,14 @@ function RegisterOfShares() {
 
   const [ loading, setLoading ] = useState<boolean>();
 
-  const [ sharesList, setSharesList ] = useState<Share[]>();
+  const [ sharesList, setSharesList ] = useState<readonly Share[]>();
 
   const {
     refetch: obtainSharesList,
-  } = useRegisterOfMembersSharesList ({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(data) {
-      if (boox && data.length > 0) {
-        getSharesList(boox[booxMap.ROS], data).then(list => {
-          setSharesList(list);
-        });
-      }
+  } = useRegisterOfSharesGetSharesList ({
+    address: boox ? boox[booxMap.ROS] : undefined,
+    onSuccess(list) {
+      setSharesList(list);    
     }
   })
 
@@ -57,7 +53,6 @@ function RegisterOfShares() {
     args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
     onSuccess(data) {
       let share:Share = {
-        sn: codifyHeadOfShare(data.head),
         head: data.head,
         body: data.body,        
       }
@@ -65,7 +60,6 @@ function RegisterOfShares() {
       setOpen(true);
     }
   });
-
 
   const searchShare = () => {
     if (seqOfShare) {

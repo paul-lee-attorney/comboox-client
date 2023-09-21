@@ -21,6 +21,8 @@ import { BookOutlined } from "@mui/icons-material";
 function Sha() {
   const { boox } = useComBooxContext();
 
+  const [ index, setIndex ] = useState(0);
+
   const { query } = useRouter();
   const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
@@ -56,7 +58,7 @@ function Sha() {
         <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider' }}>
           <Stack direction='column' justifyContent='center' alignItems='center' >
 
-            <Stack direction='row' sx={{ alignItems:'baseline' }} >
+            <Stack direction='row' sx={{ alignItems:'baseline', mb:5 }} >
 
               <Typography sx={{ mt: 5, mb:2, textDecoration:'underline' }} variant="h4" >
                 <b>Shareholders Agreement</b>
@@ -80,16 +82,24 @@ function Sha() {
             </Stack>
 
 
-            <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
+            <Tabs 
+              size='md' 
+              sx={{ 
+                justifyContent:'center', 
+                alignItems:'center' 
+              }}
+              value={index}
+              onChange={(e, v) => setIndex(v as number)}
+            >
 
-              <TabList variant="solid" color="primary" sx={{ width: 980 }}  >
-                <Tab value={0}><b>Body Term</b></Tab>
+              <TabList tabFlex={1} sx={{ width: 880 }} >
+                <Tab><b>Body Term</b></Tab>
                 {!isFinalized && (
-                  <Tab value={1}><b>Access Control</b></Tab>
+                  <Tab><b>Access Control</b></Tab>
                 )}
-                <Tab value={2}><b>Signature Page</b></Tab>
-                <Tab value={3}><b>Sup Signature Page</b></Tab>
-                <Tab value={4}><b>Life Cycle</b></Tab>
+                <Tab><b>Sig Page</b></Tab>
+                <Tab><b>Sup Page</b></Tab>
+                <Tab><b>Life Cycle</b></Tab>
               </TabList>
 
               <TabPanel value={0} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >

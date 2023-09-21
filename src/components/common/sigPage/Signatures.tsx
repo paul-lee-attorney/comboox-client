@@ -44,7 +44,7 @@ import {
 
 import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../scripts/common/sigPage";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
-import { AcceptSha } from "../../comp/roc/sha/AcceptSha";
+import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
 

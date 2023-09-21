@@ -12,11 +12,11 @@ import { HexType } from "../../../../scripts/common";
 import { AntiDilution } from "../terms/AntiDilution/AntiDilution";
 
 import { defaultTerms, getTerm } from "../../../../scripts/comp/sha";
-import { SetGovernanceRule } from "../rules/SetGovernanceRule";
-import { VotingRules } from "../rules/VotingRules";
-import { PositionAllocateRules } from "../rules/PositionAllocateRules";
-import { FirstRefusalRules } from "../rules/FirstRefusalRules";
-import { GroupUpdateOrders } from "../rules/GroupUpdateOrders";
+import { SetGovernanceRule } from "../rules/GovernanceRules/SetGovernanceRule";
+import { VotingRules } from "../rules/VotingRules/VotingRules";
+import { PositionAllocateRules } from "../rules/PositionAllocationRules/PositionAllocateRules";
+import { FirstRefusalRules } from "../rules/FirstRefusalRules/FirstRefusalRules";
+import { GroupUpdateOrders } from "../rules/GroupingRules/GroupUpdateOrders";
 import { LockUp } from "../terms/LockUp/LockUp";
 import { DragAlong } from "../terms/DragAlong/DragAlong";
 import { Options } from "../terms/Options/Options";
@@ -34,6 +34,7 @@ export async function groupingRules(bigRules: readonly bigint[]): Promise<number
       else if (v < 512) rules[2].push(v);
       else if (v < 768) rules[3].push(v);
       else if (v < 1024) rules[4].push(v);
+      else if (v < 1280) rules[5].push(v);
   })
 
   return rules;
@@ -51,7 +52,7 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
   const [ prLs, setPrLs ] = useState<number[]>();
   const [ frLs, setFrLs ] = useState<number[]>();
   const [ guoLs, setGuoLs ] = useState<number[]>();
-
+  const [ lrLs, setLrLs ] = useState<number[]>();
 
   const {
     refetch: getRules
@@ -65,13 +66,13 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
           setPrLs(rules[2]);
           setFrLs(rules[3]);
           setGuoLs(rules[4]);
+          setLrLs(rules[5]);
         }
       )
     }
   })
 
   const [ terms, setTerms ] = useState<HexType[]>(defaultTerms);
-
 
   const {
     refetch: getTitles

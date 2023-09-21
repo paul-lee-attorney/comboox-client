@@ -4,10 +4,10 @@ import {
   filesFolderABI,
   useGeneralKeeperVoteCountingOfGm, 
 
-} from "../../../../generated";
+} from "../../../../../generated";
 
-import { HexType, booxMap } from "../../../../scripts/common";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { HexType, booxMap } from "../../../../../scripts/common";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { Calculate, Outbox } from "@mui/icons-material";
 import { readContract } from "@wagmi/core";
 

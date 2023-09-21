@@ -3,10 +3,10 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { centToDollar, dateParser, longDataParser, longSnParser, toPercent } from '../../../scripts/common/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { ShareClip } from '../../../scripts/comp/rom';
-import { useRegisterOfMembersGetVotesHistory } from '../../../generated';
+import { useRegisterOfMembersVotesHistory } from '../../../generated';
 import { booxMap } from '../../../scripts/common';
 
 const columns: GridColDef[] = [
@@ -63,7 +63,7 @@ export function InvHistoryOfMember({acct, open, setOpen}: InvHistoryOfMemberProp
 
   const {
     refetch: getVotesHistory
-  } = useRegisterOfMembersGetVotesHistory({
+  } = useRegisterOfMembersVotesHistory({
     address: boox ? boox[booxMap.ROM] : undefined,
     args: acct ? [BigInt(acct)] : undefined,
     onSuccess(res) {

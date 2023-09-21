@@ -45,7 +45,8 @@ import {
   HomeOutlined,
   Diversity1Outlined,
   QuizOutlined,
-  ChevronLeft
+  ChevronLeft,
+  CurrencyExchange
 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
@@ -163,16 +164,17 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
-    {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: false},
+    {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
     {href: '/comp/roc/RegisterOfConstitution', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
     {href: '/comp/roa/RegisterOfAgreements', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
     {href: '/comp/rod/RegisterOfDirectors', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
-    {href: '/comp/rod/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/comp/bmm/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
     {href: '/comp/rom/RegisterOfMembers', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
-    {href: '/comp/rom/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/comp/gmm/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
     {href: '/comp/ros/RegisterOfShares', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
     {href: '/comp/rop/RegisterOfPledges', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
-    {href: '/comp/roo/RegisterOfOptions', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: false},
+    {href: '/comp/roo/RegisterOfOptions', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: true},
+    {href: '/comp/loo/ListOfOrders', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchange />, divider: false},
   ]
 
   const backToCenter = () => {

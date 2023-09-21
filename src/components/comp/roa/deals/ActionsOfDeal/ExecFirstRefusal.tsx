@@ -6,7 +6,7 @@ import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stac
 import { EmojiPeopleOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { FirstRefusalRule } from "../../../roc/rules/SetFirstRefusalRule";
+import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
 import { HexParser, longSnParser } from "../../../../../scripts/common/toolsKit";
 
