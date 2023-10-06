@@ -1,6 +1,6 @@
 import { createConfig, configureChains } from 'wagmi'
 
-import { goerli, mainnet, hardhat } from 'wagmi/chains'
+import { goerli, mainnet, hardhat, sepolia } from 'wagmi/chains'
 
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
@@ -10,7 +10,7 @@ import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLega
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [hardhat, mainnet, ...(process.env.NODE_ENV === 'development' ? [goerli] : [])],
+  [hardhat, mainnet, ...(process.env.NODE_ENV === 'test' ? [sepolia] : [])],
   [
     publicProvider(),
   ],
