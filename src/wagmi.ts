@@ -10,7 +10,7 @@ import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLega
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [hardhat, mainnet, ...(process.env.NODE_ENV === 'test' ? [sepolia] : [])],
+  [hardhat, sepolia, mainnet, ...(process.env.NODE_ENV === 'test' ? [goerli] : [])],
   [
     publicProvider(),
   ],
@@ -23,7 +23,7 @@ export const config = createConfig({
     new CoinbaseWalletConnector({
       chains,
       options: {
-        appName: 'wagmi',
+        appName: 'comboox',
       },
     }),
     new WalletConnectLegacyConnector({
