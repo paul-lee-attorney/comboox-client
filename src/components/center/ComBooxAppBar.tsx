@@ -190,19 +190,24 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
           <Box sx={{ width:'100%' }} >
 
             <Stack direction="row" sx={{ alignItems:'center', justifyContent:'center', alignContent:'space-between' }} >
-              <IconButton
-                color="inherit"
-                aria-label="open drawer"
-                onClick={ handleDrawerOpen }
-                edge="start"
-                sx={{ mr: 2, ...(appBarOpen && { display: 'none' }) }}
-              >
-                <MenuIcon />
-              </IconButton>
-            
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                ComBoox
-              </Typography>
+
+              <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center'}} >
+                <IconButton
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={ handleDrawerOpen }
+                  edge="start"
+                  sx={{ mr: 2, ...(appBarOpen && { display: 'none' }) }}
+                >
+                  <MenuIcon />
+                </IconButton>
+              
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                  ComBoox
+                </Typography>
+
+                <GetTimestamp />
+              </Stack>
 
               <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >
 
@@ -245,7 +250,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
                 <AcctPage flag={ isConnected } />
 
-                <GetTimestamp />
 
               </Stack>
 

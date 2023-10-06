@@ -121,15 +121,13 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
   const [ price, setPrice ] = useState<string>();
 
   const { 
-    data: addMarkReceipt,
-    isLoading: addMarkIsLoading,
+    isLoading: addMarkLoading,
     write: addMark 
   } = useAntiDilutionAddBenchmark({
     address: term,
-    args: classOfShare && 
-          price ? 
-            [BigInt(classOfShare), BigInt(price)] :
-            undefined, 
+    args: classOfShare && price 
+        ? [BigInt(classOfShare), BigInt(price)] 
+        : undefined, 
     onSuccess() {
       refetch();
     }
@@ -236,7 +234,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                         arrow
                       >
                         <IconButton 
-                          disabled={ addMarkIsLoading }
+                          disabled={ addMarkLoading }
                           sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                           onClick={ () => addMark?.() }
                           color="primary"

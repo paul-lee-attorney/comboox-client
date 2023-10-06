@@ -330,7 +330,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
 
                       <TextField 
                         variant='outlined'
-                        label='ShareRatioThreshold'
+                        label='ShareRatioThreshold (BP)'
                         size="small"
                         sx={{
                           m:1,

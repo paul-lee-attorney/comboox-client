@@ -89,7 +89,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
 
                 <TextField 
                   variant='outlined'
-                  label='ShareRatioThreshold'
+                  label='ShareRatioThreshold (BP)'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{

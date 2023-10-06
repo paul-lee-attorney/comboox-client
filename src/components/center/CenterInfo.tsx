@@ -279,7 +279,7 @@ export function CenterInfo() {
                         m:1,
                         minWidth:218,
                       }}
-                      value={ toPercent(platformRule.rate ?? 0) }
+                      value={ toPercent(2000 - (platformRule.rate ?? 0)) }
                     />
                   </td>
 

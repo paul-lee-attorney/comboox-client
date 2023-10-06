@@ -18,6 +18,7 @@ export const statesOfOrder = [
 export interface InitOffer{
   seqOfOrder: number;
   classOfShare: number;
+  seqOfShare: number;
   execHours: number;
   paid: bigint;
   price: number;
@@ -27,10 +28,11 @@ export interface InitOffer{
 export const defaultOffer: InitOffer = {
   seqOfOrder: 0,
   classOfShare: 0,
+  seqOfShare: 0,
   execHours: 0,
   paid: BigInt(0),
   price: 0,
-  seqOfLR: 18,
+  seqOfLR: 1024,
 }
 
 export interface Order {

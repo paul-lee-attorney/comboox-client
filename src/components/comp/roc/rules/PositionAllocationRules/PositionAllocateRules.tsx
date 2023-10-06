@@ -28,7 +28,7 @@ import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
 
 export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
-  const mandatoryRules = [256];
+  const mandatoryRules: number[] = isFinalized ? [] : [256];
   
   const [ cp, setCp ] = useState<number[]>(mandatoryRules);
 

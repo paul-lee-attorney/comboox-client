@@ -30,7 +30,10 @@ export function longSnParser(sn: string): string {
 }
 
 export function longDataParser(data: string): string {
-  return new Intl.NumberFormat().format(BigInt(data));
+  if (data === '0')
+    return '-';
+  else 
+    return new Intl.NumberFormat().format(BigInt(data));
 }
 
 export function selectorCodifier(func: string): HexType {

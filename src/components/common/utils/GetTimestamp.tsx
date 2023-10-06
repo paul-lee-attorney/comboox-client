@@ -1,5 +1,5 @@
 import { QueryBuilderOutlined } from "@mui/icons-material";
-import { IconButton, Snackbar, Stack } from "@mui/material";
+import { IconButton, Snackbar, Stack, Tooltip } from "@mui/material";
 import { useState } from "react";
 import { usePublicClient } from "wagmi";
 import { dateParser } from "../../../scripts/common/toolsKit";
@@ -20,17 +20,23 @@ export function GetTimestamp() {
   return (
 
     <Stack direction="row"  sx={{ m:1, p:1 }} >
-      <IconButton
-        color="inherit" 
-        onClick={getTimestamp}
-      >
-       <QueryBuilderOutlined /> 
-      </IconButton>
+
+      <Tooltip title={'Date & Time'} placement='right' arrow >
+
+        <IconButton
+          color="inherit"
+          size="small"
+          onClick={getTimestamp}
+        >
+          <QueryBuilderOutlined />
+        </IconButton>
+
+      </Tooltip>
 
       {timestamp != undefined && (
         <Snackbar
           open={open}
-          anchorOrigin={{ vertical:'top', horizontal:'right' }}
+          anchorOrigin={{ vertical:'top', horizontal:'center' }}
           autoHideDuration={3000}
           onClose={()=>setOpen(false)}
           message={ dateParser( Number(timestamp) ) }

@@ -34,7 +34,7 @@ interface ShaLifecycleProps {
 export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
 
   const { gk, boox } = useComBooxContext();
-  const [ activeStep, setActiveStep ] = useState<number>();
+  const [ activeStep, setActiveStep ] = useState<number>(0);
   const [ seqOfMotion, setSeqOfMotion ] = useState<bigint>();
   const [ passed, setPassed ] = useState<boolean>(false);
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
@@ -87,7 +87,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
     };
 
     updateActiveStep();
-  }, [boox, sha, finalized, passed, activeStep]);
+  }, [boox, gk, sha, finalized, passed, activeStep]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >

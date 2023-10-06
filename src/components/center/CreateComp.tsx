@@ -44,11 +44,11 @@ export function CreateComp() {
 
 
       <FormControl size='small' sx={{ m: 1, width: 488 }} variant="outlined">
-        <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of Board Secretary</InputLabel>
+        <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of Secretary</InputLabel>
         <OutlinedInput
           size='small'
           id="setGC-input"
-          label='PrimeKey Of Board Secretary'
+          label='PrimeKey Of Secretary'
           sx={{ height:40 }}
           endAdornment={
             <InputAdornment position="end">

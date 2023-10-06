@@ -144,3 +144,13 @@ export async function balanceOfGwei(gk: HexType):Promise<bigint>{
   return res.value;
 }
 
+export async function getCentPrice(gk: HexType):Promise<bigint>{
+  let res = await readContract({
+    address: gk,
+    abi: generalKeeperABI,
+    functionName: 'getCentPrice',
+  })
+
+  return res;
+}
+

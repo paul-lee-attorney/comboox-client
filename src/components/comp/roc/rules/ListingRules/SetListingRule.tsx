@@ -142,365 +142,362 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
             borderColor:'divider' 
             }}
           >
-            <Box sx={{ width:1680 }}>
+            <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
 
-              <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+              <Box sx={{ minWidth:600 }} >
+                <Toolbar sx={{ textDecoration:'underline' }} >
+                  <h4>Listing Rule - No. { seq } </h4>
+                </Toolbar>
+              </Box>
 
-                <Box sx={{ minWidth:600 }} >
-                  <Toolbar sx={{ textDecoration:'underline' }} >
-                    <h4>Listing Rule - No. { seq } </h4>
-                  </Toolbar>
-                </Box>
+              <AddRule
+                sha={ sha }
+                rule={ lrCodifier(objLR) }
+                refreshRule={ obtainRule }
+                editable={ editable }
+                setEditable={ setEditable }
+                isFinalized={ isFinalized }
+                getRules={ getRules }
+              />
+              
+            </Stack>
 
-                <AddRule
-                  sha={ sha }
-                  rule={ lrCodifier(objLR) }
-                  refreshRule={ obtainRule }
-                  editable={ editable }
-                  setEditable={ setEditable }
-                  isFinalized={ isFinalized }
-                  getRules={ getRules }
+            <Stack
+              direction={'column'}
+              spacing={1}
+            >
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                {/* <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='SeqOfRule'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newLR.seqOfRule.toString() }
+                /> */}
+
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='ClassOfShare'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newLR.classOfShare.toString() }
                 />
-                
-              </Stack>
 
-              <Stack
-                direction={'column'}
-                spacing={1}
-              >
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='TitleOfIssuer'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ titleOfPositions[ (newLR.titleOfIssuer < 1 ? 1 : newLR.titleOfIssuer) - 1 ] }
+                />
 
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='MaxTotalPar (Cent)'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser(newLR.maxTotalPar.toString()) }
+                />
 
-                  {/* <TextField 
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='TitleOfVerifier'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ titleOfPositions[ (newLR.titleOfVerifier < 1 ? 1 : newLR.titleOfVerifier) - 1 ] }
+                />
+
+                  <TextField 
                     variant='outlined'
                     size='small'
-                    label='SeqOfRule'
+                    label='MaxQtyOfInvestors'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ newLR.seqOfRule.toString() }
+                    value={ newLR.maxQtyOfInvestors }                                    
+                  />
+
+
+              </Stack>
+
+              <Collapse in={ editable && !isFinalized } >
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+
+                  {/* <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='SeqOfRule'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      seqOfRule: parseInt( e.target.value ?? '0'),
+                      }))
+                    }
+                    
+                    value={ objLR.seqOfRule }
                   /> */}
 
                   <TextField 
                     variant='outlined'
                     size='small'
                     label='ClassOfShare'
-                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ newLR.classOfShare.toString() }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      classOfShare: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.classOfShare } 
                   />
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfIssuer'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[ (newLR.titleOfIssuer < 1 ? 1 : newLR.titleOfIssuer) - 1 ] }
-                  />
+                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="titleOfIssuer-label">TitleOfIssuer</InputLabel>
+                    <Select
+                      labelId="titleOfIssuer-label"
+                      id="titleOfIssuer-select"
+                      label="TitleOfIssuer"
+                      value={ objLR.titleOfIssuer }
+                      onChange={(e) => setObjLR((v) => ({
+                        ...v,
+                        titleOfIssuer: parseInt( e.target.value.toString() ),
+                      }))}
+                    >
+                      {titleOfPositions.map((v, i) => (
+                        <MenuItem key={i} value={i + 1}>{v}</MenuItem>
+                      )) }
+
+                    </Select>
+                  </FormControl>
 
                   <TextField 
                     variant='outlined'
                     size='small'
                     label='MaxTotalPar (Cent)'
-                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ longDataParser(newLR.maxTotalPar.toString()) }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      maxTotalPar: BigInt(e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.maxTotalPar.toString() }
                   />
+
+                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="titleOfVerifier-label">TitleOfVerifier</InputLabel>
+                    <Select
+                      labelId="titleOfVerifier-label"
+                      id="titleOfVerifier-select"
+                      label="TitleOfIssuer"
+                      value={ objLR.titleOfVerifier }
+                      onChange={(e) => setObjLR((v) => ({
+                        ...v,
+                        titleOfVerifier: parseInt( e.target.value.toString() ),
+                      }))}
+                    >
+                  
+                      {titleOfPositions.map((v, i) => (
+                        <MenuItem key={i} value={i + 1}>{v}</MenuItem>
+                      )) }
+
+                    </Select>
+                  </FormControl>
 
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='TitleOfVerifier'
-                    inputProps={{readOnly: true}}
+                    label='MaxQtyOfInvestors'
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ titleOfPositions[ (newLR.titleOfVerifier < 1 ? 1 : newLR.titleOfVerifier) - 1 ] }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      maxQtyOfInvestors: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.maxQtyOfInvestors }                                        
                   />
 
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='MaxQtyOfInvestors'
-                      inputProps={{readOnly: true}}
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ newLR.maxQtyOfInvestors }                                    
-                    />
-
-
                 </Stack>
+              </Collapse>
 
-                <Collapse in={ editable && !isFinalized } >
-                  <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                    {/* <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='SeqOfRule'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        seqOfRule: parseInt( e.target.value ?? '0'),
-                        }))
-                      }
-                      
-                      value={ objLR.seqOfRule }
-                    /> */}
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='CeilingPrice (Cent)'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser( newLR.ceilingPrice.toString() )}
+                />
 
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='ClassOfShare'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        classOfShare: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.classOfShare } 
-                    />
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='FloorPrice (Cent)'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser( newLR.floorPrice.toString() )}
+                />
 
-                    <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                      <InputLabel id="titleOfIssuer-label">TitleOfIssuer</InputLabel>
-                      <Select
-                        labelId="titleOfIssuer-label"
-                        id="titleOfIssuer-select"
-                        label="TitleOfIssuer"
-                        value={ objLR.titleOfIssuer }
-                        onChange={(e) => setObjLR((v) => ({
-                          ...v,
-                          titleOfIssuer: parseInt( e.target.value.toString() ),
-                        }))}
-                      >
-                        {titleOfPositions.map((v, i) => (
-                          <MenuItem key={i} value={i + 1}>{v}</MenuItem>
-                        )) }
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='OffPrice (Cent) '
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ longDataParser( newLR.offPrice.toString() ) }
+                />
 
-                      </Select>
-                    </FormControl>
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='LockupDays'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newLR.lockupDays.toString() }
+                />
 
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='MaxTotalPar (Cent)'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        maxTotalPar: BigInt(e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.maxTotalPar.toString() }
-                    />
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='VotingWeight (%)'
+                  inputProps={{readOnly: true}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  value={ newLR.votingWeight.toString()}
+                />
 
-                    <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                      <InputLabel id="titleOfVerifier-label">TitleOfVerifier</InputLabel>
-                      <Select
-                        labelId="titleOfVerifier-label"
-                        id="titleOfVerifier-select"
-                        label="TitleOfIssuer"
-                        value={ objLR.titleOfVerifier }
-                        onChange={(e) => setObjLR((v) => ({
-                          ...v,
-                          titleOfVerifier: parseInt( e.target.value.toString() ),
-                        }))}
-                      >
-                    
-                        {titleOfPositions.map((v, i) => (
-                          <MenuItem key={i} value={i + 1}>{v}</MenuItem>
-                        )) }
+              </Stack>
 
-                      </Select>
-                    </FormControl>
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='MaxQtyOfInvestors'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        maxQtyOfInvestors: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.maxQtyOfInvestors }                                        
-                    />
-
-                  </Stack>
-                </Collapse>
-
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              <Collapse in={ editable && !isFinalized } >
+                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
                   <TextField 
                     variant='outlined'
                     size='small'
                     label='CeilingPrice (Cent)'
-                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ longDataParser( newLR.ceilingPrice.toString() )}
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      ceilingPrice: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.ceilingPrice.toString()}   
                   />
 
                   <TextField 
                     variant='outlined'
                     size='small'
                     label='FloorPrice (Cent)'
-                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ longDataParser( newLR.floorPrice.toString() )}
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      floorPrice: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.floorPrice.toString()}   
                   />
 
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='OffPrice (Cent) '
-                    inputProps={{readOnly: true}}
+                    label='OffPrice (Cent)'
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ longDataParser( newLR.offPrice.toString() ) }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      offPrice: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.offPrice.toString()}   
                   />
 
                   <TextField 
                     variant='outlined'
                     size='small'
                     label='LockupDays'
-                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ newLR.lockupDays.toString() }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      lockupDays: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.lockupDays.toString()}   
                   />
 
                   <TextField 
                     variant='outlined'
                     size='small'
                     label='VotingWeight (%)'
-                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ newLR.votingWeight.toString()}
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      votingWeight: parseInt( e.target.value ?? '0'),
+                    }))}
+                    value={ objLR.votingWeight.toString()}   
                   />
 
                 </Stack>
+              </Collapse>
 
-                <Collapse in={ editable && !isFinalized } >
-                  <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='CeilingPrice (Cent)'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        ceilingPrice: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.ceilingPrice.toString()}   
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='FloorPrice (Cent)'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        floorPrice: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.floorPrice.toString()}   
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='OffPrice (Cent)'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        offPrice: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.offPrice.toString()}   
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='LockupDays'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        lockupDays: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.lockupDays.toString()}   
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      size='small'
-                      label='VotingWeight (%)'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        votingWeight: parseInt( e.target.value ?? '0'),
-                      }))}
-                      value={ objLR.votingWeight.toString()}   
-                    />
-
-                  </Stack>
-                </Collapse>
-
-              </Stack>
+            </Stack>
           
-            </Box>
           </Paper>
 
         </DialogContent>

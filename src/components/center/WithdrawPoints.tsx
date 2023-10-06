@@ -17,13 +17,6 @@ interface WithdrawPointsProps{
 
 export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:WithdrawPointsProps) {
 
-  // const {
-  //   config: withdrawPointsConfig
-  // } = usePrepareRegCenterWithdrawPoints({
-  //   address: AddrOfRegCenter,
-  //   args: [ hashLock ],
-  // })
-
   const {
     isLoading: withdrawPointsLoading,
     write: withdrawPoints

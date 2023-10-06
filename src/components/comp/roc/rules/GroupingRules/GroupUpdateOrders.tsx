@@ -29,7 +29,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
   const [ cp, setCp ] = useState(mandatoryRule);
 
   useEffect(()=>{
-    if (initSeqList) {
+    if (initSeqList && initSeqList.length > 0) {
       if (!isFinalized) {
         setCp(v => {
           let setRules = new Set([...v]);
@@ -60,7 +60,9 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
-    args: [BigInt(cp[cp.length - 1])],
+    args: cp && cp.length > 0 
+      ? [BigInt(cp[cp.length - 1])]
+      : undefined,
     onSuccess() {
       if (cp.length > 1) {
         setCp(v => {

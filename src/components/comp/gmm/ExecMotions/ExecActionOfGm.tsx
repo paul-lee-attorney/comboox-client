@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { AddrZero, HexType } from "../../../../scripts/common";
+import { AddrZero, Bytes32Zero, HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperExecActionOfGm, 
@@ -34,7 +34,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
   const { gk } = useComBooxContext();
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
-  const [ desHash, setDesHash ] = useState<HexType>();
+  const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 
   const {
     isLoading: execActionLoading,
@@ -67,6 +67,11 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
       arr.pop();      
       return arr;
     })
+  }
+
+  const handleClick = () => {
+    console.log('actions: ', actions);
+    execAction();
   }
 
   return (
@@ -123,7 +128,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
         variant="contained"
         endIcon={<Surfing />}
         sx={{ m:1, minWidth:218 }}
-        onClick={()=>execAction?.()}
+        onClick={ handleClick }
       >
         Execute
       </Button>

@@ -42,7 +42,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     {
       field: 'sharesInHand',
       headerName: 'SharesInHand',
-      valueGetter: (p) => (p.row.sharesInHand.map((v:HexType) => longSnParser(parseInt(v.substring(6,14)).toString()))),
+      valueGetter: (p) => (p.row.sharesInHand.map((v:string) => longSnParser(v))),
       width: 168,
       headerAlign: 'center',
       align: 'center',

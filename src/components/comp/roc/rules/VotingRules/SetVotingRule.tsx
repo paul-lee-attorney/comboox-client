@@ -441,7 +441,6 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
               borderColor:'divider' 
               }} 
             >
-              <Box sx={{ width:1680 }}>
 
                 <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
                   <Box sx={{ minWidth:600 }} >
@@ -1001,7 +1000,6 @@ export function SetVotingRule({ sha, seq, isFinalized, getRules }: SetRuleProps)
 
                 </Stack>
             
-              </Box>
             </Paper>
 
         </DialogContent>

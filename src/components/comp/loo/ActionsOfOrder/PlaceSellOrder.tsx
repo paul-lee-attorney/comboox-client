@@ -1,16 +1,18 @@
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Button, Checkbox, FormControlLabel, Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { Loyalty } from "@mui/icons-material";
 import { useState } from "react";
 import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
-import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
+import { InitOffer, Order, defaultOffer, defaultOrder } from "../../../../scripts/comp/loo";
 
 export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
+
+  const [ fromHead, setFromHead ] = useState(false);
 
   const {
     isLoading: placeSellOrderLoading,
@@ -21,7 +23,8 @@ export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAl
             BigInt(order.execHours), 
             order.paid, 
             BigInt(order.price), 
-            BigInt(order.seqOfLR), 
+            BigInt(order.seqOfLR),
+            fromHead, 
            ],
     onSuccess() {
       getAllOrders();
@@ -38,22 +41,6 @@ export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAl
     >
 
       <Stack direction="row" sx={{ alignItems:'center' }} >
-
-        <TextField 
-          variant='outlined'
-          size="small"
-          label='SeqOfShare'
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            classOfShare: parseInt( e.target.value ?? '0' ),
-          }))}
-
-          value={ order.classOfShare.toString() } 
-        />
 
         <TextField 
           variant='outlined'
@@ -87,7 +74,6 @@ export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAl
           value={ order.seqOfLR.toString() } 
         />
 
-
         <TextField 
           variant='outlined'
           size="small"
@@ -118,6 +104,24 @@ export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAl
           }))}
 
           value={ order.price.toString() } 
+        />
+
+        <FormControlLabel
+          label='SortFromHead'
+          sx={{
+            m:1,
+            width: 188,
+          }}
+          control={
+            <Checkbox 
+              sx={{
+                m: 1,
+                height: 64,
+              }}
+              onChange={e => setFromHead(e.target.checked)}
+              checked={ fromHead }
+            />
+          }
         />
 
         <Button 

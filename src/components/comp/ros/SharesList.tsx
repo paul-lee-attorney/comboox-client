@@ -20,7 +20,23 @@ const columns: GridColDef[] = [
     field: 'class', 
     headerName: 'Class',
     valueGetter: p => p.row.head.class,
-    renderCell: ({ value }) => (<Chip label={value} />),
+    renderCell: ({ value }) => (
+      <Chip 
+        label={value} 
+        color={ value % 7 == 1
+          ? 'primary'
+          : value % 7 == 2
+            ? 'default'
+              : value % 7 == 3
+                ? 'secondary'
+                  : value % 7 == 4
+                    ? 'info' 
+                      : value % 7 == 5
+                        ? 'success'
+                          : value % 7 == 6
+                            ? 'warning'
+                            : 'error'} 
+      />),
     headerAlign:'center',
     align: 'center',
     width: 80,

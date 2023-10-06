@@ -11,7 +11,7 @@ export function RevokeInvestor({ acct: acct, getAllInvestors: getAllInvestors }:
   const { gk } = useComBooxContext();
 
   const [ userNo, setUserNo ] = useState<string>(acct);
-  const [ seqOfLR, setSeqOfLR ] = useState<string>('18');
+  const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
 
   const {
     isLoading: revokeInvestorLoading,

@@ -129,7 +129,7 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
 
             <Divider />
 
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
+            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
               <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={isFinalized} />
               <LockUp sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
             </Stack>

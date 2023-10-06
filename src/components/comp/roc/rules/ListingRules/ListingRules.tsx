@@ -28,7 +28,9 @@ import { SetListingRule } from "./SetListingRule";
 
 export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
 
-  const [ cp, setCp ] = useState([1024]);
+  const mandatoryRule: number[] = isFinalized ? [] : [1024];
+
+  const [ cp, setCp ] = useState(mandatoryRule);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {

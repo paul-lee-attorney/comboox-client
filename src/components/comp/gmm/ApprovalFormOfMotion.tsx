@@ -83,7 +83,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
       sx={{m:1, p:1}} 
     >
       <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
-        <h4>{"Approval Form of Motion"}</h4>
+        <h4>{"Form of Motion"}</h4>
       </DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
@@ -92,7 +92,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
               <tr>
                 <td colSpan={2}>
                   <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h4> Motion Of General Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
+                    <h4> General Meeting of Members - {motionType[motion.head.typeOfMotion-1]} </h4>
                   </Toolbar>
                 </td>
                 <td colSpan={2}>

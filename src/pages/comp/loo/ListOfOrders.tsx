@@ -28,10 +28,10 @@ function ListOfOrders() {
     address: boox ? boox[booxMap.ROS] : undefined,
     onSuccess(res) {
       let i = 1;
-      let list: number[] = [];
+      let list: number[] = [1];
       while (i <= res) {
-        list.push(i);
         i++;        
+        list.push(i);
       }
       
       setClasses(list);
@@ -70,7 +70,7 @@ function ListOfOrders() {
   const [ show, setShow ] = useState(false);
   
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, minWidth:1680, border:1, borderColor:'divider' }} >
 
       <Stack direction="row" sx={{alignItems:'center'}} >
 

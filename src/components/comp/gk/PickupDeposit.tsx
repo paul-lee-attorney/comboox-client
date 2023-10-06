@@ -6,9 +6,10 @@ import { Savings, SavingsOutlined } from "@mui/icons-material";
 
 interface PickupDepositProps{
   getBalanceOf: ()=>void;
+  getDeposits: ()=>void;
 }
 
-export function PickupDeposit({ getBalanceOf }:PickupDepositProps) {
+export function PickupDeposit({ getBalanceOf, getDeposits }:PickupDepositProps) {
   
   const { gk } = useComBooxContext();
 
@@ -19,6 +20,7 @@ export function PickupDeposit({ getBalanceOf }:PickupDepositProps) {
     address: gk,
     onSuccess() {
       getBalanceOf();
+      getDeposits();
     }
   })
 

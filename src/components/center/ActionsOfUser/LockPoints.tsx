@@ -133,7 +133,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
 
         </Stack>
 
-        <Divider orientation='vertical' flexItem />
+        <Divider orientation='vertical' sx={{m:1}} flexItem />
 
         <Button 
           disabled={ !lockPoints || lockPointsLoading } 

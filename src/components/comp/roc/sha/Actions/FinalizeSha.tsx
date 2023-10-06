@@ -17,7 +17,7 @@ interface FinalizeShaProps {
   isSha: boolean;
   addr: HexType;
   setIsFinalized: Dispatch<SetStateAction<boolean>>;
-  setNextStep: Dispatch<SetStateAction<number | undefined>>;
+  setNextStep: Dispatch<SetStateAction<number>>;
 }
 
 export function FinalizeSha({ isSha, addr, setIsFinalized, setNextStep }: FinalizeShaProps) {

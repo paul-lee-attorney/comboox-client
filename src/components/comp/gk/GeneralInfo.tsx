@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
-import { centToDollar, dateParser, getGWeiPart, getWeiPart, longDataParser, longSnParser, toStr } from "../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longSnParser, toStr } from "../../../scripts/common/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
 import { Position, getFullPosInfo } from "../../../scripts/comp/rod";
@@ -17,17 +17,19 @@ import {
   useRegisterOfMembersOwnersEquity, 
   useGeneralKeeperGetCompUser,
   useGeneralKeeperGetCompInfo,
-  useRegCenterBalanceOf
+  useRegCenterBalanceOf,
+  useGeneralKeeperTotalDeposits,
 } from "../../../generated";
 
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
 import { User } from "../../../scripts/center/rc";
-import { AddrOfRegCenter, HexType, booxMap } from "../../../scripts/common";
+import { AddrOfRegCenter, booxMap } from "../../../scripts/common";
 import { CompInfo, balanceOfGwei } from "../../../scripts/comp/gk";
 import { PickupDeposit } from "./PickupDeposit";
 import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";
 import { votesOfGroup } from "../../../scripts/comp/rom";
+import { DepositOfMine } from "./DepositOfMine";
 
 
 export const currencies:string[] = [
@@ -117,8 +119,8 @@ export function GeneralInfo() {
   })
 
   const [ balanceOfCBP, setBalanceOfCBP ] = useState<string>('0');
-
   const [ balanceOfETH, setBalanceOfETH ] = useState<string>('0');
+  const [ depositsOfETH, setDepositsOfETH ] = useState<string>('0');
 
   const getGwei = async () => {
     if (gk) {
@@ -138,6 +140,15 @@ export function GeneralInfo() {
     }
   })
 
+  const {
+    refetch: getDeposits
+  } = useGeneralKeeperTotalDeposits({
+    address: gk,
+    onSuccess(amt) {
+      setDepositsOfETH(amt.toString());
+    }
+  })
+
   const [ acct, setAcct ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
 
@@ -151,311 +162,371 @@ export function GeneralInfo() {
           borderColor:'divider' 
         }} 
       >
-        <Stack direction='row' sx={{ alignItems:'center' }} >
-          
-          <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
-            <h3>General Info</h3>
-          </Toolbar>
 
-          {compInfo && (
-            <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol }  />
-          )}
-
-          <PickupDeposit getBalanceOf={getBalanceOf} />
-
-        </Stack>
-        <table width={1680}>
-          <thead>
-
-            <tr>        
-              <td colSpan={2}>
-                {compInfo && (
-                  <TextField 
-                    value={ compInfo.name } 
-                    variant='outlined'
-                    size='small' 
-                    label="NameOfCompany" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                    }}
-                    fullWidth
-                  />
-                )}
-              </td>
-
-              <td>
-                <TextField 
-                  value={ currencies[ compInfo?.currency ?? 0 ] } 
-                  variant='outlined'
-                  size='small' 
-                  label="BookingCurrency" 
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                  }}
-                  fullWidth
-                />
-              </td>
-
-              <td>
-                <TextField 
-                  value={ dateParser(compInfo?.regDate ?? 0) } 
-                  variant='outlined'
-                  size='small' 
-                  label="RegDate" 
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                  }}
-                  fullWidth
-                />
-              </td>
-
-            </tr>
-
-            <tr>        
-              <td >
-                {compInfo && (
-                  <TextField 
-                    value={ longSnParser(compInfo.regNum.toString()) } 
-                    variant='outlined'
-                    size='small' 
-                    label="RegNum" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      minWidth: 120,
-                      m:1,
-                    }}
-                    fullWidth
-                  />
-                )}
-              </td>
-
-              <td >
-                {compInfo && (
-                  <TextField 
-                    value={compInfo.symbol} 
-                    variant='outlined'
-                    size='small' 
-                    label="SymbolOfCompany" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                    }}
-                    fullWidth
-                  />
-                )}
-              </td>
-
-              <td >
-                {gk && (
-                  <CopyLongStrTF title="AddressOfCompany" src={gk} size="h4" />
-                )}
-              </td>
-              <td >
-                {dk && (
-                  <CopyLongStrTF title="BoardSecretary" src={dk} size="h4" />
-                )}
-              </td>
-            </tr>
-          </thead>
-          
+        <table>
           <tbody>
 
-            <tr>
-              <td>
-                {controllor && (
-                  <TextField 
-                    value={ longSnParser(controllor) } 
-                    variant='outlined'
-                    size='small' 
-                    label="ActualControllor" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                    }}
-                    fullWidth
-                  />
-                )}
-              </td>
-              <td>
-                {votesOfController && (
-                  <TextField 
-                    value={ centToDollar(votesOfController) } 
-                    variant='outlined'
-                    size='small' 
-                    label="VotesOfController" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                    }} 
-                    fullWidth
-                  />
-                )}
-              </td>
-              <td>
-                {par && (
-                  <TextField 
-                    value={ centToDollar(par)} 
-                    variant='outlined'
-                    size='small' 
-                    label="RegisteredCapital" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                    }}
-                    fullWidth
-                  />
-                )}
-              </td>
-              <td>
-                {paid && (
-                  <TextField 
-                    value={ centToDollar(paid) } 
-                    variant='outlined'
-                    size='small' 
-                    label="PaidInCapital" 
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m: 1,
-                    }}
-                    fullWidth
-                  />
-                )}
+            <tr >
+              <td colSpan={4}>
+                <Paper elevation={3} sx={{m:1, p:1 }} >
+
+                  <Stack direction='row' sx={{ alignItems:'center' }} >
+          
+                    <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
+                      <h3>General Info</h3>
+                    </Toolbar>
+
+                    {compInfo && (
+                      <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol }  />
+                    )}
+
+                  </Stack>
+
+                  <tr>
+                    <td colSpan={2}>
+                      {compInfo && (
+                        <TextField 
+                          value={ compInfo.name } 
+                          variant='outlined'
+                          size='small' 
+                          label="NameOfCompany" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            m:1,
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    </td>
+
+                    <td>
+                      <TextField 
+                        value={ currencies[ compInfo?.currency ?? 0 ] } 
+                        variant='outlined'
+                        size='small' 
+                        label="BookingCurrency" 
+                        inputProps={{readOnly: true}}
+                        sx={{
+                          m:1,
+                        }}
+                        fullWidth
+                      />
+                    </td>
+
+                    <td>
+                      <TextField 
+                        value={ dateParser(compInfo?.regDate ?? 0) } 
+                        variant='outlined'
+                        size='small' 
+                        label="RegDate" 
+                        inputProps={{readOnly: true}}
+                        sx={{
+                          m:1,
+                        }}
+                        fullWidth
+                      />
+                    </td>
+
+                  </tr>
+
+                  <tr>        
+                    <td >
+                      {compInfo && (
+                        <TextField 
+                          value={ longSnParser(compInfo.regNum.toString()) } 
+                          variant='outlined'
+                          size='small' 
+                          label="RegNum" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            minWidth: 120,
+                            m:1,
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    </td>
+
+                    <td >
+                      {compInfo && (
+                        <TextField 
+                          value={compInfo.symbol} 
+                          variant='outlined'
+                          size='small' 
+                          label="SymbolOfCompany" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            m:1,
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    </td>
+
+                    <td >
+                      {gk && (
+                        <CopyLongStrTF title="AddressOfCompany" src={gk} size="h4" />
+                      )}
+                    </td>
+                    <td >
+                      {dk && (
+                        <CopyLongStrTF title="Secretary" src={dk} size="h4" />
+                      )}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      {controllor && (
+                        <TextField 
+                          value={ longSnParser(controllor) } 
+                          variant='outlined'
+                          size='small' 
+                          label="ActualControllor" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            m:1,
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    </td>
+                    <td>
+                      {votesOfController && (
+                        <TextField 
+                          value={ centToDollar(votesOfController) } 
+                          variant='outlined'
+                          size='small' 
+                          label="VotesOfController" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            m:1,
+                          }} 
+                          fullWidth
+                        />
+                      )}
+                    </td>
+                    <td>
+                      {par && (
+                        <TextField 
+                          value={ centToDollar(par)} 
+                          variant='outlined'
+                          size='small' 
+                          label="RegisteredCapital" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            m:1,
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    </td>
+                    <td>
+                      {paid && (
+                        <TextField 
+                          value={ centToDollar(paid) } 
+                          variant='outlined'
+                          size='small' 
+                          label="PaidInCapital" 
+                          inputProps={{readOnly: true}}
+                          sx={{
+                            m: 1,
+                          }}
+                          fullWidth
+                        />
+                      )}
+                    </td>
+                  </tr>
+
+                </Paper>
               </td>
             </tr>
 
             <tr>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfCBP (Giga CBP)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(balanceOfCBP.length > 27 ? balanceOfCBP.substring(0, balanceOfCBP.length - 27) : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfCBP (CBP)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balanceOfCBP.length > 18 
-                  ? balanceOfCBP.length > 27
-                    ? balanceOfCBP.substring(balanceOfCBP.length - 27, balanceOfCBP.length - 18)
-                    : balanceOfCBP.substring(0, balanceOfCBP.length - 18) 
-                  : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfCBP (GLee)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ getGWeiPart(balanceOfCBP) }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfCBP (Lee)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ getWeiPart(balanceOfCBP)}
-              />
-            </td>
-          </tr>
+              <td colSpan={4}>
+                <Paper elevation={3} sx={{m:1, p:1, }} >
 
-          <tr>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfETH (Giga ETH)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(balanceOfETH.length > 27 ? balanceOfETH.substring(0, balanceOfETH.length - 27) : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfETH (ETH)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balanceOfETH.length > 18 
-                  ? balanceOfETH.length > 27
-                    ? balanceOfETH.substring(balanceOfETH.length - 27, balanceOfETH.length - 18)
-                    : balanceOfETH.substring(0, balanceOfETH.length - 18) 
-                  : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfETH (GWei)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balanceOfETH.length > 9 
-                  ? balanceOfETH.length > 18
-                    ? balanceOfETH.substring(balanceOfETH.length - 18, balanceOfETH.length - 9)
-                    : balanceOfETH.substring(0, balanceOfETH.length - 9) 
-                  : '0') }
-              />
-            </td>
-            <td>
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='BalanceOfETH (Wei)'
-                inputProps={{readOnly: true}}
-                fullWidth
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                    balanceOfETH.length > 9
-                  ? balanceOfETH.substring(balanceOfETH.length - 9)
-                  : balanceOfETH
-                )}
-              />
-            </td>
-          </tr>
+                  <Stack direction='row' sx={{ alignItems:'center' }} >
+            
+                    <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
+                      <h3>Cash Box</h3>
+                    </Toolbar>
+
+                    <PickupDeposit getBalanceOf={getBalanceOf} getDeposits={getDeposits} />
+
+                    <DepositOfMine />
+
+                  </Stack>
+
+                  <tr>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfCBP (Giga CBP)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getGEthPart(balanceOfCBP) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfCBP (CBP)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getEthPart(balanceOfCBP) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfCBP (GLee)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getGWeiPart(balanceOfCBP) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfCBP (Lee)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getWeiPart(balanceOfCBP)}
+                      />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfETH (Giga ETH)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getGEthPart(balanceOfETH) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfETH (ETH)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getEthPart(balanceOfETH) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfETH (GWei)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getGWeiPart(balanceOfETH) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='BalanceOfETH (Wei)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getWeiPart(balanceOfETH) }
+                      />
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='Deposits (Giga ETH)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getGEthPart(depositsOfETH) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='Deposits (ETH)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getEthPart(depositsOfETH) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='Deposits (GWei)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getGWeiPart(depositsOfETH) }
+                      />
+                    </td>
+                    <td>
+                      <TextField 
+                        size="small"
+                        variant='outlined'
+                        label='Deposits (Wei)'
+                        inputProps={{readOnly: true}}
+                        fullWidth
+                        sx={{
+                          m:1,
+                        }}
+                        value={ getWeiPart(depositsOfETH) }
+                      />
+                    </td>
+                  </tr>
 
 
+                </Paper>
+              </td>
+            </tr>
 
             <tr>
               <td colSpan={4}>

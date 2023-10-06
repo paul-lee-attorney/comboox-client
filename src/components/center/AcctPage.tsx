@@ -71,7 +71,7 @@ export function AcctPage({ flag }:AcctPageProps) {
           regUser?.()
         }}
         variant={flag ? 'contained' : 'outlined' }
-        color={ flag ? 'info' : 'primary' }
+        color={ flag ? 'info' : 'inherit' }
         sx={{ minWidth:218 }} 
         endIcon={<BorderColor />}       
       >

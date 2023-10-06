@@ -13,7 +13,7 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
   const {gk} = useComBooxContext();
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
-  const [ seqOfLR, setSeqOfLR ] = useState<string>('18');
+  // const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
   const [ idHash, setIdHash ] = useState<HexType>(Bytes32Zero);
 
   const {
@@ -22,8 +22,7 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
   } = useGeneralKeeperRegInvestor({
     address: gk,
     args: [ BigInt(groupRep), 
-            idHash, 
-            BigInt(seqOfLR)
+            idHash
           ],
     onSuccess() {
       getAllInvestors();
@@ -53,7 +52,7 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
           value={ groupRep } 
         />
 
-        <TextField 
+        {/* <TextField 
           variant='outlined'
           size="small"
           label='SeqOfListingRule'
@@ -63,7 +62,7 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
           }}
           onChange={ e => setSeqOfLR(e.target.value ?? '0')}
           value={ seqOfLR } 
-        />
+        /> */}
 
         <TextField
           variant='outlined'

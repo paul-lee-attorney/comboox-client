@@ -9,6 +9,7 @@ import { MintAndLockPoints } from "./ActionsOfUser/MintAndLockPoints";
 import { SetRoyaltyRule } from "./ActionsOfUser/SetRoyaltyRule";
 import { User } from "../../scripts/center/rc";
 import { AddrZero } from "../../scripts/common";
+import { TransferIPR } from "./ActionsOfUser/TransferIPR";
 
 export interface ActionsOfUserProps{
   refreshList: ()=>void;
@@ -29,7 +30,7 @@ export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshLis
   
   const actionsOfUser = [
     'Set Backup Key', 'Set Royalty Rule', 'Mint Points', 
-    'Mint & Lock Points', 'Transfer Points', 'Lock Points', 'Lock Consideration' 
+    'Mint & Lock Points', 'Transfer Points', 'Lock Points', 'Lock Consideration', 'Transfer IPR' 
   ]
 
   const compsOfAction = [
@@ -39,7 +40,8 @@ export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshLis
     <MintAndLockPoints key={3} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
     <TransferPoints key={4} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
     <LockPoints key={5} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,       
-    <LockConsideration key={6} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />
+    <LockConsideration key={6} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
+    <TransferIPR key={7} />,
   ]
 
   return( 

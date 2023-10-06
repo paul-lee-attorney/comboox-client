@@ -1,6 +1,6 @@
 
 import { Button, Stack, TextField } from "@mui/material";
-import { useGeneralKeeperProposeDocOfGm, usePrepareGeneralKeeperProposeDocOfGm } from "../../../../generated";
+import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { HexType, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
@@ -23,8 +23,10 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
     args: seqOfVR && executor 
-      ? [BigInt(`0x${addr.substring(2).padStart(64, '0')}`), BigInt(seqOfVR), BigInt(executor) ]
-      : undefined,    
+      ? [ BigInt(`0x${addr.substring(2).padStart(64, '0')}`), 
+          BigInt(seqOfVR), 
+          BigInt(executor) ]
+      : undefined,
     onSuccess() {
       setNextStep(4);
     }
@@ -32,19 +34,17 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
 
   return (
     <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'stretch'}}>
-      {seqOfVR > 8 && (
-        <TextField 
-          variant='outlined'
-          label='Executor'
-          size="small"
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={(e)=>setExecutor(e.target.value ?? '0')}
-          value={ executor }
-        />
-      )}
+      <TextField 
+        variant='outlined'
+        label='Executor'
+        size="small"
+        sx={{
+          m:1,
+          minWidth: 218,
+        }}
+        onChange={(e)=>setExecutor(e.target.value ?? '0')}
+        value={ executor }
+      />
 
       <Button
         disabled={!write || isLoading}
