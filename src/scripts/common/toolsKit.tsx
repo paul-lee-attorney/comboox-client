@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { utils } from "ethers";
+import { keccak256, toHex } from "viem";
 import { HexType } from ".";
 
 export function toPercent(num: number): string {
@@ -37,7 +37,7 @@ export function longDataParser(data: string): string {
 }
 
 export function selectorCodifier(func: string): HexType {
-  let hash = utils.keccak256(utils.toUtf8Bytes(func));
+  let hash = keccak256(toHex(func));
   return `0x${hash.substring(2,10)}`;
 }
 
