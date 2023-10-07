@@ -6,7 +6,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
-import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, toPercent } from '../../../scripts/common/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
 import { Share } from '../../../scripts/comp/ros';
 
 const columns: GridColDef[] = [

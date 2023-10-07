@@ -27,7 +27,7 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
     write: updateOracle,
   } = useGeneralKeeperUpdateOracle({
     address: gk,
-    args: [seqOfOpt, BigInt(paras.p1), BigInt(paras.p2), BigInt(paras.p3)],
+    args: [BigInt(seqOfOpt), BigInt(paras.p1), BigInt(paras.p2), BigInt(paras.p3)],
     onSuccess() {
       getAllOpts();
       setOpen(false);

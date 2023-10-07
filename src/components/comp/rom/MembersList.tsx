@@ -3,11 +3,11 @@ import { Paper, Toolbar, Box, TextField, Button } from '@mui/material';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { centToDollar, dateParser, longDataParser, longSnParser, ppToPercent, splitStrArr, toPercent } from '../../../scripts/common/toolsKit';
+import { centToDollar, dateParser, longDataParser, longSnParser, splitStrArr } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MemberShareClip, getEquityList } from '../../../scripts/comp/rom';
 import { useRegisterOfMembersSortedMembersList } from '../../../generated';
-import { HexType, booxMap } from '../../../scripts/common';
+import { booxMap } from '../../../scripts/common';
 import { History } from '@mui/icons-material';
 
 

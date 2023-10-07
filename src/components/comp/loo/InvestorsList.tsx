@@ -1,7 +1,7 @@
-import { Chip, Paper, Stack, Toolbar, Typography } from "@mui/material";
+import { Chip, Paper, Stack, Toolbar, } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { centToDollar, dateParser, longSnParser } from "../../../scripts/common/toolsKit";
-import { Investor, OrderWrap } from "../../../scripts/comp/loo";
+import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { Investor } from "../../../scripts/comp/loo";
 import { Dispatch, SetStateAction } from "react";
 import { CopyLongStrSpan } from "../../common/utils/CopyLongStr";
 

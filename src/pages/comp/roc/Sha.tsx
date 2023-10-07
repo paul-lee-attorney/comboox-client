@@ -12,7 +12,6 @@ import { Signatures } from "../../../components/common/sigPage/Signatures";
 import { useState } from "react";
 import { ShaLifecycle } from "../../../components/comp/roc/sha/ShaLifecycle";
 import { useAccessControlIsFinalized, useFilesFolderGetFile } from "../../../generated";
-import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { InfoOfFile } from "../../../scripts/common/filesFolder";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";

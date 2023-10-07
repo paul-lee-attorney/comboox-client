@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   Button, 
@@ -6,8 +6,6 @@ import {
   Toolbar,
   TextField,
   Stack,
-  Typography,
-  Box,
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";

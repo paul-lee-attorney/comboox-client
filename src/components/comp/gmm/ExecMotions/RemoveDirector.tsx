@@ -2,7 +2,7 @@ import { useGeneralKeeperRemoveDirector } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { HexType, booxMap } from "../../../../scripts/common";
 import { Button, Paper } from "@mui/material";
-import { Chair, FollowTheSigns } from "@mui/icons-material";
+import { FollowTheSigns } from "@mui/icons-material";
 
 
 interface RemoveDirectorProps {

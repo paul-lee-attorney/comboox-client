@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { AddrOfRegCenter } from "../../scripts/common";
 import { Locker, User, getLocker } from "../../scripts/center/rc";
 import { Divider, Paper, TextField, Toolbar } from "@mui/material";
-import { longDataParser, longSnParser, toPercent, toStr } from "../../scripts/common/toolsKit";
+import { longDataParser, longSnParser, toPercent } from "../../scripts/common/toolsKit";
 import { regCenterABI, useRegCenterBalanceOf, useRegCenterGetLocksList, useRegCenterGetOwner } from "../../generated";
 import { useContractRead, useWalletClient } from "wagmi";
 import { LockersList } from "../../components/center/LockersList";

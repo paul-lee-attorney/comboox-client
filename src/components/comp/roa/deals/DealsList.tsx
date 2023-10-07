@@ -9,7 +9,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { Deal } from '../../../../scripts/comp/ia';
-import { centToDollar, longDataParser, longSnParser, ppToPercent, toPercent } from '../../../../scripts/common/toolsKit';
+import { centToDollar, longDataParser, longSnParser, } from '../../../../scripts/common/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
 import { HexType } from '../../../../scripts/common';
 

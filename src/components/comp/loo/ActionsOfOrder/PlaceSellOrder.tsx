@@ -5,7 +5,7 @@ import { Loyalty } from "@mui/icons-material";
 import { useState } from "react";
 import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
-import { InitOffer, Order, defaultOffer, defaultOrder } from "../../../../scripts/comp/loo";
+import { InitOffer, defaultOffer, } from "../../../../scripts/comp/loo";
 
 export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();

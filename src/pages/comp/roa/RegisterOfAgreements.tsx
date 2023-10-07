@@ -6,7 +6,6 @@ import {
   Toolbar,
   TextField,
   Stack,
-  Typography,
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";

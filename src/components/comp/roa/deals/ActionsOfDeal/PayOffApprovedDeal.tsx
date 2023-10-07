@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { CurrencyExchange, Payment } from "@mui/icons-material";
+import { Payment } from "@mui/icons-material";
 import { useState } from "react";
 import { removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
 

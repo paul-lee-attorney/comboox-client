@@ -9,7 +9,7 @@ import { InitBos } from "../../components/comp/ros/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
 import { getKeeper } from "../../scripts/comp/gk";
-import { useAccessControlGetDk, useRegisterOfSharesGetDk } from "../../generated";
+import { useAccessControlGetDk } from "../../generated";
 import { SetCompInfo } from "../../components/comp/gk/SetCompInfo";
 import { booxMap } from "../../scripts/common";
 

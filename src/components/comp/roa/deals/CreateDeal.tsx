@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 
-import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
+import { HexType, booxMap } from "../../../../scripts/common";
 
 import { 
   useInvestmentAgreementAddDeal, 
@@ -24,7 +24,7 @@ import { AddCircle } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Body, Deal, Head, TypeOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
+import { Body, Head, TypeOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
 
 export function codifyHeadOfDeal(head: Head): HexType {

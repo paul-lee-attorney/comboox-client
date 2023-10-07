@@ -1,4 +1,4 @@
-import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Paper, Stack, TextField, } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import {  BorderColor } from "@mui/icons-material";
@@ -13,7 +13,6 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
   const {gk} = useComBooxContext();
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
-  // const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
   const [ idHash, setIdHash ] = useState<HexType>(Bytes32Zero);
 
   const {
@@ -51,18 +50,6 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
           onChange={ e => setGroupRep(e.target.value ?? '0') }
           value={ groupRep } 
         />
-
-        {/* <TextField 
-          variant='outlined'
-          size="small"
-          label='SeqOfListingRule'
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={ e => setSeqOfLR(e.target.value ?? '0')}
-          value={ seqOfLR } 
-        /> */}
 
         <TextField
           variant='outlined'

@@ -1,8 +1,8 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperCreateSwap } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { Approval, SwapHorizOutlined } from "@mui/icons-material";
+import { Button, Paper, Stack, TextField } from "@mui/material";
+import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
 
 export function CreateSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {

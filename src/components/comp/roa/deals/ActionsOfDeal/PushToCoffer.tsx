@@ -1,16 +1,14 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../scripts/common";
-import { Deal, defaultDeal } from "../../../../../scripts/comp/ia";
+import { defaultDeal } from "../../../../../scripts/comp/ia";
 import dayjs, { Dayjs } from "dayjs";
 import { useGeneralKeeperPushToCoffer } from "../../../../../generated";
-import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Paper, Stack, TextField } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { LockClock } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexParser } from "../../../../../scripts/common/toolsKit";
-
-
 
 export function PushToCoffer({ia, deal, setOpen, setDeal, refreshDealsList}:ActionsOfDealProps) {
 

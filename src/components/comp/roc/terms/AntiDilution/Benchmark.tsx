@@ -4,7 +4,6 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
-import { longSnParser } from '../../../../../scripts/common/toolsKit';
 
 interface BenchmarkType {
   classOfShare: string,

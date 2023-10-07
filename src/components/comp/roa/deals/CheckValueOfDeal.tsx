@@ -3,8 +3,7 @@ import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
 import { Help } from "@mui/icons-material";
 import { useInvestmentAgreementCheckValueOfDeal } from "../../../../generated";
-import { getEthPart, getGWeiPart, getWeiPart, longDataParser, weiToEth } from "../../../../scripts/common/toolsKit";
-import { ActionsOfDealProps } from "./ActionsOfDeal";
+import { getEthPart, getGWeiPart, getWeiPart, weiToEth } from "../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../scripts/common";
 import { Deal } from "../../../../scripts/comp/ia";
 

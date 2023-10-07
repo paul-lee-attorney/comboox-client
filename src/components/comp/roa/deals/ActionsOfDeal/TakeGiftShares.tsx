@@ -1,9 +1,9 @@
-import { Button, Paper, Stack, Toolbar } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
-import { useGeneralKeeperIssueNewShare, useGeneralKeeperTakeGiftShares } from "../../../../../generated";
+import { useGeneralKeeperTakeGiftShares } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { HandshakeOutlined, RocketLaunch } from "@mui/icons-material";
+import { HandshakeOutlined } from "@mui/icons-material";
 
 
 export function TakeGiftShares({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {

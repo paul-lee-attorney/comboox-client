@@ -19,8 +19,6 @@ import { AddrZero, HexType } from "../../../../../scripts/common";
 import {
   AddCircle,
   RemoveCircle,
-  PlaylistAdd,
-  Delete,
   ListAlt,
 } from "@mui/icons-material"
 
@@ -28,19 +26,16 @@ import { waitForTransaction, readContract } from "@wagmi/core";
 
 import {
   antiDilutionABI,
-  useShareholdersAgreementCreateTerm,
-  useShareholdersAgreementRemoveTerm,
-  useAntiDilutionGetClasses, 
   useAntiDilutionAddBenchmark,
   useAntiDilutionRemoveBenchmark,
   useAntiDilutionAddObligor,
-  useAntiDilutionRemoveObligor, 
+  useAntiDilutionRemoveObligor,
+  useAntiDilutionGetClasses, 
 } from "../../../../../generated";
 
 
 import { Benchmark } from "./Benchmark";
-import { longSnParser, splitStrArr } from "../../../../../scripts/common/toolsKit";
-import { getDocAddr } from "../../../../../scripts/center/rc";
+import { longSnParser } from "../../../../../scripts/common/toolsKit";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 

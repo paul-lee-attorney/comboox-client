@@ -8,7 +8,7 @@ import { Close, Lock, StopCircleOutlined }  from '@mui/icons-material';
 
 
 import { 
-  useAccessControlLockContents, useShareholdersAgreement, useShareholdersAgreementFinalizeSha,
+  useShareholdersAgreementFinalizeSha,
 } from '../../../../../generated';
 import { HexType } from '../../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
 import { Help } from "@mui/icons-material";
 import { useInvestmentAgreementCheckValueOfSwap } from "../../../../../generated";
-import { getEthPart, getGWeiPart, getWeiPart, longDataParser, weiToEth } from "../../../../../scripts/common/toolsKit";
+import { getEthPart, getGWeiPart, getWeiPart, weiToEth } from "../../../../../scripts/common/toolsKit";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 
 export function CheckValueOfSwap({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {

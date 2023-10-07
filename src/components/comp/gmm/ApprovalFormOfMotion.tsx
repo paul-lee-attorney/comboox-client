@@ -1,4 +1,15 @@
-import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
+import { 
+  Button, 
+  Collapse, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle, 
+  Paper, 
+  TextField, 
+  Toolbar 
+} from "@mui/material";
+
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
@@ -9,15 +20,12 @@ import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { ProposeMotionToGeneralMeeting } from "./VoteMotions/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "./VoteMotions/CastVoteOfGm";
-import { Motion, VoteCase, getMotionsList, getVoteResult, voteEnded } from "../../../scripts/common/meetingMinutes";
+import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../scripts/common/meetingMinutes";
 import { VoteCountingOfGm } from "./VoteMotions/VoteCountingOfGm";
 import { TakeSeat } from "./ExecMotions/TakeSeat";
 import { RemoveDirector } from "./ExecMotions/RemoveDirector";
 import { ExecActionOfGm } from "./ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
-// import { getSnOfFile } from "../../../queries/filesFolder";
-// import { useMeetingMinutes } from "../../../generated";
-// import { RequestToBuy } from "./ExecMotions/RequestToBuy";
 import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
 import { getFile } from "../../../scripts/common/filesFolder";
 

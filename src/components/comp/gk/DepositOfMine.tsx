@@ -1,8 +1,7 @@
 import { Alert, Collapse, IconButton, Stack, Tooltip } from "@mui/material";
-import { useGeneralKeeperDepositOfMine, useGeneralKeeperPickupDeposit, useRegCenter, useRegCenterGetMyUserNo } from "../../../generated";
+import { useGeneralKeeperDepositOfMine } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { Close, HelpOutline, Savings, SavingsOutlined } from "@mui/icons-material";
-import { AddrOfRegCenter } from "../../../scripts/common";
+import { Close, HelpOutline, } from "@mui/icons-material";
 import { useState } from "react";
 import { getEthPart, getGEthPart, getGWeiPart, getWeiPart } from "../../../scripts/common/toolsKit";
 

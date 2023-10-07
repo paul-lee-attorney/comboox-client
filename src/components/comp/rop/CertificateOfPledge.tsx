@@ -9,7 +9,7 @@ import {
   TextField 
 } from "@mui/material";
 
-import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { Pledge } from "../../../scripts/comp/rop";
 import { statesOfPld } from "./PledgesList";
 import { ActionsOfPledge } from "./ActionsOfPledge";

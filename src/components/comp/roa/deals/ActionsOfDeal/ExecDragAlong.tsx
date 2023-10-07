@@ -1,9 +1,9 @@
-import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
-import { useGeneralKeeperExecDragAlong, useGeneralKeeperExecTagAlong } from "../../../../../generated";
+import { useGeneralKeeperExecDragAlong } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import {  AgricultureOutlined, DirectionsRun, SellOutlined } from "@mui/icons-material";
+import {  AgricultureOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";

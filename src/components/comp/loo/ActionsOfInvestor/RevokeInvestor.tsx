@@ -1,7 +1,7 @@
-import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Paper, Stack, TextField, } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
-import {  Approval, PersonRemoveOutlined } from "@mui/icons-material";
+import { PersonRemoveOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useGeneralKeeperRevokeInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";

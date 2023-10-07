@@ -1,7 +1,6 @@
-import { readContract, getWalletClient, getContract, getPublicClient, waitForTransaction } from "@wagmi/core";
+import { readContract, getWalletClient, getContract, waitForTransaction } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../common";
 import { regCenterABI } from "../../generated";
-import { toAscii, toStr } from "../common/toolsKit";
 
 // ==== Locker ====
 
@@ -131,9 +130,6 @@ export interface HeadOfDoc {
   seqOfDoc: bigint;
   creator: number;
   createDate: number;
-  para: number;
-  argu: number;
-  state: number;        
 }
 
 export interface Doc {

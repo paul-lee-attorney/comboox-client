@@ -1,5 +1,5 @@
 import { readContract, fetchBalance } from "@wagmi/core";
-import { AddrZero, HexType } from "../common";
+import { HexType } from "../common";
 import { generalKeeperABI } from "../../generated";
 import { getDK, getOwner } from "../common/accessControl";
 import { toStr } from "../common/toolsKit";

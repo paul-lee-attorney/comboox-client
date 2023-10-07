@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { AddrZero, HexType } from "../../../../scripts/common";
 
-import { useGeneralKeeperProposeDocOfGm, useGeneralKeeperProposeToTransferFund } from "../../../../generated";
+import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";

@@ -2,7 +2,6 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { registerOfAgreementsABI } from "../../generated";
 
-
 export interface DTClaim{
   typeOfClaim: number;
   seqOfShare: number;

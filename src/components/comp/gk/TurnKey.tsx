@@ -17,8 +17,6 @@ import { ArrowDownward, ArrowUpward, Key }  from '@mui/icons-material';
 
 
 import {
-  useRegisterOfSharesSetDirectKeeper,
-  useRegisterOfMembersSetDirectKeeper,
   useGeneralKeeperGetKeeper,
   useAccessControlGetDk,
   useAccessControlSetDirectKeeper,

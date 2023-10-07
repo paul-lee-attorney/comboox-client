@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
+import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperAcceptAlongDeal, useRegisterOfAgreementsHasDtClaims, } from "../../../../generated";
 import { HexParser, centToDollar, dateParser, longSnParser } from "../../../../scripts/common/toolsKit";

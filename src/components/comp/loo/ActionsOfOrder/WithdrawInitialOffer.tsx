@@ -1,12 +1,11 @@
-import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
+import { Button, Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
-import { Loyalty, NextPlanOutlined, RedoOutlined, UndoOutlined } from "@mui/icons-material";
+import { RedoOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useGeneralKeeperWithdrawInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-
 
 export function WithdrawInitialOffer({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();

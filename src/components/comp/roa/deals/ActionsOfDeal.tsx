@@ -1,5 +1,5 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Deal } from "../../../../scripts/comp/ia";
 import { HexType } from "../../../../scripts/common";
@@ -15,9 +15,6 @@ import { ExecFirstRefusal } from "./ActionsOfDeal/ExecFirstRefusal";
 import { TakeGiftShares } from "./ActionsOfDeal/TakeGiftShares";
 import { PayOffApprovedDeal } from "./ActionsOfDeal/PayOffApprovedDeal";
 import { RequestToBuy } from "./ActionsOfDeal/RequestToBuy";
-import { useFilesFolderClosingDeadline, useFilesFolderDtExecDeadline, useFilesFolderFrExecDeadline, useFilesFolderGetFile, useFilesFolderTerminateStartpoint, useFilesFolderVotingDeadline } from "../../../../generated";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { usePublicClient } from "wagmi";
 import { Timeline } from "./OrderOfDeal";
 
 export interface ActionsOfDealProps{

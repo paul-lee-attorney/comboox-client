@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { 
   Stack,
@@ -38,7 +38,6 @@ import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, trigg
 import { AlongLinks } from "../DragAlong/AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
-
 
 export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 

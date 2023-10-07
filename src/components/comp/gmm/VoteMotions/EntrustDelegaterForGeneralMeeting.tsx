@@ -2,7 +2,6 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperEntrustDelegaterForGeneralMeeting, 
-  usePrepareGeneralKeeperEntrustDelegaterForGeneralMeeting 
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
@@ -21,15 +20,6 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMot
   const { gk, boox } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>();
-
-  // const {
-  //   config: entrustDelegaterOfMemberConfig
-  // } = usePrepareGeneralKeeperEntrustDelegaterForGeneralMeeting({
-  //   address: gk,
-  //   args: delegater
-  //       ? [seqOfMotion, BigInt(delegater) ]
-  //       : undefined ,
-  // });
 
   const {
     isLoading: entrustDelegaterOfMemberLoading,

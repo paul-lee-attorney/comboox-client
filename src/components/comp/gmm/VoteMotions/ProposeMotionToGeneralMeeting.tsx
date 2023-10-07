@@ -19,14 +19,7 @@ interface ProposeMotionToGmProps {
 export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionToGmProps) {
 
   const { gk, boox } = useComBooxContext();
-
-  // const {
-  //   config: proposeMotionToGeneralMeetingConfig,
-  // } = usePrepareGeneralKeeperProposeMotionToGeneralMeeting ({
-  //   address: gk,
-  //   args: [BigInt(seqOfMotion)],
-  // });
-
+  
   const {
     isLoading: proposeMotionToGmLoading,
     write: proposeMotionToGm,

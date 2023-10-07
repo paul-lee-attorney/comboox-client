@@ -9,7 +9,6 @@ import { RevokePledge } from "./Actions/RevokePledge";
 import { TransferPledge } from "./Actions/TransferPledge";
 import { Pledge } from "../../../scripts/comp/rop";
 
-
 export interface ActionsOfPledgeProps{
   pld: Pledge;
   setOpen: Dispatch<SetStateAction<boolean>>;

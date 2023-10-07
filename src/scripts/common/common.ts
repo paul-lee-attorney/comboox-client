@@ -1,6 +1,5 @@
 import { waitForTransaction } from "@wagmi/core";
 import { HexType } from ".";
-import { Block } from "viem";
 
 export async function getReceipt(hash: HexType): Promise< any > {
   const res = await waitForTransaction({

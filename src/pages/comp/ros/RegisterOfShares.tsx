@@ -19,7 +19,7 @@ import {
 import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/ros/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/ros/CertificateOfContribution";
-import { Share, codifyHeadOfShare, getSharesList } from "../../../scripts/comp/ros";
+import { Share } from "../../../scripts/comp/ros";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { booxMap } from "../../../scripts/common";
 

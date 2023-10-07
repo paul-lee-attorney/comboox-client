@@ -2,11 +2,25 @@ import { useEffect, useState } from "react";
 
 import { 
   useGeneralKeeperCastVoteOfGm,
-  usePrepareGeneralKeeperCastVoteOfGm, 
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Box, Button, Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Switch, TextField, Toolbar, Typography } from "@mui/material";
+import { 
+  Box, 
+  Button, 
+  Collapse, 
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Paper, 
+  Select, 
+  Stack, 
+  Switch, 
+  TextField, 
+  Toolbar, 
+  Typography 
+} from "@mui/material";
+
 import { HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";

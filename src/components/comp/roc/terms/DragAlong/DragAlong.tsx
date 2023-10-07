@@ -24,8 +24,6 @@ import { AddrZero, HexType } from "../../../../../scripts/common";
 import {
   AddCircle,
   RemoveCircle,
-  PlaylistAdd,
-  Delete,
   ListAlt,
 } from "@mui/icons-material"
 

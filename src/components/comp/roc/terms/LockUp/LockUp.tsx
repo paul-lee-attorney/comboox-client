@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 
 import { 
   Stack,
@@ -25,7 +25,6 @@ import {
 import { readContract } from "@wagmi/core";
 
 import {
-  useShareholdersAgreementCreateTerm,
   lockUpABI,
   useLockUpSetLocker,
   useLockUpRemoveKeyholder,

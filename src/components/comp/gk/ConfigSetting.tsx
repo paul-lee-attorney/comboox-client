@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, TextField, Tooltip } from "@mui/material";
 import { SettingsOutlined } from "@mui/icons-material";
 import { AddrZero, HexType } from "../../../scripts/common";
 import { ActionsOfSetting } from "./ActionsOfSetting";

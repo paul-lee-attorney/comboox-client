@@ -26,8 +26,6 @@ import { ListAlt } from '@mui/icons-material';
 import { useShareholdersAgreementGetRule } from '../../../../../generated';
 import { SetRuleProps } from '../VotingRules/SetVotingRule';
 import { titleOfPositions } from '../PositionAllocationRules/SetPositionAllocateRule';
-import { defaultRule } from '../../../../../scripts/center/rc';
-import { ListingRules } from './ListingRules';
 
 export interface ListingRule {
   seqOfRule: number;

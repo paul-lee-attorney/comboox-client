@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Collapse, Stack, TextField, IconButton, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Stack, TextField, Typography } from "@mui/material";
 
 import { centToDollar, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useState } from "react";

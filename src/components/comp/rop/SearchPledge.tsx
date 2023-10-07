@@ -6,7 +6,6 @@ import { Pledge } from "../../../scripts/comp/rop";
 import { getPledge } from "../../../scripts/comp/rop";
 import { booxMap } from "../../../scripts/common";
 
-
 interface SearchPledgeProps{
   setPld:(pld:Pledge)=>void;
   setOpen:(flag:boolean)=>void;

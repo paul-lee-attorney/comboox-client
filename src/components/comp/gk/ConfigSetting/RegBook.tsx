@@ -1,10 +1,9 @@
 import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, Toolbar } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
-import { Create, LockOpen, Update } from "@mui/icons-material";
-import { useGeneralKeeperRegBook, useGeneralKeeperSetCompInfo } from "../../../../generated";
+import { Dispatch, SetStateAction, } from "react";
+import { Create, } from "@mui/icons-material";
+import { useGeneralKeeperRegBook } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { ConfigSettingProps } from "./SetCompInfo";
-import { AddrZero, HexType } from "../../../../scripts/common";
+import { HexType } from "../../../../scripts/common";
 import { nameOfBooks } from "../../../../scripts/comp/gk";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 

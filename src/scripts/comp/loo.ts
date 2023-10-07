@@ -1,6 +1,4 @@
-import { Bytes32Zero, HexType } from "../common";
-import { readContract } from "@wagmi/core";
-import { registerOfPledgesABI } from "../../generated";
+import { HexType } from "../common";
 
 
 export const statesOfInvestor = [

@@ -1,6 +1,6 @@
 import { useGeneralKeeperRevokePledge } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import { Block } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 

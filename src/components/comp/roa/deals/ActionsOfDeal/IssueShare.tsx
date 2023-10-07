@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Toolbar } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperIssueNewShare } from "../../../../../generated";
