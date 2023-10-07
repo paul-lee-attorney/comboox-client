@@ -35,7 +35,7 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
     args: doc && seqOfVr && executor
-          ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
+          ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
     onSuccess() {
       getMotionsList();
