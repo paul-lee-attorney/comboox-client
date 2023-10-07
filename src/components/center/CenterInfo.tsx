@@ -129,14 +129,14 @@ export function CenterInfo() {
 
                 <tr>
                   <td>
-                    <CopyLongStrTF size="body1" title='Owner' src={owner.toLowerCase() ?? '-'} />
+                    <CopyLongStrTF title='Owner' src={owner.toLowerCase() ?? '-'} />
                   </td>
                   <td>
-                    <CopyLongStrTF size="body1" title='Keeper' src={keeper.toLowerCase() ?? '-'} />
+                    <CopyLongStrTF title='Keeper' src={keeper.toLowerCase() ?? '-'} />
                   </td>
 
                   <td>
-                    <CopyLongStrTF size="body1" title='FeedReg' src={feedReg.toLowerCase() ?? '-'} />
+                    <CopyLongStrTF title='FeedReg' src={feedReg.toLowerCase() ?? '-'} />
                   </td>
 
                   <td>

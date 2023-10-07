@@ -185,7 +185,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <h3>Lock Up</h3>
                     </Toolbar>
 
-                    <CopyLongStrSpan title="Addr" size="body1" src={term} />
+                    <CopyLongStrSpan title="Addr"  src={term} />
                   </Stack>
 
                   { !isFinalized && (

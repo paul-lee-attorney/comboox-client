@@ -15,9 +15,6 @@ export interface Head {
   seqOfDoc: bigint,
   creator: number,
   createDate: number,
-  para: number,
-  argu: number,
-  state: number,
 }
 
 export interface Doc {

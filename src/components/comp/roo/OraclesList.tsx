@@ -1,5 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider } from "@mui/material";
-import { Typography } from "@mui/joy";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Typography } from "@mui/material";
 
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useEffect, useState } from "react";
@@ -71,7 +70,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
       >
 
         <Typography
-          level="body3"
+          variant="body2"
           fontWeight="xl"
           color="primary"
         >
@@ -81,7 +80,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
         <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
 
         <Typography
-          level="body3"
+          variant="body2"
           fontWeight="xl"
           color="primary"
         >
@@ -91,7 +90,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
         <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
 
         <Typography
-          level="body3"
+          variant="body2"
           fontWeight="xl"
           color="primary"
         >
@@ -101,7 +100,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
         <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
 
         <Typography
-          level="body3"
+          variant="body2"
           fontWeight="xl"
           color="primary"
         >        

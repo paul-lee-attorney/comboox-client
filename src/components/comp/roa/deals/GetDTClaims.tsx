@@ -89,7 +89,7 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
       align: 'center',
       width: 218,
       renderCell:({value})=>(
-        <CopyLongStrSpan title='Hash' size='body1' src={value} />
+        <CopyLongStrSpan title='Hash' src={value} />
       )
     },
   ];

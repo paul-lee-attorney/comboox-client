@@ -205,7 +205,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     <h3>Put/Call Options</h3>
                   </Toolbar>
 
-                  <CopyLongStrSpan title="Addr" size="body1" src={term} />
+                  <CopyLongStrSpan title="Addr"  src={term} />
                 </Stack>
 
                 {!isFinalized && (

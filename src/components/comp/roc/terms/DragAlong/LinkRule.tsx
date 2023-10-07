@@ -139,7 +139,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                   value={ rule.proRata ? 'True' : 'False' }              
                 />
 
-                <TextField 
+                {/* <TextField 
                   variant='outlined'
                   inputProps={{readOnly: true}}
                   label='TypeOfFollowers'
@@ -149,7 +149,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     minWidth: 218,
                   }}
                   value={ rule.typeOfFollowers == 1 ? 'RestAllMembers' : 'SpecifiedMembers' }              
-                />
+                /> */}
 
               </Stack>
 

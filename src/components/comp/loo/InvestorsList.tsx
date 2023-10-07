@@ -67,7 +67,7 @@ export function InvestorsList({list, setAcct}:OrdersListProps) {
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
-        <CopyLongStrSpan title='Hash' size='body1' src={value} />
+        <CopyLongStrSpan title='Hash' src={value} />
       )
     },
     {

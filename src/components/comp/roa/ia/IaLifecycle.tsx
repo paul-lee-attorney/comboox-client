@@ -34,7 +34,7 @@ interface IaLifecycleProps {
 export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
 
   const { boox } = useComBooxContext();
-  const [ activeStep, setActiveStep ] = useState<number>();
+  const [ activeStep, setActiveStep ] = useState<number>(0);
   const [ seqOfMotion, setSeqOfMotion ] = useState<bigint>();
 
   const [ typeOfIa, setTypeOfIa ] = useState<number>();

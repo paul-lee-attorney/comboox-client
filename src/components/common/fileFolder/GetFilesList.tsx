@@ -124,7 +124,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
       headerAlign:'center',
       align: 'center',
       renderCell:({value})=>(
-        <CopyLongStrSpan title='Addr' size='body1' src={value} />
+        <CopyLongStrSpan title='Addr' src={value} />
       )
     },
     {

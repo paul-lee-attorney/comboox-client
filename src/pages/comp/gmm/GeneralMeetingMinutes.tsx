@@ -59,7 +59,7 @@ function GeneralMeetingMinutes() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.GMM].toLowerCase() }  />
+          <CopyLongStrSpan title="Addr"  src={ boox[booxMap.GMM].toLowerCase() }  />
         )}
 
       </Stack>

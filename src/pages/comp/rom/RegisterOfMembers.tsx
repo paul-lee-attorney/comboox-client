@@ -23,7 +23,7 @@ function RegisterOfMembers() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={boox[booxMap.ROM].toLowerCase()} />
+          <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROM].toLowerCase()} />
         )}
       </Stack>
 

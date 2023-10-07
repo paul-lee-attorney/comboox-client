@@ -214,7 +214,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       <h3>Anti Dilution</h3>
                     </Toolbar>
 
-                    <CopyLongStrSpan title="Addr" size="body1" src={term.toLowerCase()} />
+                    <CopyLongStrSpan title="Addr"  src={term.toLowerCase()} />
                   </Stack>
                   {!isFinalized && (
                     <AddTerm sha={ sha } title={ 1 } setTerms={ setTerms } isCreated={ term != AddrZero }  />

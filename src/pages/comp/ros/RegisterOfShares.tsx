@@ -79,7 +79,7 @@ function RegisterOfShares() {
           </Toolbar>
 
           {boox && (
-            <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.ROS].toLowerCase() } />
+            <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROS].toLowerCase() } />
           )}
 
         </Stack>

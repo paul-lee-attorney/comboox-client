@@ -37,7 +37,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                   </Toolbar>
                 </td>
                 <td>
-                  <CopyLongStrSpan size="body1" title="Addr" src={file.addr}  />
+                  <CopyLongStrSpan title="Addr" src={file.addr}  />
                 </td>
                 <td>
                 </td>
@@ -71,13 +71,13 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
             <tbody>
               <tr>
                 <td>
-                  <CopyLongStrTF size="body1" title="Sn:" src={file.sn} />
+                  <CopyLongStrTF title="Sn:" src={file.sn} />
                 </td>            
                 <td>
-                  <CopyLongStrTF size="body1" title="Url:" src={file.ref.docUrl} />
+                  <CopyLongStrTF title="Url:" src={file.ref.docUrl} />
                 </td>            
                 <td>
-                  <CopyLongStrTF size="body1" title="Hash:" src={file.ref.docHash} />
+                  <CopyLongStrTF title="Hash:" src={file.ref.docHash} />
                 </td>
                 <td>
                   <TextField 

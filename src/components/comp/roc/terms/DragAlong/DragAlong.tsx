@@ -282,7 +282,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                     <h3>Drag Along</h3>
                   </Toolbar>
 
-                  <CopyLongStrSpan title="Addr" size="body1" src={term} />
+                  <CopyLongStrSpan title="Addr"  src={term} />
                 </Stack>
 
                 {!isFinalized && (

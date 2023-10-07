@@ -224,7 +224,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                 )}
 
                 {gk && (
-                  <CopyLongStrSpan size='h6' title='Addr' src={gk.toLowerCase()} />                       
+                  <CopyLongStrSpan title='Addr' src={gk.toLowerCase()} />                       
                 )}
               </Stack>
 

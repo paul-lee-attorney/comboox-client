@@ -116,7 +116,7 @@ function UserInfo() {
           <>
           <tr>
             <td>
-              <CopyLongStrTF size="body1" title='PrimeKey' src={user?.primeKey.pubKey.toLowerCase() ?? '-'} />
+              <CopyLongStrTF title='PrimeKey' src={user?.primeKey.pubKey.toLowerCase() ?? '-'} />
             </td>
             <td>
               <TextField 
@@ -165,7 +165,7 @@ function UserInfo() {
 
           <tr>
             <td>
-              <CopyLongStrTF size="body1" title='BackupKey' src={ user?.backupKey.pubKey.toLowerCase() ?? '-' } />
+              <CopyLongStrTF title='BackupKey' src={ user?.backupKey.pubKey.toLowerCase() ?? '-' } />
             </td>
             <td>
               <TextField 

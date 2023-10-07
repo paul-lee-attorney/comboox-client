@@ -265,12 +265,12 @@ export function GeneralInfo() {
 
                     <td >
                       {gk && (
-                        <CopyLongStrTF title="AddressOfCompany" src={gk} size="h4" />
+                        <CopyLongStrTF title="AddressOfCompany" src={gk} />
                       )}
                     </td>
                     <td >
                       {dk && (
-                        <CopyLongStrTF title="Secretary" src={dk} size="h4" />
+                        <CopyLongStrTF title="Secretary" src={dk} />
                       )}
                     </td>
                   </tr>

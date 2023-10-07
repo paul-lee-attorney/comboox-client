@@ -9,12 +9,11 @@ import { HexType } from '../../../scripts/common';
 
 
 interface CopyLongStrProps{
-  size: string;
   title: string;
   src: string;
 }
 
-export function CopyLongStrTF({size, title, src}:CopyLongStrProps) {
+export function CopyLongStrTF({title, src}:CopyLongStrProps) {
 
   const [ flag, setFlag ] = useState<boolean>(false);
 
@@ -74,7 +73,7 @@ function parseHexType(input: string): HexType {
 }
 
 
-export function CopyLongStrSpan({size, title, src}:CopyLongStrProps) {
+export function CopyLongStrSpan({title, src}:CopyLongStrProps) {
 
   const [ flag, setFlag ] = useState<boolean>(false);
 
@@ -90,7 +89,7 @@ export function CopyLongStrSpan({size, title, src}:CopyLongStrProps) {
   return(
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center' }} >
 
-      <Typography variant={ size } >
+      <Typography >
         { '( ' + title + ': ' + src.substring(0, 6) + '...' + src.substring(src.length-4) + ' )' }
       </Typography>
 

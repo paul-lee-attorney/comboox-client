@@ -1,5 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Collapse, Stack, TextField, IconButton } from "@mui/material";
-import { Typography } from "@mui/joy";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Collapse, Stack, TextField, IconButton, Typography } from "@mui/material";
 
 import { centToDollar, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useState } from "react";
@@ -142,7 +141,7 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
       >
 
         <Typography
-          level="body3"
+          variant="body2"
           fontWeight="xl"
           color="primary"
         >

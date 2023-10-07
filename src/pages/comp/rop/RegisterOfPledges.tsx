@@ -45,7 +45,7 @@ function RegisterOfPledges() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.ROP].toLowerCase() } />
+          <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROP].toLowerCase() } />
         )}
 
       </Stack>

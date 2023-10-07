@@ -79,7 +79,7 @@ function ListOfOrders() {
           </Toolbar>
 
           {boox && (
-            <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.LOO].toLowerCase() }  />
+            <CopyLongStrSpan title="Addr"  src={ boox[booxMap.LOO].toLowerCase() }  />
           )}
 
       </Stack>

@@ -98,7 +98,11 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
       <LinearProgress
         determinate
         variant="outlined"
-        color={ attitudes[attitude-1].colorJoy }
+        color={ attitude == 1
+            ? 'primary'
+            : attitude == 2
+                ? 'danger'
+                : 'success' }
         size="sm"
         thickness={38}
         value={ allVote.sumOfWeight > 0 
@@ -120,7 +124,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         >
 
           <Typography
-            level="body3"
+            level="body-md"
             fontWeight="xl"
             textColor="common.white"
             sx={{ mixBlendMode: 'difference' }}
@@ -149,7 +153,11 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
           {"Vote Case of Attitude"} - 
           { <Chip 
               variant="filled" 
-              color={attitudes[attitude-1].colorMaterial} 
+              color={ attitude == 1 
+                  ? 'primary'
+                  : attitude == 2
+                      ? 'error'
+                      : 'success' } 
               label={
                 attitudes[attitude-1].name + 
                 ' (' + voteCase.sumOfHead.toString() + '/' + allVote.sumOfHead.toString() + ') ' + 

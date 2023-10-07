@@ -29,7 +29,7 @@ export function CreateComp() {
     address: AddrOfRegCenter,
     args: dk && dk != '0x' 
       ? [dk] : undefined,
-    onSuccess(data) {
+    onSuccess(data:any) {
       const initComp = async ()=>{
         let addrOfGK = await getDocAddr(data.hash);
         setGK(addrOfGK);

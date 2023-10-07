@@ -84,7 +84,7 @@ export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps
       </Stack>
 
       {voteResult && boox && (
-        <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} voteResult={voteResult} />
+        <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} />
       )}
 
     </Stack>

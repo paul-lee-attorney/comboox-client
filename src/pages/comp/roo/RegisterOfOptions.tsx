@@ -84,7 +84,7 @@ function RegisterOfOptions() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={ boox[booxMap.ROO].toLowerCase() } />
+          <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROO].toLowerCase() } />
         )}
 
       </Stack>

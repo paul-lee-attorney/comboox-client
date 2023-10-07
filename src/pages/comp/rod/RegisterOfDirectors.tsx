@@ -49,7 +49,7 @@ function RegisterOfDirectors() {
         </Toolbar>
 
         {boox && (
-          <CopyLongStrSpan title="Addr" size="body1" src={boox[booxMap.ROD].toLowerCase()} />
+          <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROD].toLowerCase()} />
         )}
 
       </Stack>
