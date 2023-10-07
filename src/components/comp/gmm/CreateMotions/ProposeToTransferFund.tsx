@@ -47,7 +47,7 @@ export function ProposeToTransferFund({ getMotionsList }:CreateMotionProps) {
         paras.to, 
         paras.isCBP, 
         paras.amt, 
-        paras.expireDate, 
+        BigInt(paras.expireDate), 
         BigInt(seqOfVR), 
         BigInt(executor)
     ],
