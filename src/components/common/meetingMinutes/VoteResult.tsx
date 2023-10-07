@@ -3,7 +3,7 @@ import { Box, Stack } from "@mui/material";
 import { BallotsList } from "./BallotsList";
 import { HexType } from "../../../scripts/common";
 import { VoteCase, defaultVoteCase } from "../../../scripts/common/meetingMinutes";
-import { useMeetingMinutes, useMeetingMinutesGetCaseOfAttitude } from "../../../generated";
+import { useMeetingMinutesGetCaseOfAttitude } from "../../../generated";
 import { useState } from "react";
 
 interface VoteResultProps {
