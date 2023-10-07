@@ -7,6 +7,7 @@ import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
 import { InjectedConnector } from 'wagmi/connectors/injected'
 import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLegacy'
 
+import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
@@ -15,6 +16,10 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
     // ...(process.env.NODE_ENV === 'development' ? [hardhat] : [])
   ],
   [
+    alchemyProvider({
+      apiKey: 'vyxCJHabQX9OYFc6uVOLCY_aL4FJfgkc',
+      // stallTimeout: 2_000,
+    }),
     publicProvider(),
   ],
 )
