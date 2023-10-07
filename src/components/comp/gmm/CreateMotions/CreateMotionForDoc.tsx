@@ -6,8 +6,6 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 
-
-
 interface CreateMotionForDocProps {
   getMotionsList: () => any;
 }
@@ -19,15 +17,6 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
   const [ doc, setDoc ] = useState<HexType>();
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
-
-  // const {
-  //   config: proposeDocOfGmConfig,
-  // } = usePrepareGeneralKeeperProposeDocOfGm({
-  //   address: gk,
-  //   args: doc && seqOfVr && executor
-  //         ? [ doc, BigInt(seqOfVr), BigInt(executor) ]
-  //         : undefined,
-  // });
 
   const {
     isLoading: proposeDocOfGmLoading,
