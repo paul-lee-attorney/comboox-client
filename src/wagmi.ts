@@ -11,8 +11,8 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [hardhat, mainnet, 
-    ...(process.env.NODE_ENV === 'test' ? [sepolia] : []), 
+  [sepolia 
+    // ...(process.env.NODE_ENV === 'test' ? [sepolia] : []), 
     // ...(process.env.NODE_ENV === 'development' ? [hardhat] : [])
   ],
   [
