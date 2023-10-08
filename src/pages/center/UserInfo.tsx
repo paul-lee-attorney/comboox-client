@@ -57,7 +57,7 @@ function UserInfo() {
         let list: Locker[] = [];
 
         while (len > 0) {
-          list.push(await getLocker(AddrOfRegCenter, ls[len-1]));
+          list.push(await getLocker(ls[len-1]));
           len--;
         }
         
