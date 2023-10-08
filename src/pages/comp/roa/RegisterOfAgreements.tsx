@@ -16,7 +16,7 @@ import {
   useGeneralKeeperCreateIa, 
 } from "../../../generated";
 
-import { InfoOfFile, getFilesList, getFilesListWithInfo } from "../../../scripts/common/filesFolder";
+import { InfoOfFile, getFilesListWithInfo } from "../../../scripts/common/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
@@ -112,7 +112,6 @@ function RegisterOfAgreements() {
                     pathAs="/comp/roa/Ia" 
                     setFile={setFile}
                     setOpen={setOpen}
-                    getFilesList={getFilesList}
                   />
                 )}
                                 
