@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Button, 
@@ -13,11 +13,10 @@ import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Create } from "@mui/icons-material";
 
 import { 
-  useFilesFolderGetFilesList,
   useGeneralKeeperCreateSha,
 } from "../../../generated";
 
-import { InfoOfFile, getFilesInfoList, } from "../../../scripts/common/filesFolder";
+import { InfoOfFile, getFilesListWithInfo, } from "../../../scripts/common/filesFolder";
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
@@ -31,30 +30,20 @@ function RegisterOfConstitution() {
   const [ version, setVersion ] = useState<string>('1');
 
   const {
-    refetch: getFilesList     
-  } = useFilesFolderGetFilesList({
-    address: boox ? boox[booxMap.ROC] : undefined,
-    onSuccess(ls) {
-      if (boox)
-        getFilesInfoList(boox[booxMap.ROC], ls).then(
-          list => {
-            setFilesInfoList(list);
-          }
-        )
-    }
-  })
-
-
-  const {
     isLoading: createShaLoading, 
     write: createSha,
   } = useGeneralKeeperCreateSha({
     address: gk,
     args: version ? [BigInt(version)] : undefined,
-    onSuccess(){
-      getFilesList();
-    },
   });
+
+  useEffect(()=>{
+    if (boox) {
+      getFilesListWithInfo(boox[booxMap.ROC]).then(
+        list => setFilesInfoList(list)
+      )
+    }
+  }, [boox, createSha]);
 
   const [ file, setFile ] = useState<InfoOfFile>();
   const [ open, setOpen ] = useState<boolean>(false);
@@ -125,6 +114,7 @@ function RegisterOfConstitution() {
                   pathAs="/comp/roc/Sha" 
                   setFile={setFile}
                   setOpen={setOpen}
+                  getFilesList={getFilesList}
                 />
               )}
 

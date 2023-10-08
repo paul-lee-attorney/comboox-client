@@ -5,17 +5,16 @@ import {
   Toolbar, 
   Chip,
   Button,
-  Card
 } from '@mui/material';
 
 import Link from '../../../scripts/common/Link';
 
 import { dateParser, longSnParser } from '../../../scripts/common/toolsKit';
 import { InfoOfFile } from '../../../scripts/common/filesFolder';
-import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { CopyLongStrSpan } from '../utils/CopyLongStr';
 import { Dispatch, SetStateAction } from 'react';
-import { BookOutlined, CardGiftcard } from '@mui/icons-material';
+import { BookOutlined, } from '@mui/icons-material';
 
 interface GetFilesListProps {
   list: InfoOfFile[],
@@ -165,9 +164,10 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
   
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-      <Toolbar sx={{ textDecoration:'underline' }}>
-        <h3>{ title }</h3>
-      </Toolbar>
+
+        <Toolbar sx={{ mr:5, textDecoration:'underline' }}>
+          <h3>{ title }</h3>
+        </Toolbar>
 
       {list && (
         <DataGrid
@@ -177,7 +177,6 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
           columns={ columns }
           getRowId={(row:InfoOfFile | undefined) => (row?.sn.substring(10, 34) ?? '0') } 
           disableRowSelectionOnClick
-          // onRowClick={ handleRowClick }
         />
       )}
 

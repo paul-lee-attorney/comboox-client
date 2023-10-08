@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
@@ -23,11 +23,10 @@ import {
 import { Update, ArrowUpward, ArrowDownward }  from '@mui/icons-material';
 
 import { 
-  useGeneralKeeperGetCompInfo,
   useGeneralKeeperSetCompInfo,
 } from '../../../generated';
-import { CompInfo } from '../../../scripts/comp/gk';
-import { dateParser, longDataParser, toAscii, toStr } from '../../../scripts/common/toolsKit';
+import { CompInfo, getCompInfo } from '../../../scripts/comp/gk';
+import { dateParser, longDataParser, toAscii, } from '../../../scripts/common/toolsKit';
 import { currencies } from './GeneralInfo';
 
 
@@ -46,38 +45,46 @@ interface SetCompIdProps {
 
 export function SetCompInfo({nextStep}: SetCompIdProps) {
 
-
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
   const [ newInfo, setNewInfo] = useState<CompInfo>(defaultInfo);
 
   const { gk } = useComBooxContext();
 
-  const {
-    refetch: getCompInfo
-  } = useGeneralKeeperGetCompInfo({
-    address: gk,
-    onSuccess(res) {
-      let info:CompInfo = {
-        regNum: res.regNum,
-        regDate: res.regDate,
-        currency: res.currency,
-        symbol: toStr(Number(res.symbol)),
-        name: res.name
-      }
-      setNewInfo(info);
-    },
-  });
+  // const {
+  //   refetch: getCompInfo
+  // } = useGeneralKeeperGetCompInfo({
+  //   address: gk,
+  //   onSuccess(res) {
+  //     let info:CompInfo = {
+  //       regNum: res.regNum,
+  //       regDate: res.regDate,
+  //       currency: res.currency,
+  //       symbol: toStr(Number(res.symbol)),
+  //       name: res.name
+  //     }
+  //     setNewInfo(info);
+  //   },
+  // });
 
   const {
     isLoading: setInfoLoading,
     write: setInfo, 
    } = useGeneralKeeperSetCompInfo({
     address: gk,
-    args: [ compInfo.currency, `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, compInfo.name ],
-    onSuccess() {
-      getCompInfo();
-    }
+    args: [ 
+            compInfo.currency, 
+            `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
+            compInfo.name 
+          ],
   });
+
+  useEffect(()=>{
+    if (gk) {
+      getCompInfo(gk).then(
+        info => setNewInfo(info)
+      )
+    }
+  }, [gk, setInfo]);
 
   return (
 
