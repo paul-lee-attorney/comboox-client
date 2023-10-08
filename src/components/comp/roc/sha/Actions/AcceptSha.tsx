@@ -3,15 +3,14 @@ import { useGeneralKeeperAcceptSha } from "../../../../../generated";
 import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { HexParser } from "../../../../../scripts/common/toolsKit";
 
 interface AcceptShaProps {
-  getBuyers:()=>void;
-  getSellers:()=>void;
+  setTime:Dispatch<SetStateAction<number>>;
 }
 
-export function AcceptSha({getBuyers, getSellers}:AcceptShaProps) {
+export function AcceptSha({ setTime }:AcceptShaProps) {
 
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
@@ -23,8 +22,7 @@ export function AcceptSha({getBuyers, getSellers}:AcceptShaProps) {
     address: gk,
     args: [ sigHash ],
     onSuccess() {
-      getBuyers();
-      getSellers();
+      setTime(Date.now());
     }
   });
 
