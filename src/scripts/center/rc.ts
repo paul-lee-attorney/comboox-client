@@ -137,33 +137,11 @@ export interface Doc {
   body: HexType;
 }
 
-// export function codifyUserInfo(info: string):HexType {
-//   let sn = '0'.padStart(40, '0') + toAscii(info);
-
-//   let len = sn.length;
-
-//   if (len < 64) sn = sn.padEnd(64, '0');
-//   else sn = sn.substring(0, 64);
-
-//   let out: HexType = `0x${sn}`;
-
-//   return out;
-// }
-
-// export function parseUserInfo(info: Key): string {
-//   let out = '';
-//   out = toStr(info.refund) + toStr(info.discount) 
-//       + toStr(info.gift) + toStr(info.coupon);
-
-//   return out;
-// }
-
-
 // ==== Options ====
 
-export async function getOwner(addr: HexType): Promise<HexType>{
+export async function getOwner(): Promise<HexType>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getOwner'
   });
@@ -171,9 +149,9 @@ export async function getOwner(addr: HexType): Promise<HexType>{
   return res;
 }
 
-export async function getBookeeper(addr: HexType): Promise<HexType>{
+export async function getBookeeper(): Promise<HexType>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getBookeeper'
   });
@@ -191,7 +169,28 @@ export async function getPlatformRule(): Promise<Rule>{
   return res;
 }
 
+export async function getFeedRegistryAddress(): Promise<HexType>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getFeedRegistryAddress'
+  });
+
+  return res;
+}
+
 // ==== User ====
+
+export async function getCounterOfUsers(): Promise<number>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'counterOfUsers'
+  });
+
+  return res;
+}
+
 
 export async function isKey(key: HexType): Promise<boolean>{
   let res = await readContract({
@@ -363,3 +362,17 @@ export async function getLocker(addr: HexType, hashLock: HexType): Promise<Locke
 
   return locker;
 }
+
+// ==== CBP ====
+
+
+export async function getTotalSupply(): Promise<string>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'totalSupply'
+  });
+
+  return res.toString();
+}
+

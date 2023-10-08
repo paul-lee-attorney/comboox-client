@@ -1,5 +1,5 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { SetPlatformRule } from "./ActionsOfOwner/SetPlatformRule";
 import { TransferOwnership } from "./ActionsOfOwner/TransferOwnership";
@@ -7,10 +7,10 @@ import { HandoverCenterKey } from "./ActionsOfOwner/HandoverCenterKey";
 import { SetFeedRegistry } from "./ActionsOfOwner/SetFeedRegitry";
 
 export interface ActionsOfOwnerProps{
-  refreshPage: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function ActionsOfOwner({ refreshPage}: ActionsOfOwnerProps) {
+export function ActionsOfOwner({ setTime}: ActionsOfOwnerProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -19,10 +19,10 @@ export function ActionsOfOwner({ refreshPage}: ActionsOfOwnerProps) {
   ]
 
   const compsOfAction = [
-    <SetPlatformRule key={0} refreshPage={refreshPage} />,
-    <SetFeedRegistry key={1} refreshPage={refreshPage} />,
-    <TransferOwnership key={2} refreshPage={refreshPage} />,
-    <HandoverCenterKey key={3} refreshPage={refreshPage} />
+    <SetPlatformRule key={0} setTime={setTime} />,
+    <SetFeedRegistry key={1} setTime={setTime} />,
+    <TransferOwnership key={2} setTime={setTime} />,
+    <HandoverCenterKey key={3} setTime={setTime} />
   ]
 
   return( 

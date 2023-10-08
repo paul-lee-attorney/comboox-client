@@ -12,7 +12,7 @@ import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
-export function SetFeedRegistry({refreshPage}:ActionsOfOwnerProps) {
+export function SetFeedRegistry({setTime}:ActionsOfOwnerProps) {
 
   const [ newFeed, setNewFeed ] = useState<HexType>();
 
@@ -23,7 +23,7 @@ export function SetFeedRegistry({refreshPage}:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: newFeed ? [newFeed] : undefined,
     onSuccess() {
-      refreshPage();
+      setTime(Date.now());
     }
   })
 

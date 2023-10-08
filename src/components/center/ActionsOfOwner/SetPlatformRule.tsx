@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { Rule, codifyPlatformRule, defaultRule } from '../../../scripts/center/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
-export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
+export function SetPlatformRule({ setTime }:ActionsOfOwnerProps) {
 
   const [ rule, setRule ] = useState<Rule>(defaultRule);
 
@@ -22,7 +22,7 @@ export function SetPlatformRule({ refreshPage }:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: rule ? [ codifyPlatformRule(rule)] : undefined,
     onSuccess() {
-      refreshPage()
+      setTime(Date.now())
     }
   })
 

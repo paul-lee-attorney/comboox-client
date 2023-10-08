@@ -1,10 +1,19 @@
-import { useState } from "react";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../scripts/common";
-import { useIPriceConsumerGetFeedRegistryAddress, useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../generated";
-import { Rule, defaultRule } from "../../scripts/center/rc";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { useEffect, useState } from "react";
+import { AddrZero, HexType } from "../../scripts/common";
+import { 
+  Rule, 
+  defaultRule, 
+  getBookeeper,
+  getOwner, 
+  getPlatformRule,
+  getCounterOfUsers,
+  getTotalSupply,
+  getFeedRegistryAddress
+} from "../../scripts/center/rc";
+
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField } from "@mui/material";
 import { CopyLongStrTF } from "../common/utils/CopyLongStr";
-import { longDataParser, toPercent } from "../../scripts/common/toolsKit";
+import { getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, toPercent } from "../../scripts/common/toolsKit";
 import { ActionsOfOwner } from "./ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
 import { useWalletClient } from "wagmi";
@@ -14,80 +23,42 @@ export function CenterInfo() {
   
   const { data:signer } = useWalletClient();
 
+  const [ time, setTime ] = useState<number>(0);
+
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
-
-  const {
-    refetch: getOwner,
-  } = useRegCenterGetOwner({
-    address: AddrOfRegCenter,
-    onSuccess(res) {
-      setOwner(res)
-    }
-  })
-
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
-
-  const {
-    refetch: getKeeper,
-  } = useRegCenterGetBookeeper({
-    address: AddrOfRegCenter,
-    onSuccess(res) {
-      setKeeper(res)
-    }
-  })
-
   const [ platformRule, setPlatformRule ] = useState<Rule>(defaultRule);
-
-  const {
-    refetch: getPlatformRule,
-  } = useRegCenterGetPlatformRule({
-    address: AddrOfRegCenter,
-    onSuccess(res) {
-      setPlatformRule(res);
-    }
-  })
-
   const [ counterOfUsers, setCounterOfUsers ] = useState<number>(0);
-
-  const {
-    refetch: getCounterOfUser
-  } = useRegCenterCounterOfUsers({
-    address: AddrOfRegCenter,
-    onSuccess(res) {
-      setCounterOfUsers(res);
-    }
-  })
-
   const [ totalSupply, setTotalSupply ] = useState<string>('0');
-
-  const {
-    refetch: getTotalSupply
-  } = useRegCenterTotalSupply({
-    address: AddrOfRegCenter,
-    onSuccess(res) {
-      setTotalSupply(res.toString());
-    }
-  })
-
   const [ feedReg, setFeedReg ] = useState<HexType>(AddrZero);
 
-  const {
-    refetch: getFeedReg
-  } = useIPriceConsumerGetFeedRegistryAddress({
-    address: AddrOfRegCenter,
-    onSuccess(res) {
-      setFeedReg(res);
-    }
-  })
+  useEffect(()=>{
 
-  const refreshPage = ()=>{
-    getOwner();
-    getKeeper();
-    getCounterOfUser();
-    getTotalSupply();
-    getPlatformRule();
-    getFeedReg();
-  }
+    getOwner().then(
+      res => setOwner(res)
+    );
+      
+    getBookeeper().then(
+      res => setKeeper(res)
+    );
+
+    getPlatformRule().then(
+      res => setPlatformRule(res)
+    );
+
+    getCounterOfUsers().then(
+      res => setCounterOfUsers(res)
+    );
+
+    getTotalSupply().then(
+      res => setTotalSupply(res)
+    );
+
+    getFeedRegistryAddress().then(
+      res => setFeedReg(res)
+    );
+
+  }, [time]);
 
   const [ open, setOpen ] = useState(false);
 
@@ -166,7 +137,7 @@ export function CenterInfo() {
                       sx={{
                         m:1,
                       }}
-                      value={ longDataParser(totalSupply.length > 27 ? totalSupply.substring(0, totalSupply.length - 27) : '0') }
+                      value={ getGEthPart(totalSupply) }
                     />
                   </td>
                   <td>
@@ -179,12 +150,7 @@ export function CenterInfo() {
                       sx={{
                         m:1,
                       }}
-                      value={ longDataParser(
-                          totalSupply.length > 18 
-                        ? totalSupply.length > 27
-                          ? totalSupply.substring(totalSupply.length - 27, totalSupply.length - 18)
-                          : totalSupply.substring(0, totalSupply.length - 18) 
-                        : '0') }
+                      value={ getEthPart(totalSupply) }
                     />
                   </td>
                   <td>
@@ -197,12 +163,7 @@ export function CenterInfo() {
                       sx={{
                         m:1,
                       }}
-                      value={ longDataParser(
-                          totalSupply.length > 9 
-                        ? totalSupply.length > 18
-                          ? totalSupply.substring(totalSupply.length - 18, totalSupply.length - 9)
-                          : totalSupply.substring(0, totalSupply.length - 9) 
-                        : '0') }
+                      value={ getGWeiPart(totalSupply) }
                     />
                   </td>
                   <td>
@@ -215,11 +176,7 @@ export function CenterInfo() {
                       sx={{
                         m:1,
                       }}
-                      value={ longDataParser(
-                          totalSupply.length > 9
-                        ? totalSupply.substring(totalSupply.length - 9)
-                        : totalSupply
-                      )}
+                      value={ getWeiPart(totalSupply) }
                     />
                   </td>
                 </tr>
@@ -288,7 +245,7 @@ export function CenterInfo() {
                 {signer && (signer.account.address == owner || signer.account.address == keeper) && (
                   <tr>
                     <td colSpan={4}>
-                      <ActionsOfOwner refreshPage={refreshPage} />
+                      <ActionsOfOwner setTime={setTime} />
                     </td>
                   </tr>
                 )}
@@ -302,7 +259,7 @@ export function CenterInfo() {
 
           <DialogActions>
             <Stack direction='row' >
-              <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={refreshPage} endIcon={<Refresh/>}>Refresh</Button>
+              <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={()=>setTime(Date.now())} endIcon={<Refresh/>}>Refresh</Button>
               <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={()=>setOpen(false)} endIcon={<Close/>}>Close</Button>
             </Stack>
           </DialogActions>

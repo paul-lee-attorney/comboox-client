@@ -50,22 +50,6 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
 
   const { gk } = useComBooxContext();
 
-  // const {
-  //   refetch: getCompInfo
-  // } = useGeneralKeeperGetCompInfo({
-  //   address: gk,
-  //   onSuccess(res) {
-  //     let info:CompInfo = {
-  //       regNum: res.regNum,
-  //       regDate: res.regDate,
-  //       currency: res.currency,
-  //       symbol: toStr(Number(res.symbol)),
-  //       name: res.name
-  //     }
-  //     setNewInfo(info);
-  //   },
-  // });
-
   const {
     isLoading: setInfoLoading,
     write: setInfo, 

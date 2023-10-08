@@ -6,13 +6,13 @@ import {
 } from '../../../generated';
 
 import { AddrOfRegCenter, HexType } from '../../../scripts/common';
-import { BorderColor, Create } from '@mui/icons-material';
+import { BorderColor, } from '@mui/icons-material';
 import { useState } from 'react';
 import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
-export function HandoverCenterKey({refreshPage}:ActionsOfOwnerProps) {
+export function HandoverCenterKey({setTime}:ActionsOfOwnerProps) {
 
   const [ newKeeper, setNewKeeper ] = useState<HexType>();
 
@@ -23,7 +23,7 @@ export function HandoverCenterKey({refreshPage}:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: newKeeper ? [newKeeper] : undefined,
     onSuccess() {
-      refreshPage();
+      setTime(Date.now());
     }
   })
 

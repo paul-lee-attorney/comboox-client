@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   TextField, 
@@ -16,13 +16,13 @@ import {
 import { ArrowDownward, ArrowUpward, Update }  from '@mui/icons-material';
 
 import {
-  useRegisterOfMembersMaxQtyOfMembers,
   useRegisterOfMembersSetMaxQtyOfMembers,
 } from '../../../generated';
 
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { booxMap } from '../../../scripts/common';
+import { maxQtyOfMembers } from '../../../scripts/comp/rom';
 
 interface SetMaxQtyOfMembersProps {
   nextStep: (next: number) => void;
@@ -36,24 +36,20 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const [inputMax, setInputMax] = useState<string>('50');
 
   const {
-    refetch: getMaxQty
-  } = useRegisterOfMembersMaxQtyOfMembers({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(max) {
-      setMax(max.toString());
-    }
-  });
-
-  const {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 
   } = useRegisterOfMembersSetMaxQtyOfMembers({
     address: boox ? boox[booxMap.ROM] : undefined,
     args: [BigInt(inputMax)],
-    onSuccess() {
-      getMaxQty();
-    },
   });
+
+  useEffect(()=>{
+    if (boox) {
+      maxQtyOfMembers(boox[booxMap.ROM]).then(
+        max => setMax(max)
+      );
+    }
+  }, [boox, setMaxQty]);
 
   return (    
     <Paper elevation={3} sx={{m:1, p:1, width:'100%', alignItems:'center', justifyContent:'center' }} >

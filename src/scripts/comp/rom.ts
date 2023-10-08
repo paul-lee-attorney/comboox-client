@@ -2,6 +2,17 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { registerOfMembersABI } from "../../generated";
 
+
+export async function maxQtyOfMembers(addr: HexType):Promise<string>{
+  let res = await readContract({
+    address: addr,
+    abi: registerOfMembersABI,
+    functionName: 'maxQtyOfMembers',
+  })
+  
+  return res.toString();
+}
+
 export interface ShareClip {
   timestamp: number;
   votingWeight: number;

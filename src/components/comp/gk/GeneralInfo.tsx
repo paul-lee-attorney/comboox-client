@@ -31,7 +31,6 @@ import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";
 import { votesOfGroup } from "../../../scripts/comp/rom";
 import { DepositOfMine } from "./DepositOfMine";
 
-
 export const currencies:string[] = [
   'USD', 'GBP', 'EUR', 'JPY', 'KRW', 'CNY',
   'AUD', 'CAD', 'CHF', 'ARS', 'PHP', 'NZD', 

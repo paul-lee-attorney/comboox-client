@@ -12,7 +12,7 @@ import { HexParser } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
-export function TransferOwnership({refreshPage}:ActionsOfOwnerProps) {
+export function TransferOwnership({setTime}:ActionsOfOwnerProps) {
 
   const [ newOwner, setNewOwner ] = useState<HexType>();
 
@@ -23,7 +23,7 @@ export function TransferOwnership({refreshPage}:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: newOwner ? [newOwner] : undefined,
     onSuccess() {
-      refreshPage();
+      setTime(Date.now());
     }
   })
 

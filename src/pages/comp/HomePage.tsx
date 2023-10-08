@@ -4,7 +4,7 @@ import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/m
 
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 
-import { SetMaxQtyOfMembers } from "../../components/comp/gk/SetMaxQtyOfMembers";
+import { SetMaxQtyOfMembers } from "../../components/comp/rom/SetMaxQtyOfMembers";
 import { InitBos } from "../../components/comp/ros/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
