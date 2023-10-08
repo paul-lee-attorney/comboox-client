@@ -20,13 +20,6 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
 
   const [ hashKey, setHashKey ] = useState<string>();
 
-  // const {
-  //   config: pickupPointsConfig
-  // } = usePrepareRegCenterPickupPoints({
-  //   address: AddrOfRegCenter,
-  //   args: hashKey ? [hashLock, hashKey] : undefined,
-  // })
-
   const {
     isLoading: pickupPointsLoading,
     write: pickupPoints

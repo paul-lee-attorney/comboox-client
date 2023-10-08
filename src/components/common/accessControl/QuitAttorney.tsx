@@ -15,10 +15,8 @@ import {
   useAccessControlRenounceRole,
 } from '../../../generated';
 
-import { HexType } from '../../../scripts/common';
 import { AccessControlProps } from './SetOwner';
-
-const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
+import { ATTORNEYS } from '../../../scripts/common/accessControl';
 
 export function QuitAttorney({ addr }: AccessControlProps) {
 
@@ -26,20 +24,19 @@ export function QuitAttorney({ addr }: AccessControlProps) {
   const [ open, setOpen ] = useState(false);
 
   const {
-    isLoading,
-    write,
+    isLoading: quitAttorneyLoading,
+    write: quitAttorney,
   } = useAccessControlRenounceRole({
     address: addr,
-    args: [ATTORNEYS],
+    args: [ ATTORNEYS ],
     onSuccess() {
       setFlag(true);
       setOpen(true);
     }
   });
 
-
   const handleClick = () => {
-    write?.();
+    quitAttorney?.();
   }
 
   return (
@@ -47,7 +44,7 @@ export function QuitAttorney({ addr }: AccessControlProps) {
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
         <Button
-          disabled={ isLoading }
+          disabled={ quitAttorneyLoading }
           sx={{m:1, width: '50%', height:55}}
           variant='outlined'
           endIcon={<Skateboarding />}

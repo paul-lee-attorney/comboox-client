@@ -20,8 +20,8 @@ interface LockContentsProps {
 export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
 
   const {
-    isLoading,
-    write,
+    isLoading: lockContentsLoading,
+    write: lockContents,
   } = useAccessControlLockContents({
     address: addr,
     onSuccess() {
@@ -32,11 +32,11 @@ export function LockContents({ addr, setIsFinalized, setNextStep }: LockContents
 
   return (
     <Button
-      disabled={ isLoading }
+      disabled={ lockContentsLoading }
       sx={{m:1, minWidth:128}}
       variant='contained'
       endIcon={<Lock />}
-      onClick={()=>write?.() }
+      onClick={()=>lockContents?.() }
     >
       Lock Contents
     </Button>

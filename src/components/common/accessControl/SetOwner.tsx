@@ -30,9 +30,8 @@ export function SetOwner({ addr }: AccessControlProps) {
   const [owner, setOwner] = useState<HexType>();
 
   const {
-    data,
-    isLoading,
-    write,
+    isLoading: setOwnrLoading,
+    write: setOwnr,
   } = useAccessControlSetOwner({
     address: addr,
     args: owner ? [ owner ] : undefined,    
@@ -42,7 +41,7 @@ export function SetOwner({ addr }: AccessControlProps) {
   const [ open, setOpen ] = useState(false);
 
   const handleClick = () => {
-    write?.();
+    setOwnr?.();
   }
 
   useEffect(() => { 
@@ -50,7 +49,7 @@ export function SetOwner({ addr }: AccessControlProps) {
       setNewOwner(owner);
       setOpen(true);
     });
-  }, [data, addr]);
+  }, [ addr, setOwnr ]);
 
   return (
     <Stack direction={'row'}  sx={{ width: '100%' }} >
@@ -63,7 +62,7 @@ export function SetOwner({ addr }: AccessControlProps) {
             <InputAdornment position="end">
               <IconButton
                 color="primary"
-                disabled={ owner == undefined || owner == '0x' || isLoading }
+                disabled={ owner == undefined || owner == '0x' || setOwnrLoading }
                 onClick={ handleClick }
                 edge="end"
               >

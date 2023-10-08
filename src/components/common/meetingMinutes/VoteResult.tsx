@@ -1,77 +1,42 @@
-import { Box, Stack } from "@mui/material";
 
 import { BallotsList } from "./BallotsList";
 import { HexType } from "../../../scripts/common";
-import { VoteCase, defaultVoteCase } from "../../../scripts/common/meetingMinutes";
-import { useMeetingMinutesGetCaseOfAttitude } from "../../../generated";
-import { useState } from "react";
+import { VoteCase, defaultVoteCase, getCaseOfAttitude } from "../../../scripts/common/meetingMinutes";
+import { useEffect, useState } from "react";
 
 interface VoteResultProps {
   addr: HexType;
   seqOfMotion: bigint;
-  // voteResult: VoteCase[];
 }
 
 export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
 
-  const [ voteResult, setVoteReselt ] = useState<VoteCase[]>([
+  const [ voteResult, setVoteResult ] = useState<VoteCase[]>([
       defaultVoteCase, 
       defaultVoteCase, 
       defaultVoteCase, 
       defaultVoteCase
   ]);
 
-  useMeetingMinutesGetCaseOfAttitude({
-    address: addr,
-    args: [ seqOfMotion, BigInt(0) ],
-    onSuccess(res) {
-      setVoteReselt(v => {
-        let out = [...v];
-        out[0] = res;
-        return out;
-      })      
-    }
-  })
+  useEffect(()=>{
 
-  useMeetingMinutesGetCaseOfAttitude({
-    address: addr,
-    args: [ seqOfMotion, BigInt(1) ],
-    onSuccess(res) {
-      setVoteReselt(v => {
-        let out = [...v];
-        out[1] = res;
-        return out;
-      })      
+    let i = 0;
+    while (i < 4) {
+      getCaseOfAttitude(addr, seqOfMotion, BigInt(i)).then(
+        res => {
+          setVoteResult(v => {
+            let out = [...v];
+            out[i] = res;
+            return out;
+          })
+        }
+      )
+      i++;
     }
-  })
 
-  useMeetingMinutesGetCaseOfAttitude({
-    address: addr,
-    args: [ seqOfMotion, BigInt(2) ],
-    onSuccess(res) {
-      setVoteReselt(v => {
-        let out = [...v];
-        out[2] = res;
-        return out;
-      })      
-    }
-  })
-
-  useMeetingMinutesGetCaseOfAttitude({
-    address: addr,
-    args: [ seqOfMotion, BigInt(3) ],
-    onSuccess(res) {
-      setVoteReselt(v => {
-        let out = [...v];
-        out[3] = res;
-        return out;
-      })      
-    }
   })
 
   return (
-    // <Stack direction={'row'} sx={{ alignItems:'center', width:'100%' }}>
-
     <table>
       <tr>
         <td>

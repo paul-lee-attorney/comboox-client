@@ -22,34 +22,12 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
     }
   }, [hashLock, setLocker]);
 
-  // useRegCenterGetLocker({
-  //   address: AddrOfRegCenter,
-  //   args: hashLock
-  //       ? [ hashLock ]
-  //       : undefined,
-  //   onSuccess(target) {
-  //     if (hashLock && target) {
-  //       let locker:Locker = {
-  //         hashLock: hashLock,
-  //         head: target.head,
-  //         body: {
-  //           counterLocker: target.body.counterLocker,
-  //           selector: `0x${target.body.payload.substring(2,10)}`,
-  //           paras: splitPayload(target.body.payload.substring(10)),
-  //         }
-  //       };
-  //       setLocker(locker);
-  //     }
-  //   }
-  // })  
-
   const searchLocker = ()=>{
     if (strLock) {
       setHashLock(`0x${strLock}`);
       setOpen(true);
     }
   }
-
 
   return(
     <Stack direction='row' sx={{ alignItems:'center' }} >

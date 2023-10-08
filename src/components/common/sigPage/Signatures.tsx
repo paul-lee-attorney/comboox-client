@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -34,15 +34,12 @@ import {
 import {
   sigPageABI,
   useSigPageSetTiming,
-  useSigPageGetParasOfPage,
   useSigPageAddBlank,
   useSigPageRemoveBlank,
-  useSigPageGetBuyers,
-  useSigPageGetSellers, 
 } from "../../../generated";
 
 
-import { ParasOfSigPage, StrSig, parseParasOfPage } from "../../../scripts/common/sigPage";
+import { ParasOfSigPage, StrSig, getBuyers, getParasOfPage, getSellers, parseParasOfPage } from "../../../scripts/common/sigPage";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
 
@@ -82,17 +79,6 @@ export interface SigPageProps {
 
 
 export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps) {
-  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
-
-  const {
-    refetch: getParasOfPage
-  } = useSigPageGetParasOfPage({
-    address: addr,
-    args: [initPage],
-    onSuccess(paras) {
-      setParasOfPage(parseParasOfPage(paras));
-    }
-  })
 
   interface TimingProps {
     signingDays?: string,
@@ -102,7 +88,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
   const [ timing, setTiming ] = useState<TimingProps>();
 
   const {
-    isLoading: setTimingIsLoading,
+    isLoading: setTimingLoading,
     write: writeSetTiming,
   } = useSigPageSetTiming({
     address: addr,
@@ -113,42 +99,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
             BigInt(timing.closingDays)
           ] 
         : undefined,
-    onSuccess() {
-      getParasOfPage();
-    }
   });
-
-  // ==== Buyers ====
-
-  const [ buyerSigs, setBuyerSigs ] = useState<StrSig[]>();
-
-  const {
-    refetch: getBuyers
-  } = useSigPageGetBuyers({
-    address: addr,
-    args: [ initPage ],
-    onSuccess(buyers) {
-      getSigsOfRole(addr, initPage, buyers).
-        then(sigs => setBuyerSigs(sigs));
-    }
-  });
-
-  // ==== Seller ====
-
-  const [ sellerSigs, setSellerSigs ] = useState<StrSig[]>();  
-
-  const {
-    refetch: getSellers
-  } = useSigPageGetSellers ({
-    address: addr,
-    args: [ initPage ],
-    onSuccess(sellers) {
-      getSigsOfRole(addr, initPage, sellers).
-        then(sigs => setSellerSigs(sigs));
-    }
-  });
-
-  // ==== AddBlank ====
 
   const [ isBuyer, setIsBuyer ] = useState(true);
   const [ acct, setAcct ] = useState<string>();
@@ -165,11 +116,6 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
           BigInt(acct)
         ] 
       : undefined,
-    onSuccess() {
-      getParasOfPage();
-      getSellers();
-      getBuyers();
-    }
   });
 
   const {
@@ -183,12 +129,38 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
           BigInt(acct)
         ] 
       : undefined,
-    onSuccess() {
-      getParasOfPage();
-      getSellers();
-      getBuyers();
-    }
   });
+
+  const [ buyerSigs, setBuyerSigs ] = useState<StrSig[]>();
+  const [ sellerSigs, setSellerSigs ] = useState<StrSig[]>();  
+  const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
+  const [ time, setTime ] = useState<number>(0);
+
+  useEffect(()=>{
+
+    getParasOfPage(addr, initPage).then(
+      paras => {
+        setParasOfPage(parseParasOfPage(paras));
+      }
+    );
+
+    getBuyers(addr, initPage).then(
+      buyers => {
+        getSigsOfRole(addr, initPage, buyers).then(
+          sigs => setBuyerSigs(sigs)
+        );
+      }
+    );
+
+    getSellers(addr, initPage).then(
+      sellers => {
+        getSigsOfRole(addr, initPage, sellers).then(
+          sigs => setSellerSigs(sigs)
+        );
+      }
+    );
+
+  }, [ addr, initPage, time, writeSetTiming, addBlank, removeBlank ])
 
   return (
     <Stack direction="column" sx={{width:'100%'}} >
@@ -233,7 +205,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
                 />
 
                 <Button
-                  disabled={ setTimingIsLoading }
+                  disabled={ setTimingLoading }
                   variant="contained"
                   sx={{
                     height: 40,
@@ -341,7 +313,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
           </Toolbar>
 
           {!initPage && isFinalized && isSha && (
-            <AcceptSha getBuyers={ getBuyers } getSellers={ getSellers } />
+            <AcceptSha setTime={ setTime } />
           )}
 
           {!isFinalized && initPage && (

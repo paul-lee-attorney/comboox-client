@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
 import { LinearProgress, Typography } from "@mui/joy";
 
-import { centToDollar, dateParser, longDataParser, longSnParser, toPercent } from "../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { Bytes32Zero, HexType } from "../../../scripts/common";
 import { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";

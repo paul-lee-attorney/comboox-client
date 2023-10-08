@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   Stack,
@@ -14,13 +14,12 @@ import {
 
 import { Approval, Close }  from '@mui/icons-material';
 
-import { 
-  useAccessControlGetRoleAdmin,
+import {
   useAccessControlSetRoleAdmin,
 } from '../../../generated';
 
 import { HexType } from '../../../scripts/common';
-import { ATTORNEYS } from '../../../scripts/common/accessControl';
+import { ATTORNEYS, getGeneralCounsel } from '../../../scripts/common/accessControl';
 import { HexParser } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
 
@@ -29,33 +28,40 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
   const [ newGC, setNewGC ] = useState<HexType>();
   const [ open, setOpen ] = useState(false);
 
-  const {
-    refetch: getGC
-  } = useAccessControlGetRoleAdmin({
-    address: addr,
-    args: [ ATTORNEYS ],
-    onSuccess(gc) {
-      setNewGC(gc);
-      setOpen(true);
-    }
-  })
-
   const [gc, setGC] = useState<HexType>();
 
   const {
-    isLoading: setRoleAdminLoading,
-    write: setRoleAdmin,
+    isLoading: setGeneralCounselLoading,
+    write: setGeneralCounsel,
   } = useAccessControlSetRoleAdmin({
     address: addr,
     args: gc ? [ ATTORNEYS, gc] : undefined,
-    onSuccess() {
-      getGC()
-    }
   });
 
+  useEffect(()=>{
+    if (addr) {
+      getGeneralCounsel(addr).then(
+        res => {
+          setNewGC(res);
+          setOpen(true);
+        }
+      )
+    }
+  }, [addr, setGeneralCounsel])
+
+  // const {
+  //   refetch: getGC
+  // } = useAccessControlGetRoleAdmin({
+  //   address: addr,
+  //   args: [ ATTORNEYS ],
+  //   onSuccess(gc) {
+  //     setNewGC(gc);
+  //     setOpen(true);
+  //   }
+  // })
 
   const handleClick = () => {
-    setRoleAdmin?.();
+    setGeneralCounsel?.();
   }
 
   return (
@@ -69,7 +75,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ setRoleAdminLoading || gc == undefined || gc == '0x' }
+                  disabled={ setGeneralCounselLoading || gc == undefined || gc == '0x' }
                   color='primary'
                   onClick={ handleClick }
                   edge="end"

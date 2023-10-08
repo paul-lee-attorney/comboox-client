@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { 
   Stack,
@@ -32,9 +32,8 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
   const [ open, setOpen ] = useState(false);
 
   const {
-    data,
-    isLoading,
-    write,
+    isLoading: removeAttorneyLoading,
+    write: removeAttorney,
   } = useAccessControlRevokeRole({
     address: addr,
     args: acct && acct != '0x' 
@@ -49,7 +48,7 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
   });
 
   const handleClick = () => {
-    write?.();
+    removeAttorney?.();
   }
 
   return (
@@ -64,7 +63,7 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
             <InputAdornment position="end">
               <IconButton
                 color='primary'
-                disabled={ isLoading || acct == undefined || acct == '0x' }
+                disabled={ removeAttorneyLoading || acct == undefined || acct == '0x' }
                 onClick={ handleClick }
                 edge="end"
               >

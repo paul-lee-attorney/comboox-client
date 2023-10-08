@@ -1,7 +1,5 @@
-import { Button, Chip, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
-import Link from "next/link";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Article } from "@mui/icons-material";
+import { Button, Chip, Dialog, DialogActions, DialogContent, Paper, TextField, Toolbar } from "@mui/material";
+import { Dispatch, SetStateAction,  } from "react";
 import { dateParser, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 
 import { InfoOfFile } from "../../../scripts/common/filesFolder";

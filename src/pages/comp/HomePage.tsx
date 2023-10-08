@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/material";
 
@@ -9,26 +9,41 @@ import { InitBos } from "../../components/comp/ros/InitBos";
 import { TurnKey } from "../../components/comp/gk/TurnKey";
 import { GeneralInfo } from "../../components/comp/gk/GeneralInfo";
 import { getKeeper } from "../../scripts/comp/gk";
-import { useAccessControlGetDk } from "../../generated";
 import { SetCompInfo } from "../../components/comp/gk/SetCompInfo";
 import { booxMap } from "../../scripts/common";
-
+import { getDK } from "../../scripts/common/accessControl";
 
 function HomePage() {
   const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(0);
 
-  useAccessControlGetDk({
-    address: boox ? boox[booxMap.ROS] : undefined,
-    onSuccess(dk) {
-      if (gk)
-        getKeeper(gk, 4).then(
-          v => {
-            if (v == dk) setActiveStep(4);
+  useEffect(()=>{
+    if (boox) {
+      getDK(boox[booxMap.ROS]).then(
+        dk => {
+          if (gk) {
+            getKeeper(gk, 4).then(
+              rosKeeper => {
+                if (rosKeeper == dk) setActiveStep(4);
+              }
+            )
           }
-        )
+        }
+      )
     }
-  })
+  }, [boox, gk]);
+
+  // useAccessControlGetDk({
+  //   address: boox ? boox[booxMap.ROS] : undefined,
+  //   onSuccess(dk) {
+  //     if (gk)
+  //       getKeeper(gk, 4).then(
+  //         v => {
+  //           if (v == dk) setActiveStep(4);
+  //         }
+  //       )
+  //   }
+  // })
 
   return (
     <Stack direction='column' width='100%' height='100%' >

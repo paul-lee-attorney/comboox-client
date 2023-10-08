@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { 
   Stack,
@@ -14,10 +14,7 @@ import {
 
 import { Close, PersonAdd }  from '@mui/icons-material';
 
-import { readContract } from '@wagmi/core';
-
-import { 
-  accessControlABI,
+import {
   useAccessControlGrantRole,
 } from '../../../generated';
 
@@ -34,9 +31,8 @@ export function AppointAttorney({ addr }: AccessControlProps) {
   const [ open, setOpen ] = useState(false);
 
   const {
-    data,
-    isLoading,
-    write,
+    isLoading: grantRoleLoading,
+    write: grantRole,
   } = useAccessControlGrantRole({
     address: addr,
     args: acct && acct != '0x' 
@@ -51,7 +47,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
   });
 
   const handleClick = () => {
-    write?.();
+    grantRole?.();
   }
 
   return (
@@ -65,7 +61,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
               <InputAdornment position="end">
                 <IconButton
                   color='primary'
-                  disabled={ isLoading || acct == undefined || acct == '0x' }
+                  disabled={ grantRoleLoading || acct == undefined || acct == '0x' }
                   onClick={ handleClick }
                   edge="end"
                 >
