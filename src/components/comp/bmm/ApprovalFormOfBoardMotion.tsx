@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { HexType, booxMap } from "../../../scripts/common";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
-import { Motion } from "../../../scripts/common/meetingMinutes";
+import { Motion, voteEnded } from "../../../scripts/common/meetingMinutes";
 import { ExecActionOfGm } from "../gmm/ExecMotions/ExecActionOfGm";
 import { getSnOfFile } from "../../../scripts/common/filesFolder";
 import { ProposeMotionToBoardMeeting } from "./VoteMotions/ProposeMotionToBoardMeeting";
@@ -25,7 +25,7 @@ export interface ApprovalFormOfBoardMotionProps{
   open: boolean;
   motion: Motion;
   setOpen: (flag: boolean)=>void;
-  obtainMotionsList: ()=>any;
+  obtainMotionsList: ()=>void;
 }
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
@@ -41,7 +41,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
     setAddrOfDoc(`0x${motion.contents.toString(16).padStart(66, '0').substring(26, 66)}`);
     if (boox && addrOfDoc && motion.head.seqOfVR < 9) {
       let folder:HexType = motion.head.seqOfVR == 8
-                          ? boox[booxMap.ROC] : boox[booxMap.GMM];
+                          ? boox[booxMap.ROC] : boox[booxMap.ROA];
       getSnOfFile(folder, addrOfDoc).then(
         sn => setSnOfDoc(sn)
       );
@@ -50,19 +50,25 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
 
   const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
 
-  const {
-    refetch: queryVoteEnded
-  } = useMeetingMinutesVoteEnded({
-    address: minutes,
-    args: [ motion.head.seqOfMotion ],
-    onSuccess(res) {
-      setVoteIsEnd(res)
-    }
-  })
+  // const {
+  //   refetch: queryVoteEnded
+  // } = useMeetingMinutesVoteEnded({
+  //   address: minutes,
+  //   args: [ motion.head.seqOfMotion ],
+  //   onSuccess(res) {
+  //     setVoteIsEnd(res)
+  //   }
+  // })
 
   useEffect(()=>{
-    queryVoteEnded();
-  }, [queryVoteEnded, motion.body.state])
+
+    voteEnded(minutes, motion.head.seqOfMotion).then(
+      res => {
+        setVoteIsEnd(res);
+      }
+    )
+    
+  }, [minutes, motion])
 
   const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
 

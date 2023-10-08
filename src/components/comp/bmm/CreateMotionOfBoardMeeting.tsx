@@ -12,7 +12,7 @@ import { CreateAction } from "./CreateMotions/CreateAction";
 import { ProposeToTransferFund } from "./CreateMotions/ProposeToTransferFund";
 
 export interface CreateMotionProps {
-  getMotionsList: () => any,
+  getMotionsList: () => void,
 }
 
 export function CreateMotionOfBoardMeeting({ getMotionsList }: CreateMotionProps) {

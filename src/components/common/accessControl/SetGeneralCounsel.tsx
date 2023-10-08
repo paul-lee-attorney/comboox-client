@@ -36,6 +36,14 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
   } = useAccessControlSetRoleAdmin({
     address: addr,
     args: gc ? [ ATTORNEYS, gc] : undefined,
+    onSuccess() {
+      getGeneralCounsel(addr).then(
+        res => {
+          setNewGC(res);
+          setOpen(true);
+        }
+      )
+    }
   });
 
   useEffect(()=>{

@@ -24,7 +24,7 @@ const defaultAction: Action = {
 }
 
 interface CreateActionProps {
-  getMotionsList: () => any;
+  getMotionsList: () => void;
 }
 
 export function CreateAction({getMotionsList}:CreateActionProps) {
