@@ -114,7 +114,6 @@ function RegisterOfConstitution() {
                   pathAs="/comp/roc/Sha" 
                   setFile={setFile}
                   setOpen={setOpen}
-                  getFilesList={getFilesList}
                 />
               )}
 
