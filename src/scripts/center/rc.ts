@@ -1,6 +1,7 @@
 import { readContract, getWalletClient, getContract, waitForTransaction } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../common";
 import { regCenterABI } from "../../generated";
+import { BigIntOptions } from "fs";
 
 // ==== Locker ====
 
@@ -181,23 +182,22 @@ export async function getFeedRegistryAddress(): Promise<HexType>{
 
 // ==== User ====
 
-export async function getCounterOfUsers(): Promise<number>{
-  let res = await readContract({
-    address: AddrOfRegCenter,
-    abi: regCenterABI,
-    functionName: 'counterOfUsers'
-  });
-
-  return res;
-}
-
-
 export async function isKey(key: HexType): Promise<boolean>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'isKey',
     args: [key],
+  });
+
+  return res;
+}
+
+export async function getCounterOfUsers(): Promise<number>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'counterOfUsers'
   });
 
   return res;
@@ -233,25 +233,91 @@ export async function getMyUserNo(): Promise<number>{
   return res;
 }
 
-// ==== Docs ====
 
-export async function counterOfVersions(addr: HexType, typeOfDoc: string): Promise<number>{
+export async function getRoyaltyRule(author: bigint): Promise<Key>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
-    functionName: 'counterOfVersions',
-    args: [BigInt(typeOfDoc)]
+    functionName: 'getRoyaltyRule',
+    args: [author]
   });
 
   return res;
 }
 
-export async function counterOfDocs(addr: HexType, typeOfDoc: string, version: string): Promise<bigint>{
+// ==== Docs ====
+
+export async function counterOfTypes(): Promise<number>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'counterOfTypes',
+  });
+
+  return res;
+}
+
+export async function counterOfVersions(addr: HexType, typeOfDoc: bigint): Promise<number>{
+  let res = await readContract({
+    address: addr,
+    abi: regCenterABI,
+    functionName: 'counterOfVersions',
+    args: [ typeOfDoc ]
+  });
+
+  return res;
+}
+
+export async function counterOfDocs(addr: HexType, typeOfDoc: bigint, version: bigint): Promise<bigint>{
   let res = await readContract({
     address: addr,
     abi: regCenterABI,
     functionName: 'counterOfDocs',
-    args: [BigInt(typeOfDoc), BigInt(version)]
+    args: [ typeOfDoc, version ]
+  });
+
+  return res;
+}
+
+export async function docExist(body: HexType): Promise<boolean>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'docExist',
+    args: [body]
+  });
+
+  return res;
+}
+
+export async function getAuthor(type:bigint, version: bigint): Promise<number>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getAuthor',
+    args: [type, version]
+  });
+
+  return res;
+}
+
+export async function getAuthorByBody(body: HexType): Promise<number>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getAuthorByBody',
+    args: [body]
+  });
+
+  return res;
+}
+
+export async function getHeadByBody(body: HexType): Promise<HeadOfDoc>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getHeadByBody',
+    args: [body]
   });
 
   return res;
@@ -270,12 +336,12 @@ export async function getDoc(snOfDoc: HexType): Promise<Doc>{
   return res;
 }
 
-export async function getDocByUserNo(acct: string): Promise<Doc>{
+export async function getDocByUserNo(acct: bigint): Promise<Doc>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDocByUserNo',
-    args: [ BigInt(acct) ]
+    args: [ acct ]
   });
 
   return res;
@@ -306,23 +372,23 @@ export async function getDocAddr(hash: HexType): Promise<HexType> {
   return out; 
 }
 
+export async function getVersionsList(typeOfDoc:bigint): Promise<readonly Doc[]>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getVersionsList',
+    args: [ typeOfDoc ]
+  });
+
+  return res;
+}
+
 export async function getDocsList(snOfDoc: HexType): Promise<readonly Doc[]>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getDocsList',
     args: [ snOfDoc ]
-  });
-
-  return res;
-}
-
-export async function getVersionsList(typeOfDoc: string): Promise<readonly Doc[]>{
-  let res = await readContract({
-    address: AddrOfRegCenter,
-    abi: regCenterABI,
-    functionName: 'getVersionsList',
-    args: [ BigInt(typeOfDoc) ]
   });
 
   return res;
@@ -341,9 +407,9 @@ export function parasParser(input: string):string[] {
   return out;
 }
 
-export async function getLocker(addr: HexType, hashLock: HexType): Promise<Locker>{
+export async function getLocker(hashLock: HexType): Promise<Locker>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'getLocker',
     args: [ hashLock ]
@@ -363,16 +429,57 @@ export async function getLocker(addr: HexType, hashLock: HexType): Promise<Locke
   return locker;
 }
 
+export async function getLocksList(): Promise<readonly HexType[]>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getLocksList'
+  });
+
+  return res;
+}
+
+
+
 // ==== CBP ====
 
+export async function name(): Promise<string>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'name'
+  });
 
-export async function getTotalSupply(): Promise<string>{
+  return res;
+}
+
+export async function symbol(): Promise<string>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'symbol'
+  });
+
+  return res;
+}
+
+export async function getTotalSupply(): Promise<bigint>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'totalSupply'
   });
 
-  return res.toString();
+  return res;
 }
 
+export async function balanceOf(acct:HexType): Promise<bigint>{
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'balanceOf',
+    args: [ acct ]
+  });
+
+  return res;
+}

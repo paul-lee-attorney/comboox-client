@@ -1,44 +1,47 @@
-import { useState } from "react";
-import { useRegCenterGetLocker } from "../../generated";
-import { AddrOfRegCenter, HexType } from "../../scripts/common";
+import { useEffect, useState } from "react";
+import { HexType } from "../../scripts/common";
 import { Locker, getLocker } from "../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { splitPayload } from "../../scripts/common/toolsKit";
-
-
 
 interface LockerFinderProps{
   setLocker: (locker: Locker) => void;
   setOpen: (flag: boolean) => void;
 }
 
-
 export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
 
   const [ strLock, setStrLock ] = useState<string>();
   const [ hashLock, setHashLock ] = useState<HexType>();
 
-  useRegCenterGetLocker({
-    address: AddrOfRegCenter,
-    args: hashLock
-        ? [ hashLock ]
-        : undefined,
-    onSuccess(target) {
-      if (hashLock && target) {
-        let locker:Locker = {
-          hashLock: hashLock,
-          head: target.head,
-          body: {
-            counterLocker: target.body.counterLocker,
-            selector: `0x${target.body.payload.substring(2,10)}`,
-            paras: splitPayload(target.body.payload.substring(10)),
-          }
-        };
-        setLocker(locker);
-      }
+  useEffect(()=>{
+    if (hashLock) {
+      getLocker(hashLock).then(
+        locker => setLocker(locker)
+      )
     }
-  })  
+  }, [hashLock, setLocker]);
+
+  // useRegCenterGetLocker({
+  //   address: AddrOfRegCenter,
+  //   args: hashLock
+  //       ? [ hashLock ]
+  //       : undefined,
+  //   onSuccess(target) {
+  //     if (hashLock && target) {
+  //       let locker:Locker = {
+  //         hashLock: hashLock,
+  //         head: target.head,
+  //         body: {
+  //           counterLocker: target.body.counterLocker,
+  //           selector: `0x${target.body.payload.substring(2,10)}`,
+  //           paras: splitPayload(target.body.payload.substring(10)),
+  //         }
+  //       };
+  //       setLocker(locker);
+  //     }
+  //   }
+  // })  
 
   const searchLocker = ()=>{
     if (strLock) {

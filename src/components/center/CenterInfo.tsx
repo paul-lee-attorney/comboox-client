@@ -51,7 +51,7 @@ export function CenterInfo() {
     );
 
     getTotalSupply().then(
-      res => setTotalSupply(res)
+      res => setTotalSupply(res.toString())
     );
 
     getFeedRegistryAddress().then(

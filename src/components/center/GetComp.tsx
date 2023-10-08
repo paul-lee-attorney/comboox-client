@@ -8,6 +8,7 @@ import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/mate
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { readContract } from '@wagmi/core';
 import { CenterInfo } from './CenterInfo';
+import { getDocByUserNo } from '../../scripts/center/rc';
 
 export interface Head {
   typeOfDoc: number,
@@ -22,17 +23,17 @@ export interface Doc {
   body: HexType,
 }
 
-async function getDocByUserNo(regNum: string): Promise<Doc>{
+// async function getDocByUserNo(regNum: string): Promise<Doc>{
 
-  let data:Doc = await readContract({
-    address: AddrOfRegCenter,
-    abi: regCenterABI,
-    functionName: 'getDocByUserNo',
-    args: [BigInt(regNum)],
-  })
+//   let data:Doc = await readContract({
+//     address: AddrOfRegCenter,
+//     abi: regCenterABI,
+//     functionName: 'getDocByUserNo',
+//     args: [BigInt(regNum)],
+//   })
 
-  return data;
-}
+//   return data;
+// }
 
 export function GetComp() {
 
@@ -46,7 +47,7 @@ export function GetComp() {
 
   const handleClick = async () => {
     if ( regNum ) {
-      getDocByUserNo(regNum).then(
+      getDocByUserNo(BigInt(regNum)).then(
         (doc:Doc) => {
           if (doc.body != AddrZero) {
             setOpen(false);
