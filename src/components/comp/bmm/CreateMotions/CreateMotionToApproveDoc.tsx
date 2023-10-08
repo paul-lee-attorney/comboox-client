@@ -9,12 +9,9 @@ import {
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 
-interface CreateMotionToApproveDoc {
-  getMotionsList: () => any;
-}
-
-export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveDoc) {
+export function CreateMotionToApproveDoc({setTime}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -31,7 +28,7 @@ export function CreateMotionToApproveDoc({getMotionsList}:CreateMotionToApproveD
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 

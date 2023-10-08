@@ -6,16 +6,14 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
+import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
 
-interface TakePositionProps {
-  seqOfMotion: string;
-  seqOfPos: number;  
-  setOpen: (flag: boolean) => void;
-  getMotionsList: ()=>any;
+export interface TakePositionProps extends ProposeMotionProps {
+  seqOfPos: number;
 }
 
 
-export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList}:TakePositionProps) {
+export function TakePosition({seqOfMotion, seqOfPos, setOpen, setTime}:TakePositionProps) {
 
   const { gk } = useComBooxContext();
   
@@ -24,9 +22,9 @@ export function TakePosition({seqOfMotion, seqOfPos, setOpen, getMotionsList}:Ta
     write: takePosition,
   } = useGeneralKeeperTakePosition({
     address: gk,
-    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
+    args: [seqOfMotion, BigInt(seqOfPos)],
     onSuccess(){
-        getMotionsList();
+        setTime(Date.now());
         setOpen(false);
     }
   })

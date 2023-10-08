@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { 
   useGeneralKeeperProposeMotionToBoard,
@@ -7,18 +7,18 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { HexType, booxMap } from "../../../../scripts/common";
+import { booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 
-interface ProposeMotionToBoardProps {
+export interface ProposeMotionProps {
   seqOfMotion: bigint,
-  setOpen: (flag: boolean) => void,
-  getMotionsList: (minutes:HexType) => any,
+  setOpen: Dispatch<SetStateAction<boolean>>,
+  setTime: Dispatch<SetStateAction<number>>,
 }
 
-export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionToBoardProps) {
+export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   // const {
   //   config: proposeMotionToBoardConfig,
@@ -34,10 +34,8 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, getMotionsLi
     address: gk,
     args: [BigInt(seqOfMotion)],
     onSuccess(){
-      if (boox) {
-        getMotionsList(boox[booxMap.ROD]);
-        setOpen(false);
-      }
+      setTime(Date.now());
+      setOpen(false);
     }
   });
 
@@ -88,7 +86,7 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, getMotionsLi
         <EntrustDelegaterForBoardMeeting 
           seqOfMotion={seqOfMotion} 
           setOpen={setOpen} 
-          getMotionsList={getMotionsList} 
+          setTime={setTime} 
         />
       </Collapse>
 

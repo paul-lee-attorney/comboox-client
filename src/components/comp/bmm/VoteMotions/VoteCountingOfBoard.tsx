@@ -8,16 +8,15 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { isPassed } from "../../../../scripts/common/meetingMinutes";
 import { booxMap } from "../../../../scripts/common";
+import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
+import { Dispatch, SetStateAction } from "react";
 
-interface VoteCountingOfBoard {
-  seqOfMotion: bigint;
-  setResult: (flag: boolean) => void;
-  setNextStep: (next:number) => void;
-  setOpen: (flag: boolean) => void;
-  getMotionsList: () => any;
+interface VoteCountingOfBoard extends ProposeMotionProps {
+  setResult: Dispatch<SetStateAction<boolean>>;
+  setNextStep: Dispatch<SetStateAction<number>>;
 }
 
-export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, getMotionsList }: VoteCountingOfBoard) {
+export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, setTime }: VoteCountingOfBoard) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -29,9 +28,8 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
   // });
 
   const {
-    isLoading,
-    write,
-    data,
+    isLoading: voteCountingLoading,
+    write: voteCounting,
   } = useGeneralKeeperVoteCounting({
     address: gk,
     args: [ seqOfMotion ],
@@ -41,7 +39,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
           flag => {
             setResult(flag);
             setNextStep(1);
-            getMotionsList();
+            setTime(Date.now());
             setOpen(false);
           }
         )
@@ -54,11 +52,11 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <Button
-        disabled={ isLoading }
+        disabled={ voteCountingLoading }
         variant="contained"
         endIcon={<Calculate />}
         sx={{ m:1, mr:6 }}
-        onClick={()=>write?.()}
+        onClick={()=>voteCounting?.()}
       >
         Count
       </Button>

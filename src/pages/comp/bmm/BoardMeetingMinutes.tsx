@@ -1,13 +1,12 @@
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "../../../components/common/meetingMinutes/GetMotionsList";
 
-import { Motion, getMotion } from "../../../scripts/common/meetingMinutes";
-import { useMeetingMinutesGetSeqList } from "../../../generated";
+import { Motion, getMotionsList } from "../../../scripts/common/meetingMinutes";
 import { CreateMotionOfBoardMeeting } from "../../../components/comp/bmm/CreateMotionOfBoardMeeting";
 import { ApprovalFormOfBoardMotion } from "../../../components/comp/bmm/ApprovalFormOfBoardMotion";
-import { CopyLongStrSpan, CopyLongStrTF } from "../../../components/common/utils/CopyLongStr";
+import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { booxMap } from "../../../scripts/common";
 
 
@@ -17,39 +16,25 @@ function BoardMeetingMinutes() {
 
   const [ motionsList, setMotionsList ] = useState<Motion[]>();
 
-  const {
-    refetch: getSeqList
-  } = useMeetingMinutesGetSeqList({
-    address: boox ? boox[booxMap.BMM] : undefined,
-    onSuccess(seqList) {
-
-      const obtainMotionsList = async () => {
-
-        if ( boox ) {
-          let list: Motion[] = [];
-          let len = seqList.length;
-          let i = len >= 100 ? len - 100 : 0;
-
-          while( i < len ) {
-            let motion = await getMotion(boox[booxMap.BMM], seqList[i]);
-            list.push(motion);
-            i++;
-          }
-        
-          setMotionsList(list);
-        }
-      }
-
-      obtainMotionsList();
-    }
-  });
-
   const [ open, setOpen ] = useState(false);
   const [ motion, setMotion ] = useState<Motion>();
+  const [ time, setTime ] = useState<number>(0);
 
-  const obtainSeqList = ()=> {
-    getSeqList();
-  }
+  useEffect(()=>{
+    if (boox) {
+      getMotionsList(boox[booxMap.BMM]).then(
+        ls => setMotionsList(ls)
+      );
+    }
+  }, [boox, time]);
+
+  // const obtainSeqList = ()=> {
+  //   if (boox) {
+  //     getMotionsList(boox[booxMap.BMM]).then(
+  //       ls => setMotionsList(ls)
+  //     );
+  //   }
+  // }
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -64,7 +49,7 @@ function BoardMeetingMinutes() {
       </Stack>
       <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
 
-        <CreateMotionOfBoardMeeting  getMotionsList={obtainSeqList} />
+        <CreateMotionOfBoardMeeting  setTime={setTime} />
 
         {motionsList && (
           <GetMotionsList 
@@ -81,7 +66,7 @@ function BoardMeetingMinutes() {
             open={open} 
             motion={motion} 
             setOpen={setOpen} 
-            obtainMotionsList={obtainSeqList}
+            setTime={setTime}
           />
         )}       
 

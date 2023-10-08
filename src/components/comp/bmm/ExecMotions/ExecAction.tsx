@@ -22,6 +22,7 @@ import {
   Surfing 
 } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
 
 export interface Action {
   target: HexType;
@@ -35,14 +36,11 @@ const defaultAction: Action = {
   params: `0x${'00'}`,
 }
 
-interface ExecActionProps {
+interface ExecActionProps extends ProposeMotionProps {
   seqOfVr: number;
-  seqOfMotion: bigint;
-  setOpen: (flag: boolean)=>void;
-  getMotionsList: () => any;
 }
 
-export function ExecAction({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecActionProps) {
+export function ExecAction({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -62,7 +60,8 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecA
           desHash, BigInt(seqOfMotion)]
         : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
+      setOpen(false);
     }
   });
 

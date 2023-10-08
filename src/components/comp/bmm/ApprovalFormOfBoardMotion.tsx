@@ -3,34 +3,32 @@ import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HexType, booxMap } from "../../../scripts/common";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { Motion, voteEnded } from "../../../scripts/common/meetingMinutes";
-import { ExecActionOfGm } from "../gmm/ExecMotions/ExecActionOfGm";
 import { getSnOfFile } from "../../../scripts/common/filesFolder";
 import { ProposeMotionToBoardMeeting } from "./VoteMotions/ProposeMotionToBoardMeeting";
 import { CastVoteOfBm } from "./VoteMotions/CastVoteOfBm";
 import { VoteCountingOfBoard } from "./VoteMotions/VoteCountingOfBoard";
 import { TakePosition } from "./ExecMotions/TakePosition";
 
-import { useMeetingMinutesVoteEnded } from "../../../generated";
-
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
 import { RemoveOfficer } from "./ExecMotions/RemoveOfficer";
+import { ExecAction } from "./ExecMotions/ExecAction";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
   open: boolean;
   motion: Motion;
-  setOpen: (flag: boolean)=>void;
-  obtainMotionsList: ()=>void;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
-export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtainMotionsList }: ApprovalFormOfBoardMotionProps) {
+export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTime }: ApprovalFormOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -70,7 +68,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
     
   }, [minutes, motion])
 
-  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
+  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>(false);
 
   return (
     <Dialog
@@ -268,7 +266,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
                   </td>
                 </tr>
               )}
@@ -277,10 +275,10 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
                 <tr>
                   <td colSpan={4}>
                     <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} setTime={setTime} />
                     </Collapse>
                   </td>
                 </tr>
@@ -289,7 +287,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
               {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <TakePosition seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={Number(motion.contents)} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <TakePosition seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} setTime={setTime} />
                   </td>
                 </tr>
               )}
@@ -297,7 +295,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
               {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
                 <tr>
                   <td colSpan={4}>
-                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion.toString()} seqOfPos={Number(motion.contents)} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} setTime={setTime} />
                   </td>
                 </tr>
               )}
@@ -305,7 +303,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, obtai
               {motion.body.state == 3 && motion.head.typeOfMotion == 4 && (
                 <tr>
                   <td colSpan={4}>
-                    <ExecActionOfGm seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ExecAction seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} setTime={setTime} />
                   </td>
                 </tr>
               )}

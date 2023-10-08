@@ -60,13 +60,6 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
             `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
             compInfo.name 
           ],
-    onSuccess() {
-      if (gk) {
-        getCompInfo(gk).then(
-          info => setNewInfo(info)
-        );
-      }
-    }
   });
 
   useEffect(()=>{

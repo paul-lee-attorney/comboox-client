@@ -2,8 +2,6 @@ import { useState } from "react";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
-import { AddrZero, HexType } from "../../../../scripts/common";
-
 import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
@@ -14,7 +12,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { ParasOfTransfer, defaultParasOfTransfer } from "../../gmm/CreateMotions/ProposeToTransferFund";
 
-export function ProposeToTransferFund({ getMotionsList }:CreateMotionProps) {
+export function ProposeToTransferFund({ setTime }:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -37,7 +35,7 @@ export function ProposeToTransferFund({ getMotionsList }:CreateMotionProps) {
         BigInt(executor)
     ],
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   })
 

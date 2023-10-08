@@ -2,11 +2,12 @@ import { useGeneralKeeperQuitPosition } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
+import { Dispatch, SetStateAction } from "react";
 
 
 interface QuitPositionProps{
   seq: number;
-  setOpen: (flag:boolean)=>void;
+  setOpen: Dispatch<SetStateAction<boolean>>;
   refreshPosition: ()=>void;
 }
 

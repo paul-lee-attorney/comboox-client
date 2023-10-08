@@ -5,17 +5,17 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
+import { TakePositionProps } from "./TakePosition";
 
 
-interface RemoveOfficerProps {
-  seqOfMotion: string;
-  seqOfPos: number;  
-  setOpen: (flag: boolean) => void;
-  getMotionsList: ()=>any;
-}
+// interface RemoveOfficerProps {
+//   seqOfMotion: string;
+//   seqOfPos: number;  
+//   setOpen: (flag: boolean) => void;
+//   getMotionsList: ()=>any;
+// }
 
-
-export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:RemoveOfficerProps) {
+export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, setTime}:TakePositionProps) {
 
   const {gk, boox} = useComBooxContext();
   
@@ -24,9 +24,9 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, getMotionsList}:R
     write: removeOfficer,
   } = useGeneralKeeperRemoveOfficer({
     address: gk,
-    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
+    args: [seqOfMotion, BigInt(seqOfPos)],
     onSuccess(){
-      getMotionsList();
+      setTime(Date.now());
       setOpen(false);
     }
   })

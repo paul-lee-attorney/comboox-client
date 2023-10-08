@@ -8,12 +8,9 @@ import {
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
+import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 
-interface CreateMotionForOfficerProps {
-  getMotionsList: ()=>any;
-}
-
-export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficerProps ) {
+export function CreateMotionForOfficer({ setTime }:CreateMotionProps ) {
 
   const { gk } = useComBooxContext();
 
@@ -29,7 +26,7 @@ export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficer
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
     onSuccess(){
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 
@@ -42,7 +39,7 @@ export function CreateMotionForOfficer({ getMotionsList }:CreateMotionForOfficer
           ? [ BigInt(seqOfPos)]
           : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 

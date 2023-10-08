@@ -7,15 +7,15 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
-import { HexType, booxMap } from "../../../../scripts/common";
+import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 
-interface EntrustDelegaterForBmProps {
-  seqOfMotion: bigint,
-  setOpen: (flag: boolean) => void,
-  getMotionsList: (minutes:HexType) => any,
-}
+// interface EntrustDelegaterForBmProps {
+//   seqOfMotion: bigint,
+//   setOpen: (flag: boolean) => void,
+//   getMotionsList: (minutes:HexType) => any,
+// }
 
-export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, getMotionsList }: EntrustDelegaterForBmProps) {
+export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -39,10 +39,8 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, getMotio
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined ,
     onSuccess() {
-      if (boox) {
-        getMotionsList(boox[booxMap.ROD]);
-        setOpen(false);
-      }
+      setTime(Date.now());
+      setOpen(false);
     },
   });
 

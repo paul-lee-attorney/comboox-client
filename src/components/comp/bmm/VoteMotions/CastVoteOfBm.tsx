@@ -27,14 +27,15 @@ import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 
-interface CastVoteOfBmProps {
-  seqOfMotion: bigint,
-  setOpen: (flag: boolean) => void,
-  getMotionsList: (minutes:HexType) => any,
-}
+// interface CastVoteOfBmProps {
+//   seqOfMotion: bigint,
+//   setOpen: (flag: boolean) => void,
+//   getMotionsList: (minutes:HexType) => any,
+// }
 
-export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteOfBmProps) {
+export function CastVoteOfBm({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -50,10 +51,8 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
         ? [seqOfMotion, BigInt(attitude), sigHash]
         : undefined,
     onSuccess() {
-      if (boox) {
-        getMotionsList(boox[booxMap.BMM]);
-        setOpen(false);
-      }
+      setTime(Date.now());
+      setOpen(false);
     }
   });
 
@@ -133,7 +132,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, getMotionsList }: CastVoteO
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterForBoardMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} getMotionsList={getMotionsList} />
+        <EntrustDelegaterForBoardMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} setTime={setTime} />
       </Collapse>
 
     </Paper>
