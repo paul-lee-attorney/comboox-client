@@ -8,7 +8,6 @@ import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
-  // const [ doc, setDoc ] = useState<HexType>(docAddr);
   const [ target, setTarget ] = useState<HexType>(AddrZero);
 
   const {

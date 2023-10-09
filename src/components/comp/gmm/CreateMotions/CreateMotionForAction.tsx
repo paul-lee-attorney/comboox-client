@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { AddrZero, Bytes32Zero, HexType } from "../../../../scripts/common";
+import { Bytes32Zero, HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperCreateActionOfGm, 
@@ -9,31 +9,15 @@ import {
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
+import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
-
-export interface Action {
-  target: HexType;
-  value: string;
-  params: HexType;
-}
-
-const defaultAction: Action = {
-  target: AddrZero,
-  value: '0',
-  params: `0x${'00'}`,
-}
-
-interface CreateMotionForDocProps {
-  getMotionsList: () => any;
-}
-
-export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) {
+export function CreateMotionForAction({setTime}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
-
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
 
@@ -52,7 +36,7 @@ export function CreateMotionForAction({getMotionsList}:CreateMotionForDocProps) 
           desHash, BigInt(executor)]
         : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 

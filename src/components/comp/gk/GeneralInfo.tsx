@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
@@ -7,29 +7,23 @@ import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { centToDollar, dateParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longSnParser, toStr } from "../../../scripts/common/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
-import { Position, getFullPosInfo } from "../../../scripts/comp/rod";
+import { Position, getDirectorsPosList, getFullPosInfo } from "../../../scripts/comp/rod";
 import { GetOfficersList } from "../rod/GetOfficersList";
 
 import { 
-  useAccessControlGetDk,
   useRegisterOfDirectorsGetDirectorsPosList,
-  useRegisterOfMembersControllor, 
-  useRegisterOfMembersOwnersEquity, 
-  useGeneralKeeperGetCompUser,
-  useGeneralKeeperGetCompInfo,
-  useRegCenterBalanceOf,
-  useGeneralKeeperTotalDeposits,
 } from "../../../generated";
 
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
-import { User } from "../../../scripts/center/rc";
-import { AddrOfRegCenter, booxMap } from "../../../scripts/common";
-import { CompInfo, balanceOfGwei } from "../../../scripts/comp/gk";
+import { User, balanceOf } from "../../../scripts/center/rc";
+import { booxMap } from "../../../scripts/common";
+import { CompInfo, balanceOfWei, getCompInfo, totalDeposits } from "../../../scripts/comp/gk";
+import { getControllor, getOwnersEquity, votesOfGroup } from "../../../scripts/comp/rom";
 import { PickupDeposit } from "./PickupDeposit";
 import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";
-import { votesOfGroup } from "../../../scripts/comp/rom";
 import { DepositOfMine } from "./DepositOfMine";
+import { getDK } from "../../../scripts/common/accessControl";
 
 export const currencies:string[] = [
   'USD', 'GBP', 'EUR', 'JPY', 'KRW', 'CNY',
@@ -40,113 +34,78 @@ export const currencies:string[] = [
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
 
+  const [ time, setTime ] = useState<number>(0);
+
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
-
-  useGeneralKeeperGetCompInfo({
-    address: gk,
-    onSuccess(res) {
-
-      let info:CompInfo = {
-        regNum: res.regNum,
-        regDate: res.regDate,
-        currency: res.currency,
-        symbol: toStr(Number(res.symbol)),
-        name: res.name
-      }
-      setCompInfo(info);
-    }
-  })
-
   const [ dk, setDK ] = useState<string>('');
 
-  useAccessControlGetDk({
-    address: gk,
-    onSuccess(res) {
-      setDK(res)
+  useEffect(()=>{
+    if (gk) {
+      getCompInfo(gk).then(
+        res => setCompInfo(res)
+      )      
+      getDK(gk).then(
+        res => setDK(res)
+      )
+      
     }
-  })
+  }, [gk])
 
   const [ controllor, setControllor ] = useState<string>();
   const [ votesOfController, setVotesOfController ] = useState<string>();
-
-  useRegisterOfMembersControllor({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(res) {
-      if (boox) {
-        setControllor(res.toString());
-        votesOfGroup(boox[booxMap.ROM], BigInt(res)).then(
-          votes => setVotesOfController(votes.toString())
-        );
-      }
-    }
-  })
-
   const [ par, setPar ] = useState<string>();
   const [ paid, setPaid ] = useState<string>();
-
-  useRegisterOfMembersOwnersEquity({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(res) {
-      setPar(res.par.toString());
-      setPaid(res.paid.toString());
-    }
-  })
-
   const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
 
-  const {
-    refetch: getDirectorsList
-  } = useRegisterOfDirectorsGetDirectorsPosList({
-    address: boox ? boox[booxMap.ROD] : undefined,
-    onSuccess(res) {
-      if (boox)
-        getFullPosInfo(boox[booxMap.ROD], res).then(
-          list => setDirectorsList(list)
-        );
-    }
-  })
+  useEffect(()=>{
+    if (boox) {
+      getControllor(boox[booxMap.ROM]).then(
+        res => {
+          setControllor(res.toString());
+          votesOfGroup(boox[booxMap.ROM], Number(res)).then(
+            votes => setVotesOfController(votes.toString())
+          );
+        }
+      )
 
-  const [ compUser, setCompUser ] = useState<User>();
+      getOwnersEquity(boox[booxMap.ROM]).then(
+        res => {
+          setPar(res.par.toString());
+          setPaid(res.paid.toString());
+        }
+      )
 
-  const{
-    refetch: getCompUser
-  } = useGeneralKeeperGetCompUser({
-    address: gk,
-    onSuccess(res) {
-      setCompUser(res);
+      getDirectorsPosList(boox[booxMap.ROD]).then(
+        res => {
+          getFullPosInfo(boox[booxMap.ROD], res).then(
+            ls => setDirectorsList(ls)
+          );
+        }
+      )
+
     }
-  })
+  }, [boox]); 
 
   const [ balanceOfCBP, setBalanceOfCBP ] = useState<string>('0');
   const [ balanceOfETH, setBalanceOfETH ] = useState<string>('0');
   const [ depositsOfETH, setDepositsOfETH ] = useState<string>('0');
 
-  const getGwei = async () => {
+  useEffect(()=>{
     if (gk) {
-      let gwei = await balanceOfGwei(gk);
-      setBalanceOfETH(gwei.toString());
-    }
-  }
 
-  const {
-    refetch: getBalanceOf
-  } = useRegCenterBalanceOf({
-    address: AddrOfRegCenter,
-    args: gk ? [ gk ] : undefined,
-    onSuccess(amt) {
-      setBalanceOfCBP(amt.toString());
-      getGwei();
-    }
-  })
+      balanceOfWei(gk).then(
+        res => setBalanceOfETH(res.toString())
+      )
 
-  const {
-    refetch: getDeposits
-  } = useGeneralKeeperTotalDeposits({
-    address: gk,
-    onSuccess(amt) {
-      setDepositsOfETH(amt.toString());
+      balanceOf(gk).then(
+        res => setBalanceOfCBP(res.toString())        
+      )
+    
+      totalDeposits(gk).then(
+        res => setDepositsOfETH(res.toString())
+      )
     }
-  })
+  }, [ gk, time ]);
 
   const [ acct, setAcct ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
@@ -351,7 +310,7 @@ export function GeneralInfo() {
                       <h3>Cash Box</h3>
                     </Toolbar>
 
-                    <PickupDeposit getBalanceOf={getBalanceOf} getDeposits={getDeposits} />
+                    <PickupDeposit setTime={setTime} />
 
                     <DepositOfMine />
 
@@ -541,7 +500,7 @@ export function GeneralInfo() {
             <tr>
               <td colSpan={4}>
                 {directorsList && directorsList.length > 0 && (
-                  <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />
+                  <GetOfficersList list={directorsList} title="Directors List" />
                 )}
               </td>
             </tr>

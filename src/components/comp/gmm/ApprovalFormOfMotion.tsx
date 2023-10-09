@@ -14,13 +14,13 @@ import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
 import Link from "next/link";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { HexType, booxMap } from "../../../scripts/common";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { ProposeMotionToGeneralMeeting } from "./VoteMotions/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "./VoteMotions/CastVoteOfGm";
-import { Motion, VoteCase, getVoteResult, voteEnded } from "../../../scripts/common/meetingMinutes";
+import { VoteCase, getVoteResult, voteEnded } from "../../../scripts/common/meetingMinutes";
 import { VoteCountingOfGm } from "./VoteMotions/VoteCountingOfGm";
 import { TakeSeat } from "./ExecMotions/TakeSeat";
 import { RemoveDirector } from "./ExecMotions/RemoveDirector";
@@ -28,18 +28,11 @@ import { ExecActionOfGm } from "./ExecMotions/ExecActionOfGm";
 import { BallotsList } from "../../common/meetingMinutes/BallotsList";
 import { statesOfMotion } from "../../common/meetingMinutes/GetMotionsList";
 import { getFile } from "../../../scripts/common/filesFolder";
-
-export interface ApprovalFormOfMotionProps{
-  minutes: HexType;
-  open: boolean;
-  motion: Motion;
-  setOpen: Dispatch<SetStateAction<boolean>>;
-  obtainMotionsList: ()=>void;
-}
+import { ApprovalFormOfBoardMotionProps } from "../bmm/ApprovalFormOfBoardMotion";
 
 export const motionType = ['ElectOfficer', 'RemoveDirector', 'ApproveDocument', 'ApproveAction'];
 
-export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMotionsList}: ApprovalFormOfMotionProps) {
+export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: ApprovalFormOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -80,7 +73,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
     }
   }, [motion, boox ])
 
-  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>();
+  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>(false);
 
   return (
     <Dialog
@@ -320,7 +313,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
                   </td>
                 </tr>
               )}
@@ -329,10 +322,10 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 <tr>
                   <td colSpan={4}>
                     <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} setTime={setTime} />
                     </Collapse>
                   </td>
                 </tr>
@@ -342,9 +335,9 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 <tr>
                   <td colSpan={4}>
                     <TakeSeat 
-                      seqOfMotion={motion.head.seqOfMotion.toString()} 
+                      seqOfMotion={motion.head.seqOfMotion} 
                       seqOfPos={Number(motion.contents)} 
-                      setOpen={setOpen} getMotionsList={obtainMotionsList}
+                      setOpen={setOpen} setTime={setTime}
                     />
                   </td>
                 </tr>
@@ -354,10 +347,10 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
                 <tr>
                   <td colSpan={4}>
                     <RemoveDirector 
-                      seqOfMotion={motion.head.seqOfMotion.toString()} 
+                      seqOfMotion={motion.head.seqOfMotion} 
                       seqOfPos={Number(motion.contents)} 
                       setOpen={setOpen} 
-                      getMotionsList={obtainMotionsList}
+                      setTime={setTime}
                     />
                   </td>
                 </tr>
@@ -366,19 +359,11 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, obtainMoti
               {motion.body.state == 3 && motion.head.typeOfMotion == 4 && (
                 <tr>
                   <td colSpan={4}>
-                    <ExecActionOfGm seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} getMotionsList={obtainMotionsList} />
+                    <ExecActionOfGm seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} setTime={setTime} />
                   </td>
                 </tr>
               )}
-
-              {/* {motion.body.state == 6 && (
-                <tr>
-                  <td colSpan={4}>
-                    <RequestToBuy seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} getMotionsList={obtainMotionsList} />
-                  </td>
-                </tr>
-              )} */}
-
+              
             </tbody>
           </table>
         </Paper>

@@ -1,21 +1,12 @@
 import { useGeneralKeeperRemoveDirector } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { HexType, booxMap } from "../../../../scripts/common";
 import { Button, Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
+import { TakePositionProps } from "../../bmm/ExecMotions/TakePosition";
 
+export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, setTime}:TakePositionProps) {
 
-interface RemoveDirectorProps {
-  seqOfMotion: string;
-  seqOfPos: number;  
-  setOpen: (flag: boolean) => void;
-  getMotionsList: (minutes: HexType)=>any;
-}
-
-
-export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:RemoveDirectorProps) {
-
-  const {gk, boox} = useComBooxContext();
+  const { gk } = useComBooxContext();
   
   const {
     isLoading: removeDirectorLoading,
@@ -24,10 +15,8 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, getMotionsList}:
     address: gk,
     args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(){
-      if (boox) {
-        getMotionsList(boox[booxMap.GMM]);
-        setOpen(false);
-      }
+      setTime(Date.now());
+      setOpen(false);
     }
   })
 

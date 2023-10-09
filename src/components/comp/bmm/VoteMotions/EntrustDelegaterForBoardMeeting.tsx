@@ -9,26 +9,11 @@ import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 
-// interface EntrustDelegaterForBmProps {
-//   seqOfMotion: bigint,
-//   setOpen: (flag: boolean) => void,
-//   getMotionsList: (minutes:HexType) => any,
-// }
-
 export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
   const { gk, boox } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>();
-
-  // const {
-  //   config: entrustDelegaterForBmConfig
-  // } = usePrepareGeneralKeeperEntrustDelegaterForBoardMeeting({
-  //   address: gk,
-  //   args: delegater
-  //       ? [seqOfMotion, BigInt(delegater) ]
-  //       : undefined ,
-  // });
 
   const {
     isLoading: entrustDelegaterForBmLoading,

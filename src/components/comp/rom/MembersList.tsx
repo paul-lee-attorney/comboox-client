@@ -1,11 +1,11 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Paper, Toolbar, Box, TextField, Button } from '@mui/material';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 import { centToDollar, dateParser, longDataParser, longSnParser, splitStrArr } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { MemberShareClip, getEquityList } from '../../../scripts/comp/rom';
+import { MemberShareClip, getEquityList, sortedMembersList } from '../../../scripts/comp/rom';
 import { useRegisterOfMembersSortedMembersList } from '../../../generated';
 import { booxMap } from '../../../scripts/common';
 import { History } from '@mui/icons-material';
@@ -20,17 +20,18 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
   const { boox } = useComBooxContext();
   const [equityList, setEquityList] = useState<MemberShareClip[]>();
 
-  const {
-    refetch: getMembersList
-  } = useRegisterOfMembersSortedMembersList({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(ls){
-      if (boox)
-        getEquityList(boox[booxMap.ROM], ls).then(
-          list => setEquityList(list)
-        )
+  useEffect(()=>{
+    if (boox) {
+      sortedMembersList(boox[booxMap.ROM]).then(
+        ls => {
+          let numLs = ls.map(v => Number(v));
+          getEquityList(boox[booxMap.ROM], numLs).then(
+            list => setEquityList(list)
+          )
+        }
+      )
     }
-  })
+  }, [boox]);
 
   const columns: GridColDef[] = [
     {

@@ -1,7 +1,20 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from ".";
+import { AddrZero, HexType } from ".";
 import { meetingMinutesABI } from "../../generated";
 import { VotingRule } from "../../components/comp/roc/rules/VotingRules/SetVotingRule";
+
+export interface Action {
+  target: HexType;
+  value: string;
+  params: HexType;
+}
+
+export const defaultAction: Action = {
+  target: AddrZero,
+  value: '0',
+  params: `0x${'00'}`,
+}
+
 
 export async function isProposed(minutes: HexType, seqOfMotion: bigint): Promise<boolean> {
   let flag: boolean = await readContract({

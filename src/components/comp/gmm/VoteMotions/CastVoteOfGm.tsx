@@ -27,14 +27,9 @@ import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralM
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 
-interface ProposeMotionProps {
-  seqOfMotion: bigint,
-  setOpen: (flag: boolean) => void,
-  getMotionsList: (minutes:HexType) => any,
-}
-
-export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionProps) {
+export function CastVoteOfGm({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -51,13 +46,6 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
-  // const {config} = usePrepareGeneralKeeperCastVoteOfGm({
-  //   address: gk,
-  //   args: attitude 
-  //       ? [seqOfMotion, BigInt(attitude), sigHash]
-  //       : undefined,
-  // });
-
   const {
     isLoading: castVoteLoading,
     write: castVote,
@@ -71,7 +59,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
         getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
           list => setVoteResult(list)
         );
-        getMotionsList(boox[booxMap.GMM]);
+        setTime(Date.now());
         setOpen(false);
       }
     }
@@ -153,7 +141,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, getMotionsList }: ProposeMo
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterForGeneralMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} getMotionsList={getMotionsList} />
+        <EntrustDelegaterForGeneralMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} setTime={setTime} />
       </Collapse>
 
     </Paper>

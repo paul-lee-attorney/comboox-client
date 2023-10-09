@@ -10,7 +10,7 @@ import { HashLockerOfPoints } from "../../components/center/HashLockerOfPoints";
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 import { CopyLongStrTF } from "../../components/common/utils/CopyLongStr";
 import { ActionsOfUser } from "../../components/center/ActionsOfUser";
-import { balanceOfGwei } from "../../scripts/comp/gk";
+import { balanceOfWei } from "../../scripts/comp/gk";
 
 
 function UserInfo() {
@@ -84,18 +84,12 @@ function UserInfo() {
   const [ balanceOfETH, setBalanceOfETH ] = useState<string>('0');
 
   useEffect(()=>{
-
-    const getGwei = async () => {
-      if (user) {
-        let gwei = await balanceOfGwei(user.primeKey.pubKey);
-        setBalanceOfETH(gwei.toString());
-      }
+    if (user) {
+      balanceOfWei(user.primeKey.pubKey).then(
+        wei => setBalanceOfETH(wei.toString())
+      )
     }
-
-    getGwei();
-  })  
-
-
+  }, [user]);
 
   const [ open, setOpen ] = useState(false);
   const [ locker, setLocker ] = useState<Locker>();

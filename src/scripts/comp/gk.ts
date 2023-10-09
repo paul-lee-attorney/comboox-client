@@ -135,10 +135,10 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
   return info;
 }
 
-export async function balanceOfGwei(gk: HexType):Promise<bigint>{
+export async function balanceOfWei(gk: HexType):Promise<bigint>{
   let res = await fetchBalance({
     address: gk,
-    formatUnits: 'gwei'
+    formatUnits: 'wei'
   })
 
   return res.value;
@@ -154,3 +154,23 @@ export async function getCentPrice(gk: HexType):Promise<bigint>{
   return res;
 }
 
+export async function totalDeposits(gk: HexType): Promise<bigint>{
+  let res = await readContract({
+    address: gk,
+    abi: generalKeeperABI,
+    functionName: 'totalDeposits',
+  })
+
+  return res;
+}
+
+export async function depositOfMine(gk: HexType, acct: number): Promise<bigint>{
+  let res = await readContract({
+    address: gk,
+    abi: generalKeeperABI,
+    functionName: 'depositOfMine',
+    args: [ BigInt(acct) ]
+  })
+
+  return res;
+}

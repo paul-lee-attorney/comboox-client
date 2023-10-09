@@ -8,10 +8,7 @@ import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();
-
-  // const [ title, setTitle ] = useState<number>(orgTitle);
-  // const [ keeper, setKeeper ] = useState<HexType>(orgBook);
-
+  
   const {
     isLoading: regKeeperLoading,
     write: regKeeper,

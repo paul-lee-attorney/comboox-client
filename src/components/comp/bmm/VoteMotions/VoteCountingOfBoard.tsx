@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack } from "@mui/material";
+import { Button, Paper } from "@mui/material";
 import { 
   useGeneralKeeperVoteCounting,
 } from "../../../../generated";
@@ -11,7 +11,7 @@ import { booxMap } from "../../../../scripts/common";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { Dispatch, SetStateAction } from "react";
 
-interface VoteCountingOfBoard extends ProposeMotionProps {
+export interface VoteCountingOfBoard extends ProposeMotionProps {
   setResult: Dispatch<SetStateAction<boolean>>;
   setNextStep: Dispatch<SetStateAction<number>>;
 }
@@ -19,13 +19,6 @@ interface VoteCountingOfBoard extends ProposeMotionProps {
 export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, setTime }: VoteCountingOfBoard) {
 
   const { gk, boox } = useComBooxContext();
-
-  // const { 
-  //   config
-  // } =  usePrepareGeneralKeeperVoteCounting({
-  //   address: gk,
-  //   args: [ seqOfMotion ],
-  // });
 
   const {
     isLoading: voteCountingLoading,

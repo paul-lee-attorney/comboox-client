@@ -2,30 +2,30 @@ import { Alert, Collapse, IconButton, Stack, Tooltip } from "@mui/material";
 import { useGeneralKeeperDepositOfMine } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Close, HelpOutline, } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { getEthPart, getGEthPart, getGWeiPart, getWeiPart } from "../../../scripts/common/toolsKit";
+import { depositOfMine } from "../../../scripts/comp/gk";
 
 
 export function DepositOfMine() {
   
   const { gk, userNo } = useComBooxContext();
 
-  // const [ myNo, setMyNo] = useState<number>();
   const [ deposit, setDeposit ] = useState<string>('0');
+
+  useEffect(()=>{
+    if (gk && userNo) {
+      depositOfMine(gk, userNo).then(
+        res => setDeposit(res.toString())
+      );
+    }
+  }, [ gk, userNo ]);
+
   const [ open, setOpen ] = useState(false);
 
-  const {
-    refetch: depositOfMine
-  } = useGeneralKeeperDepositOfMine({
-    address: gk,
-    args: userNo 
-      ? [ BigInt(userNo) ]
-      : undefined,
-    onSuccess(res) {
-        setDeposit(res.toString());
-        setOpen(true);
-    }
-  })
+  const handleClick = () => {
+    setOpen(true);
+  }
 
   return(
     <Stack direction='row' sx={{ alignItems:'center' }}>
@@ -38,7 +38,7 @@ export function DepositOfMine() {
           <IconButton 
             sx={{mx:1, ml: 5}}
             size="large"
-            onClick={()=>depositOfMine?.()}
+            onClick={handleClick}
             color="primary"
           >
             <HelpOutline />

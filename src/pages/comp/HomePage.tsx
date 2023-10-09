@@ -19,12 +19,12 @@ function HomePage() {
 
   useEffect(()=>{
     if (boox) {
-      getDK(boox[booxMap.ROS]).then(
+      getDK(boox[booxMap.ROM]).then(
         dk => {
           if (gk) {
-            getKeeper(gk, 4).then(
-              rosKeeper => {
-                if (rosKeeper == dk) setActiveStep(4);
+            getKeeper(gk, booxMap.ROM).then(
+              romKeeper => {
+                if (romKeeper == dk) setActiveStep(4);
               }
             )
           }

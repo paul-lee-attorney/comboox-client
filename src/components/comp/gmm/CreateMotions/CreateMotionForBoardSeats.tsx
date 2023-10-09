@@ -8,26 +8,14 @@ import {
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
+import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
-interface CreateMotionForBoardSeatsProps {
-  getMotionsList: ()=>any;
-}
-
-export function CreateMotionForBoardSeats({ getMotionsList }:CreateMotionForBoardSeatsProps ) {
+export function CreateMotionForBoardSeats({ setTime }:CreateMotionProps ) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfPos, setSeqOfPos ] = useState<number>();
   const [ candidate, setCandidate ] = useState<number>();
-
-  // const {
-  //   config: addDirectorConfig
-  // } = usePrepareGeneralKeeperNominateDirector({
-  //   address: gk,
-  //   args: seqOfPos && candidate
-  //         ? [BigInt(seqOfPos), BigInt(candidate)]
-  //         : undefined,
-  // });
 
   const {
     isLoading: addDirectorLoading,
@@ -38,18 +26,9 @@ export function CreateMotionForBoardSeats({ getMotionsList }:CreateMotionForBoar
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
     onSuccess(){
-      getMotionsList();
+      setTime(Date.now());
     }
   });
-
-  // const {
-  //   config: removeDirectorConfig
-  // } = usePrepareGeneralKeeperCreateMotionToRemoveDirector({
-  //   address: gk,
-  //   args: seqOfPos 
-  //         ? [ BigInt(seqOfPos)]
-  //         : undefined,
-  // });
 
   const{
     isLoading: removeDirectorLoading,
@@ -60,7 +39,7 @@ export function CreateMotionForBoardSeats({ getMotionsList }:CreateMotionForBoar
           ? [ BigInt(seqOfPos)]
           : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 

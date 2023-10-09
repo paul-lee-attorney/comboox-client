@@ -8,17 +8,9 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { isPassed } from "../../../../scripts/common/meetingMinutes";
 import { booxMap } from "../../../../scripts/common";
+import { VoteCountingOfBoard } from "../../bmm/VoteMotions/VoteCountingOfBoard";
 
-
-interface VoteCountingOfGmProps {
-  seqOfMotion: bigint;
-  setResult: (flag: boolean) => void;
-  setNextStep: (step: number) => void;
-  setOpen: (flag: boolean) => void;
-  getMotionsList: () => void;
-}
-
-export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, getMotionsList }: VoteCountingOfGmProps) {
+export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, setTime }: VoteCountingOfBoard ) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -34,7 +26,7 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen,
           flag => {
             setResult(flag);
             setNextStep(flag ? 6 : 8);
-            getMotionsList();
+            setTime(Date.now());
             setOpen(false);
           }
         )

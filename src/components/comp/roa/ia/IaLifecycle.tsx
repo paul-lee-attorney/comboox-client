@@ -169,7 +169,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   </Typography>
 
                   {seqOfMotion != undefined && (
-                    <VoteForDocOfGm seqOfMotion={ seqOfMotion } setNextStep={ setActiveStep } />
+                    <VoteForDocOfGm seqOfMotion={ seqOfMotion } setNextStep={()=>{}} />
                   )}
                 </StepContent>
 
@@ -185,7 +185,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                     Count vote result of IA (only for Members).
                   </Typography>
                   {seqOfMotion != undefined && (
-                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } setOpen={()=>{}} getMotionsList={()=>{}} />
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } setOpen={()=>{}} setTime={()=>{}}  />
                   )}
                 </StepContent>
 

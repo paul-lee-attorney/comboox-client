@@ -9,7 +9,6 @@ import { GetFullPosInfoInHand } from "./GetFullPosInfoInHand";
 interface GetOfficersListProps {
   list: readonly Position[];
   title: string;
-  getOfficersList: () => any;
 }
 
 export function GetOfficersList({ list, title }:GetOfficersListProps) {

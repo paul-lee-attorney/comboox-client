@@ -55,11 +55,11 @@ function RegisterOfDirectors() {
       </Stack>
 
       {directorsList && (
-        <GetOfficersList list={directorsList} title="Directors List" getOfficersList={getDirectorsList} />
+        <GetOfficersList list={directorsList} title="Directors List" />
       )}
         
       {officersList && (
-        <GetOfficersList list={officersList} title="Officers List" getOfficersList={getOfficersList} />
+        <GetOfficersList list={officersList} title="Officers List" />
       )}
 
 

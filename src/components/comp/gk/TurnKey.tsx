@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {  
   Button,
@@ -17,14 +17,14 @@ import { ArrowDownward, ArrowUpward, Key }  from '@mui/icons-material';
 
 
 import {
-  useGeneralKeeperGetKeeper,
-  useAccessControlGetDk,
   useAccessControlSetDirectKeeper,
 } from '../../../generated';
 
 import { HexType, booxMap } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { getKeeper } from '../../../scripts/comp/gk';
+import { getDK } from '../../../scripts/common/accessControl';
 
 interface TurnKeyProps {
   nextStep: (next: number) => void;
@@ -35,57 +35,55 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
 
   const [romKeeper, setRomKeeper] = useState<HexType>();
 
-  useGeneralKeeperGetKeeper({
-    address: gk,
-    args: [ BigInt(4) ],
-    onSuccess(res) {
-      setRomKeeper(res)
-    }
-  })
-
-  const [dkOfBom, setDKOfBom] = useState<HexType>();
-
-  const {
-    refetch: getDkOfBom
-  } = useAccessControlGetDk({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(res) {
-      setDKOfBom(res)
-    }
-  })
-
-  const [dkOfBos, setDKOfBos] = useState<HexType>();
-
-  const {
-    refetch: getDkOfBos
-  } = useAccessControlGetDk({
-    address: boox ? boox[booxMap.ROS] : undefined,
-    onSuccess(res) {
-      setDKOfBos(res)
+  useEffect(()=>{
+    if (gk) {
+      getKeeper(gk, booxMap.ROM).then(
+        res => {
+          setRomKeeper(res);
+        }
+      )
     }
   })
 
   const {
-    isLoading: setBomDKLoading,
-    write: setBomDK,
+    isLoading: setRomDKLoading,
+    write: setRomDK,
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[booxMap.ROM] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
-    onSuccess() {
-      getDkOfBom();
-    }
   });
 
+  const [dkOfRom, setDKOfRom] = useState<HexType>();
+
+  useEffect(()=>{
+    if (boox) {
+      getDK(boox[booxMap.ROM]).then(
+        res => {
+          setDKOfRom(res);
+        }
+      )
+    }
+  }, [boox, setRomDK])
+
   const {
-    isLoading: setBosDKLoading,
-    write: setBosDK
+    isLoading: setRosDKLoading,
+    write: setRosDK
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[booxMap.ROS] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
-    onSuccess() {
-      getDkOfBos();
-    }  
   });
+
+  const [dkOfRos, setDKOfRos] = useState<HexType>();
+
+  useEffect(()=>{
+    if (boox) {
+      getDK(boox[booxMap.ROS]).then(
+        res => {
+          setDKOfRos(res);
+        }
+      )
+    }
+  }, [boox, setRosDK])
 
   return (
 
@@ -147,14 +145,14 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
 
                 <Stack direction='row' >
                   <Chip
-                    variant={ dkOfBom == romKeeper ? 'filled' : 'outlined' }
-                    color={ dkOfBom == romKeeper ? 'primary' : 'default' }
+                    variant={ dkOfRom == romKeeper ? 'filled' : 'outlined' }
+                    color={ dkOfRom == romKeeper ? 'primary' : 'default' }
                     label='KeeperOfRom'
                     sx={{width:120}}
                   />
 
                   <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
-                    {dkOfBom}
+                    {dkOfRom}
                   </Typography>
                 </Stack>
 
@@ -175,14 +173,14 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
 
                 <Stack direction='row' >
                   <Chip
-                    variant={ dkOfBos == romKeeper ? 'filled' : 'outlined' }
-                    color={ dkOfBos == romKeeper ? 'success' : 'default' }
+                    variant={ dkOfRos == romKeeper ? 'filled' : 'outlined' }
+                    color={ dkOfRos == romKeeper ? 'success' : 'default' }
                     label='KeeperOfRos'
                     sx={{width:120}}
                   />
 
                   <Typography variant="body1" sx={{ m:1, textDecoration:'underline' }} >
-                    {dkOfBos}
+                    {dkOfRos}
                   </Typography>
                 </Stack>
 
@@ -192,13 +190,13 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
           <Stack direction='row' sx={{m:1, p:1}}>
 
             <Button 
-              disabled = { !setBomDK || setBomDKLoading }
+              disabled = { !setRomDK || setRomDKLoading }
               sx={{ m: 1, mr: 5, minWidth: 120, height: 40 }} 
               variant="outlined" 
               color='primary'
               startIcon={<Key />}
               onClick={() => { 
-                setBomDK?.(); 
+                setRomDK?.(); 
               }}
               size='small'
             >
@@ -206,13 +204,13 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
             </Button>
 
             <Button 
-              disabled = {!setBosDK || setBosDKLoading }
+              disabled = {!setRosDK || setRosDKLoading }
               sx={{ m: 1, ml:5, minWidth: 120, height: 40 }} 
               variant="outlined" 
               color='success'
               startIcon={<Key />}
               onClick={()=> {
-                setBosDK?.();
+                setRosDK?.();
               }}
               size='small'
             >

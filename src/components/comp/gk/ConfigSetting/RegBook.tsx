@@ -19,9 +19,6 @@ export interface RegBookProps{
 export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();
 
-  // const [ title, setTitle ] = useState<number>(orgTitle);
-  // const [ book, setBook ] = useState<HexType>(orgBook);
-
   const {
     isLoading: regBookLoading,
     write: regBook,

@@ -7,17 +7,11 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
-import { HexType, booxMap } from "../../../../scripts/common";
+import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 
-interface EntrustDelegaterOfMemberProps {
-  seqOfMotion: bigint,
-  setOpen: (flag: boolean) => void,
-  getMotionsList: (minutes:HexType) => any,
-}
+export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
-export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMotionsList }: EntrustDelegaterOfMemberProps) {
-
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>();
 
@@ -30,10 +24,8 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, getMot
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined,
     onSuccess() {
-      if (boox ) {
-        getMotionsList(boox[booxMap.GMM]);
-        setOpen(false);  
-      }
+      setTime(Date.now());
+      setOpen(false);  
     },
   });
 

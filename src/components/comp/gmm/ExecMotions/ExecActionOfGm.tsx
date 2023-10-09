@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { AddrZero, Bytes32Zero, HexType } from "../../../../scripts/common";
+import { Bytes32Zero, HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperExecActionOfGm, 
@@ -9,31 +9,14 @@ import {
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
+import { ExecActionProps } from "../../bmm/ExecMotions/ExecAction";
 
-export interface Action {
-  target: HexType;
-  value: string;
-  params: HexType;
-}
-
-const defaultAction: Action = {
-  target: AddrZero,
-  value: '0',
-  params: `0x${'00'}`,
-}
-
-interface ExecActionOfGmProps {
-  seqOfVr: number;
-  seqOfMotion: bigint;
-  setOpen: (flag: boolean)=>void;
-  getMotionsList: () => any;
-}
-
-export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:ExecActionOfGmProps) {
+export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActionProps) {
 
   const { gk } = useComBooxContext();
 
-  const [ actions, setActions ] = useState<Action[]>([defaultAction]);
+  const [ actions, setActions ] = useState<Action[]>([ defaultAction ]);
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 
   const {
@@ -49,7 +32,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
           desHash, BigInt(seqOfMotion)]
         : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 
@@ -70,7 +53,6 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, getMotionsList}:E
   }
 
   const handleClick = () => {
-    console.log('actions: ', actions);
     execAction();
   }
 

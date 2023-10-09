@@ -9,9 +9,9 @@ import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
-import { CreateMotionProps } from "../CreateMotionOfGm";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
+import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
 export interface ParasOfTransfer {
   toBMM: boolean;
@@ -29,7 +29,7 @@ export const defaultParasOfTransfer: ParasOfTransfer = {
   expireDate: 0,
 }
 
-export function ProposeToTransferFund({ getMotionsList }:CreateMotionProps) {
+export function ProposeToTransferFund({ setTime }:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -52,7 +52,7 @@ export function ProposeToTransferFund({ getMotionsList }:CreateMotionProps) {
         BigInt(executor)
     ],
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   })
 

@@ -5,12 +5,9 @@ import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
+import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
-interface CreateMotionForDocProps {
-  getMotionsList: () => any;
-}
-
-export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
+export function CreateMotionForDoc({setTime}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -27,7 +24,7 @@ export function CreateMotionForDoc({getMotionsList}:CreateMotionForDocProps) {
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
     onSuccess() {
-      getMotionsList();
+      setTime(Date.now());
     }
   });
 

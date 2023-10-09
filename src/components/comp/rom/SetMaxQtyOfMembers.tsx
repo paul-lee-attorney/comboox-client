@@ -46,7 +46,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   useEffect(()=>{
     if (boox) {
       maxQtyOfMembers(boox[booxMap.ROM]).then(
-        max => setMax(max)
+        max => setMax(max.toString())
       );
     }
   }, [boox, setMaxQty]);

@@ -10,19 +10,7 @@ import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
-
-
-export interface Action {
-  target: HexType;
-  value: string;
-  params: HexType;
-}
-
-const defaultAction: Action = {
-  target: AddrZero,
-  value: '0',
-  params: `0x${'00'}`,
-}
+import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 
 export function CreateAction({setTime}:CreateMotionProps) {
 
@@ -31,7 +19,7 @@ export function CreateAction({setTime}:CreateMotionProps) {
   const [ seqOfVr, setSeqOfVr ] = useState<number>();
   const [ executor, setExecutor ] = useState<number>();
 
-  const [ actions, setActions ] = useState<Action[]>([defaultAction]);
+  const [ actions, setActions ] = useState<Action[]>([ defaultAction ]);
 
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 

@@ -8,17 +8,11 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
-import { HexType, booxMap } from "../../../../scripts/common";
+import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 
-interface ProposeMotionToGmProps {
-  seqOfMotion: bigint,
-  setOpen: (flag: boolean) => void,
-  getMotionsList: (minutes:HexType) => any,
-}
+export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
 
-export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotionsList }: ProposeMotionToGmProps) {
-
-  const { gk, boox } = useComBooxContext();
+  const { gk } = useComBooxContext();
   
   const {
     isLoading: proposeMotionToGmLoading,
@@ -27,9 +21,7 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotions
     address: gk,
     args: [BigInt(seqOfMotion)],
     onSuccess(){
-      if (boox) {
-        getMotionsList(boox[booxMap.GMM]);
-      }
+      setTime(Date.now());
       setOpen(false);
     }
   });
@@ -81,7 +73,7 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, getMotions
         <EntrustDelegaterForGeneralMeeting 
           seqOfMotion={seqOfMotion} 
           setOpen={setOpen} 
-          getMotionsList={getMotionsList} 
+          setTime={setTime} 
         />
       </Collapse>
 

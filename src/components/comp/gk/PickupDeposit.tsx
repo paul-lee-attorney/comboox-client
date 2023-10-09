@@ -2,14 +2,14 @@ import { IconButton, Tooltip } from "@mui/material";
 import { useGeneralKeeperPickupDeposit } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Savings, SavingsOutlined } from "@mui/icons-material";
+import { Dispatch, SetStateAction } from "react";
 
 
 interface PickupDepositProps{
-  getBalanceOf: ()=>void;
-  getDeposits: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function PickupDeposit({ getBalanceOf, getDeposits }:PickupDepositProps) {
+export function PickupDeposit({ setTime }:PickupDepositProps) {
   
   const { gk } = useComBooxContext();
 
@@ -19,8 +19,7 @@ export function PickupDeposit({ getBalanceOf, getDeposits }:PickupDepositProps) 
   } = useGeneralKeeperPickupDeposit({
     address: gk,
     onSuccess() {
-      getBalanceOf();
-      getDeposits();
+      setTime(Date.now());
     }
   })
 

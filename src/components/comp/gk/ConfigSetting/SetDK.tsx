@@ -1,14 +1,13 @@
 import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Update } from "@mui/icons-material";
-import { useAccessControlSetDirectKeeper, useAccessControlSetOwner } from "../../../../generated";
+import { useAccessControlSetDirectKeeper } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 
 export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
-  // const [ doc, setDoc ] = useState<HexType>(docAddr);
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
 
   const {
@@ -77,6 +76,5 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     </Paper>
 
   );  
-
 
 }

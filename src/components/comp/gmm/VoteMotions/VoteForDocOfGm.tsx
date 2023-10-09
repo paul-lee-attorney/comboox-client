@@ -6,17 +6,17 @@ import {
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { HowToVote } from "@mui/icons-material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 
-interface VoteForDocOfGmProps {
-  seqOfMotion: bigint ;
-  setNextStep: (next: number) => void;
+interface VoteForDocOfGMProps {
+  seqOfMotion: bigint;
+  setNextStep: Dispatch<SetStateAction<number>>;
 }
 
-export function VoteForDocOfGm({ seqOfMotion, setNextStep }: VoteForDocOfGmProps) {
+export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
 
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
   const { gk, boox } = useComBooxContext();

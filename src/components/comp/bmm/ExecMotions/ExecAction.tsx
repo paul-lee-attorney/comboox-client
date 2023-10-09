@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { AddrZero, HexType } from "../../../../scripts/common";
+import { HexType } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperExecAction,
@@ -23,20 +23,9 @@ import {
 } from "@mui/icons-material";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
+import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 
-export interface Action {
-  target: HexType;
-  value: string;
-  params: HexType;
-}
-
-const defaultAction: Action = {
-  target: AddrZero,
-  value: '0',
-  params: `0x${'00'}`,
-}
-
-interface ExecActionProps extends ProposeMotionProps {
+export interface ExecActionProps extends ProposeMotionProps {
   seqOfVr: number;
 }
 

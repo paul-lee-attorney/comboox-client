@@ -7,14 +7,6 @@ import { Button, Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 import { TakePositionProps } from "./TakePosition";
 
-
-// interface RemoveOfficerProps {
-//   seqOfMotion: string;
-//   seqOfPos: number;  
-//   setOpen: (flag: boolean) => void;
-//   getMotionsList: ()=>any;
-// }
-
 export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, setTime}:TakePositionProps) {
 
   const {gk, boox} = useComBooxContext();
