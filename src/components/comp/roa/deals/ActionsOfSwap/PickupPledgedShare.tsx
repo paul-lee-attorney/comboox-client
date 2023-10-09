@@ -4,7 +4,7 @@ import { useGeneralKeeperPickupPledgedShare } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
-export function PickupPledgedShare({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
+export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
   const { gk } = useComBooxContext();
 
@@ -13,7 +13,7 @@ export function PickupPledgedShare({ia, deal, seqOfSwap, setShow}: ActionsOfSwap
     write: pickupPledgedShare,
   } = useGeneralKeeperPickupPledgedShare({
     address: gk,
-    args: [ia, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
+    args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
     onSuccess() {
       setShow(false);
     }

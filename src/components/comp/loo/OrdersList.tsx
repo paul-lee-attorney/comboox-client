@@ -7,13 +7,12 @@ import { Refresh } from "@mui/icons-material";
 
 interface OrdersListProps {
   list: readonly OrderWrap[];
-
   setOrder: Dispatch<SetStateAction<OrderWrap>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  refresh: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
+export function OrdersList({list, setOrder, setOpen, setTime}:OrdersListProps) {
 
   const columns: GridColDef[] = [
 
@@ -94,7 +93,7 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
           <IconButton 
             size='small'
             sx={{ mx:5 }}
-            onClick={refresh}
+            onClick={()=>setTime(Date.now())}
             color="primary"
           >
             <Refresh />

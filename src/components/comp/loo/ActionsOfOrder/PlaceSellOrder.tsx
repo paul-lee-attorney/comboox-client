@@ -7,7 +7,7 @@ import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../../../scripts/comp/loo";
 
-export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
+export function PlaceSellOrder({ classOfShare, setTime }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
@@ -27,7 +27,7 @@ export function PlaceSellOrder({ classOfShare: classOfShare, getAllOrders: getAl
             fromHead, 
            ],
     onSuccess() {
-      getAllOrders();
+      setTime(Date.now());
     }
   });
 

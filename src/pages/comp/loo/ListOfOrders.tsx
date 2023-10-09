@@ -1,17 +1,17 @@
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 
-import { useListOfOrdersGetChain, useListOfOrdersInvestorInfoList, useRegisterOfSharesCounterOfClasses } from "../../../generated";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { booxMap } from "../../../scripts/common";
 import { ActionsOfInvestor } from "../../../components/comp/loo/ActionsOfInvestor";
 import { ActionsOfOrder } from "../../../components/comp/loo/ActionsOfOrder";
-import { Deal, defaultDeal, OrderWrap, defaultOrderWrap, Investor } from "../../../scripts/comp/loo";
+import { Deal, defaultDeal, OrderWrap, defaultOrderWrap, Investor, getChain, investorInfoList } from "../../../scripts/comp/loo";
 import { OrdersList } from "../../../components/comp/loo/OrdersList";
 import { InvestorsList } from "../../../components/comp/loo/InvestorsList";
+import { counterOfClasses } from "../../../scripts/comp/ros";
 
 function ListOfOrders() {
 
@@ -22,52 +22,46 @@ function ListOfOrders() {
   const [ classes, setClasses ] = useState<number[]>([]);
   const [ classOfShare, setClassOfShare ] = useState<number>(0);
 
-  const {
-    refetch: getCounterOfClasses
-  } = useRegisterOfSharesCounterOfClasses({
-    address: boox ? boox[booxMap.ROS] : undefined,
-    onSuccess(res) {
-      let i = 1;
-      let list: number[] = [1];
-      while (i <= res) {
-        i++;        
-        list.push(i);
-      }
-      
-      setClasses(list);
+  useEffect(()=>{
+    if (boox) {
+      counterOfClasses(boox[booxMap.LOO]).then(
+        res => {
+          let i = 1;
+          let list: number[] = [1];
+          while (i <= res) {
+            i++;
+            list.push(i);
+          }
+          
+          setClasses(list);
+        }
+      )
     }
-  })
+  }, [boox])
 
   const [ list, setList ] = useState<readonly OrderWrap[]>([]);
-
-  const {
-    refetch: getList
-  } = useListOfOrdersGetChain ({
-    address: boox ? boox[booxMap.LOO] : undefined,
-    args: [BigInt(classOfShare)],
-    onSuccess(res) {
-      setList(res);
-    }
-  });
-
   const [ invList, setInvList ] = useState<readonly Investor[]>([]);
+  const [ time, setTime ] = useState<number>(0);
 
-  const {
-    refetch: getInvList
-  } = useListOfOrdersInvestorInfoList ({
-    address: boox ? boox[booxMap.LOO] : undefined,
-    onSuccess(res) {
-      setInvList(res);
+  useEffect(()=>{
+    if (boox) {
+
+      getChain(boox[booxMap.LOO], classOfShare).then(
+        res => setList(res)
+      );
+
+      investorInfoList(boox[booxMap.LOO]).then(
+        res => setInvList(res)
+      )
+
     }
-  });
+  }, [boox, classOfShare, time]);
+
 
   const [ acct, setAcct ] = useState<string>('0');
 
   const [ order, setOrder ] = useState<OrderWrap>(defaultOrderWrap);
   const [ open, setOpen ] = useState(false);
-
-  const [ deal, setDeal ] = useState<Deal>(defaultDeal);
-  const [ show, setShow ] = useState(false);
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, minWidth:1680, border:1, borderColor:'divider' }} >
@@ -116,38 +110,21 @@ function ListOfOrders() {
         </Stack>
 
         <TabPanel value={0} sx={{ justifyContent:'start', alignItems:'center' }} >
-          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.seq} getAllOrders={getList} />
+          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.seq} setTime={setTime} />
           {list && (
-            <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} refresh={getList}/>
+            <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} setTime={setTime} />
           )}
         </TabPanel>
 
         <TabPanel value={1} sx={{ justifyContent:'start', alignItems:'center' }} >
-          <ActionsOfInvestor acct={acct} getAllInvestors={getInvList} />
+          <ActionsOfInvestor acct={acct} setTime={ setTime } />
           {invList && (
             <InvestorsList list={invList} setAcct={setAcct} />
           )}
         </TabPanel>
 
-
-
       </Tabs>
 
-
-      {/* <Stack direction="row" >
-        <ActionsOfInvestor getAllInvestors={()=>{}} />
-      </Stack> */}
-
-
-      {/* {motion && boox && (
-        <ApprovalFormOfMotion 
-          minutes={boox[booxMap.GMM]}  
-          open={open} 
-          motion={motion} 
-          setOpen={setOpen} 
-          obtainMotionsList={obtainSeqList} 
-        />
-      )} */}
 
     </Paper>
   );

@@ -6,7 +6,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 
 
-export function RequestToBuy({ia, deal, setOpen, refreshDealsList}:ActionsOfDealProps) {
+export function RequestToBuy({addr, deal, setOpen, setTime}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
@@ -18,13 +18,13 @@ export function RequestToBuy({ia, deal, setOpen, refreshDealsList}:ActionsOfDeal
     write: requestToBuy,
   } = useGeneralKeeperRequestToBuy({
     address: gk,
-    args: [ ia,
+    args: [ addr,
             BigInt(deal.head.seqOfDeal), 
             BigInt(paidOfTarget), 
             BigInt(seqOfPledge)
           ],
     onSuccess() {
-      refreshDealsList();
+      setTime(Date.now());
       setOpen(false);
     }
   })

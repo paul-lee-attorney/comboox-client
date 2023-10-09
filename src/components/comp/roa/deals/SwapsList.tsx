@@ -1,28 +1,27 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, } from "@mui/material";
 
 import { longDataParser, longSnParser } from "../../../../scripts/common/toolsKit";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { Swap } from "../../../../scripts/comp/roo";
 import { ActionsOfDealProps } from "./ActionsOfDeal";
-import { useInvestmentAgreementGetAllSwaps } from "../../../../generated";
 import { ListAltOutlined } from "@mui/icons-material";
+import { Deal, getAllSwaps, statesOfSwap } from "../../../../scripts/comp/ia";
+import { HexType } from "../../../../scripts/common";
 
+export interface SwapsListProps {
+  addr: HexType;
+  deal: Deal;
+}
 
-const statesOfSwap = [
-  'Pending', 'Issued', 'Closed', 'Terminated'
-]
-
-export function SwapsList({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps) {
+export function SwapsList({ addr, deal }: SwapsListProps) {
 
   const [ list, setList ] = useState<readonly Swap[]>([]);
 
-  useInvestmentAgreementGetAllSwaps({
-    address: ia,
-    args: [BigInt(deal.head.seqOfDeal)],
-    onSuccess(res) {
-      setList(res);
-    }
+  useEffect(()=>{
+    getAllSwaps(addr, deal.head.seqOfDeal).then(
+      res => setList(res)
+    );
   })
 
   const [ show, setShow ] = useState(false);

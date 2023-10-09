@@ -6,20 +6,20 @@ import { HexType } from "../../../../scripts/common";
 import { CheckValueOfSwap } from "./ActionsOfSwap/CheckValueOfSwap";
 
 export interface ActionsOfSwapProps{
-  ia: HexType;
+  addr: HexType;
   deal: Deal;
-  seqOfSwap: string;
+  seqOfSwap: number;
   setShow: Dispatch<SetStateAction<boolean>>;
 }
 
-export function ActionsOfSwap({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
+export function ActionsOfSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
   const actionsOfSwap = ['Check Value', 'Payoff Swap', 'Pickup Pledge'];
 
   const compsOfAction = [
-    <CheckValueOfSwap key={0} ia={ia} deal={deal} seqOfSwap={seqOfSwap} setShow={setShow} />,
+    <CheckValueOfSwap key={0} addr={addr} deal={deal} seqOfSwap={seqOfSwap} setShow={setShow} />,
   ]
 
   return(

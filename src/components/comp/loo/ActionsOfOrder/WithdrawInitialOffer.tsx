@@ -7,7 +7,7 @@ import { useGeneralKeeperWithdrawInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 
-export function WithdrawInitialOffer({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
+export function WithdrawInitialOffer({ classOfShare, setTime }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
@@ -22,7 +22,7 @@ export function WithdrawInitialOffer({ classOfShare: classOfShare, getAllOrders:
             BigInt(offer.seqOfLR), 
            ],
     onSuccess() {
-      getAllOrders();
+      setTime(Date.now());
     }
   });
 

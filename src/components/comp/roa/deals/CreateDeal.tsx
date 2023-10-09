@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
 
 import { HexType, booxMap } from "../../../../scripts/common";
 
@@ -24,31 +24,15 @@ import { AddCircle } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Body, Head, TypeOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
+import { Body, Head, TypeOfDeal, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
 
-export function codifyHeadOfDeal(head: Head): HexType {
-  let hexSn:HexType = `0x${
-    (head.typeOfDeal.toString(16).padStart(2, '0')) +
-    (head.seqOfDeal.toString(16).padStart(4, '0')) +
-    (head.preSeq.toString(16).padStart(4, '0')) +
-    (head.classOfShare.toString(16).padStart(4, '0')) +
-    (head.seqOfShare.toString(16).padStart(8, '0')) +
-    (head.seller.toString(16).padStart(10, '0')) +
-    (head.priceOfPaid.toString(16).padStart(8, '0')) +
-    (head.priceOfPar.toString(16).padStart(8, '0')) +
-    (head.closingDeadline.toString(16).padStart(12, '0')) + 
-    (head.votingWeight.toString(16).padStart(4, '0'))
-  }`;
-  return hexSn;
+export interface CreateDealProps{
+  addr: HexType;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-interface CreateDealProps{
-  ia: HexType;
-  refreshDealsList: ()=>void;
-}
-
-export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
+export function CreateDeal({addr, setTime}: CreateDealProps) {
 
   const { boox } = useComBooxContext();
 
@@ -59,7 +43,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
     isLoading: addDealLoading,
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
-    address: ia,
+    address: addr,
     args: [ codifyHeadOfDeal(head),
             BigInt(body.buyer),
             BigInt(body.groupOfBuyer),
@@ -67,7 +51,7 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
             body.par            
           ],
     onSuccess() {
-      refreshDealsList()
+      setTime(Date.now())
     }
   });
 
@@ -99,7 +83,6 @@ export function CreateDeal({ia, refreshDealsList}: CreateDealProps) {
     }
 
   }
-
 
   return (
     <Paper elevation={3} sx={{p:1, m:1, border: 1, borderColor:'divider' }} >

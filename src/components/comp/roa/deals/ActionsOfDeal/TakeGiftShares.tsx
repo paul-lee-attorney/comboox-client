@@ -6,12 +6,12 @@ import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HandshakeOutlined } from "@mui/icons-material";
 
 
-export function TakeGiftShares({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export function TakeGiftShares({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const closeOrderOfDeal = ()=>{
     setDeal(defaultDeal);
-    refreshDealsList();
+    setTime(Date.now());
     setOpen(false);    
   }
 
@@ -20,7 +20,7 @@ export function TakeGiftShares({ ia, deal, setOpen, setDeal, refreshDealsList}: 
     write: takeGiftShare
   } = useGeneralKeeperTakeGiftShares({
     address: gk,
-    args: [ia, BigInt(deal.head.seqOfDeal)],
+    args: [addr, BigInt(deal.head.seqOfDeal)],
     onSuccess() {
       closeOrderOfDeal()
     }

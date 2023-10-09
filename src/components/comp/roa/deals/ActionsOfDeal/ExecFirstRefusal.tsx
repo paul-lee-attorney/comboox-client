@@ -1,40 +1,48 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Bytes32Zero, HexType, booxMap } from "../../../../../scripts/common";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
-import { useRegisterOfConstitutionPointer, useGeneralKeeperExecFirstRefusal } from "../../../../../generated";
-import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { useGeneralKeeperExecFirstRefusal } from "../../../../../generated";
+import { 
+  Button, 
+  Divider, 
+  FormControl, 
+  InputLabel, 
+  MenuItem, 
+  Paper, 
+  Select, 
+  Stack, 
+  TextField 
+} from "@mui/material";
 import { EmojiPeopleOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
 import { HexParser, longSnParser } from "../../../../../scripts/common/toolsKit";
+import { getSha } from "../../../../../scripts/comp/roc";
 
-export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:ActionsOfDealProps) {
+export function ExecFirstRefusal({addr, deal, setOpen, setDeal, setTime}:ActionsOfDealProps) {
 
   const { gk, boox } = useComBooxContext();
 
   const [ rules, setRules ] = useState<FirstRefusalRule[]>();
 
-  useRegisterOfConstitutionPointer({
-    address: boox ? boox[booxMap.ROC] : undefined,
-    onSuccess(sha) {
-      getFirstRefusalRules(sha).then(
-        list => setRules(list)
+  useEffect(()=>{
+    if (boox) {
+      getSha(boox[booxMap.ROC]).then(
+        sha => {
+          getFirstRefusalRules(sha).then(
+            list => setRules(list)
+          );
+        }
       )
     }
-  })
+  }, [boox]);
   
   const [ seqOfRule, setSeqOfRule ] = useState<number>(512);
   const [ seqOfRightholder, setSeqOfRightholder ] = useState<number>(0);
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
-
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
-  }
 
   const {
     isLoading: execFirstRefusalLoading,
@@ -43,12 +51,14 @@ export function ExecFirstRefusal({ia, deal, setOpen, setDeal, refreshDealsList}:
     address: gk,
     args: [ BigInt(seqOfRule),
             BigInt(seqOfRightholder),
-            ia, 
+            addr, 
             BigInt(deal.head.seqOfDeal), 
             sigHash 
           ],
     onSuccess() {
-      closeOrderOfDeal();
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);    
     }
   })
 

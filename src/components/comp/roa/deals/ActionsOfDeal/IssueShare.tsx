@@ -6,23 +6,19 @@ import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { RocketLaunch } from "@mui/icons-material";
 
 
-export function IssueShare({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export function IssueShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
-
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
-  }
 
   const {
     isLoading: issueNewShareLoading,
     write: issueNewShare
   } = useGeneralKeeperIssueNewShare({
     address: gk,
-    args: [ia, BigInt(deal.head.seqOfDeal)],
+    args: [addr, BigInt(deal.head.seqOfDeal)],
     onSuccess() {
-      closeOrderOfDeal()
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);    
     }
   });
 

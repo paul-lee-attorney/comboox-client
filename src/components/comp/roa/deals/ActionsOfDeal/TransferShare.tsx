@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, Toolbar } from "@mui/material";
+import { Button, Paper, Stack } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperTransferTargetShare } from "../../../../../generated";
@@ -6,12 +6,12 @@ import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { CurrencyExchange } from "@mui/icons-material";
 
 
-export function TransferShare({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export function TransferShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const closeOrderOfDeal = ()=>{
     setDeal(defaultDeal);
-    refreshDealsList();
+    setTime(Date.now());
     setOpen(false);    
   }
 
@@ -20,7 +20,7 @@ export function TransferShare({ ia, deal, setOpen, setDeal, refreshDealsList}: A
     write: transferTargetShare
   } = useGeneralKeeperTransferTargetShare({
     address: gk,
-    args: [ia, BigInt(deal.head.seqOfDeal)],
+    args: [addr, BigInt(deal.head.seqOfDeal)],
     onSuccess() {
       closeOrderOfDeal()
     }

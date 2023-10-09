@@ -1,38 +1,27 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
 import { Help } from "@mui/icons-material";
-import { useInvestmentAgreementCheckValueOfDeal } from "../../../../generated";
 import { getEthPart, getGWeiPart, getWeiPart, weiToEth } from "../../../../scripts/common/toolsKit";
-import { HexType } from "../../../../scripts/common";
-import { Deal } from "../../../../scripts/comp/ia";
+import { checkValueOfDeal } from "../../../../scripts/comp/ia";
+import { SwapsListProps } from "./SwapsList";
 
-interface CheckValueOfDealProps {
-  ia: HexType;
-  deal: Deal;
-}
 
-export function CheckValueOfDeal({ia, deal}: CheckValueOfDealProps) {
+export function CheckValueOfDeal({addr, deal}: SwapsListProps) {
 
   const [ value, setValue ] = useState<bigint>(BigInt(0));
 
-  const {
-    refetch: checkValueOfDeal
-  } = useInvestmentAgreementCheckValueOfDeal({
-    address: ia,
-    args: [BigInt(deal.head.seqOfDeal)],
-    onSuccess(res) {
-      setValue(res);
-    }
-  })
+  useEffect(()=>{
+    checkValueOfDeal(addr, deal.head.seqOfDeal).then(
+      res => setValue(res)
+    );
+  }, [addr, deal.head.seqOfDeal]);
 
   const [ open, setOpen ] = useState<boolean>(false);
 
   const handleClick = () => {
-    checkValueOfDeal();
     setOpen(true);
   }
-
 
   return (
     <>

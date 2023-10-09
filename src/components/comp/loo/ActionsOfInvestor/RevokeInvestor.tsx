@@ -7,7 +7,7 @@ import { useGeneralKeeperRevokeInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 
 
-export function RevokeInvestor({ acct: acct, getAllInvestors: getAllInvestors }: ActionsOfInvestorProps) {
+export function RevokeInvestor({ acct, setTime }: ActionsOfInvestorProps) {
   const { gk } = useComBooxContext();
 
   const [ userNo, setUserNo ] = useState<string>(acct);
@@ -22,7 +22,7 @@ export function RevokeInvestor({ acct: acct, getAllInvestors: getAllInvestors }:
             BigInt(seqOfLR)
           ],
     onSuccess() {
-      getAllInvestors();
+      setTime(Date.now());
     }
   });
 

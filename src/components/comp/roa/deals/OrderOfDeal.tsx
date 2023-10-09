@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Deal, StateOfDeal, TypeOfDeal } from "../../../../scripts/comp/ia";
+import { Deal, StateOfDeal, Timeline, TypeOfDeal, defaultTimeline, getAllSwaps } from "../../../../scripts/comp/ia";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 import { centToDollar, dateParser, longDataParser, longSnParser, } from "../../../../scripts/common/toolsKit";
 import { DeleteDeal } from "./DeleteDeal";
@@ -8,139 +8,90 @@ import { ActionsOfDeal } from "./ActionsOfDeal";
 import { GetDTClaims } from "./GetDTClaims";
 import { CheckValueOfDeal } from "./CheckValueOfDeal";
 import { GetFRClaims } from "./GetFRClaims";
-import { useFilesFolderClosingDeadline, useFilesFolderDtExecDeadline, useFilesFolderFrExecDeadline, useFilesFolderGetFile, useFilesFolderTerminateStartpoint, useFilesFolderVotingDeadline, useInvestmentAgreementGetAllSwaps } from "../../../../generated";
 import { Swap } from "../../../../scripts/comp/roo";
 import { SwapsList } from "./SwapsList";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { usePublicClient } from "wagmi";
+import { closingDeadline, dtExecDeadline, frExecDeadline, getFile, terminateStartpoint, votingDeadline } from "../../../../scripts/common/filesFolder";
 
 interface OrderOfDealProps {
-  ia: HexType;
+  addr: HexType;
   isFinalized: boolean;
   open: boolean;
   deal: Deal;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
-  refreshDealsList: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export interface Timeline {
-  frDeadline: number;
-  dtDeadline: number;
-  terminateStart: number;
-  votingDeadline: number;
-  closingDeadline: number;
-  stateOfFile: number;
-}
-
-export const defaultTimeline: Timeline = {
-  frDeadline: 0,
-  dtDeadline: 0,
-  terminateStart: 0,
-  votingDeadline: 0,
-  closingDeadline: 0,
-  stateOfFile: 0,
-}
-
-export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, refreshDealsList}: OrderOfDealProps) {
+export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, setTime}: OrderOfDealProps) {
 
   const { boox } = useComBooxContext();
 
   const [ swaps, setSwaps ] = useState<readonly Swap[]>();
   
-  const {
-    refetch: getAllSwaps
-  } = useInvestmentAgreementGetAllSwaps({
-    address: ia,
-    args: [ BigInt(deal.head.seqOfDeal) ],
-    onSuccess(res) {
-      if (res.length > 0)
-        setSwaps(res);
-    }
-  })
+  useEffect(()=>{
+    getAllSwaps(addr, deal.head.seqOfDeal).then(
+      res => {
+        if (res.length > 0)
+          setSwaps(res);
+      }
+    )    
+  }, [addr, deal.head.seqOfDeal]);
 
   const [ timeline, setTimeline ] = useState<Timeline>(defaultTimeline);
 
-  useFilesFolderFrExecDeadline({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: [ia],
-    onSuccess(res){
-      setTimeline(v => ({
-        ...v,
-        frDeadline: res,
-      }));
+  useEffect(()=>{
+    if (boox) {
+      frExecDeadline(boox[booxMap.ROA], addr).then(
+        res => setTimeline(v => ({
+          ...v,
+          frDeadline: res,
+        }))
+      );
+      dtExecDeadline(boox[booxMap.ROA], addr).then(
+        res => setTimeline(v => ({
+          ...v,
+          dtDeadline: res,
+        }))
+      );
+      terminateStartpoint(boox[booxMap.ROA], addr).then(
+        res => setTimeline(v => ({
+          ...v,
+          terminateStart: res,
+        }))
+      );
+      votingDeadline(boox[booxMap.ROA], addr).then(
+        res => setTimeline(v => ({
+          ...v,
+          votingDeadline: res,
+        }))
+      );
+      closingDeadline(boox[booxMap.ROA], addr).then(
+        res => setTimeline(v => ({
+          ...v,
+          closingDeadline: res,
+        }))
+      );
+      getFile(boox[booxMap.ROA], addr).then(
+        res => setTimeline(v => ({
+          ...v,
+          stateOfFile: res.head.state,
+        }))
+      );
     }
-  });
-
-  useFilesFolderDtExecDeadline({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: [ia],
-    onSuccess(res){
-      setTimeline(v => ({
-        ...v,
-        dtDeadline: res,
-      }));
-    }
-  });
-
-  useFilesFolderTerminateStartpoint({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: [ia],
-    onSuccess(res){
-      setTimeline(v => ({
-        ...v,
-        terminateStart: res,
-      }));
-    }
-  });
-
-  useFilesFolderVotingDeadline({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: [ia],
-    onSuccess(res){
-      setTimeline(v => ({
-        ...v,
-        votingDeadline: res,
-      }));
-    }
-  });
-
-  useFilesFolderClosingDeadline({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: [ia],
-    onSuccess(res){
-      setTimeline(v => ({
-        ...v,
-        closingDeadline: res,
-      }));
-    }
-  });
-
-  useFilesFolderGetFile({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: [ia],
-    onSuccess(res){
-      setTimeline(v => ({
-        ...v,
-        stateOfFile: res.head.state,
-      }));
-    }
-  });
+  }, [boox, addr]);
 
   const provider = usePublicClient();
 
   const [ timestamp, setTimestamp ] = useState<number>(0);
   
   useEffect(()=>{
-    const getTimestamp = async () => {
-      let block = await provider.getBlock();
-      setTimestamp(Number(block.timestamp));
-    }
+    provider.getBlock().then(
+      block => setTimestamp(Number(block.timestamp))
+    );
+  }, [provider]);
 
-    getTimestamp();
-  })
-
-  
   return (
     <Dialog
       maxWidth={false}
@@ -154,8 +105,8 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
         </DialogTitle>
 
         {!isFinalized && (
-          <DeleteDeal ia={ia} seqOfDeal={deal.head.seqOfDeal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />
-        )}        
+          <DeleteDeal addr={addr} seqOfDeal={deal.head.seqOfDeal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />
+        )}
 
       </Stack>
       <DialogContent> 
@@ -409,23 +360,23 @@ export function OrderOfDeal({ ia, isFinalized, open, deal, setOpen, setDeal, ref
 
             <tr>
               <td>
-                <GetDTClaims ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} timeline={timeline} timestamp={timestamp}/>
+                <GetDTClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} timeline={timeline} timestamp={timestamp}/>
               </td>
               <td>
-                <GetFRClaims ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} timeline={timeline} timestamp={timestamp}/>
+                <GetFRClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} timeline={timeline} timestamp={timestamp}/>
               </td>
               <td>
-                <SwapsList ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />
+                <SwapsList addr={addr} deal={deal} />
               </td>
               <td>
-                <CheckValueOfDeal ia={ia} deal={deal} />
+                <CheckValueOfDeal addr={addr} deal={deal} />
               </td>
             </tr>
 
             <tr>
               <td colSpan={4}>
                 {deal.body.state > 0 && (
-                  <ActionsOfDeal ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} timeline={timeline} timestamp={timestamp} />
+                  <ActionsOfDeal addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} timeline={timeline} timestamp={timestamp} />
                 )}
               </td>
             </tr>

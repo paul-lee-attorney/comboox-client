@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 
 import { HexType, booxMap } from "../../../../scripts/common";
-
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
 import { voteEnded } from "../../../../scripts/common/meetingMinutes";
@@ -20,18 +19,17 @@ import { SignIa } from "./SignIa";
 import { CirculateIa } from "./CirculateIa";
 import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
-import { useFilesFolderGetHeadOfFile } from "../../../../generated";
 import { FinalizeIa } from "./FinalizeIa";
 import { getTypeOfIA } from "../../../../scripts/comp/ia";
 import { established } from "../../../../scripts/common/sigPage";
-
+import { getHeadOfFile } from "../../../../scripts/common/filesFolder";
 
 interface IaLifecycleProps {
-  ia: HexType;
+  addr: HexType;
   isFinalized: boolean;
 }
 
-export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
+export function IaLifecycle({addr, isFinalized}: IaLifecycleProps) {
 
   const { boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(0);
@@ -41,48 +39,48 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
   const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
 
   useEffect(()=>{
-    getTypeOfIA(ia).then(
+    getTypeOfIA(addr).then(
       res => setTypeOfIa(res)
     )
-  }, [ia, activeStep])
+  }, [addr, activeStep])
 
-  useFilesFolderGetHeadOfFile({
-    address: boox ? boox[booxMap.ROA] : undefined,
-    args: ia ? [ia] : undefined,
-    onSuccess(head) {
-      let seq = head.seqOfMotion;
-      if (seq) setSeqOfMotion(seq);
-
-      let fileState = head.state;
-      let flag = false;
-
-      switch (fileState) {
-          case 1: 
-            setActiveStep(finalized ? 1: 0);
-            break;
-          case 2:
-            established(ia).then(
-              flag => setActiveStep(flag ? 3 : 2)
-            )
-            break;
-          case 3: 
-            if (boox ) voteEnded(boox[booxMap.GMM], seq).then(
-              flag => setActiveStep(flag ? 5 : 4)
-            );            
-            break;
-          case 4: 
-            setActiveStep(6);
-            break;
-          case 5: // Rejected
-            setActiveStep(8);
-            break;
-          default:
-            setActiveStep(fileState + 1);
-      }
-
+  useEffect(()=>{
+    if (boox) {
+      getHeadOfFile(boox[booxMap.ROA], addr).then(
+        head => {
+          let seq = head.seqOfMotion;
+          if (seq) setSeqOfMotion(seq);
+    
+          let fileState = head.state;
+          let flag = false;
+    
+          switch (fileState) {
+              case 1: 
+                setActiveStep(finalized ? 1: 0);
+                break;
+              case 2:
+                established(addr).then(
+                  flag => setActiveStep(flag ? 3 : 2)
+                )
+                break;
+              case 3: 
+                if (boox ) voteEnded(boox[booxMap.GMM], seq).then(
+                  flag => setActiveStep(flag ? 5 : 4)
+                );
+                break;
+              case 4: 
+                setActiveStep(6);
+                break;
+              case 5: // Rejected
+                setActiveStep(8);
+                break;
+              default:
+                setActiveStep(fileState + 1);
+          }    
+        }
+      )
     }
-  })
-
+  }, [boox, addr, finalized]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -107,9 +105,8 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of IA (only for Owner of IA).
                   </Typography>
-                  {/* <LockContents addr={ ia } setIsFinalized={setFinalized} setNextStep={ setActiveStep } /> */}
 
-                  <FinalizeIa addr={ ia } setIsFinalized={ setFinalized } setNextStep={ setActiveStep }  />
+                  <FinalizeIa addr={ addr } setIsFinalized={ setFinalized } setNextStep={ setActiveStep }  />
                 </StepContent>
 
               </Step>
@@ -123,7 +120,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   <Typography>
                     Circulate IA to parties for execution (only for Parties of IA).
                   </Typography>
-                  <CirculateIa addr={ ia } setNextStep={ setActiveStep } />
+                  <CirculateIa addr={ addr } setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>
@@ -137,7 +134,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                   <Typography>
                     Sign IA to accept its terms (only for Parties of IA).
                   </Typography>
-                  <SignIa addr={ ia } setNextStep={ setActiveStep } />
+                  <SignIa addr={ addr } setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>
@@ -152,7 +149,7 @@ export function IaLifecycle({ia, isFinalized}: IaLifecycleProps) {
                     Propose IA to General Meeting for approval (only for Parties & Members).
                   </Typography>
                   {typeOfIa && (
-                    <ProposeDocOfGm addr={ ia } seqOfVR={typeOfIa} setNextStep={ setActiveStep } />
+                    <ProposeDocOfGm addr={ addr } seqOfVR={typeOfIa} setNextStep={ setActiveStep } />
                   )}
                 </StepContent>
 

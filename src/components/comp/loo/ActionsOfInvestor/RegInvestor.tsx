@@ -9,7 +9,7 @@ import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType } from "../../../../scripts/common";
 
 
-export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvestorProps) {
+export function RegInvestor({ setTime }: ActionsOfInvestorProps) {
   const {gk} = useComBooxContext();
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
@@ -24,7 +24,7 @@ export function RegInvestor({getAllInvestors: getAllInvestors }: ActionsOfInvest
             idHash
           ],
     onSuccess() {
-      getAllInvestors();
+      setTime(Date.now());
     }
   });
 

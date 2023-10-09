@@ -1,4 +1,6 @@
+import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
+import { listOfOrdersABI } from "../../generated";
 
 
 export const statesOfInvestor = [
@@ -92,5 +94,172 @@ export const defaultDeal: Deal = {
   price: 0,
   votingWeight: 0,
 }
+
+export async function isInvestor(addr: HexType,  userNo: number):Promise<boolean>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'isInvestor',
+    args: [ BigInt(userNo) ]
+  });
+
+  return res;
+}
+
+export async function getInvestor(addr: HexType,  userNo: number):Promise<Investor>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'getInvestor',
+    args: [ BigInt(userNo) ]
+  });
+
+  return res;
+}
+
+export async function getQtyOfInvestors(addr: HexType):Promise<bigint>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'getQtyOfInvestors',
+  });
+
+  return res;
+}
+
+export async function investorList(addr: HexType):Promise<readonly bigint[]>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'investorList',
+  });
+
+  return res;
+}
+
+export async function investorInfoList(addr: HexType):Promise<readonly Investor[]>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'investorInfoList',
+  });
+
+  return res;
+}
+
+// ==== Deals ====
+
+export async function counterOfOffers(addr: HexType, classOfShare:number):Promise<number>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'counterOfOffers',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+export async function headOfList(addr: HexType, classOfShare:number):Promise<number>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'headOfList',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+export async function tailOfList(addr: HexType, classOfShare:number):Promise<number>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'tailOfList',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+export async function lengthOfList(addr: HexType, classOfShare:number):Promise<bigint>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'lengthOfList',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+export async function getSeqList(addr: HexType, classOfShare:number):Promise<readonly bigint[]>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'getSeqList',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+export async function getChain(addr: HexType, classOfShare:number):Promise<readonly OrderWrap[]>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'getChain',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+// ==== Order ====
+
+
+export async function isOrder(addr: HexType, classOfShare:number, seqOfOrder: number):Promise<boolean>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'isOrder',
+    args: [ BigInt(classOfShare), BigInt(seqOfOrder) ]
+  });
+
+  return res;
+}
+
+export async function getOrder(addr: HexType, classOfShare:number, seqOfOrder: number):Promise<Order>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'getOrder',
+    args: [ BigInt(classOfShare), BigInt(seqOfOrder) ]
+  });
+
+  return res;
+}
+
+export async function isClass(addr: HexType, classOfShare:number):Promise<boolean>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'isClass',
+    args: [ BigInt(classOfShare) ]
+  });
+
+  return res;
+}
+
+export async function getClassesList(addr: HexType):Promise<readonly bigint[]>{
+  let res = await readContract({
+    address: addr,
+    abi: listOfOrdersABI,
+    functionName: 'getClassesList',
+  });
+
+  return res;
+}
+
 
 

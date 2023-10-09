@@ -7,7 +7,7 @@ import { useGeneralKeeperApproveInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 
 
-export function ApproveInvestor({acct: acct, getAllInvestors: getAllInvestors }: ActionsOfInvestorProps) {
+export function ApproveInvestor({acct, setTime }: ActionsOfInvestorProps) {
   const { gk } = useComBooxContext();
 
   const [ userNo, setUserNo ] = useState<string>(acct);
@@ -22,7 +22,7 @@ export function ApproveInvestor({acct: acct, getAllInvestors: getAllInvestors }:
             BigInt(seqOfLR)
           ],
     onSuccess() {
-      getAllInvestors();
+      setTime(Date.now());
     }
   });
 

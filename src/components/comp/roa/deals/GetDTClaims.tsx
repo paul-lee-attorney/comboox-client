@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
@@ -6,23 +6,17 @@ import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperAcceptAlongDeal, useRegisterOfAgreementsHasDtClaims, } from "../../../../generated";
 import { HexParser, centToDollar, dateParser, longSnParser } from "../../../../scripts/common/toolsKit";
 import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
-import { DTClaim, getDTClaimsOfDeal } from "../../../../scripts/comp/roa";
+import { DTClaim, getDTClaimsOfDeal, hasDTClaims } from "../../../../scripts/comp/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 
-export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
+export function GetDTClaims({addr, deal, setOpen, setDeal, setTime, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
 
   const [ claims, setClaims ] = useState<readonly DTClaim[]>([]);
   const [ appear, setAppear ] = useState(false);
-
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
-  }
 
   const columns: GridColDef[] = [
     {
@@ -93,19 +87,20 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
       )
     },
   ];
-  
-  const {
-    refetch: getDTClaims,
-  } = useRegisterOfAgreementsHasDtClaims({
-    address: boox ? boox[booxMap.ROA] : undefined,
-    args: [ia, BigInt(deal.head.seqOfDeal)],
-    onSuccess(flag) {
-      if (flag && boox)
-        getDTClaimsOfDeal(boox[booxMap.ROA], ia, deal.head.seqOfDeal).
-          then(v => setClaims(v));
-    }
-  })
 
+  useEffect(()=>{
+    if (boox) {
+      hasDTClaims(boox[booxMap.ROA], addr, deal.head.seqOfDeal).then(
+        flag => {
+          if (flag) {
+            getDTClaimsOfDeal(boox[booxMap.ROA], addr, deal.head.seqOfDeal).then(
+              v => setClaims(v)
+            );
+          }
+        }
+      );
+    }
+  }, [boox, addr, deal.head.seqOfDeal]);
 
   const handleClick = async () => {
     setAppear(true);
@@ -118,9 +113,11 @@ export function GetDTClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
     write: acceptAlongDeal,
   } = useGeneralKeeperAcceptAlongDeal({
     address: gk,
-    args: [ ia, BigInt(deal.head.seqOfDeal), sigHash],
+    args: [ addr, BigInt(deal.head.seqOfDeal), sigHash],
     onSuccess() {
-      closeOrderOfDeal()
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);    
     }
   })
 

@@ -1,51 +1,39 @@
 import { Alert, Box, Button, Stack, TextField, } from "@mui/material";
-import { useGeneralKeeperSignIa, useSigPageEstablished, useSigPageGetParasOfPage } from "../../../../generated";
+import { useGeneralKeeperSignIa } from "../../../../generated";
 import { Bytes32Zero, HexType, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
-import { useState } from "react";
-import { ParasOfSigPage, parseParasOfPage } from "../../../../scripts/common/sigPage";
+import { useEffect, useState } from "react";
+import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../../scripts/common/sigPage";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 import { FileHistoryProps } from "../../roc/sha/Actions/CirculateSha";
 
 export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
 
-  const {
-    refetch: getParasOfPage
-  } = useSigPageGetParasOfPage({
-    address: addr,
-    args: [true],
-    onSuccess(res) {
-      setParasOfPage(parseParasOfPage(res));
-    }
-  })
-
-  const {
-    refetch: isEstablished
-  } = useSigPageEstablished({
-    address: addr,
-    onSuccess(res) {
-      if (res) setNextStep(3);
-    }
-  })
-
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
 
   const {
-    isLoading,
-    write
+    isLoading: signIaLoading,
+    write: signIa
   } = useGeneralKeeperSignIa({
     address: gk,
     args: sigHash
       ? [addr, sigHash]
       : undefined,
-    onSuccess() {
-      getParasOfPage();
-      isEstablished();
-    }
   });
+
+  useEffect(()=>{
+    getParasOfPage(addr, true).then(
+      para => setParasOfPage(parseParasOfPage(para))
+    );
+    established(addr).then(
+      flag => {
+        if (flag) setNextStep(3);
+      }
+    );
+  }, [addr, setNextStep, signIa]);
 
   return (
     <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
@@ -61,11 +49,11 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
       />                                            
 
       <Button
-        disabled={!write || isLoading}
+        disabled={!signIa || signIaLoading}
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, minWidth:218, height:40 }}
-        onClick={()=>write?.()}
+        onClick={()=>signIa?.()}
       >
         Sign Ia
       </Button>

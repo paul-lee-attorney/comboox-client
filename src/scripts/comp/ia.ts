@@ -1,6 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { Bytes32Zero, HexType } from "../common";
 import { investmentAgreementABI } from "../../generated";
+import { Swap } from "./roo";
 
 export const TypeOfDeal = [
   'CapitalIncrease', 
@@ -92,6 +93,48 @@ export interface Deal {
   hashLock: HexType;
 }
 
+export function codifyHeadOfDeal(head: Head): HexType {
+  let hexSn:HexType = `0x${
+    (head.typeOfDeal.toString(16).padStart(2, '0')) +
+    (head.seqOfDeal.toString(16).padStart(4, '0')) +
+    (head.preSeq.toString(16).padStart(4, '0')) +
+    (head.classOfShare.toString(16).padStart(4, '0')) +
+    (head.seqOfShare.toString(16).padStart(8, '0')) +
+    (head.seller.toString(16).padStart(10, '0')) +
+    (head.priceOfPaid.toString(16).padStart(8, '0')) +
+    (head.priceOfPar.toString(16).padStart(8, '0')) +
+    (head.closingDeadline.toString(16).padStart(12, '0')) + 
+    (head.votingWeight.toString(16).padStart(4, '0'))
+  }`;
+  return hexSn;
+}
+
+export const dealState = ['Drafting', 'Locked', 'Cleared', 'Closed', 'Terminated'];
+
+export interface Timeline {
+  frDeadline: number;
+  dtDeadline: number;
+  terminateStart: number;
+  votingDeadline: number;
+  closingDeadline: number;
+  stateOfFile: number;
+}
+
+export const defaultTimeline: Timeline = {
+  frDeadline: 0,
+  dtDeadline: 0,
+  terminateStart: 0,
+  votingDeadline: 0,
+  closingDeadline: 0,
+  stateOfFile: 0,
+}
+
+export const statesOfSwap = [
+  'Pending', 'Issued', 'Closed', 'Terminated'
+]
+
+
+
 export async function getTypeOfIA(ia: HexType):Promise<number>{
   let typeOfIa = await readContract({
     address: ia,
@@ -123,6 +166,53 @@ export async function getSeqList(ia: HexType):Promise<readonly bigint[]>{
   return list;
 }
 
+export async function obtainDealsList(addr: HexType, seqList: readonly bigint[]): Promise<Deal[]> {
+  let list: Deal[] = [];
+  let len = seqList.length;
+
+  while (len > 0) {
+    list.push(await getDeal(addr, seqList[len - 1]));
+    len--;
+  }
+
+  return list;
+}
+
+// ==== Swap ====
+
+export async function getSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number): Promise<Swap> {
+  let res = await readContract({
+    address: ia,
+    abi: investmentAgreementABI,
+    functionName: 'getSwap',
+    args: [BigInt(seqOfDeal), BigInt(seqOfSwap)],
+  });
+
+  return res;
+}
+
+export async function getAllSwaps(ia: HexType, seqOfDeal: number): Promise<readonly Swap[]> {
+  let res = await readContract({
+    address: ia,
+    abi: investmentAgreementABI,
+    functionName: 'getAllSwaps',
+    args: [BigInt(seqOfDeal)],
+  });
+
+  return res;
+}
+
+export async function allSwapsClosed(ia: HexType, seqOfDeal: number): Promise<boolean> {
+  let res = await readContract({
+    address: ia,
+    abi: investmentAgreementABI,
+    functionName: 'allSwapsClosed',
+    args: [BigInt(seqOfDeal)],
+  });
+
+  return res;
+}
+
 export async function checkValueOfSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number): Promise<bigint> {
   let res = await readContract({
     address: ia,
@@ -133,3 +223,15 @@ export async function checkValueOfSwap(ia: HexType, seqOfDeal: number, seqOfSwap
 
   return res;
 }
+
+export async function checkValueOfDeal(ia: HexType, seqOfDeal: number): Promise<bigint> {
+  let res = await readContract({
+    address: ia,
+    abi: investmentAgreementABI,
+    functionName: 'checkValueOfDeal',
+    args: [BigInt(seqOfDeal)],
+  });
+
+  return res;
+}
+

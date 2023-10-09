@@ -5,7 +5,7 @@ import { useGeneralKeeperPayOffRejectedDeal } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
-export function PayOffSwap({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
+export function PayOffSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
   const { gk } = useComBooxContext();
 
@@ -14,7 +14,7 @@ export function PayOffSwap({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
     write: payOffSwap,
   } = useGeneralKeeperPayOffRejectedDeal({
     address: gk,
-    args: [ia, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
+    args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
     onSuccess() {
       setShow(false);
     }

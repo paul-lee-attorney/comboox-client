@@ -8,7 +8,7 @@ import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 
 
-export function PlaceInitialOffer({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
+export function PlaceInitialOffer({ classOfShare, setTime }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
@@ -25,7 +25,7 @@ export function PlaceInitialOffer({ classOfShare: classOfShare, getAllOrders: ge
             BigInt(offer.seqOfLR), 
            ],
     onSuccess() {
-      getAllOrders();
+      setTime(Date.now());
     }
   });
 

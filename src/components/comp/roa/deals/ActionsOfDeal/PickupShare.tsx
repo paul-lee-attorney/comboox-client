@@ -6,15 +6,15 @@ import { useGeneralKeeperCloseDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { LockOpen } from "@mui/icons-material";
 
-export function PickupShare({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export function PickupShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ hashKey, setHashKey ] = useState<string>('Input your key string here');
 
   const closeOrderOfDeal = ()=>{
     setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
+    setTime(Date.now());
+    setOpen(false);
   }
 
   const {
@@ -22,7 +22,7 @@ export function PickupShare({ ia, deal, setOpen, setDeal, refreshDealsList}: Act
     write: closeDeal
   } = useGeneralKeeperCloseDeal({
     address: gk,
-    args: [ia, BigInt(deal.head.seqOfDeal), hashKey],
+    args: [addr, BigInt(deal.head.seqOfDeal), hashKey],
     onSuccess() {
       closeOrderOfDeal();
     }

@@ -1,28 +1,22 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Toolbar } from "@mui/material";
 import { Calculate, ListAltOutlined } from "@mui/icons-material";
-import { useGeneralKeeperComputeFirstRefusal, useRegisterOfAgreementsHasFrClaims } from "../../../../generated";
+import { useGeneralKeeperComputeFirstRefusal } from "../../../../generated";
 import { centToDollar, dateParser, longSnParser, toPercent } from "../../../../scripts/common/toolsKit";
 import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
-import { FRClaim, getFRClaimsOfDeal } from "../../../../scripts/comp/roa";
+import { FRClaim, getFRClaimsOfDeal, hasFRClaims } from "../../../../scripts/comp/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 import { booxMap } from "../../../../scripts/common";
 
-export function GetFRClaims({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
+export function GetFRClaims({addr, deal, setOpen, setDeal, setTime, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
 
   const [ claims, setClaims ] = useState<readonly FRClaim[]>([]);
   const [ appear, setAppear ] = useState(false);
-
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);
-  }
 
   const columns: GridColDef[] = [
     {
@@ -79,17 +73,17 @@ export function GetFRClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
     },
   ]
   
-  const {
-    refetch: getFRClaims,
-  } = useRegisterOfAgreementsHasFrClaims({
-    address: boox ? boox[booxMap.ROA] : undefined,
-    args: [ia, BigInt(deal.head.seqOfDeal)],
-    onSuccess(flag) {
-      if (flag && boox)
-        getFRClaimsOfDeal(boox[booxMap.ROA], ia, deal.head.seqOfDeal).
-          then(v => setClaims(v));
+  useEffect(()=>{
+    if (boox) {
+      hasFRClaims(boox[booxMap.ROA], addr, deal.head.seqOfDeal).then(
+        flag => {
+          if (flag) getFRClaimsOfDeal(boox[booxMap.ROA], addr, deal.head.seqOfDeal).then(
+            v => setClaims(v)
+          );
+        }
+      );
     }
-  })
+  }, [boox, addr, deal.head.seqOfDeal]);
 
   const handleClick = () => {
     setAppear(true);
@@ -100,9 +94,11 @@ export function GetFRClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
     write: computeFirstRefusal,
   } = useGeneralKeeperComputeFirstRefusal({
     address: gk,
-    args: [ ia, BigInt(deal.head.seqOfDeal)],
+    args: [ addr, BigInt(deal.head.seqOfDeal)],
     onSuccess() {
-      closeOrderOfDeal()
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);
     }
   })
 
@@ -140,7 +136,6 @@ export function GetFRClaims({ia, deal, setOpen, setDeal, refreshDealsList, timel
                 rows={ claims } 
                 columns={ columns }
                 disableRowSelectionOnClick
-                // onRowClick={handleRowClick}
               />
             )}
 

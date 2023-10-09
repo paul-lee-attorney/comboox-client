@@ -8,22 +8,17 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
-import { Deal } from '../../../../scripts/comp/ia';
+import { Deal, dealState } from '../../../../scripts/comp/ia';
 import { centToDollar, longDataParser, longSnParser, } from '../../../../scripts/common/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
-import { HexType } from '../../../../scripts/common';
 
 interface DealsListProps {
-  ia: HexType;
-  isFinalized: boolean;
   list: Deal[];
   setDeal: Dispatch<SetStateAction<Deal>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const dealState = ['Drafting', 'Locked', 'Cleared', 'Closed', 'Terminated'];
-
-export function DealsList({ ia, isFinalized, list, setDeal, setOpen }:DealsListProps ) {
+export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
   
   const columns: GridColDef[] = [
     {

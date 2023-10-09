@@ -1,5 +1,5 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { PlaceInitialOffer } from "./ActionsOfOrder/PlaceInitialOffer";
 import { PlaceSellOrder } from "./ActionsOfOrder/PlaceSellOrder";
@@ -11,10 +11,10 @@ import { WithdrawSellOrder } from "./ActionsOfOrder/WithdrawSellOrder";
 export interface ActionsOfOrderProps{
   classOfShare: number;
   seqOfOrder: number;
-  getAllOrders: ()=>void;
+  setTime:Dispatch<SetStateAction<number>>;
 }
 
-export function ActionsOfOrder({classOfShare:classOfShare, seqOfOrder:seqOfOrder, getAllOrders: getAllOrders}: ActionsOfOrderProps) {
+export function ActionsOfOrder({classOfShare, seqOfOrder, setTime}: ActionsOfOrderProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -23,11 +23,11 @@ export function ActionsOfOrder({classOfShare:classOfShare, seqOfOrder:seqOfOrder
   ]
 
   const compsOfAction = [
-    <PlaceBuyOrder key={0} classOfShare={classOfShare} seqOfOrder={seqOfOrder} getAllOrders={getAllOrders} />,
-    <PlaceSellOrder key={1} classOfShare={classOfShare} seqOfOrder={seqOfOrder} getAllOrders={getAllOrders} />,
-    <PlaceInitialOffer key={2} classOfShare={classOfShare} seqOfOrder={seqOfOrder} getAllOrders={getAllOrders} />,
-    <WithdrawInitialOffer key={3} classOfShare={classOfShare} seqOfOrder={seqOfOrder} getAllOrders={getAllOrders} />,
-    <WithdrawSellOrder key={4} classOfShare={classOfShare} seqOfOrder={seqOfOrder} getAllOrders={getAllOrders} />,
+    <PlaceBuyOrder key={0} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
+    <PlaceSellOrder key={1} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
+    <PlaceInitialOffer key={2} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
+    <WithdrawInitialOffer key={3} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
+    <WithdrawSellOrder key={4} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
   ]
 
   return(

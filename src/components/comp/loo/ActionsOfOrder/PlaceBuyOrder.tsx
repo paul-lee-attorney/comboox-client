@@ -9,7 +9,7 @@ import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 import { longDataParser, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
 
-export function PlaceBuyOrder({ classOfShare: classOfShare, getAllOrders: getAllOrders }: ActionsOfOrderProps) {
+export function PlaceBuyOrder({ classOfShare, setTime }: ActionsOfOrderProps) {
   const { gk } = useComBooxContext();
 
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
@@ -26,7 +26,7 @@ export function PlaceBuyOrder({ classOfShare: classOfShare, getAllOrders: getAll
            ],
     value: BigInt(value) * BigInt(10 ** 9),
     onSuccess() {
-      getAllOrders();
+      setTime(Date.now());
     }
   });
 

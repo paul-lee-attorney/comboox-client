@@ -7,46 +7,49 @@ import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import IaBodyTerms from "../../../components/comp/roa/ia/IaBodyTerms";
 import { IaLifecycle } from "../../../components/comp/roa/ia/IaLifecycle";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
-import { useAccessControlIsFinalized, useFilesFolderGetFile } from "../../../generated";
-import { InfoOfFile } from "../../../scripts/common/filesFolder";
+import { InfoOfFile, getFile } from "../../../scripts/common/filesFolder";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
+import { isFinalized } from "../../../scripts/common/accessControl";
 
 function Ia() {
   const { boox } = useComBooxContext();
+
+  const [ index, setIndex ] = useState<number>(0);
+
   const { query } = useRouter();
   const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   const [ file, setFile ] = useState<InfoOfFile>();
 
-  useFilesFolderGetFile({
-    address: boox ? boox[booxMap.ROA]: undefined,
-    args: ia ? [ia]: undefined,
-    onSuccess(res) {
-      setFile({
-        addr: ia,
-        sn: res.snOfDoc,
-        head: res.head,
-        ref: res.ref        
-      });
+  useEffect(()=>{
+    if (boox && ia) {
+      getFile(boox[booxMap.ROA], ia).then(
+        res => setFile({
+          addr: ia,
+          sn: res.snOfDoc,
+          head: res.head,
+          ref: res.ref
+        })
+      );
     }
-  })
+  }, [boox, ia]);
 
   const [ open, setOpen ] = useState(false);
+  const [ finalized, setFinalized ] = useState<boolean>(false);
 
-  const [ isFinalized, setIsFinalized ] = useState<boolean>();
-
-  useAccessControlIsFinalized({
-    address: ia != '0x' ? ia : undefined,
-    onSuccess(flag) {
-      setIsFinalized(flag);
-    }
-  });
+  useEffect(()=>{
+    if (ia && ia != '0x') {
+      isFinalized(ia).then(
+        res => setFinalized(res)
+      );
+    } 
+  }, [ia]);
 
   return (
     <Stack direction='column' width='100%' height='100%' >
@@ -76,25 +79,34 @@ function Ia() {
               </Tooltip>
 
             </Stack>
-            <Tabs size="sm" defaultValue={0} sx={{ justifyContent:'center', alignItems:'center' }} >
 
-              <TabList variant="solid" color="primary" sx={{ width: 980 }}  >
-                <Tab value={0}><b>Body Term</b></Tab>
-                {!isFinalized && (
-                  <Tab value={1}><b>Access Control</b></Tab>
+            <Tabs 
+              size="md" 
+              sx={{ 
+                justifyContent:'center', 
+                alignItems:'center' 
+              }}
+              value={index}
+              onChange={(e,v)=>setIndex(v as number)} 
+            >
+
+              <TabList tabFlex={1} sx={{ width: 880 }}  >
+                <Tab><b>Body Term</b></Tab>
+                {!finalized && (
+                  <Tab><b>Access Control</b></Tab>
                 )}
-                <Tab value={2}><b>Signature Page</b></Tab>
-                <Tab value={3}><b>Sup Signature Page</b></Tab>
-                <Tab value={4}><b>Life Cycle</b></Tab>
+                <Tab><b>Sig Page</b></Tab>
+                <Tab><b>Sup Page</b></Tab>
+                <Tab><b>Life Cycle</b></Tab>
               </TabList>
 
               <TabPanel value={0} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {isFinalized != undefined && (
-                  <IaBodyTerms ia={ia} isFinalized={isFinalized} />
+                {finalized != undefined && (
+                  <IaBodyTerms addr={ia} isFinalized={finalized} />
                 )}
               </TabPanel>
 
-              {!isFinalized && (
+              {!finalized && (
                 <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                   {ia != '0x' && (
                     <AgrmtAccessControl isSha={false} agrmt={ia} />
@@ -103,20 +115,20 @@ function Ia() {
               )}
 
               <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {ia != '0x' && isFinalized != undefined && (
-                  <Signatures addr={ia} initPage={true} isFinalized={isFinalized} isSha={ false }/>
+                {ia != '0x' && finalized != undefined && (
+                  <Signatures addr={ia} initPage={true} isFinalized={finalized} isSha={ false }/>
                 )}
               </TabPanel>
 
               <TabPanel value={3} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {ia != '0x' && isFinalized != undefined && (
-                  <Signatures addr={ia} initPage={false} isFinalized={isFinalized} isSha={ false } />
+                {ia != '0x' && finalized != undefined && (
+                  <Signatures addr={ia} initPage={false} isFinalized={finalized} isSha={ false } />
                 )}
               </TabPanel>
 
               <TabPanel value={4} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {isFinalized != undefined && (
-                  <IaLifecycle ia={ia} isFinalized={isFinalized} />
+                {finalized != undefined && (
+                  <IaLifecycle addr={ia} isFinalized={finalized} />
                 )}
               </TabPanel>
 

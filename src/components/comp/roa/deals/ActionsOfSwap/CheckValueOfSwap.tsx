@@ -1,29 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
 import { Help } from "@mui/icons-material";
-import { useInvestmentAgreementCheckValueOfSwap } from "../../../../../generated";
 import { getEthPart, getGWeiPart, getWeiPart, weiToEth } from "../../../../../scripts/common/toolsKit";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
+import { checkValueOfSwap } from "../../../../../scripts/comp/roo";
 
-export function CheckValueOfSwap({ia, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
+export function CheckValueOfSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
   const [ value, setValue ] = useState<bigint>(BigInt(0));
 
-  const {
-    refetch: checkValueOfSwap
-  } = useInvestmentAgreementCheckValueOfSwap({
-    address: ia,
-    args: [BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
-    onSuccess(res) {
-      setValue(res);
-    }
-  })
+  useEffect(()=>{
+    checkValueOfSwap(addr, deal.head.seqOfDeal, seqOfSwap).then(
+      res => setValue(res)
+    );
+  },[addr, deal.head.seqOfDeal, seqOfSwap]);
 
   const [ open, setOpen ] = useState<boolean>(false);
 
   const handleClick = () => {
-    checkValueOfSwap();
     setOpen(true);
   }
 

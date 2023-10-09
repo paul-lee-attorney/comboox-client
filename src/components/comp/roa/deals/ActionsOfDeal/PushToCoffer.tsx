@@ -10,7 +10,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexParser } from "../../../../../scripts/common/toolsKit";
 
-export function PushToCoffer({ia, deal, setOpen, setDeal, refreshDealsList}:ActionsOfDealProps) {
+export function PushToCoffer({addr, deal, setOpen, setDeal, setTime}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
@@ -19,7 +19,7 @@ export function PushToCoffer({ia, deal, setOpen, setDeal, refreshDealsList}:Acti
 
   const closeOrderOfDeal = ()=>{
     setDeal(defaultDeal);
-    refreshDealsList();
+    setTime(Date.now());
     setOpen(false);    
   }
 
@@ -29,7 +29,7 @@ export function PushToCoffer({ia, deal, setOpen, setDeal, refreshDealsList}:Acti
   } = useGeneralKeeperPushToCoffer({
     address: gk,
     args: closingDate?.unix() ? 
-      [ia, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate.unix()) ] :
+      [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate.unix()) ] :
       undefined,
     onSuccess() {
       closeOrderOfDeal();

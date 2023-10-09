@@ -20,24 +20,18 @@ export const defaultTargetShare: TargetShare = {
   par: '0',
 }
 
-export function ExecTagAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export function ExecTagAlong({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
-
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
-  }
 
   const {
     isLoading: execTagAlongLoading,
     write: execTagAlong,
   } = useGeneralKeeperExecTagAlong({
     address: gk,
-    args: [ ia, 
+    args: [ addr, 
             BigInt(deal.head.seqOfDeal), 
             BigInt(targetShare.seqOfShare),
             BigInt(targetShare.paid),
@@ -45,7 +39,9 @@ export function ExecTagAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: Ac
             sigHash
           ],
     onSuccess() {
-      closeOrderOfDeal();
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);
     }
   });
 

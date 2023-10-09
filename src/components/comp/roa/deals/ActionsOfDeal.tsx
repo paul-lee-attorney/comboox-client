@@ -1,7 +1,7 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { Deal } from "../../../../scripts/comp/ia";
+import { Deal, Timeline } from "../../../../scripts/comp/ia";
 import { HexType } from "../../../../scripts/common";
 import { PushToCoffer } from "./ActionsOfDeal/PushToCoffer";
 import { PickupShare } from "./ActionsOfDeal/PickupShare";
@@ -15,14 +15,13 @@ import { ExecFirstRefusal } from "./ActionsOfDeal/ExecFirstRefusal";
 import { TakeGiftShares } from "./ActionsOfDeal/TakeGiftShares";
 import { PayOffApprovedDeal } from "./ActionsOfDeal/PayOffApprovedDeal";
 import { RequestToBuy } from "./ActionsOfDeal/RequestToBuy";
-import { Timeline } from "./OrderOfDeal";
 
 export interface ActionsOfDealProps{
-  ia: HexType;
+  addr: HexType;
   deal: Deal;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
-  refreshDealsList: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
 export interface ActionsOfDealCenterProps extends ActionsOfDealProps{
@@ -30,7 +29,7 @@ export interface ActionsOfDealCenterProps extends ActionsOfDealProps{
   timestamp: number;
 }
 
-export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList, timeline, timestamp}: ActionsOfDealCenterProps) {
+export function ActionsOfDeal({addr, deal, setOpen, setDeal, setTime, timeline, timestamp}: ActionsOfDealCenterProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
@@ -41,18 +40,18 @@ export function ActionsOfDeal({ia, deal, setOpen, setDeal, refreshDealsList, tim
   ]
 
   const compsOfAction = [
-    <ExecFirstRefusal key={0} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecAntiDilution key={1} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecDragAlong key={2} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <ExecTagAlong key={3} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <PushToCoffer key={4} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <IssueShare key={5} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <TransferShare key={6} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <PayOffApprovedDeal key={7} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <RequestToBuy key={8} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <PickupShare key={9} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <TerminateDeal key={10} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
-    <TakeGiftShares key={11} ia={ia} deal={deal} setOpen={setOpen} setDeal={setDeal} refreshDealsList={refreshDealsList} />,
+    <ExecFirstRefusal key={0} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <ExecAntiDilution key={1} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <ExecDragAlong key={2} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <ExecTagAlong key={3} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <PushToCoffer key={4} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <IssueShare key={5} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <TransferShare key={6} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <PayOffApprovedDeal key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <RequestToBuy key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <PickupShare key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <TerminateDeal key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <TakeGiftShares key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
   ]
 
   let activeSteps:number[] = [];

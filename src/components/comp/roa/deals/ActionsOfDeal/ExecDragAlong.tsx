@@ -9,24 +9,18 @@ import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
 import { HexParser } from "../../../../../scripts/common/toolsKit";
 
-export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: ActionsOfDealProps ) {
+export function ExecDragAlong({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
-
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
-  }
 
   const {
     isLoading: execDragAlongLoading,
     write: execDragAlong,
   } = useGeneralKeeperExecDragAlong({
     address: gk,
-    args: [ ia, 
+    args: [ addr, 
             BigInt(deal.head.seqOfDeal), 
             BigInt(targetShare.seqOfShare),
             BigInt(targetShare.paid),
@@ -34,7 +28,9 @@ export function ExecDragAlong({ ia, deal, setOpen, setDeal, refreshDealsList}: A
             sigHash
           ],
     onSuccess() {
-      closeOrderOfDeal();
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);
     }
   });
 

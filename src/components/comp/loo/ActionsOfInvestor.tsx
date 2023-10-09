@@ -1,15 +1,15 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { RegInvestor } from "./ActionsOfInvestor/RegInvestor";
 import { ApproveInvestor } from "./ActionsOfInvestor/ApproveInvestor";
 import { RevokeInvestor } from "./ActionsOfInvestor/RevokeInvestor";
 
 export interface ActionsOfInvestorProps{
   acct: string;
-  getAllInvestors: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function ActionsOfInvestor({ acct: acct, getAllInvestors: getAllInvestors}: ActionsOfInvestorProps) {
+export function ActionsOfInvestor({ acct, setTime }: ActionsOfInvestorProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -18,9 +18,9 @@ export function ActionsOfInvestor({ acct: acct, getAllInvestors: getAllInvestors
   ]
 
   const compsOfAction = [
-    <RegInvestor key={0} acct={ acct } getAllInvestors={ getAllInvestors }  />,
-    <ApproveInvestor key={1} acct={ acct } getAllInvestors={ getAllInvestors }  />,
-    <RevokeInvestor key={2} acct={ acct } getAllInvestors={ getAllInvestors }  />,
+    <RegInvestor key={0} acct={ acct } setTime={ setTime }  />,
+    <ApproveInvestor key={1} acct={ acct } setTime={ setTime }  />,
+    <RevokeInvestor key={2} acct={ acct } setTime={ setTime }  />,
   ]
 
   return(

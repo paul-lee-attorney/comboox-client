@@ -7,23 +7,23 @@ import { Delete } from "@mui/icons-material";
 
 
 interface DeleteDealProps {
-  ia: HexType;
+  addr: HexType;
   seqOfDeal: number;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
-  refreshDealsList: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function DeleteDeal({ia, seqOfDeal, setOpen, setDeal, refreshDealsList}:DeleteDealProps) {
+export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, setTime}:DeleteDealProps) {
 
   const {
     write: deleteDeal
   } = useInvestmentAgreementDelDeal({
-    address: ia,
+    address: addr,
     args: [ BigInt(seqOfDeal) ],
     onSuccess() {
       setDeal(defaultDeal);
-      refreshDealsList();
+      setTime(Date.now());
       setOpen(false);
     }
   })

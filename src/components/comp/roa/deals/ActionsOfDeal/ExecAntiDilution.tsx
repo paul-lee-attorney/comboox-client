@@ -8,31 +8,27 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexParser } from "../../../../../scripts/common/toolsKit";
 
-export function ExecAntiDilution({ia, deal, setOpen, setDeal, refreshDealsList}:ActionsOfDealProps) {
+export function ExecAntiDilution({addr, deal, setOpen, setDeal, setTime}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
   const [ seqOfShare, setSeqOfShare ] = useState<number>(0);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
-  const closeOrderOfDeal = ()=>{
-    setDeal(defaultDeal);
-    refreshDealsList();
-    setOpen(false);    
-  }
-
   const {
     isLoading: execAntiDilutionLoading,
     write: execAntiDilution,
   } = useGeneralKeeperExecAntiDilution({
     address: gk,
-    args: [ ia, 
+    args: [ addr, 
             BigInt(deal.head.seqOfDeal), 
             BigInt(seqOfShare),
             sigHash 
           ],
     onSuccess() {
-      closeOrderOfDeal();
+      setDeal(defaultDeal);
+      setTime(Date.now());
+      setOpen(false);    
     }
   })
 
