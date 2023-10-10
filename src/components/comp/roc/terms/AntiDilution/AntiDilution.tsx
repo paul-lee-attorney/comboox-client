@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -22,71 +22,18 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { waitForTransaction, readContract } from "@wagmi/core";
-
 import {
-  antiDilutionABI,
   useAntiDilutionAddBenchmark,
   useAntiDilutionRemoveBenchmark,
   useAntiDilutionAddObligor,
   useAntiDilutionRemoveObligor,
-  useAntiDilutionGetClasses, 
 } from "../../../../../generated";
 
 
 import { Benchmark } from "./Benchmark";
-import { longSnParser } from "../../../../../scripts/common/toolsKit";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
-
-
-interface BenchmarkType {
-  classOfShare: string,
-  floorPrice: string,
-  obligors: string,
-}
-
-async function getBenchmarks(ad: HexType, classes: number[]): Promise<BenchmarkType[]> {
-  let len = classes.length;
-  let output: BenchmarkType[] = [];
-
-  while (len > 0) {
-
-    let classOfShare = classes[len - 1];
-
-    let floorPrice = await readContract({
-      address: ad,
-      abi: antiDilutionABI,
-      functionName: 'getFloorPriceOfClass',
-      args: [BigInt(classOfShare)],
-    });
-
-    let obligors = await readContract({
-      address: ad,
-      abi: antiDilutionABI,
-      functionName: 'getObligorsOfAD',
-      args: [BigInt(classOfShare)],
-    });
-    
-    let strObligors = '';
-
-    obligors.map(v => {
-      strObligors += longSnParser(v.toString()) + `\n`;
-    });
-
-    let item: BenchmarkType = {
-      classOfShare: classOfShare.toString(),
-      floorPrice: floorPrice.toString(),
-      obligors: strObligors,
-    }
-
-    output.push(item);
-
-    len--;
-  }
-
-  return output;
-}
+import { BenchmarkType, getBenchmarks } from "../../../../../scripts/comp/ad";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -99,19 +46,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
   const [ newMarks, setNewMarks ] = useState<BenchmarkType[]>();
 
-  const { refetch } = useAntiDilutionGetClasses({
-    address: term,
-    onSuccess(data) {
-      let ls: number[] = [];
-      data.map(v => {
-        ls.push(Number(v))
-      })
-      if (term)
-        getBenchmarks(term, ls).
-          then(marks => setNewMarks(marks));  
-    }
-  });
-
   const [ classOfShare, setClassOfShare ] = useState<string>();
   const [ price, setPrice ] = useState<string>();
 
@@ -122,59 +56,46 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     address: term,
     args: classOfShare && price 
         ? [BigInt(classOfShare), BigInt(price)] 
-        : undefined, 
-    onSuccess() {
-      refetch();
-    }
+        : undefined,
   });
 
   const { 
-    data: removeMarkReceipt,
     isLoading: removeMarkIsLoading, 
     write: removeMark 
   } = useAntiDilutionRemoveBenchmark({
     address: term,
-    args: classOfShare ? 
-            [BigInt(classOfShare)] :
-            undefined, 
-    onSuccess() {
-      refetch();
-    }
+    args: classOfShare 
+        ? [BigInt(classOfShare)] 
+        :  undefined,
   });
 
   const [ obligor, setObligor ] = useState<string>();
 
   const { 
-    data: addObligorReceipt,
     isLoading: addObligorIsLoading, 
     write: addObligor 
   } = useAntiDilutionAddObligor({
     address: term,
-    args: classOfShare &&
-          obligor ? 
-            [ BigInt(classOfShare),
-              BigInt(obligor)] :
-            undefined, 
-    onSuccess() {
-      refetch();
-    }
+    args: classOfShare && obligor 
+        ? [ BigInt(classOfShare), BigInt(obligor)] 
+        :   undefined,
   });
 
   const { 
-    data: removeObligorReceipt,
     isLoading: removeObligorIsLoading, 
     write: removeObligor 
   } = useAntiDilutionRemoveObligor({
     address: term,
-    args: classOfShare &&
-          obligor ? 
-            [ BigInt(classOfShare),
-              BigInt(obligor)] :
-            undefined, 
-    onSuccess() {
-      refetch();
-    }
+    args: classOfShare && obligor 
+        ? [ BigInt(classOfShare), BigInt(obligor)] 
+        :   undefined, 
   });
+
+  useEffect(()=>{
+    getBenchmarks(term).then(
+      res => setNewMarks(res)
+    );
+  }, [term, addMark, removeMark, addObligor, removeObligor]);
 
   const [ open, setOpen ] = useState(false);
 
@@ -184,7 +105,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         disabled={ isFinalized && !term }
         variant={term != AddrZero ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
@@ -198,152 +118,152 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         aria-labelledby="dialog-title"        
       >
 
-          <DialogContent>
+        <DialogContent>
 
-            <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-              <Box sx={{ width:1180 }}>
+          <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
+            <Box sx={{ width:1180 }}>
 
-                <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
-                  <Stack direction={'row'} >
-                    <Toolbar sx={{ textDecoration:'underline' }}>
-                      <h3>Anti Dilution</h3>
-                    </Toolbar>
+              <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
+                <Stack direction={'row'} >
+                  <Toolbar sx={{ textDecoration:'underline' }}>
+                    <h3>Anti Dilution</h3>
+                  </Toolbar>
 
-                    <CopyLongStrSpan title="Addr"  src={term.toLowerCase()} />
-                  </Stack>
-                  {!isFinalized && (
-                    <AddTerm sha={ sha } title={ 1 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
-                  )}
-
-
+                  <CopyLongStrSpan title="Addr"  src={term.toLowerCase()} />
                 </Stack>
-
-                {term != AddrZero && !isFinalized && (
-                  <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
-
-                    <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>      
-
-                      <Tooltip
-                        title='Add Benchmark'
-                        placement="top-start"
-                        arrow
-                      >
-                        <IconButton 
-                          disabled={ addMarkLoading }
-                          sx={{width: 20, height: 20, m: 1, ml: 5 }} 
-                          onClick={ () => addMark?.() }
-                          color="primary"
-                        >
-                          <AddCircle/>
-                        </IconButton>
-                      </Tooltip>
-
-                      <TextField 
-                        variant='outlined'
-                        label='ClassOfShare'
-                        size="small"
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setClassOfShare(e.target.value)}
-                        value={ classOfShare }              
-                      />
-
-                      <TextField 
-                        variant='outlined'
-                        label='Price'
-                        size="small"
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setPrice(e.target.value)}
-                        value={ price }
-                      />
-
-                      <Tooltip
-                        title='Remove Benchmark'
-                        placement="top-end"
-                        arrow
-                      >           
-                        <IconButton
-                          disabled={ removeMarkIsLoading } 
-                          sx={{width: 20, height: 20, m: 1, mr: 10, }} 
-                          onClick={ () => removeMark?.() }
-                          color="primary"
-                        >
-                          <RemoveCircle/>
-                        </IconButton>
-                      </Tooltip>
-
-                      <Tooltip
-                        title='Add Obligor'
-                        placement="top-start"
-                        arrow
-                      >
-                        <IconButton 
-                          disabled={ addObligorIsLoading }
-                          sx={{width: 20, height: 20, m: 1, ml: 10,}} 
-                          onClick={ () => addObligor?.() }
-                          color="primary"
-                        >
-                          <AddCircle/>
-                        </IconButton>
-
-                      </Tooltip>
-
-                      <TextField 
-                        variant='outlined'
-                        label='Obligor'
-                        size="small"
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObligor(e.target.value)}
-                        value={ obligor }              
-                      />
-
-                      <Tooltip
-                        title='Remove Obligor'
-                        placement="top-end"
-                        arrow
-                      >
-
-                        <IconButton
-                          disabled={ removeObligorIsLoading } 
-                          sx={{width: 20, height: 20, m: 1, mr: 10}} 
-                          onClick={ () => removeObligor?.() }
-                          color="primary"
-                        >
-                          <RemoveCircle/>
-                        </IconButton>
-                      
-                      </Tooltip>
-
-                    </Stack>
-                  
-                  </Paper>
+                {!isFinalized && (
+                  <AddTerm sha={ sha } title={ 1 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
+
+
+              </Stack>
+
+              {term != AddrZero && !isFinalized && (
+                <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
+
+                  <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>      
+
+                    <Tooltip
+                      title='Add Benchmark'
+                      placement="top-start"
+                      arrow
+                    >
+                      <IconButton 
+                        disabled={ addMarkLoading }
+                        sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                        onClick={ () => addMark?.() }
+                        color="primary"
+                      >
+                        <AddCircle/>
+                      </IconButton>
+                    </Tooltip>
+
+                    <TextField 
+                      variant='outlined'
+                      label='ClassOfShare'
+                      size="small"
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setClassOfShare(e.target.value)}
+                      value={ classOfShare }              
+                    />
+
+                    <TextField 
+                      variant='outlined'
+                      label='Price'
+                      size="small"
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setPrice(e.target.value)}
+                      value={ price }
+                    />
+
+                    <Tooltip
+                      title='Remove Benchmark'
+                      placement="top-end"
+                      arrow
+                    >           
+                      <IconButton
+                        disabled={ removeMarkIsLoading } 
+                        sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                        onClick={ () => removeMark?.() }
+                        color="primary"
+                      >
+                        <RemoveCircle/>
+                      </IconButton>
+                    </Tooltip>
+
+                    <Tooltip
+                      title='Add Obligor'
+                      placement="top-start"
+                      arrow
+                    >
+                      <IconButton 
+                        disabled={ addObligorIsLoading }
+                        sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                        onClick={ () => addObligor?.() }
+                        color="primary"
+                      >
+                        <AddCircle/>
+                      </IconButton>
+
+                    </Tooltip>
+
+                    <TextField 
+                      variant='outlined'
+                      label='Obligor'
+                      size="small"
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObligor(e.target.value)}
+                      value={ obligor }              
+                    />
+
+                    <Tooltip
+                      title='Remove Obligor'
+                      placement="top-end"
+                      arrow
+                    >
+
+                      <IconButton
+                        disabled={ removeObligorIsLoading } 
+                        sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                        onClick={ () => removeObligor?.() }
+                        color="primary"
+                      >
+                        <RemoveCircle/>
+                      </IconButton>
+                    
+                    </Tooltip>
+
+                  </Stack>
                 
-                {term != AddrZero && newMarks?.map((v) => (
-                  <Benchmark 
-                    key={v.classOfShare} 
-                    classOfShare={v.classOfShare}
-                    floorPrice={v.floorPrice}
-                    obligors={v.obligors} 
-                  />
-                ))}
+                </Paper>
+              )}
+              
+              {term != AddrZero && newMarks?.map((v) => (
+                <Benchmark 
+                  key={v.classOfShare} 
+                  classOfShare={v.classOfShare}
+                  floorPrice={v.floorPrice}
+                  obligors={v.obligors} 
+                />
+              ))}
 
-              </Box>
-            </Paper>
+            </Box>
+          </Paper>
 
-          </DialogContent>
+        </DialogContent>
 
-          <DialogActions>
-            <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
-          </DialogActions>
+        <DialogActions>
+          <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
 
       </Dialog>
   

@@ -18,6 +18,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
   const { boox } = useComBooxContext();
 
   const [ objVr, setObjVr] = useState<VotingRule>();
+  const [ open, setOpen ] = useState(false);
   
   useRegisterOfConstitutionPointer({
     address: boox ? boox[booxMap.ROC] : undefined,
@@ -28,8 +29,6 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
         )
     }
   })
-
-  const [ open, setOpen ] = useState(false);
 
   const handleClick = ()=> {
     setOpen(true);

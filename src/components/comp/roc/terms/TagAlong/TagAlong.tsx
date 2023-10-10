@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -27,35 +27,23 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { useAlongsAddDragger, useAlongsAddFollower, useAlongsGetDraggers, useAlongsRemoveDragger, useAlongsRemoveFollower } from "../../../../../generated";
-
+import { useAlongsAddDragger, useAlongsAddFollower, useAlongsRemoveDragger, useAlongsRemoveFollower } from "../../../../../generated";
 
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
-import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../DragAlong/DragAlong";
 import { AlongLinks } from "../DragAlong/AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
+import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
 
 export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ links, setLinks ] = useState<AlongLink[]>();
-
-  const {
-    refetch:getDragers 
-  } = useAlongsGetDraggers({
-    address: term,
-    onSuccess(ls) {
-      if (term)
-        getLinks(term, ls).
-          then(links => setLinks(links));
-    }
-  });
-
   const [ drager, setDrager ] = useState<string>('0');
   const [ rule, setRule ] = useState<LinkRule>(defaultLinkRule);
+  const [ open, setOpen ] = useState(false);
 
   const { 
     isLoading: addLinkLoading,
@@ -64,10 +52,7 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
     address: term,
     args: rule && drager
       ? [ linkRuleCodifier(rule) , BigInt(drager)] 
-      : undefined, 
-    onSuccess() {
-      getDragers();
-    }
+      : undefined,
   });
 
   const { 
@@ -76,9 +61,6 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
   } = useAlongsRemoveDragger({
     address: term,
     args: drager ? [BigInt(drager)] : undefined, 
-    onSuccess() {
-      getDragers();
-    }
   });
 
   const [ follower, setFollower ] = useState<string>('0');
@@ -92,9 +74,6 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
       ? [ BigInt(drager ?? '0'),
           BigInt(follower ?? '0')] 
       : undefined, 
-    onSuccess() {
-      getDragers();
-    }
   });
 
   const { 
@@ -105,12 +84,13 @@ export function TagAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) 
     args: drager && follower 
       ? [ BigInt(drager ?? '0'), BigInt(follower ?? '0')] 
       : undefined, 
-    onSuccess() {
-      getDragers();
-    }
   });
 
-  const [ open, setOpen ] = useState(false);
+  useEffect(()=>{
+    getLinks(term).then(
+      ls => setLinks(ls)
+    );
+  }, [term, addLink, removeLink, addFollower, removeFollower]);
 
   return (
     <>

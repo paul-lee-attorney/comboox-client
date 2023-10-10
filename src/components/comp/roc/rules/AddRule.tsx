@@ -1,41 +1,34 @@
 
 import { 
   Stack,
-  Checkbox,
-  FormControlLabel,
   Button,
 } from '@mui/material';
-
 import { EditNote }  from '@mui/icons-material';
-
 import { 
   useShareholdersAgreementAddRule,
 } from '../../../../generated';
-
 import { HexType } from '../../../../scripts/common';
+import { Dispatch, SetStateAction } from 'react';
 
 interface AddRuleProps {
-  sha: HexType,
-  rule: HexType,
-  refreshRule: () => void,
-  editable: boolean,
-  setEditable: (flag: boolean) => void,
-  isFinalized: boolean,
-  getRules: () => void,
+  sha: HexType;
+  rule: HexType;
+  isFinalized: boolean;
+  setTime: Dispatch<SetStateAction<number>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinalized, getRules }: AddRuleProps) {
+export function AddRule({ sha, rule, isFinalized, setTime, setOpen }: AddRuleProps) {
 
   const {
-    data,
     isLoading,
     write,
   } = useShareholdersAgreementAddRule({
     address: sha,
     args: [rule],
     onSuccess() {
-      refreshRule();
-      getRules();
+      setTime(Date.now());
+      setOpen(false);
     }
   });
 
@@ -45,8 +38,7 @@ export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinal
         <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
           
           <Button 
-            disabled = { isLoading }
-
+            disabled = { isLoading || isFinalized }
             sx={{ m: 1, minWidth: 120, height: 40 }} 
             variant="contained" 
             endIcon={<EditNote />}
@@ -55,23 +47,6 @@ export function AddRule({ sha, rule, refreshRule, editable, setEditable, isFinal
           >
             Update
           </Button>
-
-          <FormControlLabel 
-            label='Edit'
-            sx={{
-              ml: 1,
-            }}
-            control={
-              <Checkbox 
-                sx={{
-                  m: 1,
-                  height: 64,
-                }}
-                onChange={e => setEditable(e.target.checked)}
-                checked={ editable }
-              />
-            }
-          />
 
         </Stack>
       )}

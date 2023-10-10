@@ -1,25 +1,25 @@
 
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { 
   Stack,
   TextField,
   Paper,
   Box,
-  Collapse,
   Toolbar,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Button,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
-
 import { HexType } from '../../../../../scripts/common';
 import { AddRule } from '../AddRule';
-
 import { longSnParser } from '../../../../../scripts/common/toolsKit';
-import { SetRuleProps } from '../VotingRules/SetVotingRule';
-import { useShareholdersAgreementGetRule } from '../../../../../generated';
+import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
+import { getRule } from '../../../../../scripts/comp/sha';
+import { ListAlt } from '@mui/icons-material';
 
 export interface GroupUpdateOrder {
   seqOfRule: number;
@@ -67,7 +67,7 @@ export function guoParser(hexOrder: HexType): GroupUpdateOrder {
   return order;
 }
 
-export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRuleProps) {
+export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
 
   const defaultOrder: GroupUpdateOrder = {
     seqOfRule: seq,
@@ -80,336 +80,298 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, getRules }: SetRule
   };
 
   const [ objGuo, setObjGuo ] = useState<GroupUpdateOrder>(defaultOrder); 
+  const [ open, setOpen ] = useState<boolean>(false);
 
-  const [ newGuo, setNewGuo ] = useState<GroupUpdateOrder>(defaultOrder);
-
-  const [ editable, setEditable ] = useState<boolean>(false);
-
-  const {
-    refetch: obtainRule
-  } = useShareholdersAgreementGetRule({
-    address: sha,
-    args: [ BigInt(seq) ],
-    onSuccess(res) {
-      setNewGuo(guoParser(res))
-    }
-  })
+  useEffect(()=>{
+    getRule(sha, seq).then(
+      res => setObjGuo(guoParser(res))
+    );
+  }, [sha, seq, time]);
 
   return (
     <>
-      <Paper 
-        elevation={3} 
-        sx={{
-          alignContent:'center', 
-          justifyContent:'center', 
-          p:1, m:1, 
-          border: 1, 
-          borderColor:'divider' 
-          }} 
+      <Button
+        variant={objGuo && objGuo.groupRep > 0 ? 'contained' : 'outlined'}
+        startIcon={<ListAlt />}
+        fullWidth={true}
+        sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
+        onClick={()=>setOpen(true)}      
       >
-        <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
-          <Box sx={{ minWidth:600 }} >
-            <Toolbar>
-              <h4>Rule No. { seq.toString() } </h4>
-            </Toolbar>
-          </Box>
+        Rule No. { seq } 
+      </Button>
 
-          <AddRule 
-            sha={ sha }
-            rule={ guoCodifier(objGuo) }
-            refreshRule={ obtainRule }
-            editable={ editable }
-            setEditable={ setEditable }
-            isFinalized={isFinalized}
-            getRules={ getRules }
-          />
-        </Stack>
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
+        <DialogContent>
 
-        <Stack direction={'column'} spacing={1} >
+          <Paper 
+            elevation={3} 
+            sx={{
+              alignContent:'center', 
+              justifyContent:'center', 
+              p:1, m:1, 
+              border: 1, 
+              borderColor:'divider' 
+              }} 
+          >
+            <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+              <Box sx={{ minWidth:600 }} >
+                <Toolbar>
+                  <h4>Rule No. { seq.toString() } </h4>
+                </Toolbar>
+              </Box>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-            {/* <TextField 
-              variant='outlined'
-              label='SeqOfRule'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newGuo.seqOfRule.toString() }
-            /> */}
-
-            <TextField 
-              variant='outlined'
-              label='QtyOfSubRule'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newGuo.qtyOfSubRule.toString() }
-            />
-
-            {/* <TextField 
-              variant='outlined'
-              label='SeqOfSubRule'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newGuo.seqOfSubRule.toString() }
-            /> */}
-
-            <TextField 
-              variant='outlined'
-              label='AddMember ?'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ newGuo.addMember ? 'True' : 'False' }
-            />
-
-            <TextField 
-              variant='outlined'
-              label='GroupRep'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newGuo.groupRep.toString()) }
-            />
-
-          </Stack>
-
-          <Collapse in={ editable && !isFinalized } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              {/* <TextField 
-                variant='outlined'
-                label='SeqOfRule'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  seqOfRule: parseInt(e.target.value),
-                }))}
-                value={ objGuo.seqOfRule }
-              /> */}
-
-              <TextField 
-                variant='outlined'
-                label='QtyOfSubRule'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  qtyOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objGuo.qtyOfSubRule }              
+              <AddRule 
+                sha={ sha }
+                rule={ guoCodifier(objGuo) }
+                isFinalized = { isFinalized }
+                setTime = { setTime }
+                setOpen = { setOpen }
               />
+            </Stack>
 
-              {/* <TextField 
-                variant='outlined'
-                label='SeqOfSubRule'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  seqOfSubRule: parseInt(e.target.value),
-                }))}
-                value={ objGuo.seqOfSubRule }
-              /> */}
+            <Stack direction={'column'} spacing={1} >
 
-              <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
-                <InputLabel id="addMember-label">AddMember ?</InputLabel>
-                <Select
-                  labelId="addMember-label"
-                  id="addMember-select"
-                  label="AddMember ?"
-                  value={ objGuo.addMember ? '1' : '0' }
-                  onChange={(e) => setObjGuo((v) => ({
-                    ...v,
-                    addMember: e.target.value == '1',
-                  }))}
-                >
-                  <MenuItem value={ '1' } > True </MenuItem>
-                  <MenuItem value={ '0' } > False </MenuItem>
-                </Select>
-              </FormControl>
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-              <TextField 
-                variant='outlined'
-                label='GroupRep'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => ({
-                  ...v,
-                  groupRep: parseInt(e.target.value),
-                }))}
-                value={ objGuo.groupRep }
-              />
+                  <TextField 
+                    variant='outlined'
+                    label='QtyOfSubRule'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ objGuo.qtyOfSubRule.toString() }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='AddMember ?'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ objGuo.addMember ? 'True' : 'False' }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='GroupRep'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objGuo.groupRep.toString()) }
+                  />
+
+                </Stack>
+              )}
+
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                  <TextField 
+                    variant='outlined'
+                    label='QtyOfSubRule'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGuo((v) => ({
+                      ...v,
+                      qtyOfSubRule: parseInt(e.target.value),
+                    }))}
+                    value={ objGuo.qtyOfSubRule }              
+                  />
+
+                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="addMember-label">AddMember ?</InputLabel>
+                    <Select
+                      labelId="addMember-label"
+                      id="addMember-select"
+                      label="AddMember ?"
+                      value={ objGuo.addMember ? '1' : '0' }
+                      onChange={(e) => setObjGuo((v) => ({
+                        ...v,
+                        addMember: e.target.value == '1',
+                      }))}
+                    >
+                      <MenuItem value={ '1' } > True </MenuItem>
+                      <MenuItem value={ '0' } > False </MenuItem>
+                    </Select>
+                  </FormControl>
+
+                  <TextField 
+                    variant='outlined'
+                    label='GroupRep'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGuo((v) => ({
+                      ...v,
+                      groupRep: parseInt(e.target.value),
+                    }))}
+                    value={ objGuo.groupRep }
+                  />
+
+                </Stack>
+              )}
+
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_1'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objGuo.members[0].toString()) }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_2'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objGuo.members[1].toString()) }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_3'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objGuo.members[2].toString()) }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_4'
+                    inputProps={{readOnly: true}}
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objGuo.members[3].toString()) }
+                  />
+
+                </Stack>
+              )}
+
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_1'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[0] = parseInt(e.target.value);
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    })}
+                    value={ objGuo.members[0] }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_2'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[1] = parseInt(e.target.value);
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    })}
+                    value={ objGuo.members[1] }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_3'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[2] = parseInt(e.target.value);
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    })}
+                    value={ objGuo.members[2] }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='Members_4'
+                    size="small"
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[3] = parseInt(e.target.value);
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    })}
+                    value={ objGuo.members[3] }
+                  />
+
+                </Stack>
+              )}
 
             </Stack>
-          </Collapse>
+          </Paper>
 
-          <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-            <TextField 
-              variant='outlined'
-              label='Members_1'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newGuo.members[0].toString()) }
-            />
-
-            <TextField 
-              variant='outlined'
-              label='Members_2'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newGuo.members[1].toString()) }
-            />
-
-            <TextField 
-              variant='outlined'
-              label='Members_3'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newGuo.members[2].toString()) }
-            />
-
-            <TextField 
-              variant='outlined'
-              label='Members_4'
-              inputProps={{readOnly: true}}
-              size="small"
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ longSnParser(newGuo.members[3].toString()) }
-            />
-
-          </Stack>
-
-          <Collapse in={ editable && !isFinalized } >
-            <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-              <TextField 
-                variant='outlined'
-                label='Members_1'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => {
-                  let arr = [...v.members];
-                  arr[0] = parseInt(e.target.value);
-                  return {
-                    ...v,
-                    members: arr,
-                  };
-                })}
-                value={ objGuo.members[0] }
-              />
-
-              <TextField 
-                variant='outlined'
-                label='Members_2'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => {
-                  let arr = [...v.members];
-                  arr[1] = parseInt(e.target.value);
-                  return {
-                    ...v,
-                    members: arr,
-                  };
-                })}
-                value={ objGuo.members[1] }
-              />
-
-              <TextField 
-                variant='outlined'
-                label='Members_3'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => {
-                  let arr = [...v.members];
-                  arr[2] = parseInt(e.target.value);
-                  return {
-                    ...v,
-                    members: arr,
-                  };
-                })}
-                value={ objGuo.members[2] }
-              />
-
-              <TextField 
-                variant='outlined'
-                label='Members_4'
-                size="small"
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => setObjGuo((v) => {
-                  let arr = [...v.members];
-                  arr[3] = parseInt(e.target.value);
-                  return {
-                    ...v,
-                    members: arr,
-                  };
-                })}
-                value={ objGuo.members[3] }
-              />
-
-            </Stack>
-          </Collapse>
-
-        </Stack>
-      </Paper>
+        </DialogContent>
+      </Dialog>
     </> 
   )
 }

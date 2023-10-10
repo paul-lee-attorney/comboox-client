@@ -3,10 +3,7 @@ import {
   Alert,
   Button, Collapse, IconButton, Stack,
 } from '@mui/material';
-
-import { Close, Lock, StopCircleOutlined }  from '@mui/icons-material';
-
-
+import { Close, StopCircleOutlined }  from '@mui/icons-material';
 import { 
   useShareholdersAgreementFinalizeSha,
 } from '../../../../../generated';

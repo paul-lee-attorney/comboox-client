@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../scripts/common";
+import { AddrZero } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -27,15 +27,11 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { readContract } from "@wagmi/core";
-
 import {
-  useOptionsGetAllOptions,
   useOptionsCreateOption,
   useOptionsDelOption,
   useOptionsAddObligorIntoOpt,
   useOptionsRemoveObligorFromOpt,
-  optionsABI, 
 } from "../../../../../generated";
 
 import { DateTimeField } from "@mui/x-date-pickers";
@@ -49,7 +45,6 @@ import {
   Cond, 
   HeadOfOpt, 
   OptWrap, 
-  Option, 
   comOps, 
   condCodifier, 
   defaultBodyOfOpt, 
@@ -59,59 +54,13 @@ import {
   optHeadCodifier, 
   typeOfOpts 
 } from "../../../../../scripts/comp/roo";
-
-// ==== HeadOfOpt ====
-
-
-export async function getObligorsFromTerm(term:HexType, seqOfOpt: number):Promise<number[]>{
-  let res = await readContract({
-    address: term,
-    abi: optionsABI,
-    functionName: 'getObligorsOfOption',
-    args: [ BigInt(seqOfOpt)],
-  })
-
-  let out = res.map(v => Number(v));
-
-  return out;
-}
-
-async function refreshList(term: HexType, ls: readonly Option[] ): Promise<OptWrap[]>{
-
-  let out:OptWrap[] = [];
-  let len = ls.length;
-
-  while(len > 0) {
-    let item:OptWrap = {
-      opt: ls[len-1],
-      obligors: await getObligorsFromTerm(term, ls[len-1].head.seqOfOpt),
-    }
-    out.push(item);
-    len--;
-  }
-
-  return out;
-}
+import { getOpts } from "../../../../../scripts/comp/op";
 
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ opts, setOpts ] = useState<readonly OptWrap[]>();
-
   const [ open, setOpen ] = useState(false);
-
-  const {
-    refetch:getAllOpts 
-  } = useOptionsGetAllOptions({
-    address: term,
-    onSuccess(ls) {
-      if (ls) 
-        refreshList(term, ls).then(
-          list => setOpts(list)
-        );
-    }
-  });
-
   const [ head, setHead ] = useState<HeadOfOpt>(defaultHeadOfOpt);
   const [ cond, setCond ] = useState<Cond>(defaultCond);
   const [ body, setBody ] = useState<BodyOfOpt>(defaultBodyOfOpt);
@@ -129,9 +78,6 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
           BigInt(body.paid),
           BigInt(body.par)
         ], 
-    onSuccess() {
-      getAllOpts();
-    }
   });
 
   const { 
@@ -139,10 +85,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeOpt, 
   } = useOptionsDelOption({
     address: term,
-    args: head.seqOfOpt ? [ BigInt(head.seqOfOpt) ] : undefined, 
-    onSuccess() {
-      getAllOpts();
-    }
+    args: head.seqOfOpt ? [ BigInt(head.seqOfOpt) ] : undefined,
   });
 
   const [ obligor, setObligor ] = useState<string>('0');
@@ -155,9 +98,6 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: head.seqOfOpt && obligor
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
-    onSuccess() {
-      getAllOpts();
-    }
   });
 
   const { 
@@ -168,11 +108,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: head.seqOfOpt && obligor 
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
-    onSuccess() {
-      getAllOpts();
-    }
   });
 
+  useEffect(()=>{
+    getOpts(term).then(
+      res => setOpts(res)
+    );
+  }, [term, addOpt, removeOpt, addObligor, removeObligor]);
 
   return (
     <>

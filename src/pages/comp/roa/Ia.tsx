@@ -116,13 +116,13 @@ function Ia() {
 
               <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {ia != '0x' && finalized != undefined && (
-                  <Signatures addr={ia} initPage={true} isFinalized={finalized} isSha={ false }/>
+                  <Signatures addr={ia} initPage={true} finalized={finalized} isSha={ false }/>
                 )}
               </TabPanel>
 
               <TabPanel value={3} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
                 {ia != '0x' && finalized != undefined && (
-                  <Signatures addr={ia} initPage={false} isFinalized={finalized} isSha={ false } />
+                  <Signatures addr={ia} initPage={false} finalized={finalized} isSha={ false } />
                 )}
               </TabPanel>
 

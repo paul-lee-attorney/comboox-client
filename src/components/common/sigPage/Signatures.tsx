@@ -73,12 +73,11 @@ async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonl
 export interface SigPageProps {
   addr: HexType,
   initPage: boolean,
-  isFinalized: boolean,
+  finalized: boolean,
   isSha: boolean,
 }
 
-
-export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps) {
+export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
 
   interface TimingProps {
     signingDays?: string,
@@ -171,7 +170,7 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
               <h4>Props of SigPage</h4>
             </Toolbar>
 
-            {!isFinalized && initPage && (
+            {!finalized && initPage && (
               <>
                 <TextField 
                   variant='outlined'
@@ -312,11 +311,11 @@ export function Signatures({ addr, initPage, isFinalized, isSha }: SigPageProps)
             <h4>Signatures of Doc</h4>
           </Toolbar>
 
-          {!initPage && isFinalized && isSha && (
+          {!initPage && finalized && isSha && (
             <AcceptSha setTime={ setTime } />
           )}
 
-          {!isFinalized && initPage && (
+          {!finalized && initPage && (
             <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
               <Tooltip

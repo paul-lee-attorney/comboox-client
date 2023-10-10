@@ -9,11 +9,11 @@ import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/materia
 import { AgrmtAccessControl } from "../../../components/common/accessControl/AgrmtAccessControl";
 import { ShaBodyTerms } from "../../../components/comp/roc/sha/ShaBodyTerms";
 import { Signatures } from "../../../components/common/sigPage/Signatures";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ShaLifecycle } from "../../../components/comp/roc/sha/ShaLifecycle";
-import { useAccessControlIsFinalized, useFilesFolderGetFile } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { InfoOfFile } from "../../../scripts/common/filesFolder";
+import { InfoOfFile, getFile } from "../../../scripts/common/filesFolder";
+import { isFinalized } from "../../../scripts/common/accessControl";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
 
@@ -29,27 +29,29 @@ function Sha() {
 
   const [ file, setFile ] = useState<InfoOfFile>();
 
-  useFilesFolderGetFile({
-    address: boox ? boox[booxMap.ROC]: undefined,
-    args: sha ? [sha]: undefined,
-    onSuccess(res) {
-      setFile({
-        addr: sha,
-        sn: res.snOfDoc,
-        head: res.head,
-        ref: res.ref        
-      });
+  useEffect(()=>{
+    if (boox && sha) {
+      getFile(boox[booxMap.ROC], sha).then(
+        res =>
+          setFile({
+            addr: sha,
+            sn: res.snOfDoc,
+            head: res.head,
+            ref: res.ref        
+          })
+      );
     }
-  })
+  }, [boox, sha]);
 
-  const [ isFinalized, setIsFinalized ] = useState<boolean>(false);
+  const [ finalized, setFinalized ] = useState<boolean>(false);
 
-  useAccessControlIsFinalized({
-    address: sha != '0x' ? sha : undefined,
-    onSuccess(flag) {
-      setIsFinalized(flag);
+  useEffect(()=>{
+    if (sha && sha != '0x') {
+      isFinalized(sha).then(
+        flag => setFinalized(flag)
+      );
     }
-  })
+  }, [sha]);
 
   return (
     <Stack direction='column' width='100%' height='100%' >
@@ -93,7 +95,7 @@ function Sha() {
 
               <TabList tabFlex={1} sx={{ width: 880 }} >
                 <Tab><b>Body Term</b></Tab>
-                {!isFinalized && (
+                {!finalized && (
                   <Tab><b>Access Control</b></Tab>
                 )}
                 <Tab><b>Sig Page</b></Tab>
@@ -102,32 +104,32 @@ function Sha() {
               </TabList>
 
               <TabPanel value={0} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {isFinalized != undefined && (
-                  <ShaBodyTerms sha={sha} isFinalized={isFinalized} />
+                {finalized != undefined && (
+                  <ShaBodyTerms sha={sha} finalized={finalized} />
                 )}
               </TabPanel>
 
               <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {sha != '0x' && !isFinalized && (
+                {sha != '0x' && !finalized && (
                   <AgrmtAccessControl isSha={true} agrmt={sha} />
                 )}
               </TabPanel>
 
               <TabPanel value={2} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {sha != '0x' && isFinalized != undefined && (
-                  <Signatures addr={sha} initPage={true} isFinalized={isFinalized} isSha={ true } />
+                {sha != '0x' && finalized != undefined && (
+                  <Signatures addr={sha} initPage={true} finalized={finalized} isSha={ true } />
                 )}
               </TabPanel>
 
               <TabPanel value={3} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {sha != '0x' && isFinalized != undefined && (
-                  <Signatures addr={sha} initPage={false} isFinalized={isFinalized} isSha={ true } />
+                {sha != '0x' && finalized != undefined && (
+                  <Signatures addr={sha} initPage={false} finalized={finalized} isSha={ true } />
                 )}
               </TabPanel>
 
               <TabPanel value={4} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                {sha != '0x' && isFinalized != undefined && (
-                  <ShaLifecycle sha={sha} isFinalized={isFinalized} />
+                {sha != '0x' && finalized != undefined && (
+                  <ShaLifecycle sha={sha} finalized={finalized} />
                 )}
               </TabPanel>
 

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { 
   Stack,
   IconButton,
@@ -12,22 +11,21 @@ import {
   DialogActions,
   Grid,
 } from "@mui/material";
-
 import {
   AddCircle,
   ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
-
 import { SetFirstRefusalRule } from "./SetFirstRefusalRule";
 import { useShareholdersAgreementRemoveRule } from "../../../../../generated";
-import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
+import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 
-export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
+export function FirstRefusalRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
 
   const mandatoryRules = [512, 513];
 
   const [ cp, setCp ] = useState(mandatoryRules);
+  const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     if (initSeqList) {
@@ -55,8 +53,6 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
       return arr;
     })
   }
-
-  const [open, setOpen] = useState(false);
 
   const {
     isLoading: removeRuleLoading,
@@ -90,7 +86,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={ getRules }
+        onClose={()=>setOpen(false)}
         aria-labelledby="dialog-title"        
       >
         <DialogContent>
@@ -129,7 +125,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, getRules}: Rul
 
                 {cp.map((v)=> (
                   <Grid key={ v } item xs={3}>
-                    <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={getRules} />
+                    <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} setTime={setTime} />
                   </Grid>
                 ))}
 

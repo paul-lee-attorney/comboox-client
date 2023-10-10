@@ -1,9 +1,7 @@
 
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers';
-
 import { 
   Stack,
   TextField,
@@ -13,21 +11,18 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Collapse,
   Toolbar,
   Button,
   Dialog,
   DialogContent,
   DialogActions,
 } from '@mui/material';
-
 import { AddRule } from './../AddRule';
-
 import { dateParser, longSnParser } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { SetRuleProps } from './../VotingRules/SetVotingRule';
-import { useShareholdersAgreementGetRule } from '../../../../../generated';
 import { HexType } from '../../../../../scripts/common';
+import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
+import { getRule } from '../../../../../scripts/comp/sha';
 
 export interface PosAllocateRule {
   seqOfRule: number ;
@@ -88,7 +83,7 @@ export function prParser(hexRule: HexType): PosAllocateRule {
   return rule;
 }
 
-export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: SetRuleProps ) {
+export function SetPositionAllocateRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps ) {
 
   const defaultRule: PosAllocateRule = {
     seqOfRule: seq, 
@@ -107,27 +102,18 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
   };
   
   const [ objPR, setObjPR ] = useState<PosAllocateRule>(defaultRule); 
-
-  const [ newPR, setNewPR ] = useState<PosAllocateRule>(defaultRule);
-
-  const [ editable, setEditable ] = useState<boolean>(false); 
   const [ open, setOpen ] = useState(false);
 
-  const {
-    refetch: obtainRule
-  } = useShareholdersAgreementGetRule({
-    address: sha,
-    args: [ BigInt(seq) ],
-    onSuccess(res) {
-      setNewPR(prParser(res))
-    }
-  })
+  useEffect(()=>{
+    getRule(sha, seq).then(
+      res => setObjPR(prParser(res))
+    );
+  }, [sha, seq, time]);  
 
   return (
     <>
       <Button
-        // disabled={ !newGR }
-        variant={newPR && newPR.seqOfPos > 0 ? 'contained' : 'outlined'}
+        variant={objPR && objPR.seqOfPos > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -145,7 +131,6 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
 
         <DialogContent>
 
-
           <Paper elevation={3} sx={{
             alignContent:'center', 
             justifyContent:'center', 
@@ -158,18 +143,16 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
 
               <Box sx={{ minWidth:600 }} >
                 <Toolbar sx={{ textDecoration:'underline' }} >
-                  <h4>Rule No. { seq.toString() } - { titleOfPositions[newPR.titleOfPos - 1] } </h4>
+                  <h4>Rule No. { seq.toString() } - { titleOfPositions[objPR.titleOfPos - 1] } </h4>
                 </Toolbar>
               </Box>
 
               <AddRule 
                 sha={ sha } 
                 rule={ prCodifier(objPR) } 
-                refreshRule={obtainRule} 
-                editable={editable} 
-                setEditable={setEditable} 
                 isFinalized={isFinalized}
-                getRules={ getRules }
+                setTime={setTime}
+                setOpen={setOpen}
               />
             </Stack>
 
@@ -178,87 +161,62 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
               spacing={1} 
             >
 
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                  
-                {/* <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='SeqOfRule'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newPR.seqOfRule.toString() }
-                /> */}
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='QtyOfSubRule'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newPR.qtyOfSubRule.toString() }
-                />
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='RemovePos ?'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={newPR.removePos ? 'True' : 'False'}
-                />
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='SeqOfPosition'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newPR.seqOfPos.toString() }
-                />
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='TitleOfPos'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ titleOfPositions[newPR.titleOfPos - 1] ?? 'Director' }
-                />
-
-              </Stack>
-
-              <Collapse in={ editable && !isFinalized } >
-                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-                  {/* <TextField 
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                    
+                  <TextField 
                     variant='outlined'
                     size='small'
-                    label='SeqOfRule'
+                    label='QtyOfSubRule'
+                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjPR((v) => ({
-                      ...v,
-                      seqOfRule: parseInt( e.target.value ?? '0' ),
-                    }))}
-                    value={ objPR.seqOfRule }              
-                  /> */}
+                    value={ objPR.qtyOfSubRule.toString() }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='RemovePos ?'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={objPR.removePos ? 'True' : 'False'}
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='SeqOfPosition'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ objPR.seqOfPos.toString() }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='TitleOfPos'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ titleOfPositions[objPR.titleOfPos - 1] ?? 'Director' }
+                  />
+
+                </Stack>
+              )}
+
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
                     variant='outlined'
@@ -327,62 +285,64 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                   </FormControl>
 
                 </Stack>
-              </Collapse>
+              )}
 
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='Nominator'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newPR.nominator.toString())}
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='Nominator'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objPR.nominator.toString())}
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='TitleOfNominator'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ titleOfPositions[newPR.titleOfNominator - 1] ?? 'Shareholder'}
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='TitleOfNominator'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ titleOfPositions[objPR.titleOfNominator - 1] ?? 'Shareholder'}
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='SeqOfVR'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={newPR.seqOfVR.toString()}
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='SeqOfVR'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={objPR.seqOfVR.toString()}
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='EndDate'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ dateParser(newPR.endDate) }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='EndDate'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ dateParser(objPR.endDate) }
+                  />
 
-              </Stack>
+                </Stack>
+              )}
 
-              <Collapse in={ editable && !isFinalized } >
-                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
                     variant='outlined'
@@ -449,7 +409,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, getRules }: Set
                   />
 
                 </Stack>
-              </Collapse>
+              )}
 
             </Stack>
           </Paper>

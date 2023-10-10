@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { 
   Stack,
   Paper,
@@ -10,9 +9,7 @@ import {
   StepContent,
   Typography,
 } from "@mui/material";
-
 import { AddrZero, HexType, booxMap } from "../../../../scripts/common";
-
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
 import { voteEnded } from "../../../../scripts/common/meetingMinutes";
@@ -28,16 +25,16 @@ import { getSHA } from "../../../../scripts/comp/gk";
 
 interface ShaLifecycleProps {
   sha: HexType;
-  isFinalized: boolean;
+  finalized: boolean;
 }
 
-export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
+export function ShaLifecycle({sha, finalized}: ShaLifecycleProps) {
 
   const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(0);
   const [ seqOfMotion, setSeqOfMotion ] = useState<bigint>();
   const [ passed, setPassed ] = useState<boolean>(false);
-  const [ finalized, setFinalized ] = useState<boolean>(isFinalized);
+  const [ isFinalized, setIsFinalized ] = useState<boolean>(finalized);
 
   useEffect(()=>{
     const updateActiveStep = async () => {
@@ -53,7 +50,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
         
         switch (fileState) {
           case 1: 
-            nextStep = finalized ? 1: 0;
+            nextStep = isFinalized ? 1: 0;
             break;
           case 2:
             flag = await established(sha);
@@ -87,7 +84,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
     };
 
     updateActiveStep();
-  }, [boox, gk, sha, finalized, passed, activeStep]);
+  }, [boox, gk, sha, isFinalized, passed, activeStep]);
 
   return (
     <Stack sx={{ width: '100%', alignItems:'center' }} direction={'column'} >
@@ -112,7 +109,7 @@ export function ShaLifecycle({sha, isFinalized}: ShaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of SHA (only for Owner of SHA).
                   </Typography>
-                  <FinalizeSha isSha={true} addr={ sha } setIsFinalized={setFinalized} setNextStep={ setActiveStep } />
+                  <FinalizeSha isSha={true} addr={ sha } setIsFinalized={setIsFinalized} setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>

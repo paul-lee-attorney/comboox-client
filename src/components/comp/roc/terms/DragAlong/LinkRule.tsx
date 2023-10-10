@@ -15,8 +15,8 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { LinkRule, triggerTypes } from "./DragAlong";
 import { dateParser, longDataParser, toPercent } from "../../../../../scripts/common/toolsKit";
+import { LinkRule, triggerTypes } from "../../../../../scripts/comp/da";
 
 interface LinkRuleProps {
   rule: LinkRule
@@ -134,18 +134,6 @@ export function LinkRule({ rule }: LinkRuleProps) {
                   }}
                   value={ rule.proRata ? 'True' : 'False' }              
                 />
-
-                {/* <TextField 
-                  variant='outlined'
-                  inputProps={{readOnly: true}}
-                  label='TypeOfFollowers'
-                  size="small"
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ rule.typeOfFollowers == 1 ? 'RestAllMembers' : 'SpecifiedMembers' }              
-                /> */}
 
               </Stack>
 

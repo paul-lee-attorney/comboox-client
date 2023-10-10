@@ -1,6 +1,5 @@
 
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { 
   Stack,
   TextField,
@@ -11,21 +10,18 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Collapse,
   Button,
   DialogContent,
   DialogActions,
   Dialog,
 } from '@mui/material';
-
 import { AddRule } from '../AddRule';
-
 import { HexType } from '../../../../../scripts/common';
 import { longDataParser } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { useShareholdersAgreementGetRule } from '../../../../../generated';
-import { SetRuleProps } from '../VotingRules/SetVotingRule';
 import { titleOfPositions } from '../PositionAllocationRules/SetPositionAllocateRule';
+import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
+import { getRule } from '../../../../../scripts/comp/sha';
 
 export interface ListingRule {
   seqOfRule: number;
@@ -89,32 +85,23 @@ export function lrCodifier(objLr: ListingRule ): HexType {
   return hexLr;
 }
 
-export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps) {
+export function SetListingRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
 
   defaultLR = {...defaultLR, seqOfRule: seq};
 
-  const [ objLR, setObjLR ] = useState<ListingRule>(defaultLR); 
-
-  const [ newLR, setNewLR ] = useState<ListingRule>(defaultLR);
-
-  const [ editable, setEditable ] = useState<boolean>(false);
-  
+  const [ objLR, setObjLR ] = useState<ListingRule>(defaultLR);   
   const [ open, setOpen ] = useState(false);
 
-  const {
-    refetch: obtainRule
-  } = useShareholdersAgreementGetRule({
-    address: sha,
-    args: [ BigInt(seq) ],
-    onSuccess(res) {
-      setNewLR(lrParser(res))
-    }
-  })
+  useEffect(()=>{
+    getRule(sha, seq).then(
+      res => setObjLR(lrParser(res))
+    );
+  }, [sha, seq, time]); 
 
   return (
     <>
       <Button
-        variant={ newLR.seqOfRule == seq ? 'contained' : 'outlined' }
+        variant={ objLR.seqOfRule == seq ? 'contained' : 'outlined' }
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -151,11 +138,9 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
               <AddRule
                 sha={ sha }
                 rule={ lrCodifier(objLR) }
-                refreshRule={ obtainRule }
-                editable={ editable }
-                setEditable={ setEditable }
                 isFinalized={ isFinalized }
-                getRules={ getRules }
+                setTime={setTime}
+                setOpen={setOpen}
               />
               
             </Stack>
@@ -165,102 +150,75 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
               spacing={1}
             >
 
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                {/* <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='SeqOfRule'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newLR.seqOfRule.toString() }
-                /> */}
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='ClassOfShare'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newLR.classOfShare.toString() }
-                />
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='TitleOfIssuer'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ titleOfPositions[ (newLR.titleOfIssuer < 1 ? 1 : newLR.titleOfIssuer) - 1 ] }
-                />
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='MaxTotalPar (Cent)'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser(newLR.maxTotalPar.toString()) }
-                />
-
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='TitleOfVerifier'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ titleOfPositions[ (newLR.titleOfVerifier < 1 ? 1 : newLR.titleOfVerifier) - 1 ] }
-                />
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='MaxQtyOfInvestors'
+                    label='ClassOfShare'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ newLR.maxQtyOfInvestors }                                    
+                    value={ objLR.classOfShare.toString() }
                   />
 
-
-              </Stack>
-
-              <Collapse in={ editable && !isFinalized } >
-                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-                  {/* <TextField 
+                  <TextField 
                     variant='outlined'
                     size='small'
-                    label='SeqOfRule'
+                    label='TitleOfIssuer'
+                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjLR((v) => ({
-                      ...v,
-                      seqOfRule: parseInt( e.target.value ?? '0'),
-                      }))
-                    }
-                    
-                    value={ objLR.seqOfRule }
-                  /> */}
+                    value={ titleOfPositions[ (objLR.titleOfIssuer < 1 ? 1 : objLR.titleOfIssuer) - 1 ] }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='MaxTotalPar (Cent)'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser(objLR.maxTotalPar.toString()) }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='TitleOfVerifier'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ titleOfPositions[ (objLR.titleOfVerifier < 1 ? 1 : objLR.titleOfVerifier) - 1 ] }
+                  />
+
+                    <TextField 
+                      variant='outlined'
+                      size='small'
+                      label='MaxQtyOfInvestors'
+                      inputProps={{readOnly: true}}
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      value={ objLR.maxQtyOfInvestors }                                    
+                    />
+
+
+                </Stack>
+              )}
+
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
                     variant='outlined'
@@ -347,74 +305,76 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                   />
 
                 </Stack>
-              </Collapse>
+              )}
 
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='CeilingPrice (Cent)'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser( newLR.ceilingPrice.toString() )}
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='CeilingPrice (Cent)'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser( objLR.ceilingPrice.toString() )}
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='FloorPrice (Cent)'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser( newLR.floorPrice.toString() )}
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='FloorPrice (Cent)'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser( objLR.floorPrice.toString() )}
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='OffPrice (Cent) '
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longDataParser( newLR.offPrice.toString() ) }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='OffPrice (Cent) '
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longDataParser( objLR.offPrice.toString() ) }
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='LockupDays'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newLR.lockupDays.toString() }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='LockupDays'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ objLR.lockupDays.toString() }
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='VotingWeight (%)'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ newLR.votingWeight.toString()}
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='VotingWeight (%)'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ objLR.votingWeight.toString()}
+                  />
 
-              </Stack>
+                </Stack>
+              )}
 
-              <Collapse in={ editable && !isFinalized } >
-                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
                     variant='outlined'
@@ -492,7 +452,7 @@ export function SetListingRule({ sha, seq, isFinalized, getRules }: SetRuleProps
                   />
 
                 </Stack>
-              </Collapse>
+              )}
 
             </Stack>
           

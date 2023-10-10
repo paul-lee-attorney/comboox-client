@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -39,65 +39,15 @@ import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AddTerm } from "../AddTerm";
 import { LockerOfShare } from "./LockerOfShare";
+import { Locker, getLockers } from "../../../../../scripts/comp/lu";
 
-interface Locker {
-  seqOfShare: number;
-  dueDate: number;
-  keyholders: number[];
-}
-
-async function getLocker(lu: HexType, seq: number): Promise<Locker> {
-  let res = await readContract({
-    address: lu,
-    abi: lockUpABI,
-    functionName: 'getLocker',
-    args: [ BigInt(seq) ],
-  });
-
-  let locker: Locker = {
-    seqOfShare: seq,
-    dueDate: res[0],
-    keyholders: res[1].map(v => Number(v)),
-  }
-
-  return locker;
-}
-
-async function getLockers(lu: HexType, shares: number[]): Promise<Locker[]> {
-  let len = shares.length;
-  let output: Locker[] = [];
-
-  while (len > 0) {
-    let seqOfShare = shares[len - 1];
-    let locker = await getLocker(lu, seqOfShare);
-    output.push(locker);
-    len--;
-  }
-
-  return output;
-}
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ lockers, setLockers ] = useState<Locker[]>();
-
-  const { 
-    refetch: obtainLockers 
-  } = useLockUpLockedShares({
-    address: term,
-    onSuccess(data) {
-      let ls: number[] = [];
-      data.map(v => {
-        ls.push(Number(v))
-      })
-      if (term)
-        getLockers(term, ls).
-          then(lks => setLockers(lks)); 
-    }
-  });
-
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
   const [ dueDate, setDueDate ] = useState<number>();
+  const [ open, setOpen ] = useState(false);
 
   const { 
     isLoading: addLockerLoading,
@@ -107,9 +57,6 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: seqOfShare && dueDate
       ? [ BigInt(seqOfShare), BigInt(dueDate) ]
       : undefined,
-    onSuccess() {
-      obtainLockers();
-    }
   });
 
   const { 
@@ -118,9 +65,6 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   } = useLockUpDelLocker({
     address: term,
     args: seqOfShare ? [ BigInt(seqOfShare) ] : undefined,
-    onSuccess() {
-      obtainLockers();
-    }
   });
 
   const [ keyholder, setKeyholder ] = useState<string>();
@@ -133,9 +77,6 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: seqOfShare && keyholder
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
-    onSuccess() {
-      obtainLockers();
-    }
   });
 
   const { 
@@ -146,12 +87,13 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: seqOfShare && keyholder
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
-    onSuccess() {
-      obtainLockers();
-    }
   });
 
-  const [ open, setOpen ] = useState(false);
+  useEffect(()=>{
+    getLockers(term).then(
+      ls => setLockers(ls)
+    );
+  }, [term, addLocker, removeLocker, addKeyholder, removeKeyholder]);
 
   return (
     <>

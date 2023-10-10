@@ -1,17 +1,8 @@
-import { useState } from "react";
-
-import { 
-  Divider,
-  Paper,
-  Stack,
-  Toolbar,
-} from "@mui/material";
-
+import { useEffect, useState } from "react";
+import { Divider, Paper, Stack, Toolbar } from "@mui/material";
 import { HexType } from "../../../../scripts/common";
-
 import { AntiDilution } from "../terms/AntiDilution/AntiDilution";
-
-import { defaultTerms, getTerm } from "../../../../scripts/comp/sha";
+import { defaultTerms, getRules, getTerm, getTitles } from "../../../../scripts/comp/sha";
 import { SetGovernanceRule } from "../rules/GovernanceRules/SetGovernanceRule";
 import { VotingRules } from "../rules/VotingRules/VotingRules";
 import { PositionAllocateRules } from "../rules/PositionAllocationRules/PositionAllocateRules";
@@ -21,7 +12,6 @@ import { LockUp } from "../terms/LockUp/LockUp";
 import { DragAlong } from "../terms/DragAlong/DragAlong";
 import { Options } from "../terms/Options/Options";
 import { TagAlong } from "../terms/TagAlong/TagAlong";
-import { useShareholdersAgreementGetRules, useShareholdersAgreementGetTitles } from "../../../../generated";
 import { ListingRules } from "../rules/ListingRules/ListingRules";
 
 export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
@@ -43,10 +33,10 @@ export async function groupingRules(bigRules: readonly bigint[]): Promise<number
 
 interface ShaBodyTermsProps {
   sha: HexType;
-  isFinalized: boolean;
+  finalized: boolean;
 }
 
-export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
+export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
 
   const [ grLs, setGrLs ] = useState<number[]>();
   const [ vrLs, setVrLs ] = useState<number[]>();
@@ -55,12 +45,11 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
   const [ guoLs, setGuoLs ] = useState<number[]>();
   const [ lrLs, setLrLs ] = useState<number[]>();
 
-  const {
-    refetch: getRules
-  } = useShareholdersAgreementGetRules({
-    address: sha,
-    onSuccess(res) {
-      groupingRules(res).then(
+  const [ time, setTime ] = useState<number>(0);
+
+  useEffect(()=>{
+    getRules(sha).then(
+      res => groupingRules(res).then(
         rules => {
           setGrLs(rules[0]);
           setVrLs(rules[1]);
@@ -70,81 +59,78 @@ export function ShaBodyTerms({sha, isFinalized}: ShaBodyTermsProps) {
           setLrLs(rules[5]);
         }
       )
-    }
-  })
+    )
+  }, [sha, time]);
 
   const [ terms, setTerms ] = useState<HexType[]>(defaultTerms);
 
-  const {
-    refetch: getTitles
-  } = useShareholdersAgreementGetTitles({
-    address: sha,
-    onSuccess(res) {
-      let titles = res.map(v=>Number(v));
-      titles.forEach(async v => {
-        let term = await getTerm(sha, v);
-        setTerms(k => {
-          let out = [...k];
-          out[v-1] = term;
-          return out;
+  useEffect(()=>{
+    getTitles(sha).then(
+      res => {
+        let titles = res.map(v=>Number(v));
+        titles.forEach(async v => {
+          let term = await getTerm(sha, v);
+          setTerms(k => {
+            let out = [...k];
+            out[v-1] = term;
+            return out;
+          })
         })
-      })
-    }
-  })
+      }
+    )
+  }, [sha, time]);
 
   return (
-    // <Box width={1180} >
-      <Stack direction={'row'} justifyContent='center' >
+    <Stack direction={'row'} justifyContent='center' >
 
-        <Stack direction="column"  >
-          <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider' }} >
-            <Toolbar sx={{ textDecoration:'underline' }} >
-              <h4>Rules</h4>
-            </Toolbar>
+      <Stack direction="column"  >
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider' }} >
+          <Toolbar sx={{ textDecoration:'underline' }} >
+            <h4>Rules</h4>
+          </Toolbar>
 
-            <Divider />
+          <Divider />
 
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              <SetGovernanceRule sha={ sha } initSeqList={ grLs } isFinalized={ isFinalized } getRules={ getRules } />
-              <VotingRules sha={ sha } initSeqList={ vrLs } isFinalized={ isFinalized } getRules={ getRules } />
-            </Stack>
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              <PositionAllocateRules sha={ sha } initSeqList={ prLs } isFinalized={ isFinalized } getRules={ getRules } />
-              <FirstRefusalRules sha={ sha } initSeqList={ frLs } isFinalized={ isFinalized } getRules={ getRules } />
-            </Stack>
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              {(!isFinalized || (isFinalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={isFinalized} getRules={ getRules } />)}
-              <ListingRules sha={ sha } initSeqList={ lrLs } isFinalized={ isFinalized } getRules={ getRules } />
-            </Stack>
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
+            <SetGovernanceRule sha={ sha } seq={ 0 } isFinalized={ finalized } time={time} setTime={ setTime } />
+            <VotingRules sha={ sha } initSeqList={ vrLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+          </Stack>
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
+            <PositionAllocateRules sha={ sha } initSeqList={ prLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+            <FirstRefusalRules sha={ sha } initSeqList={ frLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+          </Stack>
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
+            {(!finalized || (finalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={finalized} time={time} setTime={ setTime } />)}
+            <ListingRules sha={ sha } initSeqList={ lrLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+          </Stack>
 
-          </Paper>
-        </Stack>
+        </Paper>
+      </Stack>
 
-        <Stack direction="column" >
-          <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider' }} >
+      <Stack direction="column" >
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider' }} >
 
-            <Toolbar sx={{ textDecoration:'underline' }}>
-              <h4>Terms</h4>
-            </Toolbar>
+          <Toolbar sx={{ textDecoration:'underline' }}>
+            <h4>Terms</h4>
+          </Toolbar>
 
-            <Divider />
+          <Divider />
 
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-              <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={isFinalized} />
-              <LockUp sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={isFinalized} />
-            </Stack>
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
-              <DragAlong sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={isFinalized} />
-              <TagAlong sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={isFinalized} />
-            </Stack>
-            <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>                      
-              <Options sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={isFinalized} />
-            </Stack>
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
+            <AntiDilution sha={ sha } term={ terms[0] } setTerms={ setTerms } isFinalized={finalized} />
+            <LockUp sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={finalized} />
+          </Stack>
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
+            <DragAlong sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={finalized} />
+            <TagAlong sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={finalized} />
+          </Stack>
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>                      
+            <Options sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={finalized} />
+          </Stack>
 
-          </Paper>
-        </Stack>
+        </Paper>
+      </Stack>
 
-      </Stack>    
-    // </Box>
+    </Stack>    
   );
 } 

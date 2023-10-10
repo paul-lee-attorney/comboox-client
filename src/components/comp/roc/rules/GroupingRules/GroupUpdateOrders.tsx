@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { 
   Stack,
   IconButton,
@@ -10,23 +9,22 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  Grid,
 } from "@mui/material";
-
 import {
   AddCircle,
   ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
-
 import { SetGroupUpdateOrder } from "./SetGroupUpdateOrder";
-import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
 import { useShareholdersAgreementRemoveRule } from "../../../../../generated";
+import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 
-export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
+export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, setTime }: GroupRulesSettingProps) {
 
   const mandatoryRule: number[] = isFinalized ? [] : [768];
-
   const [ cp, setCp ] = useState(mandatoryRule);
+  const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
@@ -75,24 +73,11 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
     }
   })
 
-  // const removeCp = () => {
-  //   setCp(v => {
-  //     let arr = [...v];
-  //     arr.pop();      
-  //     return arr;
-  //   })
-  // }
-
-  const [open, setOpen] = useState(false);
-
   return (
     <>
-
       <Button
-        // disabled={ !newGR }
         variant={ initSeqList && initSeqList.length > 0 ? "contained" : "outlined"}
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
@@ -102,7 +87,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={ getRules }
+        onClose={ ()=>setOpen(false) }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>
@@ -137,7 +122,9 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, getRules }: Ru
               </Stack>
 
               {cp.map((v)=> (
-                <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} getRules={ getRules } />
+                <Grid key={v} item xs={3}>
+                  <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} time={time} setTime={setTime} />
+                </Grid>
               ))}
             
             </Box>

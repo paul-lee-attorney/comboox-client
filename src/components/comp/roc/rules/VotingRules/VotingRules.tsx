@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { 
   Stack,
   IconButton,
@@ -12,32 +11,36 @@ import {
   DialogActions,
   Grid,
 } from "@mui/material";
-
-
 import {
   AddCircle,
   ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
-
 import { SetVotingRule, VotingRule } from "./SetVotingRule";
-
 import { 
   useShareholdersAgreementRemoveRule 
 } from "../../../../../generated";
-import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
-
+import { HexType } from "../../../../../scripts/common";
 
 export interface VotingRuleWrap {
   subTitle: string,
   votingRule: VotingRule,
 }
 
-export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
+export interface GroupRulesSettingProps {
+  sha: HexType;
+  initSeqList: number[] | undefined;
+  isFinalized: boolean;
+  time: number;
+  setTime: Dispatch<SetStateAction<number>>;
+}
+
+export function VotingRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
 
   const mandatoryRules: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
 
   const [ cp, setCp ] = useState(mandatoryRules);
+  const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
@@ -61,8 +64,6 @@ export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEdit
       return arr;
     })
   }
-
-  const [open, setOpen] = useState(false);
 
   const {
     isLoading: removeRuleLoading,
@@ -100,7 +101,7 @@ export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEdit
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={ getRules }
+        onClose={()=>setOpen(false) }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>
@@ -139,7 +140,7 @@ export function VotingRules({sha, initSeqList, isFinalized, getRules}: RulesEdit
 
                 {cp.map(v=> (
                   <Grid key={ v } item xs={3} >
-                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
+                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} setTime={ setTime } />
                   </Grid>
                 ))}
 

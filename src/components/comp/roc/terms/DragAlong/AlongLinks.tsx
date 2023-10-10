@@ -4,9 +4,9 @@ import {
   Paper,
   Chip,
 } from '@mui/material';
-import { AlongLink } from './DragAlong';
 import { longSnParser, splitStrArr } from '../../../../../scripts/common/toolsKit';
 import { LinkRule } from './LinkRule';
+import { AlongLink } from '../../../../../scripts/comp/da';
 
 interface AlongLinksProps {
   link: AlongLink;

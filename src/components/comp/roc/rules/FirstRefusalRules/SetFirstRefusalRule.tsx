@@ -1,13 +1,11 @@
 
-import { useState } from 'react';
-
+import { useEffect, useState } from 'react';
 import { 
   Stack,
   TextField,
   Paper,
   Toolbar,
   Box,
-  Collapse,
   FormControl,
   InputLabel,
   Select,
@@ -17,15 +15,12 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
-
 import { AddRule } from '../AddRule'
-
 import { HexType } from '../../../../../scripts/common';
 import { ListAlt } from '@mui/icons-material';
 import { longSnParser } from '../../../../../scripts/common/toolsKit';
-import { SetRuleProps } from '../VotingRules/SetVotingRule';
-import { useShareholdersAgreementGetRule } from '../../../../../generated';
-
+import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
+import { getRule } from '../../../../../scripts/comp/sha';
 
 export interface FirstRefusalRule {
   seqOfRule: number;
@@ -40,16 +35,10 @@ export interface FirstRefusalRule {
   argu: number;
 }
 
-export interface FirstRefusalRuleWrap {
-  subTitle: string;
-  rule: FirstRefusalRule;
-}
-
-interface SetFirstRefusalRuleProps {
-  sha: HexType,
-  seq: number,
-  isFinalized: boolean,
-}
+// export interface FirstRefusalRuleWrap {
+//   subTitle: string;
+//   rule: FirstRefusalRule;
+// }
 
 export function frCodifier(rule: FirstRefusalRule): HexType {
   let hexFR: HexType = `0x${
@@ -93,40 +82,15 @@ export function frParser(hexRule: HexType ): FirstRefusalRule {
   return rule;
 } 
 
-const subTitles: string[] = [
-  '- For Capital Increase ',
-  '- For External Transfer ',
-  '- Newly Added First Refusal Rule', 
-]
-
-// const defaultRules: FirstRefusalRule[] = [
-//   { seqOfRule: 512, 
-//     qtyOfSubRule: 2, 
-//     seqOfSubRule: 1,
-//     typeOfDeal: 1,
-//     membersEqual: true,
-//     proRata: true,
-//     basedOnPar: false,
-//     rightholders: [0,0,0,0],
-//     para: 0,
-//     argu: 0,
-//   },
-//   { seqOfRule: 513, 
-//     qtyOfSubRule: 2, 
-//     seqOfSubRule: 2,
-//     typeOfDeal: 2,
-//     membersEqual: true,
-//     proRata: true,
-//     basedOnPar: false,
-//     rightholders: [0,0,0,0],
-//     para: 0,
-//     argu: 0,
-//   }
+// const subTitles: string[] = [
+//   '- For Capital Increase ',
+//   '- For External Transfer ',
+//   '- Newly Added First Refusal Rule', 
 // ]
 
 export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
-export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRuleProps) {
+export function SetFirstRefusalRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
 
   const defFR: FirstRefusalRule = 
       { seqOfRule: seq, 
@@ -141,30 +105,21 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
         argu: 0,
       };
 
-  let subTitle: string = (seq < 514) ? subTitles[seq - 512] : subTitles[2]; 
+  // let subTitle: string = (seq < 514) ? subTitles[seq - 512] : subTitles[2]; 
 
   const [ objFR, setObjFR ] = useState<FirstRefusalRule>(defFR); 
-
-  const [ newFR, setNewFR ] = useState<FirstRefusalRule>(defFR);
-
-  const [ editable, setEditable ] = useState<boolean>(false); 
-
-  const {
-    refetch: obtainRule
-  } = useShareholdersAgreementGetRule({
-    address: sha,
-    args: [ BigInt(seq) ],
-    onSuccess(res) {
-      setNewFR(frParser(res))
-    }
-  })
-
   const [ open, setOpen ] = useState(false);
+
+  useEffect(()=>{
+    getRule(sha, seq).then(
+      res => setObjFR(frParser(res))
+    );
+  }, [sha, seq, time]);
 
   return (
     <>
       <Button
-        variant={ newFR && newFR.seqOfRule > 0 ? "contained" : "outlined" }
+        variant={ objFR && objFR.seqOfRule > 0 ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -194,18 +149,16 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
             <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
               <Box sx={{ minWidth:600 }} >
                 <Toolbar sx={{ textDecoration:'underline' }} >
-                  <h4>Rule No. {seq} - FirstRefusalRight for { typesOfDeal[newFR.typeOfDeal -1] }  </h4>
+                  <h4>Rule No. {seq} - FirstRefusalRight for { typesOfDeal[objFR.typeOfDeal -1] }  </h4>
                 </Toolbar>
               </Box>
 
               <AddRule 
                 sha={ sha }
                 rule={ frCodifier(objFR) }
-                refreshRule={ obtainRule }
-                editable = { editable }
-                setEditable={ setEditable }
                 isFinalized={isFinalized}
-                getRules={getRules}
+                setTime={setTime}
+                setOpen={setOpen}
               />
             </Stack>
 
@@ -213,32 +166,8 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
               direction={'column'} 
               spacing={1} 
             >
-
+              {isFinalized && (
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  {/* <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='SeqOfRule'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ newFR.seqOfRule.toString() }
-                  /> */}
-
-                  {/* <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='QtyOfSubRule'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ newFR.qtyOfSubRule.toString() }
-                  /> */}
 
                   <TextField 
                     variant='outlined'
@@ -249,7 +178,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ typesOfDeal[newFR.typeOfDeal -1] }
+                    value={ typesOfDeal[objFR.typeOfDeal -1] }
                   />
 
                   <TextField 
@@ -261,7 +190,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newFR.membersEqual ? 'True' : 'False'}
+                    value={objFR.membersEqual ? 'True' : 'False'}
                   />
 
                   <TextField 
@@ -273,7 +202,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newFR.proRata ? 'True' : 'False'}
+                    value={objFR.proRata ? 'True' : 'False'}
                   />
 
                   <TextField 
@@ -285,43 +214,14 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                       m:1,
                       minWidth: 218,
                     }}
-                    value={newFR.basedOnPar ? 'True' : 'False'}
+                    value={objFR.basedOnPar ? 'True' : 'False'}
                   />
 
                 </Stack>
+              )}
 
-              <Collapse in={ editable && !isFinalized } >
-                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-
-                  {/* <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='SeqOfRule'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => ({
-                      ...v,
-                      seqOfRule: parseInt(e.target.value),
-                    }))}
-                    value={ objFR.seqOfRule }              
-                  /> */}
-
-                  {/* <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='QtyOfSubRule'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => ({
-                      ...v,
-                      qtyOfSubRule: parseInt(e.target.value),
-                    }))}
-                    value={ objFR.qtyOfSubRule }              
-                  /> */}
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="typeOfDeal-label">TypeOfDeal</InputLabel>
@@ -395,62 +295,64 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                   </FormControl>
 
                 </Stack>
-              </Collapse>
+              )}
 
-              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              {isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='Rightholder_1'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newFR.rightholders[0].toString()) }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='Rightholder_1'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objFR.rightholders[0].toString()) }
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='Rightholder_2'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newFR.rightholders[1].toString()) }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='Rightholder_2'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objFR.rightholders[1].toString()) }
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='Rightholder_3'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newFR.rightholders[2].toString()) }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='Rightholder_3'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objFR.rightholders[2].toString()) }
+                  />
 
-                <TextField 
-                  variant='outlined'
-                  size='small'
-                  label='Rightholder_4'
-                  inputProps={{readOnly: true}}
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ longSnParser(newFR.rightholders[3].toString()) }
-                />
+                  <TextField 
+                    variant='outlined'
+                    size='small'
+                    label='Rightholder_4'
+                    inputProps={{readOnly: true}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ longSnParser(objFR.rightholders[3].toString()) }
+                  />
 
-              </Stack>
+                </Stack>
+              )}
 
-              <Collapse in={ editable && !isFinalized } >
-                <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+              {!isFinalized && (
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                   <TextField 
                     variant='outlined'
@@ -517,7 +419,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, getRules }: SetRule
                   />
 
                 </Stack>
-              </Collapse>
+              )}
 
             </Stack>
 

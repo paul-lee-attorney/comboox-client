@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { 
   Stack,
   IconButton,
@@ -12,25 +11,22 @@ import {
   DialogActions,
   Grid,
 } from "@mui/material";
-
 import {
   AddCircle,
   ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
-
-import { 
+import {
   useShareholdersAgreementRemoveRule 
 } from "../../../../../generated";
-import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
 import { SetListingRule } from "./SetListingRule";
+import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 
-
-export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
+export function ListingRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
 
   const mandatoryRule: number[] = isFinalized ? [] : [1024];
-
   const [ cp, setCp ] = useState(mandatoryRule);
+  const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
@@ -54,8 +50,6 @@ export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEdi
       return arr;
     })
   }
-
-  const [open, setOpen] = useState(false);
 
   const {
     isLoading: removeRuleLoading,
@@ -89,8 +83,8 @@ export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEdi
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={ getRules }
-        aria-labelledby="dialog-title"        
+        onClose={ ()=>setOpen(false) }
+        aria-labelledby="dialog-title"
       >
         <DialogContent>
 
@@ -128,7 +122,7 @@ export function ListingRules({sha, initSeqList, isFinalized, getRules}: RulesEdi
 
                 {cp.map(v=> (
                   <Grid key={ v } item xs={3} >
-                    <SetListingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
+                    <SetListingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={ time } setTime={setTime} />
                   </Grid>
                 ))}
 

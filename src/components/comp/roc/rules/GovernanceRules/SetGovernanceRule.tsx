@@ -1,14 +1,11 @@
-import { useState, } from 'react';
-
+import { Dispatch, SetStateAction, useEffect, useState, } from 'react';
 import dayjs from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers';
-
 import {
   Box, 
   Stack,
   TextField,
   Paper,
-  Collapse,
   Toolbar,
   FormControl,
   InputLabel,
@@ -19,13 +16,11 @@ import {
   DialogContent,
   DialogActions,
 } from '@mui/material';
-
 import { AddRule } from '../AddRule';
-
 import { HexType } from '../../../../../scripts/common';
 import { dateParser, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { useShareholdersAgreementGetRule } from '../../../../../generated';
+import { getRule } from '../../../../../scripts/comp/sha';
 
 export interface GovernanceRule {
   fundApprovalThreshold: number;
@@ -109,92 +104,82 @@ export function grParser(hexRule: HexType): GovernanceRule {
 
 export interface RulesEditProps {
   sha: HexType;
-  initSeqList: number[] | undefined;
+  seq: number;
   isFinalized: boolean;
-  getRules: ()=>void;
+  time: number;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: RulesEditProps) {
+export function SetGovernanceRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRule>(defaultGR);
-  const [ newGR, setNewGR ] = useState<GovernanceRule>(defaultGR);
-
-  const [ editable, setEditable ] = useState<boolean>(false); 
   const [ open, setOpen ] = useState(false);
 
-  const {
-    refetch: getGr
-  } = useShareholdersAgreementGetRule({
-    address: sha,
-    args: [ BigInt(0) ],
-    onSuccess(res) {
-      setNewGR(grParser(res))
-    }
-  })
+  useEffect(()=>{
+    getRule(sha, seq).then(
+      res => setObjGR(grParser(res))
+    );
+  }, [sha, seq, time]);
 
   return (
     <>
       <Button
-        // disabled={ !newGR }
-        variant={newGR.establishedDate > 0 ? 'contained' : 'outlined'}
+        variant={objGR.establishedDate > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
-        // fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start'}}
         onClick={()=>setOpen(true)}      
       >
         Governance Rules 
       </Button>
 
-      {newGR && (
-        <Dialog
-          maxWidth={false}
-          open={open}
-          onClose={ getRules }
-          aria-labelledby="dialog-title"        
-        >
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={ ()=>setOpen(false) }
+        aria-labelledby="dialog-title"        
+      >
 
-          <DialogContent>
+        <DialogContent>
 
-            <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider'}} >
-              
-              <Stack direction={'row'} sx={{ alignItems:'center' }}>
-                <Toolbar sx={{ textDecoration:'underline' }}>
-                  <h4>Governance Rule</h4>
-                </Toolbar>
+          <Paper elevation={3} sx={{ m:1, p:1, border:1, borderColor:'divider'}} >
+            
+            <Stack direction={'row'} sx={{ alignItems:'center' }}>
+              <Toolbar sx={{ textDecoration:'underline' }}>
+                <h4>Governance Rule</h4>
+              </Toolbar>
+            </Stack>
+
+            <Paper elevation={3} sx={{
+              alignContent:'center', 
+              justifyContent:'center', 
+              p:1, m:1, 
+              border: 1, 
+              borderColor:'divider' 
+              }} 
+            >
+
+              <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
+                <Box sx={{ minWidth:600 }} >
+                  <Toolbar sx={{ textDecoration:'underline' }}>
+                    <h4>Rule No. 0</h4> 
+                  </Toolbar>
+                </Box>
+
+                <AddRule 
+                  sha={ sha }
+                  rule={ grCodifier(objGR) }
+                  isFinalized={ isFinalized }
+                  setTime = { setTime }
+                  setOpen = { setOpen }
+                />
+                
               </Stack>
 
-              <Paper elevation={3} sx={{
-                alignContent:'center', 
-                justifyContent:'center', 
-                p:1, m:1, 
-                border: 1, 
-                borderColor:'divider' 
-                }} 
+              <Stack 
+                direction={'column'} 
+                spacing={1} 
               >
 
-                <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
-                  <Box sx={{ minWidth:600 }} >
-                    <Toolbar sx={{ textDecoration:'underline' }}>
-                      <h4>Rule No. 0</h4> 
-                    </Toolbar>
-                  </Box>
-
-                  <AddRule 
-                    sha={ sha }
-                    rule={ grCodifier(objGR) }
-                    refreshRule={ getGr }
-                    editable={ editable }
-                    setEditable={ setEditable }
-                    isFinalized={ isFinalized }
-                    getRules = { getRules }
-                  />
-                  
-                </Stack>
-
-                <Stack 
-                  direction={'column'} 
-                  spacing={1} 
-                >
-
+                {isFinalized && (
                   <Stack direction={'row'} sx={{ alignItems: 'center', }} >
                     <TextField 
                       variant='outlined'
@@ -205,7 +190,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ newGR.basedOnPar ? 'True' : 'False' }
+                      value={ objGR.basedOnPar ? 'True' : 'False' }
                     />
 
                     <TextField 
@@ -217,7 +202,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(newGR.proposeWeightRatioOfGM ?? 0)}
+                      value={toPercent(objGR.proposeWeightRatioOfGM ?? 0)}
                     />
 
                     <TextField 
@@ -229,7 +214,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(newGR.proposeHeadRatioOfMembers ?? 0)}
+                      value={toPercent(objGR.proposeHeadRatioOfMembers ?? 0)}
                     />
 
                     <TextField 
@@ -241,7 +226,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(newGR.proposeHeadRatioOfDirectorsInGM ?? 0)}
+                      value={toPercent(objGR.proposeHeadRatioOfDirectorsInGM ?? 0)}
                     />
 
                     <TextField 
@@ -253,94 +238,96 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(newGR.proposeHeadRatioOfDirectorsInBoard ?? 0)}
+                      value={toPercent(objGR.proposeHeadRatioOfDirectorsInBoard ?? 0)}
                     />
 
                   </Stack>
+                )}
 
-                  <Collapse in={ editable && !isFinalized }>
-                    <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
-                        
-                      <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                        <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
-                        <Select
-                          labelId="basedOnPar-label"
-                          id="basedOnPar-select"
-                          value={ objGR.basedOnPar ? '1' : '0' }
-                          onChange={(e) => setObjGR((v) => ({
-                            ...v,
-                            proRata: e.target.value == '01',
-                          }))}
-                          label="BasedOnPar ?"
-                        >
-                          <MenuItem value={'1'}>True</MenuItem>
-                          <MenuItem value={'0'}>False</MenuItem>
-                        </Select>
-                      </FormControl>
-                    
-                      <TextField 
-                        variant='outlined'
-                        label='PropW_RatioOfGM'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
+                {!isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                      
+                    <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                      <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
+                      <Select
+                        labelId="basedOnPar-label"
+                        id="basedOnPar-select"
+                        value={ objGR.basedOnPar ? '1' : '0' }
                         onChange={(e) => setObjGR((v) => ({
                           ...v,
-                          proposeWeightRatioOfGM: parseInt(e.target.value),
+                          proRata: e.target.value == '01',
                         }))}
-                        value={ objGR.proposeWeightRatioOfGM }              
-                      />
+                        label="BasedOnPar ?"
+                      >
+                        <MenuItem value={'1'}>True</MenuItem>
+                        <MenuItem value={'0'}>False</MenuItem>
+                      </Select>
+                    </FormControl>
+                  
+                    <TextField 
+                      variant='outlined'
+                      label='PropW_RatioOfGM'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeWeightRatioOfGM: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.proposeWeightRatioOfGM }              
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='PropH_RatioOfMembers'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          proposeHeadRatioOfMembers: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.proposeHeadRatioOfMembers }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='PropH_RatioOfMembers'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeHeadRatioOfMembers: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.proposeHeadRatioOfMembers }
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='PropH_RatioOfDirectorsInGM'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          proposeHeadRatioOfDirectorsInGM: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.proposeHeadRatioOfDirectorsInGM }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='PropH_RatioOfDirectorsInGM'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeHeadRatioOfDirectorsInGM: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.proposeHeadRatioOfDirectorsInGM }
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='PropH_RatioOfDirectorsInBM'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          proposeHeadRatioOfDirectorsInBoard: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.proposeHeadRatioOfDirectorsInBoard }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='PropH_RatioOfDirectorsInBM'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        proposeHeadRatioOfDirectorsInBoard: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.proposeHeadRatioOfDirectorsInBoard }
+                    />
 
-                    </Stack>
-                  </Collapse>
+                  </Stack>
+                )}
 
+                {isFinalized && (
                   <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
                     <TextField 
@@ -352,7 +339,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newGR.maxQtyOfMembers.toString() ?? '0'}
+                      value={objGR.maxQtyOfMembers.toString() ?? '0'}
                     />
 
                     <TextField 
@@ -364,7 +351,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ toPercent(newGR.quorumOfGM ?? 0)}
+                      value={ toPercent(objGR.quorumOfGM ?? 0)}
                     />
 
                     <TextField 
@@ -376,7 +363,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newGR.maxNumOfDirectors.toString() ?? '0'}
+                      value={objGR.maxNumOfDirectors.toString() ?? '0'}
                     />
 
                     <TextField 
@@ -388,7 +375,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newGR.tenureMonOfBoard.toString() ?? '0'}
+                      value={objGR.tenureMonOfBoard.toString() ?? '0'}
                     />
 
                     <TextField 
@@ -400,93 +387,95 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ toPercent(newGR.quorumOfBoardMeeting ?? 0)}
+                      value={ toPercent(objGR.quorumOfBoardMeeting ?? 0)}
                     />
 
                   </Stack>
+                )}
 
-                  <Collapse in={ editable && !isFinalized }>
-                    <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                {!isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                      <TextField 
-                        variant='outlined'
-                        label='MaxQtyOfMembers'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          maxQtyOfMembers: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.maxQtyOfMembers.toString() } 
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='MaxQtyOfMembers'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        maxQtyOfMembers: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.maxQtyOfMembers.toString() } 
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='QuorumOfGM'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          quorumOfGM: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.quorumOfGM }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='QuorumOfGM'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        quorumOfGM: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.quorumOfGM }
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='MaxNumOfDirectors'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          maxNumOfDirectors: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.maxNumOfDirectors }
+                    <TextField 
+                      variant='outlined'
+                      label='MaxNumOfDirectors'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        maxNumOfDirectors: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.maxNumOfDirectors }
 
-                      />
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='TenureMonOfBoard'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          tenureMonOfBoard: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.tenureMonOfBoard } 
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='TenureMonOfBoard'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        tenureMonOfBoard: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.tenureMonOfBoard } 
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='QuorumOfBoardMeeting'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          quorumOfBoardMeeting: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.quorumOfBoardMeeting }   
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='QuorumOfBoardMeeting'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        quorumOfBoardMeeting: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.quorumOfBoardMeeting }   
+                    />
 
-                    </Stack>
-                  </Collapse>
+                  </Stack>
+                )}
 
+                {isFinalized && (
                   <Stack direction={'row'} sx={{ alignItems: 'center' }} >
                     <TextField 
                       variant='outlined'
@@ -497,7 +486,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ dateParser(newGR.establishedDate ?? 0) }
+                      value={ dateParser(objGR.establishedDate ?? 0) }
                     />
 
                     <TextField 
@@ -509,7 +498,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newGR.businessTermInYears.toString() ?? '0'}
+                      value={objGR.businessTermInYears.toString() ?? '0'}
                     />
 
                     <TextField 
@@ -521,7 +510,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newGR.typeOfComp.toString() ?? '0'}
+                      value={objGR.typeOfComp.toString() ?? '0'}
                     />
 
                     <TextField 
@@ -533,7 +522,7 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ toPercent(newGR.minVoteRatioOnChain ?? 0)}
+                      value={ toPercent(objGR.minVoteRatioOnChain ?? 0)}
                     />
 
                     <TextField 
@@ -545,105 +534,105 @@ export function SetGovernanceRule({ sha, initSeqList, isFinalized, getRules }: R
                         m:1,
                         minWidth: 218,
                       }}
-                      value={newGR.fundApprovalThreshold.toString() ?? '0'}
+                      value={objGR.fundApprovalThreshold.toString() ?? '0'}
                     />
 
                   </Stack>
+                )}
 
-                  <Collapse in={ editable && !isFinalized }>
-                    <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
+                {!isFinalized && (
+                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                      <DateTimeField
-                        label='EstablishedDate'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth: 218,
-                        }} 
-                        value={ dayjs.unix(objGR.establishedDate) }
-                        onChange={(date) => setObjGR((v) => ({
-                          ...v,
-                          establishedDate: date ? date.unix() : 0,
-                        }))}
-                        format='YYYY-MM-DD HH:mm:ss'
-                      />
+                    <DateTimeField
+                      label='EstablishedDate'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth: 218,
+                      }} 
+                      value={ dayjs.unix(objGR.establishedDate) }
+                      onChange={(date) => setObjGR((v) => ({
+                        ...v,
+                        establishedDate: date ? date.unix() : 0,
+                      }))}
+                      format='YYYY-MM-DD HH:mm:ss'
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='BusinessTermInYears'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth:218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          businessTermInYears: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.businessTermInYears }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='BusinessTermInYears'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        businessTermInYears: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.businessTermInYears }
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='TypeOfComp'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth:218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          typeOfComp: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.typeOfComp }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='TypeOfComp'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        typeOfComp: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.typeOfComp }
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='MinVoteRatioOnChain (BP)'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth:218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          minVoteRatioOnChain: parseInt(e.target.value),
-                        }))}
-                        value={ objGR.minVoteRatioOnChain }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='MinVoteRatioOnChain (BP)'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        minVoteRatioOnChain: parseInt(e.target.value),
+                      }))}
+                      value={ objGR.minVoteRatioOnChain }
+                    />
 
-                      <TextField 
-                        variant='outlined'
-                        label='FundThreshold  (CBP/ETH)'
-                        size='small'
-                        sx={{
-                          m:1,
-                          minWidth:218,
-                        }}
-                        onChange={(e) => setObjGR((v) => ({
-                          ...v,
-                          fundApprovalThreshold: parseInt(e.target.value ?? '0'),
-                        }))}
-                        value={ objGR.fundApprovalThreshold }
-                      />
+                    <TextField 
+                      variant='outlined'
+                      label='FundThreshold  (CBP/ETH)'
+                      size='small'
+                      sx={{
+                        m:1,
+                        minWidth:218,
+                      }}
+                      onChange={(e) => setObjGR((v) => ({
+                        ...v,
+                        fundApprovalThreshold: parseInt(e.target.value ?? '0'),
+                      }))}
+                      value={ objGR.fundApprovalThreshold }
+                    />
 
-                    </Stack>
-                  </Collapse>
+                  </Stack>
+                )}
 
-                </Stack>
-              </Paper>
-      
+              </Stack>
             </Paper>
-      
-          </DialogContent>
+    
+          </Paper>
+    
+        </DialogContent>
 
-          <DialogActions>
-            <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={ ()=>setOpen(false) }>Close</Button>
-          </DialogActions>
+        <DialogActions>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={ ()=>setOpen(false) }>Close</Button>
+        </DialogActions>
 
-        </Dialog>        
-      )}
+      </Dialog>        
 
     </> 
   )

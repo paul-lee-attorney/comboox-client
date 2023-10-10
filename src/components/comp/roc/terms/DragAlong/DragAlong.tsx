@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -27,15 +27,11 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { readContract } from "@wagmi/core";
-
 import {
-  alongsABI,
   useAlongsAddDragger,
   useAlongsRemoveDragger,
   useAlongsAddFollower,
   useAlongsRemoveFollower,
-  useAlongsGetDraggers, 
 } from "../../../../../generated";
 
 import { DateTimeField } from "@mui/x-date-pickers";
@@ -43,83 +39,7 @@ import dayjs from "dayjs";
 import { AlongLinks } from "./AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
-
-
-export interface LinkRule{
-  triggerDate: number;
-  effectiveDays: number;
-  triggerType: number;
-  shareRatioThreshold: number;
-  rate: number;
-  proRata: boolean;
-  seq: number;
-  para: number;
-  argu: number;
-  ref: number;
-  data: bigint;
-}
-
-export const defaultLinkRule: LinkRule = {
-  triggerDate: 0,
-  effectiveDays: 0,
-  triggerType: 0,
-  shareRatioThreshold: 0,
-  rate: 0,
-  proRata: false,
-  seq: 0,
-  para: 0,
-  argu: 0,
-  ref: 0,
-  data: BigInt(0)
-}
-
-export function linkRuleSnParser(sn: HexType): LinkRule {
-  let out: LinkRule = {
-    triggerDate: parseInt(sn.substring(2, 14), 16),
-    effectiveDays: parseInt(sn.substring(14, 18), 16),
-    triggerType: parseInt(sn.substring(18, 20), 16),
-    shareRatioThreshold: parseInt(sn.substring(20, 24), 16),
-    rate: parseInt(sn.substring(24, 32), 16),
-    proRata: parseInt(sn.substring(32, 34), 16) == 1,
-    seq: 0,
-    para: 0,
-    argu: 0,
-    ref: 0,
-    data: BigInt(0)
-  }
-  return out;
-}
-
-export function linkRuleCodifier(rule: LinkRule): HexType {
-  let out: HexType = `0x${
-    rule.triggerDate.toString(16).padStart(12, '0') +
-    rule.effectiveDays.toString(16).padStart(4, '0') +
-    rule.triggerType.toString(16).padStart(2, '0') +
-    rule.shareRatioThreshold.toString(16).padStart(4, '0') +
-    rule.rate.toString(16).padStart(8, '0') +
-    (rule.proRata ? '01' : '00') +
-    '0'.padEnd(32, '0')
-  }`;
-  return out;
-}
-
-export interface AlongLink {
-  drager: number;
-  linkRule: LinkRule;
-  followers: number[];
-}
-
-export const defaultFollowers: number[] = [];
-
-export const defaultLink: AlongLink ={
-  drager: 0,
-  linkRule: defaultLinkRule,
-  followers: defaultFollowers,
-} 
-
-export const triggerTypes = [
-  'NoCondition', 'CtrlChanged', 'CtrlChanged+Price', 'CtrlChanged+ROE'
-]
+import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -128,72 +48,12 @@ export interface SetShaTermProps {
   isFinalized: boolean,
 }
 
-export async function getLinks(addr: HexType, draggers: readonly bigint[]): Promise<AlongLink[]> {
-  let len = draggers.length;
-  let output: AlongLink[] = [];
-
-  while (len > 0) {
-
-    let drager = draggers[len - 1];
-
-    let linkRule = await readContract({
-      address: addr,
-      abi: alongsABI,
-      functionName: 'getLinkRule',
-      args: [ drager ],
-    });
-
-    let followers = await readContract({
-      address: addr,
-      abi: alongsABI,
-      functionName: 'getFollowers',
-      args: [ drager ],
-    });
-    
-    let item: AlongLink = {
-      drager: Number(drager),
-      linkRule: {
-        triggerDate: linkRule.triggerDate,
-        effectiveDays: linkRule.effectiveDays,
-        triggerType: linkRule.triggerType,
-        shareRatioThreshold: linkRule.shareRatioThreshold,
-        rate: linkRule.rate,
-        proRata: linkRule.proRata,
-        seq: linkRule.seq,
-        para: linkRule.para,
-        argu: linkRule.argu,
-        ref: linkRule.ref,
-        data: linkRule.data
-      },
-      followers: followers.map(v=>Number(v)),
-    }
-
-    output.push(item);
-
-    len--;
-  }
-
-  return output;
-}
-
-
 export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ links, setLinks ] = useState<AlongLink[]>();
-
-  const {
-    refetch:getDragers 
-  } = useAlongsGetDraggers({
-    address: term,
-    onSuccess(ls) {
-      if (term)
-        getLinks(term, ls).
-          then(links => setLinks(links));
-    }
-  });
-
   const [ drager, setDrager ] = useState<string>('0');
   const [ rule, setRule ] = useState<LinkRule>(defaultLinkRule);
+  const [ open, setOpen ] = useState(false);
 
   const { 
     isLoading: addLinkLoading,
@@ -203,9 +63,6 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
     args: rule && drager
       ? [ linkRuleCodifier(rule) , BigInt(drager)] 
       : undefined, 
-    onSuccess() {
-      getDragers();
-    }
   });
 
   const { 
@@ -213,10 +70,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
     write: removeLink, 
   } = useAlongsRemoveDragger({
     address: term,
-    args: drager ? [BigInt(drager)] : undefined, 
-    onSuccess() {
-      getDragers();
-    }
+    args: drager ? [BigInt(drager)] : undefined,
   });
 
   const [ follower, setFollower ] = useState<string>('0');
@@ -229,10 +83,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
     args: drager && follower
       ? [ BigInt(drager),
           BigInt(follower)] :
-            undefined, 
-    onSuccess() {
-      getDragers();
-    }
+            undefined,
   });
 
   const { 
@@ -242,13 +93,14 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
     address: term,
     args: drager && follower 
       ? [ BigInt(drager), BigInt(follower)] 
-      : undefined, 
-    onSuccess() {
-      getDragers();
-    }
+      : undefined,
   });
 
-  const [ open, setOpen ] = useState(false);
+  useEffect(()=>{
+    getLinks(term).then(
+      ls => setLinks(ls)
+    );
+  }, [term, addLink, removeLink, addFollower, removeFollower]);
 
   return (
     <>

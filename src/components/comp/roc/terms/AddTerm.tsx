@@ -55,7 +55,6 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     }
   });
 
-
   return (
     <>
       { !isCreated && (
@@ -90,18 +89,18 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
       )}
 
       {isCreated && (
-          <Button
-            disabled={ removeTermLoading }
-            variant="contained"
-            sx={{
-              height: 40,
-              mr: 5,
-            }}
-            endIcon={ <Delete /> }
-            onClick={() => removeTerm?.()}
-          >
-            Remove
-          </Button>
+        <Button
+          disabled={ removeTermLoading }
+          variant="contained"
+          sx={{
+            height: 40,
+            mr: 5,
+          }}
+          endIcon={ <Delete /> }
+          onClick={() => removeTerm?.()}
+        >
+          Remove
+        </Button>
       )}    
     </>
   );

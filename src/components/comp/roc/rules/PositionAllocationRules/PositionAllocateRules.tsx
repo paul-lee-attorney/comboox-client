@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-
 import { 
   Stack,
   IconButton,
@@ -12,25 +11,22 @@ import {
   DialogActions,
   Grid,
 } from "@mui/material";
-
 import {
   AddCircle,
   ListAlt,
   RemoveCircle,
 } from "@mui/icons-material"
-
 import { 
   useShareholdersAgreementRemoveRule 
 } from "../../../../../generated";
-
 import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
-import { RulesEditProps } from "../GovernanceRules/SetGovernanceRule";
+import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 
-export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}: RulesEditProps) {
+export function PositionAllocateRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
 
   const mandatoryRules: number[] = isFinalized ? [] : [256];
-  
   const [ cp, setCp ] = useState<number[]>(mandatoryRules);
+  const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
@@ -45,8 +41,6 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
       return arr;
     })
   }
-
-  const [open, setOpen] = useState(false);
 
   const {
     isLoading: removeRuleLoading,
@@ -66,7 +60,6 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
     }
   })
 
-
   const removeCp = () => {
     removeRule?.();
   }
@@ -85,7 +78,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
       <Dialog
         maxWidth={false}
         open={open}
-        onClose={ getRules }
+        onClose={()=>setOpen(false) }
         aria-labelledby="dialog-title"        
       >
         <DialogContent>      
@@ -124,7 +117,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, getRules}:
 
                 {cp.map((v)=> (
                   <Grid key={v} item xs={3}>
-                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } getRules={ getRules } />
+                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} setTime={setTime} />
                   </Grid>
                 ))}
 
