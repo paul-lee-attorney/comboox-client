@@ -1,10 +1,8 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useGeneralKeeperCreatePledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Body, Head, codifyHeadOfPledge, defaultBody, defaultHead } from "../../../scripts/comp/rop";
 import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { getShare } from "../../../scripts/comp/ros";
 import { Create } from "@mui/icons-material";
 import { HexType, booxMap } from "../../../scripts/common";
@@ -16,10 +14,10 @@ async function obtainPledgor(addr:HexType, seqOfShare: number):Promise<number>{
 };
 
 interface CreatePledgeProps{
-  getAllPledges:()=>void;
+  setTime:Dispatch<SetStateAction<number>>;
 }
 
-export function CreatePledge({getAllPledges}:CreatePledgeProps) {
+export function CreatePledge({setTime}:CreatePledgeProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -39,7 +37,7 @@ export function CreatePledge({getAllPledges}:CreatePledgeProps) {
           BigInt(body.execDays)
         ],
     onSuccess() {
-      getAllPledges();
+      setTime(Date.now());
     }    
   });
 

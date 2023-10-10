@@ -7,7 +7,7 @@ import { Bytes32Zero, HexType } from "../../../../scripts/common";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexParser } from "../../../../scripts/common/toolsKit";
 
-export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
+export function LockPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
@@ -25,7 +25,7 @@ export function LockPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
         ]
       : undefined,
     onSuccess(){
-      getAllPledges();
+      setTime(Date.now());
       setOpen(false);
     }
   })

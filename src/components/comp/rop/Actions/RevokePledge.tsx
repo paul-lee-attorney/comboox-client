@@ -4,7 +4,7 @@ import { Button, Paper, Stack } from "@mui/material";
 import { Block } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
-export function RevokePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
+export function RevokePledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
@@ -15,7 +15,7 @@ export function RevokePledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps)
     address: gk,
     args: [BigInt(pld.head.seqOfShare), BigInt(pld.head.seqOfPld)],
     onSuccess(){
-      getAllPledges();
+      setTime(Date.now());
       setOpen(false);
     }
   })

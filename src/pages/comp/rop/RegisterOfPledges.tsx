@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Paper, 
@@ -8,10 +8,7 @@ import {
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
-import { 
-  useRegisterOfPledgesGetAllPledges,
-} from "../../../generated";
-import { Pledge } from "../../../scripts/comp/rop";
+import { Pledge, getAllPledges } from "../../../scripts/comp/rop";
 import { PledgesList } from "../../../components/comp/rop/PledgesList";
 import { CertificateOfPledge } from "../../../components/comp/rop/CertificateOfPledge";
 import { CreatePledge } from "../../../components/comp/rop/CreatePledge";
@@ -22,15 +19,15 @@ function RegisterOfPledges() {
   const { boox } = useComBooxContext();
 
   const [ pldList, setPldList ] = useState<readonly Pledge[]>([]);
+  const [ time, setTime ] = useState<number>(0);
 
-  const {
-    refetch: getAllPledges,
-  } = useRegisterOfPledgesGetAllPledges ({
-    address: boox ? boox[booxMap.ROP] : undefined,
-    onSuccess(data) {
-      setPldList(data);
+  useEffect(()=>{
+    if (boox) {
+      getAllPledges(boox[booxMap.ROP]).then(
+        res => setPldList(res)
+      );
     }
-  })
+  }, [boox, time]);
 
   const [ open, setOpen ] = useState<boolean>(false);
   const [ pld, setPld ] = useState<Pledge>();
@@ -52,7 +49,7 @@ function RegisterOfPledges() {
 
       <Stack direction='column' sx={{m:1, p:1}} >
 
-        <CreatePledge getAllPledges={getAllPledges} />
+        <CreatePledge setTime={setTime} />
 
         <PledgesList 
           list={ pldList }  
@@ -61,7 +58,7 @@ function RegisterOfPledges() {
         />
       
         {pld && (
-          <CertificateOfPledge open={open} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />
+          <CertificateOfPledge open={open} pld={pld} setOpen={setOpen} setTime={setTime} />
         )}
 
       </Stack>

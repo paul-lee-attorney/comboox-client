@@ -65,12 +65,7 @@ export async function getShare(ros: HexType, seq: number): Promise<Share> {
     args: [BigInt(seq)],
   });
 
-  let shareWrap:Share = {
-    head: share.head,
-    body: share.body,
-  } 
-
-  return shareWrap;
+  return share;
 }
 
 export async function counterOfShares(ros: HexType): Promise<number>{

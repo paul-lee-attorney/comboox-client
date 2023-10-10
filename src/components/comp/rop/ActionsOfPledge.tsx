@@ -12,10 +12,10 @@ import { Pledge } from "../../../scripts/comp/rop";
 export interface ActionsOfPledgeProps{
   pld: Pledge;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  getAllPledges: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgeProps) {
+export function ActionsOfPledge({pld, setOpen, setTime}: ActionsOfPledgeProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -25,13 +25,13 @@ export function ActionsOfPledge({pld, setOpen, getAllPledges}: ActionsOfPledgePr
   ]
 
   const compsOfAction = [
-    <RefundDebt key={0} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />, 
-    <ExtendPledge key={1} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
-    <LockPledge key={2} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
-    <ReleasePledge key={3} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
-    <ExecPledge key={4} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />, 
-    <RevokePledge key={5} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
-    <TransferPledge key={6} pld={pld} setOpen={setOpen} getAllPledges={getAllPledges} />,
+    <RefundDebt key={0} pld={pld} setOpen={setOpen} setTime={setTime} />, 
+    <ExtendPledge key={1} pld={pld} setOpen={setOpen} setTime={setTime} />,
+    <LockPledge key={2} pld={pld} setOpen={setOpen} setTime={setTime} />,
+    <ReleasePledge key={3} pld={pld} setOpen={setOpen} setTime={setTime} />,
+    <ExecPledge key={4} pld={pld} setOpen={setOpen} setTime={setTime} />, 
+    <RevokePledge key={5} pld={pld} setOpen={setOpen} setTime={setTime} />,
+    <TransferPledge key={6} pld={pld} setOpen={setOpen} setTime={setTime} />,
   ]
 
   return(

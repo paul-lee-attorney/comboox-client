@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CurrencyExchange } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
-export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
+export function TransferPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
@@ -25,7 +25,7 @@ export function TransferPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProp
         ]
       : undefined,
     onSuccess(){
-      getAllPledges();
+      setTime(Date.now());
       setOpen(false);
     }
   })

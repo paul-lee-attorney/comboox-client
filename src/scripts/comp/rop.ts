@@ -91,6 +91,40 @@ export function codifyHeadOfPledge(head: Head): HexType {
   return sn;
 }
 
+// ==== Read Funcs ====
+
+export async function counterOfPledges(addr: HexType, seqOfShare:string):Promise<number>{
+  let res = await readContract({
+    address: addr,
+    abi: registerOfPledgesABI,
+    functionName: 'counterOfPledges',
+    args: [BigInt(seqOfShare)],
+  });
+
+  return res;
+}
+
+export async function isPledge(addr: HexType, seqOfShare:string, seqOfPld:string):Promise<boolean>{
+  let res = await readContract({
+    address: addr,
+    abi: registerOfPledgesABI,
+    functionName: 'isPledge',
+    args: [BigInt(seqOfShare), BigInt(seqOfPld)],
+  });
+
+  return res;
+}
+
+export async function getSNList(addr: HexType):Promise<readonly HexType[]>{
+  let res = await readContract({
+    address: addr,
+    abi: registerOfPledgesABI,
+    functionName: 'getSNList',
+  });
+
+  return res;
+}
+
 export async function getPledge(addr: HexType, seqOfShare:string, seqOfPld:string):Promise<Pledge>{
   let pld = await readContract({
     address: addr,
@@ -101,4 +135,26 @@ export async function getPledge(addr: HexType, seqOfShare:string, seqOfPld:strin
 
   return pld;
 }
+
+export async function getPledgesOfShare(addr: HexType, seqOfShare:string):Promise<readonly Pledge[]>{
+  let pld = await readContract({
+    address: addr,
+    abi: registerOfPledgesABI,
+    functionName: 'getPledgesOfShare',
+    args: [BigInt(seqOfShare)],
+  });
+
+  return pld;
+}
+
+export async function getAllPledges(addr: HexType):Promise<readonly Pledge[]>{
+  let pld = await readContract({
+    address: addr,
+    abi: registerOfPledgesABI,
+    functionName: 'getAllPledges',
+  });
+
+  return pld;
+}
+
 

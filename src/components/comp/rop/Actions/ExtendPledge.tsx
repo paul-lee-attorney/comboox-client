@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 
-export function ExtendPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
+export function ExtendPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
@@ -23,7 +23,7 @@ export function ExtendPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps)
         ]
       : undefined,
     onSuccess(){
-      getAllPledges();
+      setTime(Date.now());
       setOpen(false);
     }
   })

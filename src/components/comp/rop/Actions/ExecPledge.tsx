@@ -1,39 +1,43 @@
-import { useGeneralKeeperExecPledge, useRegisterOfSharesGetShare } from "../../../../generated";
+import { useGeneralKeeperExecPledge } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
-import { useState } from "react";
-import { Body, Head, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
+import { useEffect, useState } from "react";
+
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { booxMap } from "../../../../scripts/common";
+import { getShare } from "../../../../scripts/comp/ros";
+import { Body, Head, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 
-export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
+export function ExecPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
 
   const { gk, boox } = useComBooxContext();
   
   const [ head, setHead ] = useState<Head>(defaultHead);
   const [ body, setBody ] = useState<Body>(defaultBody);
   const [ version, setVersion ] = useState<number>(1);
-  
-  useRegisterOfSharesGetShare({
-    address: boox ? boox[booxMap.ROS] : undefined,
-    args: [BigInt(pld.head.seqOfShare)],
-    onSuccess(res) {
-      setHead(v => ({
-        ...v,
-        classOfShare: res.head.class,
-        seqOfShare: pld.head.seqOfShare,
-        seller: res.head.shareholder,
-      }));
-      setBody(v => ({
-        ...v,
-        paid: pld.body.paid,
-        par: pld.body.par,
-      }))
+
+  useEffect(()=>{
+    if (boox) {
+      getShare(boox[booxMap.ROS], pld.head.seqOfShare).then(
+        res => {
+          setHead(v => ({
+            ...v,
+            classOfShare: res.head.class,
+            seqOfShare: pld.head.seqOfShare,
+            seller: res.head.shareholder,
+          }));
+          setBody(v => ({
+            ...v,
+            paid: pld.body.paid,
+            par: pld.body.par,
+          }))
+        }
+      );
     }
-  })
+  });
 
   const {
     isLoading: execPledgeLoading,
@@ -46,7 +50,7 @@ export function ExecPledge({pld, setOpen, getAllPledges}:ActionsOfPledgeProps) {
             BigInt(body.buyer),
             BigInt(body.groupOfBuyer) ],
     onSuccess(){
-      getAllPledges();
+      setTime(Date.now());
       setOpen(false);
     }
   })
