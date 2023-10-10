@@ -4,19 +4,15 @@ import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
-import { centToDollar, dateParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longSnParser, toStr } from "../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longSnParser } from "../../../scripts/common/toolsKit";
 
 import { MembersEquityList } from "../rom/MembersList";
-import { Position, getDirectorsPosList, getFullPosInfo } from "../../../scripts/comp/rod";
+import { Position, getDirectorsFullPosInfo } from "../../../scripts/comp/rod";
 import { GetOfficersList } from "../rod/GetOfficersList";
-
-import { 
-  useRegisterOfDirectorsGetDirectorsPosList,
-} from "../../../generated";
 
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
-import { User, balanceOf } from "../../../scripts/center/rc";
+import { balanceOf } from "../../../scripts/center/rc";
 import { booxMap } from "../../../scripts/common";
 import { CompInfo, balanceOfWei, getCompInfo, totalDeposits } from "../../../scripts/comp/gk";
 import { getControllor, getOwnersEquity, votesOfGroup } from "../../../scripts/comp/rom";
@@ -66,23 +62,18 @@ export function GeneralInfo() {
             votes => setVotesOfController(votes.toString())
           );
         }
-      )
+      );
 
       getOwnersEquity(boox[booxMap.ROM]).then(
         res => {
           setPar(res.par.toString());
           setPaid(res.paid.toString());
         }
-      )
+      );
 
-      getDirectorsPosList(boox[booxMap.ROD]).then(
-        res => {
-          getFullPosInfo(boox[booxMap.ROD], res).then(
-            ls => setDirectorsList(ls)
-          );
-        }
-      )
-
+      getDirectorsFullPosInfo(boox[booxMap.ROD]).then(
+        ls => setDirectorsList(ls)
+      );
     }
   }, [boox]); 
 

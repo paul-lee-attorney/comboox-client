@@ -8,10 +8,10 @@ import { Dispatch, SetStateAction } from "react";
 interface QuitPositionProps{
   seq: number;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  refreshPosition: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function QuitPosition({seq, setOpen, refreshPosition}: QuitPositionProps) {
+export function QuitPosition({seq, setOpen, setTime}: QuitPositionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -22,7 +22,7 @@ export function QuitPosition({seq, setOpen, refreshPosition}: QuitPositionProps)
     address: gk,
     args: [BigInt(seq)],
     onSuccess() {
-      refreshPosition();
+      setTime(Date.now());
       setOpen(false);
     }
   })

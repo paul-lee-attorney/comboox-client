@@ -1,12 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Typography } from "@mui/material";
 import { AssignmentInd } from "@mui/icons-material";
-import { useRegisterOfDirectorsGetPosition } from "../../../generated";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { titleOfPositions } from "../roc/rules/PositionAllocationRules/SetPositionAllocateRule";
-import { Position } from "../../../scripts/comp/rod";
+import { Position, getPosition } from "../../../scripts/comp/rod";
 import { QuitPosition } from "../bmm/ExecMotions/QuitPosition";
 import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { booxMap } from "../../../scripts/common";
@@ -20,18 +19,16 @@ export function GetPosition({seq}: GetPositionProps) {
   const { boox } = useComBooxContext();
 
   const [ pos, setPos ] = useState<Position>();
-
-  const {
-    refetch: getPosition
-  } = useRegisterOfDirectorsGetPosition({
-    address: boox ? boox[booxMap.ROD]: undefined,
-    args: [BigInt(seq)],
-    onSuccess(data) {
-      setPos(data);
-    } 
-  })
-
   const [ open, setOpen ] = useState(false);
+  const [ time, setTime ] = useState(0);
+
+  useEffect(()=>{
+    if (boox) {
+      getPosition(boox[booxMap.ROD], seq).then(
+        res => setPos(res)
+      );
+    }
+  }, [boox, seq, time]);
 
   return (
     <>
@@ -168,7 +165,7 @@ export function GetPosition({seq}: GetPositionProps) {
         </DialogContent>
 
         <DialogActions>
-          <QuitPosition seq={seq} setOpen={setOpen} refreshPosition={getPosition} />          
+          <QuitPosition seq={seq} setOpen={setOpen} setTime={setTime} />          
           <Button 
             sx={{m:1, mx:3, p:1, minWidth:128 }}
             variant="outlined"

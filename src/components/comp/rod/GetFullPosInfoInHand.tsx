@@ -1,6 +1,5 @@
-import { useState } from "react";
-import { Position } from "../../../scripts/comp/rod";
-import { useRegisterOfDirectorsGetFullPosInfoInHand } from "../../../generated";
+import { useEffect, useState } from "react";
+import { Position, getFullPosInfoInHand } from "../../../scripts/comp/rod";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
 import { GetPosInHand } from "./GetPosInHand";
@@ -11,7 +10,6 @@ interface GetFullPosInfoInHandProps {
   userNo: number;
 }
 
-
 export function GetFullPosInfoInHand({userNo}:GetFullPosInfoInHandProps) {
   const { boox } = useComBooxContext();
 
@@ -19,15 +17,13 @@ export function GetFullPosInfoInHand({userNo}:GetFullPosInfoInHandProps) {
 
   const [ open, setOpen ] = useState<boolean>(false);
 
-  const {
-    refetch: getPosInHand
-  } = useRegisterOfDirectorsGetFullPosInfoInHand({
-    address: boox ? boox[booxMap.ROD]:undefined,
-    args: [BigInt(userNo)],
-    onSuccess(list) {
-      setPosList(list);
+  useEffect(()=>{
+    if (boox) {
+      getFullPosInfoInHand(boox[booxMap.ROD], userNo).then(
+        res => setPosList(res)
+      );
     }
-  })
+  }, [boox, userNo]);
 
   return (
     <>

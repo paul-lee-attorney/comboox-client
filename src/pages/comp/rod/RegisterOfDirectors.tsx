@@ -1,11 +1,10 @@
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Paper, Stack, Toolbar } from "@mui/material";
 
-import { Position, getFullPosInfo, } from "../../../scripts/comp/rod";
+import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo, } from "../../../scripts/comp/rod";
 import { GetOfficersList } from "../../../components/comp/rod/GetOfficersList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
-import { useRegisterOfDirectorsGetDirectorsPosList, useRegisterOfDirectorsGetManagersPosList } from "../../../generated";
 import { booxMap } from "../../../scripts/common";
 
 function RegisterOfDirectors() {
@@ -13,32 +12,18 @@ function RegisterOfDirectors() {
   const { boox } = useComBooxContext();
 
   const [ directorsList, setDirectorsList ] = useState<readonly Position[]>();
-
-  const {
-    refetch: getDirectorsList
-  } = useRegisterOfDirectorsGetDirectorsPosList({
-    address: boox ? boox[booxMap.ROD] : undefined,
-    onSuccess(res) {
-      if (boox)
-        getFullPosInfo(boox[booxMap.ROD], res).then(
-          list => setDirectorsList(list)
-        );
-    }
-  })
-
   const [ officersList, setOfficersList ] = useState<readonly Position[]>();
 
-  const {
-    refetch: getOfficersList
-  } = useRegisterOfDirectorsGetManagersPosList({
-    address: boox ? boox[booxMap.ROD] : undefined,
-    onSuccess(res) {
-      if (boox)
-        getFullPosInfo(boox[booxMap.ROD], res).then(
-          list => setOfficersList(list)
-        );
+  useEffect(()=>{
+    if (boox) {
+      getDirectorsFullPosInfo(boox[booxMap.ROD]).then(
+        ls => setDirectorsList(ls)
+      );
+      getManagersFullPosInfo(boox[booxMap.ROD]).then(
+        ls => setOfficersList(ls)
+      );
     }
-  })
+  }, [boox]);
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth: 1680, border:1, borderColor:'divider' }} >
