@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
 
-export function CreateSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function CreateSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -25,7 +25,7 @@ export function CreateSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
           BigInt(seqOfPledge)]
       : undefined,
     onSuccess() {
-      getAllOpts();
+      setTime(Date.now());
       setOpen(false);
     }
   })

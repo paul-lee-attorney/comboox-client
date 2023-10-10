@@ -136,7 +136,6 @@ export interface Option {
   head: HeadOfOpt;
   cond: Cond;
   body: BodyOfOpt;
-  // obligors: number[];
 }
 
 export interface OptWrap {
@@ -153,29 +152,6 @@ export const defaultOpt: Option = {
 export const defaultOptWrap: OptWrap = {
   opt: defaultOpt,
   obligors: [0],
-}
-
-export async function getOptWrap(addr: HexType, seqOfOpt: number): Promise<OptWrap>{
-  let res = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'getOption',
-    args: [BigInt(seqOfOpt)],
-  });
-
-  let obligors = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'getObligorsOfOption',
-    args: [BigInt(seqOfOpt)],
-  });
-
-  let out:OptWrap = {
-    opt: res,
-    obligors: obligors.map(v => Number(v)), 
-  }
-
-  return out;
 }
 
 export const typeOfOpts = [
@@ -202,6 +178,199 @@ export interface CheckPoint {
   par: bigint;
   cleanPaid: bigint;
 }
+
+export interface Swap{
+  seqOfSwap: number;
+  seqOfPledge: number;
+  paidOfPledge: bigint;
+  seqOfTarget: number;
+  paidOfTarget: bigint;
+  priceOfDeal: number;
+  isPutOpt: boolean;
+  state: number; 
+}
+
+// ==== Read Funcs =====
+
+export async function counterOfOptions(addr: HexType): Promise<number>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'counterOfOptions',
+  })
+
+  return res;
+}
+
+export async function qtyOfOptions(addr: HexType): Promise<bigint>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'qtyOfOptions',
+  })
+
+  return res;
+}
+
+export async function isOption(addr: HexType, seqOfOpt: number): Promise<boolean>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'isOption',
+    args: [ BigInt(seqOfOpt) ]
+  })
+
+  return res;
+}
+
+export async function getOption(addr: HexType, seqOfOpt: number): Promise<Option>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'getOption',
+    args: [ BigInt(seqOfOpt) ]
+  })
+
+  return res;
+}
+
+export async function getAllOptions(addr: HexType): Promise<readonly Option[]>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'getAllOptions',
+  })
+
+  return res;
+}
+
+export async function isRightholder(addr: HexType, seqOfOpt: number, acct: number): Promise<boolean>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'isRightholder',
+    args: [ BigInt(seqOfOpt), BigInt(acct) ]
+  })
+
+  return res;
+}
+
+export async function isObligor(addr: HexType, seqOfOpt: number, acct: number): Promise<boolean>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'isObligor',
+    args: [ BigInt(seqOfOpt), BigInt(acct) ]
+  })
+
+  return res;
+}
+
+export async function getObligorsOfOption(addr: HexType, seqOfOpt: number): Promise<readonly bigint[]>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'getObligorsOfOption',
+    args: [ BigInt(seqOfOpt) ]
+  })
+
+  return res;
+}
+
+export async function getSeqListOfOptions(addr: HexType): Promise<readonly bigint[]>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'getSeqListOfOptions',
+  })
+
+  return res;
+}
+
+// ==== Swap ====
+
+export async function counterOfSwaps(addr: HexType, seqOfOpt: number): Promise<number>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'counterOfSwaps',
+    args: [ BigInt(seqOfOpt) ],
+  })
+
+  return res;
+}
+
+export async function sumPaidOfTarget(addr: HexType, seqOfOpt: number): Promise<bigint>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'sumPaidOfTarget',
+    args: [ BigInt(seqOfOpt) ],
+  })
+
+  return res;
+}
+
+export async function isSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<boolean>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'isSwap',
+    args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
+  })
+
+  return res;
+}
+
+export async function getSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<Swap>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'getSwap',
+    args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
+  })
+
+  return res;
+}
+
+export async function getAllSwapsOfOption(addr: HexType, seqOfOpt: number): Promise<readonly Swap[]>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'getAllSwapsOfOption',
+    args: [ BigInt(seqOfOpt) ],
+  })
+
+  return res;
+}
+
+export async function allSwapsClosed(addr: HexType, seqOfOpt: number): Promise<boolean>{
+
+  let res = await readContract({
+    address: addr,
+    abi: registerOfOptionsABI,
+    functionName: 'allSwapsClosed',
+    args: [ BigInt(seqOfOpt) ],
+  })
+
+  return res;
+}
+
+// ==== Oracles ====
 
 export async function getOracleAtDate(addr: HexType, seqOfOpt: number, date: number): Promise<CheckPoint>{
 
@@ -239,54 +408,7 @@ export async function getAllOraclesOfOption(addr: HexType, seqOfOpt: number): Pr
   return res;
 }
 
-// ==== Breifs ====
-
-export interface Swap{
-  seqOfSwap: number;
-  seqOfPledge: number;
-  paidOfPledge: bigint;
-  seqOfTarget: number;
-  paidOfTarget: bigint;
-  priceOfDeal: number;
-  isPutOpt: boolean;
-  state: number; 
-}
-
-export async function counterOfSwaps(addr: HexType, seqOfOpt: number): Promise<number>{
-
-  let res = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'counterOfSwaps',
-    args: [ BigInt(seqOfOpt) ],
-  })
-
-  return Number(res);
-}
-
-export async function getSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<Swap>{
-
-  let res = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'getSwap',
-    args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
-  })
-
-  return res;
-}
-
-export async function getAllWapsOfOption(addr: HexType, seqOfOpt: number): Promise<readonly Swap[]>{
-
-  let res = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'getAllSwapsOfOption',
-    args: [ BigInt(seqOfOpt) ],
-  })
-
-  return res;
-}
+// ==== Value ====
 
 export async function checkValueOfSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<bigint>{
 
@@ -300,4 +422,37 @@ export async function checkValueOfSwap(addr: HexType, seqOfOpt: number, seqOfSwa
   return res;
 }
 
+// ==== Special Funcs ====
 
+export async function getAllOpts(addr: HexType): Promise<readonly OptWrap[]>{
+
+  let opts = await getAllOptions(addr);
+  let len = opts.length;
+  let out: OptWrap[] = [];
+
+  while(len > 0) {
+    let opt = opts[len - 1];
+    let obligors = await getObligorsOfOption(addr, opt.head.seqOfOpt);
+    let item: OptWrap = {
+      opt: opt,
+      obligors: obligors.map(v => Number(v)),
+    };
+    out.push(item);
+    len--;
+  }
+
+  return out;
+}
+
+export async function getOptWrap(addr: HexType, seqOfOpt: number): Promise<OptWrap>{
+
+  let opt = await getOption(addr, seqOfOpt);
+  let obligors = await getObligorsOfOption(addr, seqOfOpt);
+
+  let out:OptWrap = {
+    opt: opt,
+    obligors: obligors.map(v => Number(v)), 
+  }
+
+  return out;
+}

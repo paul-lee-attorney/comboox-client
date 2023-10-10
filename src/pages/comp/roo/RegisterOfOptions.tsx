@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Paper, 
@@ -8,68 +8,25 @@ import {
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
-import { 
-  registerOfOptionsABI,
-  useRegisterOfOptionsGetAllOptions,
-} from "../../../generated";
-import { HexType, booxMap } from "../../../scripts/common";
-import { readContract } from "@wagmi/core";
+import { booxMap } from "../../../scripts/common";
 import { OptionsList } from "../../../components/comp/roo/OptionsList";
 import { CertificateOfOption } from "../../../components/comp/roo/CertificateOfOption";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
-import { OptWrap, defaultOptWrap } from "../../../scripts/comp/roo";
-
-export async function getObligors(addr: HexType, seqOfOpt: number): Promise<number[]> {
-
-  let res = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'getObligorsOfOption',
-    args: [BigInt(seqOfOpt)],
-  })
-
-  return res.map(v => Number(v));
-}
+import { OptWrap, defaultOptWrap, getAllOpts } from "../../../scripts/comp/roo";
 
 function RegisterOfOptions() {
   const { boox } = useComBooxContext();
 
   const [ optsList, setOptsList ] = useState<readonly OptWrap[]>([defaultOptWrap]);
+  const [ time, setTime ] = useState(0);
 
-  const {
-    refetch: getAllOpts,
-  } = useRegisterOfOptionsGetAllOptions ({
-    address: boox ? boox[booxMap.ROO] : undefined,
-    onSuccess(ls) {
-      if (ls && boox) {
-
-        setOptsList(ls.map(v=>({
-          opt: v,
-          obligors: [],
-        })));
-
-        let len = ls.length;
-
-        while (len > 0) {
-          let opt = ls[len-1];
-          
-          getObligors(boox[booxMap.ROO], opt.head.seqOfOpt).then(
-            obligors => {
-              setOptsList(v => (v.map(k=>{
-                if (k.opt.head.seqOfOpt == opt.head.seqOfOpt)
-                  k.obligors = obligors;
-                return k;
-              })))
-            }
-          );
-
-          len--;
-
-        }
-        
-      }
+  useEffect(()=>{
+    if (boox) {
+      getAllOpts(boox[booxMap.ROO]).then(
+        res => setOptsList(res)
+      );
     }
-  })
+  }, [boox, time]);
 
   const [ open, setOpen ] = useState<boolean>(false);
   const [ opt, setOpt ] = useState<OptWrap>( defaultOptWrap );
@@ -98,7 +55,7 @@ function RegisterOfOptions() {
         />
       
         {opt && (
-          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} getAllOpts={()=>getAllOpts()} />
+          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} setTime={setTime} />
         )}
 
       </Stack>

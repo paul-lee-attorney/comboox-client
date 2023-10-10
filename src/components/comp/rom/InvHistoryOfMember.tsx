@@ -1,12 +1,11 @@
-import { Dispatch, SetStateAction, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import { ShareClip } from '../../../scripts/comp/rom';
-import { useRegisterOfMembersVotesHistory } from '../../../generated';
+import { ShareClip, votesHistory } from '../../../scripts/comp/rom';
 import { booxMap } from '../../../scripts/common';
 
 const columns: GridColDef[] = [
@@ -61,16 +60,13 @@ export function InvHistoryOfMember({acct, open, setOpen}: InvHistoryOfMemberProp
 
   const [ invHistory, setInvHistory ] = useState<readonly ShareClip[]>();
 
-  const {
-    refetch: getVotesHistory
-  } = useRegisterOfMembersVotesHistory({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    args: acct ? [BigInt(acct)] : undefined,
-    onSuccess(res) {
-      if (res.length > 0)
-        setInvHistory(res);
+  useEffect(()=>{
+    if (boox) {
+      votesHistory(boox[booxMap.ROM], acct).then(
+        res => setInvHistory(res)
+      );
     }
-  })
+  }, [boox, acct]);
 
   return (
 

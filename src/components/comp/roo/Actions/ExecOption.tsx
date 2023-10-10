@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
 
-export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function ExecOption({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -15,7 +15,7 @@ export function ExecOption({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
     address: gk,
     args: [ BigInt(seqOfOpt) ],
     onSuccess() {
-      getAllOpts();
+      setTime(Date.now());
       setOpen(false);
     }
   })

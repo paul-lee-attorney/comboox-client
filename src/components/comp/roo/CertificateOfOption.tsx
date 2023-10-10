@@ -1,6 +1,5 @@
 import { 
   Button, 
-  Chip, 
   Dialog, 
   DialogActions, 
   DialogContent, 
@@ -12,53 +11,38 @@ import {
 
 import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../../scripts/common/toolsKit";
 
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { statesOfOpt } from "../roc/terms/Options/ContentOfOpt";
 import { OraclesList } from "./OraclesList";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { ActionsOfOption } from "./ActionsOfOption";
 import { SwapsList } from "./SwapsList";
-import { Swap, CheckPoint, OptWrap, comOps, logOps, typeOfOpts } from "../../../scripts/comp/roo";
-import { useRegisterOfOptionsGetAllSwapsOfOption, useRegisterOfOptionsGetAllOraclesOfOption } from "../../../generated";
+import { Swap, CheckPoint, OptWrap, comOps, logOps, typeOfOpts, getAllOraclesOfOption, getAllSwapsOfOption } from "../../../scripts/comp/roo";
 import { booxMap } from "../../../scripts/common";
 
 export interface CertificateOfOptionProps{
   open: boolean;
   optWrap: OptWrap;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  getAllOpts: ()=>void;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: CertificateOfOptionProps) {
+export function CertificateOfOption({open, optWrap, setOpen, setTime}: CertificateOfOptionProps) {
 
   const { boox } = useComBooxContext();
 
   const [ oracles, setOracles ] = useState<readonly CheckPoint[]>();
-  
-  const {
-    refetch: getAllOracles
-  } = useRegisterOfOptionsGetAllOraclesOfOption({
-    address: boox ? boox[booxMap.ROO] : undefined,
-    args: [ BigInt(optWrap.opt.head.seqOfOpt) ],
-    onSuccess(res) {
-      if (res.length > 0)
-        setOracles(res);
-    }
-  })
-
   const [ swaps, setSwaps ] = useState<readonly Swap[]>();
-  
-  const {
-    refetch: getAllSwaps
-  } = useRegisterOfOptionsGetAllSwapsOfOption({
-    address: boox ? boox[booxMap.ROO] : undefined,
-    args: [ BigInt(optWrap.opt.head.seqOfOpt) ],
-    onSuccess(res) {
-      if (res.length > 0)
-        setSwaps(res);
-    }
-  })
 
+  useEffect(()=>{
+    if (boox) {
+      getAllOraclesOfOption(boox[booxMap.ROO], optWrap.opt.head.seqOfOpt)
+        .then(res => setOracles(res));
+      getAllSwapsOfOption(boox[booxMap.ROO], optWrap.opt.head.seqOfOpt)
+        .then(res => setSwaps(res));   
+    }
+  }, [boox, optWrap]);
+  
   return (
     <Dialog
       maxWidth={false}
@@ -368,7 +352,7 @@ export function CertificateOfOption({open, optWrap, setOpen, getAllOpts}: Certif
                 <ActionsOfOption 
                   seqOfOpt={optWrap.opt.head.seqOfOpt} 
                   setOpen={setOpen} 
-                  getAllOpts={getAllOpts} 
+                  setTime = { setTime } 
                 />
               </td>
             </tr>

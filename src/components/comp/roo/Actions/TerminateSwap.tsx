@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
 
-export function TerminateSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function TerminateSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -21,7 +21,7 @@ export function TerminateSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionPro
           BigInt(seqOfSwap)]
       : undefined,
     onSuccess() {
-      getAllOpts();
+      setTime(Date.now());
       setOpen(false);
     }
   })

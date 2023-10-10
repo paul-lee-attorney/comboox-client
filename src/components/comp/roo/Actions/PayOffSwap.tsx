@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
 
-export function PayOffSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function PayOffSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -23,7 +23,7 @@ export function PayOffSwap({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps)
       : undefined,
     value: BigInt(value) * BigInt(10 ** 9),
     onSuccess() {
-      getAllOpts();
+      setTime(Date.now());
       setOpen(false);
     }
   })

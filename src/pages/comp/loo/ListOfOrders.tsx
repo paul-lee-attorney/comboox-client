@@ -8,7 +8,7 @@ import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { booxMap } from "../../../scripts/common";
 import { ActionsOfInvestor } from "../../../components/comp/loo/ActionsOfInvestor";
 import { ActionsOfOrder } from "../../../components/comp/loo/ActionsOfOrder";
-import { Deal, defaultDeal, OrderWrap, defaultOrderWrap, Investor, getChain, investorInfoList } from "../../../scripts/comp/loo";
+import { OrderWrap, defaultOrderWrap, Investor, getChain, investorInfoList } from "../../../scripts/comp/loo";
 import { OrdersList } from "../../../components/comp/loo/OrdersList";
 import { InvestorsList } from "../../../components/comp/loo/InvestorsList";
 import { counterOfClasses } from "../../../scripts/comp/ros";

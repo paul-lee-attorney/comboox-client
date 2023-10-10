@@ -17,7 +17,7 @@ const defaultParas:Paras = {
   p3: '0',
 }
 
-export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProps) {
+export function UpdateOracle({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
   const [paras, setParas] = useState<Paras>(defaultParas);
@@ -29,7 +29,7 @@ export function UpdateOracle({seqOfOpt, setOpen, getAllOpts}:ActionsOfOptionProp
     address: gk,
     args: [BigInt(seqOfOpt), BigInt(paras.p1), BigInt(paras.p2), BigInt(paras.p3)],
     onSuccess() {
-      getAllOpts();
+      setTime(Date.now());
       setOpen(false);
     }
   })

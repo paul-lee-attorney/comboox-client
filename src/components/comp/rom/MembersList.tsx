@@ -6,10 +6,8 @@ import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { centToDollar, dateParser, longDataParser, longSnParser, splitStrArr } from '../../../scripts/common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { MemberShareClip, getEquityList, sortedMembersList } from '../../../scripts/comp/rom';
-import { useRegisterOfMembersSortedMembersList } from '../../../generated';
 import { booxMap } from '../../../scripts/common';
 import { History } from '@mui/icons-material';
-
 
 interface MembersEquityListProps{
   setAcct: Dispatch<SetStateAction<number>>;
@@ -131,11 +129,6 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     },
   ]
   
-  // const handleClick = (p) => {
-  //   setAcct(p.row.acct);
-  //   setOpen(true);
-  // }
-
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <Box sx={{width: '100%', color: 'black' }} >
@@ -150,7 +143,6 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
             getRowId={row => row.acct.toString()}
             rows={ equityList }
             columns={ columns }
-            // onRowClick={ handleRowClick }
             disableRowSelectionOnClick
           />
         )}
