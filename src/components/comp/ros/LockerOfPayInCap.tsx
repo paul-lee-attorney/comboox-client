@@ -1,91 +1,62 @@
-import { useState } from "react";
-import { Bytes32Zero, HexType, booxMap } from "../../../scripts/common";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { booxMap } from "../../../scripts/common";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { 
   useGeneralKeeperRequestPaidInCapital, 
   useGeneralKeeperSetPayInAmt, 
   useGeneralKeeperWithdrawPayInAmt,
-  useRegisterOfSharesGetLocker, 
 } from "../../../generated";
 import { Box, Collapse, IconButton, Paper, Stack, Switch, TextField, Toolbar, Tooltip, Typography } from "@mui/material";
 import { ExitToApp, IosShare, Output } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { Share } from "../../../scripts/comp/ros";
-import { Locker, HeadOfLocker,  defaultHeadOfLocker } from "../../../scripts/center/rc";
-import { HexParser, splitPayload } from "../../../scripts/common/toolsKit";
-
+import { Share, getLocker } from "../../../scripts/comp/ros";
+import { Locker, defaultLocker } from "../../../scripts/center/rc";
+import { HexParser } from "../../../scripts/common/toolsKit";
 
 interface LockerOfPayInCapProps {
   share: Share;
-  obtainSharesList: ()=>any;
-  setDialogOpen: (flag: boolean) => void;
+  setDialogOpen: Dispatch<SetStateAction<boolean>>;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: LockerOfPayInCapProps ) {
+export function LockerOfPayInCap({ share, setDialogOpen, setTime }: LockerOfPayInCapProps ) {
 
   const { gk, boox } = useComBooxContext();
 
-  const [ headOfLocker, setHeadOfLocker ] = useState<HeadOfLocker>(defaultHeadOfLocker);
+  const [ locker, setLocker ] = useState<Locker>(defaultLocker);
+  const [ key, setKey ] = useState<string>();
 
-  const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
-
-  const [ newLocker, setNewLocker ] = useState<Locker>();
-
-
-  const {
-    refetch: getLocker,
-  } = useRegisterOfSharesGetLocker({
-    address: boox ? boox[booxMap.ROS] : undefined,
-    args: hashLock ? [ hashLock ] : undefined,
-    onSuccess(locker) {
-      if (hashLock) {
-        let lk: Locker = {
-          hashLock: hashLock,
-          head: locker.head,
-          body: {
-            counterLocker: locker.body.counterLocker,
-            selector: `0x${locker.body.payload.substring(2,10)}`,
-            paras: splitPayload(locker.body.payload.substring(10)),          
-          },
-        };
-        setNewLocker(lk);
-      }
-    }
-  })
+  const [ open, setOpen ] = useState<boolean>(false);
 
   const {
     isLoading: setPayInAmtLoading,
     write: setPayInAmt,
   } = useGeneralKeeperSetPayInAmt({
     address: gk,
-    args: headOfLocker && share.head.seqOfShare && 
-          headOfLocker.value && headOfLocker.expireDate && 
-          hashLock 
+    args: locker.head && share.head.seqOfShare && 
+          locker.head.value && locker.head.expireDate && 
+          locker.hashLock 
         ? [ BigInt(share.head.seqOfShare), 
-            BigInt(headOfLocker.value), 
-            BigInt(headOfLocker.expireDate),
-            hashLock 
+            BigInt(locker.head.value), 
+            BigInt(locker.head.expireDate),
+            locker.hashLock
           ]
         : undefined,
-    onSuccess() {
-      getLocker();
-    }
   })
-
-  const [ key, setKey ] = useState<string>();
 
   const {
     isLoading: requestPaidInCapitalLoading,
     write: requestPaidInCapital,
   } = useGeneralKeeperRequestPaidInCapital({
     address: gk,
-    args: hashLock && key
-      ? [ hashLock, key ]
+    args: locker.hashLock && key
+      ? [ locker.hashLock, key ]
       : undefined,
     onSuccess() {
-      getLocker()
+      setTime(Date.now());
+      setDialogOpen(false);  
     }
   })
 
@@ -94,15 +65,18 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
     write: withdrawPayInAmt,     
   } = useGeneralKeeperWithdrawPayInAmt({
     address: gk,
-    args: hashLock 
-      ? [ hashLock, BigInt(share.head.seqOfShare) ]
+    args: locker.hashLock 
+      ? [ locker.hashLock, BigInt(share.head.seqOfShare) ]
       : undefined,
-    onSuccess() {
-      getLocker()
-    }
   })
 
-  const [ open, setOpen ] = useState<boolean>(false);
+  useEffect(()=>{
+    if (boox && locker.hashLock) {
+      getLocker(boox[booxMap.ROS], locker.hashLock).then(
+        res => setLocker(res)
+      );
+    }
+  }, [boox, locker.hashLock, setPayInAmt, withdrawPayInAmt]);
 
   return (
     <Paper elevation={3} sx={{
@@ -159,8 +133,11 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
               m:1,
               minWidth: 618,
             }}
-            onChange={(e) => setHashLock(HexParser( e.target.value ))}
-            value={ hashLock }
+            onChange={(e) => setLocker(v => ({
+              ...v,
+              hashLock: HexParser( e.target.value ),
+            }))}
+            value={ locker.hashLock }
             size="small"
           />
 
@@ -171,11 +148,13 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
               m:1,
               minWidth: 218,
             }}
-            onChange={(e) => setHeadOfLocker(v => ({
-              ...v,
-              value: BigInt(e.target.value ?? '0'),
-            }))}
-            value={ headOfLocker?.value.toString() }
+            onChange={(e) => setLocker(v => {
+              let lk = v;
+              lk.head.value = BigInt(e.target.value ?? '0');
+              return lk;
+            })}
+
+            value={ locker.head?.value.toString() }
             size="small"
           />
 
@@ -185,11 +164,12 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
               m:1,
               minWidth: 218,
             }} 
-            value={ dayjs.unix(headOfLocker.expireDate ?? '0') }
-            onChange={(date) => setHeadOfLocker(v => ({
-              ...v,
-              expireDate: date ? date.unix(): 0,
-            }))}
+            value={ dayjs.unix(locker.head.expireDate ?? '0') }
+            onChange={(date) => setLocker(v => {
+              let lk = v;
+              lk.head.expireDate = date ? date.unix() : 0;
+              return lk;
+            })}
             format='YYYY-MM-DD HH:mm:ss'
             size="small"
           />
@@ -242,7 +222,7 @@ export function LockerOfPayInCap({ share, obtainSharesList, setDialogOpen }: Loc
               m:1,
               minWidth: 618,
             }}
-            onChange={(e) => setKey(e.target.value)}
+            onChange={(e) => setKey(e.target.value ?? '')}
             value={ key }
             size="small"
           />

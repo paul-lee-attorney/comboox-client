@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Button, 
@@ -10,16 +10,11 @@ import {
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
-import { Search, Send } from "@mui/icons-material";
+import { Search } from "@mui/icons-material";
 
-import { 
-  useRegisterOfSharesGetShare,
-  useRegisterOfSharesGetSharesList,
-} from "../../../generated";
-import { LoadingButton } from "@mui/lab";
 import { SharesList } from "../../../components/comp/ros/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/ros/CertificateOfContribution";
-import { Share } from "../../../scripts/comp/ros";
+import { Share, getShare, getSharesList } from "../../../scripts/comp/ros";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { booxMap } from "../../../scripts/common";
 
@@ -27,44 +22,29 @@ import { booxMap } from "../../../scripts/common";
 function RegisterOfShares() {
   const { boox } = useComBooxContext();
 
-  const [ loading, setLoading ] = useState<boolean>();
-
   const [ sharesList, setSharesList ] = useState<readonly Share[]>();
+  const [ time, setTime ] = useState<number>(0);  
 
-  const {
-    refetch: obtainSharesList,
-  } = useRegisterOfSharesGetSharesList ({
-    address: boox ? boox[booxMap.ROS] : undefined,
-    onSuccess(list) {
-      setSharesList(list);    
+  useEffect(()=>{
+    if (boox) {
+      getSharesList(boox[booxMap.ROS]).then(
+        res => setSharesList(res)
+      );
     }
-  })
+  }, [boox, time]);
 
-  const [ seqOfShare, setSeqOfShare ] = useState<string>();
-  const [ bnSeqOfShare, setBnSeqOfShare ] = useState<bigint>();
-
+  const [ seqOfShare, setSeqOfShare ] = useState<number>();
   const [ open, setOpen ] = useState<boolean>(false);
   const [ share, setShare ] = useState<Share>();
-
-  const { 
-    refetch: getShareFunc, 
-  } = useRegisterOfSharesGetShare({
-    address: boox ? boox[booxMap.ROS]: undefined,
-    args: bnSeqOfShare ? [bnSeqOfShare] : undefined,
-    onSuccess(data) {
-      let share:Share = {
-        head: data.head,
-        body: data.body,        
-      }
-      setShare(share);
-      setOpen(true);
-    }
-  });
-
+  
   const searchShare = () => {
-    if (seqOfShare) {
-      setBnSeqOfShare(BigInt(seqOfShare));
-      getShareFunc();
+    if (boox && seqOfShare) {
+      getShare(boox[booxMap.ROS], seqOfShare).then(
+        res => {
+          setShare(res);
+          setOpen(true);
+        }
+      );
     }
   }
 
@@ -98,9 +78,7 @@ function RegisterOfShares() {
                     id="tfSeqOfShare" 
                     label="seqOfShare" 
                     variant="outlined"
-                    onChange={(e) => 
-                      setSeqOfShare(e.target.value)
-                    }
+                    onChange={(e) => setSeqOfShare(parseInt(e.target.value ?? '0')) }
                     value = { seqOfShare }
                     size='small'
                   />
@@ -115,17 +93,6 @@ function RegisterOfShares() {
                   >
                     Search
                   </Button>
-
-                  {loading && (
-                    <LoadingButton 
-                      loading={ loading } 
-                      loadingPosition='end' 
-                      endIcon={<Send/>} 
-                      sx={{p:1, m:1, ml:5}} 
-                    >
-                      <span>Loading</span>
-                    </LoadingButton>
-                  )}
 
                 </Stack>
               </td>
@@ -151,7 +118,7 @@ function RegisterOfShares() {
         </table>
         
         {share && (
-          <CertificateOfContribution open={open} share={share} setOpen={setOpen} obtainSharesList={obtainSharesList} />
+          <CertificateOfContribution open={open} share={share} setOpen={setOpen} setTime={setTime} />
         )}
 
       </Paper>

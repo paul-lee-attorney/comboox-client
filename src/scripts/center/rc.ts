@@ -59,6 +59,12 @@ export const defaultBodyOfLocker:BodyOfLocker = {
   paras: [Bytes32Zero],
 }
 
+export const defaultLocker: Locker = {
+  hashLock: Bytes32Zero,
+  head: defaultHeadOfLocker,
+  body: defaultBodyOfLocker,
+}
+
 // ==== User ====
 
 export interface Key {

@@ -88,7 +88,6 @@ export function InitBos({nextStep}: InitBosProps) {
         : undefined,
   })
 
-
   useEffect(()=>{
     if (boox) {
       getSharesList(boox[booxMap.ROS]).then(
