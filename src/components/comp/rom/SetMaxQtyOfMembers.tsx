@@ -26,6 +26,7 @@ import { HexType, booxMap } from '../../../scripts/common';
 import { maxQtyOfMembers } from '../../../scripts/comp/rom';
 import { useWaitForTransaction } from 'wagmi';
 import { GetTxReceipt } from '../../common/utils/GetTxReceipt';
+import { waitForTransaction } from '@wagmi/core';
 
 interface SetMaxQtyOfMembersProps {
   nextStep: (next: number) => void;
@@ -34,7 +35,7 @@ interface SetMaxQtyOfMembersProps {
 export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   const { boox } = useComBooxContext();
-  const [hash, setHash] = useState<HexType>();
+  // const [hash, setHash] = useState<HexType>();
 
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
@@ -55,7 +56,10 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     address: boox ? boox[booxMap.ROM] : undefined,
     args: [BigInt(inputMax)],
     onSuccess(data) {
-      setHash(data.hash);
+      let hash:HexType = data.hash;
+      waitForTransaction({hash}).then(
+        ()=>maxQtyOfMembers()
+      );
     }
   });
 
@@ -107,7 +111,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
             <b>Max Qty of Members</b>
           </Typography>
 
-          <GetTxReceipt hash={hash} setHash={setHash} refresh={maxQtyOfMembers} />
+          {/* <GetTxReceipt hash={hash} setHash={setHash} refresh={maxQtyOfMembers} /> */}
 
           <Card sx={{ m:1, width:'100%', }} variant='outlined'>
               <CardContent>
