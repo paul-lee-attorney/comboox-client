@@ -12,10 +12,10 @@ import { Pledge } from "../../../scripts/comp/rop";
 export interface ActionsOfPledgeProps{
   pld: Pledge;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function ActionsOfPledge({pld, setOpen, setTime}: ActionsOfPledgeProps) {
+export function ActionsOfPledge({pld, setOpen, refresh}: ActionsOfPledgeProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -25,13 +25,13 @@ export function ActionsOfPledge({pld, setOpen, setTime}: ActionsOfPledgeProps) {
   ]
 
   const compsOfAction = [
-    <RefundDebt key={0} pld={pld} setOpen={setOpen} setTime={setTime} />, 
-    <ExtendPledge key={1} pld={pld} setOpen={setOpen} setTime={setTime} />,
-    <LockPledge key={2} pld={pld} setOpen={setOpen} setTime={setTime} />,
-    <ReleasePledge key={3} pld={pld} setOpen={setOpen} setTime={setTime} />,
-    <ExecPledge key={4} pld={pld} setOpen={setOpen} setTime={setTime} />, 
-    <RevokePledge key={5} pld={pld} setOpen={setOpen} setTime={setTime} />,
-    <TransferPledge key={6} pld={pld} setOpen={setOpen} setTime={setTime} />,
+    <RefundDebt key={0} pld={pld} setOpen={setOpen} refresh={refresh} />, 
+    <ExtendPledge key={1} pld={pld} setOpen={setOpen} refresh={refresh} />,
+    <LockPledge key={2} pld={pld} setOpen={setOpen} refresh={refresh} />,
+    <ReleasePledge key={3} pld={pld} setOpen={setOpen} refresh={refresh} />,
+    <ExecPledge key={4} pld={pld} setOpen={setOpen} refresh={refresh} />, 
+    <RevokePledge key={5} pld={pld} setOpen={setOpen} refresh={refresh} />,
+    <TransferPledge key={6} pld={pld} setOpen={setOpen} refresh={refresh} />,
   ]
 
   return(

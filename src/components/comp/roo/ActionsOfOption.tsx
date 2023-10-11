@@ -9,10 +9,10 @@ import { TerminateSwap } from "./Actions/TerminateSwap";
 export interface ActionsOfOptionProps{
   seqOfOpt: number;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function ActionsOfOption({seqOfOpt, setOpen, setTime}: ActionsOfOptionProps) {
+export function ActionsOfOption({seqOfOpt, setOpen, refresh}: ActionsOfOptionProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
@@ -22,11 +22,11 @@ export function ActionsOfOption({seqOfOpt, setOpen, setTime}: ActionsOfOptionPro
   ]
   
   const compsOfAction = [
-    <UpdateOracle key={0} seqOfOpt={seqOfOpt} setOpen={ setOpen } setTime={ setTime } />,
-    <ExecOption key={1} seqOfOpt={seqOfOpt} setOpen={ setOpen } setTime={ setTime } />,
-    <CreateSwap key={2} seqOfOpt={seqOfOpt} setOpen={ setOpen } setTime={ setTime } />,
-    <PayOffSwap key={3} seqOfOpt={seqOfOpt} setOpen={ setOpen } setTime={ setTime } />, 
-    <TerminateSwap key={4} seqOfOpt={seqOfOpt} setOpen={ setOpen } setTime={ setTime } />,
+    <UpdateOracle key={0} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
+    <ExecOption key={1} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
+    <CreateSwap key={2} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
+    <PayOffSwap key={3} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />, 
+    <TerminateSwap key={4} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
   ]
 
   return(

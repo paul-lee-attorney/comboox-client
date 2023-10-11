@@ -7,11 +7,12 @@ import { useEffect, useState } from "react";
 
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { booxMap } from "../../../../scripts/common";
+import { HexType, booxMap } from "../../../../scripts/common";
 import { getShare } from "../../../../scripts/comp/ros";
 import { Body, Head, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function ExecPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
+export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk, boox } = useComBooxContext();
   
@@ -39,6 +40,11 @@ export function ExecPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
     }
   });
 
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
+
   const {
     isLoading: execPledgeLoading,
     write: execPledge,
@@ -49,12 +55,12 @@ export function ExecPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
             BigInt(version),
             BigInt(body.buyer),
             BigInt(body.groupOfBuyer) ],
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
-    }
-  })
-
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
+        
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       {/* <Toolbar>

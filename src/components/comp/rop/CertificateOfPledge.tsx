@@ -19,10 +19,10 @@ export interface CertificateOfPledgeProps{
   open: boolean;
   pld: Pledge;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function CertificateOfPledge({open, pld, setOpen, setTime}: CertificateOfPledgeProps) {
+export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOfPledgeProps) {
 
   return (
     <Dialog
@@ -221,7 +221,7 @@ export function CertificateOfPledge({open, pld, setOpen, setTime}: CertificateOf
                   <ActionsOfPledge 
                     pld={pld}
                     setOpen={setOpen} 
-                    setTime={setTime} 
+                    refresh={refresh} 
                   />
                 </td>
               </tr>

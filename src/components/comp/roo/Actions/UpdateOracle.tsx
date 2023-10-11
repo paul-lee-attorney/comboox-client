@@ -4,6 +4,8 @@ import { useGeneralKeeperUpdateOracle } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 interface Paras {
   p1: string;
@@ -17,10 +19,15 @@ const defaultParas:Paras = {
   p3: '0',
 }
 
-export function UpdateOracle({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
+export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
   const [paras, setParas] = useState<Paras>(defaultParas);
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: updateOracleLoading,
@@ -28,9 +35,9 @@ export function UpdateOracle({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) 
   } = useGeneralKeeperUpdateOracle({
     address: gk,
     args: [BigInt(seqOfOpt), BigInt(paras.p1), BigInt(paras.p2), BigInt(paras.p3)],
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

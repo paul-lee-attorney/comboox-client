@@ -4,12 +4,19 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Key } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function ReleasePledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
+export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ key, setKey ] = useState<string>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: releasePledgeLoading,
@@ -22,12 +29,12 @@ export function ReleasePledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
           key
         ]
       : undefined,
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
-    }
-  })
-
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
+  
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 

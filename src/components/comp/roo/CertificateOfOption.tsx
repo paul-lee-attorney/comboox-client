@@ -24,10 +24,10 @@ export interface CertificateOfOptionProps{
   open: boolean;
   optWrap: OptWrap;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function CertificateOfOption({open, optWrap, setOpen, setTime}: CertificateOfOptionProps) {
+export function CertificateOfOption({open, optWrap, setOpen, refresh}: CertificateOfOptionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -352,7 +352,7 @@ export function CertificateOfOption({open, optWrap, setOpen, setTime}: Certifica
                 <ActionsOfOption 
                   seqOfOpt={optWrap.opt.head.seqOfOpt} 
                   setOpen={setOpen} 
-                  setTime = { setTime } 
+                  refresh = { refresh } 
                 />
               </td>
             </tr>

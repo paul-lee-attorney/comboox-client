@@ -21,6 +21,10 @@ function RegisterOfPledges() {
   const [ pldList, setPldList ] = useState<readonly Pledge[]>([]);
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       getAllPledges(boox[booxMap.ROP]).then(
@@ -49,7 +53,7 @@ function RegisterOfPledges() {
 
       <Stack direction='column' sx={{m:1, p:1}} >
 
-        <CreatePledge setTime={setTime} />
+        <CreatePledge refresh={refresh} />
 
         <PledgesList 
           list={ pldList }  
@@ -58,7 +62,7 @@ function RegisterOfPledges() {
         />
       
         {pld && (
-          <CertificateOfPledge open={open} pld={pld} setOpen={setOpen} setTime={setTime} />
+          <CertificateOfPledge open={open} pld={pld} setOpen={setOpen} refresh={refresh} />
         )}
 
       </Stack>

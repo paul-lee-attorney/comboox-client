@@ -20,7 +20,7 @@ import {
 } from '../../../generated';
 
 
-import { booxMap } from '../../../scripts/common';
+import { HexType, booxMap } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
@@ -28,6 +28,7 @@ import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, codifyHeadOfShare, getSharesList, } from '../../../scripts/comp/ros';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 
 const defaultShare: Share = {
@@ -59,6 +60,12 @@ export function InitBos({nextStep}: InitBosProps) {
 
   const [sharesList, setSharesList] = useState<readonly Share[]>();
   const [share, setShare] = useState<Share>(defaultShare);
+  
+  const [time, setTime] = useState(0);
+
+  const refresh = () => {
+    setTime(Date.now());
+  }
 
   const {
     isLoading: issueShareLoading,
@@ -74,8 +81,12 @@ export function InitBos({nextStep}: InitBosProps) {
           share.body.paid,
           share.body.par  ] 
       : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }    
   });
-
+  
   const {
     isLoading: delShareLoading,
     write: delShare
@@ -86,7 +97,11 @@ export function InitBos({nextStep}: InitBosProps) {
             share.body.paid, 
             share.body.par ]
         : undefined,
-  })
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }    
+  });
 
   useEffect(()=>{
     if (boox) {
@@ -94,7 +109,7 @@ export function InitBos({nextStep}: InitBosProps) {
           ls => setSharesList(ls)
       )
     }
-  }, [boox, issueShare, delShare]);
+  }, [boox, time]);
 
   return (
 

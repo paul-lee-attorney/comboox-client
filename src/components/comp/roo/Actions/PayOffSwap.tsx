@@ -4,13 +4,20 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function PayOffSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
+export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfSwap, setSeqOfSwap ] = useState<string>('0');
   const [ value, setValue ] = useState<string>('0');
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: payOffSwapLoading,
@@ -22,9 +29,9 @@ export function PayOffSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
           BigInt(seqOfSwap)]
       : undefined,
     value: BigInt(value) * BigInt(10 ** 9),
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

@@ -3,10 +3,17 @@ import { useGeneralKeeperExecOption } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function ExecOption({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
+export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: execOptLoading,
@@ -14,9 +21,9 @@ export function ExecOption({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
   } = useGeneralKeeperExecOption({
     address: gk,
     args: [ BigInt(seqOfOpt) ],
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useGeneralKeeperCreatePledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Body, Head, codifyHeadOfPledge, defaultBody, defaultHead } from "../../../scripts/comp/rop";
@@ -6,6 +6,7 @@ import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material
 import { getShare } from "../../../scripts/comp/ros";
 import { Create } from "@mui/icons-material";
 import { HexType, booxMap } from "../../../scripts/common";
+import { refreshAfterTx } from "../../../scripts/common/toolsKit";
 
 
 async function obtainPledgor(addr:HexType, seqOfShare: number):Promise<number>{  
@@ -14,10 +15,10 @@ async function obtainPledgor(addr:HexType, seqOfShare: number):Promise<number>{
 };
 
 interface CreatePledgeProps{
-  setTime:Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function CreatePledge({setTime}:CreatePledgeProps) {
+export function CreatePledge({refresh}:CreatePledgeProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -36,8 +37,9 @@ export function CreatePledge({setTime}:CreatePledgeProps) {
           body.guaranteedAmt,
           BigInt(body.execDays)
         ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }    
   });
 

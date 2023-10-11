@@ -9,10 +9,10 @@ export interface CertificateOfContributionProps{
   open: boolean;
   share: Share;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function CertificateOfContribution({open, share, setOpen, setTime}: CertificateOfContributionProps) {
+export function CertificateOfContribution({open, share, setOpen, refresh}: CertificateOfContributionProps) {
 
   return (
     <Dialog
@@ -271,7 +271,7 @@ export function CertificateOfContribution({open, share, setOpen, setTime}: Certi
                 <td colSpan={4}>
 
                   {share && (share.body.par != share.body.paid) && (
-                    <LockerOfPayInCap share={share} setDialogOpen={setOpen} setTime={setTime} />
+                    <LockerOfPayInCap share={share} setDialogOpen={setOpen} refresh={refresh} />
                   )}
 
                 </td>

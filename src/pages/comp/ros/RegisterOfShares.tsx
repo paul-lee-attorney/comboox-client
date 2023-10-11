@@ -25,6 +25,10 @@ function RegisterOfShares() {
   const [ sharesList, setSharesList ] = useState<readonly Share[]>();
   const [ time, setTime ] = useState<number>(0);  
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       getSharesList(boox[booxMap.ROS]).then(
@@ -118,7 +122,7 @@ function RegisterOfShares() {
         </table>
         
         {share && (
-          <CertificateOfContribution open={open} share={share} setOpen={setOpen} setTime={setTime} />
+          <CertificateOfContribution open={open} share={share} setOpen={setOpen} refresh={refresh} />
         )}
 
       </Paper>

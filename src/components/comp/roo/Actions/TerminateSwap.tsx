@@ -4,12 +4,19 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function TerminateSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
+export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfSwap, setSeqOfSwap ] = useState<string>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: terminateSwapLoading,
@@ -20,12 +27,12 @@ export function TerminateSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps)
       ? [ BigInt(seqOfOpt), 
           BigInt(seqOfSwap)]
       : undefined,
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
-
+  
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 

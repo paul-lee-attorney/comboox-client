@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { booxMap } from "../../../scripts/common";
+import { HexType, booxMap } from "../../../scripts/common";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { 
@@ -13,17 +13,22 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Share, getLocker } from "../../../scripts/comp/ros";
 import { Locker, defaultLocker } from "../../../scripts/center/rc";
-import { HexParser } from "../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../scripts/common/toolsKit";
 
 interface LockerOfPayInCapProps {
   share: Share;
   setDialogOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function LockerOfPayInCap({ share, setDialogOpen, setTime }: LockerOfPayInCapProps ) {
+export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayInCapProps ) {
 
   const { gk, boox } = useComBooxContext();
+  const [ time, setTime ] = useState(0);
+
+  const refreshLockers = ()=>{
+    setTime(Date.now());
+  }
 
   const [ locker, setLocker ] = useState<Locker>(defaultLocker);
   const [ key, setKey ] = useState<string>();
@@ -44,7 +49,16 @@ export function LockerOfPayInCap({ share, setDialogOpen, setTime }: LockerOfPayI
             locker.hashLock
           ]
         : undefined,
-  })
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refreshLockers);
+    }    
+  });
+    
+  const updateResults = ()=>{
+    refresh();
+    setDialogOpen(false);
+  }
 
   const {
     isLoading: requestPaidInCapitalLoading,
@@ -54,11 +68,11 @@ export function LockerOfPayInCap({ share, setDialogOpen, setTime }: LockerOfPayI
     args: locker.hashLock && key
       ? [ locker.hashLock, key ]
       : undefined,
-    onSuccess() {
-      setTime(Date.now());
-      setDialogOpen(false);  
-    }
-  })
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
 
   const {
     isLoading: withdrawPayInAmtLoading,
@@ -68,7 +82,11 @@ export function LockerOfPayInCap({ share, setDialogOpen, setTime }: LockerOfPayI
     args: locker.hashLock 
       ? [ locker.hashLock, BigInt(share.head.seqOfShare) ]
       : undefined,
-  })
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refreshLockers);
+    }    
+  });
 
   useEffect(()=>{
     if (boox && locker.hashLock) {
@@ -76,7 +94,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, setTime }: LockerOfPayI
         res => setLocker(res)
       );
     }
-  }, [boox, locker.hashLock, setPayInAmt, withdrawPayInAmt]);
+  }, [boox, locker.hashLock, time]);
 
   return (
     <Paper elevation={3} sx={{

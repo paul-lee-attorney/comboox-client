@@ -4,12 +4,19 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { VolunteerActivismOutlined } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function RefundDebt({pld, setOpen, setTime}:ActionsOfPledgeProps) {
+export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ amt, setAmt ] = useState<number>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: refundDebtLoading,
@@ -22,12 +29,12 @@ export function RefundDebt({pld, setOpen, setTime}:ActionsOfPledgeProps) {
           BigInt(amt)
         ]
       : undefined,
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
-    }
-  })
-
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
+  
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 

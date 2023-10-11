@@ -4,13 +4,20 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CurrencyExchange } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function TransferPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
+export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ buyer, setBuyer ] = useState<number>();
   const [ amt, setAmt ] = useState<number>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: transferPledgeLoading,
@@ -24,11 +31,11 @@ export function TransferPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
           BigInt(amt)
         ]
       : undefined,
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
-    }
-  })
+      onSuccess(data) {
+        let hash: HexType = data.hash;
+        refreshAfterTx(hash, updateResults);
+      }    
+    });
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >

@@ -4,14 +4,21 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType } from "../../../../scripts/common";
 
-export function CreateSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
+export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfTarget, setSeqOfTarget ] = useState<string>();
   const [ paidOfTarget, setPaidOfTarget ] = useState<string>();
   const [ seqOfPledge, setSeqOfPledge ] = useState<string>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: createSwapLoading,
@@ -24,9 +31,9 @@ export function CreateSwap({seqOfOpt, setOpen, setTime}:ActionsOfOptionProps) {
           BigInt(paidOfTarget), 
           BigInt(seqOfPledge)]
       : undefined,
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

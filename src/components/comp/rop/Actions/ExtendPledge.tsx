@@ -4,12 +4,19 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function ExtendPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
+export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ days, setDays ] = useState<number>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: extendPledgeLoading,
@@ -22,12 +29,12 @@ export function ExtendPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
           BigInt(days)
         ]
       : undefined,
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
-    }
-  })
-
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
+  
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
       {/* <Toolbar>

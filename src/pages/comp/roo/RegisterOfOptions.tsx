@@ -20,6 +20,10 @@ function RegisterOfOptions() {
   const [ optsList, setOptsList ] = useState<readonly OptWrap[]>([defaultOptWrap]);
   const [ time, setTime ] = useState(0);
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       getAllOpts(boox[booxMap.ROO]).then(
@@ -55,7 +59,7 @@ function RegisterOfOptions() {
         />
       
         {opt && (
-          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} setTime={setTime} />
+          <CertificateOfOption open={open} optWrap={opt} setOpen={setOpen} refresh={refresh} />
         )}
 
       </Stack>

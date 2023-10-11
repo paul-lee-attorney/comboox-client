@@ -5,13 +5,18 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../../scripts/common";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function LockPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
+export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: lockPledgeLoading,
@@ -24,12 +29,12 @@ export function LockPledge({pld, setOpen, setTime}:ActionsOfPledgeProps) {
           hashLock
         ]
       : undefined,
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
-    }
-  })
-
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
+  
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
