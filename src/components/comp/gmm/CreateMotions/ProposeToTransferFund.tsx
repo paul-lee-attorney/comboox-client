@@ -8,7 +8,7 @@ import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
@@ -29,7 +29,7 @@ export const defaultParasOfTransfer: ParasOfTransfer = {
   expireDate: 0,
 }
 
-export function ProposeToTransferFund({ setTime }:CreateMotionProps) {
+export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -51,10 +51,12 @@ export function ProposeToTransferFund({ setTime }:CreateMotionProps) {
         BigInt(seqOfVR), 
         BigInt(executor)
     ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
-  })
+  });
+
 
   return (
 

@@ -8,11 +8,11 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { ExecActionProps } from "../../bmm/ExecMotions/ExecAction";
 
-export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActionProps) {
+export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -31,8 +31,9 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActi
           actions.map(v => (v.params)),
           desHash, BigInt(seqOfMotion)]
         : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

@@ -12,18 +12,18 @@ import { CreateAction } from "./CreateMotions/CreateAction";
 import { ProposeToTransferFund } from "./CreateMotions/ProposeToTransferFund";
 
 export interface CreateMotionProps {
-  setTime: Dispatch<SetStateAction<number>>,
+  refresh: ()=>void;
 }
 
-export function CreateMotionOfBoardMeeting({ setTime }: CreateMotionProps) {
+export function CreateMotionOfBoardMeeting({ refresh }: CreateMotionProps) {
 
   const nameOfTypes = ['Nominate/Remove Officer', 'Approve Document', 'Transfer Fund', 'Approve Action'];
 
   const compOfTypes = [
-    <CreateMotionForOfficer key={0} setTime={setTime} />,
-    <CreateMotionToApproveDoc key={1} setTime={setTime} />,
-    <ProposeToTransferFund key={2} setTime={setTime} />,
-    <CreateAction key={3} setTime={setTime} />,
+    <CreateMotionForOfficer key={0} refresh={refresh} />,
+    <CreateMotionToApproveDoc key={1} refresh={refresh} />,
+    <ProposeToTransferFund key={2} refresh={refresh} />,
+    <CreateAction key={3} refresh={refresh} />,
   ]
 
   const [ typeOfMotion, setTypeOfMotion ] = useState<number>(0);

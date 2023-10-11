@@ -8,11 +8,11 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 
-export function CreateAction({setTime}:CreateMotionProps) {
+export function CreateAction({refresh}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -35,8 +35,9 @@ export function CreateAction({setTime}:CreateMotionProps) {
           actions.map(v => (v.params)),
           desHash, BigInt(executor)]
         : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

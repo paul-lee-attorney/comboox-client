@@ -9,20 +9,27 @@ import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from
 import { EmojiPeople, } from "@mui/icons-material";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
+export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk } = useComBooxContext();
   
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
+
   const {
     isLoading: proposeMotionToGmLoading,
     write: proposeMotionToGm,
   } = useGeneralKeeperProposeMotionToGeneralMeeting({
     address: gk,
     args: [BigInt(seqOfMotion)],
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -73,7 +80,7 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, setTime }:
         <EntrustDelegaterForGeneralMeeting 
           seqOfMotion={seqOfMotion} 
           setOpen={setOpen} 
-          setTime={setTime} 
+          refresh={refresh} 
         />
       </Collapse>
 

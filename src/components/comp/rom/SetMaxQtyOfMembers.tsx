@@ -49,15 +49,6 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     }
   }, [boox, time]);
 
-  // const {
-  //   refetch: maxQtyOfMembers
-  // } = useRegisterOfMembersMaxQtyOfMembers({
-  //   address: boox ? boox[booxMap.ROM] : undefined,
-  //   onSuccess(res) {
-  //     setMax(res.toString());
-  //   }
-  // })
-
   const {
     isLoading: setMaxQtyLoading,
     write: setMaxQty, 

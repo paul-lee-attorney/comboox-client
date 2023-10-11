@@ -21,10 +21,10 @@ interface OrderOfDealProps {
   deal: Deal;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, setTime}: OrderOfDealProps) {
+export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, refresh}: OrderOfDealProps) {
 
   const { boox } = useComBooxContext();
 
@@ -105,7 +105,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, s
         </DialogTitle>
 
         {!isFinalized && (
-          <DeleteDeal addr={addr} seqOfDeal={deal.head.seqOfDeal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />
+          <DeleteDeal addr={addr} seqOfDeal={deal.head.seqOfDeal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />
         )}
 
       </Stack>
@@ -360,10 +360,10 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, s
 
             <tr>
               <td>
-                <GetDTClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} timeline={timeline} timestamp={timestamp}/>
+                <GetDTClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} timeline={timeline} timestamp={timestamp}/>
               </td>
               <td>
-                <GetFRClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} timeline={timeline} timestamp={timestamp}/>
+                <GetFRClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} timeline={timeline} timestamp={timestamp}/>
               </td>
               <td>
                 <SwapsList addr={addr} deal={deal} />
@@ -376,7 +376,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, s
             <tr>
               <td colSpan={4}>
                 {deal.body.state > 0 && (
-                  <ActionsOfDeal addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} timeline={timeline} timestamp={timestamp} />
+                  <ActionsOfDeal addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} timeline={timeline} timestamp={timestamp} />
                 )}
               </td>
             </tr>

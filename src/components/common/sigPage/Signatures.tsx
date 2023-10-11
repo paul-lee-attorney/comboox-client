@@ -40,7 +40,7 @@ import {
 
 
 import { ParasOfSigPage, StrSig, getBuyers, getParasOfPage, getSellers, parseParasOfPage } from "../../../scripts/common/sigPage";
-import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { dateParser, longSnParser, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
@@ -98,6 +98,10 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
             BigInt(timing.closingDays)
           ] 
         : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   const [ isBuyer, setIsBuyer ] = useState(true);
@@ -115,6 +119,10 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
           BigInt(acct)
         ] 
       : undefined,
+      onSuccess(data) {
+        let hash: HexType = data.hash;
+        refreshAfterTx(hash, refresh);
+      }
   });
 
   const {
@@ -128,12 +136,20 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
           BigInt(acct)
         ] 
       : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   const [ buyerSigs, setBuyerSigs ] = useState<StrSig[]>();
   const [ sellerSigs, setSellerSigs ] = useState<StrSig[]>();  
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
   const [ time, setTime ] = useState<number>(0);
+
+  const refresh = () => {
+    setTime(Date.now());
+  }
 
   useEffect(()=>{
 
@@ -159,7 +175,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
       }
     );
 
-  }, [ addr, initPage, time, writeSetTiming, addBlank, removeBlank ])
+  }, [ addr, initPage, time])
 
   return (
     <Stack direction="column" sx={{width:'100%'}} >

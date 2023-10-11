@@ -12,6 +12,7 @@ import {
 
 import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { refreshAfterTx } from '../../../../scripts/common/toolsKit';
 
 interface FinalizeIaProps {
   addr: HexType;
@@ -24,15 +25,20 @@ export function FinalizeIa({ addr, setIsFinalized, setNextStep }: FinalizeIaProp
   const [ flag, setFlag ] = useState<boolean>(false);
   const [ open, setOpen ] = useState(false);
 
+  const refresh = ()=>{
+    setFlag(true);
+    setIsFinalized(true);
+    setNextStep(1);
+  }
+
   const {
     isLoading: finalizeIaLoading,
     write: finalizeIa,
   } = useInvestmentAgreementFinalizeIa({
     address: addr,
-    onSuccess() {
-      setFlag(true);
-      setIsFinalized(true);
-      setNextStep(1);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

@@ -5,16 +5,18 @@ import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperCloseDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { LockOpen } from "@mui/icons-material";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function PickupShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
+export function PickupShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ hashKey, setHashKey ] = useState<string>('Input your key string here');
 
-  const closeOrderOfDeal = ()=>{
+  const updateResults = ()=>{
     setDeal(defaultDeal);
-    setTime(Date.now());
-    setOpen(false);
+    refresh();
+    setOpen(false);    
   }
 
   const {
@@ -23,8 +25,9 @@ export function PickupShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfD
   } = useGeneralKeeperCloseDeal({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal), hashKey],
-    onSuccess() {
-      closeOrderOfDeal();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

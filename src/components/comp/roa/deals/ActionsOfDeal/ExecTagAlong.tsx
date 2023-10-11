@@ -6,7 +6,7 @@ import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../scripts/common";
-import { HexParser } from "../../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export interface TargetShare {
   seqOfShare: number;
@@ -20,11 +20,17 @@ export const defaultTargetShare: TargetShare = {
   par: '0',
 }
 
-export function ExecTagAlong({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
+export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
 
   const {
     isLoading: execTagAlongLoading,
@@ -38,13 +44,12 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, setTime}: ActionsOf
             BigInt(targetShare.par),
             sigHash
           ],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
-
+      
   return (
 
     <Paper elevation={3} sx={{

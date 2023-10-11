@@ -4,15 +4,17 @@ import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperTakeGiftShares } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HandshakeOutlined } from "@mui/icons-material";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
-export function TakeGiftShares({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
+export function TakeGiftShares({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
-  const closeOrderOfDeal = ()=>{
+  const updateResults = ()=>{
     setDeal(defaultDeal);
-    setTime(Date.now());
-    setOpen(false);    
+    refresh();
+    setOpen(false);
   }
 
   const {
@@ -21,8 +23,9 @@ export function TakeGiftShares({ addr, deal, setOpen, setDeal, setTime}: Actions
   } = useGeneralKeeperTakeGiftShares({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
-    onSuccess() {
-      closeOrderOfDeal()
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

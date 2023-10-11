@@ -6,8 +6,10 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../../../scripts/comp/loo";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function PlaceSellOrder({ classOfShare, setTime }: ActionsOfOrderProps) {
+export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
@@ -26,8 +28,9 @@ export function PlaceSellOrder({ classOfShare, setTime }: ActionsOfOrderProps) {
             BigInt(order.seqOfLR),
             fromHead, 
            ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

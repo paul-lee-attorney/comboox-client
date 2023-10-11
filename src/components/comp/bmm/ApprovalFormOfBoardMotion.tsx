@@ -23,12 +23,12 @@ export interface ApprovalFormOfBoardMotionProps{
   open: boolean;
   motion: Motion;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
 export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
-export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTime }: ApprovalFormOfBoardMotionProps) {
+export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refresh }: ApprovalFormOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -48,25 +48,13 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTi
 
   const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
 
-  // const {
-  //   refetch: queryVoteEnded
-  // } = useMeetingMinutesVoteEnded({
-  //   address: minutes,
-  //   args: [ motion.head.seqOfMotion ],
-  //   onSuccess(res) {
-  //     setVoteIsEnd(res)
-  //   }
-  // })
-
   useEffect(()=>{
-
     voteEnded(minutes, motion.head.seqOfMotion).then(
       res => {
         setVoteIsEnd(res);
       }
     )
-    
-  }, [minutes, motion])
+  }, [minutes, motion]);
 
   const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>(false);
 
@@ -266,7 +254,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTi
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
+                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />
                   </td>
                 </tr>
               )}
@@ -275,10 +263,10 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTi
                 <tr>
                   <td colSpan={4}>
                     <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
+                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} setTime={setTime} />
+                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} refresh={refresh} />
                     </Collapse>
                   </td>
                 </tr>
@@ -287,7 +275,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTi
               {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <TakePosition seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} setTime={setTime} />
+                    <TakePosition seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} refresh={refresh} />
                   </td>
                 </tr>
               )}
@@ -295,7 +283,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTi
               {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
                 <tr>
                   <td colSpan={4}>
-                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} setTime={setTime} />
+                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} refresh={refresh} />
                   </td>
                 </tr>
               )}
@@ -303,7 +291,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, setTi
               {motion.body.state == 3 && motion.head.typeOfMotion == 4 && (
                 <tr>
                   <td colSpan={4}>
-                    <ExecAction seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} setTime={setTime} />
+                    <ExecAction seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} refresh={refresh} />
                   </td>
                 </tr>
               )}

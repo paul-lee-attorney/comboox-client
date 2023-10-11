@@ -3,13 +3,13 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import {  BorderColor } from "@mui/icons-material";
 import { useState } from "react";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { useGeneralKeeperRegInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType } from "../../../../scripts/common";
 
 
-export function RegInvestor({ setTime }: ActionsOfInvestorProps) {
+export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const {gk} = useComBooxContext();
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
@@ -23,11 +23,12 @@ export function RegInvestor({ setTime }: ActionsOfInvestorProps) {
     args: [ BigInt(groupRep), 
             idHash
           ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
-
+      
   return (
 
     <Paper elevation={3} sx={{

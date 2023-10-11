@@ -5,6 +5,7 @@ import { HexType, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { useState } from "react";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 interface ProposeDocOfGmProps {
   addr: HexType,
@@ -17,6 +18,10 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   const { gk } = useComBooxContext();
   const [ executor, setExecutor ] = useState<string>('0');
 
+  const updateResults = ()=>{
+    setNextStep(4);
+  }
+
   const {
     isLoading,
     write
@@ -27,11 +32,12 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
           BigInt(seqOfVR), 
           BigInt(executor) ]
       : undefined,
-    onSuccess() {
-      setNextStep(4);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
-
+  
   return (
     <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'stretch'}}>
       <TextField 

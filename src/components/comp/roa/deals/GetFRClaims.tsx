@@ -4,15 +4,15 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Toolbar } from "@mui/material";
 import { Calculate, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperComputeFirstRefusal } from "../../../../generated";
-import { centToDollar, dateParser, longSnParser, toPercent } from "../../../../scripts/common/toolsKit";
+import { centToDollar, dateParser, longSnParser, refreshAfterTx, toPercent } from "../../../../scripts/common/toolsKit";
 import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
 import { FRClaim, getFRClaimsOfDeal, hasFRClaims } from "../../../../scripts/comp/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
-import { booxMap } from "../../../../scripts/common";
+import { HexType, booxMap } from "../../../../scripts/common";
 
-export function GetFRClaims({addr, deal, setOpen, setDeal, setTime, timeline, timestamp}: ActionsOfDealCenterProps) {
+export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
 
   const [ claims, setClaims ] = useState<readonly FRClaim[]>([]);
@@ -89,18 +89,23 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, setTime, timeline, ti
     setAppear(true);
   }
 
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
+
   const {
     isLoading: computeFirstRefusalLoading,
     write: computeFirstRefusal,
   } = useGeneralKeeperComputeFirstRefusal({
     address: gk,
     args: [ addr, BigInt(deal.head.seqOfDeal)],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
+  });
 
   return (
     <>

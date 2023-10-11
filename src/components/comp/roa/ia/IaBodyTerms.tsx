@@ -21,6 +21,10 @@ function IaBodyTerms({addr, isFinalized}: BodyTermsProps) {
   const [ dealsList, setDealsList ] = useState<Deal[]>();
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = ()=> {
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     getSeqList(addr).then(
       res => {
@@ -37,7 +41,7 @@ function IaBodyTerms({addr, isFinalized}: BodyTermsProps) {
   return (
     <Paper elevation={3} sx={{p:1, m:1, border:1, borderColor:'divider' }} >
       {!isFinalized && (
-        <CreateDeal addr={addr} setTime={setTime} />
+        <CreateDeal addr={addr} refresh={refresh} />
       )}
       
       {dealsList && (
@@ -45,7 +49,7 @@ function IaBodyTerms({addr, isFinalized}: BodyTermsProps) {
       )}
 
       {open && (
-        <OrderOfDeal addr={addr} isFinalized={isFinalized} open={ open } deal={ deal } setOpen={ setOpen } setDeal={ setDeal } setTime={ setTime } />
+        <OrderOfDeal addr={addr} isFinalized={isFinalized} open={ open } deal={ deal } setOpen={ setOpen } setDeal={ setDeal } refresh={ refresh } />
       )}
 
     </Paper>

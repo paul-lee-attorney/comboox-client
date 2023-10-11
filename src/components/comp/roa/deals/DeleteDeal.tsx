@@ -4,6 +4,7 @@ import { useInvestmentAgreementDelDeal } from "../../../../generated";
 import { HexType } from "../../../../scripts/common";
 import { Button } from "@mui/material";
 import { Delete } from "@mui/icons-material";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
 interface DeleteDealProps {
@@ -11,22 +12,27 @@ interface DeleteDealProps {
   seqOfDeal: number;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, setTime}:DeleteDealProps) {
+export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDealProps) {
+
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);
+  }
 
   const {
     write: deleteDeal
   } = useInvestmentAgreementDelDeal({
     address: addr,
     args: [ BigInt(seqOfDeal) ],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
+  });
 
   return (
     <Button

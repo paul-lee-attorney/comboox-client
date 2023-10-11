@@ -6,9 +6,11 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
-export function PlaceInitialOffer({ classOfShare, setTime }: ActionsOfOrderProps) {
+export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
@@ -24,11 +26,12 @@ export function PlaceInitialOffer({ classOfShare, setTime }: ActionsOfOrderProps
             BigInt(offer.price), 
             BigInt(offer.seqOfLR), 
            ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
-
+      
   return (
 
     <Paper elevation={3} sx={{

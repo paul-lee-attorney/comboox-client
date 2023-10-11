@@ -13,14 +13,14 @@ import { CreateMotionForAction } from "./CreateMotions/CreateMotionForAction";
 import { ProposeToTransferFund } from "./CreateMotions/ProposeToTransferFund";
 import { CreateMotionProps } from "../bmm/CreateMotionOfBoardMeeting";
 
-export function CreateMotionOfGm({ setTime }: CreateMotionProps) {
+export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
 
   const nameOfTypes = ['Nominate/Remove Director', 'Approve Document', 'Transfer Fund', 'Approve Action'];
   const compOfTypes = [
-    <CreateMotionForBoardSeats key={0} setTime={setTime} />,
-    <CreateMotionForDoc key={1} setTime={setTime} />,
-    <ProposeToTransferFund key={2} setTime={setTime} />,
-    <CreateMotionForAction key={3} setTime={setTime} />,
+    <CreateMotionForBoardSeats key={0} refresh={refresh} />,
+    <CreateMotionForDoc key={1} refresh={refresh} />,
+    <ProposeToTransferFund key={2} refresh={refresh} />,
+    <CreateMotionForAction key={3} refresh={refresh} />,
   ]
   
   const [ typeOfMotion, setTypeOfMotion ] = useState<number>(0);

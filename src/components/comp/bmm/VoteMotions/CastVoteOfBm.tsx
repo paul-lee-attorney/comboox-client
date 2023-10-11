@@ -26,21 +26,20 @@ import { HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 
-// interface CastVoteOfBmProps {
-//   seqOfMotion: bigint,
-//   setOpen: (flag: boolean) => void,
-//   getMotionsList: (minutes:HexType) => any,
-// }
-
-export function CastVoteOfBm({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
+export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk, boox } = useComBooxContext();
 
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: castVoteLoading,
@@ -50,9 +49,9 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, setTime }: ProposeMotionPro
     args: attitude 
         ? [seqOfMotion, BigInt(attitude), sigHash]
         : undefined,
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -132,7 +131,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, setTime }: ProposeMotionPro
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterForBoardMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} setTime={setTime} />
+        <EntrustDelegaterForBoardMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} refresh={refresh} />
       </Collapse>
 
     </Paper>

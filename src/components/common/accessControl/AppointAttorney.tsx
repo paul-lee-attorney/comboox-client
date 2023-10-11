@@ -20,7 +20,7 @@ import {
 
 import { HexType } from '../../../scripts/common';
 import { ATTORNEYS, hasRole } from '../../../scripts/common/accessControl';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
 
 export function AppointAttorney({ addr }: AccessControlProps) {
@@ -30,6 +30,14 @@ export function AppointAttorney({ addr }: AccessControlProps) {
   const [ flag, setFlag ] = useState<boolean>();
   const [ open, setOpen ] = useState(false);
 
+  const refresh = ()=>{
+    if (acct)
+      hasRole(addr, ATTORNEYS, acct).then(flag => {
+        setFlag(flag);
+        setOpen(true);
+      }); 
+  }
+
   const {
     isLoading: grantRoleLoading,
     write: grantRole,
@@ -37,12 +45,9 @@ export function AppointAttorney({ addr }: AccessControlProps) {
     address: addr,
     args: acct && acct != '0x' 
       ? [ATTORNEYS, acct] : undefined,
-    onSuccess() {
-      if (acct)
-        hasRole(addr, ATTORNEYS, acct).then(flag => {
-          setFlag(flag);
-          setOpen(true);
-        }); 
+    onSuccess(data) {
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

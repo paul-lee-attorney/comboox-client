@@ -25,6 +25,7 @@ import { HexType, booxMap } from '../../../scripts/common';
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { getKeeper } from '../../../scripts/comp/gk';
 import { getDK } from '../../../scripts/common/accessControl';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 interface TurnKeyProps {
   nextStep: (next: number) => void;
@@ -32,6 +33,11 @@ interface TurnKeyProps {
 
 export function TurnKey({ nextStep }:TurnKeyProps) {
   const { gk, boox } = useComBooxContext();
+  const [ time, setTime ] = useState(0);
+
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
 
   const [romKeeper, setRomKeeper] = useState<HexType>();
 
@@ -43,7 +49,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
         }
       )
     }
-  })
+  }, [gk, time]);
 
   const {
     isLoading: setRomDKLoading,
@@ -51,6 +57,10 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[booxMap.ROM] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   const [dkOfRom, setDKOfRom] = useState<HexType>();
@@ -63,7 +73,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
         }
       )
     }
-  }, [boox, setRomDK])
+  }, [boox, time])
 
   const {
     isLoading: setRosDKLoading,
@@ -71,6 +81,10 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[booxMap.ROS] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   const [dkOfRos, setDKOfRos] = useState<HexType>();
@@ -83,7 +97,7 @@ export function TurnKey({ nextStep }:TurnKeyProps) {
         }
       )
     }
-  }, [boox, setRosDK])
+  }, [boox, time]);
 
   return (
 

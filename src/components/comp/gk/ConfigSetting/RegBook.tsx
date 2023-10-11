@@ -5,7 +5,7 @@ import { useGeneralKeeperRegBook } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { HexType } from "../../../../scripts/common";
 import { nameOfBooks } from "../../../../scripts/comp/gk";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export interface RegBookProps{
   title: number;
@@ -19,14 +19,19 @@ export interface RegBookProps{
 export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();
 
+  const updateResults = ()=>{
+    setOpen(false);
+  }
+
   const {
     isLoading: regBookLoading,
     write: regBook,
   } = useGeneralKeeperRegBook({
     address: gk,
     args: [BigInt(title), book],
-    onSuccess() {
-      setOpen(false)
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

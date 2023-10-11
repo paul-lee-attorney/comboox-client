@@ -3,17 +3,24 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 import { Dispatch, SetStateAction } from "react";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
 interface QuitPositionProps{
   seq: number;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function QuitPosition({seq, setOpen, setTime}: QuitPositionProps) {
+export function QuitPosition({seq, setOpen, refresh}: QuitPositionProps) {
 
   const { gk } = useComBooxContext();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: quitPositionLoading,
@@ -21,9 +28,9 @@ export function QuitPosition({seq, setOpen, setTime}: QuitPositionProps) {
   } = useGeneralKeeperQuitPosition({
     address: gk,
     args: [BigInt(seq)],
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

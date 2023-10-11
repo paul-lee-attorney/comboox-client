@@ -11,10 +11,10 @@ import { WithdrawSellOrder } from "./ActionsOfOrder/WithdrawSellOrder";
 export interface ActionsOfOrderProps{
   classOfShare: number;
   seqOfOrder: number;
-  setTime:Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function ActionsOfOrder({classOfShare, seqOfOrder, setTime}: ActionsOfOrderProps) {
+export function ActionsOfOrder({classOfShare, seqOfOrder, refresh}: ActionsOfOrderProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -23,11 +23,11 @@ export function ActionsOfOrder({classOfShare, seqOfOrder, setTime}: ActionsOfOrd
   ]
 
   const compsOfAction = [
-    <PlaceBuyOrder key={0} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
-    <PlaceSellOrder key={1} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
-    <PlaceInitialOffer key={2} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
-    <WithdrawInitialOffer key={3} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
-    <WithdrawSellOrder key={4} classOfShare={classOfShare} seqOfOrder={seqOfOrder} setTime={setTime} />,
+    <PlaceBuyOrder key={0} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
+    <PlaceSellOrder key={1} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
+    <PlaceInitialOffer key={2} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
+    <WithdrawInitialOffer key={3} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
+    <WithdrawSellOrder key={4} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
   ]
 
   return(

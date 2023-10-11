@@ -6,10 +6,11 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceBuyOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { longDataParser, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
+import { longDataParser, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
+import { HexType } from "../../../../scripts/common";
 
-export function PlaceBuyOrder({ classOfShare, setTime }: ActionsOfOrderProps) {
+export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const { gk } = useComBooxContext();
 
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
@@ -25,8 +26,9 @@ export function PlaceBuyOrder({ classOfShare, setTime }: ActionsOfOrderProps) {
             BigInt(order.price)
            ],
     value: BigInt(value) * BigInt(10 ** 9),
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

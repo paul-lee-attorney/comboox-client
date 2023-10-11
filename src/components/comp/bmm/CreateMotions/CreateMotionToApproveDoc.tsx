@@ -8,10 +8,10 @@ import {
 
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 
-export function CreateMotionToApproveDoc({setTime}:CreateMotionProps) {
+export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -27,8 +27,9 @@ export function CreateMotionToApproveDoc({setTime}:CreateMotionProps) {
     args: doc && seqOfVr && executor
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

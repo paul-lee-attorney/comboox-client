@@ -4,14 +4,21 @@ import { PanToolOutlined } from "@mui/icons-material";
 import { useGeneralKeeperRequestToBuy } from "../../../../../generated";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
-export function RequestToBuy({addr, deal, setOpen, setTime}:ActionsOfDealProps) {
+export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
   const [ paidOfTarget, setPaidOfTarget ] = useState<number>(0);
   const [ seqOfPledge, setSeqOfPledge ] = useState<number>(0);
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);    
+  }
 
   const {
     isLoading: requestToBuyLoading,
@@ -23,12 +30,12 @@ export function RequestToBuy({addr, deal, setOpen, setTime}:ActionsOfDealProps) 
             BigInt(paidOfTarget), 
             BigInt(seqOfPledge)
           ],
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
-
+  });
+      
   return (
 
     <Paper elevation={3} sx={{

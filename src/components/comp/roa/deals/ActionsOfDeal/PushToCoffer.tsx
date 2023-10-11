@@ -8,18 +8,18 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { LockClock } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { HexParser } from "../../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function PushToCoffer({addr, deal, setOpen, setDeal, setTime}:ActionsOfDealProps) {
+export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
   const [ closingDate, setClosingDate ] = useState<Dayjs | null>(dayjs('2019-09-09T00:00:00Z'));
 
-  const closeOrderOfDeal = ()=>{
+  const updateResults = ()=>{
     setDeal(defaultDeal);
-    setTime(Date.now());
+    refresh();
     setOpen(false);    
   }
 
@@ -31,11 +31,12 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, setTime}:ActionsOfDe
     args: closingDate?.unix() ? 
       [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate.unix()) ] :
       undefined,
-    onSuccess() {
-      closeOrderOfDeal();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
-
+  });
+  
   return (
 
     <Paper elevation={3} sx={{

@@ -20,32 +20,21 @@ import {
 
 import { HexType } from '../../../scripts/common';
 import { ATTORNEYS, getGeneralCounsel } from '../../../scripts/common/accessControl';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
 
 export function SetGeneralCounsel({ addr }: AccessControlProps) {
 
   const [ newGC, setNewGC ] = useState<HexType>();
   const [ open, setOpen ] = useState(false);
+  const [ time, setTime ] = useState(0);
 
   const [gc, setGC] = useState<HexType>();
 
-  const {
-    isLoading: setGeneralCounselLoading,
-    write: setGeneralCounsel,
-  } = useAccessControlSetRoleAdmin({
-    address: addr,
-    args: gc ? [ ATTORNEYS, gc] : undefined,
-    onSuccess() {
-      getGeneralCounsel(addr).then(
-        res => {
-          setNewGC(res);
-          setOpen(true);
-        }
-      )
-    }
-  });
-
+  const refresh = () => {
+    setTime(Date.now());
+  }
+  
   useEffect(()=>{
     if (addr) {
       getGeneralCounsel(addr).then(
@@ -55,18 +44,19 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
         }
       )
     }
-  }, [addr, setGeneralCounsel])
+  }, [addr, time])
 
-  // const {
-  //   refetch: getGC
-  // } = useAccessControlGetRoleAdmin({
-  //   address: addr,
-  //   args: [ ATTORNEYS ],
-  //   onSuccess(gc) {
-  //     setNewGC(gc);
-  //     setOpen(true);
-  //   }
-  // })
+  const {
+    isLoading: setGeneralCounselLoading,
+    write: setGeneralCounsel,
+  } = useAccessControlSetRoleAdmin({
+    address: addr,
+    args: gc ? [ ATTORNEYS, gc] : undefined,
+    onSuccess(data) {
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
+  });
 
   const handleClick = () => {
     setGeneralCounsel?.();

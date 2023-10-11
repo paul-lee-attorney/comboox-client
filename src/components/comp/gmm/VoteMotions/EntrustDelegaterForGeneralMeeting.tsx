@@ -8,12 +8,19 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
+export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: entrustDelegaterOfMemberLoading,
@@ -23,10 +30,10 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, setTim
     args: delegater
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined,
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);  
-    },
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }
   });
 
   return (

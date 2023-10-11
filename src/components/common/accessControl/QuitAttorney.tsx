@@ -17,11 +17,18 @@ import {
 
 import { AccessControlProps } from './SetOwner';
 import { ATTORNEYS } from '../../../scripts/common/accessControl';
+import { HexType } from '../../../scripts/common';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 export function QuitAttorney({ addr }: AccessControlProps) {
 
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);
+
+  const refresh = ()=>{
+    setFlag(true);
+    setOpen(true);
+  }
 
   const {
     isLoading: quitAttorneyLoading,
@@ -29,9 +36,9 @@ export function QuitAttorney({ addr }: AccessControlProps) {
   } = useAccessControlRenounceRole({
     address: addr,
     args: [ ATTORNEYS ],
-    onSuccess() {
-      setFlag(true);
-      setOpen(true);
+    onSuccess(data) {
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

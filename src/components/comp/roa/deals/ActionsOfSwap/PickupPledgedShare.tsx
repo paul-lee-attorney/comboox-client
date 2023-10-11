@@ -3,10 +3,16 @@ import { LockOpen } from "@mui/icons-material";
 import { useGeneralKeeperPickupPledgedShare } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
   const { gk } = useComBooxContext();
+
+  const refresh = ()=>{
+    setShow(false);
+  }
 
   const {
     isLoading: pickupPledgedShareLoading,
@@ -14,10 +20,11 @@ export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSw
   } = useGeneralKeeperPickupPledgedShare({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
-    onSuccess() {
-      setShow(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
-  })
+  });
 
   return (
     <Paper elevation={3} sx={{

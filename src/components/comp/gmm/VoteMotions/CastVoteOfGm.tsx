@@ -26,10 +26,10 @@ import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 
-export function CastVoteOfGm({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
+export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -46,6 +46,16 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, setTime }: ProposeMotionPro
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
+  const updateResults = ()=>{
+    if (boox) {
+      getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
+        list => setVoteResult(list)
+      );
+      refresh();
+      setOpen(false);
+    }
+  };
+
   const {
     isLoading: castVoteLoading,
     write: castVote,
@@ -54,14 +64,9 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, setTime }: ProposeMotionPro
     args: attitude 
         ? [seqOfMotion, BigInt(attitude), sigHash]
         : undefined,
-    onSuccess() {
-      if (boox) {
-        getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
-          list => setVoteResult(list)
-        );
-        setTime(Date.now());
-        setOpen(false);
-      }
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -141,7 +146,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, setTime }: ProposeMotionPro
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterForGeneralMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} setTime={setTime} />
+        <EntrustDelegaterForGeneralMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} refresh={refresh} />
       </Collapse>
 
     </Paper>

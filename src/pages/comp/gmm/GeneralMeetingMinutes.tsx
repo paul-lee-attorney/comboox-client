@@ -18,6 +18,10 @@ function GeneralMeetingMinutes() {
   const [ motion, setMotion ] = useState<Motion>();
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       getMotionsList(boox[booxMap.GMM]).then(
@@ -25,38 +29,6 @@ function GeneralMeetingMinutes() {
       );
     }
   }, [boox, time]);
-
-  // const {
-  //   refetch: getSeqList
-  // } = useMeetingMinutesGetSeqList({
-  //   address: boox ? boox[booxMap.GMM] : undefined,
-  //   onSuccess(seqList) {
-
-  //     const obtainMotionsList = async () => {
-
-  //       if ( boox ) {
-  //         let list: Motion[] = [];
-  //         let len = seqList.length;
-  //         let i = len >= 100 ? len - 100 : 0;
-
-  //         while( i < len ) {
-  //           let motion = await getMotion(boox[booxMap.GMM], seqList[i]);
-  //           list.push(motion);
-  //           i++;
-  //         }
-        
-  //         setMotionsList(list);
-  //       }
-  //     }
-
-  //     obtainMotionsList();
-  //   }
-  // });
-
-
-  // const obtainSeqList = ()=> {
-  //   getSeqList();
-  // }
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
@@ -73,7 +45,7 @@ function GeneralMeetingMinutes() {
 
       </Stack>
 
-      <CreateMotionOfGm  setTime={setTime} />
+      <CreateMotionOfGm  refresh={refresh} />
 
       {motionsList && (
         <GetMotionsList 
@@ -90,7 +62,7 @@ function GeneralMeetingMinutes() {
           open={open} 
           motion={motion} 
           setOpen={setOpen} 
-          setTime={setTime} 
+          refresh={refresh} 
         />
       )}
 

@@ -20,7 +20,7 @@ import {
 
 import { HexType } from '../../../scripts/common';
 import { getOwner } from '../../../scripts/common/accessControl';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 export interface AccessControlProps{
   addr: HexType;
@@ -28,28 +28,37 @@ export interface AccessControlProps{
 
 export function SetOwner({ addr }: AccessControlProps) {
   const [owner, setOwner] = useState<HexType>();
+  const [ time, setTime ] = useState(0);
 
-  const {
-    isLoading: setOwnrLoading,
-    write: setOwnr,
-  } = useAccessControlSetOwner({
-    address: addr,
-    args: owner ? [ owner ] : undefined,    
-  });
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
 
   const [ newOwner, setNewOwner ] = useState<HexType>();
   const [ open, setOpen ] = useState(false);
-
-  const handleClick = () => {
-    setOwnr?.();
-  }
 
   useEffect(() => { 
     getOwner(addr).then(owner => {
       setNewOwner(owner);
       setOpen(true);
     });
-  }, [ addr, setOwnr ]);
+  }, [ addr, time ]);
+
+  const {
+    isLoading: setOwnrLoading,
+    write: setOwnr,
+  } = useAccessControlSetOwner({
+    address: addr,
+    args: owner ? [ owner ] : undefined,
+    onSuccess(data) {
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }    
+  });
+
+  const handleClick = () => {
+    setOwnr?.();
+  }
 
   return (
     <Stack direction={'row'}  sx={{ width: '100%' }} >

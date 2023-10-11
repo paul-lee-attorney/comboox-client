@@ -6,14 +6,20 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { LocalDrinkOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { HexParser } from "../../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function ExecAntiDilution({addr, deal, setOpen, setDeal, setTime}:ActionsOfDealProps) {
+export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
   const {gk} = useComBooxContext();
 
   const [ seqOfShare, setSeqOfShare ] = useState<number>(0);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
 
   const {
     isLoading: execAntiDilutionLoading,
@@ -23,15 +29,14 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, setTime}:Actions
     args: [ addr, 
             BigInt(deal.head.seqOfDeal), 
             BigInt(seqOfShare),
-            sigHash 
+            sigHash
           ],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);    
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
-
+  });
+      
   return (
 
     <Paper elevation={3} sx={{

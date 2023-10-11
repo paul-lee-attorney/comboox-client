@@ -10,6 +10,7 @@ import {
   useAccessControlLockContents,
 } from '../../../generated';
 import { HexType } from '../../../scripts/common';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 interface LockContentsProps {
   addr: HexType;
@@ -19,14 +20,19 @@ interface LockContentsProps {
 
 export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
 
+  const refresh = ()=>{
+    setIsFinalized(true);
+    setNextStep(1);
+  }
+
   const {
     isLoading: lockContentsLoading,
     write: lockContents,
   } = useAccessControlLockContents({
     address: addr,
-    onSuccess() {
-      setIsFinalized(true);
-      setNextStep(1);
+    onSuccess(data) {
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

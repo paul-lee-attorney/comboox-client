@@ -9,10 +9,10 @@ interface OrdersListProps {
   list: readonly OrderWrap[];
   setOrder: Dispatch<SetStateAction<OrderWrap>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function OrdersList({list, setOrder, setOpen, setTime}:OrdersListProps) {
+export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
 
   const columns: GridColDef[] = [
 
@@ -81,10 +81,6 @@ export function OrdersList({list, setOrder, setOpen, setTime}:OrdersListProps) {
           <h3>Orders List</h3>
         </Toolbar>
         
-        {/* <Typography variant="body1" >
-          <b>(Class : {longSnParser(classOfShare.toString())})</b>
-        </Typography> */}
-
         <Tooltip 
           title='Refresh List' 
           placement='right' 
@@ -93,7 +89,7 @@ export function OrdersList({list, setOrder, setOpen, setTime}:OrdersListProps) {
           <IconButton 
             size='small'
             sx={{ mx:5 }}
-            onClick={()=>setTime(Date.now())}
+            onClick={()=>refresh()}
             color="primary"
           >
             <Refresh />
@@ -101,7 +97,6 @@ export function OrdersList({list, setOrder, setOpen, setTime}:OrdersListProps) {
         </Tooltip>
   
       </Stack>
-      {/* <SearchPledge setPld={setPledge} setOpen={setOpen} /> */}
 
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 

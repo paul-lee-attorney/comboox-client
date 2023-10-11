@@ -3,22 +3,29 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 import { TakePositionProps } from "../../bmm/ExecMotions/TakePosition";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, setTime}:TakePositionProps) {
+export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
 
   const { gk } = useComBooxContext();
-  
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
+
   const {
     isLoading: removeDirectorLoading,
     write: removeDirector,
   } = useGeneralKeeperRemoveDirector({
     address: gk,
     args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
+  });
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >

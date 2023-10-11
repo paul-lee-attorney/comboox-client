@@ -6,10 +6,10 @@ import { RevokeInvestor } from "./ActionsOfInvestor/RevokeInvestor";
 
 export interface ActionsOfInvestorProps{
   acct: string;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function ActionsOfInvestor({ acct, setTime }: ActionsOfInvestorProps) {
+export function ActionsOfInvestor({ acct, refresh }: ActionsOfInvestorProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
@@ -18,9 +18,9 @@ export function ActionsOfInvestor({ acct, setTime }: ActionsOfInvestorProps) {
   ]
 
   const compsOfAction = [
-    <RegInvestor key={0} acct={ acct } setTime={ setTime }  />,
-    <ApproveInvestor key={1} acct={ acct } setTime={ setTime }  />,
-    <RevokeInvestor key={2} acct={ acct } setTime={ setTime }  />,
+    <RegInvestor key={0} acct={ acct } refresh={ refresh }  />,
+    <ApproveInvestor key={1} acct={ acct } refresh={ refresh }  />,
+    <RevokeInvestor key={2} acct={ acct } refresh={ refresh }  />,
   ]
 
   return(

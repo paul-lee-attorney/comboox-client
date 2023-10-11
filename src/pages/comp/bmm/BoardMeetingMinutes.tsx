@@ -20,6 +20,10 @@ function BoardMeetingMinutes() {
   const [ motion, setMotion ] = useState<Motion>();
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = ()=> {
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       getMotionsList(boox[booxMap.BMM]).then(
@@ -41,7 +45,7 @@ function BoardMeetingMinutes() {
       </Stack>
       <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
 
-        <CreateMotionOfBoardMeeting  setTime={setTime} />
+        <CreateMotionOfBoardMeeting  refresh={refresh} />
 
         {motionsList && (
           <GetMotionsList 
@@ -58,7 +62,7 @@ function BoardMeetingMinutes() {
             open={open} 
             motion={motion} 
             setOpen={setOpen} 
-            setTime={setTime}
+            refresh={refresh}
           />
         )}       
 

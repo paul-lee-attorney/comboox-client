@@ -7,25 +7,24 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { booxMap } from "../../../../scripts/common";
+import { HexType, booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export interface ProposeMotionProps {
   seqOfMotion: bigint,
   setOpen: Dispatch<SetStateAction<boolean>>,
-  setTime: Dispatch<SetStateAction<number>>,
+  refresh: ()=>void;
 }
 
-export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, setTime }: ProposeMotionProps) {
+export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk } = useComBooxContext();
 
-  // const {
-  //   config: proposeMotionToBoardConfig,
-  // } = usePrepareGeneralKeeperProposeMotionToBoard ({
-  //   address: gk,
-  //   args: [BigInt(seqOfMotion)],
-  // });
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: proposeMotionToBoardLoading,
@@ -33,9 +32,9 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, setTime }: P
   } = useGeneralKeeperProposeMotionToBoard({
     address: gk,
     args: [BigInt(seqOfMotion)],
-    onSuccess(){
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -86,7 +85,7 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, setTime }: P
         <EntrustDelegaterForBoardMeeting 
           seqOfMotion={seqOfMotion} 
           setOpen={setOpen} 
-          setTime={setTime} 
+          refresh={refresh} 
         />
       </Collapse>
 

@@ -3,25 +3,30 @@ import { useGeneralKeeperPickupDeposit } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Savings, SavingsOutlined } from "@mui/icons-material";
 import { Dispatch, SetStateAction } from "react";
+import { HexType } from "../../../scripts/common";
+import { refreshAfterTx } from "../../../scripts/common/toolsKit";
 
 
 interface PickupDepositProps{
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function PickupDeposit({ setTime }:PickupDepositProps) {
+export function PickupDeposit({ refresh }:PickupDepositProps) {
   
   const { gk } = useComBooxContext();
+
+
 
   const {
     isLoading: pickupDepositLoading,
     write: pickupDeposit,
   } = useGeneralKeeperPickupDeposit({
     address: gk,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
-  })
+  });
 
   return(
     <Tooltip 

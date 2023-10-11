@@ -26,8 +26,9 @@ import {
   useGeneralKeeperSetCompInfo,
 } from '../../../generated';
 import { CompInfo, getCompInfo } from '../../../scripts/comp/gk';
-import { dateParser, longDataParser, toAscii, } from '../../../scripts/common/toolsKit';
+import { dateParser, longDataParser, refreshAfterTx, toAscii, } from '../../../scripts/common/toolsKit';
 import { currencies } from './GeneralInfo';
+import { HexType } from '../../../scripts/common';
 
 
 export const defaultInfo: CompInfo = {
@@ -49,6 +50,11 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
   const [ newInfo, setNewInfo] = useState<CompInfo>(defaultInfo);
 
   const { gk } = useComBooxContext();
+  const [ time, setTime ] = useState(0);
+
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
 
   const {
     isLoading: setInfoLoading,
@@ -60,6 +66,10 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
             `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
             compInfo.name 
           ],
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   useEffect(()=>{
@@ -68,7 +78,7 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
         info => setNewInfo(info)
       )
     }
-  }, [gk, setInfo]);
+  }, [gk, time]);
 
   return (
 

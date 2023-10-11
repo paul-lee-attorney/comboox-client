@@ -7,13 +7,19 @@ import {  AgricultureOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
-import { HexParser } from "../../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function ExecDragAlong({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
+export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
 
   const {
     isLoading: execDragAlongLoading,
@@ -27,13 +33,12 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, setTime}: ActionsO
             BigInt(targetShare.par),
             sigHash
           ],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
-
+      
   return (
 
     <Paper elevation={3} sx={{

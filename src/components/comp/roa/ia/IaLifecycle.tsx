@@ -182,7 +182,7 @@ export function IaLifecycle({addr, isFinalized}: IaLifecycleProps) {
                     Count vote result of IA (only for Members).
                   </Typography>
                   {seqOfMotion != undefined && (
-                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } setOpen={()=>{}} setTime={()=>{}}  />
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={()=>{}} setNextStep={ setActiveStep } setOpen={()=>{}} refresh={()=>{}}  />
                   )}
                 </StepContent>
 

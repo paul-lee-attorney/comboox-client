@@ -4,10 +4,10 @@ import { HexType } from "../../../../scripts/common";
 import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
-export function CreateMotionForDoc({setTime}:CreateMotionProps) {
+export function CreateMotionForDoc({refresh}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
@@ -23,8 +23,9 @@ export function CreateMotionForDoc({setTime}:CreateMotionProps) {
     args: doc && seqOfVr && executor
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

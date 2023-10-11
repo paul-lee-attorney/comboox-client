@@ -26,13 +26,14 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Body, Head, TypeOfDeal, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export interface CreateDealProps{
   addr: HexType;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function CreateDeal({addr, setTime}: CreateDealProps) {
+export function CreateDeal({addr, refresh}: CreateDealProps) {
 
   const { boox } = useComBooxContext();
 
@@ -50,11 +51,12 @@ export function CreateDeal({addr, setTime}: CreateDealProps) {
             body.paid,
             body.par            
           ],
-    onSuccess() {
-      setTime(Date.now())
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
-
+      
   const handleSeqChanged = (e:ChangeEvent<HTMLInputElement>)=> {
 
     let seq = parseInt(e.target.value ?? '0');

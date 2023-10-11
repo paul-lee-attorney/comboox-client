@@ -21,7 +21,7 @@ export interface ActionsOfDealProps{
   deal: Deal;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
 export interface ActionsOfDealCenterProps extends ActionsOfDealProps{
@@ -29,7 +29,7 @@ export interface ActionsOfDealCenterProps extends ActionsOfDealProps{
   timestamp: number;
 }
 
-export function ActionsOfDeal({addr, deal, setOpen, setDeal, setTime, timeline, timestamp}: ActionsOfDealCenterProps) {
+export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
@@ -40,18 +40,18 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, setTime, timeline, 
   ]
 
   const compsOfAction = [
-    <ExecFirstRefusal key={0} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <ExecAntiDilution key={1} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <ExecDragAlong key={2} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <ExecTagAlong key={3} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <PushToCoffer key={4} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <IssueShare key={5} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <TransferShare key={6} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <PayOffApprovedDeal key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <RequestToBuy key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <PickupShare key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <TerminateDeal key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
-    <TakeGiftShares key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} setTime={setTime} />,
+    <ExecFirstRefusal key={0} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <ExecAntiDilution key={1} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <ExecDragAlong key={2} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <ExecTagAlong key={3} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PushToCoffer key={4} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <IssueShare key={5} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TransferShare key={6} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PayOffApprovedDeal key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <RequestToBuy key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PickupShare key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TerminateDeal key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TakeGiftShares key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
   ]
 
   let activeSteps:number[] = [];

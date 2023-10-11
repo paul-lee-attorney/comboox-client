@@ -5,7 +5,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../../scripts/common/sigPage";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { FileHistoryProps } from "../../roc/sha/Actions/CirculateSha";
 
 export function SignIa({ addr, setNextStep }: FileHistoryProps) {
@@ -13,6 +13,13 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
+
+  const [ time, setTime ] = useState(0);
+
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
 
   const {
     isLoading: signIaLoading,
@@ -22,8 +29,12 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
     args: sigHash
       ? [addr, sigHash]
       : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
-
+  
   useEffect(()=>{
     getParasOfPage(addr, true).then(
       para => setParasOfPage(parseParasOfPage(para))
@@ -33,7 +44,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
         if (flag) setNextStep(3);
       }
     );
-  }, [addr, setNextStep, signIa]);
+  }, [addr, setNextStep, time]);
 
   return (
     <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>

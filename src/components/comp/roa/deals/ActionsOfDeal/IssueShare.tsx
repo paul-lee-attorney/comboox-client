@@ -4,10 +4,18 @@ import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperIssueNewShare } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { RocketLaunch } from "@mui/icons-material";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
-export function IssueShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
+export function IssueShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
+
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
 
   const {
     isLoading: issueNewShareLoading,
@@ -15,10 +23,9 @@ export function IssueShare({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDe
   } = useGeneralKeeperIssueNewShare({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);    
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

@@ -43,6 +43,10 @@ function ListOfOrders() {
   const [ invList, setInvList ] = useState<readonly Investor[]>([]);
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
 
@@ -110,14 +114,14 @@ function ListOfOrders() {
         </Stack>
 
         <TabPanel value={0} sx={{ justifyContent:'start', alignItems:'center' }} >
-          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.seq} setTime={setTime} />
+          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.seq} refresh={refresh} />
           {list && (
-            <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} setTime={setTime} />
+            <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
           )}
         </TabPanel>
 
         <TabPanel value={1} sx={{ justifyContent:'start', alignItems:'center' }} >
-          <ActionsOfInvestor acct={acct} setTime={ setTime } />
+          <ActionsOfInvestor acct={acct} refresh={ refresh } />
           {invList && (
             <InvestorsList list={invList} setAcct={setAcct} />
           )}

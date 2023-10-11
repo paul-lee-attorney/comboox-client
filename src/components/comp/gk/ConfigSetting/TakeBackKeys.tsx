@@ -4,11 +4,15 @@ import { Update } from "@mui/icons-material";
 import { useAccessControlTakeBackKeys } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
   const [ target, setTarget ] = useState<HexType>(AddrZero);
+
+  const updateResults = ()=>{
+    setOpen(false);
+  }
 
   const {
     isLoading: takeBackKeysLoading,
@@ -16,8 +20,9 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
   } = useAccessControlTakeBackKeys({
     address: docAddr,
     args: [ target ],
-    onSuccess() {
-      setOpen(false)
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

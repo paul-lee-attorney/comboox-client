@@ -21,7 +21,7 @@ import {
   RemoveCircle, 
   Surfing 
 } from "@mui/icons-material";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 
@@ -29,12 +29,17 @@ export interface ExecActionProps extends ProposeMotionProps {
   seqOfVr: number;
 }
 
-export function ExecAction({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActionProps) {
+export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading: execActionLoading,
@@ -48,12 +53,12 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActionPr
           actions.map(v => (v.params)),
           desHash, BigInt(seqOfMotion)]
         : undefined,
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
-
+    
   const addAction = () => {
     setActions(v => {
       let arr = [...v];
@@ -65,7 +70,7 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, setTime}:ExecActionPr
   const removeAction = () => {
     setActions(v => {
       let arr = [...v];
-      arr.pop();      
+      arr.pop();
       return arr;
     })
   }

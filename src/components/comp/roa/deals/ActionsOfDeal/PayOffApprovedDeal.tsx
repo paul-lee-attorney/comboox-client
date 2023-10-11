@@ -5,15 +5,16 @@ import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
-import { removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
+import { refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
+import { HexType } from "../../../../../scripts/common";
 
 
-export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, setTime}: ActionsOfDealProps ) {
+export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
-  const closeOrderOfDeal = ()=>{
+  const updateResults = ()=>{
     setDeal(defaultDeal);
-    setTime(Date.now());
+    refresh();
     setOpen(false);    
   }
 
@@ -26,8 +27,9 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, setTime}: Act
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
     value: BigInt(value) * BigInt( 10 ** 9 ),
-    onSuccess() {
-      closeOrderOfDeal()
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

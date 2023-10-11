@@ -32,6 +32,10 @@ export function GeneralInfo() {
 
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = () => {
+    setTime(Date.now());
+  }
+
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
   const [ dk, setDK ] = useState<string>('');
 
@@ -301,7 +305,7 @@ export function GeneralInfo() {
                       <h3>Cash Box</h3>
                     </Toolbar>
 
-                    <PickupDeposit setTime={setTime} />
+                    <PickupDeposit refresh={refresh} />
 
                     <DepositOfMine />
 

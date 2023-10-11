@@ -5,9 +5,11 @@ import { PersonAddAlt } from "@mui/icons-material";
 import { useState } from "react";
 import { useGeneralKeeperApproveInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
-export function ApproveInvestor({acct, setTime }: ActionsOfInvestorProps) {
+export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
   const { gk } = useComBooxContext();
 
   const [ userNo, setUserNo ] = useState<string>(acct);
@@ -21,11 +23,12 @@ export function ApproveInvestor({acct, setTime }: ActionsOfInvestorProps) {
     args: [ BigInt(userNo), 
             BigInt(seqOfLR)
           ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
-
+      
   return (
 
     <Paper elevation={3} sx={{

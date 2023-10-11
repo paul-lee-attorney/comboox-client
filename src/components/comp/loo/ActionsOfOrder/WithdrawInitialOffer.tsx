@@ -6,8 +6,10 @@ import { useState } from "react";
 import { useGeneralKeeperWithdrawInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function WithdrawInitialOffer({ classOfShare, setTime }: ActionsOfOrderProps) {
+export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
@@ -21,11 +23,12 @@ export function WithdrawInitialOffer({ classOfShare, setTime }: ActionsOfOrderPr
             BigInt(offer.seqOfOrder),
             BigInt(offer.seqOfLR), 
            ],
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
-
+      
   return (
 
     <Paper elevation={3} sx={{

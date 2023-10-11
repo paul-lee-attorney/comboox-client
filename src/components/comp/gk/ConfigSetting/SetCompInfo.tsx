@@ -5,8 +5,9 @@ import { useGeneralKeeperSetCompInfo } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { CompInfo } from "../../../../scripts/comp/gk";
 import { defaultInfo } from "../SetCompInfo";
-import { toAscii } from "../../../../scripts/common/toolsKit";
+import { refreshAfterTx, toAscii } from "../../../../scripts/common/toolsKit";
 import { currencies } from "../GeneralInfo";
+import { HexType } from "../../../../scripts/common";
 
 
 export interface ConfigSettingProps{
@@ -17,6 +18,10 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
   const { gk } = useComBooxContext();
 
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
+  
+  const updateResults = ()=>{
+    setOpen(false);
+  }
 
   const {
     isLoading: setInfoLoading,
@@ -24,8 +29,9 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
    } = useGeneralKeeperSetCompInfo({
     address: gk,
     args: [ compInfo.currency, `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, compInfo.name ],
-    onSuccess() {
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

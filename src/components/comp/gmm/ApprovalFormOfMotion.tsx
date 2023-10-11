@@ -32,7 +32,7 @@ import { ApprovalFormOfBoardMotionProps } from "../bmm/ApprovalFormOfBoardMotion
 
 export const motionType = ['ElectOfficer', 'RemoveDirector', 'ApproveDocument', 'ApproveAction'];
 
-export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: ApprovalFormOfBoardMotionProps) {
+export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: ApprovalFormOfBoardMotionProps) {
 
   const { boox } = useComBooxContext();
 
@@ -313,7 +313,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: 
               {motion.body.state == 1 && (
                 <tr>
                   <td colSpan={4}>
-                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
+                    <ProposeMotionToGeneralMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />
                   </td>
                 </tr>
               )}
@@ -322,10 +322,10 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: 
                 <tr>
                   <td colSpan={4}>
                     <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} setTime={setTime} />
+                      <CastVoteOfGm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />
                     </Collapse>
                     <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} setTime={setTime} />
+                      <VoteCountingOfGm seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} refresh={refresh} />
                     </Collapse>
                   </td>
                 </tr>
@@ -337,7 +337,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: 
                     <TakeSeat 
                       seqOfMotion={motion.head.seqOfMotion} 
                       seqOfPos={Number(motion.contents)} 
-                      setOpen={setOpen} setTime={setTime}
+                      setOpen={setOpen} refresh={refresh}
                     />
                   </td>
                 </tr>
@@ -350,7 +350,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: 
                       seqOfMotion={motion.head.seqOfMotion} 
                       seqOfPos={Number(motion.contents)} 
                       setOpen={setOpen} 
-                      setTime={setTime}
+                      refresh={refresh}
                     />
                   </td>
                 </tr>
@@ -359,7 +359,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, setTime}: 
               {motion.body.state == 3 && motion.head.typeOfMotion == 4 && (
                 <tr>
                   <td colSpan={4}>
-                    <ExecActionOfGm seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} setTime={setTime} />
+                    <ExecActionOfGm seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} refresh={refresh} />
                   </td>
                 </tr>
               )}

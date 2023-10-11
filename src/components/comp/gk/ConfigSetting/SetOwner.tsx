@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Update } from "@mui/icons-material";
 import { useAccessControlSetOwner } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export interface AccessControlProps{
   docAddr: HexType;
@@ -16,14 +16,19 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
 
+  const updateResults = ()=>{
+    setOpen(false);
+  }
+
   const {
     isLoading: updateOwnerLoading,
     write: updateOwner,
   } = useAccessControlSetOwner({
     address: docAddr,
     args: [ owner ],
-    onSuccess() {
-      setOpen(false)
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

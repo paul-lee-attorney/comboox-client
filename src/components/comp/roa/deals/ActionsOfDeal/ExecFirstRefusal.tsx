@@ -18,10 +18,10 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
-import { HexParser, longSnParser } from "../../../../../scripts/common/toolsKit";
+import { HexParser, longSnParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { getSha } from "../../../../../scripts/comp/roc";
 
-export function ExecFirstRefusal({addr, deal, setOpen, setDeal, setTime}:ActionsOfDealProps) {
+export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
   const { gk, boox } = useComBooxContext();
 
@@ -44,6 +44,12 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, setTime}:Actions
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
+
   const {
     isLoading: execFirstRefusalLoading,
     write: execFirstRefusal,
@@ -55,13 +61,12 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, setTime}:Actions
             BigInt(deal.head.seqOfDeal), 
             sigHash 
           ],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);    
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
-
+  });
+      
   const typesOfDeal = ['Capital Increase', 'Share Transfer (Ext)'];
 
   return (

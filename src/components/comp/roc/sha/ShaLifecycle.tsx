@@ -183,7 +183,7 @@ export function ShaLifecycle({sha, finalized}: ShaLifecycleProps) {
                     Count vote result of SHA (only for Members).
                   </Typography>
                   {seqOfMotion?.toString() && (
-                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={setPassed} setNextStep={ setActiveStep } setOpen={()=>{}} setTime={()=>{}}/>
+                    <VoteCountingOfGm seqOfMotion={ seqOfMotion } setResult={setPassed} setNextStep={ setActiveStep } setOpen={()=>{}} refresh={()=>{}}/>
                   )}
                 </StepContent>
 

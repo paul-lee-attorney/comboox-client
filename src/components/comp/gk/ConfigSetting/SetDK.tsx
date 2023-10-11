@@ -4,11 +4,15 @@ import { Update } from "@mui/icons-material";
 import { useAccessControlSetDirectKeeper } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
-import { HexParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
+
+  const updateResults = ()=>{
+    setOpen(false);
+  }
 
   const {
     isLoading: updateDKLoading,
@@ -16,8 +20,9 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
   } = useAccessControlSetDirectKeeper({
     address: docAddr,
     args: [ keeper ],
-    onSuccess() {
-      setOpen(false)
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

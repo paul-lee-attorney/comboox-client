@@ -7,12 +7,26 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { isPassed } from "../../../../scripts/common/meetingMinutes";
-import { booxMap } from "../../../../scripts/common";
+import { HexType, booxMap } from "../../../../scripts/common";
 import { VoteCountingOfBoard } from "../../bmm/VoteMotions/VoteCountingOfBoard";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, setTime }: VoteCountingOfBoard ) {
+export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfBoard ) {
 
   const { gk, boox } = useComBooxContext();
+
+  const updateResults = ()=>{
+    refresh();
+    if (boox) {
+      isPassed(boox[booxMap.GMM], seqOfMotion).then(
+        flag => {
+          setResult(flag);
+          setNextStep(flag ? 6 : 8);
+          setOpen(false);
+        }
+      )
+    }
+  }
 
   const {
     isLoading,
@@ -20,17 +34,9 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen,
   } = useGeneralKeeperVoteCountingOfGm({
     address: gk,
     args: [ seqOfMotion ],
-    onSuccess() {
-      if (boox) {
-        isPassed(boox[booxMap.GMM], seqOfMotion).then(
-          flag => {
-            setResult(flag);
-            setNextStep(flag ? 6 : 8);
-            setTime(Date.now());
-            setOpen(false);
-          }
-        )
-      }
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

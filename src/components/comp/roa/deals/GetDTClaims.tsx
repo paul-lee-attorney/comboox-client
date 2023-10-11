@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperAcceptAlongDeal, useRegisterOfAgreementsHasDtClaims, } from "../../../../generated";
-import { HexParser, centToDollar, dateParser, longSnParser } from "../../../../scripts/common/toolsKit";
+import { HexParser, centToDollar, dateParser, longSnParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
 import { DTClaim, getDTClaimsOfDeal, hasDTClaims } from "../../../../scripts/comp/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -12,7 +12,7 @@ import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 
-export function GetDTClaims({addr, deal, setOpen, setDeal, setTime, timeline, timestamp}: ActionsOfDealCenterProps) {
+export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
 
   const [ claims, setClaims ] = useState<readonly DTClaim[]>([]);
@@ -108,18 +108,23 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, setTime, timeline, ti
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
+  const updateResults = ()=>{
+    setDeal(defaultDeal);
+    refresh();
+    setOpen(false);    
+  }
+
   const {
     isLoading: acceptAlongDealLoading,
     write: acceptAlongDeal,
   } = useGeneralKeeperAcceptAlongDeal({
     address: gk,
     args: [ addr, BigInt(deal.head.seqOfDeal), sigHash],
-    onSuccess() {
-      setDeal(defaultDeal);
-      setTime(Date.now());
-      setOpen(false);    
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
-  })
+  });
 
   return (
     <>

@@ -22,6 +22,10 @@ export function GetPosition({seq}: GetPositionProps) {
   const [ open, setOpen ] = useState(false);
   const [ time, setTime ] = useState(0);
 
+  const refresh = ()=> {
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       getPosition(boox[booxMap.ROD], seq).then(
@@ -165,7 +169,7 @@ export function GetPosition({seq}: GetPositionProps) {
         </DialogContent>
 
         <DialogActions>
-          <QuitPosition seq={seq} setOpen={setOpen} setTime={setTime} />          
+          <QuitPosition seq={seq} setOpen={setOpen} refresh={refresh} />          
           <Button 
             sx={{m:1, mx:3, p:1, minWidth:128 }}
             variant="outlined"

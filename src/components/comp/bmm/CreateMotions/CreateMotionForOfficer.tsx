@@ -9,8 +9,10 @@ import {
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function CreateMotionForOfficer({ setTime }:CreateMotionProps ) {
+export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
 
   const { gk } = useComBooxContext();
 
@@ -25,8 +27,9 @@ export function CreateMotionForOfficer({ setTime }:CreateMotionProps ) {
     args: seqOfPos && candidate
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
-    onSuccess(){
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 
@@ -38,8 +41,9 @@ export function CreateMotionForOfficer({ setTime }:CreateMotionProps ) {
     args: seqOfPos 
           ? [ BigInt(seqOfPos)]
           : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 

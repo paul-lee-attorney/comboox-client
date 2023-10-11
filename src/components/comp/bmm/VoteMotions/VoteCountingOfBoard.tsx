@@ -7,18 +7,33 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { isPassed } from "../../../../scripts/common/meetingMinutes";
-import { booxMap } from "../../../../scripts/common";
+import { HexType, booxMap } from "../../../../scripts/common";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { Dispatch, SetStateAction } from "react";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { waitForTransaction } from "@wagmi/core";
 
 export interface VoteCountingOfBoard extends ProposeMotionProps {
   setResult: Dispatch<SetStateAction<boolean>>;
   setNextStep: Dispatch<SetStateAction<number>>;
 }
 
-export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, setTime }: VoteCountingOfBoard) {
+export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfBoard) {
 
   const { gk, boox } = useComBooxContext();
+
+  const updateResults = ()=>{
+    refresh();
+    if (boox) {
+      isPassed(boox[booxMap.BMM], seqOfMotion).then(
+        flag => {
+          setResult(flag);
+          setNextStep(1);
+        }
+      );
+    }
+    setOpen(false);
+  }
 
   const {
     isLoading: voteCountingLoading,
@@ -26,19 +41,10 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
   } = useGeneralKeeperVoteCounting({
     address: gk,
     args: [ seqOfMotion ],
-    onSuccess() {
-      if (boox) {
-        isPassed(boox[booxMap.BMM], seqOfMotion).then(
-          flag => {
-            setResult(flag);
-            setNextStep(1);
-            setTime(Date.now());
-            setOpen(false);
-          }
-        )
-      }
-
-    },
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }
   });
 
   return (
