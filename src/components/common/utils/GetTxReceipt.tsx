@@ -51,7 +51,7 @@ export function GetTxReceipt({hash, setHash, refresh}: GetTxReceiptProps) {
         effectiveGasPrice: {receipt?.effectiveGasPrice.toString()} <br/>
         from: {receipt?.from} <br/>
         gasUsed: {receipt?.gasUsed.toString()} <br/>
-        logs: {receipt?.logs.map(v => v.topics.map(k => k + `${<br/>}` ))} <br/>
+        logs: {receipt?.logs.map(v => v.topics)} <br/>
         status: {receipt?.status} <br/>
         to: {receipt?.to} <br/>
         transactionHash: {receipt?.transactionHash} <br/>
