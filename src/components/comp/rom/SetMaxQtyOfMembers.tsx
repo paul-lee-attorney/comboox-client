@@ -16,13 +16,16 @@ import {
 import { ArrowDownward, ArrowUpward, Update }  from '@mui/icons-material';
 
 import {
+  useRegisterOfMembersMaxQtyOfMembers,
   useRegisterOfMembersSetMaxQtyOfMembers,
 } from '../../../generated';
 
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
-import { booxMap } from '../../../scripts/common';
+import { HexType, booxMap } from '../../../scripts/common';
 import { maxQtyOfMembers } from '../../../scripts/comp/rom';
+import { useWaitForTransaction } from 'wagmi';
+import { GetTxReceipt } from '../../common/utils/GetTxReceipt';
 
 interface SetMaxQtyOfMembersProps {
   nextStep: (next: number) => void;
@@ -31,9 +34,19 @@ interface SetMaxQtyOfMembersProps {
 export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   const { boox } = useComBooxContext();
+  const [hash, setHash] = useState<HexType>();
 
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
+
+  const {
+    refetch: maxQtyOfMembers
+  } = useRegisterOfMembersMaxQtyOfMembers({
+    address: boox ? boox[booxMap.ROM] : undefined,
+    onSuccess(res) {
+      setMax(res.toString());
+    }
+  })
 
   const {
     isLoading: setMaxQtyLoading,
@@ -41,15 +54,18 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   } = useRegisterOfMembersSetMaxQtyOfMembers({
     address: boox ? boox[booxMap.ROM] : undefined,
     args: [BigInt(inputMax)],
+    onSuccess(data) {
+      setHash(data.hash);
+    }
   });
 
-  useEffect(()=>{
-    if (boox) {
-      maxQtyOfMembers(boox[booxMap.ROM]).then(
-        max => setMax(max.toString())
-      );
-    }
-  }, [boox, setMaxQty]);
+  // useEffect(()=>{
+  //   if (boox) {
+  //     maxQtyOfMembers(boox[booxMap.ROM]).then(
+  //       max => setMax(max.toString())
+  //     );
+  //   }
+  // }, [boox, setMaxQty]);
 
   return (    
     <Paper elevation={3} sx={{m:1, p:1, width:'100%', alignItems:'center', justifyContent:'center' }} >
@@ -91,6 +107,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
             <b>Max Qty of Members</b>
           </Typography>
 
+          <GetTxReceipt hash={hash} setHash={setHash} refresh={maxQtyOfMembers} />
 
           <Card sx={{ m:1, width:'100%', }} variant='outlined'>
               <CardContent>
