@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { keccak256, toHex } from "viem";
 import { HexType } from ".";
+import { waitForTransaction } from "@wagmi/core";
 
 export function toPercent(num: number): string {
   let percent = num == 0 ? '-' : Number(num / 100).toFixed(2) + '%';
@@ -188,4 +189,9 @@ export function removeKiloSymbol(input: string): string {
   return out;
 }
 
+export async function refreshAfterTx(hash: HexType, refresh:()=>void) {
+  let res = await waitForTransaction({hash});
+  console.log("Receipt: ", res);
+  refresh();
+} 
 

@@ -23,7 +23,7 @@ import {
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { HexType, booxMap } from '../../../scripts/common';
-import { waitForTransaction } from '@wagmi/core';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 interface SetMaxQtyOfMembersProps {
   nextStep: (next: number) => void;
@@ -52,12 +52,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     args: [BigInt(inputMax)],
     onSuccess(data) {
       let hash:HexType = data.hash;
-      waitForTransaction({hash}).then(
-        receipt => {
-          maxQtyOfMembers();
-          console.log("receipt: ", receipt);
-        }
-      );
+      refreshAfterTx(hash, maxQtyOfMembers);
     }
   });
 
