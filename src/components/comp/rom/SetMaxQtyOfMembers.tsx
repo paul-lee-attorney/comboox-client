@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { 
   TextField, 
@@ -23,9 +23,6 @@ import {
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { HexType, booxMap } from '../../../scripts/common';
-import { maxQtyOfMembers } from '../../../scripts/comp/rom';
-import { useWaitForTransaction } from 'wagmi';
-import { GetTxReceipt } from '../../common/utils/GetTxReceipt';
 import { waitForTransaction } from '@wagmi/core';
 
 interface SetMaxQtyOfMembersProps {
@@ -35,8 +32,6 @@ interface SetMaxQtyOfMembersProps {
 export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   const { boox } = useComBooxContext();
-  // const [hash, setHash] = useState<HexType>();
-
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
 
@@ -58,18 +53,13 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     onSuccess(data) {
       let hash:HexType = data.hash;
       waitForTransaction({hash}).then(
-        ()=>maxQtyOfMembers()
+        receipt => {
+          maxQtyOfMembers();
+          console.log("receipt: ", receipt);
+        }
       );
     }
   });
-
-  // useEffect(()=>{
-  //   if (boox) {
-  //     maxQtyOfMembers(boox[booxMap.ROM]).then(
-  //       max => setMax(max.toString())
-  //     );
-  //   }
-  // }, [boox, setMaxQty]);
 
   return (    
     <Paper elevation={3} sx={{m:1, p:1, width:'100%', alignItems:'center', justifyContent:'center' }} >
@@ -110,8 +100,6 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
           <Typography variant="h5" component="div" sx={{ m:1, textDecoration:'underline' }} >
             <b>Max Qty of Members</b>
           </Typography>
-
-          {/* <GetTxReceipt hash={hash} setHash={setHash} refresh={maxQtyOfMembers} /> */}
 
           <Card sx={{ m:1, width:'100%', }} variant='outlined'>
               <CardContent>
