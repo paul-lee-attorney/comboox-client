@@ -190,9 +190,9 @@ export function removeKiloSymbol(input: string): string {
   return out;
 }
 
-export async function refreshAfterTx(hash: HexType, setTime:Dispatch<SetStateAction<number>> ) {
+export async function refreshAfterTx(hash: HexType, refresh:()=>void ) {
   let res = await waitForTransaction({hash});
   console.log("Receipt: ", res);
-  setTime(Date.now());
+  refresh();
 } 
 

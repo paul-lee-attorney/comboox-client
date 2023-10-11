@@ -37,6 +37,10 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     if (boox) {
       maxQtyOfMembers(boox[booxMap.ROM]).then(
@@ -62,7 +66,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     args: [BigInt(inputMax)],
     onSuccess(data) {
       let hash:HexType = data.hash;
-      refreshAfterTx(hash, setTime);
+      refreshAfterTx(hash, refresh);
     }
   });
 

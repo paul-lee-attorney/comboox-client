@@ -40,12 +40,13 @@ export function AcctPage({ flag }:AcctPageProps) {
     address: AddrOfRegCenter,
     onSuccess(data) {
       let hash:HexType = data.hash;
-      waitForTransaction({hash}).then(
-        res => {
-          getMyUserNo();
-          console.log("Receipt: ", res);
-        }
-      )
+      // waitForTransaction({hash}).then(
+      //   res => {
+      //     getMyUserNo();
+      //     console.log("Receipt: ", res);
+      //   }
+      // )
+      refreshAfterTx(hash, getMyUserNo);
     }
   })
 
