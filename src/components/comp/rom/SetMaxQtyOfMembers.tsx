@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   TextField, 
@@ -24,6 +24,7 @@ import {
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { HexType, booxMap } from '../../../scripts/common';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { maxQtyOfMembers } from '../../../scripts/comp/rom';
 
 interface SetMaxQtyOfMembersProps {
   nextStep: (next: number) => void;
@@ -32,17 +33,26 @@ interface SetMaxQtyOfMembersProps {
 export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
 
   const { boox } = useComBooxContext();
+  const [time, setTime] = useState<number>(0);
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
 
-  const {
-    refetch: maxQtyOfMembers
-  } = useRegisterOfMembersMaxQtyOfMembers({
-    address: boox ? boox[booxMap.ROM] : undefined,
-    onSuccess(res) {
-      setMax(res.toString());
+  useEffect(()=>{
+    if (boox) {
+      maxQtyOfMembers(boox[booxMap.ROM]).then(
+        res => setMax(res.toString())
+      );
     }
-  })
+  }, [boox, time]);
+
+  // const {
+  //   refetch: maxQtyOfMembers
+  // } = useRegisterOfMembersMaxQtyOfMembers({
+  //   address: boox ? boox[booxMap.ROM] : undefined,
+  //   onSuccess(res) {
+  //     setMax(res.toString());
+  //   }
+  // })
 
   const {
     isLoading: setMaxQtyLoading,
@@ -52,7 +62,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
     args: [BigInt(inputMax)],
     onSuccess(data) {
       let hash:HexType = data.hash;
-      refreshAfterTx(hash, maxQtyOfMembers);
+      refreshAfterTx(hash, setTime);
     }
   });
 

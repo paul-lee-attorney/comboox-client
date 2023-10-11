@@ -2,11 +2,13 @@ import { AccountCircle, BorderColor } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 import Link from "next/link";
-import { longSnParser } from "../../scripts/common/toolsKit";
-import { useContractRead, useWalletClient } from "wagmi";
-import { AddrOfRegCenter } from "../../scripts/common";
+import { longSnParser, refreshAfterTx } from "../../scripts/common/toolsKit";
+import { useContractRead, useWaitForTransaction, useWalletClient } from "wagmi";
+import { AddrOfRegCenter, HexType } from "../../scripts/common";
 import { regCenterABI, useRegCenterRegUser } from "../../generated";
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
+import { useEffect } from "react";
+import { readContract, waitForTransaction } from "@wagmi/core";
 
 interface AcctPageProps {
   flag: boolean;
@@ -36,8 +38,14 @@ export function AcctPage({ flag }:AcctPageProps) {
     write: regUser
   } = useRegCenterRegUser({
     address: AddrOfRegCenter,
-    onSuccess() {
-      getMyUserNo();
+    onSuccess(data) {
+      let hash:HexType = data.hash;
+      waitForTransaction({hash}).then(
+        res => {
+          getMyUserNo();
+          console.log("Receipt: ", res);
+        }
+      )
     }
   })
 

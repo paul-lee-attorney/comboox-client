@@ -2,6 +2,7 @@ import dayjs from "dayjs";
 import { keccak256, toHex } from "viem";
 import { HexType } from ".";
 import { waitForTransaction } from "@wagmi/core";
+import { Dispatch, SetStateAction } from "react";
 
 export function toPercent(num: number): string {
   let percent = num == 0 ? '-' : Number(num / 100).toFixed(2) + '%';
@@ -189,9 +190,9 @@ export function removeKiloSymbol(input: string): string {
   return out;
 }
 
-export async function refreshAfterTx(hash: HexType, refresh:()=>void) {
+export async function refreshAfterTx(hash: HexType, setTime:Dispatch<SetStateAction<number>> ) {
   let res = await waitForTransaction({hash});
   console.log("Receipt: ", res);
-  refresh();
+  setTime(Date.now());
 } 
 
