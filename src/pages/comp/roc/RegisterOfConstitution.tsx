@@ -20,10 +20,16 @@ import { InfoOfFile, getFilesListWithInfo, } from "../../../scripts/common/files
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
-import { booxMap } from "../../../scripts/common";
+import { HexType, booxMap } from "../../../scripts/common";
+import { refreshAfterTx } from "../../../scripts/common/toolsKit";
 
 function RegisterOfConstitution() {
   const { gk, boox } = useComBooxContext();
+  const [ time, setTime ] = useState(0);
+
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
 
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
@@ -35,6 +41,10 @@ function RegisterOfConstitution() {
   } = useGeneralKeeperCreateSha({
     address: gk,
     args: version ? [BigInt(version)] : undefined,
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   useEffect(()=>{
@@ -43,7 +53,7 @@ function RegisterOfConstitution() {
         list => setFilesInfoList(list)
       )
     }
-  }, [boox, createSha]);
+  }, [boox, time]);
 
   const [ file, setFile ] = useState<InfoOfFile>();
   const [ open, setOpen ] = useState<boolean>(false);

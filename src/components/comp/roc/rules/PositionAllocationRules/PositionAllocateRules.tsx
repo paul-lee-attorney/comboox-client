@@ -21,8 +21,10 @@ import {
 } from "../../../../../generated";
 import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function PositionAllocateRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
+export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
 
   const mandatoryRules: number[] = isFinalized ? [] : [256];
   const [ cp, setCp ] = useState<number[]>(mandatoryRules);
@@ -42,23 +44,29 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, setT
     })
   }
 
+  const udpateResults = ()=> {
+    if (cp.length > 1) {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();      
+        return arr;
+      });
+    }
+    setOpen(false);
+  }
+
+
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
-    onSuccess() {
-      if (cp.length > 1) {
-        setCp(v => {
-          let arr = [...v];
-          arr.pop();      
-          return arr;
-        });
-      }
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, udpateResults);
     }
-  })
+  });
 
   const removeCp = () => {
     removeRule?.();
@@ -117,7 +125,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, setT
 
                 {cp.map((v)=> (
                   <Grid key={v} item xs={3}>
-                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} setTime={setTime} />
+                    <SetPositionAllocateRule sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} refresh={refresh} />
                   </Grid>
                 ))}
 

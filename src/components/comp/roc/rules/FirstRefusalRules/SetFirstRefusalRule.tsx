@@ -90,7 +90,7 @@ export function frParser(hexRule: HexType ): FirstRefusalRule {
 
 export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
-export function SetFirstRefusalRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
+export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
   const defFR: FirstRefusalRule = 
       { seqOfRule: seq, 
@@ -157,7 +157,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, setTime }: Ru
                 sha={ sha }
                 rule={ frCodifier(objFR) }
                 isFinalized={isFinalized}
-                setTime={setTime}
+                refresh={refresh}
                 setOpen={setOpen}
               />
             </Stack>

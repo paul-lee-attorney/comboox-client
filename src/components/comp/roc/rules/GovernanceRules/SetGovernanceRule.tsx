@@ -107,10 +107,10 @@ export interface RulesEditProps {
   seq: number;
   isFinalized: boolean;
   time: number;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function SetGovernanceRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
+export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
   const [ objGR, setObjGR ] = useState<GovernanceRule>(defaultGR);
   const [ open, setOpen ] = useState(false);
 
@@ -168,7 +168,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, setTime }: Rule
                   sha={ sha }
                   rule={ grCodifier(objGR) }
                   isFinalized={ isFinalized }
-                  setTime = { setTime }
+                  refresh = { refresh }
                   setOpen = { setOpen }
                 />
                 

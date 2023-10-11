@@ -67,7 +67,7 @@ export function guoParser(hexOrder: HexType): GroupUpdateOrder {
   return order;
 }
 
-export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
+export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
   const defaultOrder: GroupUpdateOrder = {
     seqOfRule: seq,
@@ -129,7 +129,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, setTime }: Ru
                 sha={ sha }
                 rule={ guoCodifier(objGuo) }
                 isFinalized = { isFinalized }
-                setTime = { setTime }
+                refresh = { refresh }
                 setOpen = { setOpen }
               />
             </Stack>

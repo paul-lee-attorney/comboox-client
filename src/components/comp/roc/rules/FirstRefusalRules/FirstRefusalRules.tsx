@@ -19,8 +19,10 @@ import {
 import { SetFirstRefusalRule } from "./SetFirstRefusalRule";
 import { useShareholdersAgreementRemoveRule } from "../../../../../generated";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function FirstRefusalRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
+export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
 
   const mandatoryRules = [512, 513];
 
@@ -54,23 +56,28 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, setTime}
     })
   }
 
+  const udpateResults = ()=> {
+    if (cp.length > 2) {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();      
+        return arr;
+      });
+    }
+    setOpen(false);
+  }
+
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: [BigInt(cp[cp.length - 1] ?? '513')],
-    onSuccess() {
-      if (cp.length > 2) {
-        setCp(v => {
-          let arr = [...v];
-          arr.pop();      
-          return arr;
-        });
-      }
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, udpateResults);
     }
-  })
+  });
 
   return (
     <>
@@ -125,7 +132,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, setTime}
 
                 {cp.map((v)=> (
                   <Grid key={ v } item xs={3}>
-                    <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} setTime={setTime} />
+                    <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} refresh={refresh} />
                   </Grid>
                 ))}
 

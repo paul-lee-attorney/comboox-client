@@ -21,6 +21,7 @@ import {
   useShareholdersAgreementRemoveRule 
 } from "../../../../../generated";
 import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export interface VotingRuleWrap {
   subTitle: string,
@@ -32,10 +33,10 @@ export interface GroupRulesSettingProps {
   initSeqList: number[] | undefined;
   isFinalized: boolean;
   time: number;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
 }
 
-export function VotingRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
+export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
 
   const mandatoryRules: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
 
@@ -65,23 +66,28 @@ export function VotingRules({sha, initSeqList, isFinalized, time, setTime}: Grou
     })
   }
 
+  const udpateResults = ()=> {
+    if (cp.length > 12) {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();      
+        return arr;
+      });
+    }
+    setOpen(false);
+  }
+
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
-    onSuccess() {
-      if (cp.length > 12) {
-        setCp(v => {
-          let arr = [...v];
-          arr.pop();      
-          return arr;
-        });
-      }
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, udpateResults);
     }
-  })
+  });
 
   const removeCp = () => {
     removeRule?.();
@@ -140,7 +146,7 @@ export function VotingRules({sha, initSeqList, isFinalized, time, setTime}: Grou
 
                 {cp.map(v=> (
                   <Grid key={ v } item xs={3} >
-                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} setTime={ setTime } />
+                    <SetVotingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} refresh={ refresh } />
                   </Grid>
                 ))}
 

@@ -85,7 +85,7 @@ export function lrCodifier(objLr: ListingRule ): HexType {
   return hexLr;
 }
 
-export function SetListingRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
+export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
   defaultLR = {...defaultLR, seqOfRule: seq};
 
@@ -139,7 +139,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, setTime }: RulesEd
                 sha={ sha }
                 rule={ lrCodifier(objLR) }
                 isFinalized={ isFinalized }
-                setTime={setTime}
+                refresh={refresh}
                 setOpen={setOpen}
               />
               

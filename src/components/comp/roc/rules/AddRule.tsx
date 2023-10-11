@@ -9,16 +9,22 @@ import {
 } from '../../../../generated';
 import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction } from 'react';
+import { refreshAfterTx } from '../../../../scripts/common/toolsKit';
 
 interface AddRuleProps {
   sha: HexType;
   rule: HexType;
   isFinalized: boolean;
-  setTime: Dispatch<SetStateAction<number>>;
+  refresh: ()=>void;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function AddRule({ sha, rule, isFinalized, setTime, setOpen }: AddRuleProps) {
+export function AddRule({ sha, rule, isFinalized, refresh, setOpen }: AddRuleProps) {
+
+  const updateResults = ()=>{
+    refresh();
+    setOpen(false);
+  }
 
   const {
     isLoading,
@@ -26,9 +32,9 @@ export function AddRule({ sha, rule, isFinalized, setTime, setOpen }: AddRulePro
   } = useShareholdersAgreementAddRule({
     address: sha,
     args: [rule],
-    onSuccess() {
-      setTime(Date.now());
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   });
 

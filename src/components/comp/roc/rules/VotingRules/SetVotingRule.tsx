@@ -356,7 +356,7 @@ const defaultRules: VotingRule[] = [
   }
 ]
 
-export function SetVotingRule({ sha, seq, isFinalized, time, setTime }: RulesEditProps) {
+export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
   const defVR: VotingRule =
       { seqOfRule: seq, 
@@ -432,7 +432,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, setTime }: RulesEdi
                 sha={ sha } 
                 rule={ vrCodifier(objVR) } 
                 isFinalized={ isFinalized }
-                setTime={ setTime }
+                refresh={ refresh }
                 setOpen={ setOpen }
               />
               

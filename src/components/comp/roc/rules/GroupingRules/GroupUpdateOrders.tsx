@@ -19,8 +19,10 @@ import {
 import { SetGroupUpdateOrder } from "./SetGroupUpdateOrder";
 import { useShareholdersAgreementRemoveRule } from "../../../../../generated";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, setTime }: GroupRulesSettingProps) {
+export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh }: GroupRulesSettingProps) {
 
   const mandatoryRule: number[] = isFinalized ? [] : [768];
   const [ cp, setCp ] = useState(mandatoryRule);
@@ -53,6 +55,17 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, setTime 
     })
   }
 
+  const udpateResults = ()=> {
+    if (cp.length > 1) {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();
+        return arr;
+      });
+    }
+    setOpen(false);
+  }
+
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
@@ -61,18 +74,12 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, setTime 
     args: cp && cp.length > 0 
       ? [BigInt(cp[cp.length - 1])]
       : undefined,
-    onSuccess() {
-      if (cp.length > 1) {
-        setCp(v => {
-          let arr = [...v];
-          arr.pop();
-          return arr;
-        });
-      }
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, udpateResults);
     }
-  })
-
+  });
+  
   return (
     <>
       <Button
@@ -123,7 +130,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, setTime 
 
               {cp.map((v)=> (
                 <Grid key={v} item xs={3}>
-                  <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} time={time} setTime={setTime} />
+                  <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} time={time} refresh={refresh} />
                 </Grid>
               ))}
             

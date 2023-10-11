@@ -47,6 +47,10 @@ export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
 
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = () => {
+    setTime(Date.now());
+  }
+
   useEffect(()=>{
     getRules(sha).then(
       res => groupingRules(res).then(
@@ -92,16 +96,16 @@ export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
           <Divider />
 
           <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-            <SetGovernanceRule sha={ sha } seq={ 0 } isFinalized={ finalized } time={time} setTime={ setTime } />
-            <VotingRules sha={ sha } initSeqList={ vrLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+            <SetGovernanceRule sha={ sha } seq={ 0 } isFinalized={ finalized } time={time} refresh={ refresh } />
+            <VotingRules sha={ sha } initSeqList={ vrLs } isFinalized={ finalized } time={time} refresh={ refresh } />
           </Stack>
           <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-            <PositionAllocateRules sha={ sha } initSeqList={ prLs } isFinalized={ finalized } time={time} setTime={ setTime } />
-            <FirstRefusalRules sha={ sha } initSeqList={ frLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+            <PositionAllocateRules sha={ sha } initSeqList={ prLs } isFinalized={ finalized } time={time} refresh={ refresh } />
+            <FirstRefusalRules sha={ sha } initSeqList={ frLs } isFinalized={ finalized } time={time} refresh={ refresh } />
           </Stack>
           <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
-            {(!finalized || (finalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={finalized} time={time} setTime={ setTime } />)}
-            <ListingRules sha={ sha } initSeqList={ lrLs } isFinalized={ finalized } time={time} setTime={ setTime } />
+            {(!finalized || (finalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={finalized} time={time} refresh={ refresh } />)}
+            <ListingRules sha={ sha } initSeqList={ lrLs } isFinalized={ finalized } time={time} refresh={ refresh } />
           </Stack>
 
         </Paper>

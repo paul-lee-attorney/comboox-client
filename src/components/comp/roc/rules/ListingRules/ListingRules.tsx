@@ -21,8 +21,10 @@ import {
 } from "../../../../../generated";
 import { SetListingRule } from "./SetListingRule";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
-export function ListingRules({sha, initSeqList, isFinalized, time, setTime}: GroupRulesSettingProps) {
+export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
 
   const mandatoryRule: number[] = isFinalized ? [] : [1024];
   const [ cp, setCp ] = useState(mandatoryRule);
@@ -51,23 +53,28 @@ export function ListingRules({sha, initSeqList, isFinalized, time, setTime}: Gro
     })
   }
 
+  const udpateResults = ()=> {
+    if (cp.length > 1) {
+      setCp(v => {
+        let arr = [...v];
+        arr.pop();
+        return arr;
+      });
+    }
+    setOpen(false);
+  }
+
   const {
     isLoading: removeRuleLoading,
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
-    onSuccess() {
-      if (cp.length > 1) {
-        setCp(v => {
-          let arr = [...v];
-          arr.pop();
-          return arr;
-        });
-      }
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, udpateResults);
     }
-  })
+  });
 
   return (
     <>
@@ -122,7 +129,7 @@ export function ListingRules({sha, initSeqList, isFinalized, time, setTime}: Gro
 
                 {cp.map(v=> (
                   <Grid key={ v } item xs={3} >
-                    <SetListingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={ time } setTime={setTime} />
+                    <SetListingRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={ time } refresh={refresh} />
                   </Grid>
                 ))}
 
