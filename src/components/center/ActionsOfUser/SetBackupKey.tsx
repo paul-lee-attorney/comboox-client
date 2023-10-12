@@ -8,7 +8,7 @@ import {
 import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 
 
@@ -16,15 +16,20 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
 
   const [ key, setKey ] = useState<HexType>();
 
+  const refresh = () => {
+    getUser();
+    refreshList();
+  }
+
   const {
     isLoading: setBackupKeyLoading,
     write: setBackupKey
   } = useRegCenterSetBackupKey({
     address: AddrOfRegCenter,
     args: key ? [key] : undefined,
-    onSuccess() {
-      getUser();
-      refreshList();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 

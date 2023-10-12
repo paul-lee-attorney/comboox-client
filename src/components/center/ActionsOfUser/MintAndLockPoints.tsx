@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/center/rc';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';
 
@@ -21,6 +21,12 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
 
   const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
+
+  const refresh = () => {
+    refreshList();
+    getUser();
+    getBalanceOf();
+  }
 
   const {
     isLoading: mintAndLockPointsLoading,
@@ -35,10 +41,9 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
             hashLock
           ]
         : undefined,
-    onSuccess() {
-      refreshList();
-      getUser();
-      getBalanceOf();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 

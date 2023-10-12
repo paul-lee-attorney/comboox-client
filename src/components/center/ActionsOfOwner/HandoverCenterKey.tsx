@@ -8,11 +8,11 @@ import {
 import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor, } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
-export function HandoverCenterKey({setTime}:ActionsOfOwnerProps) {
+export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 
   const [ newKeeper, setNewKeeper ] = useState<HexType>();
 
@@ -22,8 +22,9 @@ export function HandoverCenterKey({setTime}:ActionsOfOwnerProps) {
   } = useRegCenterHandoverCenterKey({
     address: AddrOfRegCenter,
     args: newKeeper ? [newKeeper] : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 

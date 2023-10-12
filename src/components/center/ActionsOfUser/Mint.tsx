@@ -12,6 +12,7 @@ import { getReceipt } from '../../../scripts/common/common';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { getEthPart, getGEthPart, getGWeiPart } from '../../../scripts/common/toolsKit';
+import { waitForTransaction } from '@wagmi/core';
 
 interface Receipt{
   to: string;
@@ -47,13 +48,14 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           BigInt(amt.cbp) * BigInt(10 ** 18) 
         + BigInt(amt.glee) * BigInt(10 ** 9)]
       : undefined,
-    onSuccess(data:any) {
-      getReceipt(data.hash).then(
-        r => {
-          if (r) {
-            let strAmt = BigInt(r.logs[0].topics[3]).toString();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      waitForTransaction({hash}).then(
+        res => {
+          if (res && res.logs[0].topics[3] && res.logs[0].topics[2]) {
+            let strAmt = BigInt(res.logs[0].topics[3]).toString();
             let rpt:Receipt = {
-              to: r.logs[0].topics[2],
+              to: res.logs[0].topics[2],
               amt: {
                 gp: getGEthPart(strAmt),
                 cbp: getEthPart(strAmt),
@@ -65,6 +67,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             getUser();
             getBalanceOf();
           }
+          console.log("Receipt: ", res);          
         }
       )
     }

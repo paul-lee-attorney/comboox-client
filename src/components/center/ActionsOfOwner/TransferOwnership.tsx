@@ -8,11 +8,11 @@ import {
 import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
-export function TransferOwnership({setTime}:ActionsOfOwnerProps) {
+export function TransferOwnership({refresh}:ActionsOfOwnerProps) {
 
   const [ newOwner, setNewOwner ] = useState<HexType>();
 
@@ -22,8 +22,9 @@ export function TransferOwnership({setTime}:ActionsOfOwnerProps) {
   } = useRegCenterTransferOwnership({
     address: AddrOfRegCenter,
     args: newOwner ? [newOwner] : undefined,
-    onSuccess() {
-      setTime(Date.now());
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 

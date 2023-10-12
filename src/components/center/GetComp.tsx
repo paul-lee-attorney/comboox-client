@@ -1,12 +1,10 @@
-import { regCenterABI } from '../../generated';
-import { AddrOfRegCenter, AddrZero, HexType } from '../../scripts/common';
+import { AddrZero, HexType } from '../../scripts/common';
 import Link from '../../scripts/common/Link';
 
 import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 import { useState } from 'react';
-import { Alert, Button, Collapse, IconButton, Stack, TextField } from '@mui/material';
+import { Alert, Button, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
-import { readContract } from '@wagmi/core';
 import { CenterInfo } from './CenterInfo';
 import { getDocByUserNo } from '../../scripts/center/rc';
 
@@ -22,18 +20,6 @@ export interface Doc {
   head: Head,
   body: HexType,
 }
-
-// async function getDocByUserNo(regNum: string): Promise<Doc>{
-
-//   let data:Doc = await readContract({
-//     address: AddrOfRegCenter,
-//     abi: regCenterABI,
-//     functionName: 'getDocByUserNo',
-//     args: [BigInt(regNum)],
-//   })
-
-//   return data;
-// }
 
 export function GetComp() {
 

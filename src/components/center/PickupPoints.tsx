@@ -8,6 +8,7 @@ import {
 import { AddrOfRegCenter, HexType } from '../../scripts/common';
 import { Redo } from '@mui/icons-material';
 import { useState } from 'react';
+import { refreshAfterTx } from '../../scripts/common/toolsKit';
 
 interface PickupPointsProps{
   hashLock: HexType;
@@ -20,16 +21,21 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
 
   const [ hashKey, setHashKey ] = useState<string>();
 
+  const updateResults = ()=>{
+    refreshList();
+    getUser();
+    setOpen(false);    
+  }
+
   const {
     isLoading: pickupPointsLoading,
     write: pickupPoints
   } = useRegCenterPickupPoints({
     address: AddrOfRegCenter,
     args: hashKey ? [hashLock, hashKey] : undefined,
-    onSuccess() {
-      refreshList();
-      getUser();
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

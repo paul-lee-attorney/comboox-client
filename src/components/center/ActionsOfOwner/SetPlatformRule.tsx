@@ -5,13 +5,14 @@ import {
   useRegCenterSetPlatformRule,
 } from '../../../generated';
 
-import { AddrOfRegCenter } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { Rule, codifyPlatformRule, defaultRule } from '../../../scripts/center/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
-export function SetPlatformRule({ setTime }:ActionsOfOwnerProps) {
+export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
 
   const [ rule, setRule ] = useState<Rule>(defaultRule);
 
@@ -21,8 +22,9 @@ export function SetPlatformRule({ setTime }:ActionsOfOwnerProps) {
   } = useRegCenterSetPlatformRule({
     address: AddrOfRegCenter,
     args: rule ? [ codifyPlatformRule(rule)] : undefined,
-    onSuccess() {
-      setTime(Date.now())
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 

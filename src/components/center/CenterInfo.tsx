@@ -25,6 +25,10 @@ export function CenterInfo() {
 
   const [ time, setTime ] = useState<number>(0);
 
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
+
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
   const [ platformRule, setPlatformRule ] = useState<Rule>(defaultRule);
@@ -245,7 +249,7 @@ export function CenterInfo() {
                 {signer && (signer.account.address == owner || signer.account.address == keeper) && (
                   <tr>
                     <td colSpan={4}>
-                      <ActionsOfOwner setTime={setTime} />
+                      <ActionsOfOwner refresh={refresh} />
                     </td>
                   </tr>
                 )}
@@ -259,7 +263,7 @@ export function CenterInfo() {
 
           <DialogActions>
             <Stack direction='row' >
-              <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={()=>setTime(Date.now())} endIcon={<Refresh/>}>Refresh</Button>
+              <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={refresh} endIcon={<Refresh/>}>Refresh</Button>
               <Button variant="outlined" sx={{ m:1, mx:3, minWidth:128 }} onClick={()=>setOpen(false)} endIcon={<Close/>}>Close</Button>
             </Stack>
           </DialogActions>

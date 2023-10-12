@@ -33,18 +33,6 @@ function HomePage() {
     }
   }, [boox, gk]);
 
-  // useAccessControlGetDk({
-  //   address: boox ? boox[booxMap.ROS] : undefined,
-  //   onSuccess(dk) {
-  //     if (gk)
-  //       getKeeper(gk, 4).then(
-  //         v => {
-  //           if (v == dk) setActiveStep(4);
-  //         }
-  //       )
-  //   }
-  // })
-
   return (
     <Stack direction='column' width='100%' height='100%' >
       <Box width={'100%'} height={'100%'} >

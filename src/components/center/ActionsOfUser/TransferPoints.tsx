@@ -36,9 +36,11 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
       ? [ to, 
           BigInt(amt.cbp) * BigInt(10 ** 18) + BigInt(amt.glee) * BigInt(10 ** 9)]
       : undefined,
-    onSuccess(data:any) {
-      getReceipt(data.hash).then(
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      getReceipt(hash).then(
         r => {
+          console.log("Receipt: ", r);
           if (r) {
             let strAmt = BigInt(r.logs[0].topics[3]).toString();
             let rpt:Receipt = {

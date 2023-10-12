@@ -7,6 +7,7 @@ import {
 
 import { AddrOfRegCenter, HexType } from '../../scripts/common';
 import { Undo } from '@mui/icons-material';
+import { refreshAfterTx } from '../../scripts/common/toolsKit';
 
 interface WithdrawPointsProps{
   hashLock: HexType;
@@ -17,16 +18,21 @@ interface WithdrawPointsProps{
 
 export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:WithdrawPointsProps) {
 
+  const updateResults = ()=>{
+    refreshList();
+    getUser();
+    setOpen(false);    
+  }
+
   const {
     isLoading: withdrawPointsLoading,
     write: withdrawPoints
   } = useRegCenterWithdrawPoints({
     address: AddrOfRegCenter,
     args: [ hashLock ],
-    onSuccess() {
-      refreshList();
-      getUser();
-      setOpen(false);
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
     }
   })
 

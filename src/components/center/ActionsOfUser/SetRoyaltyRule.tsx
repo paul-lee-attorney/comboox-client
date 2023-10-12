@@ -5,15 +5,21 @@ import {
   useRegCenterSetRoyaltyRule
 } from '../../../generated';
 
-import { AddrOfRegCenter } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { Key, codifyRoyaltyRule, defaultKey } from '../../../scripts/center/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
 
   const [ rule, setRule ] = useState<Key>(defaultKey);
+
+  const refresh = () => {
+    getUser();
+    refreshList();
+  }
 
   const {
     isLoading: setRoyaltyRuleLoading,
@@ -21,9 +27,9 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
   } = useRegCenterSetRoyaltyRule({
     address: AddrOfRegCenter,
     args: rule ? [ codifyRoyaltyRule(rule)] : undefined,
-    onSuccess() {
-      refreshList();
-      getUser();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 

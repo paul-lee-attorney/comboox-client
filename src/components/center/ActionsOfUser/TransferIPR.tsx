@@ -2,14 +2,12 @@
 import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterSetRoyaltyRule, useRegCenterTransferIpr
+  useRegCenterTransferIpr
 } from '../../../generated';
 
-import { AddrOfRegCenter } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor, Close } from '@mui/icons-material';
 import { useState } from 'react';
-import { Key, codifyRoyaltyRule, defaultKey } from '../../../scripts/center/rc';
-import { ActionsOfUserProps } from '../ActionsOfUser';
 import { getReceipt } from '../../../scripts/common/common';
 import { longSnParser } from '../../../scripts/common/toolsKit';
 
@@ -30,9 +28,11 @@ export function TransferIPR() {
     args: [ BigInt(typeOfDoc), 
             BigInt(version),
             BigInt(transferee)],
-    onSuccess(data:any) {
-      getReceipt(data.hash).then(
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      getReceipt(hash).then(
         r => {
+          console.log("Receipt: ", r);
           if (r) {
             let rType = BigInt(r.logs[0].topics[1]).toString();
             let rVersion = BigInt(r.logs[0].topics[2]).toString();

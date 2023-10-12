@@ -15,6 +15,7 @@ import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 import { getDocAddr } from '../../scripts/center/rc';
 import { useState } from 'react';
 import { HexParser } from '../../scripts/common/toolsKit';
+import { waitForTransaction } from '@wagmi/core';
 
 export function CreateComp() {
   const { setGK } = useComBooxContext();
@@ -29,19 +30,24 @@ export function CreateComp() {
     address: AddrOfRegCenter,
     args: dk && dk != '0x' 
       ? [dk] : undefined,
-    onSuccess(data:any) {
-      const initComp = async ()=>{
-        let addrOfGK = await getDocAddr(data.hash);
-        setGK(addrOfGK);
-        router.push('/comp/HomePage');
-      }
-      initComp();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      waitForTransaction({hash}).then(
+        res => {
+          console.log("Receipt: ", res);
+          getDocAddr(hash).then(
+            addrOfGK => {
+              setGK(addrOfGK);
+              router.push('/comp/HomePage');
+            }
+          )
+        }
+      );
     }
   })
 
   return (
     <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
-
 
       <FormControl size='small' sx={{ m: 1, width: 488 }} variant="outlined">
         <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of Secretary</InputLabel>

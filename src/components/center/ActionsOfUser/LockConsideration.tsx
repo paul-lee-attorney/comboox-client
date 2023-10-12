@@ -8,7 +8,7 @@ import {
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, selectorCodifier } from '../../../scripts/common/toolsKit';
+import { HexParser, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/center/rc';
@@ -69,6 +69,13 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
   const [ func, setFunc ] = useState<string>(funcNames[0]);
   const [ paras, setParas ] = useState<string[]>(calDefaultParas(hashLock, selectors[func].offSet));
 
+  const refresh = ()=> {
+    console.log('payloads: ', constructPayload(func, paras));
+    refreshList();
+    getUser();
+    getBalanceOf();
+  }
+
   const {
     isLoading: lockConsiderationLoading,
     write: lockConsideration,
@@ -85,11 +92,9 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
             hashLock
           ]
         : undefined,
-    onSettled() {
-      console.log('payloads: ', constructPayload(func, paras));
-      refreshList();
-      getUser();
-      getBalanceOf();
+    onSuccess(data) {
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   })
 
