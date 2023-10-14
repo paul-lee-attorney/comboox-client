@@ -5,16 +5,17 @@ import {
   useRegCenterTransferOwnership
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
-export function TransferOwnership({refresh}:ActionsOfOwnerProps) {
+export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
 
-  const [ newOwner, setNewOwner ] = useState<HexType>();
+  const [ newOwner, setNewOwner ] = useState<HexType>(AddrZero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: transferOwnershipLoading,
@@ -36,22 +37,29 @@ export function TransferOwnership({refresh}:ActionsOfOwnerProps) {
           size="small"
           variant='outlined'
           label='NewOwner'
+          error = { valid['NewOwner']?.error }
+          helperText = { valid['NewOwner'].helpTx }
+          
           sx={{
             m:1,
             minWidth: 456,
           }}
           value={ newOwner }
-          onChange={e => setNewOwner( HexParser( e.target.value ))}
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('NewOwner', input, 40, setValid);
+            setNewOwner(input);
+          }}
         />
 
         <Button 
-          disabled={ transferOwnershipLoading } 
+          disabled={ transferOwnershipLoading || hasError(valid) } 
           onClick={() => {
             transferOwnership?.()
           }}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
-          endIcon={<BorderColor />}       
+          endIcon={<BorderColor />}
         >
           Set
         </Button>

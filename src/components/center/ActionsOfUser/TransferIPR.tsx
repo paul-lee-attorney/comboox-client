@@ -5,17 +5,18 @@ import {
   useRegCenterTransferIpr
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType, MaxPrice, MaxUserNo } from '../../../scripts/common';
 import { BorderColor, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
-import { longSnParser } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, longSnParser, onlyNum } from '../../../scripts/common/toolsKit';
 
 export function TransferIPR() {
 
   const [ typeOfDoc, setTypeOfDoc ] = useState<string>('0');
   const [ version, setVersion ] = useState<string>('0');
   const [ transferee, setTransferee ] = useState<string>('0');
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ receipt, setReceipt ] = useState<string>('');
   const [ open, setOpen ] = useState<boolean>(false);
@@ -57,40 +58,58 @@ export function TransferIPR() {
           size="small"
           variant='outlined'
           label='TypeOfDoc'
+          error={ valid['TypeOfDoc']?.error }
+          helperText={ valid['TypeOfDoc']?.helpTx }                        
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ typeOfDoc }
-          onChange={e => setTypeOfDoc(e.target.value ?? '0')}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('TypeOfDoc', input, MaxPrice, setValid);
+            setTypeOfDoc(input);
+          }}
         />
 
         <TextField 
           size="small"
           variant='outlined'
           label='Version'
+          error={ valid['Version']?.error }
+          helperText={ valid['Version']?.helpTx }                        
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ version }
-          onChange={e => setVersion(e.target.value ?? '0')}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('Version', input, MaxPrice, setValid); 
+            setVersion(input);
+          }}
         />
 
         <TextField 
           size="small"
           variant='outlined'
           label='Transferee'
+          error={ valid['Transferee']?.error }
+          helperText={ valid['Transferee']?.helpTx }                        
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ transferee }
-          onChange={e => setTransferee(e.target.value ?? '0')}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('Transferee', input, MaxUserNo, setValid);
+            setTransferee( input );
+          }}
         />
 
         <Button 
-          disabled={ transferIPRLoading } 
+          disabled={ transferIPRLoading || hasError(valid)} 
           onClick={() => transferIPR?.()}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 

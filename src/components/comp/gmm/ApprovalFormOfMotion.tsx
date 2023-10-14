@@ -126,7 +126,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                     id="tfCreateDate" 
                     label="CreateDate" 
                     variant="outlined"
-                    value = { dateParser(motion.head.createDate) }
+                    value = { dateParser(motion.head.createDate.toString()) }
                     size='small'
                   />
                 </td>            
@@ -150,7 +150,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                     id="tfProposeDate" 
                     label="ProposeDate" 
                     variant="outlined"
-                    value = { dateParser(motion.body.proposeDate) }
+                    value = { dateParser(motion.body.proposeDate.toString()) }
                     size='small'
                   />
                 </td>
@@ -167,7 +167,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                       id="tfShareRegDate" 
                       label="ShareRegDate" 
                       variant="outlined"
-                      value = { dateParser(motion.body.shareRegDate) }
+                      value = { dateParser(motion.body.shareRegDate.toString()) }
                       size='small'
                     />
                   </td>
@@ -179,7 +179,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                       id="tfVoteStartDate" 
                       label="VoteStartDate" 
                       variant="outlined"
-                      value = { dateParser(motion.body.voteStartDate) }
+                      value = { dateParser(motion.body.voteStartDate.toString()) }
                       size='small'
                     />
                   </td>
@@ -191,7 +191,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                       id="tfVoteEndDate" 
                       label="VoteEndDate" 
                       variant="outlined"
-                      value = { dateParser(motion.body.voteEndDate) }
+                      value = { dateParser(motion.body.voteEndDate.toString()) }
                       size='small'
                     />
                   </td>

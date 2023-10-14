@@ -137,7 +137,7 @@ export function GetPosition({seq}: GetPositionProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dateParser(pos.startDate) }
+                    value={ dateParser(pos.startDate.toString()) }
                   />
                 )}
 
@@ -151,7 +151,7 @@ export function GetPosition({seq}: GetPositionProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dateParser( pos.endDate ) }
+                    value={ dateParser( pos.endDate.toString() ) }
                   />
                 )}
 

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { HexType } from "../../../../scripts/common";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
 export function CreateMotionForDoc({refresh}:CreateMotionProps) {
@@ -12,8 +12,10 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
   const { gk } = useComBooxContext();
 
   const [ doc, setDoc ] = useState<HexType>();
-  const [ seqOfVr, setSeqOfVr ] = useState<number>();
-  const [ executor, setExecutor ] = useState<number>();
+  const [ seqOfVr, setSeqOfVr ] = useState<string>();
+  const [ executor, setExecutor ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: proposeDocOfGmLoading,
@@ -51,11 +53,17 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
           variant='outlined'
           label='SeqOfVR'
           size="small"
+          error={ valid['SeqOfVR'].error }
+          helperText={ valid['SeqOfVR'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setSeqOfVr(parseInt(e.target.value))}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+            setSeqOfVr(input);
+          }}
           value={ seqOfVr }
         />
 
@@ -63,16 +71,22 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
           variant='outlined'
           label='Executor'
           size="small"
+          error={ valid['Executor'].error }
+          helperText={ valid['Executor'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setExecutor(parseInt(e.target.value))}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('Executor', input, MaxUserNo, setValid);
+            setExecutor(input);
+          }}
           value={ executor }
         />
 
         <Button
-          disabled={ !proposeDocOfGm || proposeDocOfGmLoading }
+          disabled={ !proposeDocOfGm || proposeDocOfGmLoading || hasError(valid)}
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:218 }}

@@ -20,7 +20,7 @@ interface PickupPointsProps{
 export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPointsProps) {
 
   const [ hashKey, setHashKey ] = useState<string>();
-
+  
   const updateResults = ()=>{
     refreshList();
     getUser();

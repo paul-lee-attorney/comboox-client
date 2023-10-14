@@ -6,14 +6,15 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
 export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: placeInitOfferLoading,
@@ -22,7 +23,7 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
     address: gk,
     args: [ BigInt(classOfShare),
             BigInt(offer.execHours), 
-            offer.paid, 
+            BigInt(offer.paid), 
             BigInt(offer.price), 
             BigInt(offer.seqOfLR), 
            ],
@@ -47,15 +48,20 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='ExecHours'
+          error={ valid['ExecHours'].error }
+          helperText={ valid['ExecHours'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            execHours: parseInt(e.target.value ?? '0'),
-          }))}
-
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('ExecHours', input, MaxSeqNo, setValid);
+            setOffer( v => ({
+              ...v,
+              execHours: input,
+            }));
+          }}
           value={ offer.execHours.toString() } 
         />
 
@@ -63,31 +69,41 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='SeqOfListingRule'
+          error={ valid['SetOfLR'].error }
+          helperText={ valid['SetOfLR'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            seqOfLR: parseInt(e.target.value ?? '0'),
-          }))}
-
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+            setOffer( v => ({
+              ...v,
+              seqOfLR: input,
+            }));
+          }}
           value={ offer.seqOfLR.toString() } 
         />
 
         <TextField 
           variant='outlined'
           size="small"
-          label='Paid'
+          label='Paid (Cent)'
+          error={ valid['Paid'].error }
+          helperText={ valid['Paid'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            paid: BigInt(e.target.value ?? '0'),
-          }))}
-
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('Paid', input, MaxData, setValid);
+            setOffer( v => ({
+              ...v,
+              paid: input,
+            }));
+          }}
           value={ offer.paid.toString() } 
         />
 
@@ -95,20 +111,26 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='Price'
+          error={ valid['Price'].error }
+          helperText={ valid['Price'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            price: parseInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('Price', input, MaxPrice, setValid);
+            setOffer( v => ({
+              ...v,
+              price: input,
+            }));
+        }}
 
           value={ offer.price.toString() } 
         />
 
         <Button 
-          disabled = { placeInitOfferLoading }
+          disabled = { placeInitOfferLoading || hasError(valid)}
 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 

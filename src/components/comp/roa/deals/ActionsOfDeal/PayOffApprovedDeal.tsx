@@ -5,7 +5,7 @@ import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
-import { refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../../scripts/common";
 
 
@@ -19,6 +19,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
   }
 
   const [ value, setValue ] = useState<string>('0');
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: payOffApprovedDealLoading,
@@ -47,16 +48,22 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
             variant='outlined'
             label='Consideration (GWei)'
             size="small"
+            error={ valid['Consideration'].error }
+            helperText={ valid['Consideration'].helpTx }
             sx={{
               m:1,
               minWidth: 456,
             }}
             value={ value }
-            onChange={(e)=>setValue(  removeKiloSymbol(e.target.value) ?? '0')}
+            onChange={(e)=>{
+              let input = removeKiloSymbol(e.target.value);
+              onlyNum('Consideration', input, 0n, setValid); 
+              setValue(input);
+            }}
           />
 
         <Button 
-          disabled = { payOffApprovedDealLoading || deal.body.state > 2}
+          disabled = { payOffApprovedDealLoading || deal.body.state > 2 || hasError(valid)}
 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 

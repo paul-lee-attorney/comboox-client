@@ -5,13 +5,12 @@ import {
   useRegCenterMint, 
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../scripts/common';
 import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../../scripts/common/common';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { getEthPart, getGEthPart, getGWeiPart } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, onlyNum } from '../../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 
 interface Receipt{
@@ -37,6 +36,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
   const [ amt, setAmt ] = useState<CBP>(defaultCBP);
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: mintPointsLoading,
@@ -81,47 +81,65 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           size="small"
           variant="outlined"
           label='To'
+          error={ valid['To']?.error }
+          helperText={ valid['To']?.helpTx }          
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ to }
-          onChange={e => setTo(e.target.value ?? '0')}
+          onChange={e => {
+            let input = e.target.value ?? '0';
+            onlyNum('To', input, MaxUserNo, setValid); 
+            setTo(input);
+          }}
         />
 
         <TextField 
           size="small"
           variant="outlined"
           label='Amount (CBP)'
+          error={ valid['Amount(CBP)']?.error }
+          helperText={ valid['Amount(CBP)']?.helpTx }          
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ amt.cbp }
-          onChange={e => setAmt(v => ({
-            ...v,
-            cbp: e.target.value ?? '0'
-          }))}
+          onChange={e => {
+            let input = e.target.value ?? '0';
+            onlyNum('Amount(CBP)', input, 0n, setValid);
+            setAmt(v => ({
+              ...v,
+              cbp: input,
+            }));
+          }}
         />
 
         <TextField 
           size="small"
           variant="outlined"
           label='Amount (GLee)'
+          error={ valid['Amount(GLee)']?.error }
+          helperText={ valid['Amount(GLee)']?.helpTx }          
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ amt.glee }
-          onChange={e => setAmt(v => ({
-            ...v,
-            glee: e.target.value ?? '0'
-          }))}
+          onChange={e => {
+            let input = e.target.value ?? '0';
+            onlyNum('Amount(GLee)', input, 0n, setValid);
+            setAmt(v => ({
+              ...v,
+              glee: input,
+            }))
+          }}
         />
 
         <Button 
           size='small'
-          disabled={ !mintPoints || mintPointsLoading } 
+          disabled={ !mintPoints || mintPointsLoading || hasError(valid)} 
           onClick={() => {
             mintPoints?.()
           }}

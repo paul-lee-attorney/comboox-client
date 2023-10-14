@@ -1,5 +1,4 @@
 import { Alert, Collapse, IconButton, Stack, Tooltip } from "@mui/material";
-import { useGeneralKeeperDepositOfMine } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Close, HelpOutline, } from "@mui/icons-material";
 import { useEffect, useState } from "react";

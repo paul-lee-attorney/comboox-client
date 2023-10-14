@@ -1,7 +1,35 @@
 import { readContract, getWalletClient, getContract, waitForTransaction } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../common";
 import { regCenterABI } from "../../generated";
-import { BigIntOptions } from "fs";
+
+// ==== StrLocker === 
+
+export interface StrHeadOfLocker {
+  from: string;
+  to: string;
+  expireDate: number;
+  value: string;
+}
+
+export interface BodyOfLocker {
+  counterLocker: HexType;
+  selector: HexType;
+  paras: string[];
+}
+
+export interface StrLocker {
+  hashLock: HexType;
+  head: StrHeadOfLocker;
+  body: BodyOfLocker;  
+}
+
+export const defaultStrHeadOfLocker:StrHeadOfLocker = {
+  from: '0',
+  to: '0',
+  expireDate: 0,
+  value: '0',
+}
+
 
 // ==== Locker ====
 
@@ -10,12 +38,6 @@ export interface HeadOfLocker {
   to: number;
   expireDate: number;
   value: bigint;
-}
-
-export interface BodyOfLocker {
-  counterLocker: HexType;
-  selector: HexType;
-  paras: string[];
 }
 
 export interface Locker {
@@ -67,6 +89,32 @@ export const defaultLocker: Locker = {
 
 // ==== User ====
 
+export interface StrKey {
+  pubKey: HexType;
+  discount: string;
+  gift: string;
+  coupon: string;
+}
+
+export const defaultStrKey:StrKey = {
+  pubKey: AddrZero,
+  discount: '0',
+  gift: '0',
+  coupon: '0',
+}
+
+export function codifyStrRoyaltyRule(rule: StrKey):HexType {
+  let out: HexType = `0x${
+    '0'.padEnd(40, '0') +
+    Number(rule.discount).toString(16).padStart(4, '0') +
+    Number(rule.gift).toString(16).padStart(10, '0') +
+    Number(rule.coupon).toString(16).padStart(10, '0')
+  }`;
+
+  return out;
+}
+
+// ==== Key ====
 export interface Key {
   pubKey: HexType;
   discount: number;
@@ -98,6 +146,35 @@ export interface User {
 }
 
 // ==== RegCenter ====
+
+export interface StrRule {
+  eoaRewards: string;
+  coaRewards: string;
+  floor: string;
+  rate: string;
+  para: string;
+}
+
+export const defaultStrRule: StrRule = {
+  eoaRewards: '0',
+  coaRewards: '0',
+  floor: '0',
+  rate: '0',
+  para: '0',
+}
+
+export function codifyPlatformStrRule(rule: StrRule):HexType {
+  let out: HexType = `0x${
+    Number(rule.eoaRewards).toString(16).padStart(10, '0') +
+    Number(rule.coaRewards).toString(16).padStart(10, '0') +
+    Number(rule.floor).toString(16).padStart(10, '0') +
+    Number(rule.rate).toString(16).padStart(4, '0') +
+    Number(rule.para).toString(16).padStart(4, '0') +
+    '0'.padEnd(26, '0')
+  }`;
+
+  return out;
+}
 
 export interface Rule {
   eoaRewards: number;

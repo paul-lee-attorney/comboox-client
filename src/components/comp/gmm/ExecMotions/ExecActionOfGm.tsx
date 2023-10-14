@@ -8,7 +8,7 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { ExecActionProps } from "../../bmm/ExecMotions/ExecAction";
 
@@ -18,6 +18,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
 
   const [ actions, setActions ] = useState<Action[]>([ defaultAction ]);
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: execActionLoading,
@@ -98,16 +99,22 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
       <TextField 
         variant='outlined'
         label='DesHash / CID in IPFS'
+        error={ valid['DesHash'].error }
+        helperText={ valid['DesHash'].helpTx }
         sx={{
           m:1,
           minWidth: 630,
         }}
-        onChange={(e) => setDesHash(HexParser( e.target.value ))}
+        onChange={(e) => {
+          let input = HexParser( e.target.value );
+          onlyHex('DesHash', input, 64, setValid);
+          setDesHash(input);
+        }}
         value={ desHash }
       />
 
       <Button
-        disabled={ !execAction || execActionLoading }
+        disabled={ !execAction || execActionLoading || hasError(valid)}
         variant="contained"
         endIcon={<Surfing />}
         sx={{ m:1, minWidth:218 }}
@@ -128,48 +135,66 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
         <TextField 
           variant='outlined'
           label='Address'
+          error={ valid['Address'].error }
+          helperText={ valid['Address'].helpTx }
           sx={{
             m:1,
             minWidth: 450,
           }}
-          onChange={(e) => setActions(a => {
-            let arr:Action[] = [];
-            arr = [...a];
-            a[i].target = HexParser( e.target.value );
-            return arr;
-          })}
+          onChange={(e) => {
+            let input = HexParser( e.target.value );
+            onlyHex('Address', input, 40, setValid);
+            setActions(a => {
+              let arr:Action[] = [];
+              arr = [...a];
+              a[i].target = input;
+              return arr;
+            });
+          }}
           value={ actions[i].target }
         />
 
         <TextField 
           variant='outlined'
           label='Value'
+          error={ valid['Value'].error }
+          helperText={ valid['Value'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setActions(a => {
-            let arr:Action[] = [];
-            arr = [...a];
-            arr[i].value = e.target.value;
-            return arr;
-          })}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('Value', input, 0n, setValid);
+            setActions(a => {
+              let arr:Action[] = [];
+              arr = [...a];
+              arr[i].value = input;
+              return arr;
+            });
+          }}
           value={ actions[i].value }
         />
 
         <TextField 
           variant='outlined'
           label='Params'
+          error={ valid['Params'].error }
+          helperText={ valid['Params'].helpTx }
           sx={{
             m:1,
             minWidth: 630,
           }}
-          onChange={(e) => setActions(a => {
-            let arr:Action[] = [];
-            arr = [...a];
-            arr[i].params = HexParser( e.target.value );
-            return arr;
-          })}
+          onChange={(e) => {
+            let input = HexParser( e.target.value );
+            onlyHex('Params', input, 0, setValid);
+            setActions(a => {
+              let arr:Action[] = [];
+              arr = [...a];
+              arr[i].params = input;
+              return arr;
+            });
+          }}
           value={ actions[i].params }
         />
 

@@ -172,7 +172,7 @@ function UserInfo() {
                   m:1,
                   minWidth: 218,
                 }}
-                value={ toPercent(user?.backupKey.discount ?? 0) }
+                value={ toPercent(user?.backupKey.discount.toString() ?? '0') }
               />
             </td>
             <td>

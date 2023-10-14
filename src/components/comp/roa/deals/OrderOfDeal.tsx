@@ -151,7 +151,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ dateParser(deal.head.closingDeadline) }
+                  value={ dateParser(deal.head.closingDeadline.toString()) }
                 />
               </td>
               <td>
@@ -164,7 +164,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ StateOfDeal[deal.body.state] }
+                  value={ StateOfDeal[Number(deal.body.state)] }
                 />
               </td>
             </tr>
@@ -180,7 +180,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ TypeOfDeal[ deal.head.typeOfDeal - 1 ] }
+                  value={ TypeOfDeal[ Number(deal.head.typeOfDeal) - 1 ] }
                 />
               </td>
               <td>
@@ -332,8 +332,8 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                     m:1,
                   }}
                   value={ centToDollar(
-                    (((deal.body.par - deal.body.paid) * BigInt(deal.head.priceOfPar) 
-                    + (deal.body.paid * BigInt(deal.head.priceOfPaid))) / BigInt(100)).toString()  
+                    (((BigInt(deal.body.par) - BigInt(deal.body.paid)) * BigInt(deal.head.priceOfPar) 
+                    + (BigInt(deal.body.paid) * BigInt(deal.head.priceOfPaid))) / BigInt(100)).toString()  
                   )}
                 />
               </td>
@@ -375,7 +375,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
 
             <tr>
               <td colSpan={4}>
-                {deal.body.state > 0 && (
+                {Number(deal.body.state) > 0 && (
                   <ActionsOfDeal addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} timeline={timeline} timestamp={timestamp} />
                 )}
               </td>

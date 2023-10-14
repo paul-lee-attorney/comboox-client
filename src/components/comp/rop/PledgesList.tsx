@@ -49,7 +49,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'createDate', 
       headerName: 'CreateDate',
-      valueGetter: p => dateParser(p.row.head.createDate),
+      valueGetter: p => dateParser(p.row.head.createDate.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -57,7 +57,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'triggerDate', 
       headerName: 'TriggerDate',
-      valueGetter: p => dateParser(p.row.head.createDate + p.row.head.daysToMaturity * 86400),
+      valueGetter: p => dateParser((p.row.head.createDate + p.row.head.daysToMaturity * 86400).toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -65,7 +65,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'expireDate', 
       headerName: 'ExpireDate',
-      valueGetter: p => dateParser(p.row.head.createDate + (p.row.head.daysToMaturity + p.row.head.guaranteeDays) * 86400),
+      valueGetter: p => dateParser((p.row.head.createDate + (p.row.head.daysToMaturity + p.row.head.guaranteeDays) * 86400).toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,

@@ -6,13 +6,14 @@ import { useState } from "react";
 import { useGeneralKeeperWithdrawInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: withdrawInitOfferLoading,
@@ -44,14 +45,20 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           variant='outlined'
           size="small"
           label='SeqOfOrder'
+          error={ valid['SeqOfOrder'].error }
+          helperText={ valid['SeqOfOrder'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            seqOfOrder: parseInt(e.target.value ?? '0'),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('SeqOfOrder', input, MaxPrice, setValid);
+            setOffer( v => ({
+              ...v,
+              seqOfOrder: input,
+            }));
+          }}
 
           value={ offer.seqOfOrder.toString() } 
         />
@@ -60,20 +67,26 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           variant='outlined'
           size="small"
           label='SeqOfListingRule'
+          error={ valid['SeqOfLR'].error }
+          helperText={ valid['SeqOfLR'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            seqOfLR: parseInt(e.target.value ?? '0'),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+            setOffer( v => ({
+              ...v,
+              seqOfLR: input,
+            }));
+          }}
 
           value={ offer.seqOfLR.toString() } 
         />
 
         <Button 
-          disabled = { withdrawInitOfferLoading }
+          disabled = { withdrawInitOfferLoading || hasError(valid)}
 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 

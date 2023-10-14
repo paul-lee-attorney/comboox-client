@@ -100,7 +100,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(objVr.headRatio)}
+                      value={toPercent(objVr.headRatio.toString())}
                     />
                   )}
 
@@ -114,7 +114,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(objVr.amountRatio)}
+                      value={toPercent(objVr.amountRatio.toString())}
                     />
                   )}
 

@@ -1,4 +1,4 @@
-import { AddrZero, HexType } from '../../scripts/common';
+import { AddrZero, HexType, MaxUserNo } from '../../scripts/common';
 import Link from '../../scripts/common/Link';
 
 import { useComBooxContext } from '../../scripts/common/ComBooxContext';
@@ -7,6 +7,7 @@ import { Alert, Button, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { CenterInfo } from './CenterInfo';
 import { getDocByUserNo } from '../../scripts/center/rc';
+import { FormResults, defFormResults, hasError, onlyNum } from '../../scripts/common/toolsKit';
 
 export interface Head {
   typeOfDoc: number,
@@ -26,6 +27,7 @@ export function GetComp() {
   const { setGK } = useComBooxContext();
 
   const [ regNum, setRegNum ] = useState<string>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ doc, setDoc ] = useState<Doc>();
 
@@ -54,16 +56,23 @@ export function GetComp() {
 
       <Stack direction={'row'} sx={{mt:2, mb:0, p:1, justifyContent:'center'}}>
         <TextField 
-          sx={{ m:1, mr:3, width: 218 }} 
           id="txRegNumOfComp" 
           label="RegNumOfComp" 
           variant="outlined"
-          onChange={(e) => setRegNum( e.target.value )}
-          // value = { regNum }
           size='small'
+          error={ valid['RegNum']?.error }
+          helperText={ valid['RegNum']?.helpTx }                                  
+          sx={{ m:1, mr:3, width: 218 }}           
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('RegNum', input, MaxUserNo, setValid);
+            setRegNum( input );
+          }}
+          value = { regNum }
         />
 
         <Button 
+          disabled={ hasError(valid) }
           sx={{ m:1, ml:3, width: 218, height: 40 }} 
           variant="outlined" 
           endIcon={ <Search /> }

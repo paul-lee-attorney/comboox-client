@@ -55,7 +55,7 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     { 
       field: 'sigDate', 
       headerName: 'SigDate',
-      valueGetter: p => dateParser(p.row.sigDate) ,
+      valueGetter: p => dateParser(p.row.sigDate.toString()) ,
       headerAlign:'center',
       align: 'center',
       width: 218,

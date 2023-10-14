@@ -39,7 +39,7 @@ export function GetTimestamp() {
           anchorOrigin={{ vertical:'top', horizontal:'center' }}
           autoHideDuration={3000}
           onClose={()=>setOpen(false)}
-          message={ dateParser( Number(timestamp) ) }
+          message={ dateParser( timestamp.toString() ) }
         />
       )}
 

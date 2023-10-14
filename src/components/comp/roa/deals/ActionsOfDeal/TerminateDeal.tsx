@@ -37,11 +37,7 @@ export function TerminateDeal({ addr, deal, setOpen, setDeal, refresh}: ActionsO
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Terminate Deal</h4>
-        </Toolbar> */}
-
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+      <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
         <Button 
           disabled = { terminateDealLoading || deal.body.state > 2}
@@ -55,7 +51,7 @@ export function TerminateDeal({ addr, deal, setOpen, setDeal, refresh}: ActionsO
           Terminate Deal
         </Button>
 
-        </Stack>
+      </Stack>
 
     </Paper>
 

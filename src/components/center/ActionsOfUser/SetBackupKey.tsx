@@ -8,13 +8,14 @@ import {
 import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 
 
 export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
 
   const [ key, setKey ] = useState<HexType>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const refresh = () => {
     getUser();
@@ -41,16 +42,22 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
           size="small"
           variant='outlined'
           label='BackupKey'
+          error={ valid['BackupKey']?.error }
+          helperText={ valid['BackupKey']?.helpTx }                    
           sx={{
             m:1,
             minWidth: 456,
           }}
           value={ key }
-          onChange={e => setKey( HexParser( e.target.value ))}
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('BackupKey', input, 40, setValid);
+            setKey(input);
+          }}
         />
 
         <Button 
-          disabled={ setBackupKeyLoading } 
+          disabled={ setBackupKeyLoading || hasError(valid) } 
           onClick={() => {
             setBackupKey?.()
           }}

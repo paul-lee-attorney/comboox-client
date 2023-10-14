@@ -7,7 +7,7 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { HexType, booxMap } from "../../../../scripts/common";
+import { HexType } from "../../../../scripts/common";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 

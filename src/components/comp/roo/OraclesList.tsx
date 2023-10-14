@@ -9,7 +9,7 @@ const columns: GridColDef[] = [
   { 
     field: 'timestamp', 
     headerName: 'Timestamp',
-    valueGetter: p => dateParser(p.row.timestamp),
+    valueGetter: p => dateParser(p.row.timestamp.toString()),
     width: 180,
   },
   { 

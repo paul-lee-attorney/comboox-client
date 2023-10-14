@@ -9,17 +9,18 @@ import {
 } from '../../../../generated';
 import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction } from 'react';
-import { refreshAfterTx } from '../../../../scripts/common/toolsKit';
+import { FormResults, hasError, refreshAfterTx } from '../../../../scripts/common/toolsKit';
 
 interface AddRuleProps {
   sha: HexType;
   rule: HexType;
   isFinalized: boolean;
+  valid: FormResults;
   refresh: ()=>void;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function AddRule({ sha, rule, isFinalized, refresh, setOpen }: AddRuleProps) {
+export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: AddRuleProps) {
 
   const updateResults = ()=>{
     refresh();
@@ -44,7 +45,7 @@ export function AddRule({ sha, rule, isFinalized, refresh, setOpen }: AddRulePro
         <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
           
           <Button 
-            disabled = { isLoading || isFinalized }
+            disabled = { isLoading || isFinalized || hasError(valid) }
             sx={{ m: 1, minWidth: 120, height: 40 }} 
             variant="contained" 
             endIcon={<EditNote />}

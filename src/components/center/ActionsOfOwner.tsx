@@ -10,11 +10,11 @@ export interface ActionsOfOwnerProps{
   refresh: ()=>void;
 }
 
-export function ActionsOfOwner({ refresh}: ActionsOfOwnerProps) {
+export function ActionsOfOwner({ refresh }: ActionsOfOwnerProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
-  const actionsOfUser = [
+  const actionsOfOwner = [
     'Set Platform Rule', 'Set Price Feed Registry', 'Transfer Ownership', 'Handover Center Key' 
   ]
 
@@ -40,9 +40,9 @@ export function ActionsOfOwner({ refresh}: ActionsOfOwnerProps) {
             id="typeOfAction-select"
             label="TypeOfAction"
             value={ typeOfAction }
-            onChange={(e) => setTypeOfAction(e.target.value)}
+            onChange={(e) => setTypeOfAction(e.target.value.toString())}
           >
-            {actionsOfUser.map((v, i) => (
+            {actionsOfOwner.map((v, i) => (
               <MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>
             ))}
           </Select>

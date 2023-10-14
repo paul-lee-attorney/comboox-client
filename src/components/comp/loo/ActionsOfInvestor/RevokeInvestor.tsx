@@ -5,8 +5,8 @@ import { PersonRemoveOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { useGeneralKeeperRevokeInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
 export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
@@ -14,6 +14,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
 
   const [ userNo, setUserNo ] = useState<string>(acct);
   const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: revokeInvestorLoading,
@@ -43,11 +44,17 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             variant='outlined'
             size="small"
             label='UserNo'
+            error={ valid['UserNo'].error }
+            helperText={ valid['UserNo'].helpTx }
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={ e => setUserNo(e.target.value ?? '0') }
+            onChange={ e => {
+              let input = e.target.value;
+              onlyNum('UserNo', input, MaxUserNo, setValid);
+              setUserNo(input); 
+            }}
             value={ userNo } 
           />
 
@@ -55,16 +62,22 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             variant='outlined'
             size="small"
             label='SeqOfListingRule'
+            error={ valid['SeqOfLR'].error }
+            helperText={ valid['SeqOfLR'].helpTx }
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={ e => setSeqOfLR(e.target.value ?? '0')}
+            onChange={ e => {
+              let input = e.target.value;
+              onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+              setSeqOfLR( input );
+            }}
             value={ seqOfLR } 
           />
 
           <Button 
-            disabled = { revokeInvestorLoading }
+            disabled = { revokeInvestorLoading || hasError(valid)}
 
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 

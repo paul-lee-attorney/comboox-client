@@ -3,8 +3,10 @@ import { keccak256, toHex } from "viem";
 import { HexType } from ".";
 import { waitForTransaction } from "@wagmi/core";
 import { Dispatch, SetStateAction } from "react";
+import { error } from "console";
 
-export function toPercent(num: number): string {
+export function toPercent(strNum: string): string {
+  let num = Number(strNum);
   let percent = num == 0 ? '-' : Number(num / 100).toFixed(2) + '%';
   return percent;
 }
@@ -20,7 +22,8 @@ export function toBasePoint(percent: string): number {
   return basePoint;
 }
 
-export function dateParser(timestamp: number): string {
+export function dateParser(timestampStr: string): string {
+  let timestamp = Number(timestampStr);
   return timestamp == 0 ? '-' : dayjs.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
 }
 
@@ -195,4 +198,84 @@ export async function refreshAfterTx(hash: HexType, refresh:()=>void ) {
   console.log("Receipt: ", res);
   refresh();
 } 
+
+export interface Result {
+  error: boolean;
+  helpTx: string;
+}
+
+export interface FormResults {
+  [id: string]: Result;
+}
+
+export const defResult: Result = {
+  error: false,
+  helpTx: '',
+}
+
+export const defFormResults:FormResults = {
+  '': defResult, 
+}
+
+export function onlyNum(id: string, input: string, max: bigint, setValid:Dispatch<SetStateAction<FormResults>>) {
+  let reg = /^(0|[1-9][0-9]*)$/;
+  let error: boolean = !reg.test(input);
+  let overflow: boolean = error
+                        ? false
+                        : max == 0n
+                          ? true
+                          : BigInt(input) > max;
+
+  let result:Result = {
+    error: error || overflow,
+    helpTx: error 
+          ? 'Only Number'
+          : overflow
+            ? 'Over Flow'
+            : '',
+  }
+
+  setValid( v => {
+    let out = {...v};
+    out[id] = result;
+    return out;
+  });
+}
+
+export function onlyHex(id: string, input: string, len: number, setValid:Dispatch<SetStateAction<FormResults>>){
+  let reg = /^((0x|\$)[a-f0-9A-F]+)$/;
+  let error: boolean = !reg.test(input);
+  let overflow: boolean = error
+                        ? false
+                        : len == 0
+                          ? true
+                          : input.substring(0,2) == '0x'
+                              ? input.length != (len + 2)
+                              : input.length != len;
+
+  let result:Result = {
+    error: error || overflow,
+    helpTx: error 
+          ? 'Only Hex'
+          : overflow
+            ? 'Incorrect Length'
+            : '', 
+  };
+
+  setValid( v => {
+    let out = {...v};
+    out[id] = result;
+    return out;
+  });
+}
+
+export function hasError(valid: FormResults): boolean {
+
+  for (let key in valid) {
+    if (valid[key].error) return true;    
+  }  
+  
+  return false;
+}
+
 

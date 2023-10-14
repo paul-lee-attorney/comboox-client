@@ -63,7 +63,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     {
       field: 'lastUpdate',
       headerName: 'LastUpdate',
-      valueGetter: (p) => dateParser(p.row.clip.timestamp),
+      valueGetter: (p) => dateParser(p.row.clip.timestamp.toString()),
       width: 168,
       headerAlign: 'center',
       align: 'center',

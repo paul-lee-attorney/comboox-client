@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Bytes32Zero, HexType } from "../../../../scripts/common";
+import { Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 
 import { 
   useGeneralKeeperCreateActionOfGm, 
@@ -8,7 +8,7 @@ import {
 
 import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 
@@ -16,12 +16,14 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
-  const [ seqOfVr, setSeqOfVr ] = useState<number>();
-  const [ executor, setExecutor ] = useState<number>();
+  const [ seqOfVr, setSeqOfVr ] = useState<string>();
+  const [ executor, setExecutor ] = useState<string>();
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
 
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: proposeActionLoading,
@@ -100,11 +102,17 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant='outlined'
             label='SeqOfVR'
             size="small"
+            error={ valid['SeqOfVR'].error }
+            helperText={ valid['SeqOfVR'].helpTx }
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={(e) => setSeqOfVr(parseInt(e.target.value))}
+            onChange={(e) => {
+              let input = e.target.value;
+              onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+              setSeqOfVr(input);
+            }}
             value={ seqOfVr }
           />
 
@@ -112,11 +120,17 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant='outlined'
             label='Executor'
             size="small"
+            error={ valid['Executor'].error }
+            helperText={ valid['Executor'].helpTx }
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={(e) => setExecutor(parseInt(e.target.value))}
+            onChange={(e) => {
+              let input = e.target.value;
+              onlyNum('Executor', input, MaxUserNo, setValid);
+              setExecutor(input);
+            }}
             value={ executor }
           />
 
@@ -124,16 +138,22 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant='outlined'
             label='DocHash / CID in IPFS'
             size="small"
+            error={ valid['DocHash'].error }
+            helperText={ valid['DocHash'].helpTx }
             sx={{
               m:1,
               minWidth: 630,
             }}
-            onChange={(e) => setDesHash(HexParser( e.target.value ))}
+            onChange={(e) => {
+              let input = HexParser( e.target.value );
+              onlyHex('DocHash', input, 64, setValid);
+              setDesHash(input);
+            }}
             value={ desHash }
           />
 
           <Button
-            disabled={ !proposeAction || proposeActionLoading }
+            disabled={ !proposeAction || proposeActionLoading || hasError(valid)}
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:218 }}
@@ -157,16 +177,22 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               variant='outlined'
               label='Address'
               size="small"
+              error={ valid['Address'].error }
+              helperText={ valid['Address'].helpTx }
               sx={{
                 m:1,
                 minWidth: 450,
               }}
-              onChange={(e) => setActions(a => {
-                let arr:Action[] = [];
-                arr = [...a];
-                a[i].target = HexParser( e.target.value );
-                return arr;
-              })}
+              onChange={(e) => {
+                let input = HexParser( e.target.value );
+                onlyHex('Address', input, 40, setValid);
+                setActions(a => {
+                  let arr:Action[] = [];
+                  arr = [...a];
+                  a[i].target = input;
+                  return arr;
+                });
+              }}
               value={ actions[i].target }
             />
 
@@ -174,16 +200,22 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               variant='outlined'
               label='Value'
               size="small"
+              error={ valid['Value'].error }
+              helperText={ valid['Value'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setActions(a => {
-                let arr:Action[] = [];
-                arr = [...a];
-                arr[i].value = e.target.value;
-                return arr;
-              })}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('Value', input, 0n, setValid);
+                setActions(a => {
+                  let arr:Action[] = [];
+                  arr = [...a];
+                  arr[i].value = input;
+                  return arr;
+                });
+              }}
               value={ actions[i].value }
             />
 
@@ -191,16 +223,22 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               variant='outlined'
               label='Params'
               size="small"
+              error={ valid['Params'].error }
+              helperText={ valid['Params'].helpTx }
               sx={{
                 m:1,
                 minWidth: 630,
               }}
-              onChange={(e) => setActions(a => {
-                let arr:Action[] = [];
-                arr = [...a];
-                arr[i].params = HexParser( e.target.value );
-                return arr;
-              })}
+              onChange={(e) => {
+                let input = HexParser( e.target.value );
+                onlyHex('Params', input, 0, setValid);
+                setActions(a => {
+                  let arr:Action[] = [];
+                  arr = [...a];
+                  arr[i].params = input;
+                  return arr;
+                })
+              }}
               value={ actions[i].params }
             />
 

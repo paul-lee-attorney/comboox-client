@@ -5,16 +5,17 @@ import {
   useRegCenterHandoverCenterKey,
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { BorderColor, } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
 export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 
-  const [ newKeeper, setNewKeeper ] = useState<HexType>();
+  const [ newKeeper, setNewKeeper ] = useState<HexType>(AddrZero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: handoverCenterKeyLoading,
@@ -30,22 +31,29 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Stack direction='row' sx={{alignItems:'stretch', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
 
         <TextField 
           size="small"
           variant='outlined'
           label='NewKeeper'
+          error={ valid['NewKeeper']?.error }
+          helperText={ valid['NewKeeper']?.helpTx }
           sx={{
             m:1,
+            mb:3,
             minWidth: 456,
           }}
           value={ newKeeper }
-          onChange={e => setNewKeeper( HexParser( e.target.value ))}
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('NewKeeper', input, 40, setValid);
+            setNewKeeper( input );
+          }}
         />
 
         <Button 
-          disabled={ handoverCenterKeyLoading } 
+          disabled={ handoverCenterKeyLoading || hasError(valid) } 
           onClick={() => {
             handoverCenterKey?.()
           }}

@@ -168,7 +168,7 @@ export function GeneralInfo() {
 
                     <td>
                       <TextField 
-                        value={ dateParser(compInfo?.regDate ?? 0) } 
+                        value={ dateParser(compInfo?.regDate.toString() ?? '0') } 
                         variant='outlined'
                         size='small' 
                         label="RegDate" 

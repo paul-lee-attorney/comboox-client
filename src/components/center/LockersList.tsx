@@ -34,7 +34,7 @@ const columns: GridColDef[] = [
   { 
     field: 'expireDate', 
     headerName: 'ExpireDate',
-    valueGetter: p => dateParser(p.row.head.expireDate),
+    valueGetter: p => dateParser(p.row.head.expireDate.toString()),
     headerAlign: 'center',
     align:'center',
     width: 180,

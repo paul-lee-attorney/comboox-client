@@ -6,8 +6,8 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../../../scripts/comp/loo";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
@@ -15,6 +15,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
 
   const [ fromHead, setFromHead ] = useState(false);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: placeSellOrderLoading,
@@ -23,7 +24,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     address: gk,
     args: [ BigInt(classOfShare),
             BigInt(order.execHours), 
-            order.paid, 
+            BigInt(order.paid), 
             BigInt(order.price), 
             BigInt(order.seqOfLR),
             fromHead, 
@@ -49,14 +50,20 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           size="small"
           label='ExecHours'
+          error={ valid['ExecHours'].error }
+          helperText={ valid['ExecHours'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            execHours: parseInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('ExecHours', input, MaxSeqNo, setValid);
+            setOrder( v => ({
+              ...v,
+              execHours: input,
+            }));
+          }}
 
           value={ order.execHours.toString() } 
         />
@@ -65,14 +72,20 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           size="small"
           label='SeqOfListingRule'
+          error={ valid['SeqOfLR'].error }
+          helperText={ valid['SeqOfLR'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            seqOfLR: parseInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+            setOrder( v => ({
+              ...v,
+              seqOfLR: input,
+            }));
+          }}
 
           value={ order.seqOfLR.toString() } 
         />
@@ -81,14 +94,20 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           size="small"
           label='Paid'
+          error={ valid['Paid'].error }
+          helperText={ valid['Paid'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            paid: BigInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('Paid', input, MaxData, setValid);
+            setOrder( v => ({
+              ...v,
+              paid: input,
+            }));
+          }}
 
           value={ order.paid.toString() } 
         />
@@ -97,14 +116,20 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           size="small"
           label='Price'
+          error={ valid['Price'].error }
+          helperText={ valid['Price'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            price: parseInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('Price', input, MaxPrice, setValid);
+            setOrder( v => ({
+              ...v,
+              price: input,
+            }));
+          }}
 
           value={ order.price.toString() } 
         />
@@ -128,7 +153,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         />
 
         <Button 
-          disabled = { placeSellOrderLoading }
+          disabled = { placeSellOrderLoading || hasError(valid)}
 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 

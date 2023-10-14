@@ -9,15 +9,17 @@ import {
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
 
   const { gk } = useComBooxContext();
 
-  const [ seqOfPos, setSeqOfPos ] = useState<number>();
-  const [ candidate, setCandidate ] = useState<number>();
+  const [ seqOfPos, setSeqOfPos ] = useState<string>();
+  const [ candidate, setCandidate ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: addOfficerLoading,
@@ -58,7 +60,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !addOfficer || addOfficerLoading }
+            disabled={ !addOfficer || addOfficerLoading || hasError(valid)}
             sx={{width:20, height:20, m:1}}
             onClick={()=>addOfficer?.()}
             color="primary"
@@ -72,22 +74,34 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
           variant='outlined'
           label='SeqOfPos'
           size="small"
+          error={ valid['SeqOfPos'].error }
+          helperText={ valid['SeqOfPos'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setSeqOfPos(parseInt(e.target.value))}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('SeqOfPos', input, MaxSeqNo, setValid);
+            setSeqOfPos(input);
+          }}
           value={ seqOfPos }
         />
 
         <TextField 
           variant='outlined'
           label='Candidate'
+          error={ valid['Candidate'].error }
+          helperText={ valid['Candidate'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setCandidate(parseInt(e.target.value))}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('Candidate', input, MaxUserNo, setValid);
+            setCandidate(input);
+          }}
           value={ candidate }
           size='small'
         />
@@ -99,7 +113,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !removeOfficer || removeOfficerLoading }
+            disabled={ !removeOfficer || removeOfficerLoading || hasError(valid) }
             sx={{width:20, height:20, m:1}}
             onClick={()=>removeOfficer?.()}
             color="primary"

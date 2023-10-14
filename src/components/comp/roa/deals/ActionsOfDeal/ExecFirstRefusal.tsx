@@ -18,7 +18,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
-import { HexParser, longSnParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { getSha } from "../../../../../scripts/comp/roc";
 
 export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
@@ -26,6 +26,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
   const { gk, boox } = useComBooxContext();
 
   const [ rules, setRules ] = useState<FirstRefusalRule[]>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   useEffect(()=>{
     if (boox) {
@@ -120,21 +121,26 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
               variant='outlined'
               label='SigHash'
               size="small"
+              error={ valid['SigHash'].error }
+              helperText={ valid['SigHash'].helpTx }
               sx={{
                 m:1,
                 minWidth: 685,
               }}
-              onChange={(e) => setSigHash(HexParser( e.target.value ))}
+              onChange={(e) => {
+                let input = HexParser(e.target.value);
+                onlyHex('SigHash', input, 64, setValid);
+                setSigHash( input );
+              }}
               value={ sigHash }
             />
-
 
           </Stack>
           
           <Divider orientation="vertical" flexItem />
 
           <Button 
-            disabled = {!execFirstRefusal || execFirstRefusalLoading }
+            disabled = {!execFirstRefusal || execFirstRefusalLoading || hasError(valid)}
 
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 

@@ -26,7 +26,7 @@ import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 
 export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
@@ -34,6 +34,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
   const { gk, boox } = useComBooxContext();
 
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   useEffect(()=>{
     if (boox) {
@@ -123,13 +124,19 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
             id="tfHashOfAction" 
             label="SigHash / CID in IPFS" 
             variant="outlined"
-            onChange={e => setSigHash(HexParser( e.target.value ))}
+            error={ valid['SigHash'].error }
+            helperText={ valid['SigHash'].helpTx }
+            onChange={e => {
+              let input = HexParser( e.target.value );
+              onlyHex('SigHash', input, 64, setValid); 
+              setSigHash(input);
+            }}
             value = { sigHash }
             size='small'
           />                                            
 
           <Button
-            disabled={ !castVote || castVoteLoading }
+            disabled={ !castVote || castVoteLoading || hasError(valid)}
             variant="contained"
             endIcon={<HowToVote />}
             sx={{ m:1, minWidth:128 }}

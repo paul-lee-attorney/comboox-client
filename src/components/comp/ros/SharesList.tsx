@@ -44,7 +44,7 @@ const columns: GridColDef[] = [
   { 
     field: 'issueDate', 
     headerName: 'IssueDate',
-    valueGetter: p => dateParser(p.row.head.issueDate),
+    valueGetter: p => dateParser(p.row.head.issueDate.toString()),
     headerAlign: 'center',
     align:'center',
     width: 180,

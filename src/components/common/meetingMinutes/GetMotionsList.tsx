@@ -50,7 +50,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
     {
       field: 'createDate',
       headerName: 'CreateDate',
-      valueGetter: p => dateParser( p.row.head.createDate ),
+      valueGetter: p => dateParser( p.row.head.createDate.toString() ),
       width: 180,
       headerAlign: 'center',
       align: 'center',
@@ -69,7 +69,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
       field: 'proposeDate',
       headerName: 'ProposeDate',
       valueGetter: p => p.row.body.proposeDate > 0
-          ? dateParser(p.row.body.proposeDate)
+          ? dateParser(p.row.body.proposeDate.toString())
           : '-',
       width: 180,
       headerAlign: 'center',
@@ -79,7 +79,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
       field: 'voteStartDate',
       headerName: 'VoteStartDate',
       valueGetter: p => p.row.body.voteStartDate > 0
-          ? dateParser(p.row.body.voteStartDate)
+          ? dateParser(p.row.body.voteStartDate.toString())
           : '-',
       width: 180,
       headerAlign: 'center',
@@ -89,7 +89,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
       field: 'voteEndDate',
       headerName: 'VoteEndDate',
       valueGetter: p => p.row.body.voteEndDate > 0
-          ? dateParser(p.row.body.voteEndDate)
+          ? dateParser(p.row.body.voteEndDate.toString())
           : '-',
       width: 180,
       headerAlign: 'center',

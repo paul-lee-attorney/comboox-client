@@ -4,11 +4,14 @@ import { useGeneralKeeperRegKeeper } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { RegBookProps } from "./RegBook";
 import { titleOfKeepers } from "../../../../scripts/comp/gk";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../scripts/common";
+import { useState } from "react";
 
 export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   
   const updateResults = ()=>{
     setOpen(false);
@@ -55,16 +58,22 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
             variant='outlined'
             label='Keeper'
             size="small"
+            error={ valid['Keeper'].error }
+            helperText={ valid['Keeper'].helpTx }
             sx={{
               m:1,
               minWidth: 480,
             }}
             value={ book }
-            onChange={(e)=>setBook(HexParser( e.target.value ))}
+            onChange={(e)=>{
+              let input = HexParser( e.target.value );
+              onlyHex('Keeper', input, 40, setValid);
+              setBook(input);
+            }}
           />
 
           <Button 
-            disabled = {regKeeperLoading }
+            disabled = {regKeeperLoading || hasError(valid)}
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<Create />}

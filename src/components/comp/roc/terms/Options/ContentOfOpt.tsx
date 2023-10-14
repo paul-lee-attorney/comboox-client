@@ -165,7 +165,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ dateParser(opt.head.issueDate ?? '0') }
+                  value={ dateParser(opt.head.issueDate.toString() ?? '0') }
                 />
 
                 <TextField 
@@ -177,7 +177,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ dateParser(opt.head.triggerDate ?? '0') }
+                  value={ dateParser(opt.head.triggerDate.toString() ?? '0') }
                 />
 
                 <TextField 

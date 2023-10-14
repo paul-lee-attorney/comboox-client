@@ -5,13 +5,13 @@ import {
   useRegCenterLockConsideration,
 } from '../../../generated';
 
-import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, defaultHeadOfLocker } from '../../../scripts/center/rc';
+import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { LockPointsProps } from './LockPoints';
 import { CBP, defaultCBP } from './Mint';
 
@@ -61,13 +61,15 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
 
   const [ amt, setAmt ] = useState<CBP>(defaultCBP);
 
-  const [ head, setHead ] = useState<HeadOfLocker>(defaultHeadOfLocker);
+  const [ head, setHead ] = useState<StrHeadOfLocker>(defaultStrHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
   const [ counterLocker, setCounterLocker ] = useState<HexType>(AddrZero);
 
   const [ func, setFunc ] = useState<string>(funcNames[0]);
   const [ paras, setParas ] = useState<string[]>(calDefaultParas(hashLock, selectors[func].offSet));
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const refresh = ()=> {
     console.log('payloads: ', constructPayload(func, paras));
@@ -111,45 +113,62 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               size="small"
               variant='outlined'
               label='To'
+              error={ valid['To']?.error }
+              helperText={ valid['To']?.helpTx }              
               sx={{
                 m:1,
                 minWidth: 218,
               }}
               value={ head.to.toString() }
-              onChange={e => setHead(v =>({
-                ...v,
-                to: parseInt(e.target.value ?? '0'),
-              }))}
+              onChange={e => {
+                let input = e.target.value;
+                onlyNum('To', input, MaxUserNo, setValid);
+                setHead(v =>({
+                  ...v,
+                  to: input,
+                }));
+              }}
             />
 
             <TextField 
               size="small"
               variant='outlined'
               label='Amount (CBP)'
-              sx={{
+              error={ valid['Amount(CBP)']?.error }
+              helperText={ valid['Amount(CBP)']?.helpTx }                            sx={{
                 m:1,
                 minWidth: 218,
               }}
               value={ amt.cbp }
-              onChange={e => setAmt(v=>({
-                ...v,
-                cbp: (e.target.value ?? '0'),
-              }))}
+              onChange={e => {
+                let input = e.target.value ?? '0';
+                onlyNum('Amount(CBP)', input, 0n, setValid);
+                setAmt(v=>({
+                  ...v,
+                  cbp: input,
+                }))
+              }}
             />
 
             <TextField 
               size="small"
               variant='outlined'
               label='Amount (GLee)'
+              error={ valid['Amount(GLee)']?.error }
+              helperText={ valid['Amount(GLee)']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
               value={ amt.glee }
-              onChange={e => setAmt(v=>({
-                ...v,
-                glee: (e.target.value ?? '0'),
-              }))}
+              onChange={e => {
+                let input = e.target.value ?? '0';
+                onlyNum('Amount(GLee)', input, 0n, setValid);
+                setAmt(v=>({
+                  ...v,
+                  glee: input,
+                }));
+              }}
             />
 
             <DateTimeField
@@ -160,9 +179,9 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               }} 
               value={ dayjs.unix(head.expireDate) }
               onChange={(date) => setHead((v) => ({
-                ...v,
-                expireDate: date ? date.unix() : 0,
-              }))}
+                  ...v,
+                  expireDate: date ? date.unix() : 0,
+              }))}              
               format='YYYY-MM-DD HH:mm:ss'
               size='small'
             />
@@ -174,12 +193,18 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               size="small"
               variant='outlined'
               label='HashLock'
+              error={ valid['HashLock']?.error }
+              helperText={ valid['HashLock']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 685,
               }}
               value={ hashLock }
-              onChange={e => setHashLock( HexParser(e.target.value) )}
+              onChange={e => {
+                let input = HexParser(e.target.value);
+                onlyHex('HashLock', input, 64, setValid);
+                setHashLock(input);
+              }}
             />
           </Stack>
 
@@ -189,12 +214,18 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               size="small"
               variant='outlined'
               label='CounterLockerAddress'
+              error={ valid['CounterLockerAddress']?.error }
+              helperText={ valid['CounterLockerAddress']?.helpTx }              
               sx={{
                 m:1,
                 minWidth: 450,
               }}
               value={ counterLocker }
-              onChange={e => setCounterLocker( HexParser(e.target.value) )}
+              onChange={e => {
+                let input = HexParser(e.target.value);
+                onlyHex('CounterOfAddress', input, 40, setValid);
+                setCounterLocker(input);
+              }}
             />
 
             <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
@@ -223,11 +254,11 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 size="small"
                 variant='outlined'
                 label='HashLock'
+                inputProps={{readOnly: true}}
                 sx={{
                   m:1,
                   minWidth: 685,
                 }}
-                inputProps={{readOnly: true}}
                 value={ HexParser(hashLock) }
               />
             </Stack>            
@@ -240,34 +271,45 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 size="small"
                 variant='outlined'
                 label='InvestmentAgreement'
+                error={ valid['InvestmentAgreement']?.error }
+                helperText={ valid['InvestmentAgreement']?.helpTx }
                 sx={{
                   m:1,
                   minWidth: 450,
                 }}
                 value={ HexParser(paras[0].substring(24,64)) }
-                onChange={e => setParas(v => {
-                  let out = [...v];
-                  let ia = HexParser(e.target.value ?? '');
-                  out[0] = ia.substring(2).padStart(64, '0');
-                  return out;
-                })}
+                onChange={e => {
+                  let input = HexParser(e.target.value);
+                  onlyHex('InvestmentAgreement', input, 40, setValid);                  
+                  setParas(v => {
+                    let out = [...v];
+                    out[0] = input.substring(2).padStart(64, '0');
+                    return out;
+                  });
+                }}
               />
 
               <TextField 
                 size="small"
                 variant='outlined'
                 label='SeqOfDeal'
+                error={ valid['SeqOfDeal']?.error }
+                helperText={ valid['SeqOfDeal']?.helpTx }                
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
                 value={ parseInt(paras[1]?.substring(60,64) ?? '0x00',16).toString()  }
-                onChange={e => setParas(v => {
-                  let out = [...v];
-                  let seq = parseInt(e.target.value ?? '0').toString(16).padStart(64, '0');
-                  out[1] = seq;
-                  return out;
-                })}
+                onChange={e => {
+                  let input = e.target.value ?? '0';
+                  onlyNum('SeqOfDeal', input, MaxSeqNo, setValid);
+                  setParas(v => {
+                    let out = [...v];
+                    let seq = parseInt(input).toString(16).padStart(64, '0');
+                    out[1] = seq;
+                    return out;
+                  })
+                }}
               />
 
             </Stack>
@@ -286,17 +328,25 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                       ? 'SeqOfShare'
                       : 'SeqOfSwap'
                 }
+
+                error={ valid['SeqInfo']?.error }
+                helperText={ valid['SeqInfo']?.helpTx }                
+
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
                 value={ parseInt(paras[0]?.substring(0x38,0x40) ?? '0x00',0x10).toString() }
-                onChange={e => setParas(v => {
-                  let out = [...v];
-                  let seq = parseInt(e.target.value ?? '0').toString(16).padStart(0x40, '0');
-                  out[0] = seq;
-                  return out;
-                })}
+                onChange={e => {
+                  let input = e.target.value ?? '0';
+                  onlyNum('SeqInfo', input, MaxSeqNo, setValid);
+                  setParas(v => {
+                    let out = [...v];
+                    let seq = parseInt(input).toString(16).padStart(0x40, '0');
+                    out[0] = seq;
+                    return out;
+                  })
+                }}
               />
 
               {(func == 'releaseSwapOrder' || func == 'releasePledge') && (
@@ -304,17 +354,25 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   size="small"
                   variant='outlined'
                   label={func == 'releaseSwapOrder' ? 'SeqOfBrief' : 'SeqOfPledge'}
+
+                  error={ valid['SeqConsider']?.error }
+                  helperText={ valid['SeqConsider']?.helpTx }
+
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
                   value={ parseInt(paras[1]?.substring(0x3c,0x40) ?? '0x00',0x10).toString()  }
-                  onChange={e => setParas(v => {
-                    let out = [...v];
-                    let seq = parseInt(e.target.value ?? '0').toString(16).padStart(0x40, '0');
-                    out[1] = seq;
-                    return out;
-                  })}
+                  onChange={e => {
+                    let input = e.target.value ?? '0';
+                    onlyNum('SeqConsider', input, BigInt(2*16-1), setValid);
+                    setParas(v => {
+                      let out = [...v];
+                      let seq = parseInt(input).toString(16).padStart(0x40, '0');
+                      out[1] = seq;
+                      return out;
+                    });
+                  }}
                 />
               )}
 
@@ -326,7 +384,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
         <Divider orientation='vertical' sx={{ m:1 }} flexItem />
 
         <Button 
-          disabled={ !lockConsideration || lockConsiderationLoading } 
+          disabled={ !lockConsideration || lockConsiderationLoading || hasError(valid)} 
           onClick={() => {
             lockConsideration?.()
           }}

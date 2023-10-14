@@ -18,11 +18,68 @@ import {
   DialogActions,
 } from '@mui/material';
 import { AddRule } from './../AddRule';
-import { dateParser, longSnParser } from '../../../../../scripts/common/toolsKit';
+import { dateParser, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { HexType } from '../../../../../scripts/common';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
+
+// ==== Str Interface ====
+
+export interface StrPosAllocateRule {
+  seqOfRule: string ;
+  qtyOfSubRule: string ;
+  seqOfSubRule: string ;
+  removePos: boolean ;
+  seqOfPos: string ;
+  titleOfPos: string ;
+  nominator: string ;
+  titleOfNominator: string ;
+  seqOfVR: string ;
+  endDate: string;
+  para: string;
+  argu: string;
+  data: string; 
+}
+
+export function strPRCodifier(rule: StrPosAllocateRule): HexType {
+  let hexRule: HexType = `0x${
+    (Number(rule.seqOfRule).toString(16).padStart(4, '0')) +
+    (Number(rule.qtyOfSubRule).toString(16).padStart(2, '0')) +
+    (Number(rule.seqOfSubRule).toString(16).padStart(2, '0')) +
+    (rule.removePos ? '01' : '00' ) +
+    (Number(rule.seqOfPos).toString(16).padStart(4, '0')) +
+    (Number(rule.titleOfPos).toString(16).padStart(4, '0')) +
+    (Number(rule.nominator).toString(16).padStart(10, '0')) +
+    (Number(rule.titleOfNominator).toString(16).padStart(4, '0')) +                  
+    (Number(rule.seqOfVR).toString(16).padStart(4, '0')) +
+    (Number(rule.endDate).toString(16).padStart(12, '0')) +
+    '0'.padStart(16, '0')
+  }`;
+  return hexRule;
+} 
+
+export function strPRParser(hexRule: HexType): StrPosAllocateRule {
+  let rule: StrPosAllocateRule = {
+    seqOfRule: parseInt(hexRule.substring(2, 6), 16).toString(), 
+    qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16).toString(),
+    seqOfSubRule: parseInt(hexRule.substring(8, 10), 16).toString(),
+    removePos: hexRule.substring(10, 12) === '01',
+    seqOfPos: parseInt(hexRule.substring(12, 16), 16).toString(),
+    titleOfPos: parseInt(hexRule.substring(16, 20), 16).toString(),
+    nominator: parseInt(hexRule.substring(20, 30), 16).toString(),
+    titleOfNominator: parseInt(hexRule.substring(30, 34), 16).toString(),
+    seqOfVR: parseInt(hexRule.substring(34, 38), 16).toString(),
+    endDate: parseInt(hexRule.substring(38, 50), 16).toString(),
+    para: parseInt(hexRule.substring(50, 54), 16).toString(),
+    argu: parseInt(hexRule.substring(54, 58), 16).toString(),
+    data: parseInt(hexRule.substring(58, 66), 16).toString(),
+  };
+
+  return rule;
+}
+
+// ==== Num Interface ====
 
 export interface PosAllocateRule {
   seqOfRule: number ;
@@ -85,35 +142,52 @@ export function prParser(hexRule: HexType): PosAllocateRule {
 
 export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps ) {
 
-  const defaultRule: PosAllocateRule = {
-    seqOfRule: seq, 
-    qtyOfSubRule: seq - 255,
-    seqOfSubRule: seq - 255,
+  const strDefaultRule: StrPosAllocateRule = {
+    seqOfRule: seq.toString(), 
+    qtyOfSubRule: (seq - 255).toString(),
+    seqOfSubRule: (seq - 255).toString(),
     removePos: false,
-    seqOfPos: 0,
-    titleOfPos: 5,
-    nominator: 0,
-    titleOfNominator: 1,
-    seqOfVR: 9,
-    endDate: 0,
-    para: 0,
-    argu: 0,
-    data: 0,
+    seqOfPos: '0',
+    titleOfPos: '5',
+    nominator: '0',
+    titleOfNominator: '1',
+    seqOfVR: '9',
+    endDate: '0',
+    para: '0',
+    argu: '0',
+    data: '0',
   };
+
+  // const defaultRule: PosAllocateRule = {
+  //   seqOfRule: seq, 
+  //   qtyOfSubRule: seq - 255,
+  //   seqOfSubRule: seq - 255,
+  //   removePos: false,
+  //   seqOfPos: 0,
+  //   titleOfPos: 5,
+  //   nominator: 0,
+  //   titleOfNominator: 1,
+  //   seqOfVR: 9,
+  //   endDate: 0,
+  //   para: 0,
+  //   argu: 0,
+  //   data: 0,
+  // };
   
-  const [ objPR, setObjPR ] = useState<PosAllocateRule>(defaultRule); 
+  const [ objPR, setObjPR ] = useState<StrPosAllocateRule>(strDefaultRule); 
+  const [ valid, setValid ] = useState(true);
   const [ open, setOpen ] = useState(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjPR(prParser(res))
+      res => setObjPR(strPRParser(res))
     );
   }, [sha, seq, time]);  
 
   return (
     <>
       <Button
-        variant={objPR && objPR.seqOfPos > 0 ? 'contained' : 'outlined'}
+        variant={objPR && Number(objPR.seqOfPos) > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -143,14 +217,15 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
 
               <Box sx={{ minWidth:600 }} >
                 <Toolbar sx={{ textDecoration:'underline' }} >
-                  <h4>Rule No. { seq.toString() } - { titleOfPositions[objPR.titleOfPos - 1] } </h4>
+                  <h4>Rule No. { seq.toString() } - { titleOfPositions[Number(objPR.titleOfPos) - 1] } </h4>
                 </Toolbar>
               </Box>
 
               <AddRule 
                 sha={ sha } 
-                rule={ prCodifier(objPR) } 
+                rule={ strPRCodifier(objPR) } 
                 isFinalized={isFinalized}
+                valid={valid}
                 refresh={refresh}
                 setOpen={setOpen}
               />
@@ -161,78 +236,27 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
               spacing={1} 
             >
 
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                    
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='QtyOfSubRule'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objPR.qtyOfSubRule.toString() }
-                  />
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='RemovePos ?'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objPR.removePos ? 'True' : 'False'}
-                  />
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='QtyOfSubRule'
+                  error={ onlyNum(objPR.qtyOfSubRule, BigInt(2**8-1), setValid).error }
+                  helperText={ onlyNum(objPR.qtyOfSubRule, BigInt(2**8-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}                  
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjPR((v) => ({
+                    ...v,
+                    qtyOfSubRule: e.target.value,
+                  }))}
+                  value={ objPR.qtyOfSubRule }
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='SeqOfPosition'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objPR.seqOfPos.toString() }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfPos'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[objPR.titleOfPos - 1] ?? 'Director' }
-                  />
-
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='QtyOfSubRule'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjPR((v) => ({
-                      ...v,
-                      qtyOfSubRule: parseInt(e.target.value ?? '0'),
-                    }))}
-                    value={ objPR.qtyOfSubRule }              
-                  />
-
+                {!isFinalized && (
                   <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="removePos-label">RemovePos ?</InputLabel>
                     <Select
@@ -249,22 +273,41 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
                   </FormControl>
-
+                )}
+                  
+                {isFinalized && (
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='SeqOfPos'
+                    label='RemovePos ?'
+                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjPR((v) => ({
-                      ...v,
-                      seqOfPos: parseInt(e.target.value ?? '0'),
-                    }))}
-                    value={ objPR.seqOfPos }              
+                    value={objPR.removePos ? 'True' : 'False'}
                   />
+                )}
 
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='SeqOfPos'
+                  error={ onlyNum(objPR.seqOfPos, MaxSeqNo, setValid).error }
+                  helperText={ onlyNum(objPR.seqOfPos, MaxSeqNo, setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}           
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjPR((v) => ({
+                    ...v,
+                    seqOfPos: e.target.value,
+                  }))}
+                  value={ objPR.seqOfPos }              
+                />
+
+                {!isFinalized && (
                   <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
                     <Select
@@ -274,7 +317,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       value={ objPR.titleOfPos }
                       onChange={(e) => setObjPR((v) => ({
                         ...v,
-                        titleOfPos: parseInt(e.target.value.toString()),
+                        titleOfPos: e.target.value,
                       }))}
                     >
                       { titleOfPositions.map( (v, i) => (
@@ -283,82 +326,44 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
 
                     </Select>
                   </FormControl>
-
-                </Stack>
-              )}
-
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
+                )}
+                {isFinalized && (
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='Nominator'
+                    label='TitleOfPos'
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ longSnParser(objPR.nominator.toString())}
+                    value={ titleOfPositions[Number(objPR.titleOfPos) - 1] ?? 'Director' }
                   />
+                )}
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfNominator'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[objPR.titleOfNominator - 1] ?? 'Shareholder'}
-                  />
+              </Stack>
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='SeqOfVR'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objPR.seqOfVR.toString()}
-                  />
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='EndDate'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ dateParser(objPR.endDate) }
-                  />
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Nominator'
+                  error={ onlyNum(objPR.nominator, BigInt(2**40-1), setValid).error }
+                  helperText={ onlyNum(objPR.nominator, BigInt(2**40-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}           
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjPR((v) => ({
+                    ...v,
+                    nominator: e.target.value,
+                  }))}
+                  value={ isFinalized ? longSnParser(objPR.nominator) : objPR.nominator }                                        
+                />
 
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Nominator'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjPR((v) => ({
-                      ...v,
-                      nominator: parseInt(e.target.value ?? '0'),
-                    }))}
-                    value={ objPR.nominator }                                        
-                  />
-
+                {!isFinalized && (
                   <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
                     <Select
@@ -368,7 +373,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       value={ !objPR ? '1' : objPR.titleOfNominator }
                       onChange={(e) => setObjPR((v) => ({
                         ...v,
-                        titleOfNominator: parseInt(e.target.value.toString()),
+                        titleOfNominator: e.target.value,
                       }))}
                     >
                       { titleOfPositions.map( (v, i) => (
@@ -377,39 +382,70 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
 
                     </Select>
                   </FormControl>
-
+                )}
+                {isFinalized && (
                   <TextField 
                     variant='outlined'
                     size='small'
-                    label='seqOfVR'
+                    label='TitleOfNominator'
+                    inputProps={{readOnly: true}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjPR((v) => ({
-                      ...v,
-                      seqOfVR: parseInt(e.target.value ?? '0'),
-                    }))}
-                    value={ objPR.seqOfVR.toString() }                                        
+                    value={ titleOfPositions[Number(objPR.titleOfNominator) - 1] ?? 'Shareholder'}
                   />
+                )}
 
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='seqOfVR'
+                  error={ onlyNum(objPR.seqOfVR, MaxSeqNo, setValid).error }
+                  helperText={ onlyNum(objPR.seqOfVR, MaxSeqNo, setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}           
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjPR((v) => ({
+                    ...v,
+                    seqOfVR: e.target.value,
+                  }))}
+                  value={ objPR.seqOfVR }                                        
+                />
+                {!isFinalized && (
                   <DateTimeField
                     label='EndDate'
                     size='small'
+                    readOnly={isFinalized}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }} 
-                    value={ dayjs.unix(objPR.endDate) }
+                    value={ dayjs.unix(Number(objPR.endDate)) }
                     onChange={(date) => setObjPR((v) => ({
                       ...v,
-                      endDate: date ? date.unix() : 0,
+                      endDate: date ? date.unix().toString() : '0',
                     }))}
                     format='YYYY-MM-DD HH:mm:ss'
                   />
+                )}
+                {isFinalized && (
+                  <TextField 
+                    variant='outlined'
+                    label='EndDate'
+                    inputProps={{readOnly: true}}
+                    size='small'
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    value={ dateParser(objPR.endDate.toString()) }
+                  />                  
+                )}
 
-                </Stack>
-              )}
+              </Stack>
 
             </Stack>
           </Paper>

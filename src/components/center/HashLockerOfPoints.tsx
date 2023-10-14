@@ -79,7 +79,7 @@ export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, 
                     id="tfExpireDate" 
                     label="ExpireDate" 
                     variant="outlined"
-                    value = { dateParser(locker.head.expireDate) }
+                    value = { dateParser(locker.head.expireDate.toString()) }
                     size='small'
                   />
                 </td>                            

@@ -108,7 +108,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     id="tfCreateDate" 
                     label="CreateDate" 
                     variant="outlined"
-                    value = { dateParser(pld.head.createDate) }
+                    value = { dateParser(pld.head.createDate.toString()) }
                     size='small'
                   />
                 </td>
@@ -120,7 +120,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     id="tfTriggerDate" 
                     label="TriggerDate" 
                     variant="outlined"
-                    value = { dateParser(pld.head.createDate + pld.head.daysToMaturity * 86400) }
+                    value = { dateParser((pld.head.createDate + pld.head.daysToMaturity * 86400).toString()) }
                     size='small'
                   />                  
                 </td>
@@ -132,7 +132,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     id="tfExpireDate" 
                     label="ExpireDate" 
                     variant="outlined"
-                    value = { dateParser(pld.head.createDate + (pld.head.daysToMaturity + pld.head.guaranteeDays) * 86400) }
+                    value = { dateParser((pld.head.createDate + (pld.head.daysToMaturity + pld.head.guaranteeDays) * 86400).toString()) }
                     size='small'
                   />                  
                 </td>

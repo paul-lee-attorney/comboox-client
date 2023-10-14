@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 
-import { FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
+import { FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
 import { BorderColor } from '@mui/icons-material';
 
 import { 
@@ -14,7 +14,7 @@ import {
 import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 import { getDocAddr } from '../../scripts/center/rc';
 import { useState } from 'react';
-import { HexParser } from '../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex } from '../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 
 export function CreateComp() {
@@ -22,6 +22,7 @@ export function CreateComp() {
   const router = useRouter();
 
   const [ dk, setDK ] = useState<HexType>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: createCompLoading, 
@@ -50,18 +51,20 @@ export function CreateComp() {
     <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
       <FormControl size='small' sx={{ m: 1, width: 488 }} variant="outlined">
-        <InputLabel size='small' htmlFor="setGC-input">PrimeKey Of Secretary</InputLabel>
+        <InputLabel size='small' htmlFor="setBookeeper-input" >PrimeKey Of Secretary</InputLabel>
         <OutlinedInput
           size='small'
-          id="setGC-input"
+          id="setBookeeper-input"
+          aria-describedby='setBookeeper-input-helper-text'
           label='PrimeKey Of Secretary'
+          error={ valid['Bookeeper']?.error }
           sx={{ height:40 }}
           endAdornment={
             <InputAdornment position="end">
               <Tooltip title={"Register My Company"} placement='right' arrow >
                 <span>
                   <IconButton
-                    disabled={ createCompLoading || dk == undefined || dk == '0x' }
+                    disabled={ createCompLoading || dk == undefined || dk == '0x' || hasError(valid) }
                     color='primary'
                     onClick={ ()=>createComp?.() }
                     edge="end"
@@ -72,9 +75,16 @@ export function CreateComp() {
               </Tooltip>
             </InputAdornment>
           }
-          onChange={(e) => setDK( HexParser(e.target.value) )}
+          onChange={(e) => {
+            let input = HexParser(e.target.value);
+            onlyHex('Bookeeper', input, 40, setValid);
+            setDK(input);
+          }}
           value={ dk }
         />
+        <FormHelperText id='setBookeeper-input-helper-text'>
+          { valid['Bookeeper']?.helpTx }
+        </FormHelperText>
       </FormControl>
 
     </Stack> 

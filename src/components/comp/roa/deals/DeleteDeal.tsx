@@ -9,7 +9,7 @@ import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 interface DeleteDealProps {
   addr: HexType;
-  seqOfDeal: number;
+  seqOfDeal: string;
   setOpen: Dispatch<SetStateAction<boolean>>;
   setDeal: Dispatch<SetStateAction<Deal>>;
   refresh: ()=>void;

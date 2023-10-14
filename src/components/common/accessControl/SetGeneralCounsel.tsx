@@ -10,6 +10,7 @@ import {
   InputAdornment,
   FormControl,
   OutlinedInput,
+  FormHelperText,
 } from '@mui/material';
 
 import { Approval, Close }  from '@mui/icons-material';
@@ -20,12 +21,14 @@ import {
 
 import { HexType } from '../../../scripts/common';
 import { ATTORNEYS, getGeneralCounsel } from '../../../scripts/common/accessControl';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
 
 export function SetGeneralCounsel({ addr }: AccessControlProps) {
 
   const [ newGC, setNewGC ] = useState<HexType>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const [ open, setOpen ] = useState(false);
   const [ time, setTime ] = useState(0);
 
@@ -73,7 +76,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ setGeneralCounselLoading || gc == undefined || gc == '0x' }
+                  disabled={ setGeneralCounselLoading || gc == undefined || gc == '0x' || hasError(valid)}
                   color='primary'
                   onClick={ handleClick }
                   edge="end"
@@ -84,9 +87,18 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
             }
             label='SetGeneralCounsel'
             sx={{height: 55}}
-            onChange={(e) => setGC( HexParser(e.target.value) )}
+            aria-describedby='setAcct-Help-Tx'
+            error={ valid['AcctAddr']?.error }
+            onChange={(e) => {
+              let input = HexParser(e.target.value);
+              onlyHex('AcctAddr', input, 40, setValid);
+              setGC(input);
+            }}
             value={ gc }
           />
+        <FormHelperText id='setAcct-Help-Tx'>
+          { valid['AcctAddr']?.helpTx }
+        </FormHelperText>                  
         </FormControl>
 
         <Collapse in={open} sx={{ width:"50%" }} >        

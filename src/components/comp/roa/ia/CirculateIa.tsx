@@ -4,7 +4,7 @@ import { Bytes32Zero, HexType, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { FileHistoryProps } from "../../roc/sha/Actions/CirculateSha";
 
 export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
@@ -13,6 +13,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
 
   const [ docUrl, setDocUrl ] = useState<HexType>(Bytes32Zero);
   const [ docHash, setDocHash ] = useState<HexType>(Bytes32Zero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const refresh = ()=>{
     setNextStep(2);
@@ -41,7 +42,13 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocUrl" 
           label="DocUrl / CID in IPFS" 
           variant="outlined"
-          onChange={e => setDocUrl(HexParser( e.target.value ))}
+          error={ valid['DocUrl'].error }
+          helperText={ valid['DocUrl'].helpTx }
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('DocUrl', input, 64, setValid);
+            setDocUrl(input);
+          }}
           value = { docUrl }
           size='small'
         />                                            
@@ -51,7 +58,12 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocHash" 
           label="DocHash" 
           variant="outlined"
-          onChange={e => setDocHash(HexParser( e.target.value ))}
+          error={ valid['DocHash'].error }
+          helperText={ valid['DocHash'].helpTx }
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            setDocHash(input);
+          }}
           value = { docHash }
           size='small'
         />                                            
@@ -61,7 +73,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
       <Divider orientation="vertical" sx={{ m:1 }} flexItem />
 
       <Button
-        disabled={ isLoading }
+        disabled={ isLoading || hasError(valid)}
         variant="contained"
         endIcon={<Recycling />}
         sx={{ m:1, minWidth:218 }}

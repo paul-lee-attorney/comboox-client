@@ -94,7 +94,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'createDate',
       headerName: 'CreateDate',
-      valueGetter: p => dateParser(parseInt(`0x${p.row.sn.substring(44, 56)}`)),
+      valueGetter: p => dateParser(parseInt(`0x${p.row.sn.substring(44, 56)}`).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -102,7 +102,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'circulateDate',
       headerName: 'CirculateDate',
-      valueGetter: p => dateParser(p.row.head.circulateDate),
+      valueGetter: p => dateParser(p.row.head.circulateDate.toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -110,7 +110,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'closingDeadline',
       headerName: 'ClosingDeadline',
-      valueGetter: p => dateParser(p.row.head.circulateDate + (p.row.head.closingDays * 86400)),
+      valueGetter: p => dateParser((p.row.head.circulateDate + (p.row.head.closingDays * 86400)).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',

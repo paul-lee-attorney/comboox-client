@@ -3,10 +3,10 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import {  BorderColor } from "@mui/icons-material";
 import { useState } from "react";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { useGeneralKeeperRegInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
-import { Bytes32Zero, HexType } from "../../../../scripts/common";
+import { Bytes32Zero, HexType, MaxUserNo } from "../../../../scripts/common";
 
 
 export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
@@ -14,6 +14,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
   const [ idHash, setIdHash ] = useState<HexType>(Bytes32Zero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: regInvestorLoading,
@@ -44,11 +45,17 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           variant='outlined'
           size="small"
           label='GroupRep'
+          error={ valid['GroupRep'].error }
+          helperText={ valid['GroupRep'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setGroupRep(e.target.value ?? '0') }
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('GroupRep', input, MaxUserNo, setValid);
+            setGroupRep(input); 
+          }}
           value={ groupRep } 
         />
 
@@ -56,17 +63,22 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           variant='outlined'
           label='IdentityInfoHash'
           size="small"
+          error={ valid['IDHash'].error }
+          helperText={ valid['IDHash'].helpTx }
           sx={{
             m:1,
             minWidth: 685,
           }}
           value={ idHash }
-          onChange={(e)=>setIdHash(HexParser( e.target.value ))}
+          onChange={(e)=>{
+            let input = HexParser( e.target.value );
+            onlyHex('IDHash', input, 64, setValid);
+            setIdHash(input);
+          }}
         />
 
         <Button 
-          disabled = { regInvestorLoading }
-
+          disabled = { regInvestorLoading || hasError(valid)}
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<BorderColor />}

@@ -5,17 +5,17 @@ import { useGeneralKeeperExecTagAlong } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { Bytes32Zero, HexType } from "../../../../../scripts/common";
-import { HexParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export interface TargetShare {
-  seqOfShare: number;
+  seqOfShare: string;
   paid: string;
   par: string;
 }
 
 export const defaultTargetShare: TargetShare = {
-  seqOfShare: 0,
+  seqOfShare: '0',
   paid: '0',
   par: '0',
 }
@@ -25,6 +25,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     setDeal(defaultDeal);
@@ -67,29 +68,41 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 variant='outlined'
                 size="small"
                 label='SeqOfTargetShare'
+                error={ valid['SeqOfTarget'].error }
+                helperText={ valid['SeqOfTarget'].helpTx }
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={ e => setTargetShare(v => ({
-                  ...v,
-                  seqOfShare: parseInt(e.target.value ?? '0'),
-                }))}
-                value={ targetShare.seqOfShare.toString() } 
+                onChange={ e => {
+                  let input = e.target.value;
+                  onlyNum('SeqOfTarget', input, MaxPrice, setValid);
+                  setTargetShare(v => ({
+                    ...v,
+                    seqOfShare: input,
+                  }));
+                }}
+                value={ targetShare.seqOfShare } 
               />
 
               <TextField 
                 variant='outlined'
                 size="small"
                 label='Paid (Cent)'
+                error={ valid['Paid'].error }
+                helperText={ valid['Paid'].helpTx }
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={ e => setTargetShare(v => ({
-                  ...v,
-                  paid: (e.target.value ?? '0'),
-                }))}
+                onChange={ e => {
+                  let input = e.target.value;
+                  onlyNum('Paid', input, MaxData, setValid);
+                  setTargetShare(v => ({
+                    ...v,
+                    paid: input,
+                  }));
+                }}
                 value={ targetShare.paid } 
               />
 
@@ -97,14 +110,20 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 variant='outlined'
                 size="small"
                 label='Par (Cent)'
+                error={ valid['Par'].error }
+                helperText={ valid['Par'].helpTx }                
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={ e => setTargetShare(v => ({
-                  ...v,
-                  par: (e.target.value ?? '0'),
-                }))}
+                onChange={ e => {
+                  let input = e.target.value;
+                  onlyNum('Par', input, MaxData, setValid);
+                  setTargetShare(v => ({
+                    ...v,
+                    par: input,
+                  }));
+                }}
                 value={ targetShare.par } 
               />
 
@@ -114,12 +133,18 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 variant='outlined'
                 label='SigHash'
                 size="small"
+                error={ valid['SigHash'].error }
+                helperText={ valid['SigHash'].helpTx }                
                 sx={{
                   m:1,
                   minWidth: 685,
                 }}
                 value={ sigHash }
-                onChange={(e)=>setSigHash(HexParser( e.target.value ))}
+                onChange={(e)=>{
+                  let input = HexParser( e.target.value );
+                  onlyHex('SigHash', input, 64, setValid);
+                  setSigHash(input);
+                }}
               />
             </Stack>
 
@@ -128,8 +153,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
           <Divider orientation="vertical" flexItem />
 
           <Button 
-            disabled = { execTagAlongLoading }
-
+            disabled = { execTagAlongLoading || hasError(valid)}
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<SurfingOutlined />}

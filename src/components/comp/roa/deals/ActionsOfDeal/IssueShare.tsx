@@ -37,23 +37,19 @@ export function IssueShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDe
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Issue Share</h4>
-        </Toolbar> */}
-
         <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
-        <Button 
-          disabled = { issueNewShareLoading }
+          <Button 
+            disabled = { issueNewShareLoading }
 
-          sx={{ m: 1, minWidth: 218, height: 40 }} 
-          variant="contained" 
-          endIcon={<RocketLaunch />}
-          onClick={()=> issueNewShare?.()}
-          size='small'
-        >
-          Issue
-        </Button>
+            sx={{ m: 1, minWidth: 218, height: 40 }} 
+            variant="contained" 
+            endIcon={<RocketLaunch />}
+            onClick={()=> issueNewShare?.()}
+            size='small'
+          >
+            Issue
+          </Button>
 
         </Stack>
 

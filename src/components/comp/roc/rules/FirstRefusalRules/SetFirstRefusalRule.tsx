@@ -16,11 +16,66 @@ import {
   DialogActions,
 } from '@mui/material';
 import { AddRule } from '../AddRule'
-import { HexType } from '../../../../../scripts/common';
+import { HexType, MaxUserNo } from '../../../../../scripts/common';
 import { ListAlt } from '@mui/icons-material';
-import { longSnParser } from '../../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
+
+export interface StrFirstRefusalRule {
+  seqOfRule: string;
+  qtyOfSubRule: string;
+  seqOfSubRule: string;
+  typeOfDeal: string;
+  membersEqual: boolean;
+  proRata: boolean;
+  basedOnPar: boolean;
+  rightholders: string[];
+  para: string;
+  argu: string;
+}
+
+export function strFRCodifier(rule: StrFirstRefusalRule): HexType {
+  let hexFR: HexType = `0x${
+    (Number(rule.seqOfRule).toString(16).padStart(4, '0')) +
+    (Number(rule.qtyOfSubRule).toString(16).padStart(2, '0')) +
+    (Number(rule.seqOfSubRule).toString(16).padStart(2, '0')) +
+    (Number(rule.typeOfDeal).toString(16).padStart(2, '0')) +
+    (rule.membersEqual ? '01' : '00') +
+    (rule.proRata ? '01' : '00') +
+    (rule.basedOnPar ? '01' : '00') +
+    (Number(rule.rightholders[0]).toString(16).padStart(10, '0')) +
+    (Number(rule.rightholders[1]).toString(16).padStart(10, '0')) +
+    (Number(rule.rightholders[2]).toString(16).padStart(10, '0')) +
+    (Number(rule.rightholders[3]).toString(16).padStart(10, '0')) +
+    (Number(rule.para).toString(16).padStart(4, '0')) +
+    (Number(rule.argu).toString(16).padStart(4, '0'))
+  }`;
+
+  return hexFR;
+}
+
+export function strFRParser(hexRule: HexType ): StrFirstRefusalRule {
+  let rule: StrFirstRefusalRule = {
+    seqOfRule: parseInt(hexRule.substring(2, 6), 16).toString(), 
+    qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16).toString(),
+    seqOfSubRule: parseInt(hexRule.substring(8, 10), 16).toString(),
+    typeOfDeal: parseInt(hexRule.substring(10, 12), 16).toString(),
+    membersEqual: hexRule.substring(12, 14) === '01',
+    proRata: hexRule.substring(14, 16) === '01',
+    basedOnPar: hexRule.substring(16, 18) === '01',
+    rightholders: [
+      parseInt(hexRule.substring(18, 28), 16).toString(),
+      parseInt(hexRule.substring(28, 38), 16).toString(),
+      parseInt(hexRule.substring(38, 48), 16).toString(),
+      parseInt(hexRule.substring(48, 58), 16).toString(),
+    ],
+    para: parseInt(hexRule.substring(58, 62), 16).toString(),
+    argu: parseInt(hexRule.substring(62, 66), 16).toString(),
+  }; 
+  
+  return rule;
+} 
 
 export interface FirstRefusalRule {
   seqOfRule: number;
@@ -34,11 +89,6 @@ export interface FirstRefusalRule {
   para: number;
   argu: number;
 }
-
-// export interface FirstRefusalRuleWrap {
-//   subTitle: string;
-//   rule: FirstRefusalRule;
-// }
 
 export function frCodifier(rule: FirstRefusalRule): HexType {
   let hexFR: HexType = `0x${
@@ -82,44 +132,51 @@ export function frParser(hexRule: HexType ): FirstRefusalRule {
   return rule;
 } 
 
-// const subTitles: string[] = [
-//   '- For Capital Increase ',
-//   '- For External Transfer ',
-//   '- Newly Added First Refusal Rule', 
-// ]
-
-export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
+export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 
+  'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
 export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
-  const defFR: FirstRefusalRule = 
-      { seqOfRule: seq, 
-        qtyOfSubRule: seq - 511, 
-        seqOfSubRule: seq - 511,
-        typeOfDeal: 2,
-        membersEqual: true,
-        proRata: true,
-        basedOnPar: false,
-        rightholders: [0,0,0,0],
-        para: 0,
-        argu: 0,
-      };
+  const strDefFR: StrFirstRefusalRule = { 
+    seqOfRule: seq.toString(), 
+    qtyOfSubRule: (seq - 511).toString(), 
+    seqOfSubRule: (seq - 511).toString(),
+    typeOfDeal: '2',
+    membersEqual: true,
+    proRata: true,
+    basedOnPar: false,
+    rightholders: ['0','0','0','0'],
+    para: '0',
+    argu: '0',
+  };
 
-  // let subTitle: string = (seq < 514) ? subTitles[seq - 512] : subTitles[2]; 
+  const defFR: FirstRefusalRule = { 
+    seqOfRule: seq, 
+    qtyOfSubRule: seq - 511, 
+    seqOfSubRule: seq - 511,
+    typeOfDeal: 2,
+    membersEqual: true,
+    proRata: true,
+    basedOnPar: false,
+    rightholders: [0,0,0,0],
+    para: 0,
+    argu: 0,
+  };
 
-  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(defFR); 
+  const [ objFR, setObjFR ] = useState<StrFirstRefusalRule>(strDefFR); 
   const [ open, setOpen ] = useState(false);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjFR(frParser(res))
+      res => setObjFR(strFRParser(res))
     );
   }, [sha, seq, time]);
 
   return (
     <>
       <Button
-        variant={ objFR && objFR.seqOfRule > 0 ? "contained" : "outlined" }
+        variant={ objFR && Number(objFR.seqOfRule) > 0 ? "contained" : "outlined" }
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -149,14 +206,15 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
             <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
               <Box sx={{ minWidth:600 }} >
                 <Toolbar sx={{ textDecoration:'underline' }} >
-                  <h4>Rule No. {seq} - FirstRefusalRight for { typesOfDeal[objFR.typeOfDeal -1] }  </h4>
+                  <h4>Rule No. {seq} - FirstRefusalRight for { typesOfDeal[Number(objFR.typeOfDeal) -1] }  </h4>
                 </Toolbar>
               </Box>
 
               <AddRule 
                 sha={ sha }
-                rule={ frCodifier(objFR) }
+                rule={ strFRCodifier(objFR) }
                 isFinalized={isFinalized}
+                valid={valid}
                 refresh={refresh}
                 setOpen={setOpen}
               />
@@ -178,7 +236,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ typesOfDeal[objFR.typeOfDeal -1] }
+                    value={ typesOfDeal[Number(objFR.typeOfDeal) -1] }
                   />
 
                   <TextField 
@@ -229,10 +287,10 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                       labelId="typeOfDeal-label"
                       id="typeOfDeal-select"
                       label="TypeOfDeal"
-                      value={ objFR.typeOfDeal - 1 }
+                      value={ Number(objFR.typeOfDeal) - 1 }
                       onChange={(e) => setObjFR((v) => ({
                         ...v,
-                        typeOfDeal: parseInt( e.target.value.toString() ),
+                        typeOfDeal: e.target.value.toString(),
                       }))}
                     >
                       {typesOfDeal.map((v,i) => (
@@ -297,129 +355,101 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                 </Stack>
               )}
 
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_1'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objFR.rightholders[0].toString()) }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_2'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objFR.rightholders[1].toString()) }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_3'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objFR.rightholders[2].toString()) }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_4'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objFR.rightholders[3].toString()) }
-                  />
-
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_1'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => {
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Rightholder_1'
+                  error={ valid['Rightholder_1']?.error }
+                  helperText={ valid['Rightholder_1']?.helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Rightholder_1', input, MaxUserNo, setValid);
+                    setObjFR((v) => {
                       let holders = [...v.rightholders];
-                      holders[0] = parseInt(e.target.value);
+                      holders[0] = input;
                       return {...v, rightholders: holders};
-                    })}
-                    value={ objFR.rightholders[0] }
-                  />
+                    });
+                  }}
+                  value={ isFinalized ? longSnParser(objFR.rightholders[0]) : objFR.rightholders[0] }
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_2'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => {
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Rightholder_2'
+                  error={ valid['Rightholder_2']?.error }
+                  helperText={ valid['Rightholder_2']?.helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Rightholder_2', input, MaxUserNo, setValid);
+                    setObjFR((v) => {
                       let holders = [...v.rightholders];
-                      holders[1] = parseInt(e.target.value);
+                      holders[1] = input;
                       return {...v, rightholders: holders};
-                    })}
-                    value={ objFR.rightholders[1] }
-                  />
+                    });
+                  }}
+                  value={ isFinalized ? longSnParser(objFR.rightholders[1]) : objFR.rightholders[1] }
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_3'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => {
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Rightholder_3'
+                  error={ valid['Rightholder_3']?.error }
+                  helperText={ valid['Rightholder_3']?.helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Rightholder_3', input, MaxUserNo, setValid);
+                    setObjFR((v) => {
                       let holders = [...v.rightholders];
-                      holders[2] = parseInt(e.target.value);
+                      holders[2] = input;
                       return {...v, rightholders: holders};
-                    })}
-                    value={ objFR.rightholders[2] }
-                  />
+                    });
+                  }}
+                  value={ isFinalized ? longSnParser(objFR.rightholders[2]) : objFR.rightholders[2] }
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Rightholder_4'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjFR((v) => {
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Rightholder_4'
+                  error={ valid['Rightholder_4']?.error }
+                  helperText={ valid['Rightholder_4']?.helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Rightholder_4', input, MaxUserNo, setValid);
+                    setObjFR((v) => {
                       let holders = [...v.rightholders];
-                      holders[3] = parseInt(e.target.value);
+                      holders[3] = input;
                       return {...v, rightholders: holders};
-                    })}
-                    value={ objFR.rightholders[3] }
-                  />
+                    });
+                  }}
+                  value={ isFinalized ? longSnParser(objFR.rightholders[3]) : objFR.rightholders[3] }
+                />
 
-                </Stack>
-              )}
+              </Stack>
 
             </Stack>
 

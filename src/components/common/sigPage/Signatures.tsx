@@ -17,7 +17,7 @@ import {
 } from "@mui/material";
 
 import { 
-  HexType,
+  HexType, MaxSeqNo, MaxUserNo,
 } from "../../../scripts/common";
 
 import {
@@ -40,7 +40,7 @@ import {
 
 
 import { ParasOfSigPage, StrSig, getBuyers, getParasOfPage, getSellers, parseParasOfPage } from "../../../scripts/common/sigPage";
-import { dateParser, longSnParser, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, dateParser, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
@@ -85,6 +85,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
   }
 
   const [ timing, setTiming ] = useState<TimingProps>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: setTimingLoading,
@@ -197,10 +198,17 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                     ml: 11.2,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setTiming((v) => ({
-                    ...v,
-                    signingDays: e.target.value,
-                  }))}
+                  error={ valid['SigningDays'].error }
+                  helperText={ valid['SigningDays'].helpTx }
+
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('SigningDays', input, MaxSeqNo, setValid);
+                    setTiming((v) => ({
+                      ...v,
+                      signingDays: input,
+                    }))
+                  }}
                   value={ timing?.signingDays }              
                 />
 
@@ -208,19 +216,26 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                   variant='outlined'
                       size='small'
                   label='ClosingDays'
+                  error={ valid['ClosingDays'].error }
+                  helperText={ valid['ClosingDays'].helpTx }
+
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setTiming((v) => ({
-                    ...v,
-                    closingDays: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('ClosingDays', input, MaxSeqNo, setValid);
+                    setTiming((v) => ({
+                      ...v,
+                      closingDays: input,
+                    }))
+                  }}
                   value={ timing?.closingDays }                                      
                 />
 
                 <Button
-                  disabled={ setTimingLoading }
+                  disabled={ setTimingLoading || hasError(valid) }
                   variant="contained"
                   sx={{
                     height: 40,
@@ -250,7 +265,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dateParser(parasOfPage.circulateDate) }
+                    value={ dateParser(parasOfPage.circulateDate.toString()) }
                   />
 
                   <TextField 
@@ -341,7 +356,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
               >
                 <span>
                 <IconButton 
-                  disabled={ addBlankIsLoading }
+                  disabled={ addBlankIsLoading || hasError(valid)}
                   sx={{width: 20, height: 20, m: 1 }} 
                   onClick={ () => addBlank?.() }
                   color="primary"
@@ -369,11 +384,18 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                 variant='outlined'
                 size='small'
                 label='UserNo.'
+                error={ valid['UserNo'].error }
+                helperText={ valid['UserNo'].helpTx }
+
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                onChange={(e) => setAcct(e.target.value)}
+                onChange={(e) => {
+                  let input = e.target.value;
+                  onlyNum('UserNo', input, MaxUserNo, setValid);
+                  setAcct(input);
+                }}
                 value={ acct }                                      
               />
 
@@ -384,7 +406,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
               >           
                 <span>
                 <IconButton
-                  disabled={ removeBlankIsLoading } 
+                  disabled={ removeBlankIsLoading || hasError(valid)} 
                   sx={{width: 20, height: 20, m: 1, mr:2 }} 
                   onClick={ () => removeBlank?.() }
                   color="primary"
@@ -439,7 +461,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dateParser(v.sigDate) }
+                    value={ dateParser(v.sigDate.toString()) }
                   />
 
                   <TextField 
@@ -508,7 +530,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={ dateParser(v.sigDate) }
+                    value={ dateParser(v.sigDate.toString()) }
                   />
 
                   <TextField 

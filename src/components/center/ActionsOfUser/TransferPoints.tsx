@@ -9,7 +9,7 @@ import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
-import { HexParser, getEthPart, getGEthPart, getGWeiPart } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, onlyHex, onlyNum } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';
 
@@ -23,6 +23,8 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
 
   const [ to, setTo ] = useState<HexType>();
   const [ amt, setAmt ] = useState<CBP>(defaultCBP);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
@@ -70,46 +72,64 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           size="small"
           variant='outlined'
           label='To (Addr)'
+          error={ valid['To(Addr)']?.error }
+          helperText={ valid['To(Addr)']?.helpTx }                                  
           sx={{
             m:1,
             minWidth: 550,
           }}
           value={ to }
-          onChange={e => setTo( HexParser(e.target.value ?? '0'))}
+          onChange={e => {
+            let input = HexParser(e.target.value ?? '0');
+            onlyHex('To(Addr)', input, 40, setValid);
+            setTo(input);
+          }}
         />
 
         <TextField 
           size="small"
           variant='outlined'
           label='Amount (CBP)' 
+          error={ valid['Amt(CBP)']?.error }
+          helperText={ valid['Amt(CBP)']?.helpTx }                                  
           sx={{
             m:1,
             minWidth: 218,
           }}
           value={ amt.cbp }
-          onChange={e => setAmt(v => ({
-            ...v,
-            cbp: (e.target.value ?? '0')
-          }))}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('Amt(CBP)', input, 0n, setValid);
+            setAmt(v => ({
+              ...v,
+              cbp: input,
+            }))
+          }}
         />
 
         <TextField 
           size="small"
           variant='outlined'
           label='Amount (GLee)' 
+          error={ valid['Amt(GLee)']?.error }
+          helperText={ valid['Amt(GLee)']?.helpTx }                                  
           sx={{
             m:1,
             minWidth: 218,
           }}
           value={ amt.glee }
-          onChange={e => setAmt(v => ({
-            ...v,
-            glee: (e.target.value ?? '0')
-          }))}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('Amt(GLee)', input, 0n, setValid);
+            setAmt(v => ({
+              ...v,
+              glee: input,
+            }));
+        }}
         />
 
         <Button 
-          disabled={ transferPointsLoading } 
+          disabled={ transferPointsLoading || hasError(valid) } 
           onClick={() => {
             transferPoints?.()
           }}

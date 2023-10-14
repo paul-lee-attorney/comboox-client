@@ -37,11 +37,7 @@ export function TransferShare({ addr, deal, setOpen, setDeal, refresh}: ActionsO
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Transfer Share</h4>
-        </Toolbar> */}
-
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+      <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
         <Button 
           disabled = { transferTargetShareLoading || deal.body.state > 2}
@@ -55,7 +51,7 @@ export function TransferShare({ addr, deal, setOpen, setDeal, refresh}: ActionsO
           Transfer
         </Button>
 
-        </Stack>
+      </Stack>
 
     </Paper>
 

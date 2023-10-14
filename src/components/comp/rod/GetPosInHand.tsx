@@ -45,7 +45,7 @@ export function GetPosInHand({ list }:GetPosInHandProps) {
       field: 'startDate',
       headerName: 'StartDate',
       valueGetter: p => p.row.startDate > 0
-        ? dateParser(p.row.startDate)
+        ? dateParser(p.row.startDate.toString())
         : '-',
       width: 218,
       headerAlign: 'center',
@@ -55,7 +55,7 @@ export function GetPosInHand({ list }:GetPosInHandProps) {
       field: 'endDate',
       headerName: 'EndDate',
       valueGetter: p => p.row.endDate > 0
-          ? dateParser(p.row.endDate)
+          ? dateParser(p.row.endDate.toString())
           : '-',
       width: 218,
       headerAlign: 'center',

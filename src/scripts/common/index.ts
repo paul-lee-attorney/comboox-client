@@ -1,4 +1,5 @@
-import Smart from "./contracts-address.json";
+// import Smart from "./contracts-address.json";
+import Smart from "../../../../comboox/server/src/contracts/contracts-address.json";
 
 export const AddrOfRegCenter:HexType = `0x${Smart.RegCenter.substring(2)}`;
 
@@ -10,6 +11,12 @@ export const SeqZero:string = '0'.padEnd(4,'0');
 export const AcctZero:string = '0'.padEnd(10,'0');
 export const DateZero:string = '0'.padEnd(12,'0');
 export const DataZero:string = '0'.padEnd(16,'0');
+
+export const MaxUserNo: bigint = 2n**40n-1n;
+export const MaxSeqNo: bigint = 2n**16n-1n;
+export const MaxPrice: bigint = 2n**32n-1n;
+export const MaxData: bigint = 2n**64n-1n;
+export const MaxRatio: bigint = 10000n;
 
 export type HexType = `0x${string}`;
 

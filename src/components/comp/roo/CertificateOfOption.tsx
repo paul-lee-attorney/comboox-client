@@ -125,7 +125,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfIssueDate" 
                   label="IssueDate" 
                   variant="outlined"
-                  value = { dateParser(optWrap.opt.head.issueDate) }
+                  value = { dateParser(optWrap.opt.head.issueDate.toString()) }
                   size='small'
                 />
               </td>
@@ -137,7 +137,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfTriggerDate" 
                   label="TriggerDate" 
                   variant="outlined"
-                  value = { dateParser(optWrap.opt.head.triggerDate) }
+                  value = { dateParser(optWrap.opt.head.triggerDate.toString()) }
                   size='small'
                 />                  
               </td>
@@ -149,7 +149,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfExecDeadline" 
                   label="ExecDeadline" 
                   variant="outlined"
-                  value = { dateParser(optWrap.opt.head.triggerDate + optWrap.opt.head.execDays * 86400) }
+                  value = { dateParser((optWrap.opt.head.triggerDate + optWrap.opt.head.execDays * 86400).toString()) }
                   size='small'
                 />                  
               </td>
@@ -161,7 +161,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfClosingDeadline" 
                   label="ClosingDeadline" 
                   variant="outlined"
-                  value = { dateParser(optWrap.opt.body.closingDeadline) }
+                  value = { dateParser(optWrap.opt.body.closingDeadline.toString()) }
                   size='small'
                 />
               </td>

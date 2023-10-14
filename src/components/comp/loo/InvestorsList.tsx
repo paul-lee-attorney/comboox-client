@@ -38,7 +38,7 @@ export function InvestorsList({list, setAcct}:OrdersListProps) {
     { 
       field: 'regDate', 
       headerName: 'RegDate',
-      valueGetter: p => dateParser(p.row.regDate),
+      valueGetter: p => dateParser(p.row.regDate.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -54,7 +54,7 @@ export function InvestorsList({list, setAcct}:OrdersListProps) {
     { 
       field: 'approveDate', 
       headerName: 'ApproveDate',
-      valueGetter: p => dateParser(p.row.approveDate),
+      valueGetter: p => dateParser(p.row.approveDate.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,

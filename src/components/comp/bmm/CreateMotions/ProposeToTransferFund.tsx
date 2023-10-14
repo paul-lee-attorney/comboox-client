@@ -6,20 +6,22 @@ import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { ParasOfTransfer, defaultParasOfTransfer } from "../../gmm/CreateMotions/ProposeToTransferFund";
-import { HexType } from "../../../../scripts/common";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 
 export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
-  const [ seqOfVR, setSeqOfVR ] = useState<number>(11);
-  const [ executor, setExecutor ] = useState<number>(0);
+  const [ seqOfVR, setSeqOfVR ] = useState<string>('11');
+  const [ executor, setExecutor ] = useState<string>('0');
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: proposeToTransferFundLoading,
@@ -30,7 +32,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         true, 
         paras.to, 
         paras.isCBP, 
-        paras.amt, 
+        BigInt(paras.amt), 
         BigInt(paras.expireDate), 
         BigInt(seqOfVR), 
         BigInt(executor)
@@ -55,14 +57,19 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               variant='outlined'
               label='SeqOfVR'
               size="small"
+              error={ valid['SeqOfVR'].error }
+              helperText={ valid['SeqOfVR'].helpTx }
               sx={{
                 m:1,
                 width: 101,
               }}
-              onChange={(e) => setSeqOfVR(parseInt(e.target.value ?? '0'))}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+                setSeqOfVR(input);
+              }}
               value={ seqOfVR }
             />
-
 
             <FormControl variant="outlined" size="small" sx={{ m: 1, width: 101 }}>
               <InputLabel id="symbolOfToken-label">Token</InputLabel>
@@ -85,14 +92,20 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               variant='outlined'
               label='To'
               size="small"
+              error={ valid['To'].error }
+              helperText={ valid['To'].helpTx }              
               sx={{
                 m:1,
                 minWidth: 452,
               }}
-              onChange={(e) => setParas( v => ({
-                ...v,
-                to: HexParser( e.target.value ?? '0x00'),
-              }))}
+              onChange={(e) => {
+                let input = HexParser( e.target.value ?? '0x00');
+                onlyHex('To', input, 40, setValid);
+                setParas( v => ({
+                  ...v,
+                  to: input,
+                }));
+              }}
 
               value={ paras.to }
             />
@@ -105,15 +118,21 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               variant='outlined'
               label='Amount'
               size="small"
+              error={ valid['Amount'].error }
+              helperText={ valid['Amount'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setParas(v => ({
-                ...v,
-                amt: BigInt(e.target.value ?? '0'),
-              }))}
-              value={ paras.amt.toString() }
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('Amount', input, 0n, setValid);
+                setParas(v => ({
+                  ...v,
+                  amt: input,
+                }));
+              }}
+              value={ paras.amt }
             />
 
             <DateTimeField
@@ -131,16 +150,21 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               format='YYYY-MM-DD HH:mm:ss'
             />
 
-
             <TextField 
               variant='outlined'
               label='Executor'
               size="small"
+              error={ valid['Executor'].error }
+              helperText={ valid['Executor'].helpTx }    
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setExecutor(parseInt(e.target.value ?? '0'))}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('Executor', input, MaxUserNo, setValid);
+                setExecutor(input);
+              }}
               value={ executor }
             />
 
@@ -152,7 +176,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
 
         <Button
-          disabled={ proposeToTransferFundLoading }
+          disabled={ proposeToTransferFundLoading || hasError(valid)}
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:128 }}

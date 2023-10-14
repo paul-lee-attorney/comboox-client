@@ -4,7 +4,6 @@ import { longDataParser, longSnParser } from "../../../../scripts/common/toolsKi
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { Swap } from "../../../../scripts/comp/roo";
-import { ActionsOfDealProps } from "./ActionsOfDeal";
 import { ListAltOutlined } from "@mui/icons-material";
 import { Deal, getAllSwaps, statesOfSwap } from "../../../../scripts/comp/ia";
 import { HexType } from "../../../../scripts/common";

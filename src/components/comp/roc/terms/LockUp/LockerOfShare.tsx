@@ -37,7 +37,7 @@ export function LockerOfShare({ seqOfShare, dueDate, keyholders }: LockerOfShare
             m:1,
             minWidth: 218,
           }}
-          value={ dateParser(dueDate) }
+          value={ dateParser(dueDate.toString()) }
         />
 
         <TextField 

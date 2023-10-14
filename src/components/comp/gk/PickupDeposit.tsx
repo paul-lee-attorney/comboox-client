@@ -15,8 +15,6 @@ export function PickupDeposit({ refresh }:PickupDepositProps) {
   
   const { gk } = useComBooxContext();
 
-
-
   const {
     isLoading: pickupDepositLoading,
     write: pickupDeposit,

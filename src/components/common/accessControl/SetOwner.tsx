@@ -10,6 +10,7 @@ import {
   InputAdornment,
   FormControl,
   OutlinedInput,
+  FormHelperText,
 } from '@mui/material';
 
 import { Approval, Close }  from '@mui/icons-material';
@@ -20,7 +21,7 @@ import {
 
 import { HexType } from '../../../scripts/common';
 import { getOwner } from '../../../scripts/common/accessControl';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 export interface AccessControlProps{
   addr: HexType;
@@ -28,8 +29,9 @@ export interface AccessControlProps{
 
 export function SetOwner({ addr }: AccessControlProps) {
   const [owner, setOwner] = useState<HexType>();
-  const [ time, setTime ] = useState(0);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ time, setTime ] = useState(0);
   const refresh = ()=>{
     setTime(Date.now());
   }
@@ -71,7 +73,7 @@ export function SetOwner({ addr }: AccessControlProps) {
             <InputAdornment position="end">
               <IconButton
                 color="primary"
-                disabled={ owner == undefined || owner == '0x' || setOwnrLoading }
+                disabled={ owner == undefined || owner == '0x' || setOwnrLoading || hasError(valid) }
                 onClick={ handleClick }
                 edge="end"
               >
@@ -81,9 +83,18 @@ export function SetOwner({ addr }: AccessControlProps) {
           }
           label='SetOwner'
           sx={{ height:55 }}
-          onChange={(e) => setOwner( HexParser(e.target.value) )}
+          aria-describedby='setAcct-Help-Tx'
+          error={ valid['AcctAddr']?.error }
+          onChange={(e) => {
+            let input = HexParser(e.target.value);
+            onlyHex('AcctAddr', input, 40, setValid);
+            setOwner(input);
+          }}
           value={ owner }
         />
+        <FormHelperText id='setAcct-Help-Tx'>
+          { valid['AcctAddr']?.helpTx }
+        </FormHelperText>                          
       </FormControl>
 
       <Collapse in={open} sx={{ width:'50%' }}>        

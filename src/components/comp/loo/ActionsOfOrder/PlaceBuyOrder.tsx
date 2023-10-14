@@ -1,4 +1,4 @@
-import { Alert, Button, Collapse, Divider, IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
+import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import {  Close, HelpOutline, ShoppingCartOutlined } from "@mui/icons-material";
@@ -6,9 +6,9 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceBuyOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { longDataParser, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, longDataParser, onlyNum, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
-import { HexType } from "../../../../scripts/common";
+import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
 
 export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const { gk } = useComBooxContext();
@@ -16,13 +16,15 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
   const [ value, setValue ] = useState<string>('0');
 
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const {
     isLoading: placeBuyOrderLoading,
     write:placeBuyOrder,
   } = useGeneralKeeperPlaceBuyOrder({
     address: gk,
     args: [ BigInt(classOfShare),
-            order.paid, 
+            BigInt(order.paid), 
             BigInt(order.price)
            ],
     value: BigInt(value) * BigInt(10 ** 9),
@@ -59,14 +61,20 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           size="small"
           label='Paid (Cent)'
+          error={ valid['Paid'].error }
+          helperText={ valid['Paid'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            paid: BigInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('Paid', input, MaxData, setValid);
+            setOrder( v => ({
+              ...v,
+              paid: input,
+            }));
+          }}
 
           value={ order.paid.toString() } 
         />
@@ -75,14 +83,20 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           size="small"
           label='Price (Cent)'
+          error={ valid['Price'].error }
+          helperText={ valid['Price'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOrder( v => ({
-            ...v,
-            price: parseInt( e.target.value ?? '0' ),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('Price', input, MaxPrice, setValid);
+            setOrder( v => ({
+              ...v,
+              price: input,
+            }));
+          }}
 
           value={ order.price.toString() } 
         />
@@ -91,16 +105,22 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           variant='outlined'
           label='Consideration (GWei)'
           size="small"
+          error={ valid['Consideration'].error }
+          helperText={ valid['Consideration'].helpTx }
           sx={{
             m:1,
             minWidth: 456,
           }}
           value={ value }
-          onChange={(e)=>setValue(  removeKiloSymbol(e.target.value) ?? '0')}
+          onChange={(e)=>{
+            let input = removeKiloSymbol(e.target.value);
+            onlyNum('Consideration', input, 0n, setValid);
+            setValue(input);
+          }}
         />
 
         <Button 
-          disabled = { placeBuyOrderLoading }
+          disabled = { placeBuyOrderLoading || hasError(valid) }
 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 

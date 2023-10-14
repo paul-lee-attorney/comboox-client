@@ -1,14 +1,8 @@
-import { useEffect, useState } from "react";
-import { AddrZero, HexType } from "../../scripts/common";
+import { useState } from "react";
+import { AddrOfRegCenter, AddrZero, HexType } from "../../scripts/common";
 import { 
   Rule, 
   defaultRule, 
-  getBookeeper,
-  getOwner, 
-  getPlatformRule,
-  getCounterOfUsers,
-  getTotalSupply,
-  getFeedRegistryAddress
 } from "../../scripts/center/rc";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField } from "@mui/material";
@@ -17,17 +11,12 @@ import { getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, toPer
 import { ActionsOfOwner } from "./ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
 import { useWalletClient } from "wagmi";
+import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetFeedRegistryAddress, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../generated";
 
 
 export function CenterInfo() {
   
   const { data:signer } = useWalletClient();
-
-  const [ time, setTime ] = useState<number>(0);
-
-  const refresh = ()=>{
-    setTime(Date.now());
-  }
 
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
@@ -36,33 +25,68 @@ export function CenterInfo() {
   const [ totalSupply, setTotalSupply ] = useState<string>('0');
   const [ feedReg, setFeedReg ] = useState<HexType>(AddrZero);
 
-  useEffect(()=>{
+  const {
+    refetch: getOwner
+  } = useRegCenterGetOwner({
+    address: AddrOfRegCenter,
+    onSuccess(data) {
+      setOwner(data);
+    }
+  })
 
-    getOwner().then(
-      res => setOwner(res)
-    );
-      
-    getBookeeper().then(
-      res => setKeeper(res)
-    );
+  const {
+    refetch: getBookeeper
+  } = useRegCenterGetBookeeper({
+    address: AddrOfRegCenter,
+    onSuccess(data) {
+      setKeeper(data);
+    }
+  })
 
-    getPlatformRule().then(
-      res => setPlatformRule(res)
-    );
+  const {
+    refetch: getPlatformRule
+  } = useRegCenterGetPlatformRule({
+    address: AddrOfRegCenter,
+    onSuccess(data) {
+      setPlatformRule(data);
+    }
+  })
 
-    getCounterOfUsers().then(
-      res => setCounterOfUsers(res)
-    );
+  const {
+    refetch: getCounterOfUsers
+  } = useRegCenterCounterOfUsers({
+    address: AddrOfRegCenter,
+    onSuccess(data) {
+      setCounterOfUsers(data);
+    }
+  })
 
-    getTotalSupply().then(
-      res => setTotalSupply(res.toString())
-    );
+  const {
+    refetch: getTotalSupply
+  } = useRegCenterTotalSupply({
+    address: AddrOfRegCenter,
+    onSuccess(data) {
+      setTotalSupply(data.toString());
+    }
+  })
 
-    getFeedRegistryAddress().then(
-      res => setFeedReg(res)
-    );
+  const {
+    refetch: getFeedReg
+  } = useRegCenterGetFeedRegistryAddress({
+    address: AddrOfRegCenter,
+    onSuccess(data) {
+      setFeedReg(data);
+    }
+  })
 
-  }, [time]);
+  const refresh = ()=>{
+    getOwner();
+    getBookeeper();
+    getPlatformRule();
+    getCounterOfUsers();
+    getTotalSupply();
+    getFeedReg();
+  }
 
   const [ open, setOpen ] = useState(false);
 
@@ -240,7 +264,7 @@ export function CenterInfo() {
                         m:1,
                         minWidth:218,
                       }}
-                      value={ toPercent(2000 - (platformRule.rate ?? 0)) }
+                      value={ toPercent((2000 - (platformRule.rate ?? 0)).toString()) }
                     />
                   </td>
 

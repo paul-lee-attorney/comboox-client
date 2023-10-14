@@ -68,7 +68,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ dateParser(rule.triggerDate) }              
+                  value={ dateParser(rule.triggerDate.toString()) }              
                 />
                 
                 <TextField 
@@ -92,7 +92,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ toPercent(rule.shareRatioThreshold) }              
+                  value={ toPercent(rule.shareRatioThreshold.toString()) }              
                 />
 
                 <TextField 

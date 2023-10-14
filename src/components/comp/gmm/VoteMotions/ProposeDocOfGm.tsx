@@ -1,11 +1,11 @@
 
 import { Button, Stack, TextField } from "@mui/material";
 import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
-import { HexType, } from "../../../../scripts/common";
+import { HexType, MaxUserNo, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { useState } from "react";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 interface ProposeDocOfGmProps {
   addr: HexType,
@@ -17,6 +17,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
 
   const { gk } = useComBooxContext();
   const [ executor, setExecutor ] = useState<string>('0');
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     setNextStep(4);
@@ -44,16 +45,22 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
         variant='outlined'
         label='Executor'
         size="small"
+        error={ valid['Executor'].error }
+        helperText={ valid['Executor'].helpTx }
         sx={{
           m:1,
           minWidth: 218,
         }}
-        onChange={(e)=>setExecutor(e.target.value ?? '0')}
+        onChange={(e)=>{
+          let input = e.target.value;
+          onlyNum('Executor', input, MaxUserNo, setValid);
+          setExecutor(input);
+        }}
         value={ executor }
       />
 
       <Button
-        disabled={!write || isLoading}
+        disabled={!write || isLoading || hasError(valid)}
         variant="contained"
         endIcon={<EmojiPeople />}
         sx={{ m:1, minWidth:218, }}

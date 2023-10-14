@@ -85,7 +85,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfCirculateDate" 
                     label="CirculateDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate) }
+                    value = { dateParser(file.head.circulateDate.toString()) }
                     size='small'
                   />
                 </td>
@@ -100,7 +100,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfSigningDeadline" 
                     label="SigningDeadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + file.head.signingDays * 86400) }
+                    value = { dateParser((file.head.circulateDate + file.head.signingDays * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -112,7 +112,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfFrExecDeadline" 
                     label="FirstRefusal Claim Deadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.frExecDays) * 86400) }
+                    value = { dateParser((file.head.circulateDate + (file.head.signingDays + file.head.frExecDays) * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -124,8 +124,8 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfDtExecDeadline" 
                     label="Drag/Tag Deadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.frExecDays 
-                      + file.head.dtExecDays) * 86400) }
+                    value = { dateParser((file.head.circulateDate + (file.head.signingDays + file.head.frExecDays 
+                      + file.head.dtExecDays) * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -137,8 +137,8 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfDtConfirmDeadline" 
                     label="FR/DT Confirm Deadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + (file.head.signingDays + file.head.frExecDays 
-                      + file.head.dtExecDays + file.head.dtConfirmDays) * 86400) }
+                    value = { dateParser((file.head.circulateDate + (file.head.signingDays + file.head.frExecDays 
+                      + file.head.dtExecDays + file.head.dtConfirmDays) * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -153,7 +153,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfProposeDate" 
                     label="ProposeDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate) }
+                    value = { dateParser(file.head.proposeDate.toString()) }
                     size='small'
                   />
                 </td>
@@ -165,7 +165,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfShareRegDate" 
                     label="ShareRegDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + file.head.invExitDays * 86400) }
+                    value = { dateParser((file.head.proposeDate + file.head.invExitDays * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -177,7 +177,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfVoteStartDate" 
                     label="VoteStartDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays) * 86400) }
+                    value = { dateParser((file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays) * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -189,7 +189,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfVoteEndDate" 
                     label="VoteEndDate" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays + file.head.votingDays) * 86400) }
+                    value = { dateParser((file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays + file.head.votingDays) * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -219,7 +219,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfPutOptionDeadline" 
                     label="PutOptionDeadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays + file.head.votingDays + file.head.execDaysForPutOpt) * 86400) }
+                    value = { dateParser((file.head.proposeDate + (file.head.invExitDays + file.head.votePrepareDays + file.head.votingDays + file.head.execDaysForPutOpt) * 86400).toString()) }
                     size='small'
                   />
                 </td>
@@ -231,7 +231,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
                     id="tfClosingDeadline" 
                     label="ClosingDeadline" 
                     variant="outlined"
-                    value = { dateParser(file.head.circulateDate + file.head.closingDays * 86400) }
+                    value = { dateParser((file.head.circulateDate + file.head.closingDays * 86400).toString()) }
                     size='small'
                   />
                 </td>

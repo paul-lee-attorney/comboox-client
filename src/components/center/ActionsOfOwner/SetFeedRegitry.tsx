@@ -5,16 +5,17 @@ import {
   useRegCenterSetFeedRegistry,
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 
 export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
 
-  const [ newFeed, setNewFeed ] = useState<HexType>();
+  const [ newFeed, setNewFeed ] = useState<HexType>(AddrZero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: setFeedRegLoading,
@@ -30,22 +31,28 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Stack direction='row' sx={{alignItems:'stretch', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
 
         <TextField 
           size="small"
           variant='outlined'
           label='FeedRegistry'
+          error={ valid['FeedRegistry']?.error }
+          helperText={ valid['FeedRegistry']?.helpTx }          
           sx={{
             m:1,
             minWidth: 456,
           }}
           value={ newFeed }
-          onChange={e => setNewFeed( HexParser( e.target.value ))}
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('FeedRegistry', input, 40, setValid);
+            setNewFeed(input);          
+          }}
         />
 
         <Button 
-          disabled={ setFeedRegLoading } 
+          disabled={ setFeedRegLoading || hasError(valid) } 
           onClick={() => {
             setFeedReg?.()
           }}

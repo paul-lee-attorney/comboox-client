@@ -59,7 +59,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'triggerDate', 
       headerName: 'TriggerDate',
-      valueGetter: p => dateParser(p.row.opt.head.triggerDate),
+      valueGetter: p => dateParser(p.row.opt.head.triggerDate.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -67,7 +67,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'execDeadline', 
       headerName: 'ExecDeadline',
-      valueGetter: p => dateParser(p.row.opt.head.triggerDate + p.row.opt.head.execDays * 86400),
+      valueGetter: p => dateParser((p.row.opt.head.triggerDate + p.row.opt.head.execDays * 86400).toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -75,7 +75,7 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
     { 
       field: 'closingDeadline', 
       headerName: 'ClosingDeadline',
-      valueGetter: p => dateParser(p.row.opt.body.closingDeadline),
+      valueGetter: p => dateParser(p.row.opt.body.closingDeadline.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,

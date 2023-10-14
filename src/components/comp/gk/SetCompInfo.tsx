@@ -129,7 +129,7 @@ export function SetCompInfo({nextStep}: SetCompIdProps) {
                 RegNum: { longDataParser(newInfo.regNum.toString()) }
               </Typography>
               <Typography variant="body1" sx={{ m:1 }} >
-                RegDate: {  dateParser(newInfo.regDate) }
+                RegDate: {  dateParser(newInfo.regDate.toString()) }
               </Typography>
               <Typography variant="body1" sx={{ m:1 }} >
                 Name: { newInfo.name }

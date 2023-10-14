@@ -21,7 +21,7 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
   const updateResults = ()=>{
     refreshList();
     getUser();
-    setOpen(false);    
+    setOpen(false);
   }
 
   const {

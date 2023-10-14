@@ -49,7 +49,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfIssueDate" 
                     label="IssueDate" 
                     variant="outlined"
-                    value = { dateParser(share.head.issueDate) }
+                    value = { dateParser(share.head.issueDate.toString()) }
                     size='small'
                   />
                 </td>
@@ -115,7 +115,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfPayInDate" 
                     label="PayInDate" 
                     variant="outlined"
-                    value = { dateParser(share.body.payInDeadline) }
+                    value = { dateParser(share.body.payInDeadline.toString()) }
                     size='small'
                   />                                
                 </td>

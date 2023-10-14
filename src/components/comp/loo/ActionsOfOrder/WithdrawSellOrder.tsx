@@ -6,14 +6,15 @@ import { useState } from "react";
 import { useGeneralKeeperWithdrawSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxPrice } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 
 export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: withdrawSellOrderLoading,
@@ -44,20 +45,27 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='SeqOfOrder'
+          error={ valid['SeqOfOrder'].error }
+          helperText={ valid['SeqOfOrder'].helpTx }
+
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={ e => setOffer( v => ({
-            ...v,
-            seqOfOrder: parseInt(e.target.value ?? '0'),
-          }))}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyNum('SeqOfOrder', input, MaxPrice, setValid);
+            setOffer( v => ({
+              ...v,
+              seqOfOrder: input,
+            }));
+          }}
 
           value={ offer.seqOfOrder.toString() } 
         />
 
         <Button 
-          disabled = { withdrawSellOrderLoading }
+          disabled = { withdrawSellOrderLoading || hasError(valid)}
 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 

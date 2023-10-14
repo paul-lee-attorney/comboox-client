@@ -51,7 +51,7 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
     { 
       field: 'expireDate', 
       headerName: 'ExpireDate',
-      valueGetter: p => dateParser(p.row.node.expireDate),
+      valueGetter: p => dateParser(p.row.node.expireDate.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,

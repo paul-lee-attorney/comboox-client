@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   useGeneralKeeperCastVote,
@@ -26,7 +26,7 @@ import { HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 
 export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
@@ -35,6 +35,9 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
 
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
 
   const updateResults = ()=>{
     refresh();
@@ -108,13 +111,19 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
             id="tfSigHash" 
             label="SigHash / CID in IPFS" 
             variant="outlined"
-            onChange={e => setSigHash(HexParser( e.target.value ))}
+            error={ valid['SigHash'].error }
+            helperText={ valid['SigHash'].helpTx }  
+            onChange={e => {
+              let input = HexParser( e.target.value );
+              onlyHex('SigHash', input, 64, setValid); 
+              setSigHash(input);
+            }}
             value = { sigHash }
             size='small'
           />                                            
 
           <Button
-            disabled={ castVoteLoading }
+            disabled={ castVoteLoading || hasError(valid)}
             variant="contained"
             endIcon={<HowToVote />}
             sx={{ m:1, minWidth:118 }}

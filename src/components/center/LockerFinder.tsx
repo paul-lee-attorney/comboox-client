@@ -3,6 +3,7 @@ import { HexType } from "../../scripts/common";
 import { Locker, getLocker } from "../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex } from "../../scripts/common/toolsKit";
 
 interface LockerFinderProps{
   setLocker: (locker: Locker) => void;
@@ -13,6 +14,7 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
 
   const [ strLock, setStrLock ] = useState<string>();
   const [ hashLock, setHashLock ] = useState<HexType>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   useEffect(()=>{
     if (hashLock) {
@@ -24,7 +26,7 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
 
   const searchLocker = ()=>{
     if (strLock) {
-      setHashLock(`0x${strLock}`);
+      setHashLock(HexParser(strLock));
       setOpen(true);
     }
   }
@@ -37,13 +39,19 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
         id="tfStrLock" 
         label="StrLock" 
         variant="outlined"
-        onChange={(e) => setStrLock(e.target.value ?? '')}
+        error={ valid['StrLocker']?.error }
+        helperText={ valid['StrLocker']?.helpTx }
         value = { strLock }
         size='small'
+        onChange={(e) => {
+          let input = e.target.value ?? '';
+          onlyHex('StrLocker', input, 64, setValid); 
+          setStrLock(input);
+        }}
       />
 
       <Button 
-        disabled={ !strLock }
+        disabled={ !strLock || hasError(valid) }
         sx={{ m: 1, minWidth: 168, height: 40 }} 
         variant="contained" 
         endIcon={ <Search /> }

@@ -8,7 +8,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { LockClock } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { HexParser, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
@@ -16,6 +16,8 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
 
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
   const [ closingDate, setClosingDate ] = useState<Dayjs | null>(dayjs('2019-09-09T00:00:00Z'));
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     setDeal(defaultDeal);
@@ -45,50 +47,52 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
       borderColor:'divider' 
       }} 
     >
-        {/* <Toolbar>
-          <h4>Push To Coffer </h4>
-        </Toolbar> */}
+      <Stack direction={'row'} sx={{ alignItems:'center'}} >
 
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <TextField 
+          variant='outlined'
+          label='HashLock'
+          size="small"
+          error={ valid['HashLock'].error }
+          helperText={ valid['HashLock'].helpTx }
+          sx={{
+            m:1,
+            minWidth: 685,
+          }}
+          onChange={(e) => {
+            let input = HexParser( e.target.value );
+            onlyHex('HashLock', input, 64, setValid);
+            setHashLock(input);
+          }}
+          value={ hashLock }
+        />
 
-          <TextField 
-            variant='outlined'
-            label='HashLock'
-            size="small"
-            sx={{
-              m:1,
-              minWidth: 685,
-            }}
-            onChange={(e) => setHashLock(HexParser( e.target.value ))}
-            value={ hashLock }
-          />
+        <DateTimeField
+          label='ClosingDate'
+          size="small"
+          sx={{
+            m:1,
+            minWidth: 218,
+          }} 
+          value={ closingDate }
+          onChange={(date) => setClosingDate(date)}
+          format='YYYY-MM-DD HH:mm:ss'
+        />
 
-          <DateTimeField
-            label='ClosingDate'
-            size="small"
-            sx={{
-              m:1,
-              minWidth: 218,
-            }} 
-            value={ closingDate }
-            onChange={(date) => setClosingDate(date)}
-            format='YYYY-MM-DD HH:mm:ss'
-          />
+        <Button 
+          disabled = {!pushToCoffer || pushToCofferLoading || deal.body.state > 1 || hasError(valid)}
 
-          <Button 
-            disabled = {!pushToCoffer || pushToCofferLoading || deal.body.state > 1 }
-
-            sx={{ m: 1, minWidth: 218, height: 40 }} 
-            variant="contained" 
-            endIcon={<LockClock />}
-            onClick={()=> pushToCoffer?.()}
-            size='small'
-          >
-            Lock Share
-          </Button>
+          sx={{ m: 1, minWidth: 218, height: 40 }} 
+          variant="contained" 
+          endIcon={<LockClock />}
+          onClick={()=> pushToCoffer?.()}
+          size='small'
+        >
+          Lock Share
+        </Button>
 
 
-        </Stack>
+      </Stack>
 
     </Paper>
 

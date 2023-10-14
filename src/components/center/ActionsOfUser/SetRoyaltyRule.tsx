@@ -8,13 +8,14 @@ import {
 import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { Key, codifyRoyaltyRule, defaultKey } from '../../../scripts/center/rc';
+import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../scripts/center/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
 
-  const [ rule, setRule ] = useState<Key>(defaultKey);
+  const [ rule, setRule ] = useState<StrKey>(defaultStrKey);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const refresh = () => {
     getUser();
@@ -26,7 +27,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
     write: setRoyaltyRule
   } = useRegCenterSetRoyaltyRule({
     address: AddrOfRegCenter,
-    args: rule ? [ codifyRoyaltyRule(rule)] : undefined,
+    args: rule ? [ codifyStrRoyaltyRule(rule)] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
@@ -41,49 +42,67 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           size="small"
           variant='outlined'
           label='DiscountRate (BP)'
+          error={ valid['DiscountRate']?.error }
+          helperText={ valid['DiscountRate']?.helpTx }                        
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ rule.discount }
-          onChange={e => setRule(v => ({
-            ...v,
-            discount: parseInt( e.target.value ?? '0'), 
-          }))}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('DiscountRate', input, 10000n, setValid);
+            setRule(v => ({
+              ...v,
+              discount: input, 
+            }));
+          }}
         />
 
         <TextField 
           size="small"
           variant='outlined'
           label='GiftAmt (GLee)'
+          error={ valid['GiftAmt']?.error }
+          helperText={ valid['GiftAmt']?.helpTx }                                  
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ rule.gift }
-          onChange={e => setRule(v => ({
-            ...v,
-            gift: parseInt( e.target.value ?? '0'), 
-          }))}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('GiftAmt', input, 0n, setValid);
+            setRule(v => ({
+              ...v,
+              gift: input, 
+            }));
+          }}
         />
 
         <TextField 
           size="small"
           variant='outlined'
           label='CouponAmt (GLee)'
+          error={ valid['CouponAmt']?.error }
+          helperText={ valid['CouponAmt']?.helpTx }                                            
           sx={{
             m:1,
             minWidth: 128,
           }}
           value={ rule.coupon }
-          onChange={e => setRule(v => ({
-            ...v,
-            coupon: parseInt( e.target.value ?? '0'), 
-          }))}
+          onChange={e => {
+            let input = e.target.value;
+            onlyNum('CouponAmt', input, 0n, setValid);
+            setRule(v => ({
+              ...v,
+              coupon: input, 
+            }));
+          }}
         />
 
         <Button 
-          disabled={ setRoyaltyRuleLoading } 
+          disabled={ setRoyaltyRuleLoading || hasError(valid)} 
           onClick={() => setRoyaltyRule?.()}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 

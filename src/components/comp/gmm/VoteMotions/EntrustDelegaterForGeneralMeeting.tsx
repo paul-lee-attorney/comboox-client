@@ -8,14 +8,15 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxUserNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     refresh();
@@ -42,17 +43,23 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
       <TextField 
         variant='outlined'
         label='Delegater'
+        error={ valid['Delegater'].error }
+        helperText={ valid['Delegater'].helpTx }
         sx={{
           m:1,
           minWidth: 218,
         }}
-        onChange={(e) => setDelegater(e.target.value)}
+        onChange={(e) => {
+          let input = e.target.value;
+          onlyNum('Delegater', input, MaxUserNo, setValid);
+          setDelegater(input);
+        }}
         value={ delegater }
         size='small'
       />
 
       <Button
-        disabled={ !entrustDelegaterOfMember || entrustDelegaterOfMemberLoading }
+        disabled={ !entrustDelegaterOfMember || entrustDelegaterOfMemberLoading || hasError(valid)}
         variant="contained"
         endIcon={<HandshakeOutlined />}
         sx={{ m:1, minWidth:128 }}

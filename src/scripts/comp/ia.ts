@@ -34,50 +34,50 @@ export const StateOfDeal = [
 ];
 
 export interface Head {
-  typeOfDeal: number,
-  seqOfDeal: number,
-  preSeq: number,
-  classOfShare: number,
-  seqOfShare: number,
-  seller: number,
-  priceOfPaid: number,
-  priceOfPar: number,
-  closingDeadline: number,
-  votingWeight: number,
+  typeOfDeal: string,
+  seqOfDeal: string,
+  preSeq: string,
+  classOfShare: string,
+  seqOfShare: string,
+  seller: string,
+  priceOfPaid: string,
+  priceOfPar: string,
+  closingDeadline: string,
+  votingWeight: string,
 }
 
 export const defaultHead: Head = {
-  typeOfDeal: 2,
-  seqOfDeal: 0,
-  preSeq: 0,
-  classOfShare: 0,
-  seqOfShare: 0,
-  seller: 0,
-  priceOfPaid: 100,
-  priceOfPar: 100,
-  closingDeadline: 0,
-  votingWeight: 100,  
+  typeOfDeal: '2',
+  seqOfDeal: '0',
+  preSeq: '0',
+  classOfShare: '0',
+  seqOfShare: '0',
+  seller: '0',
+  priceOfPaid: '100',
+  priceOfPar: '100',
+  closingDeadline: '0',
+  votingWeight: '100',  
 }
 
 export interface Body {
-  buyer: number,
-  groupOfBuyer: number,
-  paid: bigint,
-  par: bigint,
-  state: number,
-  para: number,
-  argu: number,
+  buyer: string,
+  groupOfBuyer: string,
+  paid: string,
+  par: string,
+  state: string,
+  para: string,
+  argu: string,
   flag: boolean,
 }
 
 export const defaultBody: Body = {
-  buyer: 0,
-  groupOfBuyer: 0,
-  paid: BigInt(0),
-  par: BigInt(0),
-  state: 0,
-  para: 0,
-  argu: 0,
+  buyer: '0',
+  groupOfBuyer: '0',
+  paid: '0',
+  par: '0',
+  state: '0',
+  para: '0',
+  argu: '0',
   flag: false,  
 }
 
@@ -95,16 +95,16 @@ export interface Deal {
 
 export function codifyHeadOfDeal(head: Head): HexType {
   let hexSn:HexType = `0x${
-    (head.typeOfDeal.toString(16).padStart(2, '0')) +
-    (head.seqOfDeal.toString(16).padStart(4, '0')) +
-    (head.preSeq.toString(16).padStart(4, '0')) +
-    (head.classOfShare.toString(16).padStart(4, '0')) +
-    (head.seqOfShare.toString(16).padStart(8, '0')) +
-    (head.seller.toString(16).padStart(10, '0')) +
-    (head.priceOfPaid.toString(16).padStart(8, '0')) +
-    (head.priceOfPar.toString(16).padStart(8, '0')) +
-    (head.closingDeadline.toString(16).padStart(12, '0')) + 
-    (head.votingWeight.toString(16).padStart(4, '0'))
+    (Number(head.typeOfDeal).toString(16).padStart(2, '0')) +
+    (Number(head.seqOfDeal).toString(16).padStart(4, '0')) +
+    (Number(head.preSeq).toString(16).padStart(4, '0')) +
+    (Number(head.classOfShare).toString(16).padStart(4, '0')) +
+    (Number(head.seqOfShare).toString(16).padStart(8, '0')) +
+    (Number(head.seller).toString(16).padStart(10, '0')) +
+    (Number(head.priceOfPaid).toString(16).padStart(8, '0')) +
+    (Number(head.priceOfPar).toString(16).padStart(8, '0')) +
+    (Number(head.closingDeadline).toString(16).padStart(12, '0')) + 
+    (Number(head.votingWeight).toString(16).padStart(4, '0'))
   }`;
   return hexSn;
 }
@@ -191,7 +191,7 @@ export async function getSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number)
   return res;
 }
 
-export async function getAllSwaps(ia: HexType, seqOfDeal: number): Promise<readonly Swap[]> {
+export async function getAllSwaps(ia: HexType, seqOfDeal: string): Promise<readonly Swap[]> {
   let res = await readContract({
     address: ia,
     abi: investmentAgreementABI,

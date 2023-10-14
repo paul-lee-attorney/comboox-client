@@ -10,6 +10,7 @@ import {
   InputAdornment,
   FormControl,
   OutlinedInput,
+  FormHelperText,
 } from '@mui/material';
 
 import { Close, PersonAdd }  from '@mui/icons-material';
@@ -20,12 +21,13 @@ import {
 
 import { HexType } from '../../../scripts/common';
 import { ATTORNEYS, hasRole } from '../../../scripts/common/accessControl';
-import { HexParser, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
 
 export function AppointAttorney({ addr }: AccessControlProps) {
 
   const [acct, setAcct] = useState<HexType>();
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ flag, setFlag ] = useState<boolean>();
   const [ open, setOpen ] = useState(false);
@@ -66,7 +68,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
               <InputAdornment position="end">
                 <IconButton
                   color='primary'
-                  disabled={ grantRoleLoading || acct == undefined || acct == '0x' }
+                  disabled={ grantRoleLoading || acct == undefined || acct == '0x' || hasError(valid) }
                   onClick={ handleClick }
                   edge="end"
                 >
@@ -75,10 +77,19 @@ export function AppointAttorney({ addr }: AccessControlProps) {
               </InputAdornment>
             }
             label='AppointAttorney'
+            aria-describedby='setAcct-Help-Tx'
+            error={ valid['AcctAddr']?.error }
             sx={{ height:55 }}
-            onChange={(e) => setAcct( HexParser(e.target.value) )}
+            onChange={(e) => {
+              let input = HexParser(e.target.value ?? '');
+              onlyHex('AcctAddr', input, 40, setValid);
+              setAcct(input);
+            }}
             value={ acct }
           />
+          <FormHelperText id='setAcct-Help-Tx'>
+            { valid['AcctAddr']?.helpTx }
+          </FormHelperText>
         </FormControl>
 
         <Collapse in={open} sx={{width:"50%"}}>        

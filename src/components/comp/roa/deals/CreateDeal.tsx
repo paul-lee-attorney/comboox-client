@@ -1,6 +1,6 @@
-import { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
-import { HexType, booxMap } from "../../../../scripts/common";
+import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../../../scripts/common";
 
 import { 
   useInvestmentAgreementAddDeal, 
@@ -26,7 +26,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Body, Head, TypeOfDeal, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export interface CreateDealProps{
   addr: HexType;
@@ -40,6 +40,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
   const [ head, setHead ] = useState<Head>(defaultHead);
   const [ body, setBody ] = useState<Body>(defaultBody);
 
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const {
     isLoading: addDealLoading,
     write: addDeal,
@@ -48,8 +50,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
     args: [ codifyHeadOfDeal(head),
             BigInt(body.buyer),
             BigInt(body.groupOfBuyer),
-            body.paid,
-            body.par            
+            BigInt(body.paid),
+            BigInt(body.par)
           ],
     onSuccess(data) {
       let hash: HexType = data.hash;
@@ -59,31 +61,35 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
       
   const handleSeqChanged = (e:ChangeEvent<HTMLInputElement>)=> {
 
-    let seq = parseInt(e.target.value ?? '0');
+    let input = e.target.value;
+    onlyNum('SeqOfShare', input, MaxPrice, setValid);
 
-    if (seq > 0 && boox) {
-      getShare(boox[booxMap.ROS], seq).then(
-        res => {
-          if (res)
-            setHead(v => ({
-              ...v,
-              classOfShare: res.head.class,
-              seqOfShare: seq,
-              seller: res.head.shareholder,
-              votingWeight: res.head.votingWeight,
-            }));
-        }
-      )
-    } else {
-      setHead(v => ({
-        ...v,
-        classOfShare: 0,
-        seqOfShare: 0,
-        seller: 0,
-        votingWeight: 100,
-      }));
+    if (!valid['SeqOfShare'].error) {
+      let seq = parseInt(input);
+
+      if (seq > 0 && boox) {
+        getShare(boox[booxMap.ROS], seq).then(
+          res => {
+            if (res)
+              setHead(v => ({
+                ...v,
+                classOfShare: res.head.class.toString(),
+                seqOfShare: seq.toString(),
+                seller: res.head.shareholder.toString(),
+                votingWeight: res.head.votingWeight.toString(),
+              }));
+          }
+        )
+      } else {
+        setHead(v => ({
+          ...v,
+          classOfShare: '0',
+          seqOfShare: '0',
+          seller: '0',
+          votingWeight: '100',
+        }));
+      }
     }
-
   }
 
   return (
@@ -107,7 +113,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 value={ head.typeOfDeal }
                 onChange={(e) => setHead((v) => ({
                   ...v,
-                  typeOfDeal: parseInt(e.target.value.toString()),
+                  typeOfDeal: e.target.value,
                 }))}
               >
                 {TypeOfDeal.slice(0,3).map((v,i) => (
@@ -120,27 +126,34 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='SeqOfShare'
+              error={ valid['SeqOfShare'].error }
+              helperText={ valid['SeqOfShare'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
               onChange={ handleSeqChanged }
-              value={ head.seqOfShare.toString() } 
+              value={ head.seqOfShare } 
             />
 
             <TextField 
               variant='outlined'
               size="small"
               label='ClassOfShare'
+              error={ valid['ClassOfShare'].error }
+              helperText={ valid['ClassOfShare'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setHead((v) => ({
-                ...v,
-                classOfShare: parseInt(e.target.value),
-                }))
-              }
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                setHead((v) => ({
+                  ...v,
+                  classOfShare: input,
+                  }));
+              }}
               value={ head.classOfShare }
             />
 
@@ -148,30 +161,41 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='PriceOfPar (Cent)'
+              error={ valid['PriceOfPar'].error }
+              helperText={ valid['PriceOfPar'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setHead((v) => ({
-                ...v,
-                priceOfPar: parseInt(e.target.value),
-              }))}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('PriceOfPar', input, MaxData, setValid);
+                setHead((v) => ({
+                  ...v,
+                  priceOfPar: input,
+                }));
+              }}
               value={ head.priceOfPar }
             />
-
 
             <TextField 
               variant='outlined'
               size="small"
               label='PriceOfPaid (Cent)'
+              error={ valid['PriceOfPaid'].error }
+              helperText={ valid['PriceOfPaid'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setHead((v) => ({
-                ...v,
-                priceOfPaid: parseInt(e.target.value),
-              }))}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('PriceOfPaid', input, MaxData, setValid);
+                setHead((v) => ({
+                  ...v,
+                  priceOfPaid: input,
+                }));
+              }}
               value={ head.priceOfPaid }
             />
 
@@ -186,10 +210,10 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head?.closingDeadline) }
+              value={ dayjs.unix(Number(head?.closingDeadline)) }
               onChange={(date) => setHead((v) => ({
                 ...v,
-                closingDeadline: date ? date.unix() : 0,
+                closingDeadline: date ? date.unix().toString() : '0',
               }))}
               format='YYYY-MM-DD HH:mm:ss'
             />
@@ -198,15 +222,20 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='Buyer'
+              error={ valid['Buyer'].error }
+              helperText={ valid['Buyer'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setBody((v) => ({
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('Buyer', input, MaxUserNo, setValid);
+                setBody((v) => ({
                 ...v,
-                buyer: parseInt(e.target.value ?? '0'),
-                }))
-              }
+                buyer: input,
+                }));
+              }}
               value={ body.buyer }
             />
 
@@ -214,15 +243,20 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='GroupOfBuyer'
+              error={ valid['GroupOfBuyer'].error }
+              helperText={ valid['GroupOfBuyer'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setBody((v) => ({
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('GroupOfBuyer', input, MaxUserNo, setValid);
+                setBody((v) => ({
                 ...v,
-                groupOfBuyer: parseInt(e.target.value ?? '0'),
-                }))
-              }
+                groupOfBuyer: input,
+                }));
+              }}
               value={ body.groupOfBuyer }
             />
 
@@ -230,48 +264,63 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='Par (Cent)'
+              error={ valid['Par'].error }
+              helperText={ valid['Par'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setBody((v) => ({
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('Par', input, MaxData, setValid);
+                setBody((v) => ({
                 ...v,
-                par: BigInt(e.target.value ?? '0'),
+                par: input,
                 }))
-              }
-              value={ body.par.toString() }
+              }}
+              value={ body.par }
             />
 
             <TextField 
               variant='outlined'
               size="small"
               label='Paid (Cent)'
+              error={ valid['Paid'].error }
+              helperText={ valid['Paid'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setBody((v) => ({
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('Paid', input, MaxData, setValid);
+                setBody((v) => ({
                 ...v,
-                paid: BigInt(e.target.value ?? '0'),
-                }))
-              }
-              value={ body.paid.toString() }
+                paid: input,
+                }));
+              }}
+              value={ body.paid }
             />
 
             <TextField 
               variant='outlined'
               size="small"
               label='VotingWeight (%)'
+              error={ valid['VotingWeight'].error }
+              helperText={ valid['VotingWeight'].helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
               }}
-              onChange={(e) => setHead((v) => ({
-                ...v,
-                votingWeight: parseInt(e.target.value ?? '0'),
-                }))
-              }
-              value={ head.votingWeight.toString() }
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyNum('VotingWeight', input, MaxSeqNo, setValid);
+                setHead((v) => ({
+                  ...v,
+                  votingWeight: input,
+                }));
+              }}
+              value={ head.votingWeight }
             />
 
           </Stack>
@@ -281,7 +330,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
         <Divider orientation="vertical" sx={{ m:1 }} flexItem />
 
         <Button 
-          disabled = {!addDeal || addDealLoading}
+          disabled = {!addDeal || addDealLoading || hasError(valid)}
           sx={{ m:1, mr:5, p:1, minWidth: 120, height: 40 }} 
           variant="contained" 
           endIcon={<AddCircle />}

@@ -16,10 +16,56 @@ import {
 } from '@mui/material';
 import { HexType } from '../../../../../scripts/common';
 import { AddRule } from '../AddRule';
-import { longSnParser } from '../../../../../scripts/common/toolsKit';
+import { longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 import { ListAlt } from '@mui/icons-material';
+
+export interface StrGroupUpdateOrder {
+  seqOfRule: string;
+  qtyOfSubRule: string;
+  seqOfSubRule: string;
+  addMember: boolean;
+  groupRep: string;
+  members: string[];
+  para: string;
+}
+
+export function strGUOCodifier(order: StrGroupUpdateOrder):HexType {
+  let hexGuo: HexType = `0x${
+    (Number(order.seqOfRule).toString(16).padStart(4, '0')) +
+    (Number(order.qtyOfSubRule).toString(16).padStart(2, '0')) +
+    (Number(order.seqOfSubRule).toString(16).padStart(2, '0')) +
+    (order.addMember ? '01' : '00') +
+    (Number(order.groupRep).toString(16).padStart(10, '0')) +
+    (Number(order.members[0]).toString(16).padStart(10, '0')) +
+    (Number(order.members[1]).toString(16).padStart(10, '0')) +
+    (Number(order.members[2]).toString(16).padStart(10, '0')) +
+    (Number(order.members[3]).toString(16).padStart(10, '0')) +
+    (Number(order.para).toString(16).padStart(4, '0'))
+  }`;
+
+  return hexGuo;
+}
+
+export function strGUOParser(hexOrder: HexType): StrGroupUpdateOrder {
+  let order: StrGroupUpdateOrder = {
+    seqOfRule: parseInt(hexOrder.substring(2, 6), 16).toString(), 
+    qtyOfSubRule: parseInt(hexOrder.substring(6, 8), 16).toString(),
+    seqOfSubRule: parseInt(hexOrder.substring(8, 10), 16).toString(),
+    addMember: hexOrder.substring(10, 12) === '01',
+    groupRep: parseInt(hexOrder.substring(12, 22), 16).toString(),
+    members: [
+      parseInt(hexOrder.substring(22, 32), 16).toString(),
+      parseInt(hexOrder.substring(32, 42), 16).toString(),
+      parseInt(hexOrder.substring(42, 52), 16).toString(),
+      parseInt(hexOrder.substring(52, 62), 16).toString(),
+    ],
+    para: parseInt(hexOrder.substring(62, 66), 16).toString(),
+  }
+
+  return order;
+}
 
 export interface GroupUpdateOrder {
   seqOfRule: number;
@@ -69,6 +115,16 @@ export function guoParser(hexOrder: HexType): GroupUpdateOrder {
 
 export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
+  const strDefaultOrder: StrGroupUpdateOrder = {
+    seqOfRule: seq.toString(),
+    qtyOfSubRule: (seq - 767).toString(),
+    seqOfSubRule: (seq - 767).toString(),
+    addMember: true,
+    groupRep: '0',
+    members: ['0', '0', '0', '0'],
+    para: '0',    
+  };
+
   const defaultOrder: GroupUpdateOrder = {
     seqOfRule: seq,
     qtyOfSubRule: seq - 767,
@@ -79,19 +135,20 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
     para: 0,    
   };
 
-  const [ objGuo, setObjGuo ] = useState<GroupUpdateOrder>(defaultOrder); 
+  const [ objGuo, setObjGuo ] = useState<StrGroupUpdateOrder>(strDefaultOrder); 
+  const [valid, setValid] = useState(true);
   const [ open, setOpen ] = useState<boolean>(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjGuo(guoParser(res))
+      res => setObjGuo(strGUOParser(res))
     );
   }, [sha, seq, time]);
 
   return (
     <>
       <Button
-        variant={objGuo && objGuo.groupRep > 0 ? 'contained' : 'outlined'}
+        variant={objGuo && Number(objGuo.groupRep) > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         fullWidth={true}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
@@ -127,8 +184,9 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
 
               <AddRule 
                 sha={ sha }
-                rule={ guoCodifier(objGuo) }
+                rule={ strGUOCodifier(objGuo) }
                 isFinalized = { isFinalized }
+                valid={valid}
                 refresh = { refresh }
                 setOpen = { setOpen }
               />
@@ -136,66 +194,27 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
 
             <Stack direction={'column'} spacing={1} >
 
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    label='QtyOfSubRule'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objGuo.qtyOfSubRule.toString() }
-                  />
+                <TextField 
+                  variant='outlined'
+                  label='QtyOfSubRule'
+                  size="small"
+                  error={ onlyNum(objGuo.qtyOfSubRule, BigInt(2**8-1), setValid).error }
+                  helperText={ onlyNum(objGuo.qtyOfSubRule, BigInt(2**8-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjGuo((v) => ({
+                    ...v,
+                    qtyOfSubRule: e.target.value,
+                  }))}
+                  value={ objGuo.qtyOfSubRule }              
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    label='AddMember ?'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objGuo.addMember ? 'True' : 'False' }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    label='GroupRep'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objGuo.groupRep.toString()) }
-                  />
-
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <TextField 
-                    variant='outlined'
-                    label='QtyOfSubRule'
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGuo((v) => ({
-                      ...v,
-                      qtyOfSubRule: parseInt(e.target.value),
-                    }))}
-                    value={ objGuo.qtyOfSubRule }              
-                  />
-
+                {!isFinalized && (
                   <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
                     <InputLabel id="addMember-label">AddMember ?</InputLabel>
                     <Select
@@ -212,160 +231,133 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
                   </FormControl>
+                )}
 
+                {isFinalized && (
                   <TextField 
                     variant='outlined'
-                    label='GroupRep'
+                    label='AddMember ?'
+                    inputProps={{readOnly: true}}
                     size="small"
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGuo((v) => ({
+                    value={ objGuo.addMember ? 'True' : 'False' }
+                  />
+                )}
+
+                <TextField 
+                  variant='outlined'
+                  label='GroupRep'
+                  size="small"
+                  error={ onlyNum(objGuo.groupRep, BigInt(2**40-1), setValid).error }
+                  helperText={ onlyNum(objGuo.groupRep, BigInt(2**8-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjGuo((v) => ({
+                    ...v,
+                    groupRep: e.target.value,
+                  }))}
+                  value={ isFinalized ? longSnParser(objGuo.groupRep) : objGuo.groupRep }
+                />
+
+              </Stack>
+
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+
+                <TextField 
+                  variant='outlined'
+                  label='Members_1'
+                  size="small"
+                  error={ onlyNum(objGuo.members[0], BigInt(2**40-1), setValid).error }
+                  helperText={ onlyNum(objGuo.members[0], BigInt(2**40-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjGuo((v) => {
+                    let arr = [...v.members];
+                    arr[0] = e.target.value;
+                    return {
                       ...v,
-                      groupRep: parseInt(e.target.value),
-                    }))}
-                    value={ objGuo.groupRep }
-                  />
+                      members: arr,
+                    };
+                  })}
+                  value={ isFinalized ? longSnParser(objGuo.members[0]) : objGuo.members[0] }
+                />
 
-                </Stack>
-              )}
+                <TextField 
+                  variant='outlined'
+                  label='Members_2'
+                  size="small"
+                  error={ onlyNum(objGuo.members[1], BigInt(2**40-1), setValid).error }
+                  helperText={ onlyNum(objGuo.members[1], BigInt(2**40-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjGuo((v) => {
+                    let arr = [...v.members];
+                    arr[1] = e.target.value;
+                    return {
+                      ...v,
+                      members: arr,
+                    };
+                  })}
+                  value={ isFinalized ? longSnParser(objGuo.members[1]) : objGuo.members[1] }
+                />
 
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                <TextField 
+                  variant='outlined'
+                  label='Members_3'
+                  size="small"
+                  error={ onlyNum(objGuo.members[2], BigInt(2**40-1), setValid).error }
+                  helperText={ onlyNum(objGuo.members[2], BigInt(2**40-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjGuo((v) => {
+                    let arr = [...v.members];
+                    arr[2] = e.target.value;
+                    return {
+                      ...v,
+                      members: arr,
+                    };
+                  })}
+                  value={ isFinalized ? longSnParser(objGuo.members[2]) : objGuo.members[2] }
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    label='Members_1'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objGuo.members[0].toString()) }
-                  />
+                <TextField 
+                  variant='outlined'
+                  label='Members_4'
+                  size="small"
+                  error={ onlyNum(objGuo.members[3], BigInt(2**40-1), setValid).error }
+                  helperText={ onlyNum(objGuo.members[3], BigInt(2**40-1), setValid).helpTx }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => setObjGuo((v) => {
+                    let arr = [...v.members];
+                    arr[3] = e.target.value;
+                    return {
+                      ...v,
+                      members: arr,
+                    };
+                  })}
+                  value={ isFinalized ? longSnParser(objGuo.members[3]) : objGuo.members[3] }
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    label='Members_2'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objGuo.members[1].toString()) }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    label='Members_3'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objGuo.members[2].toString()) }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    label='Members_4'
-                    inputProps={{readOnly: true}}
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objGuo.members[3].toString()) }
-                  />
-
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <TextField 
-                    variant='outlined'
-                    label='Members_1'
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGuo((v) => {
-                      let arr = [...v.members];
-                      arr[0] = parseInt(e.target.value);
-                      return {
-                        ...v,
-                        members: arr,
-                      };
-                    })}
-                    value={ objGuo.members[0] }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    label='Members_2'
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGuo((v) => {
-                      let arr = [...v.members];
-                      arr[1] = parseInt(e.target.value);
-                      return {
-                        ...v,
-                        members: arr,
-                      };
-                    })}
-                    value={ objGuo.members[1] }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    label='Members_3'
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGuo((v) => {
-                      let arr = [...v.members];
-                      arr[2] = parseInt(e.target.value);
-                      return {
-                        ...v,
-                        members: arr,
-                      };
-                    })}
-                    value={ objGuo.members[2] }
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    label='Members_4'
-                    size="small"
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => setObjGuo((v) => {
-                      let arr = [...v.members];
-                      arr[3] = parseInt(e.target.value);
-                      return {
-                        ...v,
-                        members: arr,
-                      };
-                    })}
-                    value={ objGuo.members[3] }
-                  />
-
-                </Stack>
-              )}
+              </Stack>
 
             </Stack>
           </Paper>

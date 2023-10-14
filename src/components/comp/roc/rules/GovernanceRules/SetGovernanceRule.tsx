@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState, } from 'react';
+import { useEffect, useState, } from 'react';
 import dayjs from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers';
 import {
@@ -17,10 +17,90 @@ import {
   DialogActions,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { HexType } from '../../../../../scripts/common';
-import { dateParser, toPercent } from '../../../../../scripts/common/toolsKit';
+import { HexType, MaxRatio } from '../../../../../scripts/common';
+import { FormResults, dateParser, defFormResults, longDataParser, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { getRule } from '../../../../../scripts/comp/sha';
+
+export interface StrGovernanceRule {
+  fundApprovalThreshold: string;
+  basedOnPar: boolean ;
+  proposeWeightRatioOfGM: string ;
+  proposeHeadRatioOfMembers: string ;
+  proposeHeadRatioOfDirectorsInGM: string ;
+  proposeHeadRatioOfDirectorsInBoard: string ;
+  maxQtyOfMembers: string ;
+  quorumOfGM: string ;
+  maxNumOfDirectors: string ;
+  tenureMonOfBoard: string ;
+  quorumOfBoardMeeting: string ;
+  establishedDate: string ;
+  businessTermInYears: string ;
+  typeOfComp: string ; 
+  minVoteRatioOnChain: string;
+}
+
+const defaultStrGR: StrGovernanceRule = {
+  fundApprovalThreshold: '0',
+  basedOnPar: false,
+  proposeWeightRatioOfGM: '1000',
+  proposeHeadRatioOfMembers: '0',
+  proposeHeadRatioOfDirectorsInGM: '3333',
+  proposeHeadRatioOfDirectorsInBoard: '1000',
+  maxQtyOfMembers: '50',
+  quorumOfGM: '5000',
+  maxNumOfDirectors: '5',
+  tenureMonOfBoard: '36',
+  quorumOfBoardMeeting: '5000',
+  establishedDate: '0',
+  businessTermInYears: '20',
+  typeOfComp: '1',
+  minVoteRatioOnChain: '500',   
+}
+
+export function strGRParser(hexRule: HexType): StrGovernanceRule {
+  let rule: StrGovernanceRule = {
+    fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16).toString(),
+    basedOnPar: hexRule.substring(10, 12) === '01',
+    proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16).toString(),
+    proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16).toString(),
+    proposeHeadRatioOfDirectorsInGM: parseInt(hexRule.substring(20, 24), 16).toString(),
+    proposeHeadRatioOfDirectorsInBoard: parseInt(hexRule.substring(24, 28), 16).toString(),
+    maxQtyOfMembers: parseInt(hexRule.substring(28, 32), 16).toString(),
+    quorumOfGM: parseInt(hexRule.substring(32, 36), 16).toString(),
+    maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16).toString(),
+    tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16).toString(),
+    quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16).toString(),
+    establishedDate: parseInt(hexRule.substring(46, 58), 16).toString(),
+    businessTermInYears: parseInt(hexRule.substring(58, 60), 16).toString(),
+    typeOfComp: parseInt(hexRule.substring(60, 62), 16).toString(),
+    minVoteRatioOnChain: parseInt(hexRule.substring(62, 66), 16).toString(),    
+  };
+
+  return rule;
+}
+
+export function strGRCodifier(rule: StrGovernanceRule): HexType {
+  let hexGR: HexType = `0x${
+    Number(rule.fundApprovalThreshold).toString(16).padStart(8, '0') +
+    (rule.basedOnPar ? '01' : '00') +
+    Number(rule.proposeWeightRatioOfGM).toString(16).padStart(4, '0') +
+    Number(rule.proposeHeadRatioOfMembers).toString(16).padStart(4, '0') + 
+    Number(rule.proposeHeadRatioOfDirectorsInGM).toString(16).padStart(4, '0') + 
+    Number(rule.proposeHeadRatioOfDirectorsInBoard).toString(16).padStart(4, '0') + 
+    Number(rule.maxQtyOfMembers).toString(16).padStart(4, '0') +       
+    Number(rule.quorumOfGM).toString(16).padStart(4, '0') +       
+    Number(rule.maxNumOfDirectors).toString(16).padStart(2, '0') +       
+    Number(rule.tenureMonOfBoard).toString(16).padStart(4, '0') +       
+    Number(rule.quorumOfBoardMeeting).toString(16).padStart(4, '0') +       
+    Number(rule.establishedDate).toString(16).padStart(12, '0') + 
+    Number(rule.businessTermInYears).toString(16).padStart(2, '0') +                 
+    Number(rule.typeOfComp).toString(16).padStart(2, '0')+                 
+    Number(rule.minVoteRatioOnChain).toString(16).padStart(4, '0')                 
+  }`;
+
+  return hexGR;
+}
 
 export interface GovernanceRule {
   fundApprovalThreshold: number;
@@ -111,19 +191,20 @@ export interface RulesEditProps {
 }
 
 export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
-  const [ objGR, setObjGR ] = useState<GovernanceRule>(defaultGR);
+  const [ objGR, setObjGR ] = useState<StrGovernanceRule>(defaultStrGR);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ open, setOpen ] = useState(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjGR(grParser(res))
+      res => setObjGR(strGRParser(res))
     );
   }, [sha, seq, time]);
 
   return (
     <>
       <Button
-        variant={objGR.establishedDate > 0 ? 'contained' : 'outlined'}
+        variant={Number(objGR.establishedDate) > 0 ? 'contained' : 'outlined'}
         startIcon={<ListAlt />}
         sx={{ m:0.5, minWidth: 248, justifyContent:'start'}}
         onClick={()=>setOpen(true)}      
@@ -166,8 +247,9 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
 
                 <AddRule 
                   sha={ sha }
-                  rule={ grCodifier(objGR) }
+                  rule={ strGRCodifier(objGR) }
                   isFinalized={ isFinalized }
+                  valid = {valid}
                   refresh = { refresh }
                   setOpen = { setOpen }
                 />
@@ -179,74 +261,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                 spacing={1} 
               >
 
-                {isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems: 'center', }} >
-                    <TextField 
-                      variant='outlined'
-                      label='BasedOnPar ?'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ objGR.basedOnPar ? 'True' : 'False' }
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='PropW_RatioOfGM'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={toPercent(objGR.proposeWeightRatioOfGM ?? 0)}
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='PropH_RatioOfMembers'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={toPercent(objGR.proposeHeadRatioOfMembers ?? 0)}
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='PropH_RatioOfDirectorsInGM'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={toPercent(objGR.proposeHeadRatioOfDirectorsInGM ?? 0)}
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='PropH_RatioOfDirectorsInBM'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={toPercent(objGR.proposeHeadRatioOfDirectorsInBoard ?? 0)}
-                    />
-
-                  </Stack>
-                )}
-
-                {!isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                      
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                  {!isFinalized && (                  
                     <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
                       <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
                       <Select
@@ -263,363 +279,309 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                         <MenuItem value={'0'}>False</MenuItem>
                       </Select>
                     </FormControl>
-                  
+                  )}
+
+                  {isFinalized && (
                     <TextField 
                       variant='outlined'
-                      label='PropW_RatioOfGM'
+                      label='BasedOnPar ?'
+                      inputProps={{readOnly: isFinalized}}
                       size='small'
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setObjGR((v) => ({
+                      value={ objGR.basedOnPar ? 'True' : 'False' }
+                    />
+                  )}
+                
+                  <TextField 
+                    variant='outlined'
+                    label={ 'PropWROfMembers ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ valid['PropWROfMembers'].error }
+                    helperText={ valid['PropWROfMembers'].helpTx }        
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('PropWROfMembers', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
                         ...v,
-                        proposeWeightRatioOfGM: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.proposeWeightRatioOfGM }              
-                    />
+                        proposeWeightRatioOfGM: input,
+                      }));
+                    }}
+                    value={ isFinalized ? toPercent(objGR.proposeWeightRatioOfGM) : objGR.proposeWeightRatioOfGM}
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='PropH_RatioOfMembers'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
+                  <TextField 
+                    variant='outlined'
+                    label={ 'PropHROfMembers ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ valid['PropHROfMembers'].error }
+                    helperText={ valid['PropHROfMembers'].helpTx }        
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('PropHROfMembers', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
                         ...v,
-                        proposeHeadRatioOfMembers: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.proposeHeadRatioOfMembers }
-                    />
+                        proposeHeadRatioOfMembers: input,
+                      }));
+                    }}
+                    value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfMembers) : objGR.proposeHeadRatioOfMembers}
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='PropH_RatioOfDirectorsInGM'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
+                  <TextField 
+                    variant='outlined'
+                    label={ 'PropHROfDirectorsInGM ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ valid['PropHROfDirectorsInGM'].error }
+                    helperText={ valid['PropHROfDirectorsInGM'].helpTx }        
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('PropHROfDirectorsInGM', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
                         ...v,
-                        proposeHeadRatioOfDirectorsInGM: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.proposeHeadRatioOfDirectorsInGM }
-                    />
+                        proposeHeadRatioOfDirectorsInGM: e.target.value,
+                      }));
+                    }}
+                    value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfDirectorsInGM) : objGR.proposeHeadRatioOfDirectorsInGM }
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='PropH_RatioOfDirectorsInBM'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        proposeHeadRatioOfDirectorsInBoard: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.proposeHeadRatioOfDirectorsInBoard }
-                    />
+                  <TextField 
+                    variant='outlined'
+                    label={ 'PropHROfDirectorsInBM ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ onlyNum(objGR.proposeHeadRatioOfDirectorsInBoard, BigInt(10000), setValid).error }
+                    helperText={ onlyNum(objGR.proposeHeadRatioOfDirectorsInBoard, BigInt(10000), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      proposeHeadRatioOfDirectorsInBoard: e.target.value,
+                    }))}
+                    value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfDirectorsInBoard) : objGR.proposeHeadRatioOfDirectorsInBoard }
+                  />
 
-                  </Stack>
-                )}
+                </Stack>
 
-                {isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                    <TextField 
-                      variant='outlined'
-                      label='MaxQtyOfMembers'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={objGR.maxQtyOfMembers.toString() ?? '0'}
-                    />
+                  <TextField 
+                    variant='outlined'
+                    label='MaxQtyOfMembers'
+                    size='small'
+                    error={ onlyNum(objGR.maxQtyOfMembers, MaxSeqNo, setValid).error }
+                    helperText={ onlyNum(objGR.maxQtyOfMembers, MaxSeqNo, setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      maxQtyOfMembers: e.target.value,
+                    }))}
+                    value={ objGR.maxQtyOfMembers } 
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='QuorumOfGM'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ toPercent(objGR.quorumOfGM ?? 0)}
-                    />
+                  <TextField 
+                    variant='outlined'
+                    label={ 'QuorumOfGM ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ onlyNum(objGR.quorumOfGM, BigInt(10000), setValid).error }
+                    helperText={ onlyNum(objGR.quorumOfGM, BigInt(10000), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      quorumOfGM: e.target.value,
+                    }))}
+                    value={ isFinalized ? toPercent(objGR.quorumOfGM) : objGR.quorumOfGM }
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='MaxNumOfDirectors'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={objGR.maxNumOfDirectors.toString() ?? '0'}
-                    />
+                  <TextField 
+                    variant='outlined'
+                    label='MaxNumOfDirectors'
+                    size='small'
+                    error={ onlyNum(objGR.maxNumOfDirectors, BigInt(2**8-1), setValid).error }
+                    helperText={ onlyNum(objGR.maxNumOfDirectors, BigInt(2**8-1), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      maxNumOfDirectors: e.target.value,
+                    }))}
+                    value={ objGR.maxNumOfDirectors }
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='TenureMonOfBoard'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={objGR.tenureMonOfBoard.toString() ?? '0'}
-                    />
+                  <TextField 
+                    variant='outlined'
+                    label='TenureMonOfBoard'
+                    size='small'
+                    error={ onlyNum(objGR.tenureMonOfBoard, MaxSeqNo, setValid).error }
+                    helperText={ onlyNum(objGR.tenureMonOfBoard, MaxSeqNo, setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      tenureMonOfBoard: e.target.value,
+                    }))}
+                    value={ objGR.tenureMonOfBoard } 
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='QuorumOfBoardMeeting'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ toPercent(objGR.quorumOfBoardMeeting ?? 0)}
-                    />
+                  <TextField 
+                    variant='outlined'
+                    label={ 'QuorumOfBoardMeeting ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ onlyNum(objGR.quorumOfBoardMeeting, BigInt(10000), setValid).error }
+                    helperText={ onlyNum(objGR.quorumOfBoardMeeting, BigInt(10000), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
+                    sx={{
+                      m:1,
+                      minWidth: 218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      quorumOfBoardMeeting: e.target.value,
+                    }))}
+                    value={ isFinalized ? toPercent(objGR.quorumOfBoardMeeting) : objGR.quorumOfBoardMeeting }   
+                  />
 
-                  </Stack>
-                )}
+                </Stack>
 
-                {!isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                    <TextField 
-                      variant='outlined'
-                      label='MaxQtyOfMembers'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        maxQtyOfMembers: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.maxQtyOfMembers.toString() } 
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='QuorumOfGM'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        quorumOfGM: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.quorumOfGM }
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='MaxNumOfDirectors'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        maxNumOfDirectors: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.maxNumOfDirectors }
-
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='TenureMonOfBoard'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        tenureMonOfBoard: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.tenureMonOfBoard } 
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='QuorumOfBoardMeeting'
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        quorumOfBoardMeeting: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.quorumOfBoardMeeting }   
-                    />
-
-                  </Stack>
-                )}
-
-                {isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                    <TextField 
-                      variant='outlined'
-                      label='EstablishedDate'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ dateParser(objGR.establishedDate ?? 0) }
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='BusinessTermInYears'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={objGR.businessTermInYears.toString() ?? '0'}
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='TypeOfComp'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={objGR.typeOfComp.toString() ?? '0'}
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='MinVoteRatioOnChain(%)'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={ toPercent(objGR.minVoteRatioOnChain ?? 0)}
-                    />
-
-                    <TextField 
-                      variant='outlined'
-                      label='FundThreshold (CBP/ETH)'
-                      inputProps={{readOnly: true}}
-                      size='small'
-                      sx={{
-                        m:1,
-                        minWidth: 218,
-                      }}
-                      value={objGR.fundApprovalThreshold.toString() ?? '0'}
-                    />
-
-                  </Stack>
-                )}
-
-                {!isFinalized && (
-                  <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
+                  {!isFinalized && (
                     <DateTimeField
                       label='EstablishedDate'
                       size='small'
+                      readOnly={isFinalized}
                       sx={{
                         m:1,
                         minWidth: 218,
                       }} 
-                      value={ dayjs.unix(objGR.establishedDate) }
+                      value={ dayjs.unix(Number(objGR.establishedDate)) }
                       onChange={(date) => setObjGR((v) => ({
                         ...v,
-                        establishedDate: date ? date.unix() : 0,
+                        establishedDate: date ? date.unix().toString() : '0',
                       }))}
                       format='YYYY-MM-DD HH:mm:ss'
                     />
+                  )}
 
+                  {isFinalized && (
                     <TextField 
                       variant='outlined'
-                      label='BusinessTermInYears'
+                      label='EstablishedDate'
+                      inputProps={{readOnly: true}}
                       size='small'
                       sx={{
                         m:1,
-                        minWidth:218,
+                        minWidth: 218,
                       }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        businessTermInYears: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.businessTermInYears }
+                      value={ dateParser(objGR.establishedDate.toString()) }
                     />
+                  )}
 
-                    <TextField 
-                      variant='outlined'
-                      label='TypeOfComp'
-                      size='small'
+                  <TextField 
+                    variant='outlined'
+                    label='BusinessTermInYears'
+                    size='small'
+                    error={ onlyNum(objGR.businessTermInYears, BigInt(2**8-1), setValid).error }
+                    helperText={ onlyNum(objGR.businessTermInYears, BigInt(2**8-1), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}                        
+                    sx={{
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      businessTermInYears: e.target.value,
+                    }))}
+                    value={ objGR.businessTermInYears }
+                  />
+
+                  <TextField 
+                    variant='outlined'
+                    label='TypeOfComp'
+                    size='small'
+                    error={ onlyNum(objGR.typeOfComp, BigInt(2**8-1), setValid).error }
+                    helperText={ onlyNum(objGR.typeOfComp, BigInt(2**8-1), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
                       sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        typeOfComp: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.typeOfComp }
-                    />
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      typeOfComp: e.target.value,
+                    }))}
+                    value={ objGR.typeOfComp }
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='MinVoteRatioOnChain (BP)'
-                      size='small'
+                  <TextField 
+                    variant='outlined'
+                    label={ 'MinVoteRatioOnChain ' + (isFinalized ? '(%)' : 'BP') }
+                    size='small'
+                    error={ onlyNum(objGR.minVoteRatioOnChain, MaxSeqNo, setValid).error }
+                    helperText={ onlyNum(objGR.minVoteRatioOnChain, MaxSeqNo, setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
                       sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        minVoteRatioOnChain: parseInt(e.target.value),
-                      }))}
-                      value={ objGR.minVoteRatioOnChain }
-                    />
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      minVoteRatioOnChain: e.target.value,
+                    }))}
+                    value={ isFinalized ? toPercent(objGR.minVoteRatioOnChain) : objGR.minVoteRatioOnChain }
+                  />
 
-                    <TextField 
-                      variant='outlined'
-                      label='FundThreshold  (CBP/ETH)'
-                      size='small'
+                  <TextField 
+                    variant='outlined'
+                    label='FundThreshold  (CBP/ETH)'
+                    size='small'
+                    error={ onlyNum(objGR.fundApprovalThreshold, BigInt(2**32-1), setValid).error }
+                    helperText={ onlyNum(objGR.fundApprovalThreshold, BigInt(2**32-1), setValid).helpTx }
+                    inputProps={{readOnly: isFinalized}}
                       sx={{
-                        m:1,
-                        minWidth:218,
-                      }}
-                      onChange={(e) => setObjGR((v) => ({
-                        ...v,
-                        fundApprovalThreshold: parseInt(e.target.value ?? '0'),
-                      }))}
-                      value={ objGR.fundApprovalThreshold }
-                    />
+                      m:1,
+                      minWidth:218,
+                    }}
+                    onChange={(e) => setObjGR((v) => ({
+                      ...v,
+                      fundApprovalThreshold: e.target.value,
+                    }))}
+                    value={ isFinalized ? longDataParser(objGR.fundApprovalThreshold) : objGR.fundApprovalThreshold }
+                  />
 
-                  </Stack>
-                )}
+                </Stack>
 
               </Stack>
             </Paper>
