@@ -26,12 +26,9 @@ import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { getKeeper } from '../../../scripts/comp/gk';
 import { getDK } from '../../../scripts/common/accessControl';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { InitCompProps } from './SetCompInfo';
 
-interface TurnKeyProps {
-  nextStep: (next: number) => void;
-}
-
-export function TurnKey({ nextStep }:TurnKeyProps) {
+export function TurnKey({ nextStep }:InitCompProps) {
   const { gk, boox } = useComBooxContext();
   const [ time, setTime ] = useState(0);
 

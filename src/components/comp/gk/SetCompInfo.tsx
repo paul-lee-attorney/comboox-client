@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
@@ -40,11 +40,11 @@ export const defaultInfo: CompInfo = {
 };
 
 
-interface SetCompIdProps {
-  nextStep: (next: number) => void;
+export interface InitCompProps {
+  nextStep: Dispatch<SetStateAction<number>>;
 }
 
-export function SetCompInfo({nextStep}: SetCompIdProps) {
+export function SetCompInfo({nextStep}: InitCompProps) {
 
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
   const [ newInfo, setNewInfo] = useState<CompInfo>(defaultInfo);

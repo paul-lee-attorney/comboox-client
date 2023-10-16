@@ -27,8 +27,9 @@ import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
-import { Share, StrShare, codifyHeadOfShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
+import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { InitCompProps } from '../gk/SetCompInfo';
 
 
 const defaultShare: Share = {
@@ -51,11 +52,7 @@ const defaultShare: Share = {
   },
 }
 
-interface InitBosProps {
-  nextStep: (next: number) => void;
-}
-
-export function InitBos({nextStep}: InitBosProps) {
+export function InitBos({nextStep}: InitCompProps) {
   const { boox } = useComBooxContext();
 
   const [sharesList, setSharesList] = useState<readonly Share[]>();

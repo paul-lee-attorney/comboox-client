@@ -24,12 +24,10 @@ import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { HexType, MaxSeqNo, booxMap } from '../../../scripts/common';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { maxQtyOfMembers } from '../../../scripts/comp/rom';
+import { InitCompProps } from '../gk/SetCompInfo';
 
-interface SetMaxQtyOfMembersProps {
-  nextStep: (next: number) => void;
-}
 
-export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
+export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
 
   const { boox } = useComBooxContext();
   const [time, setTime] = useState<number>(0);
