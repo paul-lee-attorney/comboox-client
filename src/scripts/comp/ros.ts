@@ -1,7 +1,18 @@
 import { HexType } from "../common";
 import { readContract } from "@wagmi/core";
 import { registerOfSharesABI } from "../../generated";
-import { Locker, parasParser } from "../center/rc";
+import { StrLocker, parasParser } from "../center/rc";
+
+export interface StrHead {
+  class: string; // 股票类别/轮次编号
+  seqOfShare: string; // 股票序列号
+  preSeq: string; // 前序股票序列号（股转时原标的股序列号）
+  issueDate: string; // 股票签发日期（秒时间戳）
+  shareholder: string; // 股东代码
+  priceOfPaid: string; // 发行价格（实缴出资价）
+  priceOfPar: string; // 发行价格（认缴出资价）
+  votingWeight: string; // 表决权重（基点）
+}
 
 export interface Head {
   class: number; // 股票类别/轮次编号
@@ -14,6 +25,40 @@ export interface Head {
   votingWeight: number; // 表决权重（基点）
 }
 
+export const defStrHead: StrHead = {
+  class: '0',
+  seqOfShare: '0',
+  preSeq: '0',
+  issueDate: '0',
+  shareholder: '0',
+  priceOfPaid: '0',
+  priceOfPar: '0',
+  votingWeight: '0',  
+}
+
+// export function parseOrgHead(head: OrgHead): Head {
+//   let out: Head = {
+//     class: head.class.toString(),
+//     seqOfShare: head.seqOfShare.toString(),
+//     preSeq: head.preSeq.toString(),
+//     issueDate: head.issueDate,
+//     shareholder: head.shareholder.toString(),
+//     priceOfPaid: head.priceOfPaid.toString(),
+//     priceOfPar: head.priceOfPar.toString(),
+//     votingWeight: head.votingWeight.toString(),
+//   };
+
+//   return out;
+// }
+
+export interface StrBody {
+  payInDeadline: string; // 出资期限（秒时间戳）
+  paid: string; // 实缴出资
+  par: string; // 认缴出资（注册资本面值）
+  cleanPaid: string; // 清洁实缴出资（扣除出质、远期、销售要约金额）
+  state: string;
+}
+
 export interface Body {
   payInDeadline: number; // 出资期限（秒时间戳）
   paid: bigint; // 实缴出资
@@ -22,10 +67,48 @@ export interface Body {
   state: number;
 }
 
+export const defStrBody: StrBody = {
+  payInDeadline: '0',
+  paid: '0',
+  par: '0',
+  cleanPaid: '0',
+  state: '0',  
+}
+
+// export function parseOrgBody(body: OrgBody): Body {
+//   let out: Body = {
+//     payInDeadline: body.payInDeadline,
+//     paid: body.paid.toString(),
+//     par: body.par.toString(),
+//     cleanPaid: body.cleanPaid.toString(),
+//     state: body.state,
+//   }
+
+//   return out;
+// }
+
 export interface Share {
   head: Head;
   body: Body;
 }
+
+export interface StrShare {
+  head: StrHead;
+  body: StrBody;
+}
+
+export const defStrShare: StrShare = {
+  head: defStrHead,
+  body: defStrBody,
+}
+
+// export function parseOrgShare(share: OrgShare):Share {
+//   let out:Share = {
+//     head: parseOrgHead(share.head),
+//     body: parseOrgBody(share.body),
+//   }
+//   return out;
+// }
 
 export function codifyHeadOfShare(head: Head): HexType {
   let sn: HexType = `0x${
@@ -42,20 +125,35 @@ export function codifyHeadOfShare(head: Head): HexType {
   return sn;
 }
 
-export function parseSnOfShare(sn: HexType): Head {
-  let head: Head = {
-    class: parseInt(sn.substring(2, 6), 16),
-    seqOfShare: parseInt(sn.substring(6, 14), 16),
-    preSeq: parseInt(sn.substring(14, 22), 16),
-    issueDate: parseInt(sn.substring(22, 34), 16),
-    shareholder: parseInt(sn.substring(34, 44), 16),
-    priceOfPaid: parseInt(sn.substring(44, 52), 16),
-    priceOfPar: parseInt(sn.substring(52, 60), 16),
-    votingWeight: parseInt(sn.substring(60, 64), 16)
-  };
-
-  return head
+export function codifyHeadOfStrShare(head: StrHead): HexType {
+  let sn: HexType = `0x${
+    Number(head.class).toString(16).padStart(4, '0') +
+    Number(head.seqOfShare).toString(16).padStart(8, '0') +
+    Number(head.preSeq).toString(16).padStart(8, '0') +
+    Number(head.issueDate).toString(16).padStart(12, '0') +
+    Number(head.shareholder).toString(16).padStart(10, '0') +
+    Number(head.priceOfPaid).toString(16).padStart(8, '0') +
+    Number(head.priceOfPar).toString(16).padStart(8, '0') +
+    Number(head.votingWeight).toString(16).padStart(4, '0') +
+    '00'
+  }`;
+  return sn;
 }
+
+// export function parseSnOfShare(sn: HexType): Head {
+//   let head: Head = {
+//     class: parseInt(sn.substring(2, 6), 16),
+//     seqOfShare: parseInt(sn.substring(6, 14), 16),
+//     preSeq: parseInt(sn.substring(14, 22), 16),
+//     issueDate: parseInt(sn.substring(22, 34), 16),
+//     shareholder: parseInt(sn.substring(34, 44), 16),
+//     priceOfPaid: parseInt(sn.substring(44, 52), 16),
+//     priceOfPar: parseInt(sn.substring(52, 60), 16),
+//     votingWeight: parseInt(sn.substring(60, 64), 16)
+//   };
+
+//   return head
+// }
 
 // ==== Read Funcs ====
 
@@ -81,7 +179,7 @@ export async function counterOfClasses(ros: HexType): Promise<number>{
   return counter;
 }
 
-export async function isShare(ros: HexType, seqOfShare: number): Promise<boolean>{
+export async function isShare(ros: HexType, seqOfShare: string): Promise<boolean>{
 
   let flag = await readContract({
     address: ros,
@@ -93,7 +191,7 @@ export async function isShare(ros: HexType, seqOfShare: number): Promise<boolean
   return flag;
 }
 
-export async function getShare(ros: HexType, seq: number): Promise<Share> {
+export async function getShare(ros: HexType, seq: string): Promise<Share> {
 
   let share = await readContract({
     address: ros,
@@ -139,7 +237,7 @@ export async function getSharesList(ros: HexType): Promise<readonly Share[]> {
 
 // ==== Classes ====
 
-export async function getQtyOfSharesInClass(ros: HexType, classOfShare: number): Promise<bigint> {
+export async function getQtyOfSharesInClass(ros: HexType, classOfShare: string): Promise<bigint> {
   let res = await readContract({
     address: ros,
     abi: registerOfSharesABI,
@@ -150,7 +248,7 @@ export async function getQtyOfSharesInClass(ros: HexType, classOfShare: number):
   return res;
 }
 
-export async function getSeqListOfClass(ros: HexType, classOfShare: number): Promise<readonly bigint[]> {
+export async function getSeqListOfClass(ros: HexType, classOfShare: string): Promise<readonly bigint[]> {
   let res = await readContract({
     address: ros,
     abi: registerOfSharesABI,
@@ -161,7 +259,7 @@ export async function getSeqListOfClass(ros: HexType, classOfShare: number): Pro
   return res;
 }
 
-export async function getInfoOfClass(ros: HexType, classOfShare: number): Promise<Share> {
+export async function getInfoOfClass(ros: HexType, classOfShare: string): Promise<Share> {
   let res = await readContract({
     address: ros,
     abi: registerOfSharesABI,
@@ -172,7 +270,7 @@ export async function getInfoOfClass(ros: HexType, classOfShare: number): Promis
   return res;
 }
 
-export async function getSharesOfClass(ros: HexType, classOfShare: number): Promise<readonly Share[]>{
+export async function getSharesOfClass(ros: HexType, classOfShare: string): Promise<readonly Share[]>{
 
   let list = await readContract({
     address: ros,
@@ -186,7 +284,7 @@ export async function getSharesOfClass(ros: HexType, classOfShare: number): Prom
 
 // ==== PayInCap ====
 
-export async function getLocker(ros: HexType, hashLock: HexType): Promise<Locker>{
+export async function getLocker(ros: HexType, hashLock: HexType): Promise<StrLocker>{
 
   let res = await readContract({
     address: ros,
@@ -195,9 +293,14 @@ export async function getLocker(ros: HexType, hashLock: HexType): Promise<Locker
     args: [ hashLock ],
   })
   
-  let locker:Locker = {
+  let locker:StrLocker = {
     hashLock: hashLock,
-    head: res.head,
+    head: {
+      from: res.head.from.toString(),
+      to: res.head.to.toString(),
+      expireDate: res.head.expireDate.toString(),
+      value: res.head.value.toString(),
+    },
     body: 
       { 
         counterLocker: res.body.counterLocker,

@@ -4,7 +4,8 @@ import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { Pledge } from "../../../scripts/comp/rop";
 import { getPledge } from "../../../scripts/comp/rop";
-import { booxMap } from "../../../scripts/common";
+import { MaxPrice, MaxSeqNo, booxMap } from "../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../scripts/common/toolsKit";
 
 interface SearchPledgeProps{
   setPld:(pld:Pledge)=>void;
@@ -16,6 +17,8 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
 
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
   const [ seqOfPld, setSeqOfPld ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const obtainPledge = async ()=>{
     if (boox && seqOfShare && seqOfPld) {
@@ -32,9 +35,13 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
         id="tfSeqOfShare" 
         label="seqOfShare" 
         variant="outlined"
-        onChange={(e) => 
-          setSeqOfShare(e.target.value)
-        }
+        error={ valid['SeqOfShare'].error }
+        helperText={ valid['SeqOfShare'].helpTx }
+        onChange={(e) => {
+          let input = e.target.value;
+          onlyNum('SeqOfShare', input, MaxPrice, setValid);
+          setSeqOfShare(input);
+        }}
         value = { seqOfShare }
         size='small'
       />
@@ -44,15 +51,19 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
         id="tfSeqOfPld" 
         label="seqOfPld" 
         variant="outlined"
-        onChange={(e) => 
-          setSeqOfPld(e.target.value)
-        }
+        error={ valid['SeqOfPld'].error }
+        helperText={ valid['SeqOfPld'].helpTx }
+        onChange={(e) => {
+          let input = e.target.value;
+          onlyNum('SeqOfPld', input, MaxSeqNo, setValid);
+          setSeqOfPld(input);
+        }}
         value = { seqOfPld }
         size='small'
       />
 
       <Button 
-        disabled={ !seqOfShare || !seqOfPld }
+        disabled={ !seqOfShare || !seqOfPld || hasError(valid)}
         sx={{ m:1, width:168, height: 40 }} 
         variant="contained" 
         endIcon={ <Search /> }

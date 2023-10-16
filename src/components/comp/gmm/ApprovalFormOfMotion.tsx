@@ -62,9 +62,9 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
 
   useEffect(()=>{
     if ( boox ) {
-      let minutes: HexType =
-      motion.votingRule.authority == 1
-      ? boox[booxMap.GMM] : boox[booxMap.BMM];
+      let minutes: HexType = motion.votingRule.authority == 1
+                            ? boox[booxMap.GMM] 
+                            : boox[booxMap.BMM];
       voteEnded(minutes, motion.head.seqOfMotion).then(
         flag => {
           setVoteIsEnd(flag);

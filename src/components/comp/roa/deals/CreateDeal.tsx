@@ -24,7 +24,7 @@ import { AddCircle } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Body, Head, TypeOfDeal, codifyHeadOfDeal, defaultBody, defaultHead } from "../../../../scripts/comp/ia";
+import { Body, Head, StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultBody, defaultHead, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
@@ -37,8 +37,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
 
   const { boox } = useComBooxContext();
 
-  const [ head, setHead ] = useState<Head>(defaultHead);
-  const [ body, setBody ] = useState<Body>(defaultBody);
+  const [ head, setHead ] = useState<StrHead>(defaultStrHead);
+  const [ body, setBody ] = useState<StrBody>(defaultStrBody);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -64,31 +64,29 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
     let input = e.target.value;
     onlyNum('SeqOfShare', input, MaxPrice, setValid);
 
-    if (!valid['SeqOfShare'].error) {
-      let seq = parseInt(input);
+    let seq = input;
 
-      if (seq > 0 && boox) {
-        getShare(boox[booxMap.ROS], seq).then(
-          res => {
-            if (res)
-              setHead(v => ({
-                ...v,
-                classOfShare: res.head.class.toString(),
-                seqOfShare: seq.toString(),
-                seller: res.head.shareholder.toString(),
-                votingWeight: res.head.votingWeight.toString(),
-              }));
-          }
-        )
-      } else {
-        setHead(v => ({
-          ...v,
-          classOfShare: '0',
-          seqOfShare: '0',
-          seller: '0',
-          votingWeight: '100',
-        }));
-      }
+    if (Number(seq) > 0 && boox) {
+      getShare(boox[booxMap.ROS], seq).then(
+        res => {
+          if (res)
+            setHead(v => ({
+              ...v,
+              classOfShare: res.head.class.toString(),
+              seqOfShare: seq,
+              seller: res.head.shareholder.toString(),
+              votingWeight: res.head.votingWeight.toString(),
+            }));
+        }
+      )
+    } else {
+      setHead(v => ({
+        ...v,
+        classOfShare: '0',
+        seqOfShare: '0',
+        seller: '0',
+        votingWeight: '100',
+      }));
     }
   }
 

@@ -3,10 +3,6 @@ import { HexType } from "../common";
 import { optionsABI } from "../../generated";
 import { OptWrap, Option } from "./roo";
 
-
-
-
-
 export async function counterOfOptions(term:HexType):Promise<number>{
   let res = await readContract({
     address: term,
@@ -46,7 +42,7 @@ export async function getOption(term:HexType, seqOfOpt: number):Promise<Option>{
     args: [ BigInt(seqOfOpt) ]
   })
 
-  return res;
+  return  res;
 }
 
 export async function getAllOptions(term:HexType):Promise<readonly Option[]>{

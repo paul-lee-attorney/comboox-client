@@ -8,7 +8,7 @@ import { checkValueOfSwap } from "../../../../../scripts/comp/roo";
 
 export function CheckValueOfSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
-  const [ value, setValue ] = useState<bigint>(BigInt(0));
+  const [ value, setValue ] = useState<bigint>(0n);
 
   useEffect(()=>{
     checkValueOfSwap(addr, deal.head.seqOfDeal, seqOfSwap).then(

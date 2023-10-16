@@ -177,10 +177,10 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head.expireDate) }
+              value={ dayjs.unix(Number(head.expireDate)) }
               onChange={(date) => setHead((v) => ({
                   ...v,
-                  expireDate: date ? date.unix() : 0,
+                  expireDate: date ? date.unix().toString() : '0',
               }))}              
               format='YYYY-MM-DD HH:mm:ss'
               size='small'

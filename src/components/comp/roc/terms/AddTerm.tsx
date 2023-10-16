@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { AddrZero, HexType } from "../../../../scripts/common";
+import { AddrZero, HexType, MaxPrice } from "../../../../scripts/common";
 
 import { 
   useShareholdersAgreementCreateTerm, 
@@ -9,6 +9,7 @@ import {
 import { getDocAddr } from "../../../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../../scripts/common/toolsKit";
 
 
 interface AddTermProps {
@@ -21,6 +22,7 @@ interface AddTermProps {
 export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
 
   const [ version, setVersion ] = useState<string>('1');
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: createTermLoading,
@@ -63,17 +65,23 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             variant='outlined'
             label='Version'
             size='small'
+            error={ valid['Version'].error }
+            helperText={ valid['Version'].helpTx }
             sx={{
               m:1,
               ml:3,
               minWidth: 218,
             }}
-            onChange={(e) => setVersion(e.target.value)}
+            onChange={(e) => {
+              let input = e.target.value;
+              onlyNum('Version', input, MaxPrice, setValid);
+              setVersion(input);
+            }}
             value={ version }              
           />
 
           <Button
-            disabled={ !version || createTermLoading }
+            disabled={ !version || createTermLoading || hasError(valid) }
             variant="contained"
             sx={{
               mr: 5,

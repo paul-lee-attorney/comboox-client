@@ -5,13 +5,15 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../../scripts/common";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
-import { HexParser, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     refresh();
@@ -43,17 +45,23 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='HashLock'
+          error={ valid['HashLock'].error }
+          helperText={ valid['HashLock'].helpTx }  
           sx={{
             m:1,
             minWidth: 688,
           }}
-          onChange={(e) => setHashLock(HexParser( e.target.value ))}
+          onChange={(e) => {
+            let input = HexParser( e.target.value );
+            onlyHex('HashLock', input, 64, setValid);
+            setHashLock( input );
+          }}
           value={ hashLock }
           size='small'
         />
 
         <Button 
-          disabled={ !lockPledge || lockPledgeLoading }
+          disabled={ !lockPledge || lockPledgeLoading || hasError(valid)}
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <LockOutlined /> }

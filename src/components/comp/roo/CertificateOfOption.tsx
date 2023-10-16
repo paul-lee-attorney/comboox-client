@@ -149,7 +149,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfExecDeadline" 
                   label="ExecDeadline" 
                   variant="outlined"
-                  value = { dateParser((optWrap.opt.head.triggerDate + optWrap.opt.head.execDays * 86400).toString()) }
+                  value = { dateParser((optWrap.opt.head.triggerDate + Number(optWrap.opt.head.execDays) * 86400).toString()) }
                   size='small'
                 />                  
               </td>

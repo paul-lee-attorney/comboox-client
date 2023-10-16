@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero } from "../../../../../scripts/common";
+import { AddrZero, MaxData, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -41,29 +41,32 @@ import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { 
-  BodyOfOpt, 
-  Cond, 
-  HeadOfOpt, 
   OptWrap, 
   comOps, 
   condCodifier, 
-  defaultBodyOfOpt, 
-  defaultCond, 
-  defaultHeadOfOpt, 
-  logOps, 
-  optHeadCodifier, 
-  typeOfOpts 
+  logOps,
+  optHeadCodifier,
+  typeOfOpts, 
+  StrHeadOfOpt,
+  defaultStrHeadOfOpt,
+  StrCond,
+  defaultStrCond,
+  defaultStrBodyOfOpt,
+  StrBodyOfOpt
 } from "../../../../../scripts/comp/roo";
 import { getOpts } from "../../../../../scripts/comp/op";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
 
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ opts, setOpts ] = useState<readonly OptWrap[]>();
   const [ open, setOpen ] = useState(false);
-  const [ head, setHead ] = useState<HeadOfOpt>(defaultHeadOfOpt);
-  const [ cond, setCond ] = useState<Cond>(defaultCond);
-  const [ body, setBody ] = useState<BodyOfOpt>(defaultBodyOfOpt);
+  const [ head, setHead ] = useState<StrHeadOfOpt>(defaultStrHeadOfOpt);
+  const [ cond, setCond ] = useState<StrCond>(defaultStrCond);
+  const [ body, setBody ] = useState<StrBodyOfOpt>(defaultStrBodyOfOpt);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const { 
     isLoading: addOptLoading,
@@ -173,7 +176,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           value={ head.typeOfOpt }
                           onChange={(e) => setHead((v) => ({
                             ...v,
-                            typeOfOpt: Number(e.target.value),
+                            typeOfOpt: e.target.value,
                           }))}
                         >
                           {typeOfOpts.map((v, i) => (
@@ -186,14 +189,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='ClassOfShare'
                         size="small"
+                        error={ valid['ClassOfShare'].error }
+                        helperText={ valid['ClassOfShare'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          classOfShare: parseInt( e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                          setHead((v) => ({
+                            ...v,
+                            classOfShare: input,
+                          }));
+                        }}
                         value={ head.classOfShare }              
                       />
 
@@ -201,14 +210,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Paid'
                         size="small"
+                        error={ valid['Paid'].error }
+                        helperText={ valid['Paid'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setBody((v) => ({
-                          ...v,
-                          paid: BigInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('Paid', input, MaxData, setValid);
+                          setBody((v) => ({
+                            ...v,
+                            paid: e.target.value,
+                          }));
+                      }}
                         value={ body.paid.toString() }              
                       />
 
@@ -216,14 +231,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Par'
                         size="small"
+                        error={ valid['Par'].error }
+                        helperText={ valid['Par'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setBody((v) => ({
-                          ...v,
-                          par: BigInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('Par', input, MaxData, setValid);
+                          setBody((v) => ({
+                            ...v,
+                            par: input,
+                          }));
+                        }}
                         value={ body.par.toString() }              
                       />
 
@@ -231,14 +252,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Rightholder'
                         size="small"
+                        error={ valid['Rightholder'].error }
+                        helperText={ valid['Rightholder'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setBody((v) => ({
-                          ...v,
-                          rightholder: parseInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('Rightholder', input, MaxUserNo, setValid);
+                          setBody((v) => ({
+                            ...v,
+                            rightholder: input,
+                          }));
+                        }}
                         value={ body.rightholder }              
                       />
 
@@ -250,14 +277,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='RateOfOption'
                         size="small"
+                        error={ valid['RateOfOption'].error }
+                        helperText={ valid['RateOfOption'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          rate: parseInt( e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('RateOfOption', input, MaxPrice, setValid);
+                          setHead((v) => ({
+                            ...v,
+                            rate: input,
+                          }));
+                        }}
                         value={ head.rate }              
                       />
 
@@ -268,10 +301,10 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           m:1,
                           minWidth: 218,
                         }} 
-                        value={ dayjs.unix(head.triggerDate) }
+                        value={ dayjs.unix(Number(head.triggerDate)) }
                         onChange={(date) => setHead((v) => ({
                           ...v,
-                          triggerDate: date ? date.unix() : 0,
+                          triggerDate: date ? date.unix().toString() : '0',
                         }))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />
@@ -280,14 +313,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='ExecDays'
                         size="small"
+                        error={ valid['ExecDays'].error }
+                        helperText={ valid['ExecDays'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          execDays: parseInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('ExecDays', input, MaxSeqNo, setValid);
+                          setHead((v) => ({
+                            ...v,
+                            execDays: input,
+                          }));
+                        }}
                         value={ head.execDays }              
                       />
 
@@ -295,14 +334,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='ClosingDays'
                         size="small"
+                        error={ valid['ClosingDays'].error }
+                        helperText={ valid['ClosingDays'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          closingDays: parseInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('ClosingDays', input, MaxSeqNo, setValid);
+                          setHead((v) => ({
+                            ...v,
+                            closingDays: input,
+                          }));
+                        }}
                         value={ head.closingDays }              
                       />
 
@@ -310,20 +355,26 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Obligor'
                         size="small"
+                        error={ valid['Obligor'].error }
+                        helperText={ valid['Obligor'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setHead((v) => ({
-                          ...v,
-                          obligor: parseInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('Obligor', input, MaxUserNo, setValid);
+                          setHead((v) => ({
+                            ...v,
+                            obligor: input,
+                          }));
+                        }}
                         value={ head.obligor }              
                       />
 
                     </Stack>
 
-                    {head.typeOfOpt > 3 && (
+                    {Number(head.typeOfOpt) > 3 && (
 
                       <Stack direction={'row'} sx={{ alignItems: 'center', backgroundColor:'lightcyan' }} >
 
@@ -337,7 +388,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                             value={ cond.logicOpr }
                             onChange={(e) => setCond((v) => ({
                               ...v,
-                              logicOpr: Number(e.target.value),
+                              logicOpr: e.target.value,
                             }))}
                           >
                             {logOps.map((v, i) => (
@@ -356,7 +407,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                             value={ cond.compOpr1 }
                             onChange={(e) => setCond((v) => ({
                               ...v,
-                              compOpr1: Number(e.target.value),
+                              compOpr1: e.target.value,
                             }))}
                           >
                             {comOps.map((v, i) => (
@@ -369,18 +420,24 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           variant='outlined'
                           label='Parameter_1'
                           size="small"
+                          error={ valid['Parameter_1'].error }
+                          helperText={ valid['Parameter_1'].helpTx }
                           sx={{
                             m:1,
                             minWidth: 218,
                           }}
-                          onChange={(e) => setCond((v) => ({
-                            ...v,
-                            para1: BigInt(e.target.value ?? '0'),
-                          }))}
-                          value={ cond.para1.toString() }
+                          onChange={(e) => {
+                            let input = e.target.value;
+                            onlyNum('Parameter_1', input, MaxData, setValid);
+                            setCond((v) => ({
+                              ...v,
+                              para1: input,
+                            }));
+                          }}
+                          value={ cond.para1 }
                         />
                       
-                      {cond.logicOpr > 0 && (<>
+                      {Number(cond.logicOpr) > 0 && (<>
 
                         <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                           <InputLabel id="compOpr2-label">CompOpr_2</InputLabel>
@@ -392,7 +449,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                             value={ cond.compOpr2 }
                             onChange={(e) => setCond((v) => ({
                               ...v,
-                              compOpr2: Number(e.target.value),
+                              compOpr2: e.target.value,
                             }))}
                           >
                             {comOps.map((v, i) => (
@@ -405,20 +462,26 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           variant='outlined'
                           label='Parameter_2'
                           size="small"
+                          error={ valid['Parameter_2'].error }
+                          helperText={ valid['Parameter_2'].helpTx }
                           sx={{
                             m:1,
                             minWidth: 218,
                           }}
-                          onChange={(e) => setCond((v) => ({
-                            ...v,
-                            para2: BigInt(e.target.value ?? '0'),
-                          }))}
-                          value={ cond.para2.toString() }              
+                          onChange={(e) => {
+                            let input = e.target.value;
+                            onlyNum('Parameter_2', input, MaxData, setValid);
+                            setCond((v) => ({
+                              ...v,
+                              para2: input,
+                            }));
+                          }}
+                          value={ cond.para2 }
                         />
 
                       </>)}
 
-                      {cond.logicOpr > 4 && (<>
+                      {Number(cond.logicOpr) > 4 && (<>
 
                         <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
                           <InputLabel id="compOpr3-label">CompOpr_3</InputLabel>
@@ -430,7 +493,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                             value={ cond.compOpr3 }
                             onChange={(e) => setCond((v) => ({
                               ...v,
-                              compOpr3: Number(e.target.value),
+                              compOpr3: e.target.value,
                             }))}
                           >
                             {comOps.map((v, i) => (
@@ -443,15 +506,21 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           variant='outlined'
                           label='Parameter_3'
                           size="small"
+                          error={ valid['Parameter_3'].error }
+                          helperText={ valid['Parameter_3'].helpTx }
                           sx={{
                             m:1,
                             minWidth: 218,
                           }}
-                          onChange={(e) => setCond((v) => ({
-                            ...v,
-                            para3: BigInt(e.target.value ?? '0'),
-                          }))}
-                          value={ cond.para3.toString() }              
+                          onChange={(e) => {
+                            let input = e.target.value;
+                            onlyNum('Parameter_3', input, MaxData, setValid);
+                            setCond((v) => ({
+                              ...v,
+                              para3: input,
+                            }));
+                          }}
+                          value={ cond.para3 }
                         />
 
                       </>)}
@@ -472,7 +541,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >
                       <IconButton 
-                        disabled={ addOptLoading }
+                        disabled={ addOptLoading || hasError(valid)}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addOpt?.() }
                         color="primary"
@@ -485,14 +554,20 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       variant='outlined'
                       label='SeqOfOption'
                       size="small"
+                      error={ valid['SeqOfOption'].error }
+                      helperText={ valid['SeqOfOption'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setHead(v=>({
-                        ...v,
-                        seqOfOpt: parseInt(e.target.value ?? '0'),
-                      }))}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('SeqOfOption', input, MaxPrice, setValid);
+                        setHead(v=>({
+                          ...v,
+                          seqOfOpt: input,
+                        }));
+                      }}
                       value={ head.seqOfOpt }              
                     />
 
@@ -502,7 +577,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeOptLoading } 
+                        disabled={ removeOptLoading || hasError(valid)} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeOpt?.() }
                         color="primary"
@@ -517,7 +592,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >
                       <IconButton 
-                        disabled={ addObligorLoading }
+                        disabled={ addObligorLoading || hasError(valid)}
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
@@ -531,11 +606,17 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       variant='outlined'
                       label='Obligor'
                       size="small"
+                      error={ valid['Obligor'].error }
+                      helperText={ valid['Obligor'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setObligor(e.target.value ?? '0')}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('Obligor', input, MaxUserNo, setValid);
+                        setObligor(input);
+                      }}
                       value={ obligor }              
                     />
 
@@ -546,7 +627,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     >
 
                       <IconButton
-                        disabled={ removeObligorLoading } 
+                        disabled={ removeObligorLoading || hasError(valid) } 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"

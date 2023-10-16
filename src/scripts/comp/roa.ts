@@ -23,7 +23,7 @@ export interface FRClaim{
 
 // ==== FR Claims ====
 
-export async function hasFRClaims(boa: HexType, ia: HexType, seqOfDeal: string ): Promise<boolean> {
+export async function hasFRClaims(boa: HexType, ia: HexType, seqOfDeal: number ): Promise<boolean> {
 
   let res = await readContract({
     address: boa,
@@ -59,7 +59,7 @@ export async function getSubjectDealsOfFR(boa: HexType, ia: HexType ): Promise<r
   return res;
 }
 
-export async function getFRClaimsOfDeal(boa: HexType, ia: HexType, seqOfDeal: string ): Promise<readonly FRClaim[]> {
+export async function getFRClaimsOfDeal(boa: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly FRClaim[]> {
 
   let res = await readContract({
     address: boa,
@@ -85,7 +85,7 @@ export async function allFRClaimsAccepted(boa: HexType, ia: HexType ): Promise<b
 
 // ==== DTClaims ====
 
-export async function hasDTClaims(boa: HexType, ia: HexType, seqOfDeal: string ): Promise<boolean> {
+export async function hasDTClaims(boa: HexType, ia: HexType, seqOfDeal: number ): Promise<boolean> {
 
   let res = await readContract({
     address: boa,
@@ -109,7 +109,7 @@ export async function getSubjectDealsOfDT(boa: HexType, ia: HexType): Promise<re
   return res;
 }
 
-export async function getDTClaimsOfDeal(boa: HexType, ia: HexType, seqOfDeal: string ): Promise<readonly DTClaim[]> {
+export async function getDTClaimsOfDeal(boa: HexType, ia: HexType, seqOfDeal: number ): Promise<readonly DTClaim[]> {
 
   let res = await readContract({
     address: boa,

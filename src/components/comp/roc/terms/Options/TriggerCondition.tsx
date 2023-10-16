@@ -96,7 +96,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
 
               </>)}
 
-              {cond.logicOpr > 2 && (<>
+              {Number(cond.logicOpr) > 2 && (<>
 
                 <TextField 
                   variant='outlined'

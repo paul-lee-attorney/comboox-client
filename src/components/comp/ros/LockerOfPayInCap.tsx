@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { HexType, booxMap } from "../../../scripts/common";
+import { HexType, MaxData, booxMap } from "../../../scripts/common";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 import { 
@@ -12,8 +12,8 @@ import { ExitToApp, IosShare, Output } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Share, getLocker } from "../../../scripts/comp/ros";
-import { Locker, defaultLocker } from "../../../scripts/center/rc";
-import { HexParser, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { StrLocker, defaultStrLocker } from "../../../scripts/center/rc";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
 
 interface LockerOfPayInCapProps {
   share: Share;
@@ -26,11 +26,13 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
   const { gk, boox } = useComBooxContext();
   const [ time, setTime ] = useState(0);
 
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const refreshLockers = ()=>{
     setTime(Date.now());
   }
 
-  const [ locker, setLocker ] = useState<Locker>(defaultLocker);
+  const [ locker, setLocker ] = useState<StrLocker>(defaultStrLocker);
   const [ key, setKey ] = useState<string>();
 
   const [ open, setOpen ] = useState<boolean>(false);
@@ -134,7 +136,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ setPayInAmtLoading }
+                disabled={ setPayInAmtLoading || hasError(valid) }
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => setPayInAmt?.() }
                 color="primary"            
@@ -147,14 +149,20 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           <TextField 
             variant='filled'
             label='HashLock'
+            error={ valid['HashLock'].error }
+            helperText={ valid['HashLock'].helpTx }    
             sx={{
               m:1,
               minWidth: 618,
             }}
-            onChange={(e) => setLocker(v => ({
-              ...v,
-              hashLock: HexParser( e.target.value ),
-            }))}
+            onChange={(e) => {
+              let input = HexParser( e.target.value );
+              onlyHex('HashLock', input, 64, setValid);
+              setLocker(v => ({
+                ...v,
+                hashLock: input,
+              }));
+            }}
             value={ locker.hashLock }
             size="small"
           />
@@ -162,17 +170,23 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           <TextField 
             variant='filled'
             label='Amount'
+            error={ valid['Amount'].error }
+            helperText={ valid['Amount'].helpTx }    
             sx={{
               m:1,
               minWidth: 218,
             }}
-            onChange={(e) => setLocker(v => {
-              let lk = v;
-              lk.head.value = BigInt(e.target.value ?? '0');
-              return lk;
-            })}
+            onChange={(e) => {
+              let input = e.target.value;
+              onlyNum('Amount', input, MaxData, setValid);
+              setLocker(v => {
+                let lk = v;
+                lk.head.value = input;
+                return lk;
+              });
+            }}
 
-            value={ locker.head?.value.toString() }
+            value={ locker.head.value }
             size="small"
           />
 
@@ -182,10 +196,12 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
               m:1,
               minWidth: 218,
             }} 
-            value={ dayjs.unix(locker.head.expireDate ?? '0') }
+            value={ dayjs.unix(Number(locker.head.expireDate)) }
             onChange={(date) => setLocker(v => {
               let lk = v;
-              lk.head.expireDate = date ? date.unix() : 0;
+              lk.head.expireDate = date 
+                    ? date.unix().toString() 
+                    : '0';
               return lk;
             })}
             format='YYYY-MM-DD HH:mm:ss'
@@ -199,7 +215,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ withdrawPayInAmtLoading }
+                disabled={ withdrawPayInAmtLoading || valid['HashLock'].error }
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => withdrawPayInAmt?.() }
                 color="primary"            
@@ -222,7 +238,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ requestPaidInCapitalLoading }
+                disabled={ requestPaidInCapitalLoading || valid['HashLock'].error}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => requestPaidInCapital?.() }
                 color="primary"            

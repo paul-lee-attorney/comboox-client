@@ -4,14 +4,16 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxSeqNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  const [ days, setDays ] = useState<number>();
+  const [ days, setDays ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     refresh();
@@ -37,26 +39,29 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Extend Pledge</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
           variant='outlined'
           label='ExtensionDays'
+          error={ valid['ExtensionDays'].error }
+          helperText={ valid['ExtensionDays'].helpTx }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setDays(parseInt(e.target.value ?? '0'))}
-          value={ days?.toString() }
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('ExtensionDays', input, MaxSeqNo, setValid);
+            setDays(input);
+          }}
+          value={ days }
           size='small'
         />
 
         <Button 
-          disabled={ extendPledgeLoading }
+          disabled={ extendPledgeLoading || hasError(valid) }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Start /> }

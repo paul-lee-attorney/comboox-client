@@ -14,7 +14,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../scripts/common";
+import { AddrZero, MaxPrice, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -22,15 +22,11 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { readContract } from "@wagmi/core";
-
 import {
-  lockUpABI,
   useLockUpSetLocker,
   useLockUpRemoveKeyholder,
   useLockUpDelLocker,
   useLockUpAddKeyholder,
-  useLockUpLockedShares, 
 } from "../../../../../generated";
 
 import { DateTimeField } from "@mui/x-date-pickers";
@@ -40,6 +36,7 @@ import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AddTerm } from "../AddTerm";
 import { LockerOfShare } from "./LockerOfShare";
 import { Locker, getLockers } from "../../../../../scripts/comp/lu";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
 
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -48,6 +45,8 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
   const [ dueDate, setDueDate ] = useState<number>();
   const [ open, setOpen ] = useState(false);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const { 
     isLoading: addLockerLoading,
@@ -146,7 +145,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >
                         <IconButton 
-                          disabled={ addLockerLoading }
+                          disabled={ addLockerLoading || hasError(valid)}
                           sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                           onClick={ () => addLocker?.() }
                           color="primary"
@@ -159,11 +158,17 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='SeqOfShare'
                         size="small"
+                        error={ valid['SeqOfShare'].error }
+                        helperText={ valid['SeqOfShare'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setSeqOfShare(e.target.value)}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                          setSeqOfShare(input);
+                        }}
                         value={ seqOfShare }              
                       />
 
@@ -185,7 +190,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >           
                         <IconButton
-                          disabled={ removeLockerLoading } 
+                          disabled={ removeLockerLoading || hasError(valid) } 
                           sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                           onClick={ () => removeLocker?.() }
                           color="primary"
@@ -200,7 +205,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >
                         <IconButton 
-                          disabled={ addKeyholderLoading }
+                          disabled={ addKeyholderLoading || hasError(valid)}
                           sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                           onClick={ () => addKeyholder?.() }
                           color="primary"
@@ -214,11 +219,17 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Keyholder'
                         size="small"
+                        error={ valid['Keyholder'].error }
+                        helperText={ valid['Keyholder'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setKeyholder(e.target.value)}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('Keyholder', input, MaxUserNo, setValid);
+                          setKeyholder(input);
+                        }}
                         value={ keyholder }              
                       />
 
@@ -229,7 +240,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       >
 
                         <IconButton
-                          disabled={ removeKeyholderLoading } 
+                          disabled={ removeKeyholderLoading || hasError(valid) } 
                           sx={{width: 20, height: 20, m: 1, mr: 10}} 
                           onClick={ () => removeKeyholder?.() }
                           color="primary"

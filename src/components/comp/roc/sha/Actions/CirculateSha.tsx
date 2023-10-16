@@ -4,7 +4,7 @@ import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { Recycling } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useState } from "react";
-import { HexParser } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex } from "../../../../../scripts/common/toolsKit";
 
 export interface FileHistoryProps {
   addr: HexType,
@@ -17,6 +17,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const [ docUrl, setDocUrl ] = useState<HexType>(Bytes32Zero);
   const [ docHash, setDocHash ] = useState<HexType>(Bytes32Zero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading,
@@ -39,7 +40,13 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           id="tfUrlOfDoc" 
           label="UrlOfDoc / CID in IPFS" 
           variant="outlined"
-          onChange={e => setDocUrl( HexParser( e.target.value ) )}
+          error={ valid['UrlOfDoc'].error }
+          helperText={ valid['UrlOfDoc'].helpTx }
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('UrlOfDoc', input, 64, setValid); 
+            setDocUrl(input);
+          }}
           value = { docUrl }
           size='small'
         />                                            
@@ -49,7 +56,13 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocHash" 
           label="DocHash" 
           variant="outlined"
-          onChange={e => setDocHash(HexParser( e.target.value ))}
+          error={ valid['DocHash'].error }
+          helperText={ valid['DocHash'].helpTx }
+          onChange={e => {
+            let input = HexParser( e.target.value );
+            onlyHex('DocHash', input, 64, setValid);
+            setDocHash(input);
+          }}
           value = { docHash }
           size='small'
         />                                            
@@ -59,7 +72,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
       <Divider orientation="vertical" sx={{ m:1 }} flexItem />
       
       <Button
-        disabled={!write || isLoading}
+        disabled={!write || isLoading || hasError(valid)}
         variant="contained"
         endIcon={<Recycling />}
         sx={{ m:1, minWidth:218 }}

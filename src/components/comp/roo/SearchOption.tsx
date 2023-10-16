@@ -4,7 +4,8 @@ import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 import { OptWrap, getOptWrap } from "../../../scripts/comp/roo";
-import { booxMap } from "../../../scripts/common";
+import { MaxPrice, booxMap } from "../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../scripts/common/toolsKit";
 
 interface SearchOptionProps{
   setOpt: Dispatch<SetStateAction<OptWrap>>;
@@ -14,7 +15,9 @@ interface SearchOptionProps{
 export function SearchOption({setOpt, setOpen}:SearchOptionProps) {
   const { boox } = useComBooxContext();
 
-  const [ seqOfOpt, setSeqOfOpt ] = useState<number>();
+  const [ seqOfOpt, setSeqOfOpt ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const obtainOpt = async ()=>{
     if (boox && seqOfOpt) {
@@ -31,15 +34,20 @@ export function SearchOption({setOpt, setOpen}:SearchOptionProps) {
         id="tfSeqOfOpt" 
         label="SeqOfOption" 
         variant="outlined"
-        onChange={(e) => 
-          setSeqOfOpt(parseInt(e.target.value ?? '0'))
-        }
+        error={ valid['SeqOfOpt'].error }
+        helperText={ valid['SeqOfOpt'].helpTx }
+
+        onChange={(e) => {
+          let input = e.target.value;
+          onlyNum('SeqOfOpt', input, MaxPrice, setValid);
+          setSeqOfOpt(input);
+        }}
         value = { seqOfOpt }
         size='small'
       />
 
       <Button 
-        disabled={ !seqOfOpt }
+        disabled={ !seqOfOpt || hasError(valid) }
         sx={{ m:1, width:168, height: 40 }} 
         variant="contained" 
         endIcon={ <Search /> }

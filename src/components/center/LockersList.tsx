@@ -4,8 +4,9 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import { dateParser, longDataParser, longSnParser } from '../../scripts/common/toolsKit';
-import { Locker } from '../../scripts/center/rc';
+import { StrLocker } from '../../scripts/center/rc';
 import { LockerFinder } from './LockerFinder';
+import { Dispatch, SetStateAction } from 'react';
 
 
 const columns: GridColDef[] = [
@@ -18,7 +19,7 @@ const columns: GridColDef[] = [
   { 
     field: 'from', 
     headerName: 'From',
-    valueGetter: p => longSnParser(p.row.head.from.toString()),
+    valueGetter: p => longSnParser(p.row.head.from),
     headerAlign: 'center',
     align: 'center',
     width: 268,
@@ -26,7 +27,7 @@ const columns: GridColDef[] = [
   { 
     field: 'to', 
     headerName: 'To',
-    valueGetter: p => longSnParser(p.row.head.to.toString()),
+    valueGetter: p => longSnParser(p.row.head.to),
     headerAlign: 'center',
     align: 'center',
     width: 268,
@@ -34,7 +35,7 @@ const columns: GridColDef[] = [
   { 
     field: 'expireDate', 
     headerName: 'ExpireDate',
-    valueGetter: p => dateParser(p.row.head.expireDate.toString()),
+    valueGetter: p => dateParser(p.row.head.expireDate),
     headerAlign: 'center',
     align:'center',
     width: 180,
@@ -42,7 +43,7 @@ const columns: GridColDef[] = [
   { 
     field: 'amt', 
     headerName: 'Amount',
-    valueGetter: p => longDataParser(p.row.head.value.toString()),
+    valueGetter: p => longDataParser(p.row.head.value),
     headerAlign: 'right',
     align:'right',
     width: 330,
@@ -50,9 +51,9 @@ const columns: GridColDef[] = [
 ];
 
 interface LocksListProps {
-  list: Locker[],
-  setLocker: (locker:Locker)=>void,
-  setOpen: (flag:boolean)=>void,
+  list: StrLocker[],
+  setLocker: Dispatch<SetStateAction<StrLocker>>,
+  setOpen: Dispatch<SetStateAction<boolean>>,
 }
 
 export function LockersList({ list, setLocker, setOpen }:LocksListProps ) {

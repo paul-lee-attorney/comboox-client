@@ -86,11 +86,11 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={ authorities[objVr.authority - 1] }
+                      value={ authorities[Number(objVr.authority) - 1] }
                     />
                   )}
 
-                  {objVr.headRatio > 0 && (
+                  {objVr.headRatio != 0 && (
                     <TextField 
                       variant='outlined'
                       label='HeadRatio'
@@ -104,7 +104,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.amountRatio > 0 && (
+                  {objVr.amountRatio != 0 && (
                     <TextField 
                       variant='outlined'
                       label='AmountRatio'
@@ -177,7 +177,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                 </Stack>
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                  {objVr.vetoers[0] > 0 && (
+                  {objVr.vetoers[0] != 0 && (
                     <TextField 
                       variant='outlined'
                       label='Vetoer_1'
@@ -187,11 +187,11 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.vetoers[0].toString()}
+                      value={objVr.vetoers[0]}
                     />
                   )}
 
-                  {objVr.vetoers[1] > 0 && (
+                  {objVr.vetoers[1] != 0 && (
                     <TextField 
                       variant='outlined'
                       label='Vetoer_2'
@@ -201,7 +201,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.vetoers[1].toString()}
+                      value={objVr.vetoers[1]}
                     />
                   )}
 
@@ -209,7 +209,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  {objVr.frExecDays > 0 && (
+                  {objVr.frExecDays != 0 && (
                     <TextField 
                       variant='outlined'
                       label='FRExecDays'
@@ -219,11 +219,11 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.frExecDays.toString()}
+                      value={objVr.frExecDays}
                     />
                   )}
 
-                  {objVr.dtExecDays > 0 && (
+                  {objVr.dtExecDays != 0 && (
                     <TextField 
                       variant='outlined'
                       label='DTExecDays'
@@ -233,11 +233,11 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.dtExecDays.toString()}
+                      value={objVr.dtExecDays}
                     />
                   )}
 
-                  {objVr.dtConfirmDays > 0 && (
+                  {objVr.dtConfirmDays != 0 && (
                     <TextField 
                       variant='outlined'
                       label='DTConfirmDays'
@@ -247,7 +247,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.dtConfirmDays.toString()}
+                      value={objVr.dtConfirmDays}
                     />
                   )}
 
@@ -255,7 +255,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  {objVr.invExitDays > 0 && (
+                  {objVr.invExitDays != 0 && (
                     <TextField 
                       variant='outlined'
                       label='InvExitDays'
@@ -265,11 +265,11 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.invExitDays.toString()}
+                      value={objVr.invExitDays}
                     />
                   )}
 
-                  {objVr.votePrepareDays > 0 && (
+                  {objVr.votePrepareDays != 0 && (
                     <TextField 
                       variant='outlined'
                       label='VotePrepareDays'
@@ -279,7 +279,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.votePrepareDays.toString()}
+                      value={objVr.votePrepareDays}
                     />
                   )}
 
@@ -292,10 +292,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                       m:1,
                       minWidth: 218,
                     }}
-                    value={objVr.votingDays.toString()}
+                    value={objVr.votingDays}
                   />
 
-                  {objVr.execDaysForPutOpt > 0 && (
+                  {objVr.execDaysForPutOpt != 0 && (
                     <TextField 
                       variant='outlined'
                       label='ExecDaysForPutOpt'
@@ -305,7 +305,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                         m:1,
                         minWidth: 218,
                       }}
-                      value={objVr.execDaysForPutOpt.toString()}
+                      value={objVr.execDaysForPutOpt}
                     />
                   )}
                   

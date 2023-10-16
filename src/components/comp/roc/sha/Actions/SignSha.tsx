@@ -5,7 +5,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../../../scripts/common/sigPage";
-import { HexParser } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum } from "../../../../../scripts/common/toolsKit";
 import { FileHistoryProps } from "./CirculateSha";
 
 export function SignSha({ addr, setNextStep }: FileHistoryProps) {
@@ -14,6 +14,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   
   const { gk } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
     isLoading: signShaLoading,
@@ -44,13 +45,19 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
-        onChange={e => setSigHash(HexParser( e.target.value ))}
+        error={ valid['SigHash'].error }
+        helperText={ valid['SigHash'].helpTx }
+        onChange={e => {
+          let input = HexParser( e.target.value );
+          onlyHex('SigHash', input, 64, setValid);
+          setSigHash(input);
+        }}
         value = { sigHash }
         size='small'
       />                                            
 
       <Button
-        disabled={signShaLoading}
+        disabled={signShaLoading || hasError(valid)}
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, height:40, minWidth:218 }}

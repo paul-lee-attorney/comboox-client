@@ -4,8 +4,8 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxSeqNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
@@ -13,6 +13,8 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const [ seqOfSwap, setSeqOfSwap ] = useState<string>('0');
   const [ value, setValue ] = useState<string>('0');
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     refresh();
@@ -43,11 +45,17 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='SeqOfSwap'
+          error={ valid['SeqOfSwap'].error }
+          helperText={ valid['SeqOfSwap'].helpTx }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setSeqOfSwap(e.target.value ?? '0')}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('SeqOfSwap', input, MaxSeqNo, setValid);
+            setSeqOfSwap(input);
+          }}
           value={ seqOfSwap }
           size='small'
         />
@@ -55,17 +63,23 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='AmtOfETH (Gwei)'
+          error={ valid['AmtOfGwei'].error }
+          helperText={ valid['AmtOfGwei'].helpTx }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setValue(e.target.value ?? '0')}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('AmtOfGwei', input, 0n, setValid);
+            setValue(input);
+          }}
           value={ value }
           size='small'
         />
 
         <Button 
-          disabled={ payOffSwapLoading }
+          disabled={ payOffSwapLoading || hasError(valid) }
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <Payment /> }

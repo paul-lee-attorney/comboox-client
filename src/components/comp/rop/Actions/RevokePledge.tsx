@@ -29,9 +29,6 @@ export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Revoke Pledge</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 

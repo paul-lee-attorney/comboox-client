@@ -27,7 +27,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
   } = useGeneralKeeperPayOffApprovedDeal({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
-    value: BigInt(value) * BigInt( 10 ** 9 ),
+    value: BigInt(value) * (10n ** 9n),
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

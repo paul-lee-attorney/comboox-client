@@ -4,8 +4,8 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { HexType } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
 
 export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
@@ -14,6 +14,9 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
   const [ seqOfTarget, setSeqOfTarget ] = useState<string>();
   const [ paidOfTarget, setPaidOfTarget ] = useState<string>();
   const [ seqOfPledge, setSeqOfPledge ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
 
   const updateResults = ()=>{
     refresh();
@@ -45,11 +48,17 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='seqOfTarget'
+          error={ valid['SeqOfTarget'].error }
+          helperText={ valid['SeqOfTarget'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setSeqOfTarget(e.target.value ?? '0')}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('SeqOfTarget', input, MaxPrice, setValid);
+            setSeqOfTarget( input );
+          }}
           value={ seqOfTarget }
           size='small'
         />
@@ -57,11 +66,17 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='paidOfTarget'
+          error={ valid['PaidOfTarget'].error }
+          helperText={ valid['PaidOfTarget'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setPaidOfTarget(e.target.value ?? '0')}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('PaidOfTarget', input, MaxData, setValid);
+            setPaidOfTarget(input);
+          }}
           value={ paidOfTarget }
           size='small'
         />
@@ -69,17 +84,23 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='seqOfPledge'
+          error={ valid['SeqOfPledge'].error }
+          helperText={ valid['SeqOfPledge'].helpTx }
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setSeqOfPledge(e.target.value ?? '0')}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('SeqOfPledge', input, MaxPrice, setValid);
+            setSeqOfPledge(input);
+          }}
           value={ seqOfPledge }
           size='small'
         />
 
         <Button 
-          disabled={ createSwapLoading }
+          disabled={ createSwapLoading || hasError(valid) }
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <SwapHorizOutlined /> }

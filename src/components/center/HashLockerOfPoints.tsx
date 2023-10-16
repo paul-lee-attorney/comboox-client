@@ -1,16 +1,17 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { Locker } from "../../scripts/center/rc";
+import { StrLocker } from "../../scripts/center/rc";
 import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../scripts/common/toolsKit";
 import { AddrZero } from "../../scripts/common";
 import { PickupPoints } from "./PickupPoints";
 import { WithdrawPoints } from "./WithdrawPoints";
+import { Dispatch, SetStateAction } from "react";
 
 
 export interface HashLockerOfPointsProps{
   open: boolean,
-  locker: Locker,
+  locker: StrLocker,
   userNo: number,
-  setOpen: (flag: boolean)=>void,
+  setOpen: Dispatch<SetStateAction<boolean>>,
   refreshList: () => void,
   getUser: () => void,
 }
@@ -151,10 +152,10 @@ export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, 
 
               <tr>
                 <td colSpan={3}>
-                  {userNo == locker.head.to && (
+                  {userNo == Number(locker.head.to) && (
                     <PickupPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} />
                   )}
-                  {userNo == locker.head.from && (
+                  {userNo == Number(locker.head.from) && (
                     <WithdrawPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} />
                   )}
                 </td>

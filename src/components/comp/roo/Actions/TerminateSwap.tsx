@@ -4,14 +4,16 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxSeqNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
   const [ seqOfSwap, setSeqOfSwap ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     refresh();
@@ -41,17 +43,23 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
         <TextField 
           variant='outlined'
           label='seqOfSwap'
+          error={ valid['SeqOfSwap'].error }
+          helperText={ valid['SeqOfSwap'].helpTx }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setSeqOfSwap(e.target.value ?? '0')}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('SeqOfSwap', input, MaxSeqNo, setValid);
+            setSeqOfSwap(input);
+          }}
           value={ seqOfSwap }
           size='small'
         />
 
         <Button 
-          disabled={ terminateSwapLoading }
+          disabled={ terminateSwapLoading || hasError(valid) }
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <CancelOutlined /> }

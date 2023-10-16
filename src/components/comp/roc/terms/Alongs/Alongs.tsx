@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { 
   Stack,
@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../scripts/common";
+import { AddrZero, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -39,21 +39,21 @@ import dayjs from "dayjs";
 import { AlongLinks } from "./AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
-import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
+import { AlongLink, StrLinkRule, defaultStrLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
+import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 
-export interface SetShaTermProps {
-  sha: HexType,
-  term: HexType,
-  setTerms: Dispatch<SetStateAction<HexType[]>> ,
-  isFinalized: boolean,
+interface AlongsProps extends SetShaTermProps {
+  seqOfTitle: number;
 }
 
-export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
+export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsProps) {
 
   const [ links, setLinks ] = useState<AlongLink[]>();
   const [ drager, setDrager ] = useState<string>('0');
-  const [ rule, setRule ] = useState<LinkRule>(defaultLinkRule);
+  const [ rule, setRule ] = useState<StrLinkRule>(defaultStrLinkRule);
   const [ open, setOpen ] = useState(false);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const { 
     isLoading: addLinkLoading,
@@ -111,7 +111,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
         sx={{ m:0.5, minWidth: 248, justifyContent:'start' }}
         onClick={()=>setOpen(true)}      
       >
-        Drag Along 
+        {seqOfTitle == 3 ? 'Drag Along' : 'Tag Along' } 
       </Button>
 
       <Dialog
@@ -129,14 +129,14 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Stack direction={'row'}>
                   <Toolbar sx={{ textDecoration:'underline' }}>
-                    <h3>Drag Along</h3>
+                    <h3> {seqOfTitle == 3 ? 'Drag Along' : 'Tag Along' }</h3>
                   </Toolbar>
 
                   <CopyLongStrSpan title="Addr"  src={term} />
                 </Stack>
 
                 {!isFinalized && (
-                  <AddTerm sha={ sha } title={ 3 } setTerms={ setTerms } isCreated={ term != AddrZero }  />
+                  <AddTerm sha={ sha } title={ seqOfTitle } setTerms={ setTerms } isCreated={ term != AddrZero }  />
                 )}
 
               </Stack>
@@ -155,10 +155,10 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                           minWidth: 218,
                         }} 
                         size="small"
-                        value={ dayjs.unix(rule.triggerDate) }
+                        value={ dayjs.unix(Number(rule.triggerDate)) }
                         onChange={(date) => setRule((v) => ({
                           ...v,
-                          triggerDate: date ? date.unix() : 0,
+                          triggerDate: date ? date.unix().toString() : '0',
                         }))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />
@@ -167,14 +167,20 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         variant='outlined'
                         label='EffectiveDays'
                         size="small"
+                        error={ valid['EffectiveDays'].error }
+                        helperText={ valid['EffectiveDays'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setRule((v) => ({
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('EffectiveDays', input, MaxSeqNo, setValid);
+                          setRule((v) => ({
                           ...v,
-                          effectiveDays: parseInt( e.target.value ?? '0'),
-                        }))}
+                          effectiveDays: input,
+                        }));
+                      }}
                         value={ rule.effectiveDays }              
                       />
 
@@ -182,14 +188,20 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         variant='outlined'
                         label='ShareRatioThreshold (BP)'
                         size="small"
+                        error={ valid['ShareRatioThreshold'].error }
+                        helperText={ valid['ShareRatioThreshold'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setRule((v) => ({
-                          ...v,
-                          shareRatioThreshold: parseInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('ShareRatioThreshold', input, MaxRatio, setValid);
+                          setRule((v) => ({
+                            ...v,
+                            shareRatioThreshold: input,
+                          }));
+                        }}
                         value={ rule.shareRatioThreshold }              
                       />
 
@@ -207,7 +219,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                           value={ rule.triggerType }
                           onChange={(e) => setRule((v) => ({
                             ...v,
-                            triggerType: Number(e.target.value),
+                            triggerType: e.target.value,
                           }))}
                         >
                           {triggerTypes.map((v, i) => (
@@ -220,14 +232,20 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                         variant='outlined'
                         label='Rate'
                         size="small"
+                        error={ valid['Rate'].error }
+                        helperText={ valid['Rate'].helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
                         }}
-                        onChange={(e) => setRule((v) => ({
-                          ...v,
-                          rate: parseInt(e.target.value ?? '0'),
-                        }))}
+                        onChange={(e) => {
+                          let input = e.target.value;
+                          onlyNum('Rate', input, MaxRatio, setValid);
+                          setRule((v) => ({
+                            ...v,
+                            rate: input,
+                          }));
+                        }}
                         value={ rule.rate }              
                       />
 
@@ -264,7 +282,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       arrow
                     >
                       <IconButton 
-                        disabled={ addLinkLoading }
+                        disabled={ addLinkLoading || hasError(valid)}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addLink?.() }
                         color="primary"
@@ -277,11 +295,17 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       variant='outlined'
                       label='Drager'
                       size="small"
+                      error={ valid['Drager'].error }
+                      helperText={ valid['Drager'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setDrager(e.target.value)}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('Drager', input, MaxUserNo, setValid);
+                        setDrager(input);
+                      }}
                       value={ drager }              
                     />
 
@@ -291,7 +315,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeLinkLoading } 
+                        disabled={ removeLinkLoading || hasError(valid)} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeLink?.() }
                         color="primary"
@@ -306,7 +330,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       arrow
                     >
                       <IconButton 
-                        disabled={ addFollowerLoading }
+                        disabled={ addFollowerLoading || hasError(valid)}
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addFollower?.() }
                         color="primary"
@@ -320,11 +344,17 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                       variant='outlined'
                       label='Follower'
                       size="small"
+                      error={ valid['Follower'].error }
+                      helperText={ valid['Follower'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setFollower(e.target.value ?? '0')}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('Follower', input, MaxUserNo, setValid);
+                        setFollower(input);
+                      }}
                       value={ follower }              
                     />
 
@@ -335,7 +365,7 @@ export function DragAlong({ sha, term, setTerms, isFinalized }: SetShaTermProps)
                     >
 
                       <IconButton
-                        disabled={ removeFollowerLoading } 
+                        disabled={ removeFollowerLoading || hasError(valid)} 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeFollower?.() }
                         color="primary"

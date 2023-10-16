@@ -33,7 +33,7 @@ export const StateOfDeal = [
   'Terminated'
 ];
 
-export interface Head {
+export interface StrHead {
   typeOfDeal: string,
   seqOfDeal: string,
   preSeq: string,
@@ -46,7 +46,7 @@ export interface Head {
   votingWeight: string,
 }
 
-export const defaultHead: Head = {
+export const defaultStrHead: StrHead = {
   typeOfDeal: '2',
   seqOfDeal: '0',
   preSeq: '0',
@@ -59,7 +59,68 @@ export const defaultHead: Head = {
   votingWeight: '100',  
 }
 
-export interface Body {
+export interface Head {
+  typeOfDeal: number,
+  seqOfDeal: number,
+  preSeq: number,
+  classOfShare: number,
+  seqOfShare: number,
+  seller: number,
+  priceOfPaid: number,
+  priceOfPar: number,
+  closingDeadline: number,
+  votingWeight: number,
+}
+
+// export function convertHead(head: StrHead):Head {
+//   let out:Head = {
+//     typeOfDeal: Number(head.typeOfDeal),
+//     seqOfDeal: Number(head.seqOfDeal),
+//     preSeq: Number(head.preSeq),
+//     classOfShare: Number(head.classOfShare),
+//     seqOfShare: Number(head.seqOfShare),
+//     seller: Number(head.seller),
+//     priceOfPaid: Number(head.priceOfPaid),
+//     priceOfPar: Number(head.priceOfPar),
+//     closingDeadline: Number(head.closingDeadline),
+//     votingWeight: Number(head.votingWeight),    
+//   };
+
+//   return out;
+// }
+
+// export function parseOrgHead(head: Head):StrHead {
+//   let out:StrHead = {
+//     typeOfDeal: head.typeOfDeal.toString(),
+//     seqOfDeal: head.seqOfDeal.toString(),
+//     preSeq: head.preSeq.toString(),
+//     classOfShare: head.classOfShare.toString(),
+//     seqOfShare: head.seqOfShare.toString(),
+//     seller: head.seller.toString(),
+//     priceOfPaid: head.priceOfPaid.toString(),
+//     priceOfPar: head.priceOfPar.toString(),
+//     closingDeadline: head.closingDeadline.toString(),
+//     votingWeight: head.votingWeight.toString(),    
+//   };
+
+//   return out;
+// }
+
+
+export const defaultHead: Head = {
+  typeOfDeal: 2,
+  seqOfDeal: 0,
+  preSeq: 0,
+  classOfShare: 0,
+  seqOfShare: 0,
+  seller: 0,
+  priceOfPaid: 100,
+  priceOfPar: 100,
+  closingDeadline: 0,
+  votingWeight: 100,  
+}
+
+export interface StrBody {
   buyer: string,
   groupOfBuyer: string,
   paid: string,
@@ -70,7 +131,46 @@ export interface Body {
   flag: boolean,
 }
 
-export const defaultBody: Body = {
+export interface Body {
+  buyer: number,
+  groupOfBuyer: number,
+  paid: bigint,
+  par: bigint,
+  state: number,
+  para: number,
+  argu: number,
+  flag: boolean,  
+}
+
+// export function convertBody(body: Body): OrgBody {
+//   let out: OrgBody = {
+//     buyer: Number(body.buyer),
+//     groupOfBuyer: Number(body.groupOfBuyer),
+//     paid: BigInt(body.paid),
+//     par: BigInt(body.par),
+//     state: body.state,
+//     para: Number(body.para),
+//     argu: Number(body.argu),
+//     flag: body.flag,      
+//   }
+//   return out;
+// }
+
+// export function parseOrgBody(body: OrgBody): Body {
+//   let out: Body = {
+//     buyer: body.buyer.toString(),
+//     groupOfBuyer: body.groupOfBuyer.toString(),
+//     paid: body.paid.toString(),
+//     par: body.par.toString(),
+//     state: body.state,
+//     para: body.para.toString(),
+//     argu: body.argu.toString(),
+//     flag: body.flag,      
+//   }
+//   return out;
+// }
+
+export const defaultStrBody: StrBody = {
   buyer: '0',
   groupOfBuyer: '0',
   paid: '0',
@@ -81,10 +181,27 @@ export const defaultBody: Body = {
   flag: false,  
 }
 
+export const defaultBody: Body = {
+  buyer: 0,
+  groupOfBuyer: 0,
+  paid: 0n,
+  par: 0n,
+  state: 0,
+  para: 0,
+  argu: 0,
+  flag: false,  
+}
+
 export const defaultDeal: Deal ={
   head: defaultHead,
   body: defaultBody,
   hashLock: Bytes32Zero,
+}
+
+export interface StrDeal {
+  head: StrHead;
+  body: StrBody;
+  hashLock: HexType;
 }
 
 export interface Deal {
@@ -93,7 +210,28 @@ export interface Deal {
   hashLock: HexType;
 }
 
-export function codifyHeadOfDeal(head: Head): HexType {
+
+// export function convertDeal(deal: Deal): OrgDeal {
+//   let out: OrgDeal ={
+//     head: convertHead(deal.head),
+//     body: convertBody(deal.body),
+//     hashLock: deal.hashLock,
+//   }
+
+//   return out;
+// }
+
+// export function parseOrgDeal(deal: OrgDeal): Deal {
+//   let out: Deal ={
+//     head: parseOrgHead(deal.head),
+//     body: parseOrgBody(deal.body),
+//     hashLock: deal.hashLock,
+//   }
+
+//   return out;
+// }
+
+export function codifyHeadOfDeal(head: StrHead): HexType {
   let hexSn:HexType = `0x${
     (Number(head.typeOfDeal).toString(16).padStart(2, '0')) +
     (Number(head.seqOfDeal).toString(16).padStart(4, '0')) +
@@ -132,8 +270,6 @@ export const defaultTimeline: Timeline = {
 export const statesOfSwap = [
   'Pending', 'Issued', 'Closed', 'Terminated'
 ]
-
-
 
 export async function getTypeOfIA(ia: HexType):Promise<number>{
   let typeOfIa = await readContract({
@@ -191,7 +327,7 @@ export async function getSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number)
   return res;
 }
 
-export async function getAllSwaps(ia: HexType, seqOfDeal: string): Promise<readonly Swap[]> {
+export async function getAllSwaps(ia: HexType, seqOfDeal: number): Promise<readonly Swap[]> {
   let res = await readContract({
     address: ia,
     abi: investmentAgreementABI,

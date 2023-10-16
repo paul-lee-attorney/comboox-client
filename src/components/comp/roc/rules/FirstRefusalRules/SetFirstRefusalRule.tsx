@@ -22,7 +22,7 @@ import { FormResults, defFormResults, longSnParser, onlyNum } from '../../../../
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 
-export interface StrFirstRefusalRule {
+export interface FirstRefusalRule {
   seqOfRule: string;
   qtyOfSubRule: string;
   seqOfSubRule: string;
@@ -35,7 +35,7 @@ export interface StrFirstRefusalRule {
   argu: string;
 }
 
-export function strFRCodifier(rule: StrFirstRefusalRule): HexType {
+export function frCodifier(rule: FirstRefusalRule): HexType {
   let hexFR: HexType = `0x${
     (Number(rule.seqOfRule).toString(16).padStart(4, '0')) +
     (Number(rule.qtyOfSubRule).toString(16).padStart(2, '0')) +
@@ -55,8 +55,8 @@ export function strFRCodifier(rule: StrFirstRefusalRule): HexType {
   return hexFR;
 }
 
-export function strFRParser(hexRule: HexType ): StrFirstRefusalRule {
-  let rule: StrFirstRefusalRule = {
+export function frParser(hexRule: HexType ): FirstRefusalRule {
+  let rule: FirstRefusalRule = {
     seqOfRule: parseInt(hexRule.substring(2, 6), 16).toString(), 
     qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16).toString(),
     seqOfSubRule: parseInt(hexRule.substring(8, 10), 16).toString(),
@@ -77,67 +77,12 @@ export function strFRParser(hexRule: HexType ): StrFirstRefusalRule {
   return rule;
 } 
 
-export interface FirstRefusalRule {
-  seqOfRule: number;
-  qtyOfSubRule: number;
-  seqOfSubRule: number;
-  typeOfDeal: number;
-  membersEqual: boolean;
-  proRata: boolean;
-  basedOnPar: boolean;
-  rightholders: number[];
-  para: number;
-  argu: number;
-}
-
-export function frCodifier(rule: FirstRefusalRule): HexType {
-  let hexFR: HexType = `0x${
-    (rule.seqOfRule.toString(16).padStart(4, '0')) +
-    (rule.qtyOfSubRule.toString(16).padStart(2, '0')) +
-    (rule.seqOfSubRule.toString(16).padStart(2, '0')) +
-    (rule.typeOfDeal.toString(16).padStart(2, '0')) +
-    (rule.membersEqual ? '01' : '00') +
-    (rule.proRata ? '01' : '00') +
-    (rule.basedOnPar ? '01' : '00') +
-    (rule.rightholders[0]?.toString(16).padStart(10, '0')) +
-    (rule.rightholders[1]?.toString(16).padStart(10, '0')) +
-    (rule.rightholders[2]?.toString(16).padStart(10, '0')) +
-    (rule.rightholders[3]?.toString(16).padStart(10, '0')) +
-    (rule.para.toString(16).padStart(4, '0')) +
-    (rule.argu.toString(16).padStart(4, '0'))
-  }`;
-
-  return hexFR;
-}
-
-export function frParser(hexRule: HexType ): FirstRefusalRule {
-  let rule: FirstRefusalRule = {
-    seqOfRule: parseInt(hexRule.substring(2, 6), 16), 
-    qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16),
-    seqOfSubRule: parseInt(hexRule.substring(8, 10), 16),
-    typeOfDeal: parseInt(hexRule.substring(10, 12), 16),
-    membersEqual: hexRule.substring(12, 14) === '01',
-    proRata: hexRule.substring(14, 16) === '01',
-    basedOnPar: hexRule.substring(16, 18) === '01',
-    rightholders: [
-      parseInt(hexRule.substring(18, 28), 16),
-      parseInt(hexRule.substring(28, 38), 16),
-      parseInt(hexRule.substring(38, 48), 16),
-      parseInt(hexRule.substring(48, 58), 16),
-    ],
-    para: parseInt(hexRule.substring(58, 62), 16),
-    argu: parseInt(hexRule.substring(62, 66), 16),
-  }; 
-  
-  return rule;
-} 
-
 export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 
   'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];
 
 export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
-  const strDefFR: StrFirstRefusalRule = { 
+  const defFR: FirstRefusalRule = { 
     seqOfRule: seq.toString(), 
     qtyOfSubRule: (seq - 511).toString(), 
     seqOfSubRule: (seq - 511).toString(),
@@ -150,26 +95,13 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
     argu: '0',
   };
 
-  const defFR: FirstRefusalRule = { 
-    seqOfRule: seq, 
-    qtyOfSubRule: seq - 511, 
-    seqOfSubRule: seq - 511,
-    typeOfDeal: 2,
-    membersEqual: true,
-    proRata: true,
-    basedOnPar: false,
-    rightholders: [0,0,0,0],
-    para: 0,
-    argu: 0,
-  };
-
-  const [ objFR, setObjFR ] = useState<StrFirstRefusalRule>(strDefFR); 
+  const [ objFR, setObjFR ] = useState<FirstRefusalRule>(defFR); 
   const [ open, setOpen ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjFR(strFRParser(res))
+      res => setObjFR(frParser(res))
     );
   }, [sha, seq, time]);
 
@@ -212,7 +144,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
 
               <AddRule 
                 sha={ sha }
-                rule={ strFRCodifier(objFR) }
+                rule={ frCodifier(objFR) }
                 isFinalized={isFinalized}
                 valid={valid}
                 refresh={refresh}

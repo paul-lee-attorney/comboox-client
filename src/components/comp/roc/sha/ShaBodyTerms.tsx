@@ -9,10 +9,9 @@ import { PositionAllocateRules } from "../rules/PositionAllocationRules/Position
 import { FirstRefusalRules } from "../rules/FirstRefusalRules/FirstRefusalRules";
 import { GroupUpdateOrders } from "../rules/GroupingRules/GroupUpdateOrders";
 import { LockUp } from "../terms/LockUp/LockUp";
-import { DragAlong } from "../terms/DragAlong/DragAlong";
 import { Options } from "../terms/Options/Options";
-import { TagAlong } from "../terms/TagAlong/TagAlong";
 import { ListingRules } from "../rules/ListingRules/ListingRules";
+import { Alongs } from "../terms/Alongs/Alongs";
 
 export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
 
@@ -125,8 +124,8 @@ export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
             <LockUp sha={ sha } term={ terms[1] } setTerms={ setTerms } isFinalized={finalized} />
           </Stack>
           <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>          
-            <DragAlong sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={finalized} />
-            <TagAlong sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={finalized} />
+            <Alongs sha={ sha } term={ terms[2] } setTerms={ setTerms } isFinalized={finalized} seqOfTitle={3} />
+            <Alongs sha={ sha } term={ terms[3] } setTerms={ setTerms } isFinalized={finalized} seqOfTitle={4} />
           </Stack>
           <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>                      
             <Options sha={ sha } term={ terms[4] } setTerms={ setTerms } isFinalized={finalized} />

@@ -16,15 +16,15 @@ import {
   Dialog,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { HexType } from '../../../../../scripts/common';
-import { centToDollar, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
+import { HexType, MaxData, MaxPrice, MaxSeqNo } from '../../../../../scripts/common';
+import { FormResults, centToDollar, defFormResults, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { titleOfPositions } from '../PositionAllocationRules/SetPositionAllocateRule';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 
-export interface StrListingRule {
-  seqOfRule: string;
+export interface ListingRule {
+  seqOfRule: number;
   titleOfIssuer: string;
   classOfShare: string;
   maxTotalPar: string;
@@ -37,8 +37,8 @@ export interface StrListingRule {
   votingWeight: string;  
 }
 
-export var strDefaultLR: StrListingRule = {
-  seqOfRule: '0',
+export var defaultLR: ListingRule = {
+  seqOfRule: 0,
   titleOfIssuer: '2',
   classOfShare: '0',
   maxTotalPar: '0',
@@ -51,9 +51,9 @@ export var strDefaultLR: StrListingRule = {
   votingWeight: '100',
 }
 
-export function strLRParser(hexLr: HexType):StrListingRule {
-  let rule: StrListingRule = {
-    seqOfRule: parseInt(hexLr.substring(2, 6), 16).toString(), 
+export function lrParser(hexLr: HexType):ListingRule {
+  let rule: ListingRule = {
+    seqOfRule: parseInt(hexLr.substring(2, 6), 16), 
     titleOfIssuer: parseInt(hexLr.substring(6, 10), 16).toString(),
     classOfShare: parseInt(hexLr.substring(10, 14), 16).toString(),
     maxTotalPar: BigInt('0x' + hexLr.substring(14, 30)).toString(),
@@ -68,9 +68,9 @@ export function strLRParser(hexLr: HexType):StrListingRule {
   return rule;
 }
 
-export function strLRCodifier(objLr: StrListingRule ): HexType {
+export function lrCodifier(objLr: ListingRule ): HexType {
   let hexLr: HexType = `0x${
-    (Number(objLr.seqOfRule).toString(16).padStart(4, '0')) +
+    (objLr.seqOfRule.toString(16).padStart(4, '0')) +
     (Number(objLr.titleOfIssuer).toString(16).padStart(4, '0')) +
     (Number(objLr.classOfShare).toString(16).padStart(4, '0')) +
     (BigInt(objLr.maxTotalPar).toString(16).padStart(16, '0')) +
@@ -85,80 +85,18 @@ export function strLRCodifier(objLr: StrListingRule ): HexType {
   return hexLr;
 }
 
-// ==== Interface Num ====
-export interface ListingRule {
-  seqOfRule: number;
-  titleOfIssuer: number;
-  classOfShare: number;
-  maxTotalPar: bigint;
-  titleOfVerifier: number;
-  maxQtyOfInvestors: number;
-  ceilingPrice: number;
-  floorPrice: number;
-  lockupDays: number;
-  offPrice: number;
-  votingWeight: number;  
-}
-
-export var defaultLR: ListingRule = {
-  seqOfRule: 0,
-  titleOfIssuer: 2,
-  classOfShare: 0,
-  maxTotalPar: BigInt(0),
-  titleOfVerifier: 1,
-  maxQtyOfInvestors: 0,
-  ceilingPrice: 0,
-  floorPrice: 0,
-  lockupDays: 0,
-  offPrice: 0,
-  votingWeight: 100,
-}
-
-export function lrParser(hexLr: HexType):ListingRule {
-  let rule: ListingRule = {
-    seqOfRule: parseInt(hexLr.substring(2, 6), 16), 
-    titleOfIssuer: parseInt(hexLr.substring(6, 10), 16),
-    classOfShare: parseInt(hexLr.substring(10, 14), 16),
-    maxTotalPar: BigInt('0x' + hexLr.substring(14, 30)),
-    titleOfVerifier: parseInt(hexLr.substring(30, 34), 16),
-    maxQtyOfInvestors: parseInt(hexLr.substring(34, 38), 16),
-    ceilingPrice: parseInt(hexLr.substring(38, 46), 16),
-    floorPrice: parseInt(hexLr.substring(46, 54), 16),
-    lockupDays: parseInt(hexLr.substring(54, 58), 16),
-    offPrice: parseInt(hexLr.substring(58, 62), 16),
-    votingWeight: parseInt(hexLr.substring(62, 66), 16),  
-  }
-  return rule;
-}
-
-export function lrCodifier(objLr: ListingRule ): HexType {
-  let hexLr: HexType = `0x${
-    (objLr.seqOfRule.toString(16).padStart(4, '0')) +
-    (objLr.titleOfIssuer.toString(16).padStart(4, '0')) +
-    (objLr.classOfShare.toString(16).padStart(4, '0')) +
-    (objLr.maxTotalPar.toString(16).padStart(16, '0')) +
-    (objLr.titleOfVerifier.toString(16).padStart(4, '0')) +
-    (objLr.maxQtyOfInvestors.toString(16).padStart(4, '0')) +
-    (objLr.ceilingPrice.toString(16).padStart(8, '0')) +
-    (objLr.floorPrice.toString(16).padStart(8, '0')) +
-    (objLr.lockupDays.toString(16).padStart(4, '0')) +
-    (objLr.offPrice.toString(16).padStart(4, '0')) +
-    (objLr.votingWeight.toString(16).padStart(4, '0'))
-  }`;
-  return hexLr;
-}
-
 export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
   defaultLR = {...defaultLR, seqOfRule: seq};
 
-  const [ objLR, setObjLR ] = useState<StrListingRule>(strDefaultLR);   
-  const [ valid, setValid ] = useState(true);
+  const [ objLR, setObjLR ] = useState<ListingRule>(defaultLR);   
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const [ open, setOpen ] = useState(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjLR(strLRParser(res))
+      res => setObjLR(lrParser(res))
     );
   }, [sha, seq, time]); 
 
@@ -201,7 +139,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
 
               <AddRule
                 sha={ sha }
-                rule={ strLRCodifier(objLR) }
+                rule={ lrCodifier(objLR) }
                 isFinalized={ isFinalized }
                 valid={valid}
                 refresh={refresh}
@@ -221,18 +159,22 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='ClassOfShare'
-                  error={ onlyNum(objLR.classOfShare, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objLR.classOfShare, MaxSeqNo, setValid).helpTx }
+                  error={ valid['ClassOfShare'].error }
+                  helperText={ valid['ClassOfShare'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    classOfShare: e.target.value,
-                  }))}
-                  value={ objLR.classOfShare } 
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      classOfShare: input,
+                    }));
+                  }}
+                  value={ objLR.classOfShare }
                 />
 
                 {!isFinalized && (
@@ -273,17 +215,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'MaxTotalPar ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ onlyNum(objLR.maxTotalPar, BigInt(2**64-1), setValid).error }
-                  helperText={ onlyNum(objLR.maxTotalPar, BigInt(2**64-1), setValid).helpTx }
+                  error={ valid['MaxTotalPar'].error }
+                  helperText={ valid['MaxTotalPar'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    maxTotalPar: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('MxTotalPar', input, MaxData, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      maxTotalPar: input,
+                    }));
+                  }}
                   value={ isFinalized ? centToDollar(objLR.maxTotalPar) : objLR.maxTotalPar }
                 />
 
@@ -326,17 +272,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='MaxQtyOfInvestors'
-                  error={ onlyNum(objLR.maxQtyOfInvestors, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objLR.maxQtyOfInvestors, MaxSeqNo, setValid).helpTx }
+                  error={ valid['MaxQtyOfInvestors'].error }
+                  helperText={ valid['MaxQtyOfInvestors'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    maxQtyOfInvestors: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('MaxQtyOfInvestors', input, MaxSeqNo, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      maxQtyOfInvestors: input,
+                    }));
+                  }}
                   value={ objLR.maxQtyOfInvestors }
                 />
 
@@ -348,17 +298,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'CeilingPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ onlyNum(objLR.ceilingPrice, BigInt(2**32-1), setValid).error }
-                  helperText={ onlyNum(objLR.ceilingPrice, BigInt(2**32-1), setValid).helpTx }
+                  error={ valid['CeilingPrice'].error }
+                  helperText={ valid['CeilingPrice'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    ceilingPrice: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('CeilingPrice', input, MaxPrice, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      ceilingPrice: input,
+                    }));
+                  }}
                   value={ isFinalized ? centToDollar(objLR.ceilingPrice) : objLR.ceilingPrice }   
                 />
 
@@ -366,17 +320,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'FloorPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ onlyNum(objLR.floorPrice, BigInt(2**32-1), setValid).error }
-                  helperText={ onlyNum(objLR.floorPrice, BigInt(2**32-1), setValid).helpTx }
+                  error={ valid['FloorPrice'].error }
+                  helperText={ valid['FloorPrice'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    floorPrice: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('FloorPrice', input, MaxPrice, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      floorPrice: input,
+                    }));
+                  }}
                   value={ isFinalized ? centToDollar(objLR.floorPrice) : objLR.floorPrice }   
                 />
 
@@ -384,17 +342,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'OffPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ onlyNum(objLR.offPrice, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objLR.offPrice, MaxSeqNo, setValid).helpTx }
+                  error={ valid['OffPrice'].error }
+                  helperText={ valid['OffPrice'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    offPrice: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('OffPrice', input, MaxSeqNo, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      offPrice: input,
+                    }));
+                  }}
                   value={ isFinalized ? centToDollar(objLR.offPrice) : objLR.offPrice }
                 />
 
@@ -402,17 +364,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='LockupDays'
-                  error={ onlyNum(objLR.lockupDays, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objLR.lockupDays, MaxSeqNo, setValid).helpTx }
+                  error={ valid['LockupDays'].error }
+                  helperText={ valid['LockupDays'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    lockupDays: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('LockupDays', input, MaxSeqNo, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      lockupDays: input,
+                    }));
+                  }}
                   value={ objLR.lockupDays }   
                 />
 
@@ -420,17 +386,21 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='VotingWeight (%)'
-                  error={ onlyNum(objLR.votingWeight, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objLR.votingWeight, MaxSeqNo, setValid).helpTx }
+                  error={ valid['VotingWeight'].error }
+                  helperText={ valid['VotingWeight'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjLR((v) => ({
-                    ...v,
-                    votingWeight: e.target.value ,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('VotingWeight', input, MaxSeqNo, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      votingWeight: input,
+                    }));
+                  }}
                   value={ isFinalized ? toPercent(objLR.votingWeight) : objLR.votingWeight }   
                 />
 

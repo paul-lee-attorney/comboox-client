@@ -120,7 +120,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ triggerTypes[rule.triggerType] }              
+                  value={ triggerTypes[Number(rule.triggerType)] }              
                 />
 
                 <TextField 

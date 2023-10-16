@@ -2,6 +2,18 @@ import { readContract } from "@wagmi/core";
 import { registerOfOptionsABI } from "../../generated";
 import { HexType } from "../common";
 
+export interface StrHeadOfOpt{
+  seqOfOpt: string;
+  typeOfOpt: string;
+  classOfShare: string;
+  rate: string;
+  issueDate: string;
+  triggerDate: string;
+  execDays: string;
+  closingDays: string;
+  obligor: string;
+}
+
 export interface HeadOfOpt{
   seqOfOpt: number;
   typeOfOpt: number;
@@ -12,6 +24,33 @@ export interface HeadOfOpt{
   execDays: number;
   closingDays: number;
   obligor: number;
+}
+
+// export function parseOrgHead(head: OrgHeadOfOpt): HeadOfOpt {
+//   let out: HeadOfOpt = {
+//     seqOfOpt: head.seqOfOpt,
+//     typeOfOpt: head.typeOfOpt,
+//     classOfShare: head.classOfShare.toString(),
+//     rate: head.rate.toString(),
+//     issueDate: head.issueDate,
+//     triggerDate: head.triggerDate,
+//     execDays: head.execDays.toString(),
+//     closingDays: head.closingDays.toString(),
+//     obligor: head.obligor.toString(),
+//   };
+//   return out;
+// }
+
+export const defaultStrHeadOfOpt: StrHeadOfOpt = {
+  seqOfOpt: '0',
+  typeOfOpt: '0',
+  classOfShare: '0',
+  rate: '0',
+  issueDate: '0',
+  triggerDate: '0',
+  execDays: '0',
+  closingDays: '0',
+  obligor: '0',
 }
 
 export const defaultHeadOfOpt: HeadOfOpt = {
@@ -26,37 +65,42 @@ export const defaultHeadOfOpt: HeadOfOpt = {
   obligor: 0,
 }
 
-export function optSnParser(sn: HexType): HeadOfOpt {
-  let out: HeadOfOpt = {
-    seqOfOpt: parseInt(sn.substring(2, 10), 16),
-    typeOfOpt: parseInt(sn.substring(10, 12), 16),
-    classOfShare: parseInt(sn.substring(12, 16), 16),
-    rate: parseInt(sn.substring(16, 24), 16),
-    issueDate: parseInt(sn.substring(24, 36), 16),
-    triggerDate: parseInt(sn.substring(36, 48), 16),
-    execDays: parseInt(sn.substring(48, 52), 16),
-    closingDays: parseInt(sn.substring(52, 56), 16),
-    obligor: parseInt(sn.substring(56, 66), 16),
-  }
-  return out;
-}
-
-export function optHeadCodifier(head: HeadOfOpt): HexType {
+export function optHeadCodifier(head: StrHeadOfOpt): HexType {
   let out: HexType = `0x${
-    head.seqOfOpt.toString(16).padStart(8, '0') +
-    head.typeOfOpt.toString(16).padStart(2, '0') +
-    head.classOfShare.toString(16).padStart(4, '0') +
-    head.rate.toString(16).padStart(8, '0') +
-    head.issueDate.toString(16).padStart(12, '0') +
-    head.triggerDate.toString(16).padStart(12, '0') +
-    head.execDays.toString(16).padStart(4, '0') +
-    head.closingDays.toString(16).padStart(4, '0') +
-    head.obligor.toString(16).padStart(10, '0')
+    Number(head.seqOfOpt).toString(16).padStart(8, '0') +
+    Number(head.typeOfOpt).toString(16).padStart(2, '0') +
+    Number(head.classOfShare).toString(16).padStart(4, '0') +
+    Number(head.rate).toString(16).padStart(8, '0') +
+    Number(head.issueDate).toString(16).padStart(12, '0') +
+    Number(head.triggerDate).toString(16).padStart(12, '0') +
+    Number(head.execDays).toString(16).padStart(4, '0') +
+    Number(head.closingDays).toString(16).padStart(4, '0') +
+    Number(head.obligor).toString(16).padStart(10, '0')
   }`;
   return out;
 }
 
 // ==== BodyOfOpt ====
+
+export interface StrBodyOfOpt{
+  closingDeadline: string;
+  rightholder: string;
+  paid: string;
+  par: string;
+  state: string;
+  para: string;
+  argu: string;
+}
+
+export const defaultStrBodyOfOpt: StrBodyOfOpt = {
+  closingDeadline: '0',
+  rightholder: '0',
+  paid: '0',
+  par: '0',
+  state: '0',
+  para: '0',
+  argu: '0',
+}
 
 export interface BodyOfOpt{
   closingDeadline: number;
@@ -71,14 +115,51 @@ export interface BodyOfOpt{
 export const defaultBodyOfOpt: BodyOfOpt = {
   closingDeadline: 0,
   rightholder: 0,
-  paid: BigInt(0),
-  par: BigInt(0),
+  paid: 0n,
+  par: 0n,
   state: 0,
   para: 0,
   argu: 0,
 }
 
+// export function parseOrgBody(body: BodyOfOpt): StrBodyOfOpt {
+
+//   let out: StrBodyOfOpt = {
+//     closingDeadline: body.closingDeadline.toString(),
+//     rightholder: body.rightholder.toString(),
+//     paid: body.paid.toString(),
+//     par: body.par.toString(),
+//     state: body.state,
+//     para: body.para.toString(),
+//     argu: body.argu.toString(),
+//   };
+
+//   return out;
+// }
+
 // ==== Cond ====
+
+export interface StrCond {
+  seqOfCond: string;
+  logicOpr: string;    
+  compOpr1: string;    
+  para1: string;           
+  compOpr2: string;    
+  para2: string;           
+  compOpr3: string;    
+  para3: string;                               
+}
+
+export const defaultStrCond: StrCond = {
+  seqOfCond: '0',
+  logicOpr: '0',    
+  compOpr1: '0',    
+  para1: '0',           
+  compOpr2: '0',
+  para2: '0',        
+  compOpr3: '0',
+  para3: '0',             
+}
 
 export interface Cond {
   seqOfCond: number;
@@ -95,48 +176,64 @@ export const defaultCond: Cond = {
   seqOfCond: 0,
   logicOpr: 0,    
   compOpr1: 0,    
-  para1: BigInt(0),           
-  compOpr2: 0,    
-  para2: BigInt(0),           
-  compOpr3: 0,    
-  para3: BigInt(0),                               
+  para1: 0n,           
+  compOpr2: 0,
+  para2: 0n,        
+  compOpr3: 0,
+  para3: 0n,             
 }
 
-export function condSnParser(sn: HexType): Cond {
-  let out: Cond = {
-    seqOfCond: parseInt(sn.substring(2, 10), 16),
-    logicOpr: parseInt(sn.substring(10, 12), 16),    
-    compOpr1: parseInt(sn.substring(12, 14), 16),    
-    para1: BigInt(parseInt(sn.substring(14, 30), 16)),           
-    compOpr2: parseInt(sn.substring(30, 32), 16),    
-    para2: BigInt(parseInt(sn.substring(32, 48), 16)),           
-    compOpr3: parseInt(sn.substring(48, 50), 16),    
-    para3: BigInt(parseInt(sn.substring(50, 66), 16)),                               
-  }
-  return out;
-}
+// export function parseOrgCond(cond: Cond): StrCond {
+//   let out: StrCond = {
+//     seqOfCond: cond.seqOfCond,
+//     logicOpr: cond.logicOpr,
+//     compOpr1: cond.compOpr1,
+//     para1: cond.para1.toString(),
+//     compOpr2: cond.compOpr2,
+//     para2: cond.para2.toString(),
+//     compOpr3: cond.compOpr3,
+//     para3: cond.para3.toString(),
+//   };
 
-export function condCodifier(cond: Cond): HexType {
+//   return out;
+// }
+
+export function condCodifier(cond: StrCond): HexType {
   let out: HexType = `0x${
-    cond.seqOfCond.toString(16).padStart(8, '0') +
-    cond.logicOpr.toString(16).padStart(2, '0') +
-    cond.compOpr1.toString(16).padStart(2, '0') +
-    cond.para1.toString(16).padStart(16, '0') +
-    cond.compOpr2.toString(16).padStart(2, '0') +
-    cond.para2.toString(16).padStart(16, '0') +
-    cond.compOpr3.toString(16).padStart(2, '0') +
-    cond.para3.toString(16).padStart(16, '0')
+    Number(cond.seqOfCond).toString(16).padStart(8, '0') +
+    Number(cond.logicOpr).toString(16).padStart(2, '0') +
+    Number(cond.compOpr1).toString(16).padStart(2, '0') +
+    BigInt(cond.para1).toString(16).padStart(16, '0') +
+    Number(cond.compOpr2).toString(16).padStart(2, '0') +
+    BigInt(cond.para2).toString(16).padStart(16, '0') +
+    Number(cond.compOpr3).toString(16).padStart(2, '0') +
+    BigInt(cond.para3).toString(16).padStart(16, '0')
   }`;
   return out;
 }
 
 // ==== Option ====
 
+export interface StrOption {
+  head: StrHeadOfOpt;
+  cond: StrCond;
+  body: StrBodyOfOpt;
+}
+
 export interface Option {
   head: HeadOfOpt;
   cond: Cond;
   body: BodyOfOpt;
 }
+
+// export function parseOrgOpt(opt: OrgOption): Option {
+//   let out: Option = {
+//     head: parseOrgHead(opt.head),
+//     cond: parseOrgCond(opt.cond),
+//     body: parseOrgBody(opt.body),
+//   };
+//   return out;
+// } 
 
 export interface OptWrap {
   opt: Option;
@@ -172,11 +269,40 @@ export const comOps = [
   'None', '==', '!=', '>', '<', '>=', '<=' 
 ]
 
+export interface StrCheckPoint {
+  timestamp: string;
+  paid: string;
+  par: string;
+  cleanPaid: string;
+}
+
+
 export interface CheckPoint {
   timestamp: number;
   paid: bigint;
   par: bigint;
   cleanPaid: bigint;
+}
+
+// export function parseOrgOracle(oracle: OrgCheckPoint): CheckPoint {
+//   let out: CheckPoint = {
+//     timestamp: oracle.toString(),
+//     paid: oracle.paid.toString(),
+//     par: oracle.par.toString(),
+//     cleanPaid: oracle.cleanPaid.toString(),
+//   }
+//   return out;
+// }
+
+export interface StrSwap{
+  seqOfSwap: string;
+  seqOfPledge: string;
+  paidOfPledge: string;
+  seqOfTarget: string;
+  paidOfTarget: string;
+  priceOfDeal: string;
+  isPutOpt: boolean;
+  state: string; 
 }
 
 export interface Swap{
@@ -189,6 +315,22 @@ export interface Swap{
   isPutOpt: boolean;
   state: number; 
 }
+
+// export function parseOrgSwap(swap: OrgSwap): Swap {
+
+//   let out: Swap = {
+//     seqOfSwap: swap.seqOfSwap.toString(),
+//     seqOfPledge: swap.seqOfPledge.toString(),
+//     paidOfPledge: swap.paidOfPledge.toString(),
+//     seqOfTarget: swap.seqOfTarget.toString(),
+//     paidOfTarget: swap.paidOfTarget.toString(),
+//     priceOfDeal: swap.priceOfDeal.toString(),
+//     isPutOpt: swap.isPutOpt,
+//     state: swap.state.toString(),
+//   }
+
+//   return out;
+// }
 
 // ==== Read Funcs =====
 
@@ -226,7 +368,7 @@ export async function isOption(addr: HexType, seqOfOpt: number): Promise<boolean
   return res;
 }
 
-export async function getOption(addr: HexType, seqOfOpt: number): Promise<Option>{
+export async function getOption(addr: HexType, seqOfOpt: string): Promise<Option>{
 
   let res = await readContract({
     address: addr,
@@ -273,7 +415,7 @@ export async function isObligor(addr: HexType, seqOfOpt: number, acct: number): 
   return res;
 }
 
-export async function getObligorsOfOption(addr: HexType, seqOfOpt: number): Promise<readonly bigint[]>{
+export async function getObligorsOfOption(addr: HexType, seqOfOpt: string): Promise<readonly bigint[]>{
 
   let res = await readContract({
     address: addr,
@@ -432,7 +574,7 @@ export async function getAllOpts(addr: HexType): Promise<readonly OptWrap[]>{
 
   while(len > 0) {
     let opt = opts[len - 1];
-    let obligors = await getObligorsOfOption(addr, opt.head.seqOfOpt);
+    let obligors = await getObligorsOfOption(addr, opt.head.seqOfOpt.toString());
     let item: OptWrap = {
       opt: opt,
       obligors: obligors.map(v => Number(v)),
@@ -444,7 +586,7 @@ export async function getAllOpts(addr: HexType): Promise<readonly OptWrap[]>{
   return out;
 }
 
-export async function getOptWrap(addr: HexType, seqOfOpt: number): Promise<OptWrap>{
+export async function getOptWrap(addr: HexType, seqOfOpt: string): Promise<OptWrap>{
 
   let opt = await getOption(addr, seqOfOpt);
   let obligors = await getObligorsOfOption(addr, seqOfOpt);

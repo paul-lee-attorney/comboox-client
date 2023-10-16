@@ -14,14 +14,14 @@ import {
   Dialog,
   DialogContent,
 } from '@mui/material';
-import { HexType } from '../../../../../scripts/common';
+import { HexType, MaxUserNo } from '../../../../../scripts/common';
 import { AddRule } from '../AddRule';
-import { longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 import { ListAlt } from '@mui/icons-material';
 
-export interface StrGroupUpdateOrder {
+export interface GroupUpdateOrder {
   seqOfRule: string;
   qtyOfSubRule: string;
   seqOfSubRule: string;
@@ -31,7 +31,7 @@ export interface StrGroupUpdateOrder {
   para: string;
 }
 
-export function strGUOCodifier(order: StrGroupUpdateOrder):HexType {
+export function guoCodifier(order: GroupUpdateOrder):HexType {
   let hexGuo: HexType = `0x${
     (Number(order.seqOfRule).toString(16).padStart(4, '0')) +
     (Number(order.qtyOfSubRule).toString(16).padStart(2, '0')) +
@@ -48,8 +48,8 @@ export function strGUOCodifier(order: StrGroupUpdateOrder):HexType {
   return hexGuo;
 }
 
-export function strGUOParser(hexOrder: HexType): StrGroupUpdateOrder {
-  let order: StrGroupUpdateOrder = {
+export function guoParser(hexOrder: HexType): GroupUpdateOrder {
+  let order: GroupUpdateOrder = {
     seqOfRule: parseInt(hexOrder.substring(2, 6), 16).toString(), 
     qtyOfSubRule: parseInt(hexOrder.substring(6, 8), 16).toString(),
     seqOfSubRule: parseInt(hexOrder.substring(8, 10), 16).toString(),
@@ -67,81 +67,26 @@ export function strGUOParser(hexOrder: HexType): StrGroupUpdateOrder {
   return order;
 }
 
-export interface GroupUpdateOrder {
-  seqOfRule: number;
-  qtyOfSubRule: number;
-  seqOfSubRule: number;
-  addMember: boolean;
-  groupRep: number;
-  members: number[];
-  para: number;
-}
-
-export function guoCodifier(order: GroupUpdateOrder):HexType {
-  let hexGuo: HexType = `0x${
-    (order.seqOfRule.toString(16).padStart(4, '0')) +
-    (order.qtyOfSubRule.toString(16).padStart(2, '0')) +
-    (order.seqOfSubRule.toString(16).padStart(2, '0')) +
-    (order.addMember ? '01' : '00') +
-    (order.groupRep.toString(16).padStart(10, '0')) +
-    (order.members[0].toString(16).padStart(10, '0')) +
-    (order.members[1].toString(16).padStart(10, '0')) +
-    (order.members[2].toString(16).padStart(10, '0')) +
-    (order.members[3].toString(16).padStart(10, '0')) +
-    (order.para.toString(16).padStart(4, '0'))
-  }`;
-
-  return hexGuo;
-}
-
-export function guoParser(hexOrder: HexType): GroupUpdateOrder {
-  let order: GroupUpdateOrder = {
-    seqOfRule: parseInt(hexOrder.substring(2, 6), 16), 
-    qtyOfSubRule: parseInt(hexOrder.substring(6, 8), 16),
-    seqOfSubRule: parseInt(hexOrder.substring(8, 10), 16),
-    addMember: hexOrder.substring(10, 12) === '01',
-    groupRep: parseInt(hexOrder.substring(12, 22), 16),
-    members: [
-      parseInt(hexOrder.substring(22, 32), 16),
-      parseInt(hexOrder.substring(32, 42), 16),
-      parseInt(hexOrder.substring(42, 52), 16),
-      parseInt(hexOrder.substring(52, 62), 16),
-    ],
-    para: parseInt(hexOrder.substring(62, 66), 16),
-  }
-
-  return order;
-}
-
 export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
-  const strDefaultOrder: StrGroupUpdateOrder = {
+  const defOrder: GroupUpdateOrder = {
     seqOfRule: seq.toString(),
     qtyOfSubRule: (seq - 767).toString(),
     seqOfSubRule: (seq - 767).toString(),
     addMember: true,
     groupRep: '0',
     members: ['0', '0', '0', '0'],
-    para: '0',    
+    para: '0',
   };
 
-  const defaultOrder: GroupUpdateOrder = {
-    seqOfRule: seq,
-    qtyOfSubRule: seq - 767,
-    seqOfSubRule: seq - 767,
-    addMember: true,
-    groupRep: 0,
-    members: [0, 0, 0, 0],
-    para: 0,    
-  };
+  const [ objGuo, setObjGuo ] = useState<GroupUpdateOrder>(defOrder); 
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
-  const [ objGuo, setObjGuo ] = useState<StrGroupUpdateOrder>(strDefaultOrder); 
-  const [valid, setValid] = useState(true);
   const [ open, setOpen ] = useState<boolean>(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjGuo(strGUOParser(res))
+      res => setObjGuo(guoParser(res))
     );
   }, [sha, seq, time]);
 
@@ -184,7 +129,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
 
               <AddRule 
                 sha={ sha }
-                rule={ strGUOCodifier(objGuo) }
+                rule={ guoCodifier(objGuo) }
                 isFinalized = { isFinalized }
                 valid={valid}
                 refresh = { refresh }
@@ -200,18 +145,22 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='QtyOfSubRule'
                   size="small"
-                  error={ onlyNum(objGuo.qtyOfSubRule, BigInt(2**8-1), setValid).error }
-                  helperText={ onlyNum(objGuo.qtyOfSubRule, BigInt(2**8-1), setValid).helpTx }
+                  error={ valid['QtyOfSubRule'].error }
+                  helperText={ valid['QtyOfSubRule'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjGuo((v) => ({
-                    ...v,
-                    qtyOfSubRule: e.target.value,
-                  }))}
-                  value={ objGuo.qtyOfSubRule }              
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('QtyOfSubRule', input, 255n, setValid);
+                    setObjGuo((v) => ({
+                      ...v,
+                      qtyOfSubRule: input,
+                    }));
+                  }}
+                  value={ objGuo.qtyOfSubRule }
                 />
 
                 {!isFinalized && (
@@ -251,8 +200,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='GroupRep'
                   size="small"
-                  error={ onlyNum(objGuo.groupRep, BigInt(2**40-1), setValid).error }
-                  helperText={ onlyNum(objGuo.groupRep, BigInt(2**8-1), setValid).helpTx }
+                  error={ valid['GroupRep'].error }
+                  helperText={ valid['GroupRep'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -273,21 +222,25 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_1'
                   size="small"
-                  error={ onlyNum(objGuo.members[0], BigInt(2**40-1), setValid).error }
-                  helperText={ onlyNum(objGuo.members[0], BigInt(2**40-1), setValid).helpTx }
+                  error={ valid['Members_1'].error }
+                  helperText={ valid['Members_1'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjGuo((v) => {
-                    let arr = [...v.members];
-                    arr[0] = e.target.value;
-                    return {
-                      ...v,
-                      members: arr,
-                    };
-                  })}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Members_1', input, MaxUserNo, setValid);
+                    setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[0] = input;
+                      return {
+                        ...v,
+                        members: arr,
+                      }
+                    });
+                  }}
                   value={ isFinalized ? longSnParser(objGuo.members[0]) : objGuo.members[0] }
                 />
 
@@ -295,21 +248,25 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_2'
                   size="small"
-                  error={ onlyNum(objGuo.members[1], BigInt(2**40-1), setValid).error }
-                  helperText={ onlyNum(objGuo.members[1], BigInt(2**40-1), setValid).helpTx }
+                  error={ valid['Members_2'].error }
+                  helperText={ valid['Members_2'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjGuo((v) => {
-                    let arr = [...v.members];
-                    arr[1] = e.target.value;
-                    return {
-                      ...v,
-                      members: arr,
-                    };
-                  })}
+                  onChange={(e) =>{
+                    let input = e.target.value;
+                    onlyNum('Members_2', input, MaxUserNo, setValid);
+                    setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[1] = input;
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    });
+                  }}
                   value={ isFinalized ? longSnParser(objGuo.members[1]) : objGuo.members[1] }
                 />
 
@@ -317,21 +274,25 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_3'
                   size="small"
-                  error={ onlyNum(objGuo.members[2], BigInt(2**40-1), setValid).error }
-                  helperText={ onlyNum(objGuo.members[2], BigInt(2**40-1), setValid).helpTx }
+                  error={ valid['Members_3'].error }
+                  helperText={ valid['Members_3'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjGuo((v) => {
-                    let arr = [...v.members];
-                    arr[2] = e.target.value;
-                    return {
-                      ...v,
-                      members: arr,
-                    };
-                  })}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Members_3', input, MaxUserNo, setValid);
+                    setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[2] = input;
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    });
+                  }}
                   value={ isFinalized ? longSnParser(objGuo.members[2]) : objGuo.members[2] }
                 />
 
@@ -339,21 +300,25 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_4'
                   size="small"
-                  error={ onlyNum(objGuo.members[3], BigInt(2**40-1), setValid).error }
-                  helperText={ onlyNum(objGuo.members[3], BigInt(2**40-1), setValid).helpTx }
+                  error={ valid['Members_4'].error }
+                  helperText={ valid['Members_4'].helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjGuo((v) => {
-                    let arr = [...v.members];
-                    arr[3] = e.target.value;
-                    return {
-                      ...v,
-                      members: arr,
-                    };
-                  })}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Members_4', input, MaxUserNo, setValid);
+                    setObjGuo((v) => {
+                      let arr = [...v.members];
+                      arr[3] = input;
+                      return {
+                        ...v,
+                        members: arr,
+                      };
+                    });
+                  }}
                   value={ isFinalized ? longSnParser(objGuo.members[3]) : objGuo.members[3] }
                 />
 

@@ -20,15 +20,15 @@ import {
 } from '../../../generated';
 
 
-import { HexType, booxMap } from '../../../scripts/common';
+import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
-import { Share, codifyHeadOfShare, getSharesList, } from '../../../scripts/comp/ros';
-import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { Share, StrShare, codifyHeadOfShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 
 
 const defaultShare: Share = {
@@ -59,7 +59,9 @@ export function InitBos({nextStep}: InitBosProps) {
   const { boox } = useComBooxContext();
 
   const [sharesList, setSharesList] = useState<readonly Share[]>();
-  const [share, setShare] = useState<Share>(defaultShare);
+  const [share, setShare] = useState<StrShare>(defStrShare);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   
   const [time, setTime] = useState(0);
 
@@ -76,10 +78,10 @@ export function InitBos({nextStep}: InitBosProps) {
           share.head.shareholder && share.head.priceOfPaid && 
           share.head.priceOfPar && share.body.payInDeadline &&
           share.body.paid && share.body.par && share.head.votingWeight
-      ? [ codifyHeadOfShare(share.head),
+      ? [ codifyHeadOfStrShare(share.head),
           BigInt(share.body.payInDeadline),
-          share.body.paid,
-          share.body.par  ] 
+          BigInt(share.body.paid),
+          BigInt(share.body.par)  ] 
       : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
@@ -92,10 +94,10 @@ export function InitBos({nextStep}: InitBosProps) {
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: share.head.seqOfShare > 0
+    args: Number(share.head.seqOfShare) > 0
         ? [ BigInt(share.head.seqOfShare), 
-            share.body.paid, 
-            share.body.par ]
+            BigInt(share.body.paid), 
+            BigInt(share.body.par) ]
         : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
@@ -159,7 +161,7 @@ export function InitBos({nextStep}: InitBosProps) {
               sx={{m:1, mx:3, px:3, py:1}}
               variant='contained'
               startIcon={<AddCircle />}
-              disabled={!issueShare || issueShareLoading}
+              disabled={!issueShare || issueShareLoading || hasError(valid) }
               onClick={()=>issueShare?.()}
               size="small"
             >
@@ -177,16 +179,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfClass" 
                   label="ClassOfShare" 
                   variant="outlined"
+                  error={ valid['ClassOfShare'].error }
+                  helperText={ valid['ClassOfShare'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
-                        class: parseInt(e.target.value ?? '0'),
+                        class: input,
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.class.toString()}
+                  value = {share.head.class}
                   size='small'
                 />
 
@@ -195,16 +201,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfShareholder" 
                   label="Shareholder" 
                   variant="outlined"
+                  error={ valid['Shareholder'].error }
+                  helperText={ valid['Shareholder'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Shareholder', input, MaxUserNo, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
-                        shareholder: parseInt(e.target.value ?? '0'), 
+                        shareholder: input, 
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.shareholder.toString()}
+                  value = {share.head.shareholder}
                   size='small'
                 />
 
@@ -213,16 +223,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfPriceOfPaid" 
                   label="PriceOfPaid (Cent)" 
                   variant="outlined"
+                  error={ valid['PriceOfPaid'].error }
+                  helperText={ valid['PriceOfPaid'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('PriceOfPaid', input, MaxPrice, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
-                        priceOfPaid: parseInt(e.target.value ?? '0'),
+                        priceOfPaid: input,
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.priceOfPaid.toString()}
+                  value = {share.head.priceOfPaid }
                   size='small'
                 />
 
@@ -231,16 +245,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfPriceOfPar" 
                   label="PriceOfPar (Cent)" 
                   variant="outlined"
+                  error={ valid['PriceOfPar'].error }
+                  helperText={ valid['PriceOfPar'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('PriceOfPar', input, MaxPrice, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
-                        priceOfPar: parseInt(e.target.value ?? '0'),
+                        priceOfPar: input,
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.priceOfPar.toString()}
+                  value = {share.head.priceOfPar }
                   size='small'
                 />
 
@@ -251,11 +269,11 @@ export function InitBos({nextStep}: InitBosProps) {
                 <DateTimeField
                   label='IssueDate'
                   sx={{m:1, width:188 }}
-                  value={ dayjs.unix(share.head.issueDate) }
+                  value={ dayjs.unix(Number(share.head.issueDate)) }
                   onChange={(date) => setShare((v) => ({
                     head: {
                       ...v.head,
-                      issueDate: date ? date.unix() : 0,
+                      issueDate: date ? date.unix().toString() : '0',
                     },
                     body: v.body,
                   }))}
@@ -266,12 +284,12 @@ export function InitBos({nextStep}: InitBosProps) {
                 <DateTimeField
                   label='PayInDeadline'
                   sx={{m:1, width:188 }}
-                  value={ dayjs.unix(share.body.payInDeadline) }
+                  value={ dayjs.unix(Number(share.body.payInDeadline)) }
                   onChange={(date) => setShare((v) => ({
                     head: v.head,
                     body: {
                       ...v.body,
-                      payInDeadline: date ? date.unix() : 0,
+                      payInDeadline: date ? date.unix().toString() : '0',
                     },
                   }))}
                   format='YYYY-MM-DD HH:mm:ss'
@@ -283,16 +301,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfPaid" 
                   label="Paid (Cent)" 
                   variant="outlined"
+                  error={ valid['Paid'].error }
+                  helperText={ valid['Paid'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Paid', input, MaxData, setValid);
                     setShare(v => ({
                       head: v.head,
                       body: {
                         ...v.body,
-                        paid: BigInt(e.target.value ?? '0'),
+                        paid: input,
                       },
                     }));
                   }}
-                  value = {share.body.paid.toString()}
+                  value = {share.body.paid}
                   size='small'
                 />
 
@@ -301,16 +323,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfPar" 
                   label="Par (Cent)" 
                   variant="outlined"
+                  error={ valid['Par'].error }
+                  helperText={ valid['Par'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Par', input, MaxData, setValid);
                     setShare(v => ({
                       head: v.head,
                       body: {
                         ...v.body,
-                        par: BigInt(e.target.value ?? '0'),
+                        par: input,
                       },
                     }));
                   }}
-                  value = {share.body.par.toString()}
+                  value = {share.body.par}
                   size='small'
                 />
 
@@ -319,16 +345,20 @@ export function InitBos({nextStep}: InitBosProps) {
                   id="tfVotingWeight" 
                   label="VotingWeight (%)" 
                   variant="outlined"
+                  error={ valid['VotingWeight'].error }
+                  helperText={ valid['VotingWeight'].helpTx }
                   onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('VotingWeight', input, MaxSeqNo, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
-                        votingWeight: parseInt(e.target.value ?? '10000')
+                        votingWeight: input,
                       },
                       body: v.body,
                     }));
                   }}
-                  value = {share.head.votingWeight.toString()}
+                  value = {share.head.votingWeight}
                   size='small'
                 />
 
@@ -343,18 +373,24 @@ export function InitBos({nextStep}: InitBosProps) {
               <TextField
                 variant="outlined"
                 label="SeqOfShare"
+                error={ valid['SeqOfShare'].error }
+                helperText={ valid['SeqOfShare'].helpTx }
                 sx={{
                   m:1,
                   width: 188
                 }}
-                onChange={(e)=>setShare(v => ({
-                  ...v,
-                  head: {
-                    ...v.head,
-                    seqOfShare: parseInt(e.target.value ?? '0'),
-                  }
-                }))}
-                value={ share.head.seqOfShare.toString() }
+                onChange={(e)=>{
+                  let input = e.target.value;
+                  onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                  setShare(v => ({
+                    ...v,
+                    head: {
+                      ...v.head,
+                      seqOfShare: input,
+                    }
+                  }));
+                }}
+                value={ share.head.seqOfShare }
                 size='small'
               />
 
@@ -362,7 +398,7 @@ export function InitBos({nextStep}: InitBosProps) {
                 sx={{m:1, p:1}}
                 variant='contained'
                 endIcon={<RemoveCircle />}
-                disabled={ !delShare || delShareLoading }
+                disabled={ !delShare || delShareLoading || hasError(valid) }
                 onClick={()=>delShare?.()}
                 size="small"
               >
@@ -370,7 +406,6 @@ export function InitBos({nextStep}: InitBosProps) {
               </Button>
 
             </Stack>
-
 
           </Stack>
           

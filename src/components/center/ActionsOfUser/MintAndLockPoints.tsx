@@ -10,7 +10,7 @@ import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { HeadOfLocker, StrHeadOfLocker, defaultHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
+import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';
@@ -126,10 +126,10 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head.expireDate) }
+              value={ dayjs.unix(Number(head.expireDate)) }
               onChange={(date) => setHead((v) => ({
                 ...v,
-                expireDate: date ? date.unix() : 0,
+                expireDate: date ? date.unix().toString() : '0',
               }))}
               format='YYYY-MM-DD HH:mm:ss'
               size='small'

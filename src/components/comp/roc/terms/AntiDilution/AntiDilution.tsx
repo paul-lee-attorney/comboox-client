@@ -14,7 +14,7 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { AddrZero, HexType } from "../../../../../scripts/common";
+import { AddrZero, HexType, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -30,10 +30,11 @@ import {
 } from "../../../../../generated";
 
 
-import { Benchmark } from "./Benchmark";
+import { Benchmark } from "../Alongs/Benchmark";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { BenchmarkType, getBenchmarks } from "../../../../../scripts/comp/ad";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -48,6 +49,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
   const [ classOfShare, setClassOfShare ] = useState<string>();
   const [ price, setPrice ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const { 
     isLoading: addMarkLoading,
@@ -149,7 +152,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       arrow
                     >
                       <IconButton 
-                        disabled={ addMarkLoading }
+                        disabled={ addMarkLoading || hasError(valid)}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addMark?.() }
                         color="primary"
@@ -162,11 +165,17 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       variant='outlined'
                       label='ClassOfShare'
                       size="small"
+                      error={ valid['ClassOfShare'].error }
+                      helperText={ valid['ClassOfShare'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setClassOfShare(e.target.value)}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                        setClassOfShare(input);
+                      }}
                       value={ classOfShare }              
                     />
 
@@ -174,11 +183,17 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       variant='outlined'
                       label='Price'
                       size="small"
+                      error={ valid['Price'].error }
+                      helperText={ valid['Price'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setPrice(e.target.value)}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('Price', input, MaxPrice, setValid);
+                        setPrice(input);
+                      }}
                       value={ price }
                     />
 
@@ -188,7 +203,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeMarkIsLoading } 
+                        disabled={ removeMarkIsLoading || hasError(valid)} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeMark?.() }
                         color="primary"
@@ -217,11 +232,17 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       variant='outlined'
                       label='Obligor'
                       size="small"
+                      error={ valid['Obligor'].error }
+                      helperText={ valid['Obligor'].helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      onChange={(e) => setObligor(e.target.value)}
+                      onChange={(e) => {
+                        let input = e.target.value;
+                        onlyNum('Obligor', input, MaxUserNo, setValid);
+                        setObligor(input);
+                      }}
                       value={ obligor }              
                     />
 
@@ -232,7 +253,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     >
 
                       <IconButton
-                        disabled={ removeObligorIsLoading } 
+                        disabled={ removeObligorIsLoading || hasError(valid)} 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"

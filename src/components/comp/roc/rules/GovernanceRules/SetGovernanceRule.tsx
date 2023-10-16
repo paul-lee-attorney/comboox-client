@@ -17,12 +17,12 @@ import {
   DialogActions,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { HexType, MaxRatio } from '../../../../../scripts/common';
+import { HexType, MaxRatio, MaxSeqNo } from '../../../../../scripts/common';
 import { FormResults, dateParser, defFormResults, longDataParser, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { getRule } from '../../../../../scripts/comp/sha';
 
-export interface StrGovernanceRule {
+export interface GovernanceRule {
   fundApprovalThreshold: string;
   basedOnPar: boolean ;
   proposeWeightRatioOfGM: string ;
@@ -40,7 +40,7 @@ export interface StrGovernanceRule {
   minVoteRatioOnChain: string;
 }
 
-const defaultStrGR: StrGovernanceRule = {
+const defGR: GovernanceRule = {
   fundApprovalThreshold: '0',
   basedOnPar: false,
   proposeWeightRatioOfGM: '1000',
@@ -58,8 +58,8 @@ const defaultStrGR: StrGovernanceRule = {
   minVoteRatioOnChain: '500',   
 }
 
-export function strGRParser(hexRule: HexType): StrGovernanceRule {
-  let rule: StrGovernanceRule = {
+export function strGRParser(hexRule: HexType): GovernanceRule {
+  let rule: GovernanceRule = {
     fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16).toString(),
     basedOnPar: hexRule.substring(10, 12) === '01',
     proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16).toString(),
@@ -80,7 +80,7 @@ export function strGRParser(hexRule: HexType): StrGovernanceRule {
   return rule;
 }
 
-export function strGRCodifier(rule: StrGovernanceRule): HexType {
+export function strGRCodifier(rule: GovernanceRule): HexType {
   let hexGR: HexType = `0x${
     Number(rule.fundApprovalThreshold).toString(16).padStart(8, '0') +
     (rule.basedOnPar ? '01' : '00') +
@@ -102,85 +102,85 @@ export function strGRCodifier(rule: StrGovernanceRule): HexType {
   return hexGR;
 }
 
-export interface GovernanceRule {
-  fundApprovalThreshold: number;
-  basedOnPar: boolean ;
-  proposeWeightRatioOfGM: number ;
-  proposeHeadRatioOfMembers: number ;
-  proposeHeadRatioOfDirectorsInGM: number ;
-  proposeHeadRatioOfDirectorsInBoard: number ;
-  maxQtyOfMembers: number ;
-  quorumOfGM: number ;
-  maxNumOfDirectors: number ;
-  tenureMonOfBoard: number ;
-  quorumOfBoardMeeting: number ;
-  establishedDate: number ;
-  businessTermInYears: number ;
-  typeOfComp: number ; 
-  minVoteRatioOnChain: number;
-}
+// export interface GovernanceRule {
+//   fundApprovalThreshold: number;
+//   basedOnPar: boolean ;
+//   proposeWeightRatioOfGM: number ;
+//   proposeHeadRatioOfMembers: number ;
+//   proposeHeadRatioOfDirectorsInGM: number ;
+//   proposeHeadRatioOfDirectorsInBoard: number ;
+//   maxQtyOfMembers: number ;
+//   quorumOfGM: number ;
+//   maxNumOfDirectors: number ;
+//   tenureMonOfBoard: number ;
+//   quorumOfBoardMeeting: number ;
+//   establishedDate: number ;
+//   businessTermInYears: number ;
+//   typeOfComp: number ; 
+//   minVoteRatioOnChain: number;
+// }
 
-const defaultGR: GovernanceRule = {
-  fundApprovalThreshold: 0,
-  basedOnPar: false,
-  proposeWeightRatioOfGM: 1000,
-  proposeHeadRatioOfMembers: 0,
-  proposeHeadRatioOfDirectorsInGM: 3333,
-  proposeHeadRatioOfDirectorsInBoard: 1000,
-  maxQtyOfMembers: 50,
-  quorumOfGM: 5000,
-  maxNumOfDirectors: 5,
-  tenureMonOfBoard: 36,
-  quorumOfBoardMeeting: 5000,
-  establishedDate: 0,
-  businessTermInYears: 20,
-  typeOfComp: 1,
-  minVoteRatioOnChain: 500,   
-}
+// const defaultGR: GovernanceRule = {
+//   fundApprovalThreshold: 0,
+//   basedOnPar: false,
+//   proposeWeightRatioOfGM: 1000,
+//   proposeHeadRatioOfMembers: 0,
+//   proposeHeadRatioOfDirectorsInGM: 3333,
+//   proposeHeadRatioOfDirectorsInBoard: 1000,
+//   maxQtyOfMembers: 50,
+//   quorumOfGM: 5000,
+//   maxNumOfDirectors: 5,
+//   tenureMonOfBoard: 36,
+//   quorumOfBoardMeeting: 5000,
+//   establishedDate: 0,
+//   businessTermInYears: 20,
+//   typeOfComp: 1,
+//   minVoteRatioOnChain: 500,   
+// }
 
-export function grCodifier(rule: GovernanceRule): HexType {
-  let hexGR: HexType = `0x${
-    rule.fundApprovalThreshold.toString(16).padStart(8, '0') +
-    (rule.basedOnPar ? '01' : '00') +
-    rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') +
-    rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') + 
-    rule.proposeHeadRatioOfDirectorsInGM.toString(16).padStart(4, '0') + 
-    rule.proposeHeadRatioOfDirectorsInBoard.toString(16).padStart(4, '0') + 
-    rule.maxQtyOfMembers.toString(16).padStart(4, '0') +       
-    rule.quorumOfGM.toString(16).padStart(4, '0') +       
-    rule.maxNumOfDirectors.toString(16).padStart(2, '0') +       
-    rule.tenureMonOfBoard.toString(16).padStart(4, '0') +       
-    rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') +       
-    rule.establishedDate.toString(16).padStart(12, '0') + 
-    rule.businessTermInYears.toString(16).padStart(2, '0') +                 
-    rule.typeOfComp.toString(16).padStart(2, '0')+                 
-    rule.minVoteRatioOnChain.toString(16).padStart(4, '0')                 
-  }`;
+// export function grCodifier(rule: GovernanceRule): HexType {
+//   let hexGR: HexType = `0x${
+//     rule.fundApprovalThreshold.toString(16).padStart(8, '0') +
+//     (rule.basedOnPar ? '01' : '00') +
+//     rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') +
+//     rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') + 
+//     rule.proposeHeadRatioOfDirectorsInGM.toString(16).padStart(4, '0') + 
+//     rule.proposeHeadRatioOfDirectorsInBoard.toString(16).padStart(4, '0') + 
+//     rule.maxQtyOfMembers.toString(16).padStart(4, '0') +       
+//     rule.quorumOfGM.toString(16).padStart(4, '0') +       
+//     rule.maxNumOfDirectors.toString(16).padStart(2, '0') +       
+//     rule.tenureMonOfBoard.toString(16).padStart(4, '0') +       
+//     rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') +       
+//     rule.establishedDate.toString(16).padStart(12, '0') + 
+//     rule.businessTermInYears.toString(16).padStart(2, '0') +                 
+//     rule.typeOfComp.toString(16).padStart(2, '0')+                 
+//     rule.minVoteRatioOnChain.toString(16).padStart(4, '0')                 
+//   }`;
 
-  return hexGR;
-}
+//   return hexGR;
+// }
 
-export function grParser(hexRule: HexType): GovernanceRule {
-  let rule: GovernanceRule = {
-    fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16),
-    basedOnPar: hexRule.substring(10, 12) === '01',
-    proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16),
-    proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16),
-    proposeHeadRatioOfDirectorsInGM: parseInt(hexRule.substring(20, 24), 16),
-    proposeHeadRatioOfDirectorsInBoard: parseInt(hexRule.substring(24, 28), 16),
-    maxQtyOfMembers: parseInt(hexRule.substring(28, 32), 16),
-    quorumOfGM: parseInt(hexRule.substring(32, 36), 16),
-    maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16),
-    tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16),
-    quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16),
-    establishedDate: parseInt(hexRule.substring(46, 58), 16),
-    businessTermInYears: parseInt(hexRule.substring(58, 60), 16),
-    typeOfComp: parseInt(hexRule.substring(60, 62), 16),
-    minVoteRatioOnChain: parseInt(hexRule.substring(62, 66), 16),    
-  };
+// export function grParser(hexRule: HexType): GovernanceRule {
+//   let rule: GovernanceRule = {
+//     fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16),
+//     basedOnPar: hexRule.substring(10, 12) === '01',
+//     proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16),
+//     proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16),
+//     proposeHeadRatioOfDirectorsInGM: parseInt(hexRule.substring(20, 24), 16),
+//     proposeHeadRatioOfDirectorsInBoard: parseInt(hexRule.substring(24, 28), 16),
+//     maxQtyOfMembers: parseInt(hexRule.substring(28, 32), 16),
+//     quorumOfGM: parseInt(hexRule.substring(32, 36), 16),
+//     maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16),
+//     tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16),
+//     quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16),
+//     establishedDate: parseInt(hexRule.substring(46, 58), 16),
+//     businessTermInYears: parseInt(hexRule.substring(58, 60), 16),
+//     typeOfComp: parseInt(hexRule.substring(60, 62), 16),
+//     minVoteRatioOnChain: parseInt(hexRule.substring(62, 66), 16),    
+//   };
 
-  return rule;
-}
+//   return rule;
+// }
 
 export interface RulesEditProps {
   sha: HexType;
@@ -191,7 +191,7 @@ export interface RulesEditProps {
 }
 
 export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
-  const [ objGR, setObjGR ] = useState<StrGovernanceRule>(defaultStrGR);
+  const [ objGR, setObjGR ] = useState<GovernanceRule>(defGR);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ open, setOpen ] = useState(false);
 
@@ -365,17 +365,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'PropHROfDirectorsInBM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ onlyNum(objGR.proposeHeadRatioOfDirectorsInBoard, BigInt(10000), setValid).error }
-                    helperText={ onlyNum(objGR.proposeHeadRatioOfDirectorsInBoard, BigInt(10000), setValid).helpTx }
+                    error={ valid['PropHROfDirectorsInBM'].error }
+                    helperText={ valid['PropHROfDirectorsInBM'].helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      proposeHeadRatioOfDirectorsInBoard: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('PropHROfDirectorsInBM', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        proposeHeadRatioOfDirectorsInBoard: input,
+                      }));
+                    }}
                     value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfDirectorsInBoard) : objGR.proposeHeadRatioOfDirectorsInBoard }
                   />
 
@@ -387,17 +391,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='MaxQtyOfMembers'
                     size='small'
-                    error={ onlyNum(objGR.maxQtyOfMembers, MaxSeqNo, setValid).error }
-                    helperText={ onlyNum(objGR.maxQtyOfMembers, MaxSeqNo, setValid).helpTx }
+                    error={ valid['MaxQtyOfMembers'].error }
+                    helperText={ valid['MaxQtyOfMembers'].helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      maxQtyOfMembers: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('MaxQtyOfMembers', input, MaxSeqNo, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        maxQtyOfMembers: input,
+                      }));
+                    }}
                     value={ objGR.maxQtyOfMembers } 
                   />
 
@@ -405,17 +413,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'QuorumOfGM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ onlyNum(objGR.quorumOfGM, BigInt(10000), setValid).error }
-                    helperText={ onlyNum(objGR.quorumOfGM, BigInt(10000), setValid).helpTx }
+                    error={ valid['QuorumOfGM'].error }
+                    helperText={ valid['QuorumOfGM'].helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      quorumOfGM: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('QuorumOfGM', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        quorumOfGM: input,
+                      }));
+                    }}
                     value={ isFinalized ? toPercent(objGR.quorumOfGM) : objGR.quorumOfGM }
                   />
 
@@ -423,17 +435,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='MaxNumOfDirectors'
                     size='small'
-                    error={ onlyNum(objGR.maxNumOfDirectors, BigInt(2**8-1), setValid).error }
-                    helperText={ onlyNum(objGR.maxNumOfDirectors, BigInt(2**8-1), setValid).helpTx }
+                    error={ valid['MaxNumOfDirectors'].error }
+                    helperText={ valid['MaxNumOfDirectors'].helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      maxNumOfDirectors: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('MaxNumOfDirectors', input, 255n, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        maxNumOfDirectors: input,
+                      }));
+                    }}
                     value={ objGR.maxNumOfDirectors }
                   />
 
@@ -441,17 +457,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='TenureMonOfBoard'
                     size='small'
-                    error={ onlyNum(objGR.tenureMonOfBoard, MaxSeqNo, setValid).error }
-                    helperText={ onlyNum(objGR.tenureMonOfBoard, MaxSeqNo, setValid).helpTx }
+                    error={ valid['TenureMonOfBoard'].error }
+                    helperText={ valid['TenureMonOfBoard'].helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      tenureMonOfBoard: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('TenureMonOfBoard', input, MaxSeqNo, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        tenureMonOfBoard: input,
+                      }));
+                    }}
                     value={ objGR.tenureMonOfBoard } 
                   />
 
@@ -459,17 +479,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'QuorumOfBoardMeeting ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ onlyNum(objGR.quorumOfBoardMeeting, BigInt(10000), setValid).error }
-                    helperText={ onlyNum(objGR.quorumOfBoardMeeting, BigInt(10000), setValid).helpTx }
+                    error={ valid['QuorumOfBoardMeeting'].error }
+                    helperText={ valid['QuorumOfBoardMeeting'].helpTx }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
                       minWidth: 218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      quorumOfBoardMeeting: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('QuorumOfBoardMeeting', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        quorumOfBoardMeeting: input,
+                      }));
+                    }}
                     value={ isFinalized ? toPercent(objGR.quorumOfBoardMeeting) : objGR.quorumOfBoardMeeting }   
                   />
 
@@ -513,17 +537,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='BusinessTermInYears'
                     size='small'
-                    error={ onlyNum(objGR.businessTermInYears, BigInt(2**8-1), setValid).error }
-                    helperText={ onlyNum(objGR.businessTermInYears, BigInt(2**8-1), setValid).helpTx }
+                    error={ valid['BusinessTerm'].error }
+                    helperText={ valid['BusinessTerm'].helpTx }
                     inputProps={{readOnly: isFinalized}}                        
                     sx={{
                       m:1,
                       minWidth:218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      businessTermInYears: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('BusinessTerm', input, 255n, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        businessTermInYears: input,
+                      }));
+                    }}
                     value={ objGR.businessTermInYears }
                   />
 
@@ -531,17 +559,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='TypeOfComp'
                     size='small'
-                    error={ onlyNum(objGR.typeOfComp, BigInt(2**8-1), setValid).error }
-                    helperText={ onlyNum(objGR.typeOfComp, BigInt(2**8-1), setValid).helpTx }
+                    error={ valid['TypeOfComp'].error }
+                    helperText={ valid['TypeOfComp'].helpTx }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
                       minWidth:218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      typeOfComp: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('TypeOfComp', input, 255n, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        typeOfComp: input,
+                      }));
+                    }}
                     value={ objGR.typeOfComp }
                   />
 
@@ -549,17 +581,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'MinVoteRatioOnChain ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ onlyNum(objGR.minVoteRatioOnChain, MaxSeqNo, setValid).error }
-                    helperText={ onlyNum(objGR.minVoteRatioOnChain, MaxSeqNo, setValid).helpTx }
+                    error={ valid['MinVoteRatioOnChain'].error }
+                    helperText={ valid['MinVoteRatioOnChain'].helpTx }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
                       minWidth:218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      minVoteRatioOnChain: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('MinVoteRatioOnChain', input, MaxRatio, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        minVoteRatioOnChain: input,
+                      }));
+                    }}
                     value={ isFinalized ? toPercent(objGR.minVoteRatioOnChain) : objGR.minVoteRatioOnChain }
                   />
 
@@ -567,17 +603,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='FundThreshold  (CBP/ETH)'
                     size='small'
-                    error={ onlyNum(objGR.fundApprovalThreshold, BigInt(2**32-1), setValid).error }
-                    helperText={ onlyNum(objGR.fundApprovalThreshold, BigInt(2**32-1), setValid).helpTx }
+                    error={ valid['FundThreshold'].error }
+                    helperText={ valid['FundThreshold'].helpTx }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
                       minWidth:218,
                     }}
-                    onChange={(e) => setObjGR((v) => ({
-                      ...v,
-                      fundApprovalThreshold: e.target.value,
-                    }))}
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('FundThreshold', input, 0n, setValid);
+                      setObjGR((v) => ({
+                        ...v,
+                        fundApprovalThreshold: input,
+                      }));
+                    }}
                     value={ isFinalized ? longDataParser(objGR.fundApprovalThreshold) : objGR.fundApprovalThreshold }
                   />
 

@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { HexType } from "../../scripts/common";
-import { Locker, getLocker } from "../../scripts/center/rc";
+import { StrLocker, getLocker } from "../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex } from "../../scripts/common/toolsKit";
 
 interface LockerFinderProps{
-  setLocker: (locker: Locker) => void;
-  setOpen: (flag: boolean) => void;
+  setLocker: Dispatch<SetStateAction<StrLocker>>;
+  setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {

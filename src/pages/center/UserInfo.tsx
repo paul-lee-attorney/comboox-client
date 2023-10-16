@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AddrOfRegCenter } from "../../scripts/common";
-import { Locker, User, getLocker } from "../../scripts/center/rc";
+import { StrLocker, User, defaultStrLocker, getLocker } from "../../scripts/center/rc";
 import { Divider, Paper, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser, toPercent } from "../../scripts/common/toolsKit";
 import { regCenterABI, useRegCenterBalanceOf, useRegCenterGetLocksList, useRegCenterGetOwner } from "../../generated";
@@ -45,7 +45,7 @@ function UserInfo() {
     }
   })
 
-  const [ lockersList, setLockersList ] = useState<Locker[]>();
+  const [ lockersList, setLockersList ] = useState<StrLocker[]>();
 
   const {
     refetch: getLocksList
@@ -54,7 +54,7 @@ function UserInfo() {
     onSuccess(ls) {
       const obtainLockers = async ()=>{
         let len = ls.length;
-        let list: Locker[] = [];
+        let list: StrLocker[] = [];
 
         while (len > 0) {
           list.push(await getLocker(ls[len-1]));
@@ -92,7 +92,7 @@ function UserInfo() {
   }, [user]);
 
   const [ open, setOpen ] = useState(false);
-  const [ locker, setLocker ] = useState<Locker>();
+  const [ locker, setLocker ] = useState<StrLocker>(defaultStrLocker);
 
   const [ showList, setShowList ] = useState(false);
 

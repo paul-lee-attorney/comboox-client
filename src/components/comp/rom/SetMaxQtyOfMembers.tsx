@@ -16,14 +16,13 @@ import {
 import { ArrowDownward, ArrowUpward, Update }  from '@mui/icons-material';
 
 import {
-  useRegisterOfMembersMaxQtyOfMembers,
   useRegisterOfMembersSetMaxQtyOfMembers,
 } from '../../../generated';
 
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
-import { HexType, booxMap } from '../../../scripts/common';
-import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { HexType, MaxSeqNo, booxMap } from '../../../scripts/common';
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { maxQtyOfMembers } from '../../../scripts/comp/rom';
 
 interface SetMaxQtyOfMembersProps {
@@ -36,6 +35,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
   const [time, setTime] = useState<number>(0);
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const refresh = ()=>{
     setTime(Date.now());
@@ -117,9 +117,12 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
               id="tfMaxQty" 
               label="MaxQtyOfMembers" 
               variant="outlined"
-              helperText="Number (e.g. '50')"
+              error={ valid['MaxQty'].error }
+              helperText={ valid['MaxQty'].helpTx }
               onChange={(e) => {
-                setInputMax(e.target.value ?? '0');
+                let input = e.target.value;
+                onlyNum('MaxQty', input, MaxSeqNo, setValid);
+                setInputMax(input);
               }}
 
               value = {inputMax}
@@ -127,7 +130,7 @@ export function SetMaxQtyOfMembers({nextStep}: SetMaxQtyOfMembersProps) {
             />
 
             <Button 
-              disabled = {!setMaxQty || setMaxQtyLoading}
+              disabled = {!setMaxQty || setMaxQtyLoading || hasError(valid)}
 
               sx={{ m: 1, minWidth: 120, height: 40 }} 
               variant="contained" 

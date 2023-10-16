@@ -3,6 +3,20 @@ import { HexType } from "../common";
 import { alongsABI } from "../../generated";
 import { Deal } from "./ia";
 
+export interface StrLinkRule{
+  triggerDate: string;
+  effectiveDays: string;
+  triggerType: string;
+  shareRatioThreshold: string;
+  rate: string;
+  proRata: boolean;
+  seq: string;
+  para: string;
+  argu: string;
+  ref: string;
+  data: string;
+}
+
 export interface LinkRule{
   triggerDate: number;
   effectiveDays: number;
@@ -17,6 +31,21 @@ export interface LinkRule{
   data: bigint;
 }
 
+export const defaultStrLinkRule: StrLinkRule = {
+  triggerDate: '0',
+  effectiveDays: '0',
+  triggerType: '0',
+  shareRatioThreshold: '0',
+  rate: '0',
+  proRata: false,
+  seq: '0',
+  para: '0',
+  argu: '0',
+  ref: '0',
+  data: '0'
+}
+
+
 export const defaultLinkRule: LinkRule = {
   triggerDate: 0,
   effectiveDays: 0,
@@ -28,7 +57,7 @@ export const defaultLinkRule: LinkRule = {
   para: 0,
   argu: 0,
   ref: 0,
-  data: BigInt(0)
+  data: 0n
 }
 
 export function linkRuleSnParser(sn: HexType): LinkRule {
@@ -43,18 +72,18 @@ export function linkRuleSnParser(sn: HexType): LinkRule {
     para: 0,
     argu: 0,
     ref: 0,
-    data: BigInt(0)
+    data: 0n
   }
   return out;
 }
 
-export function linkRuleCodifier(rule: LinkRule): HexType {
+export function linkRuleCodifier(rule: StrLinkRule): HexType {
   let out: HexType = `0x${
-    rule.triggerDate.toString(16).padStart(12, '0') +
-    rule.effectiveDays.toString(16).padStart(4, '0') +
-    rule.triggerType.toString(16).padStart(2, '0') +
-    rule.shareRatioThreshold.toString(16).padStart(4, '0') +
-    rule.rate.toString(16).padStart(8, '0') +
+    Number(rule.triggerDate).toString(16).padStart(12, '0') +
+    Number(rule.effectiveDays).toString(16).padStart(4, '0') +
+    Number(rule.triggerType).toString(16).padStart(2, '0') +
+    Number(rule.shareRatioThreshold).toString(16).padStart(4, '0') +
+    Number(rule.rate).toString(16).padStart(8, '0') +
     (rule.proRata ? '01' : '00') +
     '0'.padEnd(32, '0')
   }`;
@@ -62,15 +91,15 @@ export function linkRuleCodifier(rule: LinkRule): HexType {
 }
 
 export interface AlongLink {
-  drager: number;
+  drager: string;
   linkRule: LinkRule;
-  followers: number[];
+  followers: string[];
 }
 
-export const defaultFollowers: number[] = [];
+export const defaultFollowers: string[] = [];
 
 export const defaultLink: AlongLink ={
-  drager: 0,
+  drager: '0',
   linkRule: defaultLinkRule,
   followers: defaultFollowers,
 } 
@@ -92,7 +121,7 @@ export async function isDragger(addr: HexType, dragger: number): Promise<boolean
   return res;
 }
 
-export async function getLinkRule(addr: HexType, dragger: number): Promise<LinkRule>{
+export async function getLinkRule(addr: HexType, dragger: string): Promise<LinkRule>{
   let res = await readContract({
     address: addr,
     abi: alongsABI,
@@ -100,7 +129,21 @@ export async function getLinkRule(addr: HexType, dragger: number): Promise<LinkR
     args: [ BigInt(dragger)],
   })
 
-  return res;
+  let out: LinkRule = {
+    triggerDate: res.triggerDate,
+    effectiveDays: res.effectiveDays,
+    triggerType: res.triggerType,
+    shareRatioThreshold: res.shareRatioThreshold,
+    rate: res.rate,
+    proRata: res.proRata,
+    seq: res.seq,
+    para: res.para,
+    argu: res.argu,
+    ref: res.ref,
+    data: res.data,   
+  }
+
+  return out;
 }
 
 export async function isFollower(addr: HexType, dragger: number, follower: number): Promise<boolean>{
@@ -124,7 +167,7 @@ export async function getDraggers(addr: HexType): Promise<readonly bigint[]>{
   return res;
 }
 
-export async function getFollowers(addr: HexType, dragger: number): Promise<readonly bigint[]>{
+export async function getFollowers(addr: HexType, dragger: string): Promise<readonly bigint[]>{
   let res = await readContract({
     address: addr,
     abi: alongsABI,
@@ -168,14 +211,14 @@ export async function getLinks(addr: HexType): Promise<AlongLink[]> {
 
   while (len > 0) {
 
-    let drager = Number(draggers[len - 1]);
+    let drager = draggers[len - 1].toString();
     let linkRule = await getLinkRule(addr, drager);
     let followers = await getFollowers(addr, drager);
     
     let item: AlongLink = {
       drager: drager,
       linkRule: linkRule,
-      followers: followers.map(v=>Number(v)),
+      followers: followers.map(v=>v.toString()),
     }
 
     output.push(item);

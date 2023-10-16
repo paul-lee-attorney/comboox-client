@@ -16,10 +16,11 @@ import {
 import { EmojiPeopleOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
+// import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
-import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyHex, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { getSha } from "../../../../../scripts/comp/roc";
+import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 
 export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
@@ -95,7 +96,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
                   onChange={(e) => setSeqOfRule(512 + Number(e.target.value))}
                 >
                   {rules && rules.map((v, i) => (
-                    <MenuItem key={i} value={i.toString()} > {v.seqOfRule} - {typesOfDeal[v.typeOfDeal - 1]} </MenuItem>
+                    <MenuItem key={i} value={i.toString()} > {v.seqOfRule} - {typesOfDeal[Number(v.typeOfDeal) - 1]} </MenuItem>
                   ))}
                 </Select>
               </FormControl>

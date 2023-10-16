@@ -16,7 +16,8 @@ import { SharesList } from "../../../components/comp/ros/SharesList";
 import { CertificateOfContribution } from "../../../components/comp/ros/CertificateOfContribution";
 import { Share, getShare, getSharesList } from "../../../scripts/comp/ros";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
-import { booxMap } from "../../../scripts/common";
+import { MaxPrice, booxMap } from "../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum } from "../../../scripts/common/toolsKit";
 
 
 function RegisterOfShares() {
@@ -37,9 +38,11 @@ function RegisterOfShares() {
     }
   }, [boox, time]);
 
-  const [ seqOfShare, setSeqOfShare ] = useState<number>();
+  const [ seqOfShare, setSeqOfShare ] = useState<string>();
   const [ open, setOpen ] = useState<boolean>(false);
   const [ share, setShare ] = useState<Share>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   
   const searchShare = () => {
     if (boox && seqOfShare) {
@@ -82,13 +85,19 @@ function RegisterOfShares() {
                     id="tfSeqOfShare" 
                     label="seqOfShare" 
                     variant="outlined"
-                    onChange={(e) => setSeqOfShare(parseInt(e.target.value ?? '0')) }
+                    error={ valid['SeqOfShare'].error }
+                    helperText={ valid['SeqOfShare'].helpTx }          
+                    onChange={(e) => {
+                      let input = e.target.value;
+                      onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                      setSeqOfShare(input);
+                    }}
                     value = { seqOfShare }
                     size='small'
                   />
 
                   <Button 
-                    disabled={ !seqOfShare }
+                    disabled={ !seqOfShare || hasError(valid) }
                     sx={{ m: 1, minWidth: 168, height: 40 }} 
                     variant="contained" 
                     endIcon={ <Search /> }

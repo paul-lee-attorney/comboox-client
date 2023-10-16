@@ -18,16 +18,16 @@ import {
   DialogActions,
 } from '@mui/material';
 import { AddRule } from './../AddRule';
-import { dateParser, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
+import { FormResults, dateParser, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { HexType } from '../../../../../scripts/common';
+import { HexType, MaxSeqNo, MaxUserNo } from '../../../../../scripts/common';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 
 // ==== Str Interface ====
 
-export interface StrPosAllocateRule {
-  seqOfRule: string ;
+export interface PosAllocateRule {
+  seqOfRule: number ;
   qtyOfSubRule: string ;
   seqOfSubRule: string ;
   removePos: boolean ;
@@ -42,9 +42,9 @@ export interface StrPosAllocateRule {
   data: string; 
 }
 
-export function strPRCodifier(rule: StrPosAllocateRule): HexType {
+export function prCodifier(rule: PosAllocateRule): HexType {
   let hexRule: HexType = `0x${
-    (Number(rule.seqOfRule).toString(16).padStart(4, '0')) +
+    (rule.seqOfRule.toString(16).padStart(4, '0')) +
     (Number(rule.qtyOfSubRule).toString(16).padStart(2, '0')) +
     (Number(rule.seqOfSubRule).toString(16).padStart(2, '0')) +
     (rule.removePos ? '01' : '00' ) +
@@ -59,9 +59,9 @@ export function strPRCodifier(rule: StrPosAllocateRule): HexType {
   return hexRule;
 } 
 
-export function strPRParser(hexRule: HexType): StrPosAllocateRule {
-  let rule: StrPosAllocateRule = {
-    seqOfRule: parseInt(hexRule.substring(2, 6), 16).toString(), 
+export function prParser(hexRule: HexType): PosAllocateRule {
+  let rule: PosAllocateRule = {
+    seqOfRule: parseInt(hexRule.substring(2, 6), 16), 
     qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16).toString(),
     seqOfSubRule: parseInt(hexRule.substring(8, 10), 16).toString(),
     removePos: hexRule.substring(10, 12) === '01',
@@ -81,69 +81,16 @@ export function strPRParser(hexRule: HexType): StrPosAllocateRule {
 
 // ==== Num Interface ====
 
-export interface PosAllocateRule {
-  seqOfRule: number ;
-  qtyOfSubRule: number ;
-  seqOfSubRule: number ;
-  removePos: boolean ;
-  seqOfPos: number ;
-  titleOfPos: number ;
-  nominator: number ;
-  titleOfNominator: number ;
-  seqOfVR: number ;
-  endDate: number;
-  para: number;
-  argu: number;
-  data: number; 
-}
-
 export const titleOfPositions: string[] = [
   'Shareholder', 'Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 
   'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 
   'SeniorManager', 'Manager', 'ViceManager'
 ];
 
-export function prCodifier(rule: PosAllocateRule): HexType {
-  let hexRule: HexType = `0x${
-    (rule.seqOfRule.toString(16).padStart(4, '0')) +
-    (rule.qtyOfSubRule.toString(16).padStart(2, '0')) +
-    (rule.seqOfSubRule.toString(16).padStart(2, '0')) +
-    (rule.removePos ? '01' : '00' ) +
-    (rule.seqOfPos.toString(16).padStart(4, '0')) +
-    (rule.titleOfPos.toString(16).padStart(4, '0')) +
-    (rule.nominator.toString(16).padStart(10, '0')) +
-    (rule.titleOfNominator.toString(16).padStart(4, '0')) +                  
-    (rule.seqOfVR.toString(16).padStart(4, '0')) +
-    (rule.endDate.toString(16).padStart(12, '0')) +
-    '0'.padStart(16, '0')
-  }`;
-  return hexRule;
-} 
-
-export function prParser(hexRule: HexType): PosAllocateRule {
-  let rule: PosAllocateRule = {
-    seqOfRule: parseInt(hexRule.substring(2, 6), 16), 
-    qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16),
-    seqOfSubRule: parseInt(hexRule.substring(8, 10), 16),
-    removePos: hexRule.substring(10, 12) === '01',
-    seqOfPos: parseInt(hexRule.substring(12, 16), 16),
-    titleOfPos: parseInt(hexRule.substring(16, 20), 16),
-    nominator: parseInt(hexRule.substring(20, 30), 16),
-    titleOfNominator: parseInt(hexRule.substring(30, 34), 16),
-    seqOfVR: parseInt(hexRule.substring(34, 38), 16),
-    endDate: parseInt(hexRule.substring(38, 50), 16),
-    para: parseInt(hexRule.substring(50, 54), 16),
-    argu: parseInt(hexRule.substring(54, 58), 16),
-    data: parseInt(hexRule.substring(58, 66), 16),
-  };
-
-  return rule;
-}
-
 export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps ) {
 
-  const strDefaultRule: StrPosAllocateRule = {
-    seqOfRule: seq.toString(), 
+  const strDefaultRule: PosAllocateRule = {
+    seqOfRule: seq, 
     qtyOfSubRule: (seq - 255).toString(),
     seqOfSubRule: (seq - 255).toString(),
     removePos: false,
@@ -157,30 +104,15 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
     argu: '0',
     data: '0',
   };
-
-  // const defaultRule: PosAllocateRule = {
-  //   seqOfRule: seq, 
-  //   qtyOfSubRule: seq - 255,
-  //   seqOfSubRule: seq - 255,
-  //   removePos: false,
-  //   seqOfPos: 0,
-  //   titleOfPos: 5,
-  //   nominator: 0,
-  //   titleOfNominator: 1,
-  //   seqOfVR: 9,
-  //   endDate: 0,
-  //   para: 0,
-  //   argu: 0,
-  //   data: 0,
-  // };
   
-  const [ objPR, setObjPR ] = useState<StrPosAllocateRule>(strDefaultRule); 
-  const [ valid, setValid ] = useState(true);
+  const [ objPR, setObjPR ] = useState<PosAllocateRule>(strDefaultRule); 
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const [ open, setOpen ] = useState(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjPR(strPRParser(res))
+      res => setObjPR(prParser(res))
     );
   }, [sha, seq, time]);  
 
@@ -223,7 +155,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
 
               <AddRule 
                 sha={ sha } 
-                rule={ strPRCodifier(objPR) } 
+                rule={ prCodifier(objPR) } 
                 isFinalized={isFinalized}
                 valid={valid}
                 refresh={refresh}
@@ -242,17 +174,21 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='QtyOfSubRule'
-                  error={ onlyNum(objPR.qtyOfSubRule, BigInt(2**8-1), setValid).error }
-                  helperText={ onlyNum(objPR.qtyOfSubRule, BigInt(2**8-1), setValid).helpTx }
+                  error={ valid['QtyOfSubRule'].error }
+                  helperText={ valid['QtyOfSubRule'].helpTx }
                   inputProps={{readOnly: isFinalized}}                  
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    qtyOfSubRule: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('QtyOfSubRule', input, MaxSeqNo, setValid);
+                    setObjPR((v) => ({
+                      ...v,
+                      qtyOfSubRule: input,
+                    }));
+                  }}
                   value={ objPR.qtyOfSubRule }
                 />
 
@@ -293,17 +229,21 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='SeqOfPos'
-                  error={ onlyNum(objPR.seqOfPos, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objPR.seqOfPos, MaxSeqNo, setValid).helpTx }
-                  inputProps={{readOnly: isFinalized}}           
+                  error={ valid['SeqOfPos'].error }
+                  helperText={ valid['SeqOfPos'].helpTx }
+                  inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    seqOfPos: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('SeqOfPos', input, MaxSeqNo, setValid);
+                    setObjPR((v) => ({
+                      ...v,
+                      seqOfPos: input,
+                    }));
+                  }}
                   value={ objPR.seqOfPos }              
                 />
 
@@ -349,17 +289,21 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='Nominator'
-                  error={ onlyNum(objPR.nominator, BigInt(2**40-1), setValid).error }
-                  helperText={ onlyNum(objPR.nominator, BigInt(2**40-1), setValid).helpTx }
+                  error={ valid['Nominator'].error }
+                  helperText={ valid['Nominator'].helpTx }
                   inputProps={{readOnly: isFinalized}}           
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    nominator: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Nominator', input, MaxUserNo, setValid);
+                    setObjPR((v) => ({
+                      ...v,
+                      nominator: input,
+                    }));
+                  }}
                   value={ isFinalized ? longSnParser(objPR.nominator) : objPR.nominator }                                        
                 />
 
@@ -401,17 +345,21 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='seqOfVR'
-                  error={ onlyNum(objPR.seqOfVR, MaxSeqNo, setValid).error }
-                  helperText={ onlyNum(objPR.seqOfVR, MaxSeqNo, setValid).helpTx }
-                  inputProps={{readOnly: isFinalized}}           
+                  error={ valid['SeqOfVR'].error }
+                  helperText={ valid['SeqOfVR'].helpTx }
+                  inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  onChange={(e) => setObjPR((v) => ({
-                    ...v,
-                    seqOfVR: e.target.value,
-                  }))}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+                    setObjPR((v) => ({
+                      ...v,
+                      seqOfVR: input,
+                    }));
+                  }}
                   value={ objPR.seqOfVR }                                        
                 />
                 {!isFinalized && (

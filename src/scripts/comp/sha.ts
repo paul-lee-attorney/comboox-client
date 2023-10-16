@@ -104,7 +104,7 @@ export async function getFirstRefusalRules(sha: HexType): Promise<FirstRefusalRu
     
     let fr = frParser(strFr);
     out.push(fr);
-    let len = fr.qtyOfSubRule;
+    let len = Number(fr.qtyOfSubRule);
 
     while (len > 1) {
       out.push(frParser(await getRule(sha, 511 + len)));

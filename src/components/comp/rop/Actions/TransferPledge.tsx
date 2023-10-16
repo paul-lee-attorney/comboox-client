@@ -4,15 +4,17 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CurrencyExchange } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
-import { HexType } from "../../../../scripts/common";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxData, MaxUserNo } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  const [ buyer, setBuyer ] = useState<number>();
-  const [ amt, setAmt ] = useState<number>();
+  const [ buyer, setBuyer ] = useState<string>();
+  const [ amt, setAmt ] = useState<string>();
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const updateResults = ()=>{
     refresh();
@@ -39,38 +41,47 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      {/* <Toolbar>
-        <h4>Transfer Pledge</h4>
-      </Toolbar> */}
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
         <TextField 
           variant='outlined'
           label='Buyer'
+          error={ valid['Buyer'].error }
+          helperText={ valid['Buyer'].helpTx }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setBuyer(parseInt(e.target.value ?? '0'))}
-          value={ buyer?.toString() }
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('Buyer', input, MaxUserNo, setValid);
+            setBuyer(input);
+          }}
+          value={ buyer }
           size='small'
         />
 
         <TextField 
           variant='outlined'
           label='Amount'
+          error={ valid['Amount'].error }
+          helperText={ valid['Amount'].helpTx }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => setAmt(parseInt(e.target.value ?? '0'))}
-          value={ amt?.toString() }
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('Amount', input, MaxData, setValid);
+            setAmt(input);
+          }}
+          value={ amt }
           size='small'
         />
 
         <Button 
-          disabled={ !transferPledge || transferPledgeLoading }
+          disabled={ !transferPledge || transferPledgeLoading || hasError(valid)}
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <CurrencyExchange /> }
