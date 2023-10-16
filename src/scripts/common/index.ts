@@ -1,5 +1,5 @@
-// import Smart from "./contracts-address.json";
-import Smart from "../../../../comboox/server/src/contracts/contracts-address.json";
+import Smart from "./contracts-address.json";
+// import Smart from "../../../../comboox/server/src/contracts/contracts-address.json";
 
 export const AddrOfRegCenter:HexType = `0x${Smart.RegCenter.substring(2)}`;
 
