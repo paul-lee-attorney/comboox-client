@@ -30,7 +30,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
     write: proposeAction,
   } = useGeneralKeeperCreateAction({
     address: gk,
-    args: seqOfVr && desHash && executor
+    args: seqOfVr && desHash && executor && !hasError(valid)
         ? [BigInt(seqOfVr), 
           actions.map(v => (v.target)), 
           actions.map(v => (BigInt(v.value))),

@@ -62,7 +62,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     address: gk,
-    args: attitude 
+    args: attitude && !hasError(valid)
         ? [seqOfMotion, BigInt(attitude), sigHash]
         : undefined,
     onSuccess(data) {

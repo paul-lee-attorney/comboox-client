@@ -52,11 +52,14 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: execPledge,
   } = useGeneralKeeperExecPledge({
     address: gk,
-    args: [ codifyHeadOfDeal(head),
+    args: !hasError(valid)
+        ? [ codifyHeadOfDeal(head),
             BigInt(pld.head.seqOfPld),
             BigInt(version),
             BigInt(body.buyer),
-            BigInt(body.groupOfBuyer) ],
+            BigInt(body.groupOfBuyer) 
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

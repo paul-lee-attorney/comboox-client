@@ -25,7 +25,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
     write: execAction,
   } = useGeneralKeeperExecActionOfGm({
     address: gk,
-    args: seqOfVr && desHash && seqOfMotion
+    args: seqOfVr && desHash && seqOfMotion && !hasError(valid)
         ? [BigInt(seqOfVr), 
           actions.map(v => (v.target)), 
           actions.map(v => (BigInt(v.value))),

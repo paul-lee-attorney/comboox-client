@@ -26,11 +26,11 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
     write: payOffSwap,
   } = useGeneralKeeperPayOffSwap({
     address: gk,
-    args: seqOfSwap
+    args: seqOfSwap && !hasError(valid)
       ? [ BigInt(seqOfOpt), 
           BigInt(seqOfSwap)]
       : undefined,
-    value: BigInt(value) * BigInt(10 ** 9),
+    value: !hasError(valid) ? BigInt(value) * (10n ** 9n) : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

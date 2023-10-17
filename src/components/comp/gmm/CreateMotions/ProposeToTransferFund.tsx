@@ -44,15 +44,17 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
     write: proposeToTransferFund
   } = useGeneralKeeperProposeToTransferFund({
     address: gk,
-    args: [
-        false, 
-        paras.to, 
-        paras.isCBP, 
-        BigInt(paras.amt), 
-        BigInt(paras.expireDate), 
-        BigInt(seqOfVR), 
-        BigInt(executor)
-    ],
+    args: !hasError(valid) 
+      ? [
+          false, 
+          paras.to, 
+          paras.isCBP, 
+          BigInt(paras.amt), 
+          BigInt(paras.expireDate), 
+          BigInt(seqOfVR), 
+          BigInt(executor)
+        ]
+      : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

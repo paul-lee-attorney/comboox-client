@@ -21,9 +21,11 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
     write:withdrawSellOrder,
   } = useGeneralKeeperWithdrawSellOrder({
     address: gk,
-    args: [ BigInt(classOfShare),
+    args: !hasError(valid)
+        ? [ BigInt(classOfShare),
             BigInt(offer.seqOfOrder)
-           ],
+           ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

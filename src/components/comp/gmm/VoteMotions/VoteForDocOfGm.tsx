@@ -38,7 +38,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     address: gk,
-    args: attitude && sigHash
+    args: attitude && sigHash && !hasError(valid)
         ? [ seqOfMotion, BigInt(attitude), sigHash ]
         : undefined,
     onSuccess(data) {

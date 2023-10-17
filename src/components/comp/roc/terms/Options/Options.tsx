@@ -73,14 +73,15 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addOpt
   } = useOptionsCreateOption({
     address: term,
-    args: 
-        [ 
+    args: !hasError(valid)
+      ? [ 
           optHeadCodifier(head), 
           condCodifier(cond), 
           BigInt(body.rightholder),
           BigInt(body.paid),
           BigInt(body.par)
-        ], 
+        ]
+      : undefined, 
   });
 
   const { 
@@ -88,7 +89,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeOpt, 
   } = useOptionsDelOption({
     address: term,
-    args: head.seqOfOpt ? [ BigInt(head.seqOfOpt) ] : undefined,
+    args: head.seqOfOpt && !hasError(valid) ? [ BigInt(head.seqOfOpt) ] : undefined,
   });
 
   const [ obligor, setObligor ] = useState<string>('0');
@@ -98,7 +99,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addObligor, 
   } = useOptionsAddObligorIntoOpt({
     address: term,
-    args: head.seqOfOpt && obligor
+    args: head.seqOfOpt && obligor && !hasError(valid)
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
   });
@@ -108,7 +109,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeObligor 
   } = useOptionsRemoveObligorFromOpt({
     address: term,
-    args: head.seqOfOpt && obligor 
+    args: head.seqOfOpt && obligor && !hasError(valid)
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
   });

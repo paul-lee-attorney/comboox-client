@@ -30,7 +30,7 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
     write: pushToCoffer,
   } = useGeneralKeeperPushToCoffer({
     address: gk,
-    args: closingDate?.unix() ? 
+    args: closingDate?.unix() && !hasError(valid) ? 
       [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate.unix()) ] :
       undefined,
     onSuccess(data) {

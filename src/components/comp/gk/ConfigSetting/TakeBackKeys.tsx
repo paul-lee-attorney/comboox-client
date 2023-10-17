@@ -20,7 +20,7 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
     write: takeBackKeys,
   } = useAccessControlTakeBackKeys({
     address: docAddr,
-    args: [ target ],
+    args: !hasError(valid) ? [ target ] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

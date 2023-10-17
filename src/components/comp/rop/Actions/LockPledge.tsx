@@ -25,7 +25,7 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: lockPledge,
   } = useGeneralKeeperLockPledge({
     address: gk,
-    args: hashLock
+    args: hashLock && !hasError(valid)
       ? [ BigInt(pld.head.seqOfShare), 
           BigInt(pld.head.seqOfPld), 
           hashLock

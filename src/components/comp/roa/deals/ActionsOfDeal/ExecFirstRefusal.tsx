@@ -57,12 +57,14 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
     write: execFirstRefusal,
   } = useGeneralKeeperExecFirstRefusal({
     address: gk,
-    args: [ BigInt(seqOfRule),
+    args: !hasError(valid)
+        ? [ BigInt(seqOfRule),
             BigInt(seqOfRightholder),
             addr, 
             BigInt(deal.head.seqOfDeal), 
             sigHash 
-          ],
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

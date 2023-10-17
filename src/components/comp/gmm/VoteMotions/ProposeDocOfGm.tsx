@@ -28,7 +28,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
     write
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: seqOfVR && executor 
+    args: seqOfVR && executor && !hasError(valid)
       ? [ BigInt(`0x${addr.substring(2).padStart(64, '0')}`), 
           BigInt(seqOfVR), 
           BigInt(executor) ]

@@ -21,12 +21,14 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
     write:placeInitOffer,
   } = useGeneralKeeperPlaceInitialOffer({
     address: gk,
-    args: [ BigInt(classOfShare),
+    args: !hasError(valid)
+        ? [ BigInt(classOfShare),
             BigInt(offer.execHours), 
             BigInt(offer.paid), 
             BigInt(offer.price), 
             BigInt(offer.seqOfLR), 
-           ],
+           ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

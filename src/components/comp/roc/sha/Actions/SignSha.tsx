@@ -21,7 +21,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
     write: signSha
   } = useGeneralKeeperSignSha({
     address: gk,
-    args: sigHash 
+    args: sigHash && !hasError(valid) 
         ? [addr, sigHash]
         : undefined,
   });

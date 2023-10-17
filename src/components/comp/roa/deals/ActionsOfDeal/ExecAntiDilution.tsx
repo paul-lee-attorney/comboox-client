@@ -28,11 +28,13 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
     write: execAntiDilution,
   } = useGeneralKeeperExecAntiDilution({
     address: gk,
-    args: [ addr, 
+    args: !hasError(valid)
+        ? [ addr, 
             BigInt(deal.head.seqOfDeal), 
             BigInt(seqOfShare),
             sigHash
-          ],
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

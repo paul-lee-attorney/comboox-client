@@ -19,7 +19,7 @@ import {
   useAccessControlSetOwner,
 } from '../../../generated';
 
-import { HexType } from '../../../scripts/common';
+import { AddrZero, HexType } from '../../../scripts/common';
 import { getOwner } from '../../../scripts/common/accessControl';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 
@@ -28,7 +28,7 @@ export interface AccessControlProps{
 }
 
 export function SetOwner({ addr }: AccessControlProps) {
-  const [owner, setOwner] = useState<HexType>();
+  const [owner, setOwner] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ time, setTime ] = useState(0);
@@ -51,7 +51,7 @@ export function SetOwner({ addr }: AccessControlProps) {
     write: setOwnr,
   } = useAccessControlSetOwner({
     address: addr,
-    args: owner ? [ owner ] : undefined,
+    args: !hasError(valid) ? [ owner ] : undefined,
     onSuccess(data) {
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);

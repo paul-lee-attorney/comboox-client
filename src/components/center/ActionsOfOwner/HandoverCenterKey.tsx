@@ -22,7 +22,7 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
     write: handoverCenterKey
   } = useRegCenterHandoverCenterKey({
     address: AddrOfRegCenter,
-    args: newKeeper ? [newKeeper] : undefined,
+    args: hasError(valid) ? undefined : [newKeeper],
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

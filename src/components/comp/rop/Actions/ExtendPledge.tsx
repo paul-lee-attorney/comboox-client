@@ -25,7 +25,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: extendPledge,
   } = useGeneralKeeperExtendPledge({
     address: gk,
-    args: days
+    args: days && !hasError(valid)
       ? [ BigInt(pld.head.seqOfShare), 
           BigInt(pld.head.seqOfPld), 
           BigInt(days)

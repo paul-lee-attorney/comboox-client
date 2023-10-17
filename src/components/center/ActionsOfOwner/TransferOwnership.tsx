@@ -22,7 +22,7 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
     write: transferOwnership
   } = useRegCenterTransferOwnership({
     address: AddrOfRegCenter,
-    args: newOwner ? [newOwner] : undefined,
+    args: hasError(valid) ? undefined : [newOwner],
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

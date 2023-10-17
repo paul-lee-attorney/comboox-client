@@ -22,7 +22,7 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
     write: proposeDocOfGm,
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: doc && seqOfVr && executor
+    args: doc && seqOfVr && executor && !hasError(valid)
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
     onSuccess(data) {

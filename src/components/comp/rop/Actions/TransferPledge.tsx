@@ -26,7 +26,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: transferPledge,
   } = useGeneralKeeperTransferPledge({
     address: gk,
-    args: buyer && amt
+    args: buyer && amt && !hasError(valid)
       ? [ BigInt(pld.head.seqOfShare), 
           BigInt(pld.head.seqOfPld), 
           BigInt(buyer),

@@ -53,7 +53,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addLocker 
   } = useLockUpSetLocker({
     address: term,
-    args: seqOfShare && dueDate
+    args: seqOfShare && dueDate && !hasError(valid)
       ? [ BigInt(seqOfShare), BigInt(dueDate) ]
       : undefined,
   });
@@ -63,7 +63,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeLocker 
   } = useLockUpDelLocker({
     address: term,
-    args: seqOfShare ? [ BigInt(seqOfShare) ] : undefined,
+    args: seqOfShare && !hasError(valid) ? [ BigInt(seqOfShare) ] : undefined,
   });
 
   const [ keyholder, setKeyholder ] = useState<string>();
@@ -73,7 +73,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addKeyholder,
   } = useLockUpAddKeyholder({
     address: term,
-    args: seqOfShare && keyholder
+    args: seqOfShare && keyholder && !hasError(valid)
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
   });
@@ -83,7 +83,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeKeyholder,
   } = useLockUpRemoveKeyholder({
     address: term,
-    args: seqOfShare && keyholder
+    args: seqOfShare && keyholder && !hasError(valid)
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
   });

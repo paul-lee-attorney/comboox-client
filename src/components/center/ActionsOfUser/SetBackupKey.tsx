@@ -5,7 +5,7 @@ import {
   useRegCenterSetBackupKey
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
@@ -14,7 +14,7 @@ import { ActionsOfUserProps } from '../ActionsOfUser';
 
 export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
 
-  const [ key, setKey ] = useState<HexType>();
+  const [ key, setKey ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const refresh = () => {
@@ -27,7 +27,7 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
     write: setBackupKey
   } = useRegCenterSetBackupKey({
     address: AddrOfRegCenter,
-    args: key ? [key] : undefined,
+    args: !hasError(valid) ? [key] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

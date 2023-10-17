@@ -22,7 +22,7 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
     write: setFeedReg
   } = useRegCenterSetFeedRegistry({
     address: AddrOfRegCenter,
-    args: newFeed ? [newFeed] : undefined,
+    args: hasError(valid) ? undefined : [newFeed],
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

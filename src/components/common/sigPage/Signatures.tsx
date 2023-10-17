@@ -79,12 +79,17 @@ export interface SigPageProps {
 
 export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
 
-  interface TimingProps {
-    signingDays?: string,
-    closingDays?: string,
+  interface Timing {
+    signingDays: string,
+    closingDays: string,
   }
 
-  const [ timing, setTiming ] = useState<TimingProps>();
+  const defaultTiming:Timing = {
+    signingDays: '0',
+    closingDays: '0',
+  }
+
+  const [ timing, setTiming ] = useState<Timing>(defaultTiming);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
@@ -92,8 +97,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
     write: writeSetTiming,
   } = useSigPageSetTiming({
     address: addr,
-    args: timing?.closingDays &&
-          timing?.signingDays 
+    args: !hasError(valid) 
         ? [ initPage, 
             BigInt(timing.signingDays), 
             BigInt(timing.closingDays)

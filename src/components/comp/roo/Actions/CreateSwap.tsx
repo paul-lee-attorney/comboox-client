@@ -28,7 +28,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
     write: createSwap,
   } = useGeneralKeeperCreateSwap({
     address: gk,
-    args: seqOfTarget && paidOfTarget && seqOfPledge
+    args: seqOfTarget && paidOfTarget && seqOfPledge && !hasError(valid)
       ? [ BigInt(seqOfOpt), 
           BigInt(seqOfTarget), 
           BigInt(paidOfTarget), 

@@ -29,7 +29,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
     write: entrustDelegaterForBm,
   } = useGeneralKeeperEntrustDelegaterForBoardMeeting({
     address: gk,
-    args: delegater
+    args: delegater && !hasError(valid)
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined,
     onSuccess(data) {

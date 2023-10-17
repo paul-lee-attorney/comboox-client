@@ -26,7 +26,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     write: addOfficer,
   } = useGeneralKeeperNominateOfficer({
     address: gk,
-    args: seqOfPos && candidate
+    args: seqOfPos && candidate && !hasError(valid)
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
     onSuccess(data) {
@@ -40,7 +40,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     write: removeOfficer
   } = useGeneralKeeperCreateMotionToRemoveOfficer({
     address: gk,
-    args: seqOfPos 
+    args: seqOfPos && !hasError(valid) 
           ? [ BigInt(seqOfPos)]
           : undefined,
     onSuccess(data) {

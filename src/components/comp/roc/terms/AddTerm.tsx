@@ -29,7 +29,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     write: createTerm,
   } = useShareholdersAgreementCreateTerm({
     address: sha,
-    args: version 
+    args: version && !hasError(valid)
       ? [BigInt(title), BigInt(version)]
       : undefined,
     onSuccess(data:any) {
@@ -47,7 +47,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     write: removeTerm,
   } = useShareholdersAgreementRemoveTerm({
     address: sha,
-    args: [BigInt(title)],
+    args: !hasError(valid) ? [BigInt(title)] : undefined,
     onSuccess() {
       setTerms(v=>{
         let out = [...v];

@@ -21,7 +21,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const obtainPledge = async ()=>{
-    if (boox && seqOfShare && seqOfPld) {
+    if (boox && seqOfShare && seqOfPld && !hasError(valid)) {
       let pld = await getPledge(boox[booxMap.ROP], seqOfShare, seqOfPld);
       setPld(pld);
       setOpen(true);

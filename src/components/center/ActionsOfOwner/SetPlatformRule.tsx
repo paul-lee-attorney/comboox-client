@@ -22,7 +22,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
     write: setPlatformRule
   } = useRegCenterSetPlatformRule({
     address: AddrOfRegCenter,
-    args: rule ? [ codifyPlatformStrRule(rule)] : undefined,
+    args: hasError(valid) ? undefined : [ codifyPlatformStrRule(rule)],
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

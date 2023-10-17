@@ -42,9 +42,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     write: setPayInAmt,
   } = useGeneralKeeperSetPayInAmt({
     address: gk,
-    args: locker.head && share.head.seqOfShare && 
-          locker.head.value && locker.head.expireDate && 
-          locker.hashLock 
+    args: !hasError(valid) 
         ? [ BigInt(share.head.seqOfShare), 
             BigInt(locker.head.value), 
             BigInt(locker.head.expireDate),
@@ -67,7 +65,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     write: requestPaidInCapital,
   } = useGeneralKeeperRequestPaidInCapital({
     address: gk,
-    args: locker.hashLock && key
+    args: locker.hashLock && key && !hasError(valid)
       ? [ locker.hashLock, key ]
       : undefined,
     onSuccess(data) {
@@ -81,7 +79,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     write: withdrawPayInAmt,     
   } = useGeneralKeeperWithdrawPayInAmt({
     address: gk,
-    args: locker.hashLock 
+    args: locker.hashLock && !hasError(valid)
       ? [ locker.hashLock, BigInt(share.head.seqOfShare) ]
       : undefined,
     onSuccess(data) {
@@ -91,7 +89,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
   });
 
   useEffect(()=>{
-    if (boox && locker.hashLock) {
+    if (boox && locker.hashLock ) {
       getLocker(boox[booxMap.ROS], locker.hashLock).then(
         res => setLocker(res)
       );

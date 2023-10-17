@@ -36,7 +36,13 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
     write: updateOracle,
   } = useGeneralKeeperUpdateOracle({
     address: gk,
-    args: [BigInt(seqOfOpt), BigInt(paras.p1), BigInt(paras.p2), BigInt(paras.p3)],
+    args: !hasError(valid)
+      ? [ BigInt(seqOfOpt), 
+          BigInt(paras.p1), 
+          BigInt(paras.p2), 
+          BigInt(paras.p3)
+        ]
+      : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

@@ -5,7 +5,7 @@ import {
   useRegCenterTransfer, 
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
@@ -21,7 +21,7 @@ interface Receipt{
 
 export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
 
-  const [ to, setTo ] = useState<HexType>();
+  const [ to, setTo ] = useState<HexType>(AddrZero);
   const [ amt, setAmt ] = useState<CBP>(defaultCBP);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -34,7 +34,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
     write: transferPoints
   } = useRegCenterTransfer({
     address: AddrOfRegCenter,
-    args: to && amt
+    args: !hasError(valid)
       ? [ to, 
           BigInt(amt.cbp) * BigInt(10 ** 18) + BigInt(amt.glee) * BigInt(10 ** 9)]
       : undefined,

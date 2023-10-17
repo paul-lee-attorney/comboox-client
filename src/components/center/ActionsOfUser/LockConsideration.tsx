@@ -83,17 +83,15 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     write: lockConsideration,
   } = useRegCenterLockConsideration({
     address: AddrOfRegCenter,
-    args: head.to && head.value && head.expireDate && 
-          counterLocker && paras && hashLock
-        ? [ 
+    args: hasError(valid) ? undefined
+        : [ 
             BigInt(head.to),
             BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
             BigInt(head.expireDate),
             counterLocker,
             constructPayload(func, paras),
             hashLock
-          ]
-        : undefined,
+          ],
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

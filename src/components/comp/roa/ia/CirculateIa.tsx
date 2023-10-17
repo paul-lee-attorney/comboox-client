@@ -24,7 +24,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
     write
   } = useGeneralKeeperCirculateIa({
     address: gk,
-    args: [addr, docUrl, docHash],
+    args: !hasError(valid) ? [addr, docUrl, docHash] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

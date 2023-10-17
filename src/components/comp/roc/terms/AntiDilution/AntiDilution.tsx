@@ -57,7 +57,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: addMark 
   } = useAntiDilutionAddBenchmark({
     address: term,
-    args: classOfShare && price 
+    args: classOfShare && price && !hasError(valid)
         ? [BigInt(classOfShare), BigInt(price)] 
         : undefined,
   });
@@ -67,7 +67,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: removeMark 
   } = useAntiDilutionRemoveBenchmark({
     address: term,
-    args: classOfShare 
+    args: classOfShare && !hasError(valid) 
         ? [BigInt(classOfShare)] 
         :  undefined,
   });
@@ -79,7 +79,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: addObligor 
   } = useAntiDilutionAddObligor({
     address: term,
-    args: classOfShare && obligor 
+    args: classOfShare && obligor && !hasError(valid)
         ? [ BigInt(classOfShare), BigInt(obligor)] 
         :   undefined,
   });
@@ -89,7 +89,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: removeObligor 
   } = useAntiDilutionRemoveObligor({
     address: term,
-    args: classOfShare && obligor 
+    args: classOfShare && obligor && !hasError(valid)
         ? [ BigInt(classOfShare), BigInt(obligor)] 
         :   undefined, 
   });

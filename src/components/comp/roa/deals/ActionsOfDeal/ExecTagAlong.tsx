@@ -38,13 +38,15 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
     write: execTagAlong,
   } = useGeneralKeeperExecTagAlong({
     address: gk,
-    args: [ addr, 
+    args: !hasError(valid)
+        ? [ addr, 
             BigInt(deal.head.seqOfDeal), 
             BigInt(targetShare.seqOfShare),
             BigInt(targetShare.paid),
             BigInt(targetShare.par),
             sigHash
-          ],
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

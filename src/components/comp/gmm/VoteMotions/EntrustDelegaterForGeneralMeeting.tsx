@@ -28,7 +28,7 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
     write: entrustDelegaterOfMember,
   } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
     address: gk,
-    args: delegater
+    args: delegater && !hasError(valid)
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined,
     onSuccess(data) {

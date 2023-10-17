@@ -22,9 +22,9 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
     write:approveInvestor,
   } = useGeneralKeeperApproveInvestor({
     address: gk,
-    args: [ BigInt(userNo), 
-            BigInt(seqOfLR)
-          ],
+    args: !hasError(valid) 
+        ? [ BigInt(userNo), BigInt(seqOfLR)]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

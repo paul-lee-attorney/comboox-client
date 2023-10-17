@@ -21,7 +21,7 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
     write
   } = useGeneralKeeperAcceptSha({
     address: gk,
-    args: [ sigHash ],
+    args: !hasError(valid) ? [ sigHash ] : undefined,
     onSuccess() {
       setTime(Date.now());
     }

@@ -27,7 +27,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
     write: setRoyaltyRule
   } = useRegCenterSetRoyaltyRule({
     address: AddrOfRegCenter,
-    args: rule ? [ codifyStrRoyaltyRule(rule)] : undefined,
+    args: !hasError(valid) ? [ codifyStrRoyaltyRule(rule)] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

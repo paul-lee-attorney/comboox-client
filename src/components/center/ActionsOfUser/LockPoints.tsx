@@ -40,14 +40,13 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     write: lockPoints,
   } = useRegCenterLockPoints({
     address: AddrOfRegCenter,
-    args: head.to && (amt.cbp || amt.glee ) && head.expireDate && hashLock
-        ? [ 
+    args: hasError(valid) ? undefined
+        : [ 
             BigInt(head.to),
             BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
             BigInt(head.expireDate),
             hashLock
-          ]
-        : undefined,
+          ],
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

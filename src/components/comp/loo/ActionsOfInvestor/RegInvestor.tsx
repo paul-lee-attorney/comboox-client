@@ -21,9 +21,9 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
     write:regInvestor,
   } = useGeneralKeeperRegInvestor({
     address: gk,
-    args: [ BigInt(groupRep), 
-            idHash
-          ],
+    args: !hasError(valid) 
+        ? [ BigInt(groupRep), idHash]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

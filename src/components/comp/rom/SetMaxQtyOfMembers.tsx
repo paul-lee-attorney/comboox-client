@@ -52,7 +52,7 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
     write: setMaxQty, 
   } = useRegisterOfMembersSetMaxQtyOfMembers({
     address: boox ? boox[booxMap.ROM] : undefined,
-    args: [BigInt(inputMax)],
+    args: !hasError(valid) ? [BigInt(inputMax)] : undefined,
     onSuccess(data) {
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);

@@ -45,7 +45,7 @@ function RegisterOfShares() {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   
   const searchShare = () => {
-    if (boox && seqOfShare) {
+    if (boox && seqOfShare && !hasError(valid)) {
       getShare(boox[booxMap.ROS], seqOfShare).then(
         res => {
           setShare(res);

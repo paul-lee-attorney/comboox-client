@@ -26,7 +26,7 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     write: updateOwner,
   } = useAccessControlSetOwner({
     address: docAddr,
-    args: [ owner ],
+    args: !hasError(valid) ? [ owner ] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

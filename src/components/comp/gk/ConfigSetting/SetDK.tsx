@@ -21,7 +21,7 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     write: updateDK,
   } = useAccessControlSetDirectKeeper({
     address: docAddr,
-    args: [ keeper ],
+    args: !hasError(valid) ? [ keeper ] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

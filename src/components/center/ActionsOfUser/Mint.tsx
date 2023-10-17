@@ -5,7 +5,7 @@ import {
   useRegCenterMint, 
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType, MaxUserNo } from '../../../scripts/common';
 import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
 
@@ -32,7 +32,7 @@ export const defaultCBP:CBP = {
 
 export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
-  const [ to, setTo ] = useState<string>();
+  const [ to, setTo ] = useState<string>('0');
   const [ amt, setAmt ] = useState<CBP>(defaultCBP);
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
@@ -43,11 +43,11 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
     write: mintPoints
   } = useRegCenterMint({
     address: AddrOfRegCenter,
-    args: to && amt
-      ? [ BigInt(to), 
+    args: hasError(valid) ? undefined
+      : [ BigInt(to), 
           BigInt(amt.cbp) * BigInt(10 ** 18) 
-        + BigInt(amt.glee) * BigInt(10 ** 9)]
-      : undefined,
+        + BigInt(amt.glee) * BigInt(10 ** 9)
+        ],
     onSuccess(data) {
       let hash: HexType = data.hash;
       waitForTransaction({hash}).then(
@@ -139,7 +139,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
         <Button 
           size='small'
-          disabled={ !mintPoints || mintPointsLoading || hasError(valid)} 
+          disabled={ mintPointsLoading || hasError(valid)} 
           onClick={() => {
             mintPoints?.()
           }}

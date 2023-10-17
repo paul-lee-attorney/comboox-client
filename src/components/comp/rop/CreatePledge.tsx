@@ -31,13 +31,14 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
     write: createPledge,
   } = useGeneralKeeperCreatePledge({
     address: gk,
-    args:
-        [ codifyHeadOfPledge(head), 
+    args: !hasError(valid)
+      ? [ codifyHeadOfPledge(head), 
           BigInt(body.paid),
           BigInt(body.par),
           BigInt(body.guaranteedAmt),
           BigInt(body.execDays)
-        ],
+        ]
+      : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

@@ -26,11 +26,13 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
     write: requestToBuy,
   } = useGeneralKeeperRequestToBuy({
     address: gk,
-    args: [ addr,
+    args: !hasError(valid)
+        ? [ addr,
             BigInt(deal.head.seqOfDeal), 
             BigInt(paidOfTarget), 
             BigInt(seqOfPledge)
-          ],
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

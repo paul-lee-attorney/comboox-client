@@ -25,7 +25,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: refundDebt,
   } = useGeneralKeeperRefundDebt({
     address: gk,
-    args: amt
+    args: amt && !hasError(valid)
       ? [ BigInt(pld.head.seqOfShare), 
           BigInt(pld.head.seqOfPld), 
           BigInt(amt)

@@ -24,7 +24,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
     write
   } = useGeneralKeeperCirculateSha({
     address: gk,
-    args: [addr, docUrl, docHash],
+    args: !hasError(valid) ? [addr, docUrl, docHash] : undefined,
     onSuccess() {
       setNextStep(2);
     }

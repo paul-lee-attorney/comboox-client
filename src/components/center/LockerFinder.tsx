@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { HexType } from "../../scripts/common";
+import { Dispatch, SetStateAction, useState } from "react";
+import { Bytes32Zero, HexType } from "../../scripts/common";
 import { StrLocker, getLocker } from "../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
@@ -12,22 +12,17 @@ interface LockerFinderProps{
 
 export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
 
-  const [ strLock, setStrLock ] = useState<string>();
-  const [ hashLock, setHashLock ] = useState<HexType>();
+  const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
-  useEffect(()=>{
+  const searchLocker = ()=>{
     if (hashLock) {
       getLocker(hashLock).then(
-        locker => setLocker(locker)
-      )
-    }
-  }, [hashLock, setLocker]);
-
-  const searchLocker = ()=>{
-    if (strLock) {
-      setHashLock(HexParser(strLock));
-      setOpen(true);
+        locker => {
+          setLocker(locker);
+          setOpen(true);
+        }    
+      );
     }
   }
 
@@ -37,21 +32,21 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
       <TextField 
         sx={{ m: 1, minWidth: 685 }} 
         id="tfStrLock" 
-        label="StrLock" 
+        label="HashLock" 
         variant="outlined"
-        error={ valid['StrLocker']?.error }
-        helperText={ valid['StrLocker']?.helpTx }
-        value = { strLock }
+        error={ valid['HashLock']?.error }
+        helperText={ valid['HashLock']?.helpTx }
+        value = { hashLock }
         size='small'
         onChange={(e) => {
-          let input = e.target.value ?? '';
-          onlyHex('StrLocker', input, 64, setValid); 
-          setStrLock(input);
+          let input = HexParser(e.target.value);
+          onlyHex('HashLock', input, 64, setValid); 
+          setHashLock(input);
         }}
       />
 
       <Button 
-        disabled={ !strLock || hasError(valid) }
+        disabled={ hasError(valid) }
         sx={{ m: 1, minWidth: 168, height: 40 }} 
         variant="contained" 
         endIcon={ <Search /> }

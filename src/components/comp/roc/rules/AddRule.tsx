@@ -32,7 +32,7 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
     write,
   } = useShareholdersAgreementAddRule({
     address: sha,
-    args: [rule],
+    args: !hasError(valid) ? [rule] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

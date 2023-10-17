@@ -20,10 +20,12 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
     write:withdrawInitOffer,
   } = useGeneralKeeperWithdrawInitialOffer({
     address: gk,
-    args: [ BigInt(classOfShare),
+    args: !hasError(valid)
+        ? [ BigInt(classOfShare),
             BigInt(offer.seqOfOrder),
             BigInt(offer.seqOfLR), 
-           ],
+           ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

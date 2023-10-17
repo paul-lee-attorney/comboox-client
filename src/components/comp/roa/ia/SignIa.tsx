@@ -27,7 +27,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
     write: signIa
   } = useGeneralKeeperSignIa({
     address: gk,
-    args: sigHash
+    args: sigHash && !hasError(valid)
       ? [addr, sigHash]
       : undefined,
     onSuccess(data) {

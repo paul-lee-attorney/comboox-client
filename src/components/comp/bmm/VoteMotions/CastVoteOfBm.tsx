@@ -49,7 +49,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
     write: castVote,
   } = useGeneralKeeperCastVote({
     address: gk,
-    args: attitude 
+    args: attitude && !hasError(valid)
         ? [seqOfMotion, BigInt(attitude), sigHash]
         : undefined,
     onSuccess(data) {

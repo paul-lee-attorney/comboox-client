@@ -19,14 +19,14 @@ import {
   useAccessControlGrantRole,
 } from '../../../generated';
 
-import { HexType } from '../../../scripts/common';
+import { AddrZero, HexType } from '../../../scripts/common';
 import { ATTORNEYS, hasRole } from '../../../scripts/common/accessControl';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
 
 export function AppointAttorney({ addr }: AccessControlProps) {
 
-  const [acct, setAcct] = useState<HexType>();
+  const [acct, setAcct] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ flag, setFlag ] = useState<boolean>();
@@ -45,7 +45,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
     write: grantRole,
   } = useAccessControlGrantRole({
     address: addr,
-    args: acct && acct != '0x' 
+    args: !hasError(valid) 
       ? [ATTORNEYS, acct] : undefined,
     onSuccess(data) {
       let hash:HexType = data.hash;

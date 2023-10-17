@@ -25,7 +25,7 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
     write: terminateSwap,
   } = useGeneralKeeperTerminateSwap({
     address: gk,
-    args: seqOfSwap
+    args: seqOfSwap && !hasError(valid)
       ? [ BigInt(seqOfOpt), 
           BigInt(seqOfSwap)]
       : undefined,

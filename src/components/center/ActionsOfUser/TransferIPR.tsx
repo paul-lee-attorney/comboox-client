@@ -26,9 +26,12 @@ export function TransferIPR() {
     write: transferIPR
   } = useRegCenterTransferIpr({
     address: AddrOfRegCenter,
-    args: [ BigInt(typeOfDoc), 
+    args: !hasError(valid)
+        ? [ BigInt(typeOfDoc), 
             BigInt(version),
-            BigInt(transferee)],
+            BigInt(transferee)
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       getReceipt(hash).then(

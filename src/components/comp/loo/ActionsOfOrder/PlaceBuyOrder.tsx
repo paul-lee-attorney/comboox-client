@@ -23,11 +23,15 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     write:placeBuyOrder,
   } = useGeneralKeeperPlaceBuyOrder({
     address: gk,
-    args: [ BigInt(classOfShare),
+    args: !hasError(valid)
+        ? [ BigInt(classOfShare),
             BigInt(order.paid), 
             BigInt(order.price)
-           ],
-    value: BigInt(value) * BigInt(10 ** 9),
+          ]
+        : undefined,
+    value: !hasError(valid) 
+        ? BigInt(value) * (10n ** 9n) 
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

@@ -19,7 +19,7 @@ import {
   useAccessControlSetRoleAdmin,
 } from '../../../generated';
 
-import { HexType } from '../../../scripts/common';
+import { AddrZero, HexType } from '../../../scripts/common';
 import { ATTORNEYS, getGeneralCounsel } from '../../../scripts/common/accessControl';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
@@ -32,7 +32,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
   const [ open, setOpen ] = useState(false);
   const [ time, setTime ] = useState(0);
 
-  const [gc, setGC] = useState<HexType>();
+  const [gc, setGC] = useState<HexType>(AddrZero);
 
   const refresh = () => {
     setTime(Date.now());
@@ -54,7 +54,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
     write: setGeneralCounsel,
   } = useAccessControlSetRoleAdmin({
     address: addr,
-    args: gc ? [ ATTORNEYS, gc] : undefined,
+    args: !hasError(valid) ? [ ATTORNEYS, gc] : undefined,
     onSuccess(data) {
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);

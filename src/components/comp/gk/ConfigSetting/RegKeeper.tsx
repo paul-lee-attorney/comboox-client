@@ -22,7 +22,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
     write: regKeeper,
   } = useGeneralKeeperRegKeeper({
     address: gk,
-    args: [BigInt(title), book],
+    args: !hasError(valid) ? [BigInt(title), book] : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);

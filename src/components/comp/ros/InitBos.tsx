@@ -31,7 +31,6 @@ import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } fr
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { InitCompProps } from '../gk/SetCompInfo';
 
-
 // const defaultShare: Share = {
 //   head: {
 //     seqOfShare: 0,
@@ -71,10 +70,7 @@ export function InitBos({nextStep}: InitCompProps) {
     write: issueShare,
   } = useRegisterOfSharesIssueShare({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: share.head.class && share.head.issueDate &&
-          share.head.shareholder && share.head.priceOfPaid && 
-          share.head.priceOfPar && share.body.payInDeadline &&
-          share.body.paid && share.body.par && share.head.votingWeight
+    args: !hasError(valid)
       ? [ codifyHeadOfStrShare(share.head),
           BigInt(share.body.payInDeadline),
           BigInt(share.body.paid),
@@ -91,7 +87,7 @@ export function InitBos({nextStep}: InitCompProps) {
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: Number(share.head.seqOfShare) > 0
+    args: Number(share.head.seqOfShare) > 0 && !hasError(valid)
         ? [ BigInt(share.head.seqOfShare), 
             BigInt(share.body.paid), 
             BigInt(share.body.par) ]

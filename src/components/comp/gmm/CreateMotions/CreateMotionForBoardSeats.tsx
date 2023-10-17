@@ -26,7 +26,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
     write: addDirector,
   } = useGeneralKeeperNominateDirector({
     address: gk,
-    args: seqOfPos && candidate
+    args: seqOfPos && candidate && !hasError(valid)
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
     onSuccess(data) {

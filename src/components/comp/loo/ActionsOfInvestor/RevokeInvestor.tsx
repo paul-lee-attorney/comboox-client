@@ -21,9 +21,9 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
     write:revokeInvestor,
   } = useGeneralKeeperRevokeInvestor({
     address: gk,
-    args: [ BigInt(userNo), 
-            BigInt(seqOfLR)
-          ],
+    args: !hasError(valid)
+        ? [ BigInt(userNo), BigInt(seqOfLR)]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

@@ -47,12 +47,14 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
     address: addr,
-    args: [ codifyHeadOfDeal(head),
+    args: !hasError(valid)
+        ? [ codifyHeadOfDeal(head),
             BigInt(body.buyer),
             BigInt(body.groupOfBuyer),
             BigInt(body.paid),
             BigInt(body.par)
-          ],
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

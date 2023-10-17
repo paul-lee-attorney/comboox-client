@@ -8,7 +8,7 @@ import {
 } from '../../generated';
 
 import { 
-  AddrOfRegCenter, HexType,
+  AddrOfRegCenter, AddrZero, HexType,
 } from '../../scripts/common';
 
 import { useComBooxContext } from '../../scripts/common/ComBooxContext';
@@ -21,7 +21,7 @@ export function CreateComp() {
   const { setGK } = useComBooxContext();
   const router = useRouter();
 
-  const [ dk, setDK ] = useState<HexType>();
+  const [ dk, setDK ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
@@ -29,8 +29,7 @@ export function CreateComp() {
     write: createComp,
   } = useRegCenterCreateComp({
     address: AddrOfRegCenter,
-    args: dk && dk != '0x' 
-      ? [dk] : undefined,
+    args: !hasError(valid) ? [dk] : undefined, 
     onSuccess(data) {
       let hash: HexType = data.hash;
       waitForTransaction({hash}).then(

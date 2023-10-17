@@ -60,7 +60,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: addLink 
   } = useAlongsAddDragger({
     address: term,
-    args: rule && drager
+    args: rule && drager && !hasError(valid)
       ? [ linkRuleCodifier(rule) , BigInt(drager)] 
       : undefined, 
   });
@@ -70,7 +70,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: removeLink, 
   } = useAlongsRemoveDragger({
     address: term,
-    args: drager ? [BigInt(drager)] : undefined,
+    args: drager && !hasError(valid) ? [BigInt(drager)] : undefined,
   });
 
   const [ follower, setFollower ] = useState<string>('0');
@@ -80,7 +80,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: addFollower, 
   } = useAlongsAddFollower({
     address: term,
-    args: drager && follower
+    args: drager && follower && !hasError(valid)
       ? [ BigInt(drager),
           BigInt(follower)] :
             undefined,
@@ -91,7 +91,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: removeFollower 
   } = useAlongsRemoveFollower({
     address: term,
-    args: drager && follower 
+    args: drager && follower && !hasError(valid)
       ? [ BigInt(drager), BigInt(follower)] 
       : undefined,
   });
