@@ -21,7 +21,7 @@ export function CreateComp() {
   const { setGK } = useComBooxContext();
   const router = useRouter();
 
-  const [ dk, setDK ] = useState<HexType>(AddrZero);
+  const [ dk, setDK ] = useState<HexType>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const {
@@ -29,7 +29,7 @@ export function CreateComp() {
     write: createComp,
   } = useRegCenterCreateComp({
     address: AddrOfRegCenter,
-    args: !hasError(valid) ? [dk] : undefined, 
+    args: !hasError(valid) && dk ? [dk] : undefined, 
     onSuccess(data) {
       let hash: HexType = data.hash;
       waitForTransaction({hash}).then(

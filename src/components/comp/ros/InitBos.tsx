@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 
 import { 
   TextField, 
-  Button,
   Paper,
   Stack,
   Divider,
@@ -30,26 +29,7 @@ import { SharesList } from './SharesList';
 import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { InitCompProps } from '../gk/SetCompInfo';
-
-// const defaultShare: Share = {
-//   head: {
-//     seqOfShare: 0,
-//     preSeq: 0,
-//     class: 1,
-//     issueDate: 0,
-//     shareholder: 0,
-//     priceOfPaid: 100,
-//     priceOfPar: 100,
-//     votingWeight: 100,
-//   },
-//   body: {
-//     payInDeadline: 0,
-//     paid: BigInt(0),
-//     par: BigInt(0),
-//     cleanPaid: BigInt(0),
-//     state: 0,
-//   },
-// }
+import { LoadingButton } from '@mui/lab';
 
 export function InitBos({nextStep}: InitCompProps) {
   const { boox } = useComBooxContext();
@@ -58,11 +38,13 @@ export function InitBos({nextStep}: InitCompProps) {
   const [share, setShare] = useState<StrShare>(defStrShare);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
-  
+  const [ loading, setLoading ] = useState<boolean>(false);
+
   const [time, setTime] = useState(0);
 
   const refresh = () => {
     setTime(Date.now());
+    setLoading(false);
   }
 
   const {
@@ -77,6 +59,7 @@ export function InitBos({nextStep}: InitCompProps) {
           BigInt(share.body.par)  ] 
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }    
@@ -93,6 +76,7 @@ export function InitBos({nextStep}: InitCompProps) {
             BigInt(share.body.par) ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }    
@@ -150,16 +134,17 @@ export function InitBos({nextStep}: InitCompProps) {
           
           <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
-            <Button
+            <LoadingButton
               sx={{m:1, mx:3, px:3, py:1}}
               variant='contained'
               startIcon={<AddCircle />}
+              loading={loading}
               disabled={!issueShare || issueShareLoading || hasError(valid) }
               onClick={()=>issueShare?.()}
               size="small"
             >
               Add Share
-            </Button>
+            </LoadingButton>
 
             <Divider orientation='vertical' sx={{m:2}} flexItem />
 
@@ -387,16 +372,17 @@ export function InitBos({nextStep}: InitCompProps) {
                 size='small'
               />
 
-              <Button
+              <LoadingButton
                 sx={{m:1, p:1}}
                 variant='contained'
+                loading={ loading }
                 endIcon={<RemoveCircle />}
                 disabled={ !delShare || delShareLoading || hasError(valid) }
                 onClick={()=>delShare?.()}
                 size="small"
               >
                 Remove Share
-              </Button>
+              </LoadingButton>
 
             </Stack>
 
