@@ -17,7 +17,7 @@ import {
   DialogActions,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { HexType, MaxRatio, MaxSeqNo } from '../../../../../scripts/common';
+import { HexType, MaxByte, MaxRatio, MaxSeqNo } from '../../../../../scripts/common';
 import { FormResults, dateParser, defFormResults, longDataParser, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { getRule } from '../../../../../scripts/comp/sha';
@@ -444,7 +444,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('MaxNumOfDirectors', input, 255n, setValid);
+                      onlyNum('MaxNumOfDirectors', input, MaxByte, setValid);
                       setObjGR((v) => ({
                         ...v,
                         maxNumOfDirectors: input,
@@ -546,7 +546,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('BusinessTerm', input, 255n, setValid);
+                      onlyNum('BusinessTerm', input, MaxByte, setValid);
                       setObjGR((v) => ({
                         ...v,
                         businessTermInYears: input,
@@ -568,7 +568,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('TypeOfComp', input, 255n, setValid);
+                      onlyNum('TypeOfComp', input, MaxByte, setValid);
                       setObjGR((v) => ({
                         ...v,
                         typeOfComp: input,

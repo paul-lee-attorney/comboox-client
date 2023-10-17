@@ -16,7 +16,7 @@ import {
   Dialog,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { HexType, MaxRatio, MaxSeqNo, MaxUserNo } from '../../../../../scripts/common';
+import { HexType, MaxByte, MaxRatio, MaxSeqNo, MaxUserNo } from '../../../../../scripts/common';
 import { FormResults, defFormResults, longSnParser, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
@@ -570,7 +570,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('FRExecDays', input, 255n, setValid);
+                    onlyNum('FRExecDays', input, MaxByte, setValid);
                     setObjVR((v) => ({
                       ...v,
                       frExecDays: input,
@@ -592,7 +592,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('DTExecDays', input, 255n, setValid);
+                    onlyNum('DTExecDays', input, MaxByte, setValid);
                     setObjVR((v) => ({
                       ...v,
                       dtExecDays: input,
@@ -614,7 +614,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('DTConfirmDays',input, 255n, setValid);
+                    onlyNum('DTConfirmDays',input, MaxByte, setValid);
                     setObjVR((v) => ({
                       ...v,
                       dtConfirmDays: input,
@@ -636,7 +636,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('InvExitDays', input, 255n, setValid);
+                    onlyNum('InvExitDays', input, MaxByte, setValid);
                     setObjVR((v) => ({
                       ...v,
                       invExitDays: input,
@@ -658,7 +658,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('VotePrepareDays', input, 255n, setValid);
+                    onlyNum('VotePrepareDays', input, MaxByte, setValid);
                     setObjVR((v) => ({
                       ...v,
                       votePrepareDays: input,
@@ -680,7 +680,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('VotingDays', input, 255n, setValid);
+                    onlyNum('VotingDays', input, MaxByte, setValid);
                     setObjVR((v) => ({
                       ...v,
                       votingDays: input,

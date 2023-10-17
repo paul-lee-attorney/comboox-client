@@ -17,6 +17,7 @@ export const MaxSeqNo: bigint = 2n**16n-1n;
 export const MaxPrice: bigint = 2n**32n-1n;
 export const MaxData: bigint = 2n**64n-1n;
 export const MaxRatio: bigint = 10000n;
+export const MaxByte: bigint = 255n;
 
 export type HexType = `0x${string}`;
 

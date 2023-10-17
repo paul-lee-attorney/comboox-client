@@ -2,9 +2,7 @@ import { ChangeEvent, useState } from "react";
 
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../../../scripts/common";
 
-import { 
-  useInvestmentAgreementAddDeal, 
-} from "../../../../generated";
+import { useInvestmentAgreementAddDeal } from "../../../../generated";
 
 import { 
   Button, 
@@ -24,7 +22,7 @@ import { AddCircle } from "@mui/icons-material";
 import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Body, Head, StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultBody, defaultHead, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
+import { StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
@@ -210,7 +208,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head?.closingDeadline) }
+              value={ dayjs.unix(head.closingDeadline) }
               onChange={(date) => setHead((v) => ({
                 ...v,
                 closingDeadline: date ? date.unix() : 0,

@@ -14,7 +14,7 @@ import {
   Dialog,
   DialogContent,
 } from '@mui/material';
-import { HexType, MaxUserNo } from '../../../../../scripts/common';
+import { HexType, MaxByte, MaxUserNo } from '../../../../../scripts/common';
 import { AddRule } from '../AddRule';
 import { FormResults, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
@@ -154,7 +154,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('QtyOfSubRule', input, 255n, setValid);
+                    onlyNum('QtyOfSubRule', input, MaxByte, setValid);
                     setObjGuo((v) => ({
                       ...v,
                       qtyOfSubRule: input,
