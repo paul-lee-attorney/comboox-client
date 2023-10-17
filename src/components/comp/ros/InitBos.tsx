@@ -32,25 +32,25 @@ import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '
 import { InitCompProps } from '../gk/SetCompInfo';
 
 
-const defaultShare: Share = {
-  head: {
-    seqOfShare: 0,
-    preSeq: 0,
-    class: 1,
-    issueDate: 0,
-    shareholder: 0,
-    priceOfPaid: 100,
-    priceOfPar: 100,
-    votingWeight: 100,
-  },
-  body: {
-    payInDeadline: 0,
-    paid: BigInt(0),
-    par: BigInt(0),
-    cleanPaid: BigInt(0),
-    state: 0,
-  },
-}
+// const defaultShare: Share = {
+//   head: {
+//     seqOfShare: 0,
+//     preSeq: 0,
+//     class: 1,
+//     issueDate: 0,
+//     shareholder: 0,
+//     priceOfPaid: 100,
+//     priceOfPar: 100,
+//     votingWeight: 100,
+//   },
+//   body: {
+//     payInDeadline: 0,
+//     paid: BigInt(0),
+//     par: BigInt(0),
+//     cleanPaid: BigInt(0),
+//     state: 0,
+//   },
+// }
 
 export function InitBos({nextStep}: InitCompProps) {
   const { boox } = useComBooxContext();
@@ -266,11 +266,11 @@ export function InitBos({nextStep}: InitCompProps) {
                 <DateTimeField
                   label='IssueDate'
                   sx={{m:1, width:188 }}
-                  value={ dayjs.unix(Number(share.head.issueDate)) }
+                  value={ dayjs.unix(share.head.issueDate) }
                   onChange={(date) => setShare((v) => ({
                     head: {
                       ...v.head,
-                      issueDate: date ? date.unix().toString() : '0',
+                      issueDate: date ? date.unix() : 0,
                     },
                     body: v.body,
                   }))}
@@ -281,12 +281,12 @@ export function InitBos({nextStep}: InitCompProps) {
                 <DateTimeField
                   label='PayInDeadline'
                   sx={{m:1, width:188 }}
-                  value={ dayjs.unix(Number(share.body.payInDeadline)) }
+                  value={ dayjs.unix(share.body.payInDeadline) }
                   onChange={(date) => setShare((v) => ({
                     head: v.head,
                     body: {
                       ...v.body,
-                      payInDeadline: date ? date.unix().toString() : '0',
+                      payInDeadline: date ? date.unix() : 0,
                     },
                   }))}
                   format='YYYY-MM-DD HH:mm:ss'

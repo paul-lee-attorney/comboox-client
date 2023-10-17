@@ -34,7 +34,7 @@ export interface GovernanceRule {
   maxNumOfDirectors: string ;
   tenureMonOfBoard: string ;
   quorumOfBoardMeeting: string ;
-  establishedDate: string ;
+  establishedDate: number ;
   businessTermInYears: string ;
   typeOfComp: string ; 
   minVoteRatioOnChain: string;
@@ -52,7 +52,7 @@ const defGR: GovernanceRule = {
   maxNumOfDirectors: '5',
   tenureMonOfBoard: '36',
   quorumOfBoardMeeting: '5000',
-  establishedDate: '0',
+  establishedDate: 0,
   businessTermInYears: '20',
   typeOfComp: '1',
   minVoteRatioOnChain: '500',   
@@ -71,7 +71,7 @@ export function strGRParser(hexRule: HexType): GovernanceRule {
     maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16).toString(),
     tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16).toString(),
     quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16).toString(),
-    establishedDate: parseInt(hexRule.substring(46, 58), 16).toString(),
+    establishedDate: parseInt(hexRule.substring(46, 58), 16),
     businessTermInYears: parseInt(hexRule.substring(58, 60), 16).toString(),
     typeOfComp: parseInt(hexRule.substring(60, 62), 16).toString(),
     minVoteRatioOnChain: parseInt(hexRule.substring(62, 66), 16).toString(),    
@@ -93,7 +93,7 @@ export function strGRCodifier(rule: GovernanceRule): HexType {
     Number(rule.maxNumOfDirectors).toString(16).padStart(2, '0') +       
     Number(rule.tenureMonOfBoard).toString(16).padStart(4, '0') +       
     Number(rule.quorumOfBoardMeeting).toString(16).padStart(4, '0') +       
-    Number(rule.establishedDate).toString(16).padStart(12, '0') + 
+    rule.establishedDate.toString(16).padStart(12, '0') + 
     Number(rule.businessTermInYears).toString(16).padStart(2, '0') +                 
     Number(rule.typeOfComp).toString(16).padStart(2, '0')+                 
     Number(rule.minVoteRatioOnChain).toString(16).padStart(4, '0')                 
@@ -510,10 +510,10 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                         m:1,
                         minWidth: 218,
                       }} 
-                      value={ dayjs.unix(Number(objGR.establishedDate)) }
+                      value={ dayjs.unix(objGR.establishedDate) }
                       onChange={(date) => setObjGR((v) => ({
                         ...v,
-                        establishedDate: date ? date.unix().toString() : '0',
+                        establishedDate: date ? date.unix() : 0,
                       }))}
                       format='YYYY-MM-DD HH:mm:ss'
                     />

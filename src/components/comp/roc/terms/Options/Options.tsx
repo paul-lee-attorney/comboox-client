@@ -301,10 +301,10 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           m:1,
                           minWidth: 218,
                         }} 
-                        value={ dayjs.unix(Number(head.triggerDate)) }
+                        value={ dayjs.unix(head.triggerDate) }
                         onChange={(date) => setHead((v) => ({
                           ...v,
-                          triggerDate: date ? date.unix().toString() : '0',
+                          triggerDate: date ? date.unix() : 0,
                         }))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />

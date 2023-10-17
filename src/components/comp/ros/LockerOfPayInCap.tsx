@@ -196,12 +196,12 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
               m:1,
               minWidth: 218,
             }} 
-            value={ dayjs.unix(Number(locker.head.expireDate)) }
+            value={ dayjs.unix(locker.head.expireDate) }
             onChange={(date) => setLocker(v => {
               let lk = v;
               lk.head.expireDate = date 
-                    ? date.unix().toString() 
-                    : '0';
+                    ? date.unix() 
+                    : 0;
               return lk;
             })}
             format='YYYY-MM-DD HH:mm:ss'

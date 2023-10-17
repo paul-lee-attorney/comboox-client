@@ -158,10 +158,10 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
             m:1,
             minWidth: 218,
           }} 
-          value={ dayjs.unix(Number(head.closingDeadline)) }
+          value={ dayjs.unix(head.closingDeadline) }
           onChange={(date) => setHead((v) => ({
             ...v,
-            closingDeadline: date ? date.unix().toString() : '0',
+            closingDeadline: date ? date.unix() : 0,
           }))}
           format='YYYY-MM-DD HH:mm:ss'
           size="small"

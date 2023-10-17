@@ -4,7 +4,7 @@ import { alongsABI } from "../../generated";
 import { Deal } from "./ia";
 
 export interface StrLinkRule{
-  triggerDate: string;
+  triggerDate: number;
   effectiveDays: string;
   triggerType: string;
   shareRatioThreshold: string;
@@ -32,7 +32,7 @@ export interface LinkRule{
 }
 
 export const defaultStrLinkRule: StrLinkRule = {
-  triggerDate: '0',
+  triggerDate: 0,
   effectiveDays: '0',
   triggerType: '0',
   shareRatioThreshold: '0',
@@ -79,7 +79,7 @@ export function linkRuleSnParser(sn: HexType): LinkRule {
 
 export function linkRuleCodifier(rule: StrLinkRule): HexType {
   let out: HexType = `0x${
-    Number(rule.triggerDate).toString(16).padStart(12, '0') +
+    rule.triggerDate.toString(16).padStart(12, '0') +
     Number(rule.effectiveDays).toString(16).padStart(4, '0') +
     Number(rule.triggerType).toString(16).padStart(2, '0') +
     Number(rule.shareRatioThreshold).toString(16).padStart(4, '0') +
@@ -129,21 +129,21 @@ export async function getLinkRule(addr: HexType, dragger: string): Promise<LinkR
     args: [ BigInt(dragger)],
   })
 
-  let out: LinkRule = {
-    triggerDate: res.triggerDate,
-    effectiveDays: res.effectiveDays,
-    triggerType: res.triggerType,
-    shareRatioThreshold: res.shareRatioThreshold,
-    rate: res.rate,
-    proRata: res.proRata,
-    seq: res.seq,
-    para: res.para,
-    argu: res.argu,
-    ref: res.ref,
-    data: res.data,   
-  }
+  // let out: LinkRule = {
+  //   triggerDate: res.triggerDate,
+  //   effectiveDays: res.effectiveDays,
+  //   triggerType: res.triggerType,
+  //   shareRatioThreshold: res.shareRatioThreshold,
+  //   rate: res.rate,
+  //   proRata: res.proRata,
+  //   seq: res.seq,
+  //   para: res.para,
+  //   argu: res.argu,
+  //   ref: res.ref,
+  //   data: res.data,   
+  // }
 
-  return out;
+  return res;
 }
 
 export async function isFollower(addr: HexType, dragger: number, follower: number): Promise<boolean>{

@@ -155,10 +155,10 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                           minWidth: 218,
                         }} 
                         size="small"
-                        value={ dayjs.unix(Number(rule.triggerDate)) }
+                        value={ dayjs.unix(rule.triggerDate) }
                         onChange={(date) => setRule((v) => ({
                           ...v,
-                          triggerDate: date ? date.unix().toString() : '0',
+                          triggerDate: date ? date.unix() : 0,
                         }))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />

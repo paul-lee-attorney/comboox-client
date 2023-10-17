@@ -7,7 +7,7 @@ export interface StrHead {
   class: string; // 股票类别/轮次编号
   seqOfShare: string; // 股票序列号
   preSeq: string; // 前序股票序列号（股转时原标的股序列号）
-  issueDate: string; // 股票签发日期（秒时间戳）
+  issueDate: number; // 股票签发日期（秒时间戳）
   shareholder: string; // 股东代码
   priceOfPaid: string; // 发行价格（实缴出资价）
   priceOfPar: string; // 发行价格（认缴出资价）
@@ -29,7 +29,7 @@ export const defStrHead: StrHead = {
   class: '0',
   seqOfShare: '0',
   preSeq: '0',
-  issueDate: '0',
+  issueDate: 0,
   shareholder: '0',
   priceOfPaid: '0',
   priceOfPar: '0',
@@ -52,7 +52,7 @@ export const defStrHead: StrHead = {
 // }
 
 export interface StrBody {
-  payInDeadline: string; // 出资期限（秒时间戳）
+  payInDeadline: number; // 出资期限（秒时间戳）
   paid: string; // 实缴出资
   par: string; // 认缴出资（注册资本面值）
   cleanPaid: string; // 清洁实缴出资（扣除出质、远期、销售要约金额）
@@ -68,7 +68,7 @@ export interface Body {
 }
 
 export const defStrBody: StrBody = {
-  payInDeadline: '0',
+  payInDeadline: 0,
   paid: '0',
   par: '0',
   cleanPaid: '0',
@@ -298,7 +298,7 @@ export async function getLocker(ros: HexType, hashLock: HexType): Promise<StrLoc
     head: {
       from: res.head.from.toString(),
       to: res.head.to.toString(),
-      expireDate: res.head.expireDate.toString(),
+      expireDate: res.head.expireDate,
       value: res.head.value.toString(),
     },
     body: 

@@ -42,7 +42,7 @@ export interface StrHead {
   seller: string,
   priceOfPaid: string,
   priceOfPar: string,
-  closingDeadline: string,
+  closingDeadline: number,
   votingWeight: string,
 }
 
@@ -55,7 +55,7 @@ export const defaultStrHead: StrHead = {
   seller: '0',
   priceOfPaid: '100',
   priceOfPar: '100',
-  closingDeadline: '0',
+  closingDeadline: 0,
   votingWeight: '100',  
 }
 

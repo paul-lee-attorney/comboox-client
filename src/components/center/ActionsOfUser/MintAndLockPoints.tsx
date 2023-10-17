@@ -126,10 +126,10 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(Number(head.expireDate)) }
+              value={ dayjs.unix(head.expireDate) }
               onChange={(date) => setHead((v) => ({
                 ...v,
-                expireDate: date ? date.unix().toString() : '0',
+                expireDate: date ? date.unix() : 0,
               }))}
               format='YYYY-MM-DD HH:mm:ss'
               size='small'

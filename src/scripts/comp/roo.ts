@@ -7,8 +7,8 @@ export interface StrHeadOfOpt{
   typeOfOpt: string;
   classOfShare: string;
   rate: string;
-  issueDate: string;
-  triggerDate: string;
+  issueDate: number;
+  triggerDate: number;
   execDays: string;
   closingDays: string;
   obligor: string;
@@ -46,8 +46,8 @@ export const defaultStrHeadOfOpt: StrHeadOfOpt = {
   typeOfOpt: '0',
   classOfShare: '0',
   rate: '0',
-  issueDate: '0',
-  triggerDate: '0',
+  issueDate: 0,
+  triggerDate: 0,
   execDays: '0',
   closingDays: '0',
   obligor: '0',
@@ -71,8 +71,8 @@ export function optHeadCodifier(head: StrHeadOfOpt): HexType {
     Number(head.typeOfOpt).toString(16).padStart(2, '0') +
     Number(head.classOfShare).toString(16).padStart(4, '0') +
     Number(head.rate).toString(16).padStart(8, '0') +
-    Number(head.issueDate).toString(16).padStart(12, '0') +
-    Number(head.triggerDate).toString(16).padStart(12, '0') +
+    head.issueDate.toString(16).padStart(12, '0') +
+    head.triggerDate.toString(16).padStart(12, '0') +
     Number(head.execDays).toString(16).padStart(4, '0') +
     Number(head.closingDays).toString(16).padStart(4, '0') +
     Number(head.obligor).toString(16).padStart(10, '0')
@@ -83,7 +83,7 @@ export function optHeadCodifier(head: StrHeadOfOpt): HexType {
 // ==== BodyOfOpt ====
 
 export interface StrBodyOfOpt{
-  closingDeadline: string;
+  closingDeadline: number;
   rightholder: string;
   paid: string;
   par: string;
@@ -93,7 +93,7 @@ export interface StrBodyOfOpt{
 }
 
 export const defaultStrBodyOfOpt: StrBodyOfOpt = {
-  closingDeadline: '0',
+  closingDeadline: 0,
   rightholder: '0',
   paid: '0',
   par: '0',

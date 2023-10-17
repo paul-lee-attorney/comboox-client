@@ -7,31 +7,9 @@ import { regCenterABI } from "../../generated";
 export interface StrHeadOfLocker {
   from: string;
   to: string;
-  expireDate: string;
+  expireDate: number;
   value: string;
 }
-
-export interface BodyOfLocker {
-  counterLocker: HexType;
-  selector: HexType;
-  paras: string[];
-}
-
-export interface StrLocker {
-  hashLock: HexType;
-  head: StrHeadOfLocker;
-  body: BodyOfLocker;  
-}
-
-export const defaultStrHeadOfLocker:StrHeadOfLocker = {
-  from: '0',
-  to: '0',
-  expireDate: '0',
-  value: '0',
-}
-
-
-// ==== Locker ====
 
 export interface HeadOfLocker {
   from: number;
@@ -40,33 +18,18 @@ export interface HeadOfLocker {
   value: bigint;
 }
 
-export interface Locker {
-  hashLock: HexType;
-  head: HeadOfLocker;
-  body: BodyOfLocker;
+export const defaultStrHeadOfLocker:StrHeadOfLocker = {
+  from: '0',
+  to: '0',
+  expireDate: 0,
+  value: '0',
 }
 
-// export function headOfLockerCodifier(head:HeadOfLocker):HexType {
-//   let sn:HexType = `0x${
-//     (head.from.toString(16).padStart(10, '0')) +
-//     (head.to.toString(16).padStart(10, '0')) +
-//     (head.expireDate.toString(16).padStart(12, '0')) +
-//     (head.value.toString(16).substring(2).padStart(32, '0'))
-//   }`;
-//   return sn;
-// }
-
-// export function headOfLockerParser(sn:HexType):HeadOfLocker {
-
-//   let head:HeadOfLocker = {
-//     from: parseInt(sn.substring(2, 12), 16),
-//     to: parseInt(sn.substring(12, 22), 16),
-//     expireDate: parseInt(sn.substring(22, 34), 16),
-//     value: BigInt(`0x${sn.substring(34, 66)}`),
-//   };
-
-//   return head;
-// }
+export interface BodyOfLocker {
+  counterLocker: HexType;
+  selector: HexType;
+  paras: string[];
+}
 
 export const defaultHeadOfLocker:HeadOfLocker = {
   from: 0,
@@ -92,6 +55,42 @@ export const defaultStrLocker: StrLocker = {
   head: defaultStrHeadOfLocker,
   body: defaultBodyOfLocker,
 }
+
+export interface StrLocker {
+  hashLock: HexType;
+  head: StrHeadOfLocker;
+  body: BodyOfLocker;  
+}
+
+export interface Locker {
+  hashLock: HexType;
+  head: HeadOfLocker;
+  body: BodyOfLocker;
+}
+
+// ==== Locker ====
+
+// export function headOfLockerCodifier(head:HeadOfLocker):HexType {
+//   let sn:HexType = `0x${
+//     (head.from.toString(16).padStart(10, '0')) +
+//     (head.to.toString(16).padStart(10, '0')) +
+//     (head.expireDate.toString(16).padStart(12, '0')) +
+//     (head.value.toString(16).substring(2).padStart(32, '0'))
+//   }`;
+//   return sn;
+// }
+
+// export function headOfLockerParser(sn:HexType):HeadOfLocker {
+
+//   let head:HeadOfLocker = {
+//     from: parseInt(sn.substring(2, 12), 16),
+//     to: parseInt(sn.substring(12, 22), 16),
+//     expireDate: parseInt(sn.substring(22, 34), 16),
+//     value: BigInt(`0x${sn.substring(34, 66)}`),
+//   };
+
+//   return head;
+// }
 
 
 // ==== User ====
@@ -510,7 +509,7 @@ export async function getLocker(hashLock: HexType): Promise<StrLocker>{
     head: {
       from: res.head.from.toString(),
       to: res.head.to.toString(),
-      expireDate: res.head.expireDate.toString(),
+      expireDate: res.head.expireDate,
       value: res.head.value.toString(),
     },
     body: 
@@ -533,8 +532,6 @@ export async function getLocksList(): Promise<readonly HexType[]>{
 
   return res;
 }
-
-
 
 // ==== CBP ====
 

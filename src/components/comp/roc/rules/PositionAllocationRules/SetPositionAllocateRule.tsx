@@ -36,7 +36,7 @@ export interface PosAllocateRule {
   nominator: string ;
   titleOfNominator: string ;
   seqOfVR: string ;
-  endDate: string;
+  endDate: number;
   para: string;
   argu: string;
   data: string; 
@@ -53,7 +53,7 @@ export function prCodifier(rule: PosAllocateRule): HexType {
     (Number(rule.nominator).toString(16).padStart(10, '0')) +
     (Number(rule.titleOfNominator).toString(16).padStart(4, '0')) +                  
     (Number(rule.seqOfVR).toString(16).padStart(4, '0')) +
-    (Number(rule.endDate).toString(16).padStart(12, '0')) +
+    (rule.endDate.toString(16).padStart(12, '0')) +
     '0'.padStart(16, '0')
   }`;
   return hexRule;
@@ -70,7 +70,7 @@ export function prParser(hexRule: HexType): PosAllocateRule {
     nominator: parseInt(hexRule.substring(20, 30), 16).toString(),
     titleOfNominator: parseInt(hexRule.substring(30, 34), 16).toString(),
     seqOfVR: parseInt(hexRule.substring(34, 38), 16).toString(),
-    endDate: parseInt(hexRule.substring(38, 50), 16).toString(),
+    endDate: parseInt(hexRule.substring(38, 50), 16),
     para: parseInt(hexRule.substring(50, 54), 16).toString(),
     argu: parseInt(hexRule.substring(54, 58), 16).toString(),
     data: parseInt(hexRule.substring(58, 66), 16).toString(),
@@ -99,7 +99,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
     nominator: '0',
     titleOfNominator: '1',
     seqOfVR: '9',
-    endDate: '0',
+    endDate: 0,
     para: '0',
     argu: '0',
     data: '0',
@@ -371,10 +371,10 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       m:1,
                       minWidth: 218,
                     }} 
-                    value={ dayjs.unix(Number(objPR.endDate)) }
+                    value={ dayjs.unix(objPR.endDate) }
                     onChange={(date) => setObjPR((v) => ({
                       ...v,
-                      endDate: date ? date.unix().toString() : '0',
+                      endDate: date ? date.unix() : 0,
                     }))}
                     format='YYYY-MM-DD HH:mm:ss'
                   />
