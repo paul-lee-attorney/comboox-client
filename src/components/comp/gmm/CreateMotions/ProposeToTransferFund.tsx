@@ -44,7 +44,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
     write: proposeToTransferFund
   } = useGeneralKeeperProposeToTransferFund({
     address: gk,
-    args: !hasError(valid) 
+    args: !hasError(valid) && paras.expireDate
       ? [
           false, 
           paras.to, 

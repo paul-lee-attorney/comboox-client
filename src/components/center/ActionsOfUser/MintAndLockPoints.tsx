@@ -34,7 +34,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
     write: mintAndLockPoints,
   } = useRegCenterMintAndLockPoints({
     address: AddrOfRegCenter,
-    args: !hasError(valid)
+    args: !hasError(valid) && head.expireDate
         ? [ 
             BigInt(head.to),
             BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),

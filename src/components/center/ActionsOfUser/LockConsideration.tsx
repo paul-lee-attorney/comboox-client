@@ -1,9 +1,7 @@
 
 import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
-import { 
-  useRegCenterLockConsideration,
-} from '../../../generated';
+import { useRegCenterLockConsideration } from '../../../generated';
 
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
@@ -83,15 +81,16 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     write: lockConsideration,
   } = useRegCenterLockConsideration({
     address: AddrOfRegCenter,
-    args: hasError(valid) ? undefined
-        : [ 
+    args: !hasError(valid) && head.expireDate
+        ? [ 
             BigInt(head.to),
             BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
             BigInt(head.expireDate),
             counterLocker,
             constructPayload(func, paras),
             hashLock
-          ],
+          ]
+        : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);

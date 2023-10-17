@@ -15,7 +15,7 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
   const {gk} = useComBooxContext();
 
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
-  const [ closingDate, setClosingDate ] = useState<Dayjs | null>(dayjs('2019-09-09T00:00:00Z'));
+  const [ closingDate, setClosingDate ] = useState<number>(0);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -30,9 +30,9 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
     write: pushToCoffer,
   } = useGeneralKeeperPushToCoffer({
     address: gk,
-    args: closingDate?.unix() && !hasError(valid) ? 
-      [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate.unix()) ] :
-      undefined,
+    args: !hasError(valid) && closingDate 
+      ? [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate) ] 
+      : undefined,
     onSuccess(data) {
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
@@ -74,8 +74,8 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
             m:1,
             minWidth: 218,
           }} 
-          value={ closingDate }
-          onChange={(date) => setClosingDate(date)}
+          value={ dayjs.unix(closingDate) }
+          onChange={(date) => setClosingDate(date ? date.unix() : 0)}
           format='YYYY-MM-DD HH:mm:ss'
         />
 

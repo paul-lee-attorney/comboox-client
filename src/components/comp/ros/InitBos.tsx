@@ -24,7 +24,7 @@ import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from '../../
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
+import dayjs, {Dayjs} from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
@@ -70,7 +70,7 @@ export function InitBos({nextStep}: InitCompProps) {
     write: issueShare,
   } = useRegisterOfSharesIssueShare({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: !hasError(valid)
+    args: !hasError(valid) && share.body.payInDeadline
       ? [ codifyHeadOfStrShare(share.head),
           BigInt(share.body.payInDeadline),
           BigInt(share.body.paid),
@@ -266,7 +266,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   onChange={(date) => setShare((v) => ({
                     head: {
                       ...v.head,
-                      issueDate: date ? date.unix() : 0,
+                      issueDate: date ? date.unix() : 0 ,
                     },
                     body: v.body,
                   }))}

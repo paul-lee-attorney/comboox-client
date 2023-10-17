@@ -42,7 +42,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     write: setPayInAmt,
   } = useGeneralKeeperSetPayInAmt({
     address: gk,
-    args: !hasError(valid) 
+    args: !hasError(valid) && locker.head.expireDate
         ? [ BigInt(share.head.seqOfShare), 
             BigInt(locker.head.value), 
             BigInt(locker.head.expireDate),

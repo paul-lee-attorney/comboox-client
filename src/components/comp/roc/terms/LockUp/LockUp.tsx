@@ -43,7 +43,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ lockers, setLockers ] = useState<Locker[]>();
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
-  const [ dueDate, setDueDate ] = useState<number>();
+  const [ dueDate, setDueDate ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -179,8 +179,8 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           minWidth: 218,
                         }} 
                         size="small"
-                        value={ dayjs.unix(dueDate ?? 0) }
-                        onChange={(date) => setDueDate(date?.unix() ?? undefined)}
+                        value={ dayjs.unix(dueDate) }
+                        onChange={(date) => setDueDate(date ? date.unix() : 0)}
                         format='YYYY-MM-DD HH:mm:ss'
                       />
 
