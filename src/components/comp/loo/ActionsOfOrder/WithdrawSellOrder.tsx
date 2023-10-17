@@ -45,8 +45,8 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='SeqOfOrder'
-          error={ valid['SeqOfOrder'].error }
-          helperText={ valid['SeqOfOrder'].helpTx }
+          error={ valid['SeqOfOrder']?.error }
+          helperText={ valid['SeqOfOrder']?.helpTx }
 
           sx={{
             m:1,

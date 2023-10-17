@@ -45,8 +45,8 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='ExtensionDays'
-          error={ valid['ExtensionDays'].error }
-          helperText={ valid['ExtensionDays'].helpTx }  
+          error={ valid['ExtensionDays']?.error }
+          helperText={ valid['ExtensionDays']?.helpTx }  
           sx={{
             m:1,
             minWidth: 218,

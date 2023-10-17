@@ -53,8 +53,8 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
           variant='outlined'
           label='HashLock'
           size="small"
-          error={ valid['HashLock'].error }
-          helperText={ valid['HashLock'].helpTx }
+          error={ valid['HashLock']?.error }
+          helperText={ valid['HashLock']?.helpTx }
           sx={{
             m:1,
             minWidth: 685,

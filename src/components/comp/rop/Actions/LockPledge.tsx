@@ -45,8 +45,8 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='HashLock'
-          error={ valid['HashLock'].error }
-          helperText={ valid['HashLock'].helpTx }  
+          error={ valid['HashLock']?.error }
+          helperText={ valid['HashLock']?.helpTx }  
           sx={{
             m:1,
             minWidth: 688,

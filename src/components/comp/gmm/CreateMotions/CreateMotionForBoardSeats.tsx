@@ -73,8 +73,8 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
         <TextField 
           variant='outlined'
           label='SeqOfPos'
-          error={ valid['SeqOfPos'].error }
-          helperText={ valid['SeqOfPos'].helpTx }          
+          error={ valid['SeqOfPos']?.error }
+          helperText={ valid['SeqOfPos']?.helpTx }          
           sx={{
             m:1,
             minWidth: 218,
@@ -91,8 +91,8 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
         <TextField 
           variant='outlined'
           label='Candidate'
-          error={ valid['Candidate'].error }
-          helperText={ valid['Candidate'].helpTx }          
+          error={ valid['Candidate']?.error }
+          helperText={ valid['Candidate']?.helpTx }          
           sx={{
             m:1,
             minWidth: 218,

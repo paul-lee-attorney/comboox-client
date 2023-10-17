@@ -293,8 +293,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label={'HeadRatio ' + (isFinalized ? '(%)' : 'BP')}
-                  error={ valid['HeadRatio'].error }
-                  helperText={ valid['HeadRatio'].helpTx }
+                  error={ valid['HeadRatio']?.error }
+                  helperText={ valid['HeadRatio']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -315,8 +315,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label={'AmountRatio ' + (isFinalized ? '(%)' : 'BP')}
-                  error={ valid['AmountRatio'].error }
-                  helperText={ valid['AmountRatio'].helpTx }
+                  error={ valid['AmountRatio']?.error }
+                  helperText={ valid['AmountRatio']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -337,8 +337,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='ExecDaysForPutOpt'
-                  error={ valid['ExecDaysForPutOpt'].error }
-                  helperText={ valid['ExecDaysForPutOpt'].helpTx }
+                  error={ valid['ExecDaysForPutOpt']?.error }
+                  helperText={ valid['ExecDaysForPutOpt']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -510,8 +510,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='Vetoer_1'
-                    error={ valid['Vetoer_1'].error }
-                    helperText={ valid['Vetoer_1'].helpTx }
+                    error={ valid['Vetoer_1']?.error }
+                    helperText={ valid['Vetoer_1']?.helpTx }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -533,8 +533,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='Vetoer_2'
-                    error={ valid['Vetoer_2'].error }
-                    helperText={ valid['Vetoer_2'].helpTx }
+                    error={ valid['Vetoer_2']?.error }
+                    helperText={ valid['Vetoer_2']?.helpTx }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -561,8 +561,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='FRExecDays'
-                  error={ valid['FRExecDays'].error }
-                  helperText={ valid['FRExecDays'].helpTx }
+                  error={ valid['FRExecDays']?.error }
+                  helperText={ valid['FRExecDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -583,8 +583,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='DTExecDays'
-                  error={ valid['DTExecDays'].error }
-                  helperText={ valid['DTExecDays'].helpTx }
+                  error={ valid['DTExecDays']?.error }
+                  helperText={ valid['DTExecDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -605,8 +605,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='DTConfirmDays'
-                  error={ valid['DTConfirmDays'].error }
-                  helperText={ valid['DTConfirmDays'].helpTx }
+                  error={ valid['DTConfirmDays']?.error }
+                  helperText={ valid['DTConfirmDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -627,8 +627,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='InvExitDays'
-                  error={ valid['InvExitDays'].error }
-                  helperText={ valid['InvExitDays'].helpTx }
+                  error={ valid['InvExitDays']?.error }
+                  helperText={ valid['InvExitDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -649,8 +649,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='VotePrepareDays'
-                  error={ valid['VotePrepareDays'].error }
-                  helperText={ valid['VotePrepareDays'].helpTx }
+                  error={ valid['VotePrepareDays']?.error }
+                  helperText={ valid['VotePrepareDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -671,8 +671,8 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   variant='outlined'
                   size='small'
                   label='VotingDays'
-                  error={ valid['VotingDays'].error }
-                  helperText={ valid['VotingDays'].helpTx }
+                  error={ valid['VotingDays']?.error }
+                  helperText={ valid['VotingDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

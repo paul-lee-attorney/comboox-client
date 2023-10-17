@@ -45,8 +45,8 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
         variant='outlined'
         label='Executor'
         size="small"
-        error={ valid['Executor'].error }
-        helperText={ valid['Executor'].helpTx }
+        error={ valid['Executor']?.error }
+        helperText={ valid['Executor']?.helpTx }
         sx={{
           m:1,
           minWidth: 218,

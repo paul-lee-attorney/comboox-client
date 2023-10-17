@@ -176,8 +176,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfClass" 
                   label="ClassOfShare" 
                   variant="outlined"
-                  error={ valid['ClassOfShare'].error }
-                  helperText={ valid['ClassOfShare'].helpTx }
+                  error={ valid['ClassOfShare']?.error }
+                  helperText={ valid['ClassOfShare']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
@@ -198,8 +198,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfShareholder" 
                   label="Shareholder" 
                   variant="outlined"
-                  error={ valid['Shareholder'].error }
-                  helperText={ valid['Shareholder'].helpTx }
+                  error={ valid['Shareholder']?.error }
+                  helperText={ valid['Shareholder']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('Shareholder', input, MaxUserNo, setValid);
@@ -220,8 +220,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfPriceOfPaid" 
                   label="PriceOfPaid (Cent)" 
                   variant="outlined"
-                  error={ valid['PriceOfPaid'].error }
-                  helperText={ valid['PriceOfPaid'].helpTx }
+                  error={ valid['PriceOfPaid']?.error }
+                  helperText={ valid['PriceOfPaid']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('PriceOfPaid', input, MaxPrice, setValid);
@@ -242,8 +242,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfPriceOfPar" 
                   label="PriceOfPar (Cent)" 
                   variant="outlined"
-                  error={ valid['PriceOfPar'].error }
-                  helperText={ valid['PriceOfPar'].helpTx }
+                  error={ valid['PriceOfPar']?.error }
+                  helperText={ valid['PriceOfPar']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('PriceOfPar', input, MaxPrice, setValid);
@@ -298,8 +298,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfPaid" 
                   label="Paid (Cent)" 
                   variant="outlined"
-                  error={ valid['Paid'].error }
-                  helperText={ valid['Paid'].helpTx }
+                  error={ valid['Paid']?.error }
+                  helperText={ valid['Paid']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('Paid', input, MaxData, setValid);
@@ -320,8 +320,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfPar" 
                   label="Par (Cent)" 
                   variant="outlined"
-                  error={ valid['Par'].error }
-                  helperText={ valid['Par'].helpTx }
+                  error={ valid['Par']?.error }
+                  helperText={ valid['Par']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('Par', input, MaxData, setValid);
@@ -342,8 +342,8 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfVotingWeight" 
                   label="VotingWeight (%)" 
                   variant="outlined"
-                  error={ valid['VotingWeight'].error }
-                  helperText={ valid['VotingWeight'].helpTx }
+                  error={ valid['VotingWeight']?.error }
+                  helperText={ valid['VotingWeight']?.helpTx }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('VotingWeight', input, MaxSeqNo, setValid);
@@ -370,8 +370,8 @@ export function InitBos({nextStep}: InitCompProps) {
               <TextField
                 variant="outlined"
                 label="SeqOfShare"
-                error={ valid['SeqOfShare'].error }
-                helperText={ valid['SeqOfShare'].helpTx }
+                error={ valid['SeqOfShare']?.error }
+                helperText={ valid['SeqOfShare']?.helpTx }
                 sx={{
                   m:1,
                   width: 188

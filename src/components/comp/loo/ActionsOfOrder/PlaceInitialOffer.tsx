@@ -48,8 +48,8 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='ExecHours'
-          error={ valid['ExecHours'].error }
-          helperText={ valid['ExecHours'].helpTx }
+          error={ valid['ExecHours']?.error }
+          helperText={ valid['ExecHours']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -69,8 +69,8 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='SeqOfListingRule'
-          error={ valid['SetOfLR'].error }
-          helperText={ valid['SetOfLR'].helpTx }
+          error={ valid['SetOfLR']?.error }
+          helperText={ valid['SetOfLR']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -90,8 +90,8 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='Paid (Cent)'
-          error={ valid['Paid'].error }
-          helperText={ valid['Paid'].helpTx }
+          error={ valid['Paid']?.error }
+          helperText={ valid['Paid']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -111,8 +111,8 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           variant='outlined'
           size="small"
           label='Price'
-          error={ valid['Price'].error }
-          helperText={ valid['Price'].helpTx }
+          error={ valid['Price']?.error }
+          helperText={ valid['Price']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,

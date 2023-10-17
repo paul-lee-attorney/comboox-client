@@ -198,8 +198,8 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                     ml: 11.2,
                     minWidth: 218,
                   }}
-                  error={ valid['SigningDays'].error }
-                  helperText={ valid['SigningDays'].helpTx }
+                  error={ valid['SigningDays']?.error }
+                  helperText={ valid['SigningDays']?.helpTx }
 
                   onChange={(e) => {
                     let input = e.target.value;
@@ -216,8 +216,8 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                   variant='outlined'
                       size='small'
                   label='ClosingDays'
-                  error={ valid['ClosingDays'].error }
-                  helperText={ valid['ClosingDays'].helpTx }
+                  error={ valid['ClosingDays']?.error }
+                  helperText={ valid['ClosingDays']?.helpTx }
 
                   sx={{
                     m:1,
@@ -384,8 +384,8 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                 variant='outlined'
                 size='small'
                 label='UserNo.'
-                error={ valid['UserNo'].error }
-                helperText={ valid['UserNo'].helpTx }
+                error={ valid['UserNo']?.error }
+                helperText={ valid['UserNo']?.helpTx }
 
                 sx={{
                   m:1,

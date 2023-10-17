@@ -145,8 +145,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='QtyOfSubRule'
                   size="small"
-                  error={ valid['QtyOfSubRule'].error }
-                  helperText={ valid['QtyOfSubRule'].helpTx }
+                  error={ valid['QtyOfSubRule']?.error }
+                  helperText={ valid['QtyOfSubRule']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -200,8 +200,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='GroupRep'
                   size="small"
-                  error={ valid['GroupRep'].error }
-                  helperText={ valid['GroupRep'].helpTx }
+                  error={ valid['GroupRep']?.error }
+                  helperText={ valid['GroupRep']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -222,8 +222,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_1'
                   size="small"
-                  error={ valid['Members_1'].error }
-                  helperText={ valid['Members_1'].helpTx }
+                  error={ valid['Members_1']?.error }
+                  helperText={ valid['Members_1']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -248,8 +248,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_2'
                   size="small"
-                  error={ valid['Members_2'].error }
-                  helperText={ valid['Members_2'].helpTx }
+                  error={ valid['Members_2']?.error }
+                  helperText={ valid['Members_2']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -274,8 +274,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_3'
                   size="small"
-                  error={ valid['Members_3'].error }
-                  helperText={ valid['Members_3'].helpTx }
+                  error={ valid['Members_3']?.error }
+                  helperText={ valid['Members_3']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -300,8 +300,8 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   variant='outlined'
                   label='Members_4'
                   size="small"
-                  error={ valid['Members_4'].error }
-                  helperText={ valid['Members_4'].helpTx }
+                  error={ valid['Members_4']?.error }
+                  helperText={ valid['Members_4']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

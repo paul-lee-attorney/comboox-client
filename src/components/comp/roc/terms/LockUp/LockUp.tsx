@@ -158,8 +158,8 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='SeqOfShare'
                         size="small"
-                        error={ valid['SeqOfShare'].error }
-                        helperText={ valid['SeqOfShare'].helpTx }
+                        error={ valid['SeqOfShare']?.error }
+                        helperText={ valid['SeqOfShare']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -219,8 +219,8 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Keyholder'
                         size="small"
-                        error={ valid['Keyholder'].error }
-                        helperText={ valid['Keyholder'].helpTx }
+                        error={ valid['Keyholder']?.error }
+                        helperText={ valid['Keyholder']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,

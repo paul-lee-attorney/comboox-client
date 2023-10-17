@@ -124,8 +124,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='SeqOfShare'
-              error={ valid['SeqOfShare'].error }
-              helperText={ valid['SeqOfShare'].helpTx }
+              error={ valid['SeqOfShare']?.error }
+              helperText={ valid['SeqOfShare']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -138,8 +138,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='ClassOfShare'
-              error={ valid['ClassOfShare'].error }
-              helperText={ valid['ClassOfShare'].helpTx }
+              error={ valid['ClassOfShare']?.error }
+              helperText={ valid['ClassOfShare']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -159,8 +159,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='PriceOfPar (Cent)'
-              error={ valid['PriceOfPar'].error }
-              helperText={ valid['PriceOfPar'].helpTx }
+              error={ valid['PriceOfPar']?.error }
+              helperText={ valid['PriceOfPar']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -180,8 +180,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='PriceOfPaid (Cent)'
-              error={ valid['PriceOfPaid'].error }
-              helperText={ valid['PriceOfPaid'].helpTx }
+              error={ valid['PriceOfPaid']?.error }
+              helperText={ valid['PriceOfPaid']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -220,8 +220,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='Buyer'
-              error={ valid['Buyer'].error }
-              helperText={ valid['Buyer'].helpTx }
+              error={ valid['Buyer']?.error }
+              helperText={ valid['Buyer']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -241,8 +241,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='GroupOfBuyer'
-              error={ valid['GroupOfBuyer'].error }
-              helperText={ valid['GroupOfBuyer'].helpTx }
+              error={ valid['GroupOfBuyer']?.error }
+              helperText={ valid['GroupOfBuyer']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -262,8 +262,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='Par (Cent)'
-              error={ valid['Par'].error }
-              helperText={ valid['Par'].helpTx }
+              error={ valid['Par']?.error }
+              helperText={ valid['Par']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -283,8 +283,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='Paid (Cent)'
-              error={ valid['Paid'].error }
-              helperText={ valid['Paid'].helpTx }
+              error={ valid['Paid']?.error }
+              helperText={ valid['Paid']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -304,8 +304,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               variant='outlined'
               size="small"
               label='VotingWeight (%)'
-              error={ valid['VotingWeight'].error }
-              helperText={ valid['VotingWeight'].helpTx }
+              error={ valid['VotingWeight']?.error }
+              helperText={ valid['VotingWeight']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,

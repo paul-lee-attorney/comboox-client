@@ -65,8 +65,8 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             variant='outlined'
             label='Version'
             size='small'
-            error={ valid['Version'].error }
-            helperText={ valid['Version'].helpTx }
+            error={ valid['Version']?.error }
+            helperText={ valid['Version']?.helpTx }
             sx={{
               m:1,
               ml:3,

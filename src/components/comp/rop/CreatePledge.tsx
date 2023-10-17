@@ -59,8 +59,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='SeqOfShare'
-              error={ valid['SeqOfShare'].error }
-              helperText={ valid['SeqOfShare'].helpTx }
+              error={ valid['SeqOfShare']?.error }
+              helperText={ valid['SeqOfShare']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -89,8 +89,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='DaysToMaturity'
-              error={ valid['DaysToMaturity'].error }
-              helperText={ valid['DaysToMaturity'].helpTx }
+              error={ valid['DaysToMaturity']?.error }
+              helperText={ valid['DaysToMaturity']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -110,8 +110,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='GuaranteeDays'
-              error={ valid['GuaranteeDays'].error }
-              helperText={ valid['GuaranteeDays'].helpTx }
+              error={ valid['GuaranteeDays']?.error }
+              helperText={ valid['GuaranteeDays']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -131,8 +131,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='ExecDays'
-              error={ valid['ExecDays'].error }
-              helperText={ valid['ExecDays'].helpTx }
+              error={ valid['ExecDays']?.error }
+              helperText={ valid['ExecDays']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -153,8 +153,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='Creditor'
-              error={ valid['Creditor'].error }
-              helperText={ valid['Creditor'].helpTx }
+              error={ valid['Creditor']?.error }
+              helperText={ valid['Creditor']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -179,8 +179,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='Pledgor'
-              error={ valid['Pledgor'].error }
-              helperText={ valid['Pledgor'].helpTx }
+              error={ valid['Pledgor']?.error }
+              helperText={ valid['Pledgor']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -201,8 +201,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='PledgedPaid (Cent)'
-              error={ valid['PledgedPaid'].error }
-              helperText={ valid['PledgedPaid'].helpTx }
+              error={ valid['PledgedPaid']?.error }
+              helperText={ valid['PledgedPaid']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -223,8 +223,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='PledgedPar (Cent)'
-              error={ valid['PledgedPar'].error }
-              helperText={ valid['PledgedPar'].helpTx }
+              error={ valid['PledgedPar']?.error }
+              helperText={ valid['PledgedPar']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -245,8 +245,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='GuaranteedAmount (Cent)'
-              error={ valid['GuaranteedAmount'].error }
-              helperText={ valid['GuaranteedAmount'].helpTx }
+              error={ valid['GuaranteedAmount']?.error }
+              helperText={ valid['GuaranteedAmount']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -267,8 +267,8 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
             <TextField 
               variant='outlined'
               label='Debtor'
-              error={ valid['Debtor'].error }
-              helperText={ valid['Debtor'].helpTx }
+              error={ valid['Debtor']?.error }
+              helperText={ valid['Debtor']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,

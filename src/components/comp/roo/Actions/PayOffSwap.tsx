@@ -45,8 +45,8 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='SeqOfSwap'
-          error={ valid['SeqOfSwap'].error }
-          helperText={ valid['SeqOfSwap'].helpTx }  
+          error={ valid['SeqOfSwap']?.error }
+          helperText={ valid['SeqOfSwap']?.helpTx }  
           sx={{
             m:1,
             minWidth: 218,
@@ -63,8 +63,8 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='AmtOfETH (Gwei)'
-          error={ valid['AmtOfGwei'].error }
-          helperText={ valid['AmtOfGwei'].helpTx }  
+          error={ valid['AmtOfGwei']?.error }
+          helperText={ valid['AmtOfGwei']?.helpTx }  
           sx={{
             m:1,
             minWidth: 218,

@@ -174,8 +174,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='QtyOfSubRule'
-                  error={ valid['QtyOfSubRule'].error }
-                  helperText={ valid['QtyOfSubRule'].helpTx }
+                  error={ valid['QtyOfSubRule']?.error }
+                  helperText={ valid['QtyOfSubRule']?.helpTx }
                   inputProps={{readOnly: isFinalized}}                  
                   sx={{
                     m:1,
@@ -229,8 +229,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='SeqOfPos'
-                  error={ valid['SeqOfPos'].error }
-                  helperText={ valid['SeqOfPos'].helpTx }
+                  error={ valid['SeqOfPos']?.error }
+                  helperText={ valid['SeqOfPos']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -289,8 +289,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='Nominator'
-                  error={ valid['Nominator'].error }
-                  helperText={ valid['Nominator'].helpTx }
+                  error={ valid['Nominator']?.error }
+                  helperText={ valid['Nominator']?.helpTx }
                   inputProps={{readOnly: isFinalized}}           
                   sx={{
                     m:1,
@@ -345,8 +345,8 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   variant='outlined'
                   size='small'
                   label='seqOfVR'
-                  error={ valid['SeqOfVR'].error }
-                  helperText={ valid['SeqOfVR'].helpTx }
+                  error={ valid['SeqOfVR']?.error }
+                  helperText={ valid['SeqOfVR']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

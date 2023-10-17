@@ -47,8 +47,8 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='Buyer'
-          error={ valid['Buyer'].error }
-          helperText={ valid['Buyer'].helpTx }  
+          error={ valid['Buyer']?.error }
+          helperText={ valid['Buyer']?.helpTx }  
           sx={{
             m:1,
             minWidth: 218,
@@ -65,8 +65,8 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='Amount'
-          error={ valid['Amount'].error }
-          helperText={ valid['Amount'].helpTx }  
+          error={ valid['Amount']?.error }
+          helperText={ valid['Amount']?.helpTx }  
           sx={{
             m:1,
             minWidth: 218,

@@ -45,8 +45,8 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
-        error={ valid['SigHash'].error }
-        helperText={ valid['SigHash'].helpTx }
+        error={ valid['SigHash']?.error }
+        helperText={ valid['SigHash']?.helpTx }
         onChange={e => {
           let input = HexParser( e.target.value );
           onlyHex('SigHash', input, 64, setValid);

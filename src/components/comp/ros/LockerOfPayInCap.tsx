@@ -149,8 +149,8 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           <TextField 
             variant='filled'
             label='HashLock'
-            error={ valid['HashLock'].error }
-            helperText={ valid['HashLock'].helpTx }    
+            error={ valid['HashLock']?.error }
+            helperText={ valid['HashLock']?.helpTx }    
             sx={{
               m:1,
               minWidth: 618,
@@ -170,8 +170,8 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           <TextField 
             variant='filled'
             label='Amount'
-            error={ valid['Amount'].error }
-            helperText={ valid['Amount'].helpTx }    
+            error={ valid['Amount']?.error }
+            helperText={ valid['Amount']?.helpTx }    
             sx={{
               m:1,
               minWidth: 218,
@@ -215,7 +215,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ withdrawPayInAmtLoading || valid['HashLock'].error }
+                disabled={ withdrawPayInAmtLoading || valid['HashLock']?.error }
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => withdrawPayInAmt?.() }
                 color="primary"            
@@ -238,7 +238,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ requestPaidInCapitalLoading || valid['HashLock'].error}
+                disabled={ requestPaidInCapitalLoading || valid['HashLock']?.error}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => requestPaidInCapital?.() }
                 color="primary"            

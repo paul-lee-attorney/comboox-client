@@ -122,8 +122,8 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
               variant='outlined'
               label='SigHash'
               size="small"
-              error={ valid['SigHash'].error }
-              helperText={ valid['SigHash'].helpTx }
+              error={ valid['SigHash']?.error }
+              helperText={ valid['SigHash']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 685,

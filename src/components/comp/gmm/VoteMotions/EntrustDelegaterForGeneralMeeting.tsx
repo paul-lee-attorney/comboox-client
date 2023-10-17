@@ -43,8 +43,8 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
       <TextField 
         variant='outlined'
         label='Delegater'
-        error={ valid['Delegater'].error }
-        helperText={ valid['Delegater'].helpTx }
+        error={ valid['Delegater']?.error }
+        helperText={ valid['Delegater']?.helpTx }
         sx={{
           m:1,
           minWidth: 218,

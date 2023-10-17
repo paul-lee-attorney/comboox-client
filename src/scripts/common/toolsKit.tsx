@@ -272,7 +272,7 @@ export function onlyHex(id: string, input: string, len: number, setValid:Dispatc
 export function hasError(valid: FormResults): boolean {
 
   for (let key in valid) {
-    if (valid[key].error) return true;    
+    if (valid[key]?.error) return true;    
   }  
   
   return false;

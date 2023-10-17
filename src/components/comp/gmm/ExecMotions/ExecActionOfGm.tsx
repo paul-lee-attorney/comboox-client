@@ -99,8 +99,8 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
       <TextField 
         variant='outlined'
         label='DesHash / CID in IPFS'
-        error={ valid['DesHash'].error }
-        helperText={ valid['DesHash'].helpTx }
+        error={ valid['DesHash']?.error }
+        helperText={ valid['DesHash']?.helpTx }
         sx={{
           m:1,
           minWidth: 630,
@@ -135,8 +135,8 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
         <TextField 
           variant='outlined'
           label='Address'
-          error={ valid['Address'].error }
-          helperText={ valid['Address'].helpTx }
+          error={ valid['Address']?.error }
+          helperText={ valid['Address']?.helpTx }
           sx={{
             m:1,
             minWidth: 450,
@@ -157,8 +157,8 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
         <TextField 
           variant='outlined'
           label='Value'
-          error={ valid['Value'].error }
-          helperText={ valid['Value'].helpTx }
+          error={ valid['Value']?.error }
+          helperText={ valid['Value']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -179,8 +179,8 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
         <TextField 
           variant='outlined'
           label='Params'
-          error={ valid['Params'].error }
-          helperText={ valid['Params'].helpTx }
+          error={ valid['Params']?.error }
+          helperText={ valid['Params']?.helpTx }
           sx={{
             m:1,
             minWidth: 630,

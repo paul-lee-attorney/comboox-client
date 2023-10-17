@@ -167,8 +167,8 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         variant='outlined'
                         label='EffectiveDays'
                         size="small"
-                        error={ valid['EffectiveDays'].error }
-                        helperText={ valid['EffectiveDays'].helpTx }
+                        error={ valid['EffectiveDays']?.error }
+                        helperText={ valid['EffectiveDays']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -188,8 +188,8 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         variant='outlined'
                         label='ShareRatioThreshold (BP)'
                         size="small"
-                        error={ valid['ShareRatioThreshold'].error }
-                        helperText={ valid['ShareRatioThreshold'].helpTx }
+                        error={ valid['ShareRatioThreshold']?.error }
+                        helperText={ valid['ShareRatioThreshold']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -232,8 +232,8 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         variant='outlined'
                         label='Rate'
                         size="small"
-                        error={ valid['Rate'].error }
-                        helperText={ valid['Rate'].helpTx }
+                        error={ valid['Rate']?.error }
+                        helperText={ valid['Rate']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -295,8 +295,8 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       variant='outlined'
                       label='Drager'
                       size="small"
-                      error={ valid['Drager'].error }
-                      helperText={ valid['Drager'].helpTx }
+                      error={ valid['Drager']?.error }
+                      helperText={ valid['Drager']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -344,8 +344,8 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       variant='outlined'
                       label='Follower'
                       size="small"
-                      error={ valid['Follower'].error }
-                      helperText={ valid['Follower'].helpTx }
+                      error={ valid['Follower']?.error }
+                      helperText={ valid['Follower']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,

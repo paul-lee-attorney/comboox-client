@@ -42,8 +42,8 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocUrl" 
           label="DocUrl / CID in IPFS" 
           variant="outlined"
-          error={ valid['DocUrl'].error }
-          helperText={ valid['DocUrl'].helpTx }
+          error={ valid['DocUrl']?.error }
+          helperText={ valid['DocUrl']?.helpTx }
           onChange={e => {
             let input = HexParser( e.target.value );
             onlyHex('DocUrl', input, 64, setValid);
@@ -58,8 +58,8 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocHash" 
           label="DocHash" 
           variant="outlined"
-          error={ valid['DocHash'].error }
-          helperText={ valid['DocHash'].helpTx }
+          error={ valid['DocHash']?.error }
+          helperText={ valid['DocHash']?.helpTx }
           onChange={e => {
             let input = HexParser( e.target.value );
             setDocHash(input);

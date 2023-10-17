@@ -71,8 +71,8 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='Buyer'
-          error={ valid['Buyer'].error }
-          helperText={ valid['Buyer'].helpTx }
+          error={ valid['Buyer']?.error }
+          helperText={ valid['Buyer']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -92,8 +92,8 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='GroupRepOfBuyer'
-          error={ valid['GroupOfBuyer'].error }
-          helperText={ valid['GroupOfBuyer'].helpTx }
+          error={ valid['GroupOfBuyer']?.error }
+          helperText={ valid['GroupOfBuyer']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -113,8 +113,8 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='PriceOfPaid'
-          error={ valid['PriceOfPaid'].error }
-          helperText={ valid['PriceOfPaid'].helpTx }
+          error={ valid['PriceOfPaid']?.error }
+          helperText={ valid['PriceOfPaid']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -134,8 +134,8 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         <TextField 
           variant='outlined'
           label='PriceOfPar'
-          error={ valid['PriceOfPar'].error }
-          helperText={ valid['PriceOfPar'].helpTx }
+          error={ valid['PriceOfPar']?.error }
+          helperText={ valid['PriceOfPar']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,

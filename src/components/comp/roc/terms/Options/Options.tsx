@@ -189,8 +189,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='ClassOfShare'
                         size="small"
-                        error={ valid['ClassOfShare'].error }
-                        helperText={ valid['ClassOfShare'].helpTx }
+                        error={ valid['ClassOfShare']?.error }
+                        helperText={ valid['ClassOfShare']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -210,8 +210,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Paid'
                         size="small"
-                        error={ valid['Paid'].error }
-                        helperText={ valid['Paid'].helpTx }
+                        error={ valid['Paid']?.error }
+                        helperText={ valid['Paid']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -231,8 +231,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Par'
                         size="small"
-                        error={ valid['Par'].error }
-                        helperText={ valid['Par'].helpTx }
+                        error={ valid['Par']?.error }
+                        helperText={ valid['Par']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -252,8 +252,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Rightholder'
                         size="small"
-                        error={ valid['Rightholder'].error }
-                        helperText={ valid['Rightholder'].helpTx }
+                        error={ valid['Rightholder']?.error }
+                        helperText={ valid['Rightholder']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -277,8 +277,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='RateOfOption'
                         size="small"
-                        error={ valid['RateOfOption'].error }
-                        helperText={ valid['RateOfOption'].helpTx }
+                        error={ valid['RateOfOption']?.error }
+                        helperText={ valid['RateOfOption']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -313,8 +313,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='ExecDays'
                         size="small"
-                        error={ valid['ExecDays'].error }
-                        helperText={ valid['ExecDays'].helpTx }
+                        error={ valid['ExecDays']?.error }
+                        helperText={ valid['ExecDays']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -334,8 +334,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='ClosingDays'
                         size="small"
-                        error={ valid['ClosingDays'].error }
-                        helperText={ valid['ClosingDays'].helpTx }
+                        error={ valid['ClosingDays']?.error }
+                        helperText={ valid['ClosingDays']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -355,8 +355,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         variant='outlined'
                         label='Obligor'
                         size="small"
-                        error={ valid['Obligor'].error }
-                        helperText={ valid['Obligor'].helpTx }
+                        error={ valid['Obligor']?.error }
+                        helperText={ valid['Obligor']?.helpTx }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -420,8 +420,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           variant='outlined'
                           label='Parameter_1'
                           size="small"
-                          error={ valid['Parameter_1'].error }
-                          helperText={ valid['Parameter_1'].helpTx }
+                          error={ valid['Parameter_1']?.error }
+                          helperText={ valid['Parameter_1']?.helpTx }
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -462,8 +462,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           variant='outlined'
                           label='Parameter_2'
                           size="small"
-                          error={ valid['Parameter_2'].error }
-                          helperText={ valid['Parameter_2'].helpTx }
+                          error={ valid['Parameter_2']?.error }
+                          helperText={ valid['Parameter_2']?.helpTx }
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -506,8 +506,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           variant='outlined'
                           label='Parameter_3'
                           size="small"
-                          error={ valid['Parameter_3'].error }
-                          helperText={ valid['Parameter_3'].helpTx }
+                          error={ valid['Parameter_3']?.error }
+                          helperText={ valid['Parameter_3']?.helpTx }
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -554,8 +554,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       variant='outlined'
                       label='SeqOfOption'
                       size="small"
-                      error={ valid['SeqOfOption'].error }
-                      helperText={ valid['SeqOfOption'].helpTx }
+                      error={ valid['SeqOfOption']?.error }
+                      helperText={ valid['SeqOfOption']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -606,8 +606,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       variant='outlined'
                       label='Obligor'
                       size="small"
-                      error={ valid['Obligor'].error }
-                      helperText={ valid['Obligor'].helpTx }
+                      error={ valid['Obligor']?.error }
+                      helperText={ valid['Obligor']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,

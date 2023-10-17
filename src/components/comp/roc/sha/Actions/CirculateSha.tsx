@@ -40,8 +40,8 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           id="tfUrlOfDoc" 
           label="UrlOfDoc / CID in IPFS" 
           variant="outlined"
-          error={ valid['UrlOfDoc'].error }
-          helperText={ valid['UrlOfDoc'].helpTx }
+          error={ valid['UrlOfDoc']?.error }
+          helperText={ valid['UrlOfDoc']?.helpTx }
           onChange={e => {
             let input = HexParser( e.target.value );
             onlyHex('UrlOfDoc', input, 64, setValid); 
@@ -56,8 +56,8 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           id="tfDocHash" 
           label="DocHash" 
           variant="outlined"
-          error={ valid['DocHash'].error }
-          helperText={ valid['DocHash'].helpTx }
+          error={ valid['DocHash']?.error }
+          helperText={ valid['DocHash']?.helpTx }
           onChange={e => {
             let input = HexParser( e.target.value );
             onlyHex('DocHash', input, 64, setValid);

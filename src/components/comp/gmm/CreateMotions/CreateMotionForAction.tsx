@@ -102,8 +102,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant='outlined'
             label='SeqOfVR'
             size="small"
-            error={ valid['SeqOfVR'].error }
-            helperText={ valid['SeqOfVR'].helpTx }
+            error={ valid['SeqOfVR']?.error }
+            helperText={ valid['SeqOfVR']?.helpTx }
             sx={{
               m:1,
               minWidth: 218,
@@ -120,8 +120,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant='outlined'
             label='Executor'
             size="small"
-            error={ valid['Executor'].error }
-            helperText={ valid['Executor'].helpTx }
+            error={ valid['Executor']?.error }
+            helperText={ valid['Executor']?.helpTx }
             sx={{
               m:1,
               minWidth: 218,
@@ -138,8 +138,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant='outlined'
             label='DocHash / CID in IPFS'
             size="small"
-            error={ valid['DocHash'].error }
-            helperText={ valid['DocHash'].helpTx }
+            error={ valid['DocHash']?.error }
+            helperText={ valid['DocHash']?.helpTx }
             sx={{
               m:1,
               minWidth: 630,
@@ -177,8 +177,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               variant='outlined'
               label='Address'
               size="small"
-              error={ valid['Address'].error }
-              helperText={ valid['Address'].helpTx }
+              error={ valid['Address']?.error }
+              helperText={ valid['Address']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 450,
@@ -200,8 +200,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               variant='outlined'
               label='Value'
               size="small"
-              error={ valid['Value'].error }
-              helperText={ valid['Value'].helpTx }
+              error={ valid['Value']?.error }
+              helperText={ valid['Value']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -223,8 +223,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               variant='outlined'
               label='Params'
               size="small"
-              error={ valid['Params'].error }
-              helperText={ valid['Params'].helpTx }
+              error={ valid['Params']?.error }
+              helperText={ valid['Params']?.helpTx }
               sx={{
                 m:1,
                 minWidth: 630,

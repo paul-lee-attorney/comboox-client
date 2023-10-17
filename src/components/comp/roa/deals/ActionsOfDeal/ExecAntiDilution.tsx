@@ -53,8 +53,8 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
             variant='outlined'
             label='SeqOfTargetShare'
             size="small"
-            error={ valid['SeqOfTarget'].error }
-            helperText={ valid['SeqOfTarget'].helpTx }
+            error={ valid['SeqOfTarget']?.error }
+            helperText={ valid['SeqOfTarget']?.helpTx }
             sx={{
               m:1,
               minWidth: 218,
@@ -71,8 +71,8 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
             variant='outlined'
             label='SigHash'
             size="small"
-            error={ valid['SigHash'].error }
-            helperText={ valid['SigHash'].helpTx }
+            error={ valid['SigHash']?.error }
+            helperText={ valid['SigHash']?.helpTx }
             sx={{
               m:1,
               minWidth: 685,

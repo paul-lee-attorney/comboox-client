@@ -299,8 +299,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'PropWROfMembers ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['PropWROfMembers'].error }
-                    helperText={ valid['PropWROfMembers'].helpTx }        
+                    error={ valid['PropWROfMembers']?.error }
+                    helperText={ valid['PropWROfMembers']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -321,8 +321,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'PropHROfMembers ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['PropHROfMembers'].error }
-                    helperText={ valid['PropHROfMembers'].helpTx }        
+                    error={ valid['PropHROfMembers']?.error }
+                    helperText={ valid['PropHROfMembers']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -343,8 +343,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'PropHROfDirectorsInGM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['PropHROfDirectorsInGM'].error }
-                    helperText={ valid['PropHROfDirectorsInGM'].helpTx }        
+                    error={ valid['PropHROfDirectorsInGM']?.error }
+                    helperText={ valid['PropHROfDirectorsInGM']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -365,8 +365,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'PropHROfDirectorsInBM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['PropHROfDirectorsInBM'].error }
-                    helperText={ valid['PropHROfDirectorsInBM'].helpTx }        
+                    error={ valid['PropHROfDirectorsInBM']?.error }
+                    helperText={ valid['PropHROfDirectorsInBM']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -391,8 +391,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='MaxQtyOfMembers'
                     size='small'
-                    error={ valid['MaxQtyOfMembers'].error }
-                    helperText={ valid['MaxQtyOfMembers'].helpTx }        
+                    error={ valid['MaxQtyOfMembers']?.error }
+                    helperText={ valid['MaxQtyOfMembers']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -413,8 +413,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'QuorumOfGM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['QuorumOfGM'].error }
-                    helperText={ valid['QuorumOfGM'].helpTx }        
+                    error={ valid['QuorumOfGM']?.error }
+                    helperText={ valid['QuorumOfGM']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -435,8 +435,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='MaxNumOfDirectors'
                     size='small'
-                    error={ valid['MaxNumOfDirectors'].error }
-                    helperText={ valid['MaxNumOfDirectors'].helpTx }        
+                    error={ valid['MaxNumOfDirectors']?.error }
+                    helperText={ valid['MaxNumOfDirectors']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -457,8 +457,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='TenureMonOfBoard'
                     size='small'
-                    error={ valid['TenureMonOfBoard'].error }
-                    helperText={ valid['TenureMonOfBoard'].helpTx }        
+                    error={ valid['TenureMonOfBoard']?.error }
+                    helperText={ valid['TenureMonOfBoard']?.helpTx }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -479,8 +479,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'QuorumOfBoardMeeting ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['QuorumOfBoardMeeting'].error }
-                    helperText={ valid['QuorumOfBoardMeeting'].helpTx }
+                    error={ valid['QuorumOfBoardMeeting']?.error }
+                    helperText={ valid['QuorumOfBoardMeeting']?.helpTx }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -537,8 +537,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='BusinessTermInYears'
                     size='small'
-                    error={ valid['BusinessTerm'].error }
-                    helperText={ valid['BusinessTerm'].helpTx }
+                    error={ valid['BusinessTerm']?.error }
+                    helperText={ valid['BusinessTerm']?.helpTx }
                     inputProps={{readOnly: isFinalized}}                        
                     sx={{
                       m:1,
@@ -559,8 +559,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='TypeOfComp'
                     size='small'
-                    error={ valid['TypeOfComp'].error }
-                    helperText={ valid['TypeOfComp'].helpTx }
+                    error={ valid['TypeOfComp']?.error }
+                    helperText={ valid['TypeOfComp']?.helpTx }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
@@ -581,8 +581,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label={ 'MinVoteRatioOnChain ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
-                    error={ valid['MinVoteRatioOnChain'].error }
-                    helperText={ valid['MinVoteRatioOnChain'].helpTx }
+                    error={ valid['MinVoteRatioOnChain']?.error }
+                    helperText={ valid['MinVoteRatioOnChain']?.helpTx }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
@@ -603,8 +603,8 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     variant='outlined'
                     label='FundThreshold  (CBP/ETH)'
                     size='small'
-                    error={ valid['FundThreshold'].error }
-                    helperText={ valid['FundThreshold'].helpTx }
+                    error={ valid['FundThreshold']?.error }
+                    helperText={ valid['FundThreshold']?.helpTx }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,

@@ -34,8 +34,8 @@ export function SearchOption({setOpt, setOpen}:SearchOptionProps) {
         id="tfSeqOfOpt" 
         label="SeqOfOption" 
         variant="outlined"
-        error={ valid['SeqOfOpt'].error }
-        helperText={ valid['SeqOfOpt'].helpTx }
+        error={ valid['SeqOfOpt']?.error }
+        helperText={ valid['SeqOfOpt']?.helpTx }
 
         onChange={(e) => {
           let input = e.target.value;

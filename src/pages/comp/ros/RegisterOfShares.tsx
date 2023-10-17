@@ -85,8 +85,8 @@ function RegisterOfShares() {
                     id="tfSeqOfShare" 
                     label="seqOfShare" 
                     variant="outlined"
-                    error={ valid['SeqOfShare'].error }
-                    helperText={ valid['SeqOfShare'].helpTx }          
+                    error={ valid['SeqOfShare']?.error }
+                    helperText={ valid['SeqOfShare']?.helpTx }          
                     onChange={(e) => {
                       let input = e.target.value;
                       onlyNum('SeqOfShare', input, MaxPrice, setValid);

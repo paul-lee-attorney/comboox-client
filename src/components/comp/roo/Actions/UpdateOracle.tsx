@@ -51,8 +51,8 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
         <TextField 
           variant='outlined'
           label='Parameter_1'
-          error={ valid['Para_1'].error }
-          helperText={ valid['Para_1'].helpTx }
+          error={ valid['Para_1']?.error }
+          helperText={ valid['Para_1']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -72,8 +72,8 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
         <TextField 
           variant='outlined'
           label='Parameter_2'
-          error={ valid['Para_2'].error }
-          helperText={ valid['Para_2'].helpTx }
+          error={ valid['Para_2']?.error }
+          helperText={ valid['Para_2']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,
@@ -93,8 +93,8 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
         <TextField 
           variant='outlined'
           label='Parameter_3'
-          error={ valid['Para_3'].error }
-          helperText={ valid['Para_3'].helpTx }
+          error={ valid['Para_3']?.error }
+          helperText={ valid['Para_3']?.helpTx }
           sx={{
             m:1,
             minWidth: 218,

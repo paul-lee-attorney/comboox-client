@@ -165,8 +165,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       variant='outlined'
                       label='ClassOfShare'
                       size="small"
-                      error={ valid['ClassOfShare'].error }
-                      helperText={ valid['ClassOfShare'].helpTx }
+                      error={ valid['ClassOfShare']?.error }
+                      helperText={ valid['ClassOfShare']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -183,8 +183,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       variant='outlined'
                       label='Price'
                       size="small"
-                      error={ valid['Price'].error }
-                      helperText={ valid['Price'].helpTx }
+                      error={ valid['Price']?.error }
+                      helperText={ valid['Price']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -232,8 +232,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       variant='outlined'
                       label='Obligor'
                       size="small"
-                      error={ valid['Obligor'].error }
-                      helperText={ valid['Obligor'].helpTx }
+                      error={ valid['Obligor']?.error }
+                      helperText={ valid['Obligor']?.helpTx }
                       sx={{
                         m:1,
                         minWidth: 218,

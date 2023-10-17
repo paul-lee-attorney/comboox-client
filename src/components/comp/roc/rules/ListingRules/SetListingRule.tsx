@@ -159,8 +159,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='ClassOfShare'
-                  error={ valid['ClassOfShare'].error }
-                  helperText={ valid['ClassOfShare'].helpTx }
+                  error={ valid['ClassOfShare']?.error }
+                  helperText={ valid['ClassOfShare']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -215,8 +215,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'MaxTotalPar ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ valid['MaxTotalPar'].error }
-                  helperText={ valid['MaxTotalPar'].helpTx }
+                  error={ valid['MaxTotalPar']?.error }
+                  helperText={ valid['MaxTotalPar']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -272,8 +272,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='MaxQtyOfInvestors'
-                  error={ valid['MaxQtyOfInvestors'].error }
-                  helperText={ valid['MaxQtyOfInvestors'].helpTx }
+                  error={ valid['MaxQtyOfInvestors']?.error }
+                  helperText={ valid['MaxQtyOfInvestors']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -298,8 +298,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'CeilingPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ valid['CeilingPrice'].error }
-                  helperText={ valid['CeilingPrice'].helpTx }
+                  error={ valid['CeilingPrice']?.error }
+                  helperText={ valid['CeilingPrice']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -320,8 +320,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'FloorPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ valid['FloorPrice'].error }
-                  helperText={ valid['FloorPrice'].helpTx }
+                  error={ valid['FloorPrice']?.error }
+                  helperText={ valid['FloorPrice']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -342,8 +342,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label={'OffPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
-                  error={ valid['OffPrice'].error }
-                  helperText={ valid['OffPrice'].helpTx }
+                  error={ valid['OffPrice']?.error }
+                  helperText={ valid['OffPrice']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -364,8 +364,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='LockupDays'
-                  error={ valid['LockupDays'].error }
-                  helperText={ valid['LockupDays'].helpTx }
+                  error={ valid['LockupDays']?.error }
+                  helperText={ valid['LockupDays']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -386,8 +386,8 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   variant='outlined'
                   size='small'
                   label='VotingWeight (%)'
-                  error={ valid['VotingWeight'].error }
-                  helperText={ valid['VotingWeight'].helpTx }
+                  error={ valid['VotingWeight']?.error }
+                  helperText={ valid['VotingWeight']?.helpTx }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

@@ -118,8 +118,8 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
       <TextField 
         variant='filled'
         label='DesHash / CID in IPFS'
-        error={ valid['DocHash'].error }
-        helperText={ valid['DocHash'].helpTx }
+        error={ valid['DocHash']?.error }
+        helperText={ valid['DocHash']?.helpTx }
         sx={{
           m:1,
           minWidth: 630,
@@ -154,8 +154,8 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
         <TextField 
           variant='filled'
           label='Address'
-          error={ valid['Address'].error }
-          helperText={ valid['Address'].helpTx }
+          error={ valid['Address']?.error }
+          helperText={ valid['Address']?.helpTx }
           sx={{
             m:1,
             minWidth: 450,
@@ -176,8 +176,8 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
         <TextField 
           variant='filled'
           label='Value'
-          error={ valid['Value'].error }
-          helperText={ valid['Value'].helpTx }          
+          error={ valid['Value']?.error }
+          helperText={ valid['Value']?.helpTx }          
           sx={{
             m:1,
             minWidth: 218,
@@ -198,8 +198,8 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
         <TextField 
           variant='filled'
           label='Params'
-          error={ valid['Params'].error }
-          helperText={ valid['Params'].helpTx }
+          error={ valid['Params']?.error }
+          helperText={ valid['Params']?.helpTx }
           sx={{
             m:1,
             minWidth: 630,

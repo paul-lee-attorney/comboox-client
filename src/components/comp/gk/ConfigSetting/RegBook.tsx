@@ -66,8 +66,8 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
             variant='outlined'
             label='Book'
             size="small"
-            error={ valid['Book'].error }
-            helperText={ valid['Book'].helpTx }
+            error={ valid['Book']?.error }
+            helperText={ valid['Book']?.helpTx }
             sx={{
               m:1,
               minWidth: 480,

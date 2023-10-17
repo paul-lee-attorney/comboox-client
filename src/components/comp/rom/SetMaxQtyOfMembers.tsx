@@ -115,8 +115,8 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
               id="tfMaxQty" 
               label="MaxQtyOfMembers" 
               variant="outlined"
-              error={ valid['MaxQty'].error }
-              helperText={ valid['MaxQty'].helpTx }
+              error={ valid['MaxQty']?.error }
+              helperText={ valid['MaxQty']?.helpTx }
               onChange={(e) => {
                 let input = e.target.value;
                 onlyNum('MaxQty', input, MaxSeqNo, setValid);

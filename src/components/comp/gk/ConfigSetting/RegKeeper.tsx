@@ -58,8 +58,8 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
             variant='outlined'
             label='Keeper'
             size="small"
-            error={ valid['Keeper'].error }
-            helperText={ valid['Keeper'].helpTx }
+            error={ valid['Keeper']?.error }
+            helperText={ valid['Keeper']?.helpTx }
             sx={{
               m:1,
               minWidth: 480,

@@ -43,8 +43,8 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
         <TextField 
           variant='outlined'
           label='seqOfSwap'
-          error={ valid['SeqOfSwap'].error }
-          helperText={ valid['SeqOfSwap'].helpTx }  
+          error={ valid['SeqOfSwap']?.error }
+          helperText={ valid['SeqOfSwap']?.helpTx }  
           sx={{
             m:1,
             minWidth: 218,
