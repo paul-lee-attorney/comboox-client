@@ -25,6 +25,7 @@ export function AcctPage({ flag }:AcctPageProps) {
     refetch: getMyUserNo
   } = useRegCenterGetMyUserNo({
     address: AddrOfRegCenter,
+    account: signer?.account,
     onSuccess(res) {
       if (signer) setUserNo(res);
       else setUserNo(undefined);
