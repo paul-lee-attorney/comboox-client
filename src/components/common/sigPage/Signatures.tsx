@@ -6,7 +6,6 @@ import {
   Paper,
   Toolbar,
   TextField,
-  Button,
   Tooltip,
   FormControl,
   InputLabel,
@@ -42,7 +41,6 @@ import {
 import { ParasOfSigPage, StrSig, getBuyers, getParasOfPage, getSellers, parseParasOfPage } from "../../../scripts/common/sigPage";
 import { FormResults, dateParser, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
-import { setLazyProp } from "next/dist/server/api-utils";
 import { LoadingButton } from "@mui/lab";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
@@ -95,6 +93,10 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [loading, setLoading] = useState(false);
+  const refresh = () => {
+    setTime(Date.now());
+    setLoading(false);
+  }
 
   const {
     isLoading: setTimingLoading,
@@ -117,6 +119,12 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
   const [ isBuyer, setIsBuyer ] = useState(true);
   const [ acct, setAcct ] = useState<string>();
 
+  const [loadingAddBlk, setLoadingAddBlk] = useState(false);
+  const refreshAddBlk = () => {
+    setTime(Date.now());
+    setLoadingAddBlk(false);
+  }
+
   const {
     isLoading: addBlankIsLoading,
     write: addBlank,
@@ -130,11 +138,17 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
         ] 
       : undefined,
       onSuccess(data) {
-        setLoading(true);
+        setLoadingAddBlk(true);
         let hash: HexType = data.hash;
-        refreshAfterTx(hash, refresh);
+        refreshAfterTx(hash, refreshAddBlk);
       }
   });
+
+  const [loadingRemoveBlk, setLoadingRemoveBlk] = useState(false);
+  const refreshRemoveBlk = () => {
+    setTime(Date.now());
+    setLoadingRemoveBlk(false);
+  }
 
   const {
     isLoading: removeBlankIsLoading,
@@ -148,9 +162,9 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
         ] 
       : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemoveBlk(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemoveBlk);
     }
   });
 
@@ -158,11 +172,6 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
   const [ sellerSigs, setSellerSigs ] = useState<StrSig[]>();  
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >();
   const [ time, setTime ] = useState<number>(0);
-
-  const refresh = () => {
-    setTime(Date.now());
-    setLoading(false);
-  }
 
   useEffect(()=>{
 
@@ -370,7 +379,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
               >
                 <span>
                 <IconButton 
-                  disabled={ addBlankIsLoading || hasError(valid) || loading}
+                  disabled={ addBlankIsLoading || hasError(valid) || loadingAddBlk}
                   sx={{width: 20, height: 20, m: 1 }} 
                   onClick={ () => addBlank?.() }
                   color="primary"
@@ -420,7 +429,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
               >           
                 <span>
                 <IconButton
-                  disabled={ removeBlankIsLoading || hasError(valid) || loading} 
+                  disabled={ removeBlankIsLoading || hasError(valid) || loadingRemoveBlk} 
                   sx={{width: 20, height: 20, m: 1, mr:2 }} 
                   onClick={ () => removeBlank?.() }
                   color="primary"

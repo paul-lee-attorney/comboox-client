@@ -30,13 +30,6 @@ export function TurnKey({ nextStep }:InitCompProps) {
   const { gk, boox } = useComBooxContext();
   const [ time, setTime ] = useState(0);
 
-  const [ loading, setLoading ] = useState(false);
-
-  const refresh = ()=>{
-    setTime(Date.now());
-    setLoading(false);
-  }
-
   const [romKeeper, setRomKeeper] = useState<HexType>();
 
   useEffect(()=>{
@@ -49,6 +42,12 @@ export function TurnKey({ nextStep }:InitCompProps) {
     }
   }, [gk, time]);
 
+  const [ loadingRom, setLoadingRom ] = useState(false);
+  const refreshRom = ()=>{
+    setTime(Date.now());
+    setLoadingRom(false);
+  }
+
   const {
     isLoading: setRomDKLoading,
     write: setRomDK,
@@ -56,9 +55,9 @@ export function TurnKey({ nextStep }:InitCompProps) {
     address: boox ? boox[booxMap.ROM] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRom(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRom);
     }
   });
 
@@ -74,6 +73,12 @@ export function TurnKey({ nextStep }:InitCompProps) {
     }
   }, [boox, time])
 
+  const [ loadingRos, setLoadingRos ] = useState(false);
+  const refreshRos = ()=>{
+    setTime(Date.now());
+    setLoadingRos(false);
+  }
+
   const {
     isLoading: setRosDKLoading,
     write: setRosDK
@@ -81,9 +86,9 @@ export function TurnKey({ nextStep }:InitCompProps) {
     address: boox ? boox[booxMap.ROS] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRos(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRos);
     }
   });
 
@@ -205,7 +210,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
 
             <LoadingButton 
               disabled = { !setRomDK || setRomDKLoading }
-              loading={loading}
+              loading={loadingRom}
               loadingPosition='start'
               sx={{ m: 1, mr: 5, minWidth: 120, height: 40 }} 
               variant="outlined" 
@@ -221,7 +226,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
 
             <LoadingButton 
               disabled = {!setRosDK || setRosDKLoading }
-              loading={loading}
+              loading={loadingRos}
               loadingPosition='start'
               sx={{ m: 1, ml:5, minWidth: 120, height: 40 }} 
               variant="outlined" 

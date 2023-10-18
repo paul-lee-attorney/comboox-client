@@ -68,11 +68,11 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ time, setTime ] = useState<number>(0);
-  const [ loading, setLoading ] = useState(false);
 
-  const refresh = ()=> {
+  const [ loadingAdd, setLoadingAdd ] = useState(false);
+  const refreshAdd = ()=> {
     setTime(Date.now());
-    setLoading(false);
+    setLoadingAdd(false);
   }
 
   const { 
@@ -90,12 +90,18 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
         ]
       : undefined, 
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAdd(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAdd);
     },    
   });
   
+  const [ loadingRemove, setLoadingRemove ] = useState(false);
+  const refreshRemove = ()=> {
+    setTime(Date.now());
+    setLoadingRemove(false);
+  }
+
   const { 
     isLoading: removeOptLoading, 
     write: removeOpt, 
@@ -103,13 +109,19 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     address: term,
     args: head.seqOfOpt && !hasError(valid) ? [ BigInt(head.seqOfOpt) ] : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemove(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemove);
     },    
   });
 
   const [ obligor, setObligor ] = useState<string>('0');
+
+  const [ loadingAddObr, setLoadingAddObr ] = useState(false);
+  const refreshAddObr = ()=> {
+    setTime(Date.now());
+    setLoadingAddObr(false);
+  }
 
   const { 
     isLoading: addObligorLoading, 
@@ -120,12 +132,18 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAddObr(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAddObr);
     },    
   });
-  
+
+  const [ loadingRemoveObr, setLoadingRemoveObr ] = useState(false);
+  const refreshRemoveObr = ()=> {
+    setTime(Date.now());
+    setLoadingRemoveObr(false);
+  }
+
   const { 
     isLoading: removeObligorLoading, 
     write: removeObligor 
@@ -135,9 +153,9 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemoveObr(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemoveObr);
     },    
   });
   
@@ -569,7 +587,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >
                       <IconButton 
-                        disabled={ addOptLoading || hasError(valid) || loading}
+                        disabled={ addOptLoading || hasError(valid) || loadingAdd}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addOpt?.() }
                         color="primary"
@@ -605,7 +623,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeOptLoading || hasError(valid) || loading} 
+                        disabled={ removeOptLoading || hasError(valid) || loadingRemove} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeOpt?.() }
                         color="primary"
@@ -620,7 +638,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >
                       <IconButton 
-                        disabled={ addObligorLoading || hasError(valid) || loading}
+                        disabled={ addObligorLoading || hasError(valid) || loadingAddObr}
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
@@ -655,7 +673,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     >
 
                       <IconButton
-                        disabled={ removeObligorLoading || hasError(valid) || loading} 
+                        disabled={ removeObligorLoading || hasError(valid) || loadingRemoveObr} 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"

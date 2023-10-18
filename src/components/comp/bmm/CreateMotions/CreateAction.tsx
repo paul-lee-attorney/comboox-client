@@ -25,7 +25,6 @@ export function CreateAction({refresh}:CreateMotionProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ loading, setLoading ] = useState(false);
-
   const updateResults = ()=> {
     refresh();
     setLoading(false);

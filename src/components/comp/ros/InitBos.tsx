@@ -13,10 +13,7 @@ import {
 import { AddCircle, ArrowDownward, ArrowUpward, RemoveCircle }  from '@mui/icons-material';
 
 
-import {
-  useRegisterOfSharesIssueShare,
-  useRegisterOfSharesDecreaseCapital,
-} from '../../../generated';
+import { useRegisterOfSharesIssueShare, useRegisterOfSharesDecreaseCapital } from '../../../generated';
 
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from '../../../scripts/common';
 
@@ -37,13 +34,12 @@ export function InitBos({nextStep}: InitCompProps) {
   const [share, setShare] = useState<StrShare>(defStrShare);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
-  const [ loading, setLoading ] = useState<boolean>(false);
-
   const [time, setTime] = useState(0);
 
-  const refresh = () => {
+  const [ loadingAdd, setLoadingAdd ] = useState<boolean>(false);
+  const refreshAdd = () => {
     setTime(Date.now());
-    setLoading(false);
+    setLoadingAdd(false);
   }
 
   const {
@@ -58,12 +54,18 @@ export function InitBos({nextStep}: InitCompProps) {
           BigInt(share.body.par)  ] 
       : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAdd(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAdd);
     }    
   });
-  
+
+  const [ loadingRemove, setLoadingRemove ] = useState<boolean>(false);
+  const refreshRemove = () => {
+    setTime(Date.now());
+    setLoadingRemove(false);
+  }
+
   const {
     isLoading: delShareLoading,
     write: delShare
@@ -75,10 +77,10 @@ export function InitBos({nextStep}: InitCompProps) {
             BigInt(share.body.par) ]
         : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemove(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
-    }    
+      refreshAfterTx(hash, refreshRemove);
+    }
   });
 
   useEffect(()=>{
@@ -137,7 +139,7 @@ export function InitBos({nextStep}: InitCompProps) {
               sx={{m:1, mx:3, px:3, py:1}}
               variant='contained'
               startIcon={<AddCircle />}
-              loading={loading}
+              loading={loadingAdd}
               loadingPosition='start'
               disabled={!issueShare || issueShareLoading || hasError(valid) }
               onClick={()=>issueShare?.()}
@@ -240,6 +242,31 @@ export function InitBos({nextStep}: InitCompProps) {
                   size='small'
                 />
 
+                <TextField
+                  variant="outlined"
+                  label="SeqOfShare"
+                  color='warning'
+                  error={ valid['SeqOfShare']?.error }
+                  helperText={ valid['SeqOfShare']?.helpTx }
+                  sx={{
+                    m:1,
+                    width: 188
+                  }}
+                  onChange={(e)=>{
+                    let input = e.target.value;
+                    onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                    setShare(v => ({
+                      ...v,
+                      head: {
+                        ...v.head,
+                        seqOfShare: input,
+                      }
+                    }));
+                  }}
+                  value={ share.head.seqOfShare }
+                  size='small'
+                />
+
               </Stack>
 
               <Stack direction={'row'} sx={{alignItems:'center' }}>
@@ -279,6 +306,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfPaid" 
                   label="Paid (Cent)" 
                   variant="outlined"
+                  color='warning'
                   error={ valid['Paid']?.error }
                   helperText={ valid['Paid']?.helpTx }
                   onChange={(e) => {
@@ -301,6 +329,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   id="tfPar" 
                   label="Par (Cent)" 
                   variant="outlined"
+                  color='warning'
                   error={ valid['Par']?.error }
                   helperText={ valid['Par']?.helpTx }
                   onChange={(e) => {
@@ -348,34 +377,10 @@ export function InitBos({nextStep}: InitCompProps) {
 
             <Stack direction='row' sx={{m:1, p:1, alignItems:'center'}}>
 
-              <TextField
-                variant="outlined"
-                label="SeqOfShare"
-                error={ valid['SeqOfShare']?.error }
-                helperText={ valid['SeqOfShare']?.helpTx }
-                sx={{
-                  m:1,
-                  width: 188
-                }}
-                onChange={(e)=>{
-                  let input = e.target.value;
-                  onlyNum('SeqOfShare', input, MaxPrice, setValid);
-                  setShare(v => ({
-                    ...v,
-                    head: {
-                      ...v.head,
-                      seqOfShare: input,
-                    }
-                  }));
-                }}
-                value={ share.head.seqOfShare }
-                size='small'
-              />
-
               <LoadingButton
                 sx={{m:1, p:1}}
                 variant='contained'
-                loading={ loading }
+                loading={ loadingRemove }
                 loadingPosition='end'
                 endIcon={<RemoveCircle />}
                 disabled={ !delShare || delShareLoading || hasError(valid) }

@@ -3,12 +3,13 @@ import { Button } from "@mui/material";
 
 import Link from "next/link";
 import { longSnParser, refreshAfterTx } from "../../scripts/common/toolsKit";
-import { useContractRead, useWalletClient } from "wagmi";
+import { useWalletClient } from "wagmi";
 import { AddrOfRegCenter, HexType } from "../../scripts/common";
-import { regCenterABI, useRegCenterRegUser } from "../../generated";
+import { useRegCenterRegUser } from "../../generated";
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { getMyUserNo } from "../../scripts/center/rc";
 
 interface AcctPageProps {
   flag: boolean;
@@ -21,23 +22,19 @@ export function AcctPage({ flag }:AcctPageProps) {
   const { userNo, setUserNo } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
+  const [ time, setTime ] = useState(0);
+  useEffect(()=>{
+    if (signer)
+      getMyUserNo().then(
+        res => setUserNo(res)
+      );
+    else setUserNo(undefined);
+  }, [signer, time, setUserNo]);
+
   const refresh = ()=>{
-    getMyUserNo();
+    setTime(Date.now());
     setLoading(false);
   }
-
-  const {
-    refetch: getMyUserNo
-  } = useContractRead({
-    address: AddrOfRegCenter,
-    abi: regCenterABI,
-    functionName: 'getMyUserNo',
-    account: signer?.account ,
-    onSuccess(data) {
-      if (signer) setUserNo(data);
-      else setUserNo(undefined);
-    },
-  })
 
   const {
     isLoading: regUserLoading,

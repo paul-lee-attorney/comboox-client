@@ -21,8 +21,8 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
   const [ candidate, setCandidate ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
-  const [ loading, setLoading ] = useState(false);
 
+  const [ loading, setLoading ] = useState(false);
   const updateResults = ()=>{
     refresh();
     setLoading(false);
@@ -39,9 +39,16 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
+
+  const [ loadingRemove, setLoadingRemove ] = useState(false);
+  const updateResultsRemove = ()=>{
+    refresh();
+    setLoadingRemove(false);
+  }
+
 
   const{
     isLoading: removeOfficerLoading,
@@ -54,7 +61,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResultsRemove);
     }
   });
 
@@ -122,7 +129,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !removeOfficer || removeOfficerLoading || hasError(valid) || loading}
+            disabled={ !removeOfficer || removeOfficerLoading || hasError(valid) || loadingRemove}
             sx={{width:20, height:20, m:1}}
             onClick={()=>removeOfficer?.()}
             color="primary"

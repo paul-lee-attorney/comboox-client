@@ -51,13 +51,12 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
   const [ price, setPrice ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
-
   const [ time, setTime ] = useState<number>(0);
-  const [ loading, setLoading ] = useState(false);
 
-  const refresh = ()=> {
+  const [ loadingAdd, setLoadingAdd ] = useState(false);
+  const refreshAdd = ()=> {
     setTime(Date.now());
-    setLoading(false);
+    setLoadingAdd(false);
   }
 
   const { 
@@ -69,11 +68,17 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         ? [BigInt(classOfShare), BigInt(price)] 
         : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAdd(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAdd);
     }
   });
+
+  const [ loadingRemove, setLoadingRemove ] = useState(false);
+  const refreshRemove = ()=> {
+    setTime(Date.now());
+    setLoadingRemove(false);
+  }
 
   const { 
     isLoading: removeMarkIsLoading, 
@@ -84,13 +89,19 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         ? [BigInt(classOfShare)] 
         :  undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemove(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemove);
     },    
   });
 
   const [ obligor, setObligor ] = useState<string>();
+
+  const [ loadingAddObl, setLoadingAddObl ] = useState(false);
+  const refreshAddObl = ()=> {
+    setTime(Date.now());
+    setLoadingAddObl(false);
+  }
 
   const { 
     isLoading: addObligorIsLoading, 
@@ -101,12 +112,18 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         ? [ BigInt(classOfShare), BigInt(obligor)] 
         :   undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAddObl(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAddObl);
     },    
   });
     
+  const [ loadingRemoveObl, setLoadingRemoveObl ] = useState(false);
+  const refreshRemoveObl = ()=> {
+    setTime(Date.now());
+    setLoadingRemoveObl(false);
+  }
+
   const { 
     isLoading: removeObligorIsLoading, 
     write: removeObligor 
@@ -116,9 +133,9 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
         ? [ BigInt(classOfShare), BigInt(obligor)] 
         :   undefined, 
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemoveObl(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemoveObl);
     },    
   });
     
@@ -180,7 +197,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       arrow
                     >
                       <IconButton 
-                        disabled={ addMarkLoading || hasError(valid) || loading}
+                        disabled={ addMarkLoading || hasError(valid) || loadingAdd}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addMark?.() }
                         color="primary"
@@ -231,7 +248,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeMarkIsLoading || hasError(valid) || loading} 
+                        disabled={ removeMarkIsLoading || hasError(valid) || loadingRemove} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeMark?.() }
                         color="primary"
@@ -246,7 +263,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       arrow
                     >
                       <IconButton 
-                        disabled={ addObligorIsLoading || loading}
+                        disabled={ addObligorIsLoading || loadingAddObl}
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
@@ -281,7 +298,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     >
 
                       <IconButton
-                        disabled={ removeObligorIsLoading || hasError(valid) || loading} 
+                        disabled={ removeObligorIsLoading || hasError(valid) || loadingRemoveObl} 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"

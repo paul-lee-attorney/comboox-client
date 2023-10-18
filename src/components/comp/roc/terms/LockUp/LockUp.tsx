@@ -49,11 +49,11 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ time, setTime ] = useState<number>(0);
-  const [ loading, setLoading ] = useState(false);
 
-  const refresh = ()=> {
+  const [ loadingAdd, setLoadingAdd ] = useState(false);
+  const refreshAdd = ()=> {
     setTime(Date.now());
-    setLoading(false);
+    setLoadingAdd(false);
   }
 
   const { 
@@ -65,12 +65,18 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
       ? [ BigInt(seqOfShare), BigInt(dueDate) ]
       : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAdd(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAdd);
     },    
   });
   
+  const [ loadingRemove, setLoadingRemove ] = useState(false);
+  const refreshRemove = ()=> {
+    setTime(Date.now());
+    setLoadingRemove(false);
+  }
+
   const { 
     isLoading: removeLockerLoading, 
     write: removeLocker 
@@ -78,13 +84,19 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     address: term,
     args: seqOfShare && !hasError(valid) ? [ BigInt(seqOfShare) ] : undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemove(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemove);
     },    
   });
 
   const [ keyholder, setKeyholder ] = useState<string>();
+
+  const [ loadingAddKlr, setLoadingAddKlr ] = useState(false);
+  const refreshAddKlr = ()=> {
+    setTime(Date.now());
+    setLoadingAddKlr(false);
+  }
 
   const { 
     isLoading: addKeyholderLoading, 
@@ -95,12 +107,18 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingAddKlr(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshAddKlr);
     },    
   });
   
+  const [ loadingRemoveKlr, setLoadingRemoveKlr ] = useState(false);
+  const refreshRemoveKlr = ()=> {
+    setTime(Date.now());
+    setLoadingRemoveKlr(false);
+  }
+
   const { 
     isLoading: removeKeyholderLoading, 
     write: removeKeyholder,
@@ -110,9 +128,9 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
     onSuccess(data) {
-      setLoading(true);
+      setLoadingRemoveKlr(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, refreshRemoveKlr);
     },    
   });
   
@@ -173,7 +191,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >
                         <IconButton 
-                          disabled={ addLockerLoading || hasError(valid) || loading}
+                          disabled={ addLockerLoading || hasError(valid) || loadingAdd}
                           sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                           onClick={ () => addLocker?.() }
                           color="primary"
@@ -218,7 +236,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >           
                         <IconButton
-                          disabled={ removeLockerLoading || hasError(valid) || loading} 
+                          disabled={ removeLockerLoading || hasError(valid) || loadingRemove} 
                           sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                           onClick={ () => removeLocker?.() }
                           color="primary"
@@ -233,7 +251,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >
                         <IconButton 
-                          disabled={ addKeyholderLoading || hasError(valid) || loading}
+                          disabled={ addKeyholderLoading || hasError(valid) || loadingAddKlr}
                           sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                           onClick={ () => addKeyholder?.() }
                           color="primary"
@@ -268,7 +286,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       >
 
                         <IconButton
-                          disabled={ removeKeyholderLoading || hasError(valid) || loading} 
+                          disabled={ removeKeyholderLoading || hasError(valid) || loadingRemoveKlr} 
                           sx={{width: 20, height: 20, m: 1, mr: 10}} 
                           onClick={ () => removeKeyholder?.() }
                           color="primary"
