@@ -145,7 +145,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
 
               <AddRule 
                 sha={ sha }
-                rule={ frCodifier(objFR) }
+                rule={ frCodifier(objFR, seq) }
                 isFinalized={isFinalized}
                 valid={valid}
                 refresh={refresh}
