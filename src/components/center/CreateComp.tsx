@@ -23,6 +23,8 @@ export function CreateComp() {
 
   const [ dk, setDK ] = useState<HexType>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  
+  const [ loading, setLoading ] = useState(false);
 
   const {
     isLoading: createCompLoading, 
@@ -31,6 +33,7 @@ export function CreateComp() {
     address: AddrOfRegCenter,
     args: !hasError(valid) && dk ? [dk] : undefined, 
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       waitForTransaction({hash}).then(
         res => {
@@ -40,7 +43,8 @@ export function CreateComp() {
               setGK(addrOfGK);
               router.push('/comp/HomePage');
             }
-          )
+          );
+          setLoading(false);
         }
       );
     }
@@ -63,7 +67,7 @@ export function CreateComp() {
               <Tooltip title={"Register My Company"} placement='right' arrow >
                 <span>
                   <IconButton
-                    disabled={ createCompLoading || dk == undefined || dk == '0x' || hasError(valid) }
+                    disabled={ createCompLoading || dk == undefined || dk == '0x' || hasError(valid) || loading}
                     color='primary'
                     onClick={ ()=>createComp?.() }
                     edge="end"

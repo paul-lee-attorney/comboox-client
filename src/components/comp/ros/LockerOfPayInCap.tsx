@@ -27,9 +27,11 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
   const [ time, setTime ] = useState(0);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const refreshLockers = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
   const [ locker, setLocker ] = useState<StrLocker>(defaultStrLocker);
@@ -50,6 +52,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshLockers);
     }    
@@ -57,6 +60,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setDialogOpen(false);
   }
 
@@ -69,6 +73,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
       ? [ locker.hashLock, key ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -83,6 +88,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
       ? [ locker.hashLock, BigInt(share.head.seqOfShare) ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshLockers);
     }    
@@ -134,7 +140,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ setPayInAmtLoading || hasError(valid) }
+                disabled={ setPayInAmtLoading || hasError(valid) || loading}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => setPayInAmt?.() }
                 color="primary"            
@@ -213,7 +219,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ withdrawPayInAmtLoading || valid['HashLock']?.error }
+                disabled={ withdrawPayInAmtLoading || valid['HashLock']?.error || loading}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => withdrawPayInAmt?.() }
                 color="primary"            
@@ -236,7 +242,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           >
             <span>
               <IconButton
-                disabled={ requestPaidInCapitalLoading || valid['HashLock']?.error}
+                disabled={ requestPaidInCapitalLoading || valid['HashLock']?.error || loading}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
                 onClick={ () => requestPaidInCapital?.() }
                 color="primary"            

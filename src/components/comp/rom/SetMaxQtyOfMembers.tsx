@@ -57,6 +57,7 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
     address: boox ? boox[booxMap.ROM] : undefined,
     args: !hasError(valid) ? [BigInt(inputMax)] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }

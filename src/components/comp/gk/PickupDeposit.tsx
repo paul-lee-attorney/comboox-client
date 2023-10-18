@@ -2,7 +2,7 @@ import { IconButton, Tooltip } from "@mui/material";
 import { useGeneralKeeperPickupDeposit } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Savings, SavingsOutlined } from "@mui/icons-material";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { HexType } from "../../../scripts/common";
 import { refreshAfterTx } from "../../../scripts/common/toolsKit";
 
@@ -14,6 +14,12 @@ interface PickupDepositProps{
 export function PickupDeposit({ refresh }:PickupDepositProps) {
   
   const { gk } = useComBooxContext();
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: pickupDepositLoading,
@@ -21,8 +27,9 @@ export function PickupDeposit({ refresh }:PickupDepositProps) {
   } = useGeneralKeeperPickupDeposit({
     address: gk,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -36,7 +43,7 @@ export function PickupDeposit({ refresh }:PickupDepositProps) {
         <IconButton 
           sx={{mx:1}}
           size="large"
-          disabled={ pickupDepositLoading }
+          disabled={ pickupDepositLoading || loading}
           onClick={()=>pickupDeposit?.()}
           color="primary"
         >

@@ -21,6 +21,13 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = () => {
+    refresh();
+    setLoading(false);
+  }
+
   const {
     isLoading: addDirectorLoading,
     write: addDirector,
@@ -30,8 +37,9 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -44,8 +52,9 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
           ? [ BigInt(seqOfPos)]
           : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -60,7 +69,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !addDirector || addDirectorLoading || hasError(valid)}
+            disabled={ !addDirector || addDirectorLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
             onClick={()=>addDirector?.()}
             color="primary"
@@ -113,7 +122,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !removeDirector || removeDirectorLoading || hasError(valid)}
+            disabled={ !removeDirector || removeDirectorLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
             onClick={()=>removeDirector?.()}
             color="primary"

@@ -32,8 +32,11 @@ export function SetOwner({ addr }: AccessControlProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ time, setTime ] = useState(0);
+  const [loading, setLoading] = useState(false);
+
   const refresh = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
   const [ newOwner, setNewOwner ] = useState<HexType>();
@@ -53,6 +56,7 @@ export function SetOwner({ addr }: AccessControlProps) {
     address: addr,
     args: !hasError(valid) ? [ owner ] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }    
@@ -73,7 +77,7 @@ export function SetOwner({ addr }: AccessControlProps) {
             <InputAdornment position="end">
               <IconButton
                 color="primary"
-                disabled={ owner == undefined || owner == '0x' || setOwnrLoading || hasError(valid) }
+                disabled={ owner == undefined || owner == '0x' || setOwnrLoading || hasError(valid) || loading}
                 onClick={ handleClick }
                 edge="end"
               >

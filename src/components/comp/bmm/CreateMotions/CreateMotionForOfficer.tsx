@@ -11,6 +11,7 @@ import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { loadingButtonClasses } from "@mui/lab";
 
 export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
 
@@ -20,6 +21,12 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
   const [ candidate, setCandidate ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: addOfficerLoading,
@@ -30,6 +37,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
           ? [BigInt(seqOfPos), BigInt(candidate)]
           : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -44,6 +52,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
           ? [ BigInt(seqOfPos)]
           : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -60,7 +69,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !addOfficer || addOfficerLoading || hasError(valid)}
+            disabled={ !addOfficer || addOfficerLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
             onClick={()=>addOfficer?.()}
             color="primary"
@@ -113,7 +122,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !removeOfficer || removeOfficerLoading || hasError(valid) }
+            disabled={ !removeOfficer || removeOfficerLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
             onClick={()=>removeOfficer?.()}
             color="primary"

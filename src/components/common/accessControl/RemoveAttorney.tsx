@@ -33,7 +33,10 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
   const [ flag, setFlag ] = useState<boolean>();
   const [ open, setOpen ] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const refresh = () => {
+    setLoading(false);
     if (acct) 
     hasRole(addr, ATTORNEYS, acct).then(flag => {
       setFlag(flag);
@@ -49,6 +52,7 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
     args: !hasError(valid) 
       ? [ATTORNEYS, acct] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -70,7 +74,7 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
             <InputAdornment position="end">
               <IconButton
                 color='primary'
-                disabled={ removeAttorneyLoading || acct == undefined || acct == '0x' || hasError(valid) }
+                disabled={ removeAttorneyLoading || acct == undefined || acct == '0x' || hasError(valid) || loading}
                 onClick={ handleClick }
                 edge="end"
               >

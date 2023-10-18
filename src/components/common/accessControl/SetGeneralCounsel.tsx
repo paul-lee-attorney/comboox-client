@@ -33,9 +33,11 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
   const [ time, setTime ] = useState(0);
 
   const [gc, setGC] = useState<HexType>(AddrZero);
+  const [loading, setLoading] = useState(false);
 
   const refresh = () => {
     setTime(Date.now());
+    setLoading(false);
   }
   
   useEffect(()=>{
@@ -56,6 +58,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
     address: addr,
     args: !hasError(valid) ? [ ATTORNEYS, gc] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -76,7 +79,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
-                  disabled={ setGeneralCounselLoading || gc == undefined || gc == '0x' || hasError(valid)}
+                  disabled={ setGeneralCounselLoading || gc == undefined || gc == '0x' || hasError(valid) || loading}
                   color='primary'
                   onClick={ handleClick }
                   edge="end"
