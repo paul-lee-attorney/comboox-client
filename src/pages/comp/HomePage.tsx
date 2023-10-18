@@ -15,7 +15,7 @@ import { getDK } from "../../scripts/common/accessControl";
 
 function HomePage() {
   const { gk, boox } = useComBooxContext();
-  const [ activeStep, setActiveStep ] = useState<number>(0);
+  const [ activeStep, setActiveStep ] = useState<number>(4);
 
   useEffect(()=>{
     if (boox) {
@@ -24,7 +24,7 @@ function HomePage() {
           if (gk) {
             getKeeper(gk, booxMap.ROM).then(
               romKeeper => {
-                if (romKeeper == dk) setActiveStep(4);
+                if (romKeeper != dk) setActiveStep(0);
               }
             )
           }
