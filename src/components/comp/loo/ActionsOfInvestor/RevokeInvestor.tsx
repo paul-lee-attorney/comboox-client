@@ -53,7 +53,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             size="small"
             label='UserNo'
             error={ valid['UserNo']?.error }
-            helperText={ valid['UserNo']?.helpTx }
+            helperText={ valid['UserNo']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 218,
@@ -71,7 +71,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             size="small"
             label='SeqOfListingRule'
             error={ valid['SeqOfLR']?.error }
-            helperText={ valid['SeqOfLR']?.helpTx }
+            helperText={ valid['SeqOfLR']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 218,

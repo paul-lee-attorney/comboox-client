@@ -61,7 +61,7 @@ export function GetComp() {
           variant="outlined"
           size='small'
           error={ valid['RegNum']?.error }
-          helperText={ valid['RegNum']?.helpTx }                                  
+          helperText={ valid['RegNum']?.helpTx ?? ' ' }                                  
           sx={{ m:1, mr:3, width: 218 }}           
           onChange={(e) => {
             let input = e.target.value;

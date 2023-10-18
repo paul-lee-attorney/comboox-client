@@ -20,13 +20,14 @@ import { InfoOfFile, getFilesListWithInfo, } from "../../../scripts/common/files
 import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
-import { HexType, booxMap } from "../../../scripts/common";
-import { refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { HexType, MaxPrice, booxMap } from "../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 function RegisterOfConstitution() {
   const { gk, boox } = useComBooxContext();
   const [ time, setTime ] = useState(0);
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
@@ -43,7 +44,7 @@ function RegisterOfConstitution() {
     write: createSha,
   } = useGeneralKeeperCreateSha({
     address: gk,
-    args: version ? [BigInt(version)] : undefined,
+    args: version && !hasError(valid) ? [BigInt(version)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -92,11 +93,13 @@ function RegisterOfConstitution() {
                     id="tfVersion" 
                     label="Version" 
                     variant="outlined"
-                    helperText="Integer <= 2^16 (e.g. '123')"
+                    error={ valid['Version']?.error }
+                    helperText={ valid['Version']?.helpTx ?? ' ' }
                     onChange={(e) => {
-                      setVersion(e.target.value);
-                    }
-                    }
+                      let input = e.target.value;
+                      onlyNum('Version', input, MaxPrice, setValid);
+                      setVersion(input);
+                    }}
                     value = { version }
                     size='small'
                   />

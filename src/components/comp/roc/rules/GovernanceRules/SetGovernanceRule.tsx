@@ -15,6 +15,7 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  FormHelperText,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxByte, MaxRatio, MaxSeqNo } from '../../../../../scripts/common';
@@ -278,6 +279,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                         <MenuItem value={'1'}>True</MenuItem>
                         <MenuItem value={'0'}>False</MenuItem>
                       </Select>
+                      <FormHelperText>{' '}</FormHelperText>
                     </FormControl>
                   )}
 
@@ -300,7 +302,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'PropWROfMembers ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['PropWROfMembers']?.error }
-                    helperText={ valid['PropWROfMembers']?.helpTx }        
+                    helperText={ valid['PropWROfMembers']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -322,7 +324,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'PropHROfMembers ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['PropHROfMembers']?.error }
-                    helperText={ valid['PropHROfMembers']?.helpTx }        
+                    helperText={ valid['PropHROfMembers']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -344,7 +346,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'PropHROfDirectorsInGM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['PropHROfDirectorsInGM']?.error }
-                    helperText={ valid['PropHROfDirectorsInGM']?.helpTx }        
+                    helperText={ valid['PropHROfDirectorsInGM']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -366,7 +368,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'PropHROfDirectorsInBM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['PropHROfDirectorsInBM']?.error }
-                    helperText={ valid['PropHROfDirectorsInBM']?.helpTx }        
+                    helperText={ valid['PropHROfDirectorsInBM']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -392,7 +394,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label='MaxQtyOfMembers'
                     size='small'
                     error={ valid['MaxQtyOfMembers']?.error }
-                    helperText={ valid['MaxQtyOfMembers']?.helpTx }        
+                    helperText={ valid['MaxQtyOfMembers']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -414,7 +416,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'QuorumOfGM ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['QuorumOfGM']?.error }
-                    helperText={ valid['QuorumOfGM']?.helpTx }        
+                    helperText={ valid['QuorumOfGM']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -436,7 +438,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label='MaxNumOfDirectors'
                     size='small'
                     error={ valid['MaxNumOfDirectors']?.error }
-                    helperText={ valid['MaxNumOfDirectors']?.helpTx }        
+                    helperText={ valid['MaxNumOfDirectors']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -458,7 +460,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label='TenureMonOfBoard'
                     size='small'
                     error={ valid['TenureMonOfBoard']?.error }
-                    helperText={ valid['TenureMonOfBoard']?.helpTx }        
+                    helperText={ valid['TenureMonOfBoard']?.helpTx ?? ' ' }        
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -480,7 +482,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'QuorumOfBoardMeeting ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['QuorumOfBoardMeeting']?.error }
-                    helperText={ valid['QuorumOfBoardMeeting']?.helpTx }
+                    helperText={ valid['QuorumOfBoardMeeting']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -506,6 +508,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                       label='EstablishedDate'
                       size='small'
                       readOnly={isFinalized}
+                      helperText=' '
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -538,7 +541,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label='BusinessTermInYears'
                     size='small'
                     error={ valid['BusinessTerm']?.error }
-                    helperText={ valid['BusinessTerm']?.helpTx }
+                    helperText={ valid['BusinessTerm']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}                        
                     sx={{
                       m:1,
@@ -560,7 +563,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label='TypeOfComp'
                     size='small'
                     error={ valid['TypeOfComp']?.error }
-                    helperText={ valid['TypeOfComp']?.helpTx }
+                    helperText={ valid['TypeOfComp']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
@@ -582,7 +585,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label={ 'MinVoteRatioOnChain ' + (isFinalized ? '(%)' : 'BP') }
                     size='small'
                     error={ valid['MinVoteRatioOnChain']?.error }
-                    helperText={ valid['MinVoteRatioOnChain']?.helpTx }
+                    helperText={ valid['MinVoteRatioOnChain']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,
@@ -604,7 +607,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     label='FundThreshold  (CBP/ETH)'
                     size='small'
                     error={ valid['FundThreshold']?.error }
-                    helperText={ valid['FundThreshold']?.helpTx }
+                    helperText={ valid['FundThreshold']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                       sx={{
                       m:1,

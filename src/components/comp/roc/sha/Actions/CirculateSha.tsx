@@ -51,7 +51,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           label="UrlOfDoc / CID in IPFS" 
           variant="outlined"
           error={ valid['UrlOfDoc']?.error }
-          helperText={ valid['UrlOfDoc']?.helpTx }
+          helperText={ valid['UrlOfDoc']?.helpTx ?? ' ' }
           onChange={e => {
             let input = HexParser( e.target.value );
             onlyHex('UrlOfDoc', input, 64, setValid); 
@@ -67,7 +67,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           label="DocHash" 
           variant="outlined"
           error={ valid['DocHash']?.error }
-          helperText={ valid['DocHash']?.helpTx }
+          helperText={ valid['DocHash']?.helpTx ?? ' ' }
           onChange={e => {
             let input = HexParser( e.target.value );
             onlyHex('DocHash', input, 64, setValid);

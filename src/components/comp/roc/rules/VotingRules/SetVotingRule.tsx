@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   Dialog,
+  FormHelperText,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxByte, MaxRatio, MaxSeqNo, MaxUserNo } from '../../../../../scripts/common';
@@ -119,9 +120,9 @@ export function strVRParser(hexVr: HexType):StrVotingRule {
   return rule;
 }
 
-export function vrCodifier(objVr: StrVotingRule ): HexType {
+export function vrCodifier(objVr: StrVotingRule, seq: number ): HexType {
   let hexVr: HexType = `0x${
-    (Number(objVr.seqOfRule).toString(16).padStart(4, '0')) +
+    (seq.toString(16).padStart(4, '0')) +
     (Number(objVr.qtyOfSubRule).toString(16).padStart(2, '0')) +
     (Number(objVr.seqOfSubRule).toString(16).padStart(2, '0')) +
     (Number(objVr.authority).toString(16).padStart(2, '0')) +
@@ -239,7 +240,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
 
               <AddRule 
                 sha={ sha } 
-                rule={ vrCodifier(objVR) } 
+                rule={ vrCodifier(objVR, seq) } 
                 isFinalized={ isFinalized }
                 valid={valid}
                 refresh={ refresh }
@@ -271,6 +272,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                       <MenuItem value={1}>ShareholdersMeeting</MenuItem>
                       <MenuItem value={2}>BoardMeeting</MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
 
@@ -280,6 +282,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     size='small'
                     label='Authority'
                     inputProps={{readOnly: true}}
+                    helperText=' '
                     sx={{
                       m:1,
                       minWidth: 218,
@@ -294,7 +297,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label={'HeadRatio ' + (isFinalized ? '(%)' : 'BP')}
                   error={ valid['HeadRatio']?.error }
-                  helperText={ valid['HeadRatio']?.helpTx }
+                  helperText={ valid['HeadRatio']?.helpTx ?? ' '}
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -316,7 +319,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label={'AmountRatio ' + (isFinalized ? '(%)' : 'BP')}
                   error={ valid['AmountRatio']?.error }
-                  helperText={ valid['AmountRatio']?.helpTx }
+                  helperText={ valid['AmountRatio']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -338,7 +341,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='ExecDaysForPutOpt'
                   error={ valid['ExecDaysForPutOpt']?.error }
-                  helperText={ valid['ExecDaysForPutOpt']?.helpTx }
+                  helperText={ valid['ExecDaysForPutOpt']?.helpTx ?? ' '}
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -364,6 +367,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='OnlyAttendance ?'
+                    helperText=' '
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -376,6 +380,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='ImpliedConsent ?'
+                    helperText=' '
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -388,6 +393,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='PartyAsConsent ?'
+                    helperText=' '
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -400,6 +406,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='AgainstShallBuy ?'
+                    helperText=' '
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -412,6 +419,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='Vetoer_1'
+                    helperText=' '
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -424,6 +432,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     variant='outlined'
                     size='small'
                     label='Vetoer_2'
+                    helperText=' '
                     inputProps={{readOnly: true}}
                     sx={{
                       m:1,
@@ -453,6 +462,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                       <MenuItem value={ '1' } > True </MenuItem>
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
                   <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
@@ -470,6 +480,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                       <MenuItem value={ '1' } > True </MenuItem>
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
                   <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
@@ -487,6 +498,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                       <MenuItem value={ '1' } > True </MenuItem>
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
                   <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
@@ -504,6 +516,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                       <MenuItem value={ '1' } > True </MenuItem>
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
                   <TextField 
@@ -511,7 +524,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     size='small'
                     label='Vetoer_1'
                     error={ valid['Vetoer_1']?.error }
-                    helperText={ valid['Vetoer_1']?.helpTx }
+                    helperText={ valid['Vetoer_1']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -534,7 +547,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     size='small'
                     label='Vetoer_2'
                     error={ valid['Vetoer_2']?.error }
-                    helperText={ valid['Vetoer_2']?.helpTx }
+                    helperText={ valid['Vetoer_2']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -562,7 +575,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='FRExecDays'
                   error={ valid['FRExecDays']?.error }
-                  helperText={ valid['FRExecDays']?.helpTx }
+                  helperText={ valid['FRExecDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -584,7 +597,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='DTExecDays'
                   error={ valid['DTExecDays']?.error }
-                  helperText={ valid['DTExecDays']?.helpTx }
+                  helperText={ valid['DTExecDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -606,7 +619,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='DTConfirmDays'
                   error={ valid['DTConfirmDays']?.error }
-                  helperText={ valid['DTConfirmDays']?.helpTx }
+                  helperText={ valid['DTConfirmDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -628,7 +641,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='InvExitDays'
                   error={ valid['InvExitDays']?.error }
-                  helperText={ valid['InvExitDays']?.helpTx }
+                  helperText={ valid['InvExitDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -650,7 +663,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='VotePrepareDays'
                   error={ valid['VotePrepareDays']?.error }
-                  helperText={ valid['VotePrepareDays']?.helpTx }
+                  helperText={ valid['VotePrepareDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -672,7 +685,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   size='small'
                   label='VotingDays'
                   error={ valid['VotingDays']?.error }
-                  helperText={ valid['VotingDays']?.helpTx }
+                  helperText={ valid['VotingDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

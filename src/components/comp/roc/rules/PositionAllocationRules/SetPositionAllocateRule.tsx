@@ -16,11 +16,12 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  FormHelperText,
 } from '@mui/material';
 import { AddRule } from './../AddRule';
 import { FormResults, dateParser, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { HexType, MaxSeqNo, MaxUserNo } from '../../../../../scripts/common';
+import { HexType, MaxSeqNo, MaxUserNo, SeqZero } from '../../../../../scripts/common';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 
@@ -42,9 +43,9 @@ export interface PosAllocateRule {
   data: string; 
 }
 
-export function prCodifier(rule: PosAllocateRule): HexType {
+export function prCodifier(rule: PosAllocateRule, seq:number): HexType {
   let hexRule: HexType = `0x${
-    (rule.seqOfRule.toString(16).padStart(4, '0')) +
+    (seq.toString(16).padStart(4, '0')) +
     (Number(rule.qtyOfSubRule).toString(16).padStart(2, '0')) +
     (Number(rule.seqOfSubRule).toString(16).padStart(2, '0')) +
     (rule.removePos ? '01' : '00' ) +
@@ -112,7 +113,10 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjPR(prParser(res))
+      res => {
+        setObjPR(prParser(res));
+        console.log('pr:', prParser(res));
+      }
     );
   }, [sha, seq, time]);  
 
@@ -155,7 +159,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
 
               <AddRule 
                 sha={ sha } 
-                rule={ prCodifier(objPR) } 
+                rule={ prCodifier(objPR, seq) } 
                 isFinalized={isFinalized}
                 valid={valid}
                 refresh={refresh}
@@ -175,7 +179,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   size='small'
                   label='QtyOfSubRule'
                   error={ valid['QtyOfSubRule']?.error }
-                  helperText={ valid['QtyOfSubRule']?.helpTx }
+                  helperText={ valid['QtyOfSubRule']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}                  
                   sx={{
                     m:1,
@@ -208,6 +212,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       <MenuItem value={ '1' } > True </MenuItem>
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
                   
@@ -230,7 +235,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   size='small'
                   label='SeqOfPos'
                   error={ valid['SeqOfPos']?.error }
-                  helperText={ valid['SeqOfPos']?.helpTx }
+                  helperText={ valid['SeqOfPos']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -265,6 +270,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       ))}
 
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
                 {isFinalized && (
@@ -290,7 +296,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   size='small'
                   label='Nominator'
                   error={ valid['Nominator']?.error }
-                  helperText={ valid['Nominator']?.helpTx }
+                  helperText={ valid['Nominator']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}           
                   sx={{
                     m:1,
@@ -325,6 +331,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                       ))}
 
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
                 {isFinalized && (
@@ -346,7 +353,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   size='small'
                   label='seqOfVR'
                   error={ valid['SeqOfVR']?.error }
-                  helperText={ valid['SeqOfVR']?.helpTx }
+                  helperText={ valid['SeqOfVR']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -367,6 +374,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                     label='EndDate'
                     size='small'
                     readOnly={isFinalized}
+                    helperText=' '
                     sx={{
                       m:1,
                       minWidth: 218,

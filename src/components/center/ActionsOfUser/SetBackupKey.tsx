@@ -47,7 +47,7 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
           variant='outlined'
           label='BackupKey'
           error={ valid['BackupKey']?.error }
-          helperText={ valid['BackupKey']?.helpTx }                    
+          helperText={ valid['BackupKey']?.helpTx ?? ' ' }                    
           sx={{
             m:1,
             minWidth: 456,

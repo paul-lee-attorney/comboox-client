@@ -160,7 +160,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   label="ClassOfShare" 
                   variant="outlined"
                   error={ valid['ClassOfShare']?.error }
-                  helperText={ valid['ClassOfShare']?.helpTx }
+                  helperText={ valid['ClassOfShare']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
@@ -182,7 +182,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   label="Shareholder" 
                   variant="outlined"
                   error={ valid['Shareholder']?.error }
-                  helperText={ valid['Shareholder']?.helpTx }
+                  helperText={ valid['Shareholder']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('Shareholder', input, MaxUserNo, setValid);
@@ -204,7 +204,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   label="PriceOfPaid (Cent)" 
                   variant="outlined"
                   error={ valid['PriceOfPaid']?.error }
-                  helperText={ valid['PriceOfPaid']?.helpTx }
+                  helperText={ valid['PriceOfPaid']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('PriceOfPaid', input, MaxPrice, setValid);
@@ -226,7 +226,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   label="PriceOfPar (Cent)" 
                   variant="outlined"
                   error={ valid['PriceOfPar']?.error }
-                  helperText={ valid['PriceOfPar']?.helpTx }
+                  helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('PriceOfPar', input, MaxPrice, setValid);
@@ -247,7 +247,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   label="SeqOfShare"
                   color='warning'
                   error={ valid['SeqOfShare']?.error }
-                  helperText={ valid['SeqOfShare']?.helpTx }
+                  helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
                   sx={{
                     m:1,
                     width: 188
@@ -308,7 +308,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   variant="outlined"
                   color='warning'
                   error={ valid['Paid']?.error }
-                  helperText={ valid['Paid']?.helpTx }
+                  helperText={ valid['Paid']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('Paid', input, MaxData, setValid);
@@ -331,7 +331,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   variant="outlined"
                   color='warning'
                   error={ valid['Par']?.error }
-                  helperText={ valid['Par']?.helpTx }
+                  helperText={ valid['Par']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('Par', input, MaxData, setValid);
@@ -353,7 +353,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   label="VotingWeight (%)" 
                   variant="outlined"
                   error={ valid['VotingWeight']?.error }
-                  helperText={ valid['VotingWeight']?.helpTx }
+                  helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
                     onlyNum('VotingWeight', input, MaxSeqNo, setValid);

@@ -68,7 +68,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
                 value={ logOps[cond.logicOpr] }
               />
 
-              {cond.logicOpr > 0 && (<>
+              {Number(cond.logicOpr) > 0 && (<>
 
                 <TextField 
                   variant='outlined'
@@ -96,7 +96,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
 
               </>)}
 
-              {Number(cond.logicOpr) > 2 && (<>
+              {Number(cond.logicOpr) > 0 && (<>
 
                 <TextField 
                   variant='outlined'
@@ -159,7 +159,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

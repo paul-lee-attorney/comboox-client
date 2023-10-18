@@ -13,6 +13,8 @@ import {
   Button,
   Dialog,
   DialogContent,
+  FormHelperText,
+  DialogActions,
 } from '@mui/material';
 import { HexType, MaxByte, MaxUserNo } from '../../../../../scripts/common';
 import { AddRule } from '../AddRule';
@@ -31,9 +33,9 @@ export interface GroupUpdateOrder {
   para: string;
 }
 
-export function guoCodifier(order: GroupUpdateOrder):HexType {
+export function guoCodifier(order: GroupUpdateOrder, seq:number):HexType {
   let hexGuo: HexType = `0x${
-    (Number(order.seqOfRule).toString(16).padStart(4, '0')) +
+    (seq.toString(16).padStart(4, '0')) +
     (Number(order.qtyOfSubRule).toString(16).padStart(2, '0')) +
     (Number(order.seqOfSubRule).toString(16).padStart(2, '0')) +
     (order.addMember ? '01' : '00') +
@@ -86,7 +88,10 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjGuo(guoParser(res))
+      res => {
+        setObjGuo(guoParser(res));
+        console.log('guo: ', guoParser(res));
+      }
     );
   }, [sha, seq, time]);
 
@@ -129,7 +134,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
 
               <AddRule 
                 sha={ sha }
-                rule={ guoCodifier(objGuo) }
+                rule={ guoCodifier(objGuo, seq) }
                 isFinalized = { isFinalized }
                 valid={valid}
                 refresh = { refresh }
@@ -146,7 +151,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   label='QtyOfSubRule'
                   size="small"
                   error={ valid['QtyOfSubRule']?.error }
-                  helperText={ valid['QtyOfSubRule']?.helpTx }
+                  helperText={ valid['QtyOfSubRule']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -179,6 +184,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                       <MenuItem value={ '1' } > True </MenuItem>
                       <MenuItem value={ '0' } > False </MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
 
@@ -201,7 +207,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   label='GroupRep'
                   size="small"
                   error={ valid['GroupRep']?.error }
-                  helperText={ valid['GroupRep']?.helpTx }
+                  helperText={ valid['GroupRep']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -223,7 +229,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   label='Members_1'
                   size="small"
                   error={ valid['Members_1']?.error }
-                  helperText={ valid['Members_1']?.helpTx }
+                  helperText={ valid['Members_1']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -249,7 +255,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   label='Members_2'
                   size="small"
                   error={ valid['Members_2']?.error }
-                  helperText={ valid['Members_2']?.helpTx }
+                  helperText={ valid['Members_2']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -275,7 +281,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   label='Members_3'
                   size="small"
                   error={ valid['Members_3']?.error }
-                  helperText={ valid['Members_3']?.helpTx }
+                  helperText={ valid['Members_3']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -301,7 +307,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   label='Members_4'
                   size="small"
                   error={ valid['Members_4']?.error }
-                  helperText={ valid['Members_4']?.helpTx }
+                  helperText={ valid['Members_4']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -328,6 +334,11 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
           </Paper>
 
         </DialogContent>
+
+        <DialogActions>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
+
       </Dialog>
     </> 
   )

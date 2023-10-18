@@ -6,6 +6,7 @@ import {
   Button, 
   Divider, 
   FormControl, 
+  FormHelperText, 
   InputLabel, 
   MenuItem, 
   Paper, 
@@ -105,6 +106,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
                     <MenuItem key={i} value={i.toString()} > {v.seqOfRule} - {typesOfDeal[Number(v.typeOfDeal) - 1]} </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>{' '}</FormHelperText>
               </FormControl>
 
               <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
@@ -120,6 +122,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
                     <MenuItem key={i} value={i.toString()} > {longSnParser(v.toString())} </MenuItem>
                   ))}
                 </Select>
+                <FormHelperText>{' '}</FormHelperText>
               </FormControl>
 
             </Stack>
@@ -129,7 +132,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
               label='SigHash'
               size="small"
               error={ valid['SigHash']?.error }
-              helperText={ valid['SigHash']?.helpTx }
+              helperText={ valid['SigHash']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 685,

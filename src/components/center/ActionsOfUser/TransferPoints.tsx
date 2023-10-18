@@ -78,7 +78,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           variant='outlined'
           label='To (Addr)'
           error={ valid['To(Addr)']?.error }
-          helperText={ valid['To(Addr)']?.helpTx }                                  
+          helperText={ valid['To(Addr)']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
             minWidth: 550,
@@ -96,7 +96,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           variant='outlined'
           label='Amount (CBP)' 
           error={ valid['Amt(CBP)']?.error }
-          helperText={ valid['Amt(CBP)']?.helpTx }                                  
+          helperText={ valid['Amt(CBP)']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
             minWidth: 218,
@@ -117,7 +117,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           variant='outlined'
           label='Amount (GLee)' 
           error={ valid['Amt(GLee)']?.error }
-          helperText={ valid['Amt(GLee)']?.helpTx }                                  
+          helperText={ valid['Amt(GLee)']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
             minWidth: 218,

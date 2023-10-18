@@ -39,6 +39,11 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
     }
   });
 
+  const handleClick = ()=>{
+    console.log('rule: ', rule);
+    write?.();
+  }
+
   return (
     <>
       {!isFinalized && (
@@ -51,7 +56,7 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
             sx={{ m: 1, minWidth: 120, height: 40 }} 
             variant="contained" 
             endIcon={<EditNote />}
-            onClick={()=> write?.()}
+            onClick={handleClick}
             size='small'
           >
             Update

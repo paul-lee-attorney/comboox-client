@@ -51,7 +51,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           label='Amount (Cent)'
           size="small"
           error={ valid['Amount']?.error }
-          helperText={ valid['Amount']?.helpTx }
+          helperText={ valid['Amount']?.helpTx ?? ' ' }
   
           sx={{
             m:1,

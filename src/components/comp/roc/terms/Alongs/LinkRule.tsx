@@ -144,7 +144,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
         </DialogContent>
 
         <DialogActions>
-          <Button onClick={()=>setOpen(false)}>Close</Button>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
         </DialogActions>
 
       </Dialog>

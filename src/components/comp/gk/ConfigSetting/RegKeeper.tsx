@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
 import { Create } from "@mui/icons-material";
 import { useGeneralKeeperRegKeeper } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
@@ -56,6 +56,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
               <MenuItem key={v} value={i} > {v} </MenuItem>
             ))}
           </Select>
+          <FormHelperText>{' '}</FormHelperText>
         </FormControl>
 
           <TextField 
@@ -63,7 +64,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
             label='Keeper'
             size="small"
             error={ valid['Keeper']?.error }
-            helperText={ valid['Keeper']?.helpTx }
+            helperText={ valid['Keeper']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,

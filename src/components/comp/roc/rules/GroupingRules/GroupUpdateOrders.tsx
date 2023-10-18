@@ -104,7 +104,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
         <DialogContent>
 
           <Paper elevation={3} sx={{ m:1 , p:1, border: 1, borderColor:'divider' }}>
-            <Box sx={{ width:1280 }}>
+            <Box sx={{ width:1180 }}>
 
               <Stack direction={'row'} sx={{ alignItems:'center' }}>
                 <Toolbar>
@@ -131,13 +131,13 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
                 )}
 
               </Stack>
-
+            <Grid container spacing={0.5} >
               {cp.map((v)=> (
                 <Grid key={v} item xs={3}>
                   <SetGroupUpdateOrder key={ v } sha={ sha }  seq={ v } isFinalized={isFinalized} time={time} refresh={refresh} />
                 </Grid>
               ))}
-            
+            </Grid>
             </Box>
           </Paper>
 

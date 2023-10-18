@@ -59,6 +59,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
     args: !hasError(valid) ? [ ATTORNEYS, gc] : undefined,
     onSuccess(data) {
       setLoading(true);
+      setOpen(false);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -100,7 +101,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
             value={ gc }
           />
         <FormHelperText id='setAcct-Help-Tx'>
-          { valid['AcctAddr']?.helpTx }
+          { valid['AcctAddr']?.helpTx ?? ' ' }
         </FormHelperText>                  
         </FormControl>
 

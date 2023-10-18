@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { Dispatch, SetStateAction, useState, } from "react";
 import { Create, } from "@mui/icons-material";
 import { useGeneralKeeperRegBook } from "../../../../generated";
@@ -64,6 +64,7 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
                 <MenuItem key={v} value={i} > {v} </MenuItem>
               ))}
             </Select>
+            <FormHelperText>{' '}</FormHelperText>
           </FormControl>
 
           <TextField 
@@ -71,7 +72,7 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
             label='Book'
             size="small"
             error={ valid['Book']?.error }
-            helperText={ valid['Book']?.helpTx }
+            helperText={ valid['Book']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,

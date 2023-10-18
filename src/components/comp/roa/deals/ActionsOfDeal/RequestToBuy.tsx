@@ -58,7 +58,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             label='PaidOfTarget'
             size="small"
             error={ valid['PaidOfTarget']?.error }
-            helperText={ valid['PaidOfTarget']?.helpTx }
+            helperText={ valid['PaidOfTarget']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 218,
@@ -76,7 +76,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             label='SeqOfPledge'
             size="small"
             error={ valid['SeqOfPledge']?.error }
-            helperText={ valid['SeqOfPledge']?.helpTx }
+            helperText={ valid['SeqOfPledge']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 218,

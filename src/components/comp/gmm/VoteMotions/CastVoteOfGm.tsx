@@ -10,6 +10,7 @@ import {
   Button, 
   Collapse, 
   FormControl, 
+  FormHelperText, 
   InputLabel, 
   MenuItem, 
   Paper, 
@@ -120,6 +121,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
               <MenuItem value={'2'}>Against</MenuItem>
               <MenuItem value={'3'}>Abstain</MenuItem>
             </Select>
+            <FormHelperText>{' '}</FormHelperText>
           </FormControl>
 
           <TextField 
@@ -128,7 +130,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
             label="SigHash / CID in IPFS" 
             variant="outlined"
             error={ valid['SigHash']?.error }
-            helperText={ valid['SigHash']?.helpTx }
+            helperText={ valid['SigHash']?.helpTx ?? ' ' }
             onChange={e => {
               let input = HexParser( e.target.value );
               onlyHex('SigHash', input, 64, setValid); 

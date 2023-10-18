@@ -69,7 +69,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='SeqOfShare'
               error={ valid['SeqOfShare']?.error }
-              helperText={ valid['SeqOfShare']?.helpTx }
+              helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -99,7 +99,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='DaysToMaturity'
               error={ valid['DaysToMaturity']?.error }
-              helperText={ valid['DaysToMaturity']?.helpTx }
+              helperText={ valid['DaysToMaturity']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -120,7 +120,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='GuaranteeDays'
               error={ valid['GuaranteeDays']?.error }
-              helperText={ valid['GuaranteeDays']?.helpTx }
+              helperText={ valid['GuaranteeDays']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -141,7 +141,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='ExecDays'
               error={ valid['ExecDays']?.error }
-              helperText={ valid['ExecDays']?.helpTx }
+              helperText={ valid['ExecDays']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -163,7 +163,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='Creditor'
               error={ valid['Creditor']?.error }
-              helperText={ valid['Creditor']?.helpTx }
+              helperText={ valid['Creditor']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -189,7 +189,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='Pledgor'
               error={ valid['Pledgor']?.error }
-              helperText={ valid['Pledgor']?.helpTx }
+              helperText={ valid['Pledgor']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -211,7 +211,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='PledgedPaid (Cent)'
               error={ valid['PledgedPaid']?.error }
-              helperText={ valid['PledgedPaid']?.helpTx }
+              helperText={ valid['PledgedPaid']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -233,7 +233,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='PledgedPar (Cent)'
               error={ valid['PledgedPar']?.error }
-              helperText={ valid['PledgedPar']?.helpTx }
+              helperText={ valid['PledgedPar']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -255,7 +255,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='GuaranteedAmount (Cent)'
               error={ valid['GuaranteedAmount']?.error }
-              helperText={ valid['GuaranteedAmount']?.helpTx }
+              helperText={ valid['GuaranteedAmount']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -277,7 +277,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               variant='outlined'
               label='Debtor'
               error={ valid['Debtor']?.error }
-              helperText={ valid['Debtor']?.helpTx }
+              helperText={ valid['Debtor']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,

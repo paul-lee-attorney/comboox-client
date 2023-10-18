@@ -46,7 +46,7 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
           variant='outlined'
           label='NewKeeper'
           error={ valid['NewKeeper']?.error }
-          helperText={ valid['NewKeeper']?.helpTx }
+          helperText={ valid['NewKeeper']?.helpTx ?? ' ' }
           sx={{
             m:1,
             mb:3,

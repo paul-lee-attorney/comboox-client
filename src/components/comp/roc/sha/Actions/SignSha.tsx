@@ -50,7 +50,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   }, [addr, signSha, setNextStep])
 
   return (
-    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'start'}}>
 
       <TextField
         sx={{ m: 1, minWidth: 650 }} 
@@ -58,7 +58,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         label="SigHash / CID in IPFS" 
         variant="outlined"
         error={ valid['SigHash']?.error }
-        helperText={ valid['SigHash']?.helpTx }
+        helperText={ valid['SigHash']?.helpTx ?? ' ' }
         onChange={e => {
           let input = HexParser( e.target.value );
           onlyHex('SigHash', input, 64, setValid);
@@ -74,7 +74,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         loadingPosition="end"
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
-        sx={{ m:1, height:40, minWidth:218 }}
+        sx={{ m:1, height:42, minWidth:218 }}
         onClick={()=>signSha?.()}
       >
         Sign Sha

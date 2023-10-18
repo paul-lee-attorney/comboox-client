@@ -67,7 +67,7 @@ export function TransferIPR() {
           variant='outlined'
           label='TypeOfDoc'
           error={ valid['TypeOfDoc']?.error }
-          helperText={ valid['TypeOfDoc']?.helpTx }                        
+          helperText={ valid['TypeOfDoc']?.helpTx ?? ' ' }                        
           sx={{
             m:1,
             minWidth: 128,
@@ -85,7 +85,7 @@ export function TransferIPR() {
           variant='outlined'
           label='Version'
           error={ valid['Version']?.error }
-          helperText={ valid['Version']?.helpTx }                        
+          helperText={ valid['Version']?.helpTx ?? ' ' }                        
           sx={{
             m:1,
             minWidth: 128,
@@ -103,7 +103,7 @@ export function TransferIPR() {
           variant='outlined'
           label='Transferee'
           error={ valid['Transferee']?.error }
-          helperText={ valid['Transferee']?.helpTx }                        
+          helperText={ valid['Transferee']?.helpTx ?? ' ' }                        
           sx={{
             m:1,
             minWidth: 128,

@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
-import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
@@ -68,7 +68,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               label='SeqOfVR'
               size="small"
               error={ valid['SeqOfVR']?.error }
-              helperText={ valid['SeqOfVR']?.helpTx }
+              helperText={ valid['SeqOfVR']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 width: 101,
@@ -96,6 +96,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
                   <MenuItem value={ '0' } > <b>{'ETH'}</b> </MenuItem>
                   <MenuItem value={ '1' } > <b>{'CBP'}</b> </MenuItem>
               </Select>
+              <FormHelperText>{' '}</FormHelperText>
             </FormControl>
 
             <TextField 
@@ -103,7 +104,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               label='To'
               size="small"
               error={ valid['To']?.error }
-              helperText={ valid['To']?.helpTx }              
+              helperText={ valid['To']?.helpTx ?? ' ' }              
               sx={{
                 m:1,
                 minWidth: 452,
@@ -129,7 +130,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               label='Amount'
               size="small"
               error={ valid['Amount']?.error }
-              helperText={ valid['Amount']?.helpTx }
+              helperText={ valid['Amount']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -165,7 +166,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               label='Executor'
               size="small"
               error={ valid['Executor']?.error }
-              helperText={ valid['Executor']?.helpTx }    
+              helperText={ valid['Executor']?.helpTx ?? ' ' }    
               sx={{
                 m:1,
                 minWidth: 218,

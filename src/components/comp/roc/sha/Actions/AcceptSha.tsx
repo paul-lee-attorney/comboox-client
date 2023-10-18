@@ -45,7 +45,7 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
         label="SigHash / CID in IPFS" 
         variant="outlined"
         error={ valid['SigHash']?.error }
-        helperText={ valid['SigHash']?.helpTx }
+        helperText={ valid['SigHash']?.helpTx ?? ' ' }
         onChange={e => {
           let input = HexParser( e.target.value );
           onlyHex('SigHash', input, 64, setValid);

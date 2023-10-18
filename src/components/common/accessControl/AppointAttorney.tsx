@@ -91,7 +91,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
             value={ acct }
           />
           <FormHelperText id='setAcct-Help-Tx'>
-            { valid['AcctAddr']?.helpTx }
+            { valid['AcctAddr']?.helpTx ?? ' ' }
           </FormHelperText>
         </FormControl>
 

@@ -86,7 +86,7 @@ export function CreateComp() {
           value={ dk }
         />
         <FormHelperText id='setBookeeper-input-helper-text'>
-          { valid['Bookeeper']?.helpTx }
+          { valid['Bookeeper']?.helpTx ?? ' ' }
         </FormHelperText>
       </FormControl>
 

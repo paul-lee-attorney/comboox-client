@@ -1,5 +1,5 @@
 
-import { Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
 import { useRegCenterLockConsideration } from '../../../generated';
 
@@ -115,7 +115,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               variant='outlined'
               label='To'
               error={ valid['To']?.error }
-              helperText={ valid['To']?.helpTx }              
+              helperText={ valid['To']?.helpTx ?? ' ' }              
               sx={{
                 m:1,
                 minWidth: 218,
@@ -136,7 +136,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               variant='outlined'
               label='Amount (CBP)'
               error={ valid['Amount(CBP)']?.error }
-              helperText={ valid['Amount(CBP)']?.helpTx }                            sx={{
+              helperText={ valid['Amount(CBP)']?.helpTx ?? ' ' }                            sx={{
                 m:1,
                 minWidth: 218,
               }}
@@ -156,7 +156,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               variant='outlined'
               label='Amount (GLee)'
               error={ valid['Amount(GLee)']?.error }
-              helperText={ valid['Amount(GLee)']?.helpTx }
+              helperText={ valid['Amount(GLee)']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -195,7 +195,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               variant='outlined'
               label='HashLock'
               error={ valid['HashLock']?.error }
-              helperText={ valid['HashLock']?.helpTx }
+              helperText={ valid['HashLock']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 685,
@@ -216,7 +216,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               variant='outlined'
               label='CounterLockerAddress'
               error={ valid['CounterLockerAddress']?.error }
-              helperText={ valid['CounterLockerAddress']?.helpTx }              
+              helperText={ valid['CounterLockerAddress']?.helpTx ?? ' ' }              
               sx={{
                 m:1,
                 minWidth: 450,
@@ -243,6 +243,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   <MenuItem key={v} value={v} >{v}</MenuItem>
                 ))}
               </Select>
+              <FormHelperText>{' '}</FormHelperText>
             </FormControl>
 
           </Stack>
@@ -273,7 +274,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 variant='outlined'
                 label='InvestmentAgreement'
                 error={ valid['InvestmentAgreement']?.error }
-                helperText={ valid['InvestmentAgreement']?.helpTx }
+                helperText={ valid['InvestmentAgreement']?.helpTx ?? ' ' }
                 sx={{
                   m:1,
                   minWidth: 450,
@@ -295,7 +296,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 variant='outlined'
                 label='SeqOfDeal'
                 error={ valid['SeqOfDeal']?.error }
-                helperText={ valid['SeqOfDeal']?.helpTx }                
+                helperText={ valid['SeqOfDeal']?.helpTx ?? ' ' }                
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -331,7 +332,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 }
 
                 error={ valid['SeqInfo']?.error }
-                helperText={ valid['SeqInfo']?.helpTx }                
+                helperText={ valid['SeqInfo']?.helpTx ?? ' ' }                
 
                 sx={{
                   m:1,
@@ -357,7 +358,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   label={func == 'releaseSwapOrder' ? 'SeqOfBrief' : 'SeqOfPledge'}
 
                   error={ valid['SeqConsider']?.error }
-                  helperText={ valid['SeqConsider']?.helpTx }
+                  helperText={ valid['SeqConsider']?.helpTx ?? ' ' }
 
                   sx={{
                     m:1,

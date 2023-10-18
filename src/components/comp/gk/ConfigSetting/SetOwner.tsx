@@ -54,7 +54,7 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
             label='DocAddress'
             size="small"
             error={ valid['DocAddress']?.error }
-            helperText={ valid['DocAddress']?.helpTx }
+            helperText={ valid['DocAddress']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,
@@ -72,7 +72,7 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
             label='Owner'
             size="small"
             error={ valid['Owner']?.error }
-            helperText={ valid['Owner']?.helpTx }                        
+            helperText={ valid['Owner']?.helpTx ?? ' ' }                        
             sx={{
               m:1,
               minWidth: 480,

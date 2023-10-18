@@ -52,7 +52,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='Buyer'
           error={ valid['Buyer']?.error }
-          helperText={ valid['Buyer']?.helpTx }  
+          helperText={ valid['Buyer']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
@@ -70,7 +70,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='Amount'
           error={ valid['Amount']?.error }
-          helperText={ valid['Amount']?.helpTx }  
+          helperText={ valid['Amount']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,

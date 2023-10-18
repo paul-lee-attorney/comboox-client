@@ -49,7 +49,7 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
             label='DocAddress'
             size="small"
             error={ valid['DocAddress']?.error }
-            helperText={ valid['DocAddress']?.helpTx }
+            helperText={ valid['DocAddress']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,
@@ -67,7 +67,7 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
             label='DirectKeeper'
             size="small"
             error={ valid['DirectKeeper']?.error }
-            helperText={ valid['DirectKeeper']?.helpTx }
+            helperText={ valid['DirectKeeper']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,

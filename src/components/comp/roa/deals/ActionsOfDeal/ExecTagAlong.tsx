@@ -76,7 +76,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 size="small"
                 label='SeqOfTargetShare'
                 error={ valid['SeqOfTarget']?.error }
-                helperText={ valid['SeqOfTarget']?.helpTx }
+                helperText={ valid['SeqOfTarget']?.helpTx ?? ' ' }
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -97,7 +97,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 size="small"
                 label='Paid (Cent)'
                 error={ valid['Paid']?.error }
-                helperText={ valid['Paid']?.helpTx }
+                helperText={ valid['Paid']?.helpTx ?? ' ' }
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -118,7 +118,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 size="small"
                 label='Par (Cent)'
                 error={ valid['Par']?.error }
-                helperText={ valid['Par']?.helpTx }                
+                helperText={ valid['Par']?.helpTx ?? ' ' }                
                 sx={{
                   m:1,
                   minWidth: 218,
@@ -141,7 +141,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
                 label='SigHash'
                 size="small"
                 error={ valid['SigHash']?.error }
-                helperText={ valid['SigHash']?.helpTx }                
+                helperText={ valid['SigHash']?.helpTx ?? ' ' }                
                 sx={{
                   m:1,
                   minWidth: 685,

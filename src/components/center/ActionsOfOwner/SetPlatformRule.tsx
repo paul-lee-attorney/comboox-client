@@ -47,7 +47,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           variant='outlined'
           label='EOA_Rewards(GLee)'
           error = { valid['EOA_Rewards']?.error }
-          helperText = { valid['EOA_Rewards']?.helpTx }
+          helperText = { valid['EOA_Rewards']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 128,
@@ -68,7 +68,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           variant='outlined'
           label='COA_Rewards(GLee)'
           error = { valid['COA_Rewards']?.error }
-          helperText = { valid['COA_Rewards']?.helpTx }
+          helperText = { valid['COA_Rewards']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 128,
@@ -89,7 +89,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           variant='outlined'
           label='FloorOfRoyalty(GLee)'
           error = { valid['FloorOfRoyalty']?.error }
-          helperText = { valid['FloorOfRoyalty']?.helpTx }
+          helperText = { valid['FloorOfRoyalty']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 128,
@@ -110,7 +110,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           variant='outlined'
           label='OffRateOnCommission (BP)'
           error = { valid['OffRate']?.error }
-          helperText = { valid['OffRate']?.helpTx }
+          helperText = { valid['OffRate']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 128,

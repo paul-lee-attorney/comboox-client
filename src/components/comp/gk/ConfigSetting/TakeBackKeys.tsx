@@ -48,7 +48,7 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
             label='DocAddress'
             size="small"
             error={ valid['DocAddress']?.error }
-            helperText={ valid['DocAddress']?.helpTx }
+            helperText={ valid['DocAddress']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,
@@ -66,7 +66,7 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
             label='TargetBook'
             size="small"
             error={ valid['TargetBook']?.error }
-            helperText={ valid['TargetBook']?.helpTx }
+            helperText={ valid['TargetBook']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 480,

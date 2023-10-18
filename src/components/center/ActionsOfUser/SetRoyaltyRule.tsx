@@ -47,7 +47,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           variant='outlined'
           label='DiscountRate (BP)'
           error={ valid['DiscountRate']?.error }
-          helperText={ valid['DiscountRate']?.helpTx }                        
+          helperText={ valid['DiscountRate']?.helpTx ?? ' ' }                        
           sx={{
             m:1,
             minWidth: 128,
@@ -68,7 +68,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           variant='outlined'
           label='GiftAmt (GLee)'
           error={ valid['GiftAmt']?.error }
-          helperText={ valid['GiftAmt']?.helpTx }                                  
+          helperText={ valid['GiftAmt']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
             minWidth: 128,
@@ -89,7 +89,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           variant='outlined'
           label='CouponAmt (GLee)'
           error={ valid['CouponAmt']?.error }
-          helperText={ valid['CouponAmt']?.helpTx }                                            
+          helperText={ valid['CouponAmt']?.helpTx ?? ' ' }                                            
           sx={{
             m:1,
             minWidth: 128,

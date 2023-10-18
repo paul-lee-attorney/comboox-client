@@ -50,7 +50,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='ExtensionDays'
           error={ valid['ExtensionDays']?.error }
-          helperText={ valid['ExtensionDays']?.helpTx }  
+          helperText={ valid['ExtensionDays']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,

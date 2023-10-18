@@ -17,6 +17,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormHelperText,
 } from "@mui/material";
 
 import { AddrZero, HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
@@ -160,9 +161,11 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   });
   
   useEffect(()=>{
-    getOpts(term).then(
-      res => setOpts(res)
-    );
+    if (term != AddrZero) {
+      getOpts(term).then(
+        res => setOpts(res)
+      );
+    }
   }, [term, time]);
 
   return (
@@ -229,6 +232,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                             <MenuItem key={i} value={ i } >{ v }</MenuItem>  
                           ))}
                         </Select>
+                        <FormHelperText>{' '}</FormHelperText>
                       </FormControl>
 
                       <TextField 
@@ -236,7 +240,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='ClassOfShare'
                         size="small"
                         error={ valid['ClassOfShare']?.error }
-                        helperText={ valid['ClassOfShare']?.helpTx }
+                        helperText={ valid['ClassOfShare']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -257,7 +261,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='Paid'
                         size="small"
                         error={ valid['Paid']?.error }
-                        helperText={ valid['Paid']?.helpTx }
+                        helperText={ valid['Paid']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -278,7 +282,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='Par'
                         size="small"
                         error={ valid['Par']?.error }
-                        helperText={ valid['Par']?.helpTx }
+                        helperText={ valid['Par']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -299,7 +303,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='Rightholder'
                         size="small"
                         error={ valid['Rightholder']?.error }
-                        helperText={ valid['Rightholder']?.helpTx }
+                        helperText={ valid['Rightholder']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -324,7 +328,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='RateOfOption'
                         size="small"
                         error={ valid['RateOfOption']?.error }
-                        helperText={ valid['RateOfOption']?.helpTx }
+                        helperText={ valid['RateOfOption']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -343,6 +347,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <DateTimeField
                         label='TriggerDate'
                         size="small"
+                        helperText=' '
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -360,7 +365,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='ExecDays'
                         size="small"
                         error={ valid['ExecDays']?.error }
-                        helperText={ valid['ExecDays']?.helpTx }
+                        helperText={ valid['ExecDays']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -381,7 +386,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='ClosingDays'
                         size="small"
                         error={ valid['ClosingDays']?.error }
-                        helperText={ valid['ClosingDays']?.helpTx }
+                        helperText={ valid['ClosingDays']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -402,7 +407,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='Obligor'
                         size="small"
                         error={ valid['Obligor']?.error }
-                        helperText={ valid['Obligor']?.helpTx }
+                        helperText={ valid['Obligor']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -441,6 +446,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                               <MenuItem key={i} value={ i } >{ v }</MenuItem>  
                             ))}
                           </Select>
+                          <FormHelperText>{' '}</FormHelperText>
                         </FormControl>
                     
                         <FormControl variant="outlined" sx={{ m: 1, minWidth: 128 }}>
@@ -460,6 +466,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                               <MenuItem key={i} value={ i } >{ v }</MenuItem>  
                             ))}
                           </Select>
+                          <FormHelperText>{' '}</FormHelperText>
                         </FormControl>
 
                         <TextField 
@@ -467,7 +474,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           label='Parameter_1'
                           size="small"
                           error={ valid['Parameter_1']?.error }
-                          helperText={ valid['Parameter_1']?.helpTx }
+                          helperText={ valid['Parameter_1']?.helpTx ?? ' ' }
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -502,6 +509,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                               <MenuItem key={i} value={ i } >{ v }</MenuItem>  
                             ))}
                           </Select>
+                          <FormHelperText>{' '}</FormHelperText>
                         </FormControl>
 
                         <TextField 
@@ -509,7 +517,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           label='Parameter_2'
                           size="small"
                           error={ valid['Parameter_2']?.error }
-                          helperText={ valid['Parameter_2']?.helpTx }
+                          helperText={ valid['Parameter_2']?.helpTx ?? ' ' }
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -546,6 +554,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                               <MenuItem key={i} value={ i } >{ v }</MenuItem>  
                             ))}
                           </Select>
+                          <FormHelperText>{' '}</FormHelperText>
                         </FormControl>
 
                         <TextField 
@@ -553,7 +562,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           label='Parameter_3'
                           size="small"
                           error={ valid['Parameter_3']?.error }
-                          helperText={ valid['Parameter_3']?.helpTx }
+                          helperText={ valid['Parameter_3']?.helpTx ?? ' ' }
                           sx={{
                             m:1,
                             minWidth: 218,
@@ -579,7 +588,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                   <Divider sx={{ m:1 }} flexItem />
 
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+                  <Stack direction={'row'} sx={{ alignItems:'start' }}>      
 
                     <Tooltip
                       title='Add Option'
@@ -588,7 +597,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     >
                       <IconButton 
                         disabled={ addOptLoading || hasError(valid) || loadingAdd}
-                        sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                        sx={{width: 20, height: 20, mt:2, ml: 5 }} 
                         onClick={ () => addOpt?.() }
                         color="primary"
                       >
@@ -601,7 +610,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       label='SeqOfOption'
                       size="small"
                       error={ valid['SeqOfOption']?.error }
-                      helperText={ valid['SeqOfOption']?.helpTx }
+                      helperText={ valid['SeqOfOption']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -624,7 +633,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     >           
                       <IconButton
                         disabled={ removeOptLoading || hasError(valid) || loadingRemove} 
-                        sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                        sx={{width: 20, height: 20, mt:2, mr: 10, }} 
                         onClick={ () => removeOpt?.() }
                         color="primary"
                       >
@@ -639,7 +648,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     >
                       <IconButton 
                         disabled={ addObligorLoading || hasError(valid) || loadingAddObr}
-                        sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                        sx={{width: 20, height: 20, mt:2, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
                       >
@@ -653,7 +662,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       label='Obligor'
                       size="small"
                       error={ valid['Obligor']?.error }
-                      helperText={ valid['Obligor']?.helpTx }
+                      helperText={ valid['Obligor']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -674,7 +683,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                       <IconButton
                         disabled={ removeObligorLoading || hasError(valid) || loadingRemoveObr} 
-                        sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                        sx={{width: 20, height: 20, mt:2, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"
                       >

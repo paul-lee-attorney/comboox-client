@@ -49,7 +49,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
         variant='filled'
         label='Delegater'
         error={ valid['Delegater']?.error }
-        helperText={ valid['Delegater']?.helpTx }
+        helperText={ valid['Delegater']?.helpTx ?? ' ' }
         sx={{
           m:1,
           minWidth: 218,

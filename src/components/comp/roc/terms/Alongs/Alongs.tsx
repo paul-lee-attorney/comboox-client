@@ -17,6 +17,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  FormHelperText,
 } from "@mui/material";
 
 import { AddrZero, HexType, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
@@ -143,9 +144,11 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
   });
 
   useEffect(()=>{
-    getLinks(term).then(
-      ls => setLinks(ls)
-    );
+    if (term != AddrZero) {
+      getLinks(term).then(
+        ls => setLinks(ls)
+      );
+    }
   }, [term, time]);
 
   return (
@@ -196,6 +199,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
 
                       <DateTimeField
                         label='TriggerDate'
+                        helperText=' '
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -214,7 +218,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         label='EffectiveDays'
                         size="small"
                         error={ valid['EffectiveDays']?.error }
-                        helperText={ valid['EffectiveDays']?.helpTx }
+                        helperText={ valid['EffectiveDays']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -235,7 +239,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         label='ShareRatioThreshold (BP)'
                         size="small"
                         error={ valid['ShareRatioThreshold']?.error }
-                        helperText={ valid['ShareRatioThreshold']?.helpTx }
+                        helperText={ valid['ShareRatioThreshold']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -272,6 +276,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                             <MenuItem key={i} value={ i } >{ v }</MenuItem>  
                           ))}
                         </Select>
+                        <FormHelperText>{' '}</FormHelperText>
                       </FormControl>
 
                       <TextField 
@@ -279,7 +284,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         label='Rate'
                         size="small"
                         error={ valid['Rate']?.error }
-                        helperText={ valid['Rate']?.helpTx }
+                        helperText={ valid['Rate']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -311,6 +316,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                           <MenuItem value={ '1' } > True </MenuItem>  
                           <MenuItem value={ '0' } > False </MenuItem>  
                         </Select>
+                        <FormHelperText>{' '}</FormHelperText>
                       </FormControl>
 
                     </Stack>
@@ -320,7 +326,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                   <Divider orientation="horizontal" sx={{ m:1 }} flexItem />
 
 
-                  <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+                  <Stack direction={'row'} sx={{ alignItems:'start' }}>      
 
                     <Tooltip
                       title='Add DragAlong'
@@ -329,7 +335,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                     >
                       <IconButton 
                         disabled={ addLinkLoading || hasError(valid) || loadingAdd}
-                        sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                        sx={{width: 20, height: 20, mt: 2, ml: 5 }} 
                         onClick={ () => addLink?.() }
                         color="primary"
                       >
@@ -342,7 +348,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       label='Drager'
                       size="small"
                       error={ valid['Drager']?.error }
-                      helperText={ valid['Drager']?.helpTx }
+                      helperText={ valid['Drager']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -362,7 +368,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                     >           
                       <IconButton
                         disabled={ removeLinkLoading || hasError(valid) || loadingRemove} 
-                        sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                        sx={{width: 20, height: 20, mt: 2, mr: 10, }} 
                         onClick={ () => removeLink?.() }
                         color="primary"
                       >
@@ -377,7 +383,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                     >
                       <IconButton 
                         disabled={ addFollowerLoading || hasError(valid) || loadingAddFlr}
-                        sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                        sx={{width: 20, height: 20, mt:2, ml: 10,}} 
                         onClick={ () => addFollower?.() }
                         color="primary"
                       >
@@ -391,7 +397,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       label='Follower'
                       size="small"
                       error={ valid['Follower']?.error }
-                      helperText={ valid['Follower']?.helpTx }
+                      helperText={ valid['Follower']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -412,7 +418,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
 
                       <IconButton
                         disabled={ removeFollowerLoading || hasError(valid) || loadingRemoveFlr} 
-                        sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                        sx={{width: 20, height: 20, mt:2, mr: 10}} 
                         onClick={ () => removeFollower?.() }
                         color="primary"
                       >

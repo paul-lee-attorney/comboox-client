@@ -47,7 +47,7 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
           variant='outlined'
           label='NewOwner'
           error = { valid['NewOwner']?.error }
-          helperText = { valid['NewOwner']?.helpTx }
+          helperText = { valid['NewOwner']?.helpTx ?? ' ' }
           
           sx={{
             m:1,

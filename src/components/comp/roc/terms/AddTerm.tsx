@@ -75,13 +75,13 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
   return (
     <>
       { !isCreated && (
-        <Stack direction={'row'} sx={{ alignItems:'center' }}>
+        <Stack direction={'row'} sx={{ alignItems:'start' }}>
           <TextField 
             variant='outlined'
             label='Version'
             size='small'
             error={ valid['Version']?.error }
-            helperText={ valid['Version']?.helpTx }
+            helperText={ valid['Version']?.helpTx ?? ' ' }
             sx={{
               m:1,
               ml:3,
@@ -101,6 +101,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             loadingPosition="end"
             variant="contained"
             sx={{
+              m:1,
               mr: 5,
               height: 40,
             }}

@@ -50,7 +50,7 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='HashLock'
           error={ valid['HashLock']?.error }
-          helperText={ valid['HashLock']?.helpTx }  
+          helperText={ valid['HashLock']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 688,

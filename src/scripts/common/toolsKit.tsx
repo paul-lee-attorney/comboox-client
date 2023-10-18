@@ -223,7 +223,7 @@ export function onlyNum(id: string, input: string, max: bigint, setValid:Dispatc
   let overflow: boolean = error
                         ? false
                         : max == 0n
-                          ? true
+                          ? false
                           : BigInt(input) > max;
 
   let result:Result = {
@@ -232,7 +232,7 @@ export function onlyNum(id: string, input: string, max: bigint, setValid:Dispatc
           ? 'Only Number'
           : overflow
             ? 'Over Flow'
-            : '',
+            : ' ',
   }
 
   setValid( v => {
@@ -248,7 +248,7 @@ export function onlyHex(id: string, input: string, len: number, setValid:Dispatc
   let overflow: boolean = error
                         ? false
                         : len == 0
-                          ? true
+                          ? false
                           : input.substring(0,2) == '0x'
                               ? input.length != (len + 2)
                               : input.length != len;
@@ -259,7 +259,7 @@ export function onlyHex(id: string, input: string, len: number, setValid:Dispatc
           ? 'Only Hex'
           : overflow
             ? 'Incorrect Length'
-            : '', 
+            : ' ', 
   };
 
   setValid( v => {

@@ -119,7 +119,7 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
               label="MaxQtyOfMembers" 
               variant="outlined"
               error={ valid['MaxQty']?.error }
-              helperText={ valid['MaxQty']?.helpTx }
+              helperText={ valid['MaxQty']?.helpTx ?? ' ' }
               onChange={(e) => {
                 let input = e.target.value;
                 onlyNum('MaxQty', input, MaxSeqNo, setValid);

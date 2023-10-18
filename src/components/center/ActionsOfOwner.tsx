@@ -1,4 +1,4 @@
-import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
+import { Collapse, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { useState } from "react";
 
 import { SetPlatformRule } from "./ActionsOfOwner/SetPlatformRule";
@@ -46,6 +46,7 @@ export function ActionsOfOwner({ refresh }: ActionsOfOwnerProps) {
               <MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>
             ))}
           </Select>
+          <FormHelperText>{' '}</FormHelperText>
         </FormControl>
 
       </Stack>

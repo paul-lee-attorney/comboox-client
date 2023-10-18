@@ -82,7 +82,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='Buyer'
           error={ valid['Buyer']?.error }
-          helperText={ valid['Buyer']?.helpTx }
+          helperText={ valid['Buyer']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -103,7 +103,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='GroupRepOfBuyer'
           error={ valid['GroupOfBuyer']?.error }
-          helperText={ valid['GroupOfBuyer']?.helpTx }
+          helperText={ valid['GroupOfBuyer']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -124,7 +124,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='PriceOfPaid'
           error={ valid['PriceOfPaid']?.error }
-          helperText={ valid['PriceOfPaid']?.helpTx }
+          helperText={ valid['PriceOfPaid']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -145,7 +145,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           variant='outlined'
           label='PriceOfPar'
           error={ valid['PriceOfPar']?.error }
-          helperText={ valid['PriceOfPar']?.helpTx }
+          helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,

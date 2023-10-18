@@ -78,7 +78,7 @@ function RegisterOfShares() {
 
             <tr>        
               <td colSpan={2}>
-                <Stack direction='row' sx={{ alignItems:'center' }} >
+                <Stack direction='row' sx={{ alignItems:'start' }} >
 
                   <TextField 
                     sx={{ m: 1, minWidth: 218 }} 
@@ -86,7 +86,7 @@ function RegisterOfShares() {
                     label="seqOfShare" 
                     variant="outlined"
                     error={ valid['SeqOfShare']?.error }
-                    helperText={ valid['SeqOfShare']?.helpTx }          
+                    helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }          
                     onChange={(e) => {
                       let input = e.target.value;
                       onlyNum('SeqOfShare', input, MaxPrice, setValid);

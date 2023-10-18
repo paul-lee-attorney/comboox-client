@@ -49,7 +49,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           size="small"
           label='GroupRep'
           error={ valid['GroupRep']?.error }
-          helperText={ valid['GroupRep']?.helpTx }
+          helperText={ valid['GroupRep']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -67,7 +67,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           label='IdentityInfoHash'
           size="small"
           error={ valid['IDHash']?.error }
-          helperText={ valid['IDHash']?.helpTx }
+          helperText={ valid['IDHash']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 685,

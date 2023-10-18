@@ -86,7 +86,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           variant="outlined"
           label='To'
           error={ valid['To']?.error }
-          helperText={ valid['To']?.helpTx }          
+          helperText={ valid['To']?.helpTx ?? ' ' }          
           sx={{
             m:1,
             minWidth: 128,
@@ -104,7 +104,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           variant="outlined"
           label='Amount (CBP)'
           error={ valid['Amount(CBP)']?.error }
-          helperText={ valid['Amount(CBP)']?.helpTx }          
+          helperText={ valid['Amount(CBP)']?.helpTx ?? ' ' }          
           sx={{
             m:1,
             minWidth: 128,
@@ -125,7 +125,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           variant="outlined"
           label='Amount (GLee)'
           error={ valid['Amount(GLee)']?.error }
-          helperText={ valid['Amount(GLee)']?.helpTx }          
+          helperText={ valid['Amount(GLee)']?.helpTx ?? ' ' }          
           sx={{
             m:1,
             minWidth: 128,

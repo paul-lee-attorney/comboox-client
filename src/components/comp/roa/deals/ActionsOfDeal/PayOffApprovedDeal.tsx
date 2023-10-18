@@ -54,7 +54,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
             label='Consideration (GWei)'
             size="small"
             error={ valid['Consideration']?.error }
-            helperText={ valid['Consideration']?.helpTx }
+            helperText={ valid['Consideration']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 456,

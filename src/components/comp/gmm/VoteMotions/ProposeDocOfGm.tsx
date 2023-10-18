@@ -44,13 +44,13 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   });
   
   return (
-    <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'stretch'}}>
+    <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'start'}}>
       <TextField 
         variant='outlined'
         label='Executor'
         size="small"
         error={ valid['Executor']?.error }
-        helperText={ valid['Executor']?.helpTx }
+        helperText={ valid['Executor']?.helpTx ?? ' ' }
         sx={{
           m:1,
           minWidth: 218,

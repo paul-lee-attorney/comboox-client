@@ -14,6 +14,7 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  FormHelperText,
 } from '@mui/material';
 import { AddRule } from '../AddRule'
 import { HexType, MaxUserNo } from '../../../../../scripts/common';
@@ -35,9 +36,9 @@ export interface FirstRefusalRule {
   argu: string;
 }
 
-export function frCodifier(rule: FirstRefusalRule): HexType {
+export function frCodifier(rule: FirstRefusalRule, seq: number): HexType {
   let hexFR: HexType = `0x${
-    (Number(rule.seqOfRule).toString(16).padStart(4, '0')) +
+    (seq.toString(16).padStart(4, '0')) +
     (Number(rule.qtyOfSubRule).toString(16).padStart(2, '0')) +
     (Number(rule.seqOfSubRule).toString(16).padStart(2, '0')) +
     (Number(rule.typeOfDeal).toString(16).padStart(2, '0')) +
@@ -229,6 +230,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                         <MenuItem key={i} value={i+1}>{v}</MenuItem>
                       ))}
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
 
@@ -247,6 +249,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                       <MenuItem value={'1'}>True</MenuItem>
                       <MenuItem value={'0'}>False</MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
 
@@ -265,6 +268,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                       <MenuItem value={'1'}>True</MenuItem>
                       <MenuItem value={'0'}>False</MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
                   <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
@@ -282,6 +286,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                       <MenuItem value={'1'}>True</MenuItem>
                       <MenuItem value={'0'}>False</MenuItem>
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
 
                 </Stack>
@@ -294,7 +299,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   size='small'
                   label='Rightholder_1'
                   error={ valid['Rightholder_1']?.error }
-                  helperText={ valid['Rightholder_1']?.helpTx }
+                  helperText={ valid['Rightholder_1']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -317,7 +322,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   size='small'
                   label='Rightholder_2'
                   error={ valid['Rightholder_2']?.error }
-                  helperText={ valid['Rightholder_2']?.helpTx }
+                  helperText={ valid['Rightholder_2']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -340,7 +345,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   size='small'
                   label='Rightholder_3'
                   error={ valid['Rightholder_3']?.error }
-                  helperText={ valid['Rightholder_3']?.helpTx }
+                  helperText={ valid['Rightholder_3']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -363,7 +368,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   size='small'
                   label='Rightholder_4'
                   error={ valid['Rightholder_4']?.error }
-                  helperText={ valid['Rightholder_4']?.helpTx }
+                  helperText={ valid['Rightholder_4']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

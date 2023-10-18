@@ -74,7 +74,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size="small"
           label='Paid (Cent)'
           error={ valid['Paid']?.error }
-          helperText={ valid['Paid']?.helpTx }
+          helperText={ valid['Paid']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -96,7 +96,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size="small"
           label='Price (Cent)'
           error={ valid['Price']?.error }
-          helperText={ valid['Price']?.helpTx }
+          helperText={ valid['Price']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -118,7 +118,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           label='Consideration (GWei)'
           size="small"
           error={ valid['Consideration']?.error }
-          helperText={ valid['Consideration']?.helpTx }
+          helperText={ valid['Consideration']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 456,

@@ -61,7 +61,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size="small"
           label='ExecHours'
           error={ valid['ExecHours']?.error }
-          helperText={ valid['ExecHours']?.helpTx }
+          helperText={ valid['ExecHours']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -83,7 +83,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size="small"
           label='SeqOfListingRule'
           error={ valid['SeqOfLR']?.error }
-          helperText={ valid['SeqOfLR']?.helpTx }
+          helperText={ valid['SeqOfLR']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -105,7 +105,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size="small"
           label='Paid'
           error={ valid['Paid']?.error }
-          helperText={ valid['Paid']?.helpTx }
+          helperText={ valid['Paid']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -127,7 +127,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size="small"
           label='Price'
           error={ valid['Price']?.error }
-          helperText={ valid['Price']?.helpTx }
+          helperText={ valid['Price']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,

@@ -135,9 +135,11 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   });
   
   useEffect(()=>{
-    getLockers(term).then(
-      ls => setLockers(ls)
-    );
+    if (term != AddrZero) {
+      getLockers(term).then(
+        ls => setLockers(ls)
+      );
+    }
   }, [term, time]);
 
   return (
@@ -183,7 +185,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                 {term != AddrZero && !isFinalized && (
                   <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-                    <Stack direction={'row'} sx={{ alignItems:'center' }}>      
+                    <Stack direction={'row'} sx={{ alignItems:'start' }}>      
 
                       <Tooltip
                         title='Add Locker'
@@ -192,7 +194,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       >
                         <IconButton 
                           disabled={ addLockerLoading || hasError(valid) || loadingAdd}
-                          sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                          sx={{width: 20, height: 20, mt: 2, ml: 5 }} 
                           onClick={ () => addLocker?.() }
                           color="primary"
                         >
@@ -205,7 +207,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='SeqOfShare'
                         size="small"
                         error={ valid['SeqOfShare']?.error }
-                        helperText={ valid['SeqOfShare']?.helpTx }
+                        helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -220,6 +222,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                       <DateTimeField
                         label='ExpireDate'
+                        helperText=' '
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -237,7 +240,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       >           
                         <IconButton
                           disabled={ removeLockerLoading || hasError(valid) || loadingRemove} 
-                          sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                          sx={{width: 20, height: 20, mt: 2, mr: 10, }} 
                           onClick={ () => removeLocker?.() }
                           color="primary"
                         >
@@ -252,7 +255,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       >
                         <IconButton 
                           disabled={ addKeyholderLoading || hasError(valid) || loadingAddKlr}
-                          sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                          sx={{width: 20, height: 20, mt:2, ml: 10,}} 
                           onClick={ () => addKeyholder?.() }
                           color="primary"
                         >
@@ -266,7 +269,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         label='Keyholder'
                         size="small"
                         error={ valid['Keyholder']?.error }
-                        helperText={ valid['Keyholder']?.helpTx }
+                        helperText={ valid['Keyholder']?.helpTx ?? ' ' }
                         sx={{
                           m:1,
                           minWidth: 218,
@@ -287,7 +290,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                         <IconButton
                           disabled={ removeKeyholderLoading || hasError(valid) || loadingRemoveKlr} 
-                          sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                          sx={{width: 20, height: 20, mt:2, mr: 10}} 
                           onClick={ () => removeKeyholder?.() }
                           color="primary"
                         >

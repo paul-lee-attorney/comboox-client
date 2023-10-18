@@ -56,7 +56,7 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           size="small"
           label='SeqOfOrder'
           error={ valid['SeqOfOrder']?.error }
-          helperText={ valid['SeqOfOrder']?.helpTx }
+          helperText={ valid['SeqOfOrder']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -78,7 +78,7 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           size="small"
           label='SeqOfListingRule'
           error={ valid['SeqOfLR']?.error }
-          helperText={ valid['SeqOfLR']?.helpTx }
+          helperText={ valid['SeqOfLR']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,

@@ -35,7 +35,7 @@ export function SearchOption({setOpt, setOpen}:SearchOptionProps) {
         label="SeqOfOption" 
         variant="outlined"
         error={ valid['SeqOfOpt']?.error }
-        helperText={ valid['SeqOfOpt']?.helpTx }
+        helperText={ valid['SeqOfOpt']?.helpTx ?? ' ' }
 
         onChange={(e) => {
           let input = e.target.value;

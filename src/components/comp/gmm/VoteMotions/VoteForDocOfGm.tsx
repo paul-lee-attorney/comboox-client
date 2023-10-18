@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { 
   useGeneralKeeperCastVoteOfGm,
 } from "../../../../generated";
@@ -70,6 +70,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
             <MenuItem value={'2'}>Against</MenuItem>
             <MenuItem value={'3'}>Abstain</MenuItem>
           </Select>
+          <FormHelperText>{' '}</FormHelperText>
         </FormControl>
 
         <TextField 
@@ -78,7 +79,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
           label="SigHash / CID in IPFS" 
           variant="outlined"
           error={ valid['SigHash']?.error }
-          helperText={ valid['SigHash']?.helpTx }
+          helperText={ valid['SigHash']?.helpTx ?? ' ' }
 
           onChange={e => {
             let input = HexParser( e.target.value );

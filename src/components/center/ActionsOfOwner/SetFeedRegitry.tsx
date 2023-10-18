@@ -47,7 +47,7 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
           variant='outlined'
           label='FeedRegistry'
           error={ valid['FeedRegistry']?.error }
-          helperText={ valid['FeedRegistry']?.helpTx }          
+          helperText={ valid['FeedRegistry']?.helpTx ?? ' ' }          
           sx={{
             m:1,
             minWidth: 456,

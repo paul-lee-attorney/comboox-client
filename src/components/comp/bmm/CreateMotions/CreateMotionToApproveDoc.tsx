@@ -55,7 +55,7 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
           label='AddressOfDoc'
           size="small"
           error={ valid['AddressOfDoc']?.error }
-          helperText={ valid['AddressOfDoc']?.helpTx }
+          helperText={ valid['AddressOfDoc']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -73,7 +73,7 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
           label='SeqOfVR'
           size="small"
           error={ valid['SeqOfVR']?.error }
-          helperText={ valid['SeqOfVR']?.helpTx }
+          helperText={ valid['SeqOfVR']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
@@ -91,7 +91,7 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
           label='Executor'
           size="small"
           error={ valid['Executor']?.error }
-          helperText={ valid['Executor']?.helpTx }
+          helperText={ valid['Executor']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,

@@ -19,7 +19,7 @@ interface AgrmtAccessControlProps{
 export function AgrmtAccessControl({ isSha, agrmt }:AgrmtAccessControlProps) {
 
   return (
-    <Stack direction={'column'}  >
+    <Stack direction={'column'}  sx={{ width: 980}} >
       <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
         <SetOwner addr={ agrmt } />
         <SetGeneralCounsel addr={ agrmt } />

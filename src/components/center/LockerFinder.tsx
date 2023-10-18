@@ -35,7 +35,7 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
         label="HashLock" 
         variant="outlined"
         error={ valid['HashLock']?.error }
-        helperText={ valid['HashLock']?.helpTx }
+        helperText={ valid['HashLock']?.helpTx ?? ' ' }
         value = { hashLock }
         size='small'
         onChange={(e) => {

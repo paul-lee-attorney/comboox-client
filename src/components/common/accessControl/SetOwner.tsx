@@ -97,7 +97,7 @@ export function SetOwner({ addr }: AccessControlProps) {
           value={ owner }
         />
         <FormHelperText id='setAcct-Help-Tx'>
-          { valid['AcctAddr']?.helpTx }
+          { valid['AcctAddr']?.helpTx ?? ' ' }
         </FormHelperText>                          
       </FormControl>
 

@@ -106,7 +106,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             label='SeqOfVR'
             size="small"
             error={ valid['SeqOfVR']?.error }
-            helperText={ valid['SeqOfVR']?.helpTx }
+            helperText={ valid['SeqOfVR']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 218,
@@ -124,7 +124,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             label='Executor'
             size="small"
             error={ valid['Executor']?.error }
-            helperText={ valid['Executor']?.helpTx }
+            helperText={ valid['Executor']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 218,
@@ -142,7 +142,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             label='DocHash / CID in IPFS'
             size="small"
             error={ valid['DocHash']?.error }
-            helperText={ valid['DocHash']?.helpTx }
+            helperText={ valid['DocHash']?.helpTx ?? ' ' }
             sx={{
               m:1,
               minWidth: 630,
@@ -183,7 +183,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               label='Address'
               size="small"
               error={ valid['Address']?.error }
-              helperText={ valid['Address']?.helpTx }
+              helperText={ valid['Address']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 450,
@@ -206,7 +206,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               label='Value'
               size="small"
               error={ valid['Value']?.error }
-              helperText={ valid['Value']?.helpTx }
+              helperText={ valid['Value']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 218,
@@ -229,7 +229,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               label='Params'
               size="small"
               error={ valid['Params']?.error }
-              helperText={ valid['Params']?.helpTx }
+              helperText={ valid['Params']?.helpTx ?? ' ' }
               sx={{
                 m:1,
                 minWidth: 630,

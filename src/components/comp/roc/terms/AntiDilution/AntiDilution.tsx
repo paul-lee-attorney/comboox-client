@@ -140,9 +140,11 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
   });
     
   useEffect(()=>{
-    getBenchmarks(term).then(
-      res => setNewMarks(res)
-    );
+    if (term != AddrZero) {
+      getBenchmarks(term).then(
+        res => setNewMarks(res)
+      );
+    }
   }, [term, time]);
 
   const [ open, setOpen ] = useState(false);
@@ -189,7 +191,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
               {term != AddrZero && !isFinalized && (
                 <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
 
-                  <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>      
+                  <Stack direction={'row'} sx={{ alignItems:'start', justifyContent:'space-between' }}>      
 
                     <Tooltip
                       title='Add Benchmark'
@@ -198,7 +200,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     >
                       <IconButton 
                         disabled={ addMarkLoading || hasError(valid) || loadingAdd}
-                        sx={{width: 20, height: 20, m: 1, ml: 5 }} 
+                        sx={{width: 20, height: 20, mt: 2, ml: 5 }} 
                         onClick={ () => addMark?.() }
                         color="primary"
                       >
@@ -211,7 +213,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       label='ClassOfShare'
                       size="small"
                       error={ valid['ClassOfShare']?.error }
-                      helperText={ valid['ClassOfShare']?.helpTx }
+                      helperText={ valid['ClassOfShare']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -229,7 +231,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       label='Price'
                       size="small"
                       error={ valid['Price']?.error }
-                      helperText={ valid['Price']?.helpTx }
+                      helperText={ valid['Price']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -249,7 +251,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     >           
                       <IconButton
                         disabled={ removeMarkIsLoading || hasError(valid) || loadingRemove} 
-                        sx={{width: 20, height: 20, m: 1, mr: 10, }} 
+                        sx={{width: 20, height: 20, mt: 2, mr: 10, }} 
                         onClick={ () => removeMark?.() }
                         color="primary"
                       >
@@ -264,7 +266,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                     >
                       <IconButton 
                         disabled={ addObligorIsLoading || loadingAddObl}
-                        sx={{width: 20, height: 20, m: 1, ml: 10,}} 
+                        sx={{width: 20, height: 20, mt: 2, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
                       >
@@ -278,7 +280,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       label='Obligor'
                       size="small"
                       error={ valid['Obligor']?.error }
-                      helperText={ valid['Obligor']?.helpTx }
+                      helperText={ valid['Obligor']?.helpTx ?? ' ' }
                       sx={{
                         m:1,
                         minWidth: 218,
@@ -299,7 +301,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
                       <IconButton
                         disabled={ removeObligorIsLoading || hasError(valid) || loadingRemoveObl} 
-                        sx={{width: 20, height: 20, m: 1, mr: 10}} 
+                        sx={{width: 20, height: 20, mt: 2, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"
                       >

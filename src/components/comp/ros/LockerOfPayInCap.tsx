@@ -154,7 +154,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             variant='filled'
             label='HashLock'
             error={ valid['HashLock']?.error }
-            helperText={ valid['HashLock']?.helpTx }    
+            helperText={ valid['HashLock']?.helpTx ?? ' ' }    
             sx={{
               m:1,
               minWidth: 618,
@@ -175,7 +175,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             variant='filled'
             label='Amount'
             error={ valid['Amount']?.error }
-            helperText={ valid['Amount']?.helpTx }    
+            helperText={ valid['Amount']?.helpTx ?? ' ' }    
             sx={{
               m:1,
               minWidth: 218,

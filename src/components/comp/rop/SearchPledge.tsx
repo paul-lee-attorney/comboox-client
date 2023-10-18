@@ -36,7 +36,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
         label="seqOfShare" 
         variant="outlined"
         error={ valid['SeqOfShare']?.error }
-        helperText={ valid['SeqOfShare']?.helpTx }
+        helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
         onChange={(e) => {
           let input = e.target.value;
           onlyNum('SeqOfShare', input, MaxPrice, setValid);
@@ -52,7 +52,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
         label="seqOfPld" 
         variant="outlined"
         error={ valid['SeqOfPld']?.error }
-        helperText={ valid['SeqOfPld']?.helpTx }
+        helperText={ valid['SeqOfPld']?.helpTx ?? ' ' }
         onChange={(e) => {
           let input = e.target.value;
           onlyNum('SeqOfPld', input, MaxSeqNo, setValid);

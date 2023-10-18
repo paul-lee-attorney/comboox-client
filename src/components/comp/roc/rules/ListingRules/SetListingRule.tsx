@@ -14,6 +14,7 @@ import {
   DialogContent,
   DialogActions,
   Dialog,
+  FormHelperText,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from '../../../../../scripts/common';
@@ -68,9 +69,9 @@ export function lrParser(hexLr: HexType):ListingRule {
   return rule;
 }
 
-export function lrCodifier(objLr: ListingRule ): HexType {
+export function lrCodifier(objLr: ListingRule, seq: number ): HexType {
   let hexLr: HexType = `0x${
-    (objLr.seqOfRule.toString(16).padStart(4, '0')) +
+    (seq.toString(16).padStart(4, '0')) +
     (Number(objLr.titleOfIssuer).toString(16).padStart(4, '0')) +
     (Number(objLr.classOfShare).toString(16).padStart(4, '0')) +
     (BigInt(objLr.maxTotalPar).toString(16).padStart(16, '0')) +
@@ -139,7 +140,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
 
               <AddRule
                 sha={ sha }
-                rule={ lrCodifier(objLR) }
+                rule={ lrCodifier(objLR, seq) }
                 isFinalized={ isFinalized }
                 valid={valid}
                 refresh={refresh}
@@ -160,7 +161,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label='ClassOfShare'
                   error={ valid['ClassOfShare']?.error }
-                  helperText={ valid['ClassOfShare']?.helpTx }
+                  helperText={ valid['ClassOfShare']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -195,6 +196,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                       )) }
 
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
                 {isFinalized && (
@@ -216,7 +218,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label={'MaxTotalPar ' + (isFinalized ? '(Dollar)' : '(Cent)')}
                   error={ valid['MaxTotalPar']?.error }
-                  helperText={ valid['MaxTotalPar']?.helpTx }
+                  helperText={ valid['MaxTotalPar']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -252,6 +254,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                       )) }
 
                     </Select>
+                    <FormHelperText>{' '}</FormHelperText>
                   </FormControl>
                 )}
                 {isFinalized && (
@@ -273,7 +276,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label='MaxQtyOfInvestors'
                   error={ valid['MaxQtyOfInvestors']?.error }
-                  helperText={ valid['MaxQtyOfInvestors']?.helpTx }
+                  helperText={ valid['MaxQtyOfInvestors']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -299,7 +302,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label={'CeilingPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
                   error={ valid['CeilingPrice']?.error }
-                  helperText={ valid['CeilingPrice']?.helpTx }
+                  helperText={ valid['CeilingPrice']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -321,7 +324,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label={'FloorPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
                   error={ valid['FloorPrice']?.error }
-                  helperText={ valid['FloorPrice']?.helpTx }
+                  helperText={ valid['FloorPrice']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -343,7 +346,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label={'OffPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
                   error={ valid['OffPrice']?.error }
-                  helperText={ valid['OffPrice']?.helpTx }
+                  helperText={ valid['OffPrice']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -365,7 +368,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label='LockupDays'
                   error={ valid['LockupDays']?.error }
-                  helperText={ valid['LockupDays']?.helpTx }
+                  helperText={ valid['LockupDays']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
@@ -387,7 +390,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   size='small'
                   label='VotingWeight (%)'
                   error={ valid['VotingWeight']?.error }
-                  helperText={ valid['VotingWeight']?.helpTx }
+                  helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,

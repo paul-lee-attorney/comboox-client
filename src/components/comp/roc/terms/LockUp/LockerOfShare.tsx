@@ -26,7 +26,7 @@ export function LockerOfShare({ seqOfShare, dueDate, keyholders }: LockerOfShare
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label={"SeqOfShare: " + longSnParser(seqOfShare.toString())} color='primary' sx={{m:1, minWidth:218 }} />
+        <Chip label={longSnParser(seqOfShare.toString())} color='primary' sx={{m:1, minWidth:128 }} />
 
         <TextField 
           variant='outlined'
