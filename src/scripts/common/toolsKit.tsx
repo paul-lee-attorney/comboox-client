@@ -77,10 +77,10 @@ export function HexParser(input: string):HexType {
   return output;
 }
 
-export function toStr(input: number): string {
+export function toStr(input: HexType): string {
 
-  let hex = input.toString(16);
-  if (hex.length % 2 != 0) hex = '0' + hex;
+  let hex = input.substring(2);
+  if (hex.length % 2 != 0) hex = hex + '0';
   let len = hex.length;
   let i=0;
   let str = '';

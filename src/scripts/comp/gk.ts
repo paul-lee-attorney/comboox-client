@@ -128,7 +128,7 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
     regNum: res.regNum,
     regDate: res.regDate,
     currency: res.currency,
-    symbol: toStr(Number(res.symbol)),
+    symbol: toStr(res.symbol),
     name: res.name
   }
 
