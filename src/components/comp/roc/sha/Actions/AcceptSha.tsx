@@ -37,10 +37,10 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
   });
 
   return (
-    <Stack direction='row' sx={{ alignItems:'center' }}>
+    <Stack direction='row' sx={{ alignItems:'start' }}>
 
       <TextField
-        sx={{ m: 1, minWidth: 650 }} 
+        sx={{ m:1, mt:3, minWidth: 650 }} 
         id="tfSigHash" 
         label="SigHash / CID in IPFS" 
         variant="outlined"
@@ -61,7 +61,7 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
         loadingPosition="end"
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
-        sx={{ m:1, height:40, minWidth:218 }}
+        sx={{ m:1, mt:3, height:40, minWidth:218 }}
         onClick={()=>write?.()}
       >
         Accept Sha

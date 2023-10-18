@@ -54,7 +54,7 @@ export function GetComp() {
   return (
     <Stack direction={'column'} sx={{ width:'100%', alignItems:'center' }} >
 
-      <Stack direction={'row'} sx={{mt:2, mb:0, p:1, justifyContent:'center'}}>
+      <Stack direction={'row'} sx={{justifyContent:'center'}}>
         <TextField 
           id="txRegNumOfComp" 
           label="RegNumOfComp" 
@@ -105,7 +105,7 @@ export function GetComp() {
 
           underline='hover'
         >
-          <Button variant='outlined' sx={{m:3, width: 488, height:40}} endIcon={<DriveFileMove />} >
+          <Button variant='outlined' sx={{m:1, width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +
                   doc?.head.version.toString(16).padStart(4, '0') +
                   doc?.head.seqOfDoc.toString(16).padStart(16, '0')
@@ -132,7 +132,7 @@ export function GetComp() {
 
           variant='outlined' 
           severity='info' 
-          sx={{ m:3, height: 40, width:488, p:0.25, px:1, }} 
+          sx={{ m:1, height: 40, width:488, p:0.25, px:1, }} 
         >
           No Records. 
         </Alert>

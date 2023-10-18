@@ -99,7 +99,7 @@ export function CenterInfo() {
       <Button
         variant="outlined"
         startIcon={<Settings />}
-        sx={{ m:3, width:488, height:40 }}
+        sx={{ m:1, width:488, height:40 }}
         onClick={ handleClick }      
       >
         Registration Center Info

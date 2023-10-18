@@ -73,7 +73,7 @@ export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: Gro
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
-    args: [BigInt(cp[cp.length - 1])],
+    args: cp && cp.length > 0 ? [BigInt(cp[cp.length - 1])] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
