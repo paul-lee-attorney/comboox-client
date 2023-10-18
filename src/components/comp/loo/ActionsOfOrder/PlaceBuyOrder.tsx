@@ -9,6 +9,7 @@ import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 import { FormResults, defFormResults, hasError, longDataParser, onlyNum, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
 import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
+import { LoadingButton } from "@mui/lab";
 
 export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const { gk } = useComBooxContext();
@@ -17,6 +18,12 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const [ value, setValue ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: placeBuyOrderLoading,
@@ -33,8 +40,9 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         ? BigInt(value) * (10n ** 9n) 
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -123,9 +131,10 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled = { placeBuyOrderLoading || hasError(valid) }
-
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<ShoppingCartOutlined />}
@@ -133,7 +142,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           size='small'
         >
           Buy
-        </Button>
+        </LoadingButton>
 
         <Tooltip
           title='ValueInGwei'

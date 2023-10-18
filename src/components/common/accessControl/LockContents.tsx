@@ -11,6 +11,8 @@ import {
 } from '../../../generated';
 import { HexType } from '../../../scripts/common';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { useState } from 'react';
+import { LoadingButton } from '@mui/lab';
 
 interface LockContentsProps {
   addr: HexType;
@@ -20,9 +22,12 @@ interface LockContentsProps {
 
 export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
 
+  const [loading, setLoading] = useState(false);
+
   const refresh = ()=>{
     setIsFinalized(true);
     setNextStep(1);
+    setLoading(false);
   }
 
   const {
@@ -31,20 +36,23 @@ export function LockContents({ addr, setIsFinalized, setNextStep }: LockContents
   } = useAccessControlLockContents({
     address: addr,
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
 
   return (
-    <Button
+    <LoadingButton
       disabled={ lockContentsLoading }
+      loading={loading}
+      loadingPosition='end'
       sx={{m:1, minWidth:128}}
       variant='contained'
       endIcon={<Lock />}
       onClick={()=>lockContents?.() }
     >
       Lock Contents
-    </Button>
+    </LoadingButton>
   )
 }

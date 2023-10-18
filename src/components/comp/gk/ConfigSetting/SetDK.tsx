@@ -5,15 +5,18 @@ import { useAccessControlSetDirectKeeper } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -23,6 +26,7 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     address: docAddr,
     args: !hasError(valid) ? [ keeper ] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -80,8 +84,10 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
         <Divider orientation="vertical" flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled = {updateDKLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Update />}
@@ -89,7 +95,7 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
           size='small'
         >
           Update
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

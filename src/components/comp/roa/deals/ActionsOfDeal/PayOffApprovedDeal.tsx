@@ -7,14 +7,18 @@ import { Payment } from "@mui/icons-material";
 import { useState } from "react";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../../scripts/common";
+import { LoadingButton } from "@mui/lab";
 
 
 export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
 
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -29,6 +33,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
     args: !hasError(valid) ? [addr, BigInt(deal.head.seqOfDeal)] : undefined,
     value: !hasError(valid) ? BigInt(value) * (10n ** 9n) : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -62,9 +67,10 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
             }}
           />
 
-        <Button 
+        <LoadingButton 
           disabled = { payOffApprovedDealLoading || deal.body.state > 2 || hasError(valid)}
-
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Payment />}
@@ -72,7 +78,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
           size='small'
         >
           Pay Off
-        </Button>
+        </LoadingButton>
 
         </Stack>
 

@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero, MaxData, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
+import { AddrZero, HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -55,7 +55,7 @@ import {
   StrBodyOfOpt
 } from "../../../../../scripts/comp/roo";
 import { getOpts } from "../../../../../scripts/comp/op";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -67,6 +67,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   const [ body, setBody ] = useState<StrBodyOfOpt>(defaultStrBodyOfOpt);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ time, setTime ] = useState<number>(0);
+  const [ loading, setLoading ] = useState(false);
+
+  const refresh = ()=> {
+    setTime(Date.now());
+    setLoading(false);
+  }
 
   const { 
     isLoading: addOptLoading,
@@ -82,14 +89,24 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
           BigInt(body.par)
         ]
       : undefined, 
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
-
+  
   const { 
     isLoading: removeOptLoading, 
     write: removeOpt, 
   } = useOptionsDelOption({
     address: term,
     args: head.seqOfOpt && !hasError(valid) ? [ BigInt(head.seqOfOpt) ] : undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
 
   const [ obligor, setObligor ] = useState<string>('0');
@@ -102,8 +119,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: head.seqOfOpt && obligor && !hasError(valid)
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
-
+  
   const { 
     isLoading: removeObligorLoading, 
     write: removeObligor 
@@ -112,13 +134,18 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: head.seqOfOpt && obligor && !hasError(valid)
       ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
       : undefined, 
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
-
+  
   useEffect(()=>{
     getOpts(term).then(
       res => setOpts(res)
     );
-  }, [term, addOpt, removeOpt, addObligor, removeObligor]);
+  }, [term, time]);
 
   return (
     <>
@@ -542,7 +569,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >
                       <IconButton 
-                        disabled={ addOptLoading || hasError(valid)}
+                        disabled={ addOptLoading || hasError(valid) || loading}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addOpt?.() }
                         color="primary"
@@ -578,7 +605,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeOptLoading || hasError(valid)} 
+                        disabled={ removeOptLoading || hasError(valid) || loading} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeOpt?.() }
                         color="primary"
@@ -593,7 +620,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       arrow
                     >
                       <IconButton 
-                        disabled={ addObligorLoading || hasError(valid)}
+                        disabled={ addObligorLoading || hasError(valid) || loading}
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addObligor?.() }
                         color="primary"
@@ -628,7 +655,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                     >
 
                       <IconButton
-                        disabled={ removeObligorLoading || hasError(valid) } 
+                        disabled={ removeObligorLoading || hasError(valid) || loading} 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeObligor?.() }
                         color="primary"

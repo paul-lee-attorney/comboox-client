@@ -1,11 +1,12 @@
 
-import { Button, Stack, TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
 import { HexType, MaxUserNo, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { useState } from "react";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 interface ProposeDocOfGmProps {
   addr: HexType,
@@ -18,8 +19,10 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
   const { gk } = useComBooxContext();
   const [ executor, setExecutor ] = useState<string>('0');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
+    setLoading(false);
     setNextStep(4);
   }
 
@@ -34,6 +37,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
           BigInt(executor) ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -59,15 +63,17 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
         value={ executor }
       />
 
-      <Button
+      <LoadingButton
         disabled={!write || isLoading || hasError(valid)}
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<EmojiPeople />}
         sx={{ m:1, minWidth:218, }}
         onClick={()=>write?.()}
       >
         Propose
-      </Button>
+      </LoadingButton>
     </Stack>
   )
 

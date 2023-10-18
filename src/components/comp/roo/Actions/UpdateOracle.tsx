@@ -6,6 +6,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxData } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 interface Paras {
   p1: string;
@@ -25,9 +26,11 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
   const [paras, setParas] = useState<Paras>(defaultParas);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -44,6 +47,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -117,8 +121,10 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ updateOracleLoading || hasError(valid) }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Update /> }
@@ -126,7 +132,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           size='small'
         >
           Update
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

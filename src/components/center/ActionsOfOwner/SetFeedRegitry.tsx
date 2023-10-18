@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetFeedRegistry,
@@ -10,12 +10,20 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
+import { LoadingButton } from '@mui/lab';
 
 
 export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
 
   const [ newFeed, setNewFeed ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
+  const [loading, setLoading] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: setFeedRegLoading,
@@ -24,6 +32,7 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: hasError(valid) ? undefined : [newFeed],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -51,8 +60,10 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ setFeedRegLoading || hasError(valid) } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             setFeedReg?.()
           }}
@@ -61,7 +72,7 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
           endIcon={<BorderColor />}       
         >
           Set
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

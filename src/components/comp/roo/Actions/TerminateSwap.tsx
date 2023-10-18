@@ -6,6 +6,7 @@ import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
@@ -14,9 +15,11 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
   const [ seqOfSwap, setSeqOfSwap ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -30,6 +33,7 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
           BigInt(seqOfSwap)]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -58,8 +62,10 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ terminateSwapLoading || hasError(valid) }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <CancelOutlined /> }
@@ -67,7 +73,7 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
           size='small'
         >
           Terminate Swap
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

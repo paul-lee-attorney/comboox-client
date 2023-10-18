@@ -1,5 +1,5 @@
 
-import { Button, Divider, Paper, Stack, TextField } from '@mui/material';
+import { Divider, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterLockPoints,
@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { CBP, defaultCBP } from './Mint';
+import { LoadingButton } from '@mui/lab';
 
 export interface LockPointsProps{
   refreshList: ()=>void;
@@ -28,11 +29,13 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [loading, setLoading] = useState(false);
 
   const refresh = ()=>{
     refreshList();
     getUser();
-    getBalanceOf();    
+    getBalanceOf();
+    setLoading(false);
   }
 
   const {
@@ -49,6 +52,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -166,8 +170,10 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
 
         <Divider orientation='vertical' sx={{m:1}} flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled={ !lockPoints || lockPointsLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             lockPoints?.()
           }}
@@ -176,7 +182,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
           endIcon={<LockClockOutlined />}       
         >
           Lock
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

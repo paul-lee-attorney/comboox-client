@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { Update } from "@mui/icons-material";
 import { useGeneralKeeperSetCompInfo } from "../../../../generated";
@@ -8,7 +8,7 @@ import { defaultInfo } from "../SetCompInfo";
 import { refreshAfterTx, toAscii } from "../../../../scripts/common/toolsKit";
 import { currencies } from "../GeneralInfo";
 import { HexType } from "../../../../scripts/common";
-
+import { LoadingButton } from "@mui/lab";
 
 export interface ConfigSettingProps{
   setOpen: Dispatch<SetStateAction<boolean>>;
@@ -18,9 +18,11 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
   const { gk } = useComBooxContext();
 
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
+  const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -30,6 +32,7 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
     address: gk,
     args: [ compInfo.currency, `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, compInfo.name ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -94,9 +97,10 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
           </Select>
         </FormControl>
 
-        <Button 
+        <LoadingButton 
           disabled = { setInfoLoading }
-
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
           endIcon={<Update />}
@@ -104,7 +108,7 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
           size='small'
         >
           Update
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

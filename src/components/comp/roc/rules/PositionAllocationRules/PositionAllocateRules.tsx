@@ -44,6 +44,8 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refr
     })
   }
 
+  const [ loading, setLoading ] = useState(false);
+
   const udpateResults = ()=> {
     if (cp.length > 1) {
       setCp(v => {
@@ -52,6 +54,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refr
         return arr;
       });
     }
+    setLoading(false);
     setOpen(false);
   }
 
@@ -63,6 +66,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refr
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, udpateResults);
     }
@@ -109,7 +113,7 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refr
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ removeRuleLoading || !removeRule } 
+                      disabled={ removeRuleLoading || !removeRule || loading} 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ removeCp }
                       color="primary"

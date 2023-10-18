@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterHandoverCenterKey,
@@ -10,12 +10,19 @@ import { BorderColor, } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
-
+import { LoadingButton } from '@mui/lab';
 
 export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 
   const [ newKeeper, setNewKeeper ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
+  const [loading, setLoading] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: handoverCenterKeyLoading,
@@ -24,8 +31,9 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: hasError(valid) ? undefined : [newKeeper],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 
@@ -52,8 +60,10 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ handoverCenterKeyLoading || hasError(valid) } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             handoverCenterKey?.()
           }}
@@ -62,7 +72,7 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
           endIcon={<BorderColor />}       
         >
           Set
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

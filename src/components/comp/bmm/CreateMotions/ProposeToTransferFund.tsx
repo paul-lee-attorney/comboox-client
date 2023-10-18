@@ -12,6 +12,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { ParasOfTransfer, defaultParasOfTransfer } from "../../gmm/CreateMotions/ProposeToTransferFund";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
+import { LoadingButton } from "@mui/lab";
 
 export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
@@ -22,6 +23,12 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
   const [ executor, setExecutor ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
+  const [ loading, setLoading ] = useState(false);
+  const updateResults = ()=> {
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: proposeToTransferFundLoading,
@@ -40,8 +47,9 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 
@@ -177,15 +185,17 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
 
-        <Button
+        <LoadingButton
           disabled={ proposeToTransferFundLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:128 }}
           onClick={()=>proposeToTransferFund?.()}
         >
           Propose
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

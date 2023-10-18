@@ -6,6 +6,7 @@ import { LockOutlined } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../../scripts/common";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
@@ -14,9 +15,11 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -32,6 +35,7 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -60,8 +64,10 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ !lockPledge || lockPledgeLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <LockOutlined /> }
@@ -69,7 +75,7 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         >
           Lock
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

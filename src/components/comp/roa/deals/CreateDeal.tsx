@@ -25,6 +25,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export interface CreateDealProps{
   addr: HexType;
@@ -39,6 +40,12 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
   const [ body, setBody ] = useState<StrBody>(defaultStrBody);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=> {
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: addDealLoading,
@@ -54,8 +61,9 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
       
@@ -327,8 +335,10 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
 
         <Divider orientation="vertical" sx={{ m:1 }} flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled = {!addDeal || addDealLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           sx={{ m:1, mr:5, p:1, minWidth: 120, height: 40 }} 
           variant="contained" 
           endIcon={<AddCircle />}
@@ -336,7 +346,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
           size='small'
         >
           Add Deal
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

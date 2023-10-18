@@ -6,6 +6,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) {
@@ -15,9 +16,11 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
   const [ paidOfTarget, setPaidOfTarget ] = useState<string>('0');
   const [ seqOfPledge, setSeqOfPledge ] = useState<string>('0');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -34,6 +37,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true)
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -85,8 +89,10 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             value={ seqOfPledge }
           />
 
-          <Button 
+          <LoadingButton 
             disabled = {!requestToBuy || requestToBuyLoading || hasError(valid)}
+            loading = {loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<PanToolOutlined />}
@@ -94,7 +100,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             size='small'
           >
             Request To Buy
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

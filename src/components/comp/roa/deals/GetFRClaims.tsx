@@ -11,6 +11,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 import { HexType, booxMap } from "../../../../scripts/common";
+import { LoadingButton } from "@mui/lab";
 
 export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
@@ -89,9 +90,12 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     setAppear(true);
   }
 
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -102,6 +106,7 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     address: gk,
     args: [ addr, BigInt(deal.head.seqOfDeal)],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -157,8 +162,10 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
 
                 <Stack direction="row" sx={{ alignItems:'center' }} >
                   
-                  <Button 
+                  <LoadingButton 
                     disabled = { computeFirstRefusalLoading }
+                    loading={loading}
+                    loadingPosition="end"
                     sx={{ m: 1, minWidth: 168, height: 40 }} 
                     variant="contained" 
                     endIcon={<Calculate />}
@@ -166,7 +173,7 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
                     size='small'
                   >
                     Compute
-                  </Button>
+                  </LoadingButton>
 
                 </Stack>
               </Paper>

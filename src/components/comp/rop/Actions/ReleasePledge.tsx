@@ -6,15 +6,18 @@ import { Key } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType } from "../../../../scripts/common";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
   const [ key, setKey ] = useState<string>();
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -30,6 +33,7 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -52,8 +56,10 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ !releasePledge || releasePledgeLoading }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Key /> }
@@ -61,7 +67,7 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         >
           Release
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

@@ -9,6 +9,8 @@ import {
 } from '../../../../../generated';
 import { HexType } from '../../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
+import { refreshAfterTx } from '../../../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 interface FinalizeShaProps {
   isSha: boolean;
@@ -22,30 +24,41 @@ export function FinalizeSha({ isSha, addr, setIsFinalized, setNextStep }: Finali
   const [ flag, setFlag ] = useState<boolean>(false);
   const [ open, setOpen ] = useState(false);
 
+  const [ loading, setLoading ] = useState(false);
+
+  const refresh = () => {
+    setFlag(true);
+    setIsFinalized(true);
+    setLoading(false);
+    setNextStep(1);
+  }
+
   const {
     isLoading: finalizeShaLoading,
     write: finalizeSha,
   } = useShareholdersAgreementFinalizeSha({
     address: addr,
-    onSuccess() {
-      setFlag(true);
-      setIsFinalized(true);
-      setNextStep(1);
+    onSuccess(data) {
+      setLoading(true);
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 
   return (
     <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-      <Button
+      <LoadingButton
         disabled={ finalizeShaLoading }
+        loading = {loading}
+        loadingPosition='end'
         sx={{m:1, width:'50%', height:55}}
         variant='outlined'
         endIcon={<StopCircleOutlined />}
         onClick={ () => finalizeSha?.() }
       >
         Finalize
-      </Button>
+      </LoadingButton>
 
       <Collapse in={open} sx={{width:"50%"}}>        
         <Alert 

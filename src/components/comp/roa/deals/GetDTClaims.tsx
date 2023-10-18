@@ -11,6 +11,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { defaultDeal } from "../../../../scripts/comp/ia";
 import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
+import { LoadingButton } from "@mui/lab";
 
 export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
   const { gk, boox } = useComBooxContext();
@@ -107,10 +108,12 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
   }
 
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -121,6 +124,7 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     address: gk,
     args: [ addr, BigInt(deal.head.seqOfDeal), sigHash],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -189,8 +193,10 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
                     onChange={(e)=>setSigHash(HexParser( e.target.value ))}
                   />              
 
-                  <Button 
+                  <LoadingButton 
                     disabled = { acceptAlongDealLoading }
+                    loading={loading}
+                    loadingPosition="end"
                     sx={{ m: 1, minWidth: 218, height: 40 }} 
                     variant="contained" 
                     endIcon={<HandshakeOutlined />}
@@ -198,7 +204,7 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
                     size='small'
                   >
                     Accept
-                  </Button>
+                  </LoadingButton>
 
                 </Stack>
               </Paper>

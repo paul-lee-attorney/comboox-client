@@ -7,6 +7,7 @@ import { useGeneralKeeperRevokeInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
@@ -15,6 +16,12 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
   const [ userNo, setUserNo ] = useState<string>(acct);
   const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: revokeInvestorLoading,
@@ -25,8 +32,9 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
         ? [ BigInt(userNo), BigInt(seqOfLR)]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
       
@@ -76,9 +84,10 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             value={ seqOfLR } 
           />
 
-          <Button 
+          <LoadingButton 
             disabled = { revokeInvestorLoading || hasError(valid)}
-
+            loading={loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<PersonRemoveOutlined />}
@@ -86,7 +95,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             size='small'
           >
             Revoke
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

@@ -1,15 +1,11 @@
 
-import { 
-  Stack,
-  Button,
-} from '@mui/material';
+import { Stack } from '@mui/material';
 import { EditNote }  from '@mui/icons-material';
-import { 
-  useShareholdersAgreementAddRule,
-} from '../../../../generated';
+import { useShareholdersAgreementAddRule } from '../../../../generated';
 import { HexType } from '../../../../scripts/common';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 import { FormResults, hasError, refreshAfterTx } from '../../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 interface AddRuleProps {
   sha: HexType;
@@ -22,8 +18,11 @@ interface AddRuleProps {
 
 export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: AddRuleProps) {
 
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -34,6 +33,7 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
     address: sha,
     args: !hasError(valid) ? [rule] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -44,8 +44,10 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
       {!isFinalized && (
         <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
           
-          <Button 
+          <LoadingButton 
             disabled = { isLoading || isFinalized || hasError(valid) }
+            loading = {loading}
+            loadingPosition='end'
             sx={{ m: 1, minWidth: 120, height: 40 }} 
             variant="contained" 
             endIcon={<EditNote />}
@@ -53,7 +55,7 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
             size='small'
           >
             Update
-          </Button>
+          </LoadingButton>
 
         </Stack>
       )}

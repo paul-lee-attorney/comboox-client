@@ -14,6 +14,7 @@ import {
 import {
   AddCircle,
   ListAlt,
+  LocalDiningSharp,
   RemoveCircle,
 } from "@mui/icons-material"
 import {
@@ -53,6 +54,8 @@ export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: Gro
     })
   }
 
+  const [ loading, setLoading ] = useState(false);
+
   const udpateResults = ()=> {
     if (cp.length > 1) {
       setCp(v => {
@@ -61,6 +64,7 @@ export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: Gro
         return arr;
       });
     }
+    setLoading(false);
     setOpen(false);
   }
 
@@ -71,6 +75,7 @@ export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: Gro
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, udpateResults);
     }
@@ -113,7 +118,7 @@ export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: Gro
                       <AddCircle/>
                     </IconButton>
                     <IconButton 
-                      disabled={ cp.length < 1 || removeRuleLoading || !removeRule }
+                      disabled={ cp.length < 1 || removeRuleLoading || !removeRule || loading }
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={()=>removeRule?.() }
                       color="primary"

@@ -5,14 +5,18 @@ import { Button, Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
 import { TakePositionProps } from "../../bmm/ExecMotions/TakePosition";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
 
 export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
 
   const { gk } = useComBooxContext();
+  const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
     refresh();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -22,6 +26,7 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionP
     address: gk,
     args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -30,15 +35,17 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionP
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
-      <Button
+      <LoadingButton
         disabled={ !takeSeat || takeSeatLoading}
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<Chair />}
         sx={{ m:1, mr:6 }}
         onClick={()=>takeSeat?.()}
       >
         Take Seat
-      </Button>
+      </LoadingButton>
 
     </Paper>
   );

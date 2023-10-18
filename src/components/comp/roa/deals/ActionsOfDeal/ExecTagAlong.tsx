@@ -1,4 +1,4 @@
-import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
+import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperExecTagAlong } from "../../../../../generated";
@@ -7,6 +7,7 @@ import { SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export interface TargetShare {
   seqOfShare: string;
@@ -27,9 +28,12 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -48,6 +52,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -154,8 +159,11 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
 
           <Divider orientation="vertical" flexItem />
 
-          <Button 
+          <LoadingButton 
             disabled = { execTagAlongLoading || hasError(valid)}
+            loading = {loading}
+            loadingPosition="end"
+
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<SurfingOutlined />}
@@ -163,7 +171,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
             size='small'
           >
             Tag Along
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

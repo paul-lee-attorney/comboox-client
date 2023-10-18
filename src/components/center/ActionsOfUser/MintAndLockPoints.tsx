@@ -14,6 +14,7 @@ import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';
+import { LoadingButton } from '@mui/lab';
 
 export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOfUserProps) {
 
@@ -22,11 +23,13 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
   const [ head, setHead ] = useState<StrHeadOfLocker>(defaultStrHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [loading, setLoading] = useState(false);
 
   const refresh = () => {
     refreshList();
     getUser();
     getBalanceOf();
+    setLoading(false);
   }
 
   const {
@@ -43,6 +46,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -161,8 +165,10 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
 
         <Divider orientation='vertical' sx={{ m:1 }} flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled={ mintAndLockPointsLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             mintAndLockPoints?.()
           }}
@@ -171,7 +177,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
           endIcon={<LockClockOutlined />}       
         >
           Mint & Lock
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

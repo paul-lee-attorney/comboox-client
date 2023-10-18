@@ -6,6 +6,7 @@ import { Payment } from "@mui/icons-material";
 import { useState } from "react";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
@@ -15,9 +16,11 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
   const [ value, setValue ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -32,6 +35,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
       : undefined,
     value: !hasError(valid) ? BigInt(value) * (10n ** 9n) : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -78,8 +82,10 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ payOffSwapLoading || hasError(valid) }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <Payment /> }
@@ -87,7 +93,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           size='small'
         >
           Pay Off Swap
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

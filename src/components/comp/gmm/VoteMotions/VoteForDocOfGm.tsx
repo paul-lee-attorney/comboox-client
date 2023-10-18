@@ -10,6 +10,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 interface VoteForDocOfGMProps {
   seqOfMotion: bigint;
@@ -25,8 +26,10 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
+    setLoading(false);
     if (boox)
       getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
         list => setVoteResult(list)
@@ -42,6 +45,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
         ? [ seqOfMotion, BigInt(attitude), sigHash ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -85,15 +89,17 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
           size='small'
         />                                            
 
-        <Button
+        <LoadingButton
           disabled={!castVote || castVoteLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition="end"
           variant="contained"
           endIcon={<HowToVote />}
           sx={{ m:1, minWidth:218 }}
           onClick={()=>castVote?.()}
         >
           Cast Vote
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

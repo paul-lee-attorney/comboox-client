@@ -9,6 +9,7 @@ import { LockClock } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
@@ -18,10 +19,12 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
   const [ closingDate, setClosingDate ] = useState<number>(0);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -34,6 +37,7 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
       ? [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate) ] 
       : undefined,
     onSuccess(data) {
+      setLoading(true)
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -79,9 +83,10 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
           format='YYYY-MM-DD HH:mm:ss'
         />
 
-        <Button 
+        <LoadingButton 
           disabled = {!pushToCoffer || pushToCofferLoading || deal.body.state > 1 || hasError(valid)}
-
+          loading = {loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<LockClock />}
@@ -89,7 +94,7 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
           size='small'
         >
           Lock Share
-        </Button>
+        </LoadingButton>
 
 
       </Stack>

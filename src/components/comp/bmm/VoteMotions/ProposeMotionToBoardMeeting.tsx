@@ -10,6 +10,7 @@ import { EmojiPeople, } from "@mui/icons-material";
 import { HexType } from "../../../../scripts/common";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export interface ProposeMotionProps {
   seqOfMotion: bigint,
@@ -20,10 +21,12 @@ export interface ProposeMotionProps {
 export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk } = useComBooxContext();
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -33,6 +36,7 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
     address: gk,
     args: [BigInt(seqOfMotion)],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -69,15 +73,17 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
 
       <Collapse in={ !appear } >
         <Stack direction="row" sx={{ alignItems:'center' }} >
-         <Button
+         <LoadingButton
             disabled={ !proposeMotionToBoard || proposeMotionToBoardLoading }
+            loading={loading}
+            loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:118 }}
             onClick={()=>proposeMotionToBoard?.()}
           >
             Propose
-          </Button>
+          </LoadingButton>
         </Stack>
       </Collapse>
 

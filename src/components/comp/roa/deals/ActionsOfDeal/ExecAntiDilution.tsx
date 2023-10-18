@@ -7,6 +7,7 @@ import { LocalDrinkOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
@@ -16,10 +17,12 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -36,6 +39,7 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -87,9 +91,10 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
             value={ sigHash }
           />
 
-          <Button 
+          <LoadingButton 
             disabled = {!execAntiDilution || execAntiDilutionLoading || deal.body.state > 1 || hasError(valid)}
-
+            loading = {loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<LocalDrinkOutlined />}
@@ -97,7 +102,7 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
             size='small'
           >
             Anti Dilution
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

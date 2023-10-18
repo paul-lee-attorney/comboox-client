@@ -7,6 +7,7 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, ref
 import { useGeneralKeeperRegInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType, MaxUserNo } from "../../../../scripts/common";
+import { LoadingButton } from "@mui/lab";
 
 
 export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
@@ -15,6 +16,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const [ groupRep, setGroupRep ] = useState<string>('0');
   const [ idHash, setIdHash ] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const {
     isLoading: regInvestorLoading,
@@ -25,6 +27,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
         ? [ BigInt(groupRep), idHash]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -77,8 +80,10 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled = { regInvestorLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<BorderColor />}
@@ -86,7 +91,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           size='small'
         >
           Register
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

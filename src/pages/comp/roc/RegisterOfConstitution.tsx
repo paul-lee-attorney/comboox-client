@@ -22,13 +22,16 @@ import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 import { HexType, booxMap } from "../../../scripts/common";
 import { refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 function RegisterOfConstitution() {
   const { gk, boox } = useComBooxContext();
   const [ time, setTime ] = useState(0);
+  const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
@@ -42,6 +45,7 @@ function RegisterOfConstitution() {
     address: gk,
     args: version ? [BigInt(version)] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -97,8 +101,10 @@ function RegisterOfConstitution() {
                     size='small'
                   />
 
-                  <Button 
+                  <LoadingButton 
                     disabled={ createShaLoading }
+                    loading = {loading}
+                    loadingPosition="end"
                     sx={{ m: 1, minWidth: 120, height: 40 }} 
                     variant="contained" 
                     endIcon={ <Create /> }
@@ -106,7 +112,7 @@ function RegisterOfConstitution() {
                     size='small'
                   >
                     Create SHA
-                  </Button>
+                  </LoadingButton>
               </Stack>
             </td>
             <td colSpan={2} >

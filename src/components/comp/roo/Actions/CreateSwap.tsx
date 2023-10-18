@@ -6,6 +6,7 @@ import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
+import { LoadingButton } from "@mui/lab";
 
 export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
@@ -16,10 +17,11 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
   const [ seqOfPledge, setSeqOfPledge ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
-
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -35,6 +37,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           BigInt(seqOfPledge)]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -99,8 +102,10 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ createSwapLoading || hasError(valid) }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <SwapHorizOutlined /> }
@@ -108,7 +113,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           size='small'
         >
           Create Swap
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

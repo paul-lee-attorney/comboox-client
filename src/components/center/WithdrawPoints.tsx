@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack } from '@mui/material';
+import { Paper, Stack } from '@mui/material';
 
 import { 
   useRegCenterWithdrawPoints,
@@ -8,6 +8,8 @@ import {
 import { AddrOfRegCenter, HexType } from '../../scripts/common';
 import { Undo } from '@mui/icons-material';
 import { refreshAfterTx } from '../../scripts/common/toolsKit';
+import { useState } from 'react';
+import { LoadingButton } from '@mui/lab';
 
 interface WithdrawPointsProps{
   hashLock: HexType;
@@ -18,10 +20,13 @@ interface WithdrawPointsProps{
 
 export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:WithdrawPointsProps) {
 
+  const [loading, setLoading] = useState(false);
+
   const updateResults = ()=>{
     refreshList();
     getUser();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -31,6 +36,7 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
     address: AddrOfRegCenter,
     args: [ hashLock ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -40,9 +46,11 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >    
       <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
-        <Button 
+        <LoadingButton 
           size='small'
           disabled={  withdrawPointsLoading } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             withdrawPoints?.()
           }}
@@ -51,7 +59,7 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
           endIcon={<Undo />}       
         >
           Withdraw Points
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

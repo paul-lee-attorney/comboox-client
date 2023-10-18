@@ -9,9 +9,10 @@ import { Calculate } from "@mui/icons-material";
 import { isPassed } from "../../../../scripts/common/meetingMinutes";
 import { HexType, booxMap } from "../../../../scripts/common";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { waitForTransaction } from "@wagmi/core";
+import { LoadingButton } from "@mui/lab";
 
 export interface VoteCountingOfBoard extends ProposeMotionProps {
   setResult: Dispatch<SetStateAction<boolean>>;
@@ -21,9 +22,11 @@ export interface VoteCountingOfBoard extends ProposeMotionProps {
 export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfBoard) {
 
   const { gk, boox } = useComBooxContext();
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     if (boox) {
       isPassed(boox[booxMap.BMM], seqOfMotion).then(
         flag => {
@@ -42,6 +45,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
     address: gk,
     args: [ seqOfMotion ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -50,15 +54,17 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
-      <Button
+      <LoadingButton
         disabled={ voteCountingLoading }
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<Calculate />}
         sx={{ m:1, mr:6 }}
         onClick={()=>voteCounting?.()}
       >
         Count
-      </Button>
+      </LoadingButton>
 
     </Paper>
   )

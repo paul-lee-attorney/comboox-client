@@ -14,12 +14,13 @@ import {
   DialogActions,
 } from "@mui/material";
 
-import { AddrZero, MaxPrice, MaxUserNo } from "../../../../../scripts/common";
+import { AddrZero, HexType, MaxPrice, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
   RemoveCircle,
   ListAlt,
+  LocalDiningOutlined,
 } from "@mui/icons-material"
 
 import {
@@ -36,7 +37,7 @@ import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AddTerm } from "../AddTerm";
 import { LockerOfShare } from "./LockerOfShare";
 import { Locker, getLockers } from "../../../../../scripts/comp/lu";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -47,6 +48,13 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
   const [ open, setOpen ] = useState(false);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ time, setTime ] = useState<number>(0);
+  const [ loading, setLoading ] = useState(false);
+
+  const refresh = ()=> {
+    setTime(Date.now());
+    setLoading(false);
+  }
 
   const { 
     isLoading: addLockerLoading,
@@ -56,14 +64,24 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: seqOfShare && dueDate && !hasError(valid)
       ? [ BigInt(seqOfShare), BigInt(dueDate) ]
       : undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
-
+  
   const { 
     isLoading: removeLockerLoading, 
     write: removeLocker 
   } = useLockUpDelLocker({
     address: term,
     args: seqOfShare && !hasError(valid) ? [ BigInt(seqOfShare) ] : undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
 
   const [ keyholder, setKeyholder ] = useState<string>();
@@ -76,8 +94,13 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: seqOfShare && keyholder && !hasError(valid)
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
-
+  
   const { 
     isLoading: removeKeyholderLoading, 
     write: removeKeyholder,
@@ -86,13 +109,18 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     args: seqOfShare && keyholder && !hasError(valid)
       ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
       :   undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },    
   });
-
+  
   useEffect(()=>{
     getLockers(term).then(
       ls => setLockers(ls)
     );
-  }, [term, addLocker, removeLocker, addKeyholder, removeKeyholder]);
+  }, [term, time]);
 
   return (
     <>
@@ -145,7 +173,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >
                         <IconButton 
-                          disabled={ addLockerLoading || hasError(valid)}
+                          disabled={ addLockerLoading || hasError(valid) || loading}
                           sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                           onClick={ () => addLocker?.() }
                           color="primary"
@@ -190,7 +218,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >           
                         <IconButton
-                          disabled={ removeLockerLoading || hasError(valid) } 
+                          disabled={ removeLockerLoading || hasError(valid) || loading} 
                           sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                           onClick={ () => removeLocker?.() }
                           color="primary"
@@ -205,7 +233,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         arrow
                       >
                         <IconButton 
-                          disabled={ addKeyholderLoading || hasError(valid)}
+                          disabled={ addKeyholderLoading || hasError(valid) || loading}
                           sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                           onClick={ () => addKeyholder?.() }
                           color="primary"
@@ -240,7 +268,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       >
 
                         <IconButton
-                          disabled={ removeKeyholderLoading || hasError(valid) } 
+                          disabled={ removeKeyholderLoading || hasError(valid) || loading} 
                           sx={{width: 20, height: 20, m: 1, mr: 10}} 
                           onClick={ () => removeKeyholder?.() }
                           color="primary"

@@ -11,6 +11,7 @@ import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
+import { LoadingButton } from "@mui/lab";
 
 export function CreateMotionForAction({refresh}:CreateMotionProps) {
 
@@ -24,6 +25,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const {
     isLoading: proposeActionLoading,
@@ -38,6 +40,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
           desHash, BigInt(executor)]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -152,15 +155,17 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             value={ desHash }
           />
 
-          <Button
+          <LoadingButton
             disabled={ !proposeAction || proposeActionLoading || hasError(valid)}
+            loading={loading}
+            loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:218 }}
             onClick={()=>proposeAction?.()}
           >
             Propose
-          </Button>
+          </LoadingButton>
 
         </Stack>
       </Paper>

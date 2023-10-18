@@ -55,6 +55,8 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
     })
   }
 
+  const [ loading, setLoading ] = useState(false);
+
   const udpateResults = ()=> {
     if (cp.length > 1) {
       setCp(v => {
@@ -63,6 +65,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
         return arr;
       });
     }
+    setLoading(false);
     setOpen(false);
   }
 
@@ -75,6 +78,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
       ? [BigInt(cp[cp.length - 1])]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, udpateResults);
     }
@@ -116,7 +120,7 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ cp.length < 2 } 
+                      disabled={ cp.length < 2 || removeRuleLoading || loading} 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ ()=>removeRule?.() }
                       color="primary"

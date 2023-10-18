@@ -6,6 +6,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
+import { LoadingButton } from "@mui/lab";
 
 export function CreateMotionForDoc({refresh}:CreateMotionProps) {
 
@@ -16,6 +17,12 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
   const [ executor, setExecutor ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=> {
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: proposeDocOfGmLoading,
@@ -26,8 +33,9 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -85,15 +93,17 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
           value={ executor }
         />
 
-        <Button
+        <LoadingButton
           disabled={ !proposeDocOfGm || proposeDocOfGmLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:218 }}
           onClick={()=>proposeDocOfGm?.()}
         >
           Propose
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

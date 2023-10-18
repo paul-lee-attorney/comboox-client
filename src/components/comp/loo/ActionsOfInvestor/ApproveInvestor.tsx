@@ -7,6 +7,7 @@ import { useGeneralKeeperApproveInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
@@ -16,6 +17,12 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
   const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: approveInvestorLoading,
@@ -26,6 +33,7 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
         ? [ BigInt(userNo), BigInt(seqOfLR)]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -77,9 +85,10 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
             value={ seqOfLR } 
           />
 
-          <Button 
+          <LoadingButton 
             disabled = { approveInvestorLoading || hasError(valid)}
-
+            loading={loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<PersonAddAlt />}
@@ -87,7 +96,7 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
             size='small'
           >
             Approve
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

@@ -6,10 +6,21 @@ import {
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { LightMode } from "@mui/icons-material";
 import { FileHistoryProps } from "./CirculateSha";
+import { HexType } from "../../../../../scripts/common";
+import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
 export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 
   const { gk } = useComBooxContext();
+
+  const [ loading, setLoading ] = useState(false);
+
+  const refresh = ()=>{
+    setLoading(false);
+    setNextStep(7);
+  }
 
   const {
     isLoading,
@@ -17,21 +28,25 @@ export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
   } = useGeneralKeeperActivateSha({
     address: gk,
     args: [ addr ],
-    onSuccess() {
-      setNextStep(7);
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 
   return (
-    <Button
+    <LoadingButton
       disabled={isLoading}
+      loading = {loading}
+      loadingPosition="end"
       variant="contained"
       endIcon={<LightMode />}
       sx={{ m:1, minWidth:218 }}
       onClick={()=>write?.()}
     >
       Activate
-    </Button>
+    </LoadingButton>
   )
 
 }

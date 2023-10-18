@@ -21,6 +21,7 @@ import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
 import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyHex, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { getSha } from "../../../../../scripts/comp/roc";
 import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
+import { LoadingButton } from "@mui/lab";
 
 export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
@@ -28,6 +29,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
 
   const [ rules, setRules ] = useState<FirstRefusalRule[]>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   useEffect(()=>{
     if (boox) {
@@ -49,6 +51,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -66,6 +69,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -142,9 +146,10 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
           
           <Divider orientation="vertical" flexItem />
 
-          <Button 
+          <LoadingButton 
             disabled = {!execFirstRefusal || execFirstRefusalLoading || hasError(valid)}
-
+            loading={loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<EmojiPeopleOutlined />}
@@ -152,7 +157,7 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
             size='small'
           >
             First Refusal
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

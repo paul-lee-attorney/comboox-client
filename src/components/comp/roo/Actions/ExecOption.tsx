@@ -1,17 +1,21 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperExecOption } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { DoneOutline } from "@mui/icons-material";
 import { HexType } from "../../../../scripts/common";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
 export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
+  const [ loading, setLoading ] = useState(false);
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -22,6 +26,7 @@ export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
     address: gk,
     args: [ BigInt(seqOfOpt) ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -32,8 +37,10 @@ export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
       <Stack direction='row' >
 
-        <Button 
+        <LoadingButton 
           disabled={ execOptLoading }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <DoneOutline /> }
@@ -41,7 +48,7 @@ export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           size='small'
         >
           Exercise
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../../scripts/common/sigPage";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { FileHistoryProps } from "../../roc/sha/Actions/CirculateSha";
+import { LoadingButton } from "@mui/lab";
 
 export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
@@ -15,10 +16,13 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ loading, setLoading ] = useState(false);
+
   const [ time, setTime ] = useState(0);
 
   const refresh = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
 
@@ -31,6 +35,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
       ? [addr, sigHash]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -66,15 +71,17 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
         size='small'
       />                                            
 
-      <Button
+      <LoadingButton
         disabled={!signIa || signIaLoading || hasError(valid)}
+        loading = {loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, minWidth:218, height:40 }}
         onClick={()=>signIa?.()}
       >
         Sign Ia
-      </Button>
+      </LoadingButton>
 
       {parasOfPage && (
         <Box sx={{ width:280 }} >        

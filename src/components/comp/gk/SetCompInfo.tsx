@@ -4,7 +4,6 @@ import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 import { 
   TextField, 
-  Button,
   Card, 
   CardContent, 
   Typography,
@@ -29,6 +28,7 @@ import { CompInfo, getCompInfo } from '../../../scripts/comp/gk';
 import { dateParser, longDataParser, refreshAfterTx, toAscii, } from '../../../scripts/common/toolsKit';
 import { currencies } from './GeneralInfo';
 import { HexType } from '../../../scripts/common';
+import { LoadingButton } from '@mui/lab';
 
 
 export const defaultInfo: CompInfo = {
@@ -51,9 +51,12 @@ export function SetCompInfo({nextStep}: InitCompProps) {
 
   const { gk } = useComBooxContext();
   const [ time, setTime ] = useState(0);
+  
+  const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
   const {
@@ -67,6 +70,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
             compInfo.name 
           ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -194,9 +198,10 @@ export function SetCompInfo({nextStep}: InitCompProps) {
               </Select>
             </FormControl>
 
-            <Button 
+            <LoadingButton 
               disabled = { setInfoLoading }
-
+              loading={loading}
+              loadingPosition='end'
               sx={{ m: 1, minWidth: 120, height: 40 }} 
               variant="contained" 
               endIcon={<Update />}
@@ -204,7 +209,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
               size='small'
             >
               Update
-            </Button>
+            </LoadingButton>
 
           </Stack>
 

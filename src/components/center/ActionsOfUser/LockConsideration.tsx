@@ -1,5 +1,5 @@
 
-import { Button, Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
+import { Divider, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
 import { useRegCenterLockConsideration } from '../../../generated';
 
@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { LockPointsProps } from './LockPoints';
 import { CBP, defaultCBP } from './Mint';
+import { LoadingButton } from '@mui/lab';
 
 
 export interface Selector {
@@ -68,12 +69,14 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
   const [ paras, setParas ] = useState<string[]>(calDefaultParas(hashLock, selectors[func].offSet));
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [loading, setLoading] = useState(false);
 
   const refresh = ()=> {
     console.log('payloads: ', constructPayload(func, paras));
     refreshList();
     getUser();
     getBalanceOf();
+    setLoading(false);
   }
 
   const {
@@ -92,6 +95,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -380,8 +384,10 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
 
         <Divider orientation='vertical' sx={{ m:1 }} flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled={ !lockConsideration || lockConsiderationLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             lockConsideration?.()
           }}
@@ -390,7 +396,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
           endIcon={<LockClockOutlined />}       
         >
           Lock
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

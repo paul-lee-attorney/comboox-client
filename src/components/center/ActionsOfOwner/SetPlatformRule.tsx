@@ -11,11 +11,19 @@ import { useState } from 'react';
 import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../scripts/center/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
 
   const [ rule, setRule ] = useState<StrRule>(defaultStrRule);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
+  const [loading, setLoading] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: setPlatformRuleLoading,
@@ -24,6 +32,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: hasError(valid) ? undefined : [ codifyPlatformStrRule(rule)],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -117,15 +126,17 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ setPlatformRuleLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => setPlatformRule?.()}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}
         >
           Set
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

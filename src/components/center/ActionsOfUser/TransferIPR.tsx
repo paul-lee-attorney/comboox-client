@@ -10,6 +10,7 @@ import { BorderColor, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
 import { FormResults, defFormResults, hasError, longSnParser, onlyNum } from '../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 export function TransferIPR() {
 
@@ -20,6 +21,8 @@ export function TransferIPR() {
 
   const [ receipt, setReceipt ] = useState<string>('');
   const [ open, setOpen ] = useState<boolean>(false);
+
+  const [loading, setLoading] = useState(false);
 
   const {
     isLoading: transferIPRLoading,
@@ -33,6 +36,7 @@ export function TransferIPR() {
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       getReceipt(hash).then(
         r => {
@@ -47,6 +51,7 @@ export function TransferIPR() {
 
             setReceipt(str);
             setOpen(true);
+            setLoading(false);
           }
         }
       )
@@ -111,15 +116,17 @@ export function TransferIPR() {
           }}
         />
 
-        <Button 
-          disabled={ transferIPRLoading || hasError(valid)} 
+        <LoadingButton 
+          disabled={ transferIPRLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition='end' 
           onClick={() => transferIPR?.()}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}
         >
           Transfer
-        </Button>
+        </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >
           <Alert 

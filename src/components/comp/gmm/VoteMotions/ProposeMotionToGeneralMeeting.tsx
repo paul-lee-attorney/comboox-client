@@ -11,14 +11,18 @@ import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralM
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 import { HexType } from "../../../../scripts/common";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk } = useComBooxContext();
+
+  const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
     refresh();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -28,6 +32,7 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }:
     address: gk,
     args: [BigInt(seqOfMotion)],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -64,15 +69,17 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }:
 
       <Collapse in={ !appear } >
         <Stack direction="row" sx={{ alignItems:'center' }} >
-         <Button
+         <LoadingButton
             disabled={ !proposeMotionToGm || proposeMotionToGmLoading }
+            loading={loading}
+            loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:118 }}
             onClick={()=>proposeMotionToGm?.()}
           >
             Propose
-          </Button>
+          </LoadingButton>
         </Stack>
       </Collapse>
 

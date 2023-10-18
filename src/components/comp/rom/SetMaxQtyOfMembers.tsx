@@ -25,6 +25,7 @@ import { HexType, MaxSeqNo, booxMap } from '../../../scripts/common';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { maxQtyOfMembers } from '../../../scripts/comp/rom';
 import { InitCompProps } from '../gk/SetCompInfo';
+import { LoadingButton } from '@mui/lab';
 
 
 export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
@@ -34,9 +35,11 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
   useEffect(()=>{
@@ -127,9 +130,10 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
               size='small'
             />
 
-            <Button 
+            <LoadingButton 
               disabled = {!setMaxQty || setMaxQtyLoading || hasError(valid)}
-
+              loading= {loading}
+              loadingPosition='end'
               sx={{ m: 1, minWidth: 120, height: 40 }} 
               variant="contained" 
               endIcon={<Update />}
@@ -137,7 +141,7 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
               size='small'
             >
               Update
-            </Button>
+            </LoadingButton>
 
           </Stack>
 

@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetRoyaltyRule
@@ -11,15 +11,18 @@ import { useState } from 'react';
 import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../scripts/center/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
 
   const [ rule, setRule ] = useState<StrKey>(defaultStrKey);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [loading, setLoading] = useState(false);
 
   const refresh = () => {
     getUser();
     refreshList();
+    setLoading(false);
   }
 
   const {
@@ -29,6 +32,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
     address: AddrOfRegCenter,
     args: !hasError(valid) ? [ codifyStrRoyaltyRule(rule)] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -101,15 +105,17 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ setRoyaltyRuleLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => setRoyaltyRule?.()}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}
         >
           Set
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import {  
-  Button,
   Paper,
   Stack,
   Divider,
@@ -16,9 +15,7 @@ import {
 import { ArrowDownward, ArrowUpward, Key }  from '@mui/icons-material';
 
 
-import {
-  useAccessControlSetDirectKeeper,
-} from '../../../generated';
+import { useAccessControlSetDirectKeeper } from '../../../generated';
 
 import { HexType, booxMap } from '../../../scripts/common';
 
@@ -27,13 +24,17 @@ import { getKeeper } from '../../../scripts/comp/gk';
 import { getDK } from '../../../scripts/common/accessControl';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { InitCompProps } from './SetCompInfo';
+import { LoadingButton } from '@mui/lab';
 
 export function TurnKey({ nextStep }:InitCompProps) {
   const { gk, boox } = useComBooxContext();
   const [ time, setTime ] = useState(0);
 
+  const [ loading, setLoading ] = useState(false);
+
   const refresh = ()=>{
     setTime(Date.now());
+    setLoading(false);
   }
 
   const [romKeeper, setRomKeeper] = useState<HexType>();
@@ -55,6 +56,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
     address: boox ? boox[booxMap.ROM] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -79,6 +81,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
     address: boox ? boox[booxMap.ROS] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -200,8 +203,10 @@ export function TurnKey({ nextStep }:InitCompProps) {
         
           <Stack direction='row' sx={{m:1, p:1}}>
 
-            <Button 
+            <LoadingButton 
               disabled = { !setRomDK || setRomDKLoading }
+              loading={loading}
+              loadingPosition='start'
               sx={{ m: 1, mr: 5, minWidth: 120, height: 40 }} 
               variant="outlined" 
               color='primary'
@@ -212,10 +217,12 @@ export function TurnKey({ nextStep }:InitCompProps) {
               size='small'
             >
               Turn Key of ROM
-            </Button>
+            </LoadingButton>
 
-            <Button 
+            <LoadingButton 
               disabled = {!setRosDK || setRosDKLoading }
+              loading={loading}
+              loadingPosition='start'
               sx={{ m: 1, ml:5, minWidth: 120, height: 40 }} 
               variant="outlined" 
               color='success'
@@ -226,7 +233,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
               size='small'
             >
               Turn Key of ROS
-            </Button>
+            </LoadingButton>
 
           </Stack>
 

@@ -10,6 +10,7 @@ import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 import { HexType, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
@@ -17,10 +18,12 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
 
   const [ delegater, setDelegater ] = useState<string>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -32,6 +35,7 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -58,15 +62,17 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
         size='small'
       />
 
-      <Button
+      <LoadingButton
         disabled={ !entrustDelegaterOfMember || entrustDelegaterOfMemberLoading || hasError(valid)}
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<HandshakeOutlined />}
         sx={{ m:1, minWidth:128 }}
         onClick={()=>entrustDelegaterOfMember?.()}
       >
         Entrust
-      </Button>
+      </LoadingButton>
 
     </Stack> 
   );

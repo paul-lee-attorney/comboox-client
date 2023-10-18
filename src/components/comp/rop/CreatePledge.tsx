@@ -7,6 +7,7 @@ import { getShare } from "../../../scripts/comp/ros";
 import { Create } from "@mui/icons-material";
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 async function obtainPledgor(addr:HexType, seqOfShare: string):Promise<string>{  
@@ -25,6 +26,12 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
   const [ head, setHead ] = useState<StrHead>(defaultStrHead);
   const [ body, setBody ] = useState<StrBody>(defaultStrBody);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: createPledgeLoading,
@@ -40,9 +47,10 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
-    }    
+      refreshAfterTx(hash, updateResults);
+    }
   });
 
   return (
@@ -293,8 +301,10 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
 
         <Divider orientation="vertical" flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled={ createPledgeLoading || hasError(valid) }
+          loading = {loading}
+          loadingPosition="end"
           sx={{ m: 3, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Create /> }
@@ -302,7 +312,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
           size='small'
         >
           Create
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

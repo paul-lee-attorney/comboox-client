@@ -11,6 +11,7 @@ import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { ExecActionProps } from "../../bmm/ExecMotions/ExecAction";
+import { LoadingButton } from "@mui/lab";
 
 export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionProps) {
 
@@ -19,6 +20,12 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
   const [ actions, setActions ] = useState<Action[]>([ defaultAction ]);
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults=()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: execActionLoading,
@@ -33,8 +40,9 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
           desHash, BigInt(seqOfMotion)]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -113,15 +121,17 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
         value={ desHash }
       />
 
-      <Button
+      <LoadingButton
         disabled={ !execAction || execActionLoading || hasError(valid)}
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<Surfing />}
         sx={{ m:1, minWidth:218 }}
         onClick={ handleClick }
       >
         Execute
-      </Button>
+      </LoadingButton>
 
       </Stack>
 

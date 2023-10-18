@@ -13,6 +13,7 @@ import {
 import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { refreshAfterTx } from '../../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 interface FinalizeIaProps {
   addr: HexType;
@@ -24,10 +25,12 @@ export function FinalizeIa({ addr, setIsFinalized, setNextStep }: FinalizeIaProp
 
   const [ flag, setFlag ] = useState<boolean>(false);
   const [ open, setOpen ] = useState(false);
+  const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
     setFlag(true);
     setIsFinalized(true);
+    setLoading(false);
     setNextStep(1);
   }
 
@@ -37,6 +40,7 @@ export function FinalizeIa({ addr, setIsFinalized, setNextStep }: FinalizeIaProp
   } = useInvestmentAgreementFinalizeIa({
     address: addr,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -45,15 +49,17 @@ export function FinalizeIa({ addr, setIsFinalized, setNextStep }: FinalizeIaProp
   return (
     <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-      <Button
+      <LoadingButton
         disabled={ finalizeIaLoading }
+        loading = {loading}
+        loadingPosition='end'
         sx={{m:1, width:'50%', height:55}}
         variant='outlined'
         endIcon={<StopCircleOutlined />}
         onClick={ () => finalizeIa?.() }
       >
         Finalize Ia
-      </Button>
+      </LoadingButton>
 
       <Collapse in={open} sx={{width:"50%"}}>        
         <Alert 

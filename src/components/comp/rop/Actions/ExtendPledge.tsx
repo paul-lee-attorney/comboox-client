@@ -6,6 +6,7 @@ import { Start } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
@@ -14,9 +15,11 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const [ days, setDays ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -32,6 +35,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -60,8 +64,10 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ extendPledgeLoading || hasError(valid) }
+          loading = {loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Start /> }
@@ -69,7 +75,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         >
           Extend
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

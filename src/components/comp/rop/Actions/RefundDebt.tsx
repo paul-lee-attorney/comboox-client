@@ -6,6 +6,7 @@ import { VolunteerActivismOutlined } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxData } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
@@ -14,9 +15,11 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const [ amt, setAmt ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -32,6 +35,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         ]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -61,8 +65,10 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           value={ amt?.toString() }
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ refundDebtLoading || hasError(valid) }
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <VolunteerActivismOutlined /> }
@@ -70,7 +76,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         >
           Refund Debt
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

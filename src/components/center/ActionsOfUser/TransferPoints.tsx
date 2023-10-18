@@ -12,6 +12,7 @@ import { getReceipt } from '../../../scripts/common/common';
 import { FormResults, HexParser, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, onlyHex, onlyNum } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { CBP, defaultCBP } from './Mint';
+import { LoadingButton } from '@mui/lab';
 
 interface Receipt{
   from: string;
@@ -29,6 +30,8 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const {
     isLoading: transferPointsLoading,
     write: transferPoints
@@ -39,6 +42,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           BigInt(amt.cbp) * BigInt(10 ** 18) + BigInt(amt.glee) * BigInt(10 ** 9)]
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       getReceipt(hash).then(
         r => {
@@ -57,6 +61,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
             setReceipt(rpt);
             setOpen(true);
             getBalanceOf();
+            setLoading(false);
           }
         }
       )
@@ -128,8 +133,10 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
         }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ transferPointsLoading || hasError(valid) } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             transferPoints?.()
           }}
@@ -138,7 +145,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           endIcon={<ArrowCircleRightOutlined />}       
         >
           Transfer
-        </Button>
+        </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >
           <Alert 

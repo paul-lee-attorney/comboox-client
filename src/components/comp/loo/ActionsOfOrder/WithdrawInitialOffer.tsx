@@ -8,12 +8,19 @@ import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 import { HexType, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {gk} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=> {
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: withdrawInitOfferLoading,
@@ -27,8 +34,9 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
            ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
       
@@ -87,9 +95,10 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           value={ offer.seqOfLR.toString() } 
         />
 
-        <Button 
+        <LoadingButton 
           disabled = { withdrawInitOfferLoading || hasError(valid)}
-
+          loading = {loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<RedoOutlined />}
@@ -97,7 +106,7 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           size='small'
         >
           Withdraw
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

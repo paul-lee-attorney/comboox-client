@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetBackupKey
@@ -10,16 +10,19 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
+import { LoadingButton } from '@mui/lab';
 
 
 export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
 
   const [ key, setKey ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [loading, setLoading] = useState(false);
 
   const refresh = () => {
     getUser();
     refreshList();
+    setLoading(false);
   }
 
   const {
@@ -29,6 +32,7 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
     address: AddrOfRegCenter,
     args: !hasError(valid) ? [key] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -56,8 +60,10 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ setBackupKeyLoading || hasError(valid) } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             setBackupKey?.()
           }}
@@ -66,7 +72,7 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
           endIcon={<BorderColor />}       
         >
           Set
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

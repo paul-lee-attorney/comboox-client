@@ -10,12 +10,20 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
+import { LoadingButton } from '@mui/lab';
 
 
 export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
 
   const [ newOwner, setNewOwner ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
+  const [loading, setLoading] = useState(false);
+
+  const updateResults = ()=> {
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: transferOwnershipLoading,
@@ -24,6 +32,7 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
     address: AddrOfRegCenter,
     args: hasError(valid) ? undefined : [newOwner],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -52,8 +61,10 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ transferOwnershipLoading || hasError(valid) } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             transferOwnership?.()
           }}
@@ -62,7 +73,7 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
           endIcon={<BorderColor />}
         >
           Set
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

@@ -8,6 +8,7 @@ import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
@@ -15,6 +16,12 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
 
   const {
     isLoading: placeInitOfferLoading,
@@ -30,8 +37,9 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
            ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
       
@@ -131,9 +139,10 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           value={ offer.price.toString() } 
         />
 
-        <Button 
+        <LoadingButton 
           disabled = { placeInitOfferLoading || hasError(valid)}
-
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Loyalty />}
@@ -141,7 +150,7 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           size='small'
         >
           Offer
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

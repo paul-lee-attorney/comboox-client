@@ -8,6 +8,7 @@ import { useState } from "react";
 import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const {gk} = useComBooxContext();
@@ -15,10 +16,13 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
+          
 
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);    
   }
 
@@ -37,6 +41,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -143,8 +148,10 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
 
           <Divider orientation="vertical" flexItem />
 
-          <Button 
+          <LoadingButton 
             disabled = { execDragAlongLoading || hasError(valid)}
+            loading={loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<AgricultureOutlined />}
@@ -152,7 +159,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
             size='small'
           >
             Drag Along
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

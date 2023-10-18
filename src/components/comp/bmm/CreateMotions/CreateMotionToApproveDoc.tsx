@@ -10,6 +10,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
+import { LoadingButton } from "@mui/lab";
 
 export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
 
@@ -21,6 +22,13 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
+
   const {
     isLoading: proposeDocLoading,
     write: proposeDoc,
@@ -30,8 +38,9 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
           ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
           : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -95,15 +104,17 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
           value={ executor }
         />
 
-        <Button
+        <LoadingButton
           disabled={ !proposeDoc || proposeDocLoading || hasError(valid)}
           variant="contained"
+          loading={loading}
+          loadingPosition="end"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:218 }}
           onClick={()=>proposeDoc?.()}
         >
           Propose
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

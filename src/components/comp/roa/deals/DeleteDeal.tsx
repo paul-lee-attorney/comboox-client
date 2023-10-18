@@ -1,10 +1,11 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Deal, defaultDeal } from "../../../../scripts/comp/ia";
 import { useInvestmentAgreementDelDeal } from "../../../../generated";
 import { HexType } from "../../../../scripts/common";
 import { Button } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 interface DeleteDealProps {
@@ -17,9 +18,12 @@ interface DeleteDealProps {
 
 export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDealProps) {
 
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     setDeal(defaultDeal);
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -29,19 +33,22 @@ export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDe
     address: addr,
     args: [ BigInt(seqOfDeal) ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
 
   return (
-    <Button
+    <LoadingButton
       variant="contained" 
+      loading={loading}
+      loadingPosition="end"
       endIcon={<Delete/>} 
       sx={{ mr:5 }}
       onClick={()=>deleteDeal?.()} 
     >
       Delete
-    </Button>
+    </LoadingButton>
   );  
 }

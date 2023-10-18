@@ -18,7 +18,6 @@ import {
   useRegisterOfSharesDecreaseCapital,
 } from '../../../generated';
 
-
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
@@ -139,6 +138,7 @@ export function InitBos({nextStep}: InitCompProps) {
               variant='contained'
               startIcon={<AddCircle />}
               loading={loading}
+              loadingPosition='start'
               disabled={!issueShare || issueShareLoading || hasError(valid) }
               onClick={()=>issueShare?.()}
               size="small"
@@ -376,6 +376,7 @@ export function InitBos({nextStep}: InitCompProps) {
                 sx={{m:1, p:1}}
                 variant='contained'
                 loading={ loading }
+                loadingPosition='end'
                 endIcon={<RemoveCircle />}
                 disabled={ !delShare || delShareLoading || hasError(valid) }
                 onClick={()=>delShare?.()}

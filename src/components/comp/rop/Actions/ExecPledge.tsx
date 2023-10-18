@@ -11,6 +11,7 @@ import { HexType, MaxData, MaxUserNo, booxMap } from "../../../../scripts/common
 import { getShare } from "../../../../scripts/comp/ros";
 import { StrBody, StrHead, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
@@ -21,6 +22,8 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const [ version, setVersion ] = useState<string>('1');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
+
 
   useEffect(()=>{
     if (boox) {
@@ -42,8 +45,11 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     }
   });
 
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -61,6 +67,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -170,8 +177,10 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size="small"
         />
 
-        <Button 
+        <LoadingButton 
           disabled={ execPledgeLoading || hasError(valid) }
+          loading = {loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <DoneOutline /> }
@@ -179,7 +188,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         >
           Exercise
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

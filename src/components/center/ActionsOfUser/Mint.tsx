@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, onlyNum } from '../../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
+import { LoadingButton } from '@mui/lab';
 
 interface Receipt{
   to: string;
@@ -37,6 +38,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [loading, setLoading] = useState(false);
 
   const {
     isLoading: mintPointsLoading,
@@ -49,6 +51,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
         + BigInt(amt.glee) * BigInt(10 ** 9)
         ],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       waitForTransaction({hash}).then(
         res => {
@@ -66,6 +69,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             setOpen(true);
             getUser();
             getBalanceOf();
+            setLoading(false);
           }
           console.log("Receipt: ", res);          
         }
@@ -137,9 +141,11 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           }}
         />
 
-        <Button 
+        <LoadingButton 
           size='small'
           disabled={ mintPointsLoading || hasError(valid)} 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             mintPoints?.()
           }}
@@ -148,7 +154,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           endIcon={<Flare />}       
         >
           Mint
-        </Button>
+        </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >
           <Alert 

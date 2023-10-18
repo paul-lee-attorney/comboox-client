@@ -29,6 +29,8 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
   const [ cp, setCp ] = useState(mandatoryRules);
   const [open, setOpen] = useState(false);
 
+  const [ loading, setLoading ] = useState(false);
+
   useEffect(()=>{
     if (initSeqList) {
       if (!isFinalized) {
@@ -64,6 +66,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
         return arr;
       });
     }
+    setLoading(false);
     setOpen(false);
   }
 
@@ -74,6 +77,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
     address: sha,
     args: [BigInt(cp[cp.length - 1] ?? '513')],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, udpateResults);
     }
@@ -116,7 +120,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule } 
+                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule || loading} 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ () => removeRule?.() }
                       color="primary"

@@ -66,6 +66,8 @@ export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: Grou
     })
   }
 
+  const [ loading, setLoading ] = useState(false);
+
   const udpateResults = ()=> {
     if (cp.length > 12) {
       setCp(v => {
@@ -74,6 +76,7 @@ export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: Grou
         return arr;
       });
     }
+    setLoading(false);
     setOpen(false);
   }
 
@@ -84,6 +87,7 @@ export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: Grou
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, udpateResults);
     }
@@ -130,7 +134,7 @@ export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: Grou
                       <AddCircle/>
                     </IconButton>
                     <IconButton 
-                      disabled={ cp.length < 13 || removeRuleLoading || !removeRule }
+                      disabled={ cp.length < 13 || removeRuleLoading || !removeRule || loading}
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ removeCp }
                       color="primary"

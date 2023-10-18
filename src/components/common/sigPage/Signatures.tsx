@@ -42,6 +42,8 @@ import {
 import { ParasOfSigPage, StrSig, getBuyers, getParasOfPage, getSellers, parseParasOfPage } from "../../../scripts/common/sigPage";
 import { FormResults, dateParser, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
+import { setLazyProp } from "next/dist/server/api-utils";
+import { LoadingButton } from "@mui/lab";
 
 async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
 
@@ -92,6 +94,8 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
   const [ timing, setTiming ] = useState<Timing>(defaultTiming);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [loading, setLoading] = useState(false);
+
   const {
     isLoading: setTimingLoading,
     write: writeSetTiming,
@@ -104,6 +108,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
           ] 
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -125,6 +130,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
         ] 
       : undefined,
       onSuccess(data) {
+        setLoading(true);
         let hash: HexType = data.hash;
         refreshAfterTx(hash, refresh);
       }
@@ -142,6 +148,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
         ] 
       : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -154,6 +161,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
 
   const refresh = () => {
     setTime(Date.now());
+    setLoading(false);
   }
 
   useEffect(()=>{
@@ -238,8 +246,10 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                   value={ timing?.closingDays }                                      
                 />
 
-                <Button
+                <LoadingButton
                   disabled={ setTimingLoading || hasError(valid) }
+                  loading={loading}
+                  loadingPosition="end"
                   variant="contained"
                   sx={{
                     height: 40,
@@ -249,7 +259,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                   onClick={() => writeSetTiming?.()}
                 >
                   Update
-                </Button>
+                </LoadingButton>
               
               </>
             )}
@@ -360,7 +370,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
               >
                 <span>
                 <IconButton 
-                  disabled={ addBlankIsLoading || hasError(valid)}
+                  disabled={ addBlankIsLoading || hasError(valid) || loading}
                   sx={{width: 20, height: 20, m: 1 }} 
                   onClick={ () => addBlank?.() }
                   color="primary"
@@ -410,7 +420,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
               >           
                 <span>
                 <IconButton
-                  disabled={ removeBlankIsLoading || hasError(valid)} 
+                  disabled={ removeBlankIsLoading || hasError(valid) || loading} 
                   sx={{width: 20, height: 20, m: 1, mr:2 }} 
                   onClick={ () => removeBlank?.() }
                   color="primary"

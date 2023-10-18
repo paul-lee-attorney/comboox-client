@@ -19,7 +19,7 @@ import {
   MenuItem,
 } from "@mui/material";
 
-import { AddrZero, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
+import { AddrZero, HexType, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -40,7 +40,7 @@ import { AlongLinks } from "./AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AlongLink, StrLinkRule, defaultStrLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 
 interface AlongsProps extends SetShaTermProps {
@@ -55,6 +55,12 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
   const [ open, setOpen ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ loading, setLoading ] = useState(false);
+
+  const refresh = ()=>{
+    setLoading(false);
+  }
+
   const { 
     isLoading: addLinkLoading,
     write: addLink 
@@ -63,6 +69,11 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     args: rule && drager && !hasError(valid)
       ? [ linkRuleCodifier(rule) , BigInt(drager)] 
       : undefined, 
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   const { 
@@ -71,6 +82,11 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
   } = useAlongsRemoveDragger({
     address: term,
     args: drager && !hasError(valid) ? [BigInt(drager)] : undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    },   
   });
 
   const [ follower, setFollower ] = useState<string>('0');
@@ -84,6 +100,11 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
       ? [ BigInt(drager),
           BigInt(follower)] :
             undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }
   });
 
   const { 
@@ -94,6 +115,11 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     args: drager && follower && !hasError(valid)
       ? [ BigInt(drager), BigInt(follower)] 
       : undefined,
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, refresh);
+    }  
   });
 
   useEffect(()=>{
@@ -282,7 +308,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       arrow
                     >
                       <IconButton 
-                        disabled={ addLinkLoading || hasError(valid)}
+                        disabled={ addLinkLoading || hasError(valid) || loading}
                         sx={{width: 20, height: 20, m: 1, ml: 5 }} 
                         onClick={ () => addLink?.() }
                         color="primary"
@@ -315,7 +341,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       arrow
                     >           
                       <IconButton
-                        disabled={ removeLinkLoading || hasError(valid)} 
+                        disabled={ removeLinkLoading || hasError(valid) || loading} 
                         sx={{width: 20, height: 20, m: 1, mr: 10, }} 
                         onClick={ () => removeLink?.() }
                         color="primary"
@@ -330,7 +356,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       arrow
                     >
                       <IconButton 
-                        disabled={ addFollowerLoading || hasError(valid)}
+                        disabled={ addFollowerLoading || hasError(valid) || loading}
                         sx={{width: 20, height: 20, m: 1, ml: 10,}} 
                         onClick={ () => addFollower?.() }
                         color="primary"
@@ -365,7 +391,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                     >
 
                       <IconButton
-                        disabled={ removeFollowerLoading || hasError(valid)} 
+                        disabled={ removeFollowerLoading || hasError(valid) || loading} 
                         sx={{width: 20, height: 20, m: 1, mr: 10}} 
                         onClick={ () => removeFollower?.() }
                         color="primary"

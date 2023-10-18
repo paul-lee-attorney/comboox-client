@@ -3,12 +3,12 @@ import { Button } from "@mui/material";
 
 import Link from "next/link";
 import { longSnParser, refreshAfterTx } from "../../scripts/common/toolsKit";
-import { useContractRead, useWaitForTransaction, useWalletClient } from "wagmi";
+import { useContractRead, useWalletClient } from "wagmi";
 import { AddrOfRegCenter, HexType } from "../../scripts/common";
 import { regCenterABI, useRegCenterRegUser } from "../../generated";
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
-import { useEffect } from "react";
-import { readContract, waitForTransaction } from "@wagmi/core";
+import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
 
 interface AcctPageProps {
   flag: boolean;
@@ -19,6 +19,12 @@ export function AcctPage({ flag }:AcctPageProps) {
   const { data: signer } = useWalletClient();
 
   const { userNo, setUserNo } = useComBooxContext();
+  const [ loading, setLoading ] = useState(false);
+
+  const refresh = ()=>{
+    getMyUserNo();
+    setLoading(false);
+  }
 
   const {
     refetch: getMyUserNo
@@ -39,8 +45,9 @@ export function AcctPage({ flag }:AcctPageProps) {
   } = useRegCenterRegUser({
     address: AddrOfRegCenter,
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
-      refreshAfterTx(hash, getMyUserNo);
+      refreshAfterTx(hash, refresh);
     }
   })
 
@@ -67,9 +74,11 @@ export function AcctPage({ flag }:AcctPageProps) {
     )}
 
     {!userNo && (
-      <Button 
+      <LoadingButton 
         size="small"
         disabled={ !signer || regUserLoading } 
+        loading={loading}
+        loadingPosition="end"
         onClick={() => {
           regUser?.()
         }}
@@ -79,7 +88,7 @@ export function AcctPage({ flag }:AcctPageProps) {
         endIcon={<BorderColor />}       
       >
         Register
-      </Button>
+      </LoadingButton>
 
     )}
   </>

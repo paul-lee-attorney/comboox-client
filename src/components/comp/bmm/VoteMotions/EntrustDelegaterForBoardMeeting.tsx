@@ -5,11 +5,12 @@ import {
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Stack, TextField, } from "@mui/material";
+import { Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { HexType, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
@@ -18,10 +19,12 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
   const [ delegater, setDelegater ] = useState<string>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -33,6 +36,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
         ? [seqOfMotion, BigInt(delegater) ]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -59,15 +63,17 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
         size='small'
       />
 
-      <Button
+      <LoadingButton
         disabled={ !entrustDelegaterForBm || entrustDelegaterForBmLoading || hasError(valid)}
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<HandshakeOutlined />}
         sx={{ m:1, minWidth:118 }}
         onClick={()=>entrustDelegaterForBm?.()}
       >
         Entrust
-      </Button>
+      </LoadingButton>
 
     </Stack> 
   );

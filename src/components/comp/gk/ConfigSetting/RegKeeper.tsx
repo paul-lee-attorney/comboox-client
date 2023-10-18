@@ -1,4 +1,4 @@
-import { Button, FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
 import { Create } from "@mui/icons-material";
 import { useGeneralKeeperRegKeeper } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
@@ -7,14 +7,17 @@ import { titleOfKeepers } from "../../../../scripts/comp/gk";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../scripts/common";
 import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
 
 export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps) {
   const { gk } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -24,6 +27,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
     address: gk,
     args: !hasError(valid) ? [BigInt(title), book] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -72,8 +76,10 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
             }}
           />
 
-          <Button 
+          <LoadingButton 
             disabled = {regKeeperLoading || hasError(valid)}
+            loading={loading}
+            loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<Create />}
@@ -81,7 +87,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
             size='small'
           >
             Register Keeper
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

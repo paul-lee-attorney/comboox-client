@@ -1,5 +1,5 @@
 
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterPickupPoints,
@@ -9,6 +9,7 @@ import { AddrOfRegCenter, HexType } from '../../scripts/common';
 import { Redo } from '@mui/icons-material';
 import { useState } from 'react';
 import { refreshAfterTx } from '../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 interface PickupPointsProps{
   hashLock: HexType;
@@ -20,11 +21,13 @@ interface PickupPointsProps{
 export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPointsProps) {
 
   const [ hashKey, setHashKey ] = useState<string>();
-  
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     refreshList();
     getUser();
-    setOpen(false);    
+    setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -34,6 +37,7 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
     address: AddrOfRegCenter,
     args: hashKey ? [hashLock, hashKey] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -55,9 +59,11 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
           onChange={e => setHashKey(e.target.value)}
         />
 
-        <Button 
+        <LoadingButton 
           size='small'
           disabled={ pickupPointsLoading } 
+          loading={loading}
+          loadingPosition='end'
           onClick={() => {
             pickupPoints?.()
           }}
@@ -66,7 +72,7 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
           endIcon={<Redo />}       
         >
           Pickup Points
-        </Button>
+        </LoadingButton>
 
       </Stack>
 

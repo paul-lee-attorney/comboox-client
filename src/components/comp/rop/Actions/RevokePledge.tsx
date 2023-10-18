@@ -1,17 +1,21 @@
 import { useGeneralKeeperRevokePledge } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack } from "@mui/material";
+import { Paper, Stack } from "@mui/material";
 import { Block } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType } from "../../../../scripts/common";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
 
 export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
-  
+  const [ loading, setLoading ] = useState(false);
+
   const updateResults = ()=>{
     refresh();
+    setLoading(false);
     setOpen(false);
   }
 
@@ -22,6 +26,7 @@ export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     address: gk,
     args: [BigInt(pld.head.seqOfShare), BigInt(pld.head.seqOfPld)],
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
@@ -32,8 +37,10 @@ export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
       <Stack direction='row' sx={{ alignItems:'stretch' }} >
 
-        <Button 
+        <LoadingButton 
           disabled={ !revokePledge || revokePledgeLoading }
+          loading = {loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Block /> }
@@ -41,7 +48,7 @@ export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           size='small'
         >
           Revoke
-        </Button>        
+        </LoadingButton>        
 
       </Stack>
     </Paper>

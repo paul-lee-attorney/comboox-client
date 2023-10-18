@@ -7,9 +7,10 @@ import {
 } from "../../../../generated";
 
 import { getDocAddr } from "../../../../scripts/center/rc";
-import { Button, Stack, TextField } from "@mui/material";
+import { Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 
 interface AddTermProps {
@@ -23,6 +24,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
 
   const [ version, setVersion ] = useState<string>('1');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const {
     isLoading: createTermLoading,
@@ -32,15 +34,30 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     args: version && !hasError(valid)
       ? [BigInt(title), BigInt(version)]
       : undefined,
-    onSuccess(data:any) {
-      getDocAddr(data.hash).
-        then(addrOfTerm => setTerms(v => {
-          let out = [...v];
-          out[title-1] = addrOfTerm;
-          return out;
-        }));      
+    onSuccess(data) {
+      setLoading(true);
+      let hash:HexType = data.hash;
+      getDocAddr(hash).
+        then(addrOfTerm => {
+          setLoading(false);
+          setTerms(v => {
+            let out = [...v];
+            out[title-1] = addrOfTerm;
+            return out;
+          });
+        });      
     }
   });
+
+  const refresh = ()=> {
+    setLoading(false);
+    setTerms(v=>{
+      let out = [...v];
+      out[title-1] = AddrZero;
+      return out;
+    });
+
+  }
 
   const {
     isLoading: removeTermLoading,
@@ -48,12 +65,10 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
   } = useShareholdersAgreementRemoveTerm({
     address: sha,
     args: !hasError(valid) ? [BigInt(title)] : undefined,
-    onSuccess() {
-      setTerms(v=>{
-        let out = [...v];
-        out[title-1] = AddrZero;
-        return out;
-      });
+    onSuccess(data) {
+      setLoading(true);
+      let hash:HexType = data.hash;
+      refreshAfterTx(hash, refresh);
     }
   });
 
@@ -80,8 +95,10 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             value={ version }              
           />
 
-          <Button
+          <LoadingButton
             disabled={ !version || createTermLoading || hasError(valid) }
+            loading={loading}
+            loadingPosition="end"
             variant="contained"
             sx={{
               mr: 5,
@@ -91,14 +108,16 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             onClick={() => createTerm?.()}
           >
             Create
-          </Button>
+          </LoadingButton>
 
         </Stack>
       )}
 
       {isCreated && (
-        <Button
+        <LoadingButton
           disabled={ removeTermLoading }
+          loading = {loading}
+          loadingPosition="end"
           variant="contained"
           sx={{
             height: 40,
@@ -108,7 +127,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
           onClick={() => removeTerm?.()}
         >
           Remove
-        </Button>
+        </LoadingButton>
       )}    
     </>
   );

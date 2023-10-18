@@ -2,15 +2,14 @@ import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 
-import { 
-  useGeneralKeeperCreateAction,
-} from "../../../../generated";
+import { useGeneralKeeperCreateAction } from "../../../../generated";
 
-import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
+import { LoadingButton } from "@mui/lab";
 
 export function CreateAction({refresh}:CreateMotionProps) {
 
@@ -25,6 +24,13 @@ export function CreateAction({refresh}:CreateMotionProps) {
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ loading, setLoading ] = useState(false);
+
+  const updateResults = ()=> {
+    refresh();
+    setLoading(false);
+  }
+
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
@@ -38,8 +44,9 @@ export function CreateAction({refresh}:CreateMotionProps) {
           desHash, BigInt(executor)]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -153,15 +160,17 @@ export function CreateAction({refresh}:CreateMotionProps) {
             value={ desHash }
           />
 
-          <Button
+          <LoadingButton
             disabled={ !proposeAction || proposeActionLoading || hasError(valid) }
+            loading={loading}
+            loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:218 }}
             onClick={()=>proposeAction?.()}
           >
             Propose
-          </Button>
+          </LoadingButton>
 
         </Stack>
 

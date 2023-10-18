@@ -11,23 +11,25 @@ import {
 
 import { Skateboarding, Close, }  from '@mui/icons-material';
 
-import { 
-  useAccessControlRenounceRole,
-} from '../../../generated';
+import { useAccessControlRenounceRole } from '../../../generated';
 
 import { AccessControlProps } from './SetOwner';
 import { ATTORNEYS } from '../../../scripts/common/accessControl';
 import { HexType } from '../../../scripts/common';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { LoadingButton } from '@mui/lab';
 
 export function QuitAttorney({ addr }: AccessControlProps) {
 
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   const refresh = ()=>{
     setFlag(true);
     setOpen(true);
+    setLoading(false);
   }
 
   const {
@@ -37,6 +39,7 @@ export function QuitAttorney({ addr }: AccessControlProps) {
     address: addr,
     args: [ ATTORNEYS ],
     onSuccess(data) {
+      setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
@@ -50,15 +53,17 @@ export function QuitAttorney({ addr }: AccessControlProps) {
     <>
       <Stack direction={'row'}  sx={{ width: '100%' }} >
 
-        <Button
+        <LoadingButton
           disabled={ quitAttorneyLoading }
+          loading={loading}
+          loadingPosition='end'
           sx={{m:1, width: '50%', height:55}}
           variant='outlined'
           endIcon={<Skateboarding />}
           onClick={ handleClick }
         >
           Quit Attorney
-        </Button>
+        </LoadingButton>
 
         <Collapse in={open} sx={{width:'50%'}}>        
           <Alert 

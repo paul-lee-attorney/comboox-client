@@ -28,6 +28,7 @@ import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
 import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
+import { LoadingButton } from "@mui/lab";
 
 export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
@@ -35,6 +36,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
 
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   useEffect(()=>{
     if (boox) {
@@ -66,6 +68,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
         ? [seqOfMotion, BigInt(attitude), sigHash]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -135,15 +138,17 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
             size='small'
           />                                            
 
-          <Button
+          <LoadingButton
             disabled={ !castVote || castVoteLoading || hasError(valid)}
+            loading={loading}
+            loadingPosition="end"
             variant="contained"
             endIcon={<HowToVote />}
             sx={{ m:1, minWidth:128 }}
             onClick={()=>castVote?.()}
           >
             Vote
-          </Button>
+          </LoadingButton>
         </Stack>
 
         {voteResult && boox && (

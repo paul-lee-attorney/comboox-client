@@ -4,6 +4,7 @@ import { Update } from "@mui/icons-material";
 import { useAccessControlSetOwner } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { LoadingButton } from "@mui/lab";
 
 export interface AccessControlProps{
   docAddr: HexType;
@@ -16,9 +17,11 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -28,6 +31,7 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     address: docAddr,
     args: !hasError(valid) ? [ owner ] : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -85,8 +89,10 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
 
         <Divider orientation="vertical" flexItem />
 
-        <Button 
+        <LoadingButton 
           disabled = {updateOwnerLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Update />}
@@ -94,7 +100,7 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
           size='small'
         >
           Update
-        </Button>
+        </LoadingButton>
 
       </Stack>
     </Paper>

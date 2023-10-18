@@ -24,6 +24,7 @@ import {
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
+import { LoadingButton } from "@mui/lab";
 
 export interface ExecActionProps extends ProposeMotionProps {
   seqOfVr: number;
@@ -37,10 +38,12 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
   const [ desHash, setDesHash ] = useState<HexType>();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
     refresh();
     setOpen(false);
+    setLoading(false);
   }
 
   const {
@@ -56,6 +59,7 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
           desHash, BigInt(seqOfMotion)]
         : undefined,
     onSuccess(data) {
+      setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
@@ -64,7 +68,7 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
   const addAction = () => {
     setActions(v => {
       let arr = [...v];
-      arr.push(defaultAction);      
+      arr.push(defaultAction);
       return arr;
     })
   }
@@ -132,15 +136,17 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
         value={ desHash }
       />
 
-      <Button
+      <LoadingButton
         disabled={ execActionLoading || hasError(valid) }
+        loading={loading}
+        loadingPosition="end"
         variant="contained"
         endIcon={<Surfing />}
         sx={{ m:1, minWidth:218 }}
         onClick={()=>execAction?.()}
       >
         Execute
-      </Button>
+      </LoadingButton>
 
       </Stack>
 
