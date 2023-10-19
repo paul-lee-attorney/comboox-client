@@ -214,42 +214,42 @@ export function CenterInfo() {
                     <TextField
                       size="small"
                       variant='outlined'
-                      label='EOA_Rewards(GLee)'
+                      label='EOA_Rewards(CBP)'
                       inputProps={{readOnly: true}}
                       fullWidth
                       sx={{
                         m:1,
                         minWidth:218,
                       }}
-                      value={ longDataParser(platformRule.eoaRewards.toString() ?? '0') }
+                      value={ longDataParser((platformRule.eoaRewards / (10**9)).toFixed(4).toString()) }
                     />
                   </td>
                   <td>
                     <TextField
                       size="small"
                       variant='outlined'
-                      label='COA_Rewards(GLee)'
+                      label='COA_Rewards(CBP)'
                       inputProps={{readOnly: true}}
                       fullWidth
                       sx={{
                         m:1,
                         minWidth:218,
                       }}
-                      value={ longDataParser(platformRule.coaRewards.toString() ?? '0') }
+                      value={ longDataParser((platformRule.coaRewards / (10**9)).toFixed(4).toString()) }
                     />
                   </td>
                   <td>
                     <TextField
                       size="small"
                       variant='outlined'
-                      label='FloorOfRoyalty(GLee)'
+                      label='FloorOfRoyalty(CBP)'
                       inputProps={{readOnly: true}}
                       fullWidth
                       sx={{
                         m:1,
                         minWidth:218,
                       }}
-                      value={ longDataParser(platformRule.floor.toString() ?? '0') }
+                      value={ longDataParser((platformRule.floor / (10**9)).toFixed(4).toString()) }
                     />
                   </td>
 
@@ -257,7 +257,7 @@ export function CenterInfo() {
                     <TextField
                       size="small"
                       variant='outlined'
-                      label='RateOfCommission'
+                      label='RateOfCommission (%)'
                       inputProps={{readOnly: true}}
                       fullWidth
                       sx={{

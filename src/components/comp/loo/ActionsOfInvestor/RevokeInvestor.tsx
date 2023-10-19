@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useGeneralKeeperRevokeInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -60,7 +60,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             }}
             onChange={ e => {
               let input = e.target.value;
-              onlyNum('UserNo', input, MaxUserNo, setValid);
+              onlyInt('UserNo', input, MaxUserNo, setValid);
               setUserNo(input); 
             }}
             value={ userNo } 
@@ -78,7 +78,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             }}
             onChange={ e => {
               let input = e.target.value;
-              onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+              onlyInt('SeqOfLR', input, MaxSeqNo, setValid);
               setSeqOfLR( input );
             }}
             value={ seqOfLR } 

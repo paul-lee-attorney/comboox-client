@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
@@ -57,7 +57,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('SeqOfSwap', input, MaxSeqNo, setValid);
+            onlyInt('SeqOfSwap', input, MaxSeqNo, setValid);
             setSeqOfSwap(input);
           }}
           value={ seqOfSwap }
@@ -75,7 +75,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('AmtOfGwei', input, 0n, setValid);
+            onlyInt('AmtOfGwei', input, 0n, setValid);
             setValue(input);
           }}
           value={ value }

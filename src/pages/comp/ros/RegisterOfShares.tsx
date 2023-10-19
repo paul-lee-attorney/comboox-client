@@ -17,7 +17,7 @@ import { CertificateOfContribution } from "../../../components/comp/ros/Certific
 import { Share, getShare, getSharesList } from "../../../scripts/comp/ros";
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { MaxPrice, booxMap } from "../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt } from "../../../scripts/common/toolsKit";
 
 
 function RegisterOfShares() {
@@ -89,7 +89,7 @@ function RegisterOfShares() {
                     helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }          
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                      onlyInt('SeqOfShare', input, MaxPrice, setValid);
                       setSeqOfShare(input);
                     }}
                     value = { seqOfShare }

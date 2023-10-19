@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
 
@@ -59,7 +59,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('SeqOfTarget', input, MaxPrice, setValid);
+            onlyInt('SeqOfTarget', input, MaxPrice, setValid);
             setSeqOfTarget( input );
           }}
           value={ seqOfTarget }
@@ -77,7 +77,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('PaidOfTarget', input, MaxData, setValid);
+            onlyInt('PaidOfTarget', input, MaxData, setValid);
             setPaidOfTarget(input);
           }}
           value={ paidOfTarget }
@@ -95,7 +95,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('SeqOfPledge', input, MaxPrice, setValid);
+            onlyInt('SeqOfPledge', input, MaxPrice, setValid);
             setSeqOfPledge(input);
           }}
           value={ seqOfPledge }

@@ -37,7 +37,7 @@ import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AddTerm } from "../AddTerm";
 import { LockerOfShare } from "./LockerOfShare";
 import { Locker, getLockers } from "../../../../../scripts/comp/lu";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -214,7 +214,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                          onlyInt('SeqOfShare', input, MaxPrice, setValid);
                           setSeqOfShare(input);
                         }}
                         value={ seqOfShare }              
@@ -276,7 +276,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Keyholder', input, MaxUserNo, setValid);
+                          onlyInt('Keyholder', input, MaxUserNo, setValid);
                           setKeyholder(input);
                         }}
                         value={ keyholder }              

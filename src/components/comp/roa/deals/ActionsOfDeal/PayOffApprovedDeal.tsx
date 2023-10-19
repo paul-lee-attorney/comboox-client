@@ -5,7 +5,7 @@ import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
 
@@ -62,7 +62,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
             value={ value }
             onChange={(e)=>{
               let input = removeKiloSymbol(e.target.value);
-              onlyNum('Consideration', input, 0n, setValid); 
+              onlyInt('Consideration', input, 0n, setValid); 
               setValue(input);
             }}
           />

@@ -7,7 +7,7 @@ import { useWalletClient } from "wagmi";
 import { AddrOfRegCenter, HexType } from "../../scripts/common";
 import { useRegCenterGetMyUserNo, useRegCenterRegUser } from "../../generated";
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 
 interface AcctPageProps {

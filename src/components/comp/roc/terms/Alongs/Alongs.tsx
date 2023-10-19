@@ -41,7 +41,7 @@ import { AlongLinks } from "./AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AlongLink, StrLinkRule, defaultStrLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 
 interface AlongsProps extends SetShaTermProps {
@@ -225,7 +225,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('EffectiveDays', input, MaxSeqNo, setValid);
+                          onlyInt('EffectiveDays', input, MaxSeqNo, setValid);
                           setRule((v) => ({
                           ...v,
                           effectiveDays: input,
@@ -246,7 +246,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('ShareRatioThreshold', input, MaxRatio, setValid);
+                          onlyInt('ShareRatioThreshold', input, MaxRatio, setValid);
                           setRule((v) => ({
                             ...v,
                             shareRatioThreshold: input,
@@ -291,7 +291,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Rate', input, MaxRatio, setValid);
+                          onlyInt('Rate', input, MaxRatio, setValid);
                           setRule((v) => ({
                             ...v,
                             rate: input,
@@ -355,7 +355,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('Drager', input, MaxUserNo, setValid);
+                        onlyInt('Drager', input, MaxUserNo, setValid);
                         setDrager(input);
                       }}
                       value={ drager }              
@@ -404,7 +404,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('Follower', input, MaxUserNo, setValid);
+                        onlyInt('Follower', input, MaxUserNo, setValid);
                         setFollower(input);
                       }}
                       value={ follower }              

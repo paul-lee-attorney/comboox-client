@@ -9,21 +9,20 @@ import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
-import { FormResults, HexParser, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, onlyHex, onlyNum } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyHex, onlyInt, onlyNum } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { CBP, defaultCBP } from './Mint';
 import { LoadingButton } from '@mui/lab';
 
 interface Receipt{
   from: string;
   to: string;
-  amt: CBP;
+  amt: string;
 }
 
 export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<HexType>(AddrZero);
-  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
+  const [ amt, setAmt ] = useState('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -39,7 +38,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
     address: AddrOfRegCenter,
     args: !hasError(valid)
       ? [ to, 
-          BigInt(amt.cbp) * BigInt(10 ** 18) + BigInt(amt.glee) * BigInt(10 ** 9)]
+          BigInt(Number(amt) * (10 ** 9)) * (10n ** 9n)]
       : undefined,
     onSuccess(data) {
       setLoading(true);
@@ -48,16 +47,11 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
         r => {
           console.log("Receipt: ", r);
           if (r) {
-            let strAmt = BigInt(r.logs[0].topics[3]).toString();
             let rpt:Receipt = {
               from: r.logs[0].topics[1],
               to: r.logs[0].topics[2],
-              amt: {
-                gp: getGEthPart(strAmt),
-                cbp: getEthPart(strAmt),
-                glee: getGWeiPart(strAmt),
-              }
-            }
+              amt: BigInt(r.logs[0].topics[3]).toString(),
+              };
             setReceipt(rpt);
             setOpen(true);
             getBalanceOf();
@@ -71,7 +65,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
 
         <TextField 
           size="small"
@@ -101,36 +95,12 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
             m:1,
             minWidth: 218,
           }}
-          value={ amt.cbp }
+          value={ amt }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('Amt(CBP)', input, 0n, setValid);
-            setAmt(v => ({
-              ...v,
-              cbp: input,
-            }))
+            onlyNum('Amt(CBP)', input, 9, setValid);
+            setAmt(input);
           }}
-        />
-
-        <TextField 
-          size="small"
-          variant='outlined'
-          label='Amount (GLee)' 
-          error={ valid['Amt(GLee)']?.error }
-          helperText={ valid['Amt(GLee)']?.helpTx ?? ' ' }                                  
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          value={ amt.glee }
-          onChange={e => {
-            let input = e.target.value;
-            onlyNum('Amt(GLee)', input, 0n, setValid);
-            setAmt(v => ({
-              ...v,
-              glee: input,
-            }));
-        }}
         />
 
         <LoadingButton 
@@ -166,7 +136,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {receipt?.amt.cbp != '-' && receipt?.amt.cbp + ' CBP, '} {receipt?.amt.glee != '-' && receipt?.amt.glee + ' GLee '} transfered to Addr ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
+            {  longDataParser(receipt?.amt ?? '0') + ' CBP' } transfered to Addr ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
           </Alert>          
         </Collapse>
 

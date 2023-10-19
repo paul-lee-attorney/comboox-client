@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceBuyOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { FormResults, defFormResults, hasError, longDataParser, onlyNum, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, longDataParser, onlyInt, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
 import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
@@ -81,7 +81,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Paid', input, MaxData, setValid);
+            onlyInt('Paid', input, MaxData, setValid);
             setOrder( v => ({
               ...v,
               paid: input,
@@ -103,7 +103,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Price', input, MaxPrice, setValid);
+            onlyInt('Price', input, MaxPrice, setValid);
             setOrder( v => ({
               ...v,
               price: input,
@@ -126,7 +126,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           value={ value }
           onChange={(e)=>{
             let input = removeKiloSymbol(e.target.value);
-            onlyNum('Consideration', input, 0n, setValid);
+            onlyInt('Consideration', input, 0n, setValid);
             setValue(input);
           }}
         />

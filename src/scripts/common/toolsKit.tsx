@@ -38,7 +38,7 @@ export function longDataParser(data: string): string {
   if (data === '0')
     return '-';
   else 
-    return new Intl.NumberFormat().format(BigInt(data));
+    return data.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export function selectorCodifier(func: string): HexType {
@@ -217,7 +217,7 @@ export const defFormResults:FormResults = {
   '': defResult, 
 }
 
-export function onlyNum(id: string, input: string, max: bigint, setValid:Dispatch<SetStateAction<FormResults>>) {
+export function onlyInt(id: string, input: string, max: bigint, setValid:Dispatch<SetStateAction<FormResults>>) {
   let reg = /^(0|[1-9][0-9]*)$/;
   let error: boolean = !reg.test(input);
   let overflow: boolean = error
@@ -229,9 +229,34 @@ export function onlyNum(id: string, input: string, max: bigint, setValid:Dispatc
   let result:Result = {
     error: error || overflow,
     helpTx: error 
-          ? 'Only Number'
+          ? 'Only Integer'
           : overflow
             ? 'Over Flow'
+            : ' ',
+  }
+
+  setValid( v => {
+    let out = {...v};
+    out[id] = result;
+    return out;
+  });
+}
+
+export function onlyNum(id: string, input: string, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {
+  let reg = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
+  let error: boolean = !reg.test(input);
+  let overflow: boolean = error
+                        ? false
+                        : maxDec == 0 || input.indexOf('.') < 0
+                          ? false 
+                          : (input.length - input.indexOf('.') - 1) > maxDec;
+
+  let result:Result = {
+    error: error || overflow,
+    helpTx: error 
+          ? 'Only Number'
+          : overflow
+            ? 'Dec Length Over Flow'
             : ' ',
   }
 

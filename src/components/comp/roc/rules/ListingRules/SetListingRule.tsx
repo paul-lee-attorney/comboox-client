@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from '../../../../../scripts/common';
-import { FormResults, centToDollar, defFormResults, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
+import { FormResults, centToDollar, defFormResults, onlyInt, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { titleOfPositions } from '../PositionAllocationRules/SetPositionAllocateRule';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
@@ -169,7 +169,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                    onlyInt('ClassOfShare', input, MaxSeqNo, setValid);
                     setObjLR((v) => ({
                       ...v,
                       classOfShare: input,
@@ -226,7 +226,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('MxTotalPar', input, MaxData, setValid);
+                    onlyInt('MxTotalPar', input, MaxData, setValid);
                     setObjLR((v) => ({
                       ...v,
                       maxTotalPar: input,
@@ -284,7 +284,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('MaxQtyOfInvestors', input, MaxSeqNo, setValid);
+                    onlyInt('MaxQtyOfInvestors', input, MaxSeqNo, setValid);
                     setObjLR((v) => ({
                       ...v,
                       maxQtyOfInvestors: input,
@@ -310,7 +310,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('CeilingPrice', input, MaxPrice, setValid);
+                    onlyInt('CeilingPrice', input, MaxPrice, setValid);
                     setObjLR((v) => ({
                       ...v,
                       ceilingPrice: input,
@@ -332,7 +332,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('FloorPrice', input, MaxPrice, setValid);
+                    onlyInt('FloorPrice', input, MaxPrice, setValid);
                     setObjLR((v) => ({
                       ...v,
                       floorPrice: input,
@@ -354,7 +354,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('OffPrice', input, MaxSeqNo, setValid);
+                    onlyInt('OffPrice', input, MaxSeqNo, setValid);
                     setObjLR((v) => ({
                       ...v,
                       offPrice: input,
@@ -376,7 +376,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('LockupDays', input, MaxSeqNo, setValid);
+                    onlyInt('LockupDays', input, MaxSeqNo, setValid);
                     setObjLR((v) => ({
                       ...v,
                       lockupDays: input,
@@ -398,7 +398,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('VotingWeight', input, MaxSeqNo, setValid);
+                    onlyInt('VotingWeight', input, MaxSeqNo, setValid);
                     setObjLR((v) => ({
                       ...v,
                       votingWeight: input,

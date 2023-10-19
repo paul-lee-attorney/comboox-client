@@ -7,7 +7,7 @@ import {  AgricultureOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
@@ -72,7 +72,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyNum('SeqOfTarget', input, MaxPrice, setValid);
+                  onlyInt('SeqOfTarget', input, MaxPrice, setValid);
                   setTargetShare(v => ({
                     ...v,
                     seqOfShare: input,
@@ -93,7 +93,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyNum('Paid', input, MaxData, setValid);
+                  onlyInt('Paid', input, MaxData, setValid);
                   setTargetShare(v => ({
                     ...v,
                     paid: input,
@@ -114,7 +114,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyNum('Par', input, MaxData, setValid);
+                  onlyInt('Par', input, MaxData, setValid);
                   setTargetShare(v => ({
                     ...v,
                     par: input,

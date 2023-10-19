@@ -5,7 +5,7 @@ import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext"
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../../../scripts/common/sigPage";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { FileHistoryProps } from "./CirculateSha";
 import { LoadingButton } from "@mui/lab";
 

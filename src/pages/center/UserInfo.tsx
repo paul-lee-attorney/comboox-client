@@ -179,28 +179,28 @@ function UserInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='GiftAmt'
+                label='GiftAmt(CBP)'
                 inputProps={{readOnly: true}}
                 fullWidth
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                value={ longDataParser(user?.backupKey.gift.toString() ?? '0') }
+                value={ longDataParser((Number(user?.backupKey.gift ?? '0') / (10**9)).toString()) }
               />
             </td>
             <td>
               <TextField 
                 size="small"
                 variant='outlined'
-                label='CouponAmt'
+                label='CouponAmt(CBP)'
                 inputProps={{readOnly: true}}
                 fullWidth
                 sx={{
                   m:1,
                   minWidth: 218,
                 }}
-                value={ longDataParser(user?.backupKey.coupon.toString() ?? '0') }
+                value={ longDataParser((Number(user?.backupKey.coupon ?? '0') / (10**9)).toString()) }
               />
             </td>
           </tr>

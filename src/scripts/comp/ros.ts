@@ -132,8 +132,8 @@ export function codifyHeadOfStrShare(head: StrHead): HexType {
     Number(head.preSeq).toString(16).padStart(8, '0') +
     Number(head.issueDate).toString(16).padStart(12, '0') +
     Number(head.shareholder).toString(16).padStart(10, '0') +
-    Number(head.priceOfPaid).toString(16).padStart(8, '0') +
-    Number(head.priceOfPar).toString(16).padStart(8, '0') +
+    (Number(head.priceOfPaid) * 100).toString(16).padStart(8, '0') +
+    (Number(head.priceOfPar) * 100).toString(16).padStart(8, '0') +
     Number(head.votingWeight).toString(16).padStart(4, '0') +
     '00'
   }`;

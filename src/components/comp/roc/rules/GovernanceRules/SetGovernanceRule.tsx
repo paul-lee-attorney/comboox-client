@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxByte, MaxRatio, MaxSeqNo } from '../../../../../scripts/common';
-import { FormResults, dateParser, defFormResults, longDataParser, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
+import { FormResults, dateParser, defFormResults, longDataParser, onlyInt, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { getRule } from '../../../../../scripts/comp/sha';
 
@@ -310,7 +310,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('PropWROfMembers', input, MaxRatio, setValid);
+                      onlyInt('PropWROfMembers', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeWeightRatioOfGM: input,
@@ -332,7 +332,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('PropHROfMembers', input, MaxRatio, setValid);
+                      onlyInt('PropHROfMembers', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeHeadRatioOfMembers: input,
@@ -354,7 +354,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('PropHROfDirectorsInGM', input, MaxRatio, setValid);
+                      onlyInt('PropHROfDirectorsInGM', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeHeadRatioOfDirectorsInGM: e.target.value,
@@ -376,7 +376,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('PropHROfDirectorsInBM', input, MaxRatio, setValid);
+                      onlyInt('PropHROfDirectorsInBM', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeHeadRatioOfDirectorsInBoard: input,
@@ -402,7 +402,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('MaxQtyOfMembers', input, MaxSeqNo, setValid);
+                      onlyInt('MaxQtyOfMembers', input, MaxSeqNo, setValid);
                       setObjGR((v) => ({
                         ...v,
                         maxQtyOfMembers: input,
@@ -424,7 +424,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('QuorumOfGM', input, MaxRatio, setValid);
+                      onlyInt('QuorumOfGM', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         quorumOfGM: input,
@@ -446,7 +446,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('MaxNumOfDirectors', input, MaxByte, setValid);
+                      onlyInt('MaxNumOfDirectors', input, MaxByte, setValid);
                       setObjGR((v) => ({
                         ...v,
                         maxNumOfDirectors: input,
@@ -468,7 +468,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('TenureMonOfBoard', input, MaxSeqNo, setValid);
+                      onlyInt('TenureMonOfBoard', input, MaxSeqNo, setValid);
                       setObjGR((v) => ({
                         ...v,
                         tenureMonOfBoard: input,
@@ -490,7 +490,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('QuorumOfBoardMeeting', input, MaxRatio, setValid);
+                      onlyInt('QuorumOfBoardMeeting', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         quorumOfBoardMeeting: input,
@@ -549,7 +549,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('BusinessTerm', input, MaxByte, setValid);
+                      onlyInt('BusinessTerm', input, MaxByte, setValid);
                       setObjGR((v) => ({
                         ...v,
                         businessTermInYears: input,
@@ -571,7 +571,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('TypeOfComp', input, MaxByte, setValid);
+                      onlyInt('TypeOfComp', input, MaxByte, setValid);
                       setObjGR((v) => ({
                         ...v,
                         typeOfComp: input,
@@ -593,7 +593,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('MinVoteRatioOnChain', input, MaxRatio, setValid);
+                      onlyInt('MinVoteRatioOnChain', input, MaxRatio, setValid);
                       setObjGR((v) => ({
                         ...v,
                         minVoteRatioOnChain: input,
@@ -615,7 +615,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('FundThreshold', input, 0n, setValid);
+                      onlyInt('FundThreshold', input, 0n, setValid);
                       setObjGR((v) => ({
                         ...v,
                         fundApprovalThreshold: input,

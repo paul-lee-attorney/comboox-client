@@ -10,31 +10,19 @@ import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, onlyNum } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyInt, onlyNum } from '../../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 import { LoadingButton } from '@mui/lab';
 
 interface Receipt{
   to: string;
-  amt: CBP;
-}
-
-export interface CBP{
-  gp: string;
-  cbp: string;
-  glee: string;
-}
-
-export const defaultCBP:CBP = {
-  gp: '0',
-  cbp: '0',
-  glee: '0',
+  amt: string;
 }
 
 export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
   const [ to, setTo ] = useState<string>('0');
-  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
+  const [ amt, setAmt ] = useState<string>('0');
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -47,23 +35,18 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
     address: AddrOfRegCenter,
     args: hasError(valid) ? undefined
       : [ BigInt(to), 
-          BigInt(amt.cbp) * BigInt(10 ** 18) 
-        + BigInt(amt.glee) * BigInt(10 ** 9)
+          BigInt(Number(amt) * (10 ** 9)) * (10n ** 9n)
         ],
     onSuccess(data) {
       setLoading(true);
+      setOpen(false);
       let hash: HexType = data.hash;
       waitForTransaction({hash}).then(
         res => {
           if (res && res.logs[0].topics[3] && res.logs[0].topics[2]) {
-            let strAmt = BigInt(res.logs[0].topics[3]).toString();
             let rpt:Receipt = {
               to: res.logs[0].topics[2],
-              amt: {
-                gp: getGEthPart(strAmt),
-                cbp: getEthPart(strAmt),
-                glee: getGWeiPart(strAmt),
-              }
+              amt: BigInt(res.logs[0].topics[3]).toString(),
             }
             setReceipt(rpt);
             setOpen(true);
@@ -80,7 +63,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
         <TextField 
           size="small"
           variant="outlined"
@@ -94,7 +77,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           value={ to }
           onChange={e => {
             let input = e.target.value ?? '0';
-            onlyNum('To', input, MaxUserNo, setValid); 
+            onlyInt('To', input, MaxUserNo, setValid); 
             setTo(input);
           }}
         />
@@ -109,35 +92,11 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             m:1,
             minWidth: 128,
           }}
-          value={ amt.cbp }
+          value={ amt }
           onChange={e => {
             let input = e.target.value ?? '0';
-            onlyNum('Amount(CBP)', input, 0n, setValid);
-            setAmt(v => ({
-              ...v,
-              cbp: input,
-            }));
-          }}
-        />
-
-        <TextField 
-          size="small"
-          variant="outlined"
-          label='Amount (GLee)'
-          error={ valid['Amount(GLee)']?.error }
-          helperText={ valid['Amount(GLee)']?.helpTx ?? ' ' }          
-          sx={{
-            m:1,
-            minWidth: 128,
-          }}
-          value={ amt.glee }
-          onChange={e => {
-            let input = e.target.value ?? '0';
-            onlyNum('Amount(GLee)', input, 0n, setValid);
-            setAmt(v => ({
-              ...v,
-              glee: input,
-            }))
+            onlyNum('Amount(CBP)', input, 9, setValid);
+            setAmt(input);
           }}
         />
 
@@ -175,9 +134,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {(receipt?.amt.gp != '-' && receipt?.amt.gp != '0') && receipt?.amt.gp + ' Giga-CBP '} 
-            {(receipt?.amt.cbp != '-' && receipt?.amt.cbp != '0') && receipt?.amt.cbp + ' CBP ' } 
-            {(receipt?.amt.glee != '-' && receipt?.amt.glee != '0') && receipt?.amt.glee + ' GLee ' } 
+            { longDataParser((Number(BigInt(receipt?.amt ?? '0') / (10n ** 12n)) / (10 ** 6)).toString() ) + ' CBP'} 
             minted to Address 
             ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
           </Alert>          

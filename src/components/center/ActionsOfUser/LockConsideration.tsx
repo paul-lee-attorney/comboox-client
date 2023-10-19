@@ -6,12 +6,11 @@ import { useRegCenterLockConsideration } from '../../../generated';
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { LockPointsProps } from './LockPoints';
-import { CBP, defaultCBP } from './Mint';
 import { LoadingButton } from '@mui/lab';
 
 
@@ -58,7 +57,7 @@ function calDefaultParas(hashLock:HexType, offSet:number):string[]{
 
 export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPointsProps) {
 
-  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
+  const [ amt, setAmt ] = useState('0');
 
   const [ head, setHead ] = useState<StrHeadOfLocker>(defaultStrHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -87,7 +86,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     args: !hasError(valid) && head.expireDate
         ? [ 
             BigInt(head.to),
-            BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
+            BigInt(Number(amt) * (10 ** 9)),
             BigInt(head.expireDate),
             counterLocker,
             constructPayload(func, paras),
@@ -123,7 +122,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               value={ head.to.toString() }
               onChange={e => {
                 let input = e.target.value;
-                onlyNum('To', input, MaxUserNo, setValid);
+                onlyInt('To', input, MaxUserNo, setValid);
                 setHead(v =>({
                   ...v,
                   to: input,
@@ -140,35 +139,11 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 m:1,
                 minWidth: 218,
               }}
-              value={ amt.cbp }
+              value={ amt }
               onChange={e => {
                 let input = e.target.value ?? '0';
-                onlyNum('Amount(CBP)', input, 0n, setValid);
-                setAmt(v=>({
-                  ...v,
-                  cbp: input,
-                }))
-              }}
-            />
-
-            <TextField 
-              size="small"
-              variant='outlined'
-              label='Amount (GLee)'
-              error={ valid['Amount(GLee)']?.error }
-              helperText={ valid['Amount(GLee)']?.helpTx ?? ' ' }
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ amt.glee }
-              onChange={e => {
-                let input = e.target.value ?? '0';
-                onlyNum('Amount(GLee)', input, 0n, setValid);
-                setAmt(v=>({
-                  ...v,
-                  glee: input,
-                }));
+                onlyNum('Amount(CBP)', input, 9, setValid);
+                setAmt(input);
               }}
             />
 
@@ -304,7 +279,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 value={ parseInt(paras[1]?.substring(60,64) ?? '0x00',16).toString()  }
                 onChange={e => {
                   let input = e.target.value ?? '0';
-                  onlyNum('SeqOfDeal', input, MaxSeqNo, setValid);
+                  onlyInt('SeqOfDeal', input, MaxSeqNo, setValid);
                   setParas(v => {
                     let out = [...v];
                     let seq = parseInt(input).toString(16).padStart(64, '0');
@@ -341,7 +316,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 value={ parseInt(paras[0]?.substring(0x38,0x40) ?? '0x00',0x10).toString() }
                 onChange={e => {
                   let input = e.target.value ?? '0';
-                  onlyNum('SeqInfo', input, MaxSeqNo, setValid);
+                  onlyInt('SeqInfo', input, MaxSeqNo, setValid);
                   setParas(v => {
                     let out = [...v];
                     let seq = parseInt(input).toString(16).padStart(0x40, '0');
@@ -367,7 +342,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   value={ parseInt(paras[1]?.substring(0x3c,0x40) ?? '0x00',0x10).toString()  }
                   onChange={e => {
                     let input = e.target.value ?? '0';
-                    onlyNum('SeqConsider', input, BigInt(2*16-1), setValid);
+                    onlyInt('SeqConsider', input, BigInt(2*16-1), setValid);
                     setParas(v => {
                       let out = [...v];
                       let seq = parseInt(input).toString(16).padStart(0x40, '0');

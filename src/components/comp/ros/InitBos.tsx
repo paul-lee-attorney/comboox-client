@@ -23,7 +23,7 @@ import dayjs, {Dayjs} from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { InitCompProps } from '../gk/SetCompInfo';
 import { LoadingButton } from '@mui/lab';
 
@@ -47,11 +47,14 @@ export function InitBos({nextStep}: InitCompProps) {
     write: issueShare,
   } = useRegisterOfSharesIssueShare({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: !hasError(valid) && share.body.payInDeadline
-      ? [ codifyHeadOfStrShare(share.head),
-          BigInt(share.body.payInDeadline),
-          BigInt(share.body.paid),
-          BigInt(share.body.par)  ] 
+    args: share.body.payInDeadline && share.body.paid &&
+          share.body.par 
+      ? [ 
+          codifyHeadOfStrShare(share.head),
+          BigInt((share.body.payInDeadline ?? 0)),
+          BigInt((Number(share.body.paid) ?? 0) * 100),
+          BigInt((Number(share.body.par) ?? 0) * 100)
+        ] 
       : undefined,
     onSuccess(data) {
       setLoadingAdd(true);
@@ -71,10 +74,13 @@ export function InitBos({nextStep}: InitCompProps) {
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: Number(share.head.seqOfShare) > 0 && !hasError(valid)
-        ? [ BigInt(share.head.seqOfShare), 
-            BigInt(share.body.paid), 
-            BigInt(share.body.par) ]
+    args: share.head.seqOfShare && share.body.paid && 
+          share.body.par
+        ? [ 
+            BigInt(share.head.seqOfShare ?? 0), 
+            BigInt((Number(share.body.paid) ?? 0)* 100), 
+            BigInt((Number(share.body.par) ?? 0) * 100) 
+          ]
         : undefined,
     onSuccess(data) {
       setLoadingRemove(true);
@@ -163,7 +169,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['ClassOfShare']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                    onlyInt('ClassOfShare', input, MaxSeqNo, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
@@ -185,7 +191,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['Shareholder']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Shareholder', input, MaxUserNo, setValid);
+                    onlyInt('Shareholder', input, MaxUserNo, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
@@ -201,13 +207,13 @@ export function InitBos({nextStep}: InitCompProps) {
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
                   id="tfPriceOfPaid" 
-                  label="PriceOfPaid (Cent)" 
+                  label="PriceOfPaid" 
                   variant="outlined"
                   error={ valid['PriceOfPaid']?.error }
                   helperText={ valid['PriceOfPaid']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('PriceOfPaid', input, MaxPrice, setValid);
+                    onlyNum('PriceOfPaid', input, 2, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
@@ -223,13 +229,13 @@ export function InitBos({nextStep}: InitCompProps) {
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
                   id="tfPriceOfPar" 
-                  label="PriceOfPar (Cent)" 
+                  label="PriceOfPar" 
                   variant="outlined"
                   error={ valid['PriceOfPar']?.error }
                   helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('PriceOfPar', input, MaxPrice, setValid);
+                    onlyNum('PriceOfPar', input, 2, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
@@ -254,7 +260,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   }}
                   onChange={(e)=>{
                     let input = e.target.value;
-                    onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                    onlyInt('SeqOfShare', input, MaxPrice, setValid);
                     setShare(v => ({
                       ...v,
                       head: {
@@ -273,6 +279,7 @@ export function InitBos({nextStep}: InitCompProps) {
 
                 <DateTimeField
                   label='IssueDate'
+                  helperText=' '
                   sx={{m:1, width:188 }}
                   value={ dayjs.unix(share.head.issueDate) }
                   onChange={(date) => setShare((v) => ({
@@ -288,6 +295,7 @@ export function InitBos({nextStep}: InitCompProps) {
 
                 <DateTimeField
                   label='PayInDeadline'
+                  helperText=' '
                   sx={{m:1, width:188 }}
                   value={ dayjs.unix(share.body.payInDeadline) }
                   onChange={(date) => setShare((v) => ({
@@ -304,14 +312,14 @@ export function InitBos({nextStep}: InitCompProps) {
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
                   id="tfPaid" 
-                  label="Paid (Cent)" 
+                  label="Paid" 
                   variant="outlined"
                   color='warning'
                   error={ valid['Paid']?.error }
                   helperText={ valid['Paid']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Paid', input, MaxData, setValid);
+                    onlyNum('Paid', input, 2, setValid);
                     setShare(v => ({
                       head: v.head,
                       body: {
@@ -327,14 +335,14 @@ export function InitBos({nextStep}: InitCompProps) {
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
                   id="tfPar" 
-                  label="Par (Cent)" 
+                  label="Par" 
                   variant="outlined"
                   color='warning'
                   error={ valid['Par']?.error }
                   helperText={ valid['Par']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Par', input, MaxData, setValid);
+                    onlyNum('Par', input, 2, setValid);
                     setShare(v => ({
                       head: v.head,
                       body: {
@@ -356,7 +364,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('VotingWeight', input, MaxSeqNo, setValid);
+                    onlyInt('VotingWeight', input, MaxSeqNo, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,

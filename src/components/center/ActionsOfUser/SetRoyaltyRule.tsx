@@ -10,7 +10,7 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../scripts/center/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
@@ -55,7 +55,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           value={ rule.discount }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('DiscountRate', input, 10000n, setValid);
+            onlyInt('DiscountRate', input, 10000n, setValid);
             setRule(v => ({
               ...v,
               discount: input, 
@@ -66,7 +66,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='GiftAmt (GLee)'
+          label='GiftAmt (CBP)'
           error={ valid['GiftAmt']?.error }
           helperText={ valid['GiftAmt']?.helpTx ?? ' ' }                                  
           sx={{
@@ -76,7 +76,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           value={ rule.gift }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('GiftAmt', input, 0n, setValid);
+            onlyNum('GiftAmt', input, 6, setValid);
             setRule(v => ({
               ...v,
               gift: input, 
@@ -87,7 +87,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='CouponAmt (GLee)'
+          label='CouponAmt (CBP)'
           error={ valid['CouponAmt']?.error }
           helperText={ valid['CouponAmt']?.helpTx ?? ' ' }                                            
           sx={{
@@ -97,7 +97,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           value={ rule.coupon }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('CouponAmt', input, 0n, setValid);
+            onlyNum('CouponAmt', input, 6, setValid);
             setRule(v => ({
               ...v,
               coupon: input, 

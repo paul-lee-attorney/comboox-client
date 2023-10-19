@@ -40,7 +40,7 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-      <Stack direction='row' sx={{alignItems:'stretch', justifyContent:'start'}} >
+      <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
 
         <TextField 
           size="small"

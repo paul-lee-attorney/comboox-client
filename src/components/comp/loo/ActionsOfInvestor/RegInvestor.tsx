@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import {  BorderColor } from "@mui/icons-material";
 import { useState } from "react";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { useGeneralKeeperRegInvestor } from "../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType, MaxUserNo } from "../../../../scripts/common";
@@ -56,7 +56,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('GroupRep', input, MaxUserNo, setValid);
+            onlyInt('GroupRep', input, MaxUserNo, setValid);
             setGroupRep(input); 
           }}
           value={ groupRep } 

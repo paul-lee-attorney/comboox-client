@@ -10,7 +10,7 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../scripts/center/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
@@ -34,7 +34,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 
@@ -45,7 +45,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='EOA_Rewards(GLee)'
+          label='EOA_Rewards(CBP)'
           error = { valid['EOA_Rewards']?.error }
           helperText = { valid['EOA_Rewards']?.helpTx ?? ' ' }
           sx={{
@@ -55,7 +55,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.eoaRewards }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('EOA_Rewards', input, 0n, setValid);
+            onlyNum('EOA_Rewards', input, 9, setValid);
             setRule(v => ({
               ...v,
               eoaRewards: input, 
@@ -66,7 +66,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='COA_Rewards(GLee)'
+          label='COA_Rewards(CBP)'
           error = { valid['COA_Rewards']?.error }
           helperText = { valid['COA_Rewards']?.helpTx ?? ' ' }
           sx={{
@@ -76,7 +76,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.coaRewards }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('COA_Rewards', input, 0n, setValid);            
+            onlyNum('COA_Rewards', input, 9, setValid);            
             setRule(v => ({
               ...v,
               coaRewards: input, 
@@ -87,7 +87,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='FloorOfRoyalty(GLee)'
+          label='FloorOfRoyalty(CBP)'
           error = { valid['FloorOfRoyalty']?.error }
           helperText = { valid['FloorOfRoyalty']?.helpTx ?? ' ' }
           sx={{
@@ -97,7 +97,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.floor }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('FloorOfRoyalty', input, 0n, setValid);
+            onlyNum('FloorOfRoyalty', input, 9, setValid);
             setRule(v => ({
               ...v,
               floor: input, 
@@ -108,7 +108,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='OffRateOnCommission (BP)'
+          label='OffRateOnCommission (%)'
           error = { valid['OffRate']?.error }
           helperText = { valid['OffRate']?.helpTx ?? ' ' }
           sx={{
@@ -118,7 +118,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.rate }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('OffRate', input, 0n, setValid);
+            onlyNum('OffRate', input, 2, setValid);
             setRule(v =>({
                 ...v,
                 rate: input, 

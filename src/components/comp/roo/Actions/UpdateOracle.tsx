@@ -5,7 +5,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxData } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 interface Paras {
@@ -69,7 +69,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Para_1', input, MaxData, setValid);
+            onlyInt('Para_1', input, MaxData, setValid);
             setParas(v =>({
               ...v,
               p1: input,
@@ -90,7 +90,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Para_2', input, MaxData, setValid);
+            onlyInt('Para_2', input, MaxData, setValid);
             setParas(v =>({
               ...v,
               p2: input,
@@ -111,7 +111,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Para_3', input, MaxData, setValid);
+            onlyInt('Para_3', input, MaxData, setValid);
             setParas(v =>({
               ...v,
               p3: input,

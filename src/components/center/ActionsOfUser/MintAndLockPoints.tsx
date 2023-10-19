@@ -11,14 +11,13 @@ import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { CBP, defaultCBP } from './Mint';
 import { LoadingButton } from '@mui/lab';
 
 export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOfUserProps) {
 
-  const [ amt, setAmt ] = useState<CBP>(defaultCBP);
+  const [ amt, setAmt ] = useState('0');
 
   const [ head, setHead ] = useState<StrHeadOfLocker>(defaultStrHeadOfLocker);
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
@@ -40,7 +39,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
     args: !hasError(valid) && head.expireDate
         ? [ 
             BigInt(head.to),
-            BigInt(amt.cbp) * BigInt(10 ** 9) + BigInt(amt.glee),
+            BigInt(Number(amt) * (10 ** 9)),
             BigInt(head.expireDate),
             hashLock
           ]
@@ -58,7 +57,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
 
         <Stack direction='column' >
 
-          <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
+          <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
             <TextField 
               size="small"
               variant='outlined'
@@ -73,7 +72,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
               value={ head.to }
               onChange={e => {
                 let input = e.target.value ?? '0';
-                onlyNum('To', input, MaxUserNo, setValid);
+                onlyInt('To', input, MaxUserNo, setValid);
                 setHead(v =>({
                   ...v,
                   to: input,
@@ -92,18 +91,15 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
                 m:1,
                 minWidth: 218,
               }}
-              value={ amt.cbp }
+              value={ amt }
               onChange={e => {
                 let input = e.target.value ?? '0';
-                onlyNum('Amount(CBP)', input, 0n, setValid);
-                setAmt(v=>({
-                  ...v,
-                  cbp: input,
-                }));
+                onlyNum('Amount(CBP)', input, 9, setValid);
+                setAmt(input);
               }}
             />
 
-            <TextField 
+            {/* <TextField 
               size="small"
               variant='outlined'
               label='Amount (GLee)'
@@ -116,16 +112,17 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
               value={ amt.glee }
               onChange={e => {
                 let input = e.target.value ?? '0';
-                onlyNum('Amount(GLee)', input, 0n, setValid);
+                onlyInt('Amount(GLee)', input, 0n, setValid);
                 setAmt(v=>({
                   ...v,
                   glee: input,
                 }));
               }}
-            />
+            /> */}
 
             <DateTimeField
               label='ExpireDate'
+              helperText=' '
               sx={{
                 m:1,
                 minWidth: 218,

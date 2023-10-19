@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 import { HexType, MaxData, MaxUserNo, booxMap } from "../../../../scripts/common";
 import { getShare } from "../../../../scripts/comp/ros";
 import { StrBody, StrHead, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
@@ -89,7 +89,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Buyer', input, MaxUserNo, setValid);
+            onlyInt('Buyer', input, MaxUserNo, setValid);
             setBody(v=>({
               ...v,
               buyer: e.target.value,
@@ -110,7 +110,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('GroupOfBuyer', input, MaxUserNo, setValid);
+            onlyInt('GroupOfBuyer', input, MaxUserNo, setValid);
             setBody(v=>({
               ...v,
               groupOfBuyer: e.target.value,
@@ -131,7 +131,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('PriceOfPaid', input, MaxData, setValid);
+            onlyInt('PriceOfPaid', input, MaxData, setValid);
             setHead(v=>({
               ...v,
               priceOfPaid: e.target.value,
@@ -152,7 +152,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('PriceOfPar', input, MaxData, setValid);
+            onlyInt('PriceOfPar', input, MaxData, setValid);
             setHead(v=>({
               ...v,
               priceOfPar: e.target.value,

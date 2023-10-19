@@ -25,7 +25,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export interface CreateDealProps{
@@ -71,7 +71,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
   const handleSeqChanged = (e:ChangeEvent<HTMLInputElement>)=> {
 
     let input = e.target.value;
-    onlyNum('SeqOfShare', input, MaxPrice, setValid);
+    onlyInt('SeqOfShare', input, MaxPrice, setValid);
 
     let seq = input;
 
@@ -156,7 +156,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                onlyInt('ClassOfShare', input, MaxSeqNo, setValid);
                 setHead((v) => ({
                   ...v,
                   classOfShare: input,
@@ -177,7 +177,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PriceOfPar', input, MaxData, setValid);
+                onlyInt('PriceOfPar', input, MaxData, setValid);
                 setHead((v) => ({
                   ...v,
                   priceOfPar: input,
@@ -198,7 +198,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PriceOfPaid', input, MaxData, setValid);
+                onlyInt('PriceOfPaid', input, MaxData, setValid);
                 setHead((v) => ({
                   ...v,
                   priceOfPaid: input,
@@ -238,7 +238,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Buyer', input, MaxUserNo, setValid);
+                onlyInt('Buyer', input, MaxUserNo, setValid);
                 setBody((v) => ({
                 ...v,
                 buyer: input,
@@ -259,7 +259,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('GroupOfBuyer', input, MaxUserNo, setValid);
+                onlyInt('GroupOfBuyer', input, MaxUserNo, setValid);
                 setBody((v) => ({
                 ...v,
                 groupOfBuyer: input,
@@ -280,7 +280,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Par', input, MaxData, setValid);
+                onlyInt('Par', input, MaxData, setValid);
                 setBody((v) => ({
                 ...v,
                 par: input,
@@ -301,7 +301,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Paid', input, MaxData, setValid);
+                onlyInt('Paid', input, MaxData, setValid);
                 setBody((v) => ({
                 ...v,
                 paid: input,
@@ -322,7 +322,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('VotingWeight', input, MaxSeqNo, setValid);
+                onlyInt('VotingWeight', input, MaxSeqNo, setValid);
                 setHead((v) => ({
                   ...v,
                   votingWeight: input,

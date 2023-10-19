@@ -6,7 +6,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { LocalDrinkOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
@@ -67,7 +67,7 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('SeqOfTarget', input, MaxPrice, setValid);
+              onlyInt('SeqOfTarget', input, MaxPrice, setValid);
               setSeqOfShare(input);
             }}
             value={ seqOfShare }

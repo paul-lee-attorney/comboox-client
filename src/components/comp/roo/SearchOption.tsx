@@ -5,7 +5,7 @@ import { Search } from "@mui/icons-material";
 
 import { OptWrap, getOptWrap } from "../../../scripts/comp/roo";
 import { MaxPrice, booxMap } from "../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt } from "../../../scripts/common/toolsKit";
 
 interface SearchOptionProps{
   setOpt: Dispatch<SetStateAction<OptWrap>>;
@@ -39,7 +39,7 @@ export function SearchOption({setOpt, setOpen}:SearchOptionProps) {
 
         onChange={(e) => {
           let input = e.target.value;
-          onlyNum('SeqOfOpt', input, MaxPrice, setValid);
+          onlyInt('SeqOfOpt', input, MaxPrice, setValid);
           setSeqOfOpt(input);
         }}
         value = { seqOfOpt }

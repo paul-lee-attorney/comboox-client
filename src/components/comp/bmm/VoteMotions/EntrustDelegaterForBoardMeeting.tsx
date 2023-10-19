@@ -9,7 +9,7 @@ import { Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { HexType, MaxUserNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
@@ -56,7 +56,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
         }}
         onChange={(e) => {
           let input = e.target.value;
-          onlyNum('Delegater', input, MaxUserNo, setValid);
+          onlyInt('Delegater', input, MaxUserNo, setValid);
           setDelegater(input);
         }}
         value={ delegater }

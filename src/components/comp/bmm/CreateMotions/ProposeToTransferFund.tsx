@@ -6,7 +6,7 @@ import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
 import { Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -75,7 +75,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+                onlyInt('SeqOfVR', input, MaxSeqNo, setValid);
                 setSeqOfVR(input);
               }}
               value={ seqOfVR }
@@ -137,7 +137,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Amount', input, 0n, setValid);
+                onlyInt('Amount', input, 0n, setValid);
                 setParas(v => ({
                   ...v,
                   amt: input,
@@ -173,7 +173,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Executor', input, MaxUserNo, setValid);
+                onlyInt('Executor', input, MaxUserNo, setValid);
                 setExecutor(input);
               }}
               value={ executor }

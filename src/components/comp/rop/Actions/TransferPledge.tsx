@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CurrencyExchange } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxData, MaxUserNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
@@ -59,7 +59,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Buyer', input, MaxUserNo, setValid);
+            onlyInt('Buyer', input, MaxUserNo, setValid);
             setBuyer(input);
           }}
           value={ buyer }
@@ -77,7 +77,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Amount', input, MaxData, setValid);
+            onlyInt('Amount', input, MaxData, setValid);
             setAmt(input);
           }}
           value={ amt }

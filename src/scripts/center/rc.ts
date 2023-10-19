@@ -113,8 +113,8 @@ export function codifyStrRoyaltyRule(rule: StrKey):HexType {
   let out: HexType = `0x${
     '0'.padEnd(40, '0') +
     Number(rule.discount).toString(16).padStart(4, '0') +
-    Number(rule.gift).toString(16).padStart(10, '0') +
-    Number(rule.coupon).toString(16).padStart(10, '0')
+    (Number(rule.gift) * (10 ** 9)).toString(16).padStart(10, '0') +
+    (Number(rule.coupon) * (10 ** 9)).toString(16).padStart(10, '0')
   }`;
 
   return out;
@@ -171,10 +171,10 @@ export const defaultStrRule: StrRule = {
 
 export function codifyPlatformStrRule(rule: StrRule):HexType {
   let out: HexType = `0x${
-    Number(rule.eoaRewards).toString(16).padStart(10, '0') +
-    Number(rule.coaRewards).toString(16).padStart(10, '0') +
-    Number(rule.floor).toString(16).padStart(10, '0') +
-    Number(rule.rate).toString(16).padStart(4, '0') +
+    (Number(rule.eoaRewards) * (10**9)).toString(16).padStart(10, '0') +
+    (Number(rule.coaRewards) * (10**9)).toString(16).padStart(10, '0') +
+    (Number(rule.floor) * (10**9)).toString(16).padStart(10, '0') +
+    (Number(rule.rate) * 100 ).toString(16).padStart(4, '0') +
     Number(rule.para).toString(16).padStart(4, '0') +
     '0'.padEnd(26, '0')
   }`;
@@ -199,11 +199,14 @@ export const defaultRule: Rule = {
 }
 
 export function codifyPlatformRule(rule: Rule):HexType {
+
+  console.log("Rule: ", rule );
+
   let out: HexType = `0x${
-    rule.eoaRewards.toString(16).padStart(10, '0') +
-    rule.coaRewards.toString(16).padStart(10, '0') +
-    rule.floor.toString(16).padStart(10, '0') +
-    rule.rate.toString(16).padStart(4, '0') +
+    (Number(rule.eoaRewards) * (10 ** 9)).toString(16).padStart(10, '0') +
+    (Number(rule.coaRewards) * (10 ** 9)).toString(16).padStart(10, '0') +
+    (Number(rule.floor) * (10 ** 9)).toString(16).padStart(10, '0') +
+    (Number(rule.rate) * 100).toString(16).padStart(4, '0') +
     rule.para.toString(16).padStart(4, '0') +
     '0'.padEnd(26, '0')
   }`;

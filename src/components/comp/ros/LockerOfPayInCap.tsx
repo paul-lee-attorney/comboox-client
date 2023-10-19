@@ -13,7 +13,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Share, getLocker } from "../../../scripts/comp/ros";
 import { StrLocker, defaultStrLocker } from "../../../scripts/center/rc";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
 
 interface LockerOfPayInCapProps {
   share: Share;
@@ -182,7 +182,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('Amount', input, MaxData, setValid);
+              onlyInt('Amount', input, MaxData, setValid);
               setLocker(v => {
                 let lk = v;
                 lk.head.value = input;

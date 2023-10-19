@@ -9,7 +9,7 @@ import {
 import { getDocAddr } from "../../../../scripts/center/rc";
 import { Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -89,7 +89,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('Version', input, MaxPrice, setValid);
+              onlyInt('Version', input, MaxPrice, setValid);
               setVersion(input);
             }}
             value={ version }              

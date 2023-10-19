@@ -56,7 +56,7 @@ import {
   StrBodyOfOpt
 } from "../../../../../scripts/comp/roo";
 import { getOpts } from "../../../../../scripts/comp/op";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
@@ -247,7 +247,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                          onlyInt('ClassOfShare', input, MaxSeqNo, setValid);
                           setHead((v) => ({
                             ...v,
                             classOfShare: input,
@@ -268,7 +268,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Paid', input, MaxData, setValid);
+                          onlyInt('Paid', input, MaxData, setValid);
                           setBody((v) => ({
                             ...v,
                             paid: e.target.value,
@@ -289,7 +289,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Par', input, MaxData, setValid);
+                          onlyInt('Par', input, MaxData, setValid);
                           setBody((v) => ({
                             ...v,
                             par: input,
@@ -310,7 +310,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Rightholder', input, MaxUserNo, setValid);
+                          onlyInt('Rightholder', input, MaxUserNo, setValid);
                           setBody((v) => ({
                             ...v,
                             rightholder: input,
@@ -335,7 +335,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('RateOfOption', input, MaxPrice, setValid);
+                          onlyInt('RateOfOption', input, MaxPrice, setValid);
                           setHead((v) => ({
                             ...v,
                             rate: input,
@@ -372,7 +372,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('ExecDays', input, MaxSeqNo, setValid);
+                          onlyInt('ExecDays', input, MaxSeqNo, setValid);
                           setHead((v) => ({
                             ...v,
                             execDays: input,
@@ -393,7 +393,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('ClosingDays', input, MaxSeqNo, setValid);
+                          onlyInt('ClosingDays', input, MaxSeqNo, setValid);
                           setHead((v) => ({
                             ...v,
                             closingDays: input,
@@ -414,7 +414,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Obligor', input, MaxUserNo, setValid);
+                          onlyInt('Obligor', input, MaxUserNo, setValid);
                           setHead((v) => ({
                             ...v,
                             obligor: input,
@@ -481,7 +481,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           }}
                           onChange={(e) => {
                             let input = e.target.value;
-                            onlyNum('Parameter_1', input, MaxData, setValid);
+                            onlyInt('Parameter_1', input, MaxData, setValid);
                             setCond((v) => ({
                               ...v,
                               para1: input,
@@ -524,7 +524,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           }}
                           onChange={(e) => {
                             let input = e.target.value;
-                            onlyNum('Parameter_2', input, MaxData, setValid);
+                            onlyInt('Parameter_2', input, MaxData, setValid);
                             setCond((v) => ({
                               ...v,
                               para2: input,
@@ -569,7 +569,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           }}
                           onChange={(e) => {
                             let input = e.target.value;
-                            onlyNum('Parameter_3', input, MaxData, setValid);
+                            onlyInt('Parameter_3', input, MaxData, setValid);
                             setCond((v) => ({
                               ...v,
                               para3: input,
@@ -617,7 +617,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('SeqOfOption', input, MaxPrice, setValid);
+                        onlyInt('SeqOfOption', input, MaxPrice, setValid);
                         setHead(v=>({
                           ...v,
                           seqOfOpt: input,
@@ -669,7 +669,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('Obligor', input, MaxUserNo, setValid);
+                        onlyInt('Obligor', input, MaxUserNo, setValid);
                         setObligor(input);
                       }}
                       value={ obligor }              

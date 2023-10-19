@@ -6,7 +6,7 @@ import { useGeneralKeeperCreateAction } from "../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
@@ -117,7 +117,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+              onlyInt('SeqOfVR', input, MaxSeqNo, setValid);
               setSeqOfVr(input);
             }}
             value={ seqOfVr }
@@ -135,7 +135,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('Executor', input, MaxUserNo, setValid);
+              onlyInt('Executor', input, MaxUserNo, setValid);
               setExecutor(input);
             }}
             value={ executor }
@@ -219,7 +219,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Value', input, 0n, setValid);
+                onlyInt('Value', input, 0n, setValid);
                 setActions(a => {
                   let arr:Action[] = [];
                   arr = [...a];

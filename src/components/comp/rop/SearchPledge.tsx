@@ -5,7 +5,7 @@ import { Search } from "@mui/icons-material";
 import { Pledge } from "../../../scripts/comp/rop";
 import { getPledge } from "../../../scripts/comp/rop";
 import { MaxPrice, MaxSeqNo, booxMap } from "../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum } from "../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt } from "../../../scripts/common/toolsKit";
 
 interface SearchPledgeProps{
   setPld:(pld:Pledge)=>void;
@@ -39,7 +39,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
         helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
         onChange={(e) => {
           let input = e.target.value;
-          onlyNum('SeqOfShare', input, MaxPrice, setValid);
+          onlyInt('SeqOfShare', input, MaxPrice, setValid);
           setSeqOfShare(input);
         }}
         value = { seqOfShare }
@@ -55,7 +55,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
         helperText={ valid['SeqOfPld']?.helpTx ?? ' ' }
         onChange={(e) => {
           let input = e.target.value;
-          onlyNum('SeqOfPld', input, MaxSeqNo, setValid);
+          onlyInt('SeqOfPld', input, MaxSeqNo, setValid);
           setSeqOfPld(input);
         }}
         value = { seqOfPld }

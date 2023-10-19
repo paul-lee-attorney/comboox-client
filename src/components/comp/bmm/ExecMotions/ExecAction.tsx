@@ -21,7 +21,7 @@ import {
   RemoveCircle, 
   Surfing 
 } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
@@ -190,7 +190,7 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Value', input, 0n, setValid);
+            onlyInt('Value', input, 0n, setValid);
             setActions(a => {
               let arr:Action[] = [];
               arr = [...a];

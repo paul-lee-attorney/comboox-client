@@ -19,7 +19,7 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { AddRule } from './../AddRule';
-import { FormResults, dateParser, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
+import { FormResults, dateParser, defFormResults, longSnParser, onlyInt } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { HexType, MaxSeqNo, MaxUserNo, SeqZero } from '../../../../../scripts/common';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
@@ -187,7 +187,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('QtyOfSubRule', input, MaxSeqNo, setValid);
+                    onlyInt('QtyOfSubRule', input, MaxSeqNo, setValid);
                     setObjPR((v) => ({
                       ...v,
                       qtyOfSubRule: input,
@@ -243,7 +243,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('SeqOfPos', input, MaxSeqNo, setValid);
+                    onlyInt('SeqOfPos', input, MaxSeqNo, setValid);
                     setObjPR((v) => ({
                       ...v,
                       seqOfPos: input,
@@ -304,7 +304,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Nominator', input, MaxUserNo, setValid);
+                    onlyInt('Nominator', input, MaxUserNo, setValid);
                     setObjPR((v) => ({
                       ...v,
                       nominator: input,
@@ -361,7 +361,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('SeqOfVR', input, MaxSeqNo, setValid);
+                    onlyInt('SeqOfVR', input, MaxSeqNo, setValid);
                     setObjPR((v) => ({
                       ...v,
                       seqOfVR: input,

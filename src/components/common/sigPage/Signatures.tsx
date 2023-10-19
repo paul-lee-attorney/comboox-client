@@ -40,7 +40,7 @@ import {
 
 
 import { ParasOfSigPage, StrSig, getBuyers, getParasOfPage, getSellers, parseParasOfPage } from "../../../scripts/common/sigPage";
-import { FormResults, dateParser, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, dateParser, defFormResults, hasError, longSnParser, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { AcceptSha } from "../../comp/roc/sha/Actions/AcceptSha";
 import { LoadingButton } from "@mui/lab";
 
@@ -226,7 +226,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
 
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('SigningDays', input, MaxSeqNo, setValid);
+                    onlyInt('SigningDays', input, MaxSeqNo, setValid);
                     setTiming((v) => ({
                       ...v,
                       signingDays: input,
@@ -249,7 +249,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('ClosingDays', input, MaxSeqNo, setValid);
+                    onlyInt('ClosingDays', input, MaxSeqNo, setValid);
                     setTiming((v) => ({
                       ...v,
                       closingDays: input,
@@ -422,7 +422,7 @@ export function Signatures({ addr, initPage, finalized, isSha }: SigPageProps) {
                 }}
                 onChange={(e) => {
                   let input = e.target.value;
-                  onlyNum('UserNo', input, MaxUserNo, setValid);
+                  onlyInt('UserNo', input, MaxUserNo, setValid);
                   setAcct(input);
                 }}
                 value={ acct }                                      

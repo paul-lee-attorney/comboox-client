@@ -61,10 +61,12 @@ export function GeneralInfo() {
     if (boox) {
       getControllor(boox[booxMap.ROM]).then(
         res => {
-          setControllor(res.toString());
-          votesOfGroup(boox[booxMap.ROM], Number(res)).then(
-            votes => setVotesOfController(votes.toString())
-          );
+          if (res > 0) {
+            setControllor(res.toString());
+            votesOfGroup(boox[booxMap.ROM], Number(res)).then(
+              votes => setVotesOfController(votes.toString())
+            );
+          }
         }
       );
 

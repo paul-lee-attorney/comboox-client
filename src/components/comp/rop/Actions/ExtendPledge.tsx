@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { Start } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
@@ -57,7 +57,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('ExtensionDays', input, MaxSeqNo, setValid);
+            onlyInt('ExtensionDays', input, MaxSeqNo, setValid);
             setDays(input);
           }}
           value={ days }

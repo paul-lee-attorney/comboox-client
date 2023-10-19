@@ -9,7 +9,7 @@ import { AddrOfRegCenter, HexType, MaxPrice, MaxUserNo } from '../../../scripts/
 import { BorderColor, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
-import { FormResults, defFormResults, hasError, longSnParser, onlyNum } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, longSnParser, onlyInt } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 export function TransferIPR() {
@@ -75,7 +75,7 @@ export function TransferIPR() {
           value={ typeOfDoc }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('TypeOfDoc', input, MaxPrice, setValid);
+            onlyInt('TypeOfDoc', input, MaxPrice, setValid);
             setTypeOfDoc(input);
           }}
         />
@@ -93,7 +93,7 @@ export function TransferIPR() {
           value={ version }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('Version', input, MaxPrice, setValid); 
+            onlyInt('Version', input, MaxPrice, setValid); 
             setVersion(input);
           }}
         />
@@ -111,7 +111,7 @@ export function TransferIPR() {
           value={ transferee }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('Transferee', input, MaxUserNo, setValid);
+            onlyInt('Transferee', input, MaxUserNo, setValid);
             setTransferee( input );
           }}
         />

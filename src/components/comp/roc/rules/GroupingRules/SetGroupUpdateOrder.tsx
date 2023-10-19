@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { HexType, MaxByte, MaxUserNo } from '../../../../../scripts/common';
 import { AddRule } from '../AddRule';
-import { FormResults, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, longSnParser, onlyInt } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 import { ListAlt } from '@mui/icons-material';
@@ -159,7 +159,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('QtyOfSubRule', input, MaxByte, setValid);
+                    onlyInt('QtyOfSubRule', input, MaxByte, setValid);
                     setObjGuo((v) => ({
                       ...v,
                       qtyOfSubRule: input,
@@ -237,7 +237,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Members_1', input, MaxUserNo, setValid);
+                    onlyInt('Members_1', input, MaxUserNo, setValid);
                     setObjGuo((v) => {
                       let arr = [...v.members];
                       arr[0] = input;
@@ -263,7 +263,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) =>{
                     let input = e.target.value;
-                    onlyNum('Members_2', input, MaxUserNo, setValid);
+                    onlyInt('Members_2', input, MaxUserNo, setValid);
                     setObjGuo((v) => {
                       let arr = [...v.members];
                       arr[1] = input;
@@ -289,7 +289,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Members_3', input, MaxUserNo, setValid);
+                    onlyInt('Members_3', input, MaxUserNo, setValid);
                     setObjGuo((v) => {
                       let arr = [...v.members];
                       arr[2] = input;
@@ -315,7 +315,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Members_4', input, MaxUserNo, setValid);
+                    onlyInt('Members_4', input, MaxUserNo, setValid);
                     setObjGuo((v) => {
                       let arr = [...v.members];
                       arr[3] = input;

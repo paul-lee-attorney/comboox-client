@@ -6,7 +6,7 @@ import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material
 import { getShare } from "../../../scripts/comp/ros";
 import { Create } from "@mui/icons-material";
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -76,7 +76,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('SeqOfShare', input, MaxPrice, setValid);
+                onlyInt('SeqOfShare', input, MaxPrice, setValid);
                 if (input != '0' && boox) {
                   setHead((v) => ({
                     ...v,
@@ -106,7 +106,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('DaysToMaturity', input, MaxSeqNo, setValid);
+                onlyInt('DaysToMaturity', input, MaxSeqNo, setValid);
                 setHead((v) => ({
                   ...v,
                   daysToMaturity: input,
@@ -127,7 +127,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('GuaranteeDays', input, MaxSeqNo, setValid);
+                onlyInt('GuaranteeDays', input, MaxSeqNo, setValid);
                 setHead((v) => ({
                   ...v,
                   guaranteeDays: input,
@@ -148,7 +148,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('ExecDays', input, MaxSeqNo, setValid);
+                onlyInt('ExecDays', input, MaxSeqNo, setValid);
                 setBody((v) => ({
                   ...v,
                   execDays: e.target.value,
@@ -170,7 +170,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Creditor', input, MaxUserNo, setValid);
+                onlyInt('Creditor', input, MaxUserNo, setValid);
                 setHead((v) => ({
                   ...v,
                   creditor: input,
@@ -196,7 +196,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Pledgor', input, MaxUserNo, setValid);
+                onlyInt('Pledgor', input, MaxUserNo, setValid);
                 setHead((v) => ({
                   ...v,
                   pledgor: input,
@@ -218,7 +218,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PledgedPaid', input, MaxData, setValid);
+                onlyInt('PledgedPaid', input, MaxData, setValid);
                 setBody((v) => ({
                   ...v,
                   paid: input,
@@ -240,7 +240,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PledgedPar', input, MaxData, setValid);
+                onlyInt('PledgedPar', input, MaxData, setValid);
                 setBody((v) => ({
                   ...v,
                   par: input,
@@ -262,7 +262,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('GuaranteedAmount', input, MaxData, setValid);
+                onlyInt('GuaranteedAmount', input, MaxData, setValid);
                 setBody((v) => ({
                   ...v,
                   guaranteedAmt: input,
@@ -284,7 +284,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Debtor', input, MaxData, setValid);
+                onlyInt('Debtor', input, MaxData, setValid);
                 setHead((v) => ({
                   ...v,
                   debtor: input,

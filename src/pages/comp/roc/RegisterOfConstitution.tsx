@@ -21,7 +21,7 @@ import { GetFilesList } from "../../../components/common/fileFolder/GetFilesList
 import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
 import { IndexCard } from "../../../components/common/fileFolder/IndexCard";
 import { HexType, MaxPrice, booxMap } from "../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 function RegisterOfConstitution() {
@@ -97,7 +97,7 @@ function RegisterOfConstitution() {
                     helperText={ valid['Version']?.helpTx ?? ' ' }
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyNum('Version', input, MaxPrice, setValid);
+                      onlyInt('Version', input, MaxPrice, setValid);
                       setVersion(input);
                     }}
                     value = { version }

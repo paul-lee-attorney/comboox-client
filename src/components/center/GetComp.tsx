@@ -7,7 +7,7 @@ import { Alert, Button, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { CenterInfo } from './CenterInfo';
 import { getDocByUserNo } from '../../scripts/center/rc';
-import { FormResults, defFormResults, hasError, onlyNum } from '../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt } from '../../scripts/common/toolsKit';
 
 export interface Head {
   typeOfDoc: number,
@@ -65,7 +65,7 @@ export function GetComp() {
           sx={{ m:1, mr:3, width: 218 }}           
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('RegNum', input, MaxUserNo, setValid);
+            onlyInt('RegNum', input, MaxUserNo, setValid);
             setRegNum( input );
           }}
           value = { regNum }

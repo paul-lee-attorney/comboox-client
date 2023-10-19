@@ -19,7 +19,7 @@ import {
 import { AddRule } from '../AddRule'
 import { HexType, MaxUserNo } from '../../../../../scripts/common';
 import { ListAlt } from '@mui/icons-material';
-import { FormResults, defFormResults, longSnParser, onlyNum } from '../../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, longSnParser, onlyInt } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
 
@@ -307,7 +307,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Rightholder_1', input, MaxUserNo, setValid);
+                    onlyInt('Rightholder_1', input, MaxUserNo, setValid);
                     setObjFR((v) => {
                       let holders = [...v.rightholders];
                       holders[0] = input;
@@ -330,7 +330,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Rightholder_2', input, MaxUserNo, setValid);
+                    onlyInt('Rightholder_2', input, MaxUserNo, setValid);
                     setObjFR((v) => {
                       let holders = [...v.rightholders];
                       holders[1] = input;
@@ -353,7 +353,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Rightholder_3', input, MaxUserNo, setValid);
+                    onlyInt('Rightholder_3', input, MaxUserNo, setValid);
                     setObjFR((v) => {
                       let holders = [...v.rightholders];
                       holders[2] = input;
@@ -376,7 +376,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Rightholder_4', input, MaxUserNo, setValid);
+                    onlyInt('Rightholder_4', input, MaxUserNo, setValid);
                     setObjFR((v) => {
                       let holders = [...v.rightholders];
                       holders[3] = input;

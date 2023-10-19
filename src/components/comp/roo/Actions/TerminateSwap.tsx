@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
@@ -55,7 +55,7 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('SeqOfSwap', input, MaxSeqNo, setValid);
+            onlyInt('SeqOfSwap', input, MaxSeqNo, setValid);
             setSeqOfSwap(input);
           }}
           value={ seqOfSwap }

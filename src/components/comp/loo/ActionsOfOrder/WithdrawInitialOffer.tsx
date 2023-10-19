@@ -7,7 +7,7 @@ import { useGeneralKeeperWithdrawInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 import { HexType, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
@@ -63,7 +63,7 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('SeqOfOrder', input, MaxPrice, setValid);
+            onlyInt('SeqOfOrder', input, MaxPrice, setValid);
             setOffer( v => ({
               ...v,
               seqOfOrder: input,
@@ -85,7 +85,7 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+            onlyInt('SeqOfLR', input, MaxSeqNo, setValid);
             setOffer( v => ({
               ...v,
               seqOfLR: input,

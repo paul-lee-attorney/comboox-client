@@ -7,7 +7,7 @@ import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../../../scripts/comp/loo";
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
@@ -68,7 +68,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('ExecHours', input, MaxSeqNo, setValid);
+            onlyInt('ExecHours', input, MaxSeqNo, setValid);
             setOrder( v => ({
               ...v,
               execHours: input,
@@ -90,7 +90,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('SeqOfLR', input, MaxSeqNo, setValid);
+            onlyInt('SeqOfLR', input, MaxSeqNo, setValid);
             setOrder( v => ({
               ...v,
               seqOfLR: input,
@@ -112,7 +112,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Paid', input, MaxData, setValid);
+            onlyInt('Paid', input, MaxData, setValid);
             setOrder( v => ({
               ...v,
               paid: input,
@@ -134,7 +134,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Price', input, MaxPrice, setValid);
+            onlyInt('Price', input, MaxPrice, setValid);
             setOrder( v => ({
               ...v,
               price: input,

@@ -10,7 +10,7 @@ import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
 export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
 
@@ -95,7 +95,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('SeqOfPos', input, MaxSeqNo, setValid);
+            onlyInt('SeqOfPos', input, MaxSeqNo, setValid);
             setSeqOfPos(input);
           }}
           value={ seqOfPos }
@@ -113,7 +113,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Candidate', input, MaxUserNo, setValid);
+            onlyInt('Candidate', input, MaxUserNo, setValid);
             setCandidate(input);
           }}
           value={ candidate }

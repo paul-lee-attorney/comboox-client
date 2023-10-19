@@ -21,7 +21,7 @@ import {
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { HexType, MaxSeqNo, booxMap } from '../../../scripts/common';
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { maxQtyOfMembers } from '../../../scripts/comp/rom';
 import { InitCompProps } from '../gk/SetCompInfo';
 import { LoadingButton } from '@mui/lab';
@@ -122,7 +122,7 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
               helperText={ valid['MaxQty']?.helpTx ?? ' ' }
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('MaxQty', input, MaxSeqNo, setValid);
+                onlyInt('MaxQty', input, MaxSeqNo, setValid);
                 setInputMax(input);
               }}
 

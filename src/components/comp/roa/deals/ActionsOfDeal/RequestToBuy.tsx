@@ -5,7 +5,7 @@ import { useGeneralKeeperRequestToBuy } from "../../../../../generated";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -65,7 +65,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('PaidOfTarget', input, MaxData, setValid);
+              onlyInt('PaidOfTarget', input, MaxData, setValid);
               setPaidOfTarget(input);
             }}
             value={ paidOfTarget }
@@ -83,7 +83,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('SeqOfPledge', input, MaxPrice, setValid);
+              onlyInt('SeqOfPledge', input, MaxPrice, setValid);
               setSeqOfPledge(input);
             }}
             value={ seqOfPledge }

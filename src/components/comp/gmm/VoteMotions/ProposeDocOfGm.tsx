@@ -5,7 +5,7 @@ import { HexType, MaxUserNo, } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { EmojiPeople } from "@mui/icons-material";
 import { useState } from "react";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 interface ProposeDocOfGmProps {
@@ -57,7 +57,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
         }}
         onChange={(e)=>{
           let input = e.target.value;
-          onlyNum('Executor', input, MaxUserNo, setValid);
+          onlyInt('Executor', input, MaxUserNo, setValid);
           setExecutor(input);
         }}
         value={ executor }

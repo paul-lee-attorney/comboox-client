@@ -34,7 +34,7 @@ import { Benchmark } from "../Alongs/Benchmark";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { BenchmarkType, getBenchmarks } from "../../../../../scripts/comp/ad";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -220,7 +220,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('ClassOfShare', input, MaxSeqNo, setValid);
+                        onlyInt('ClassOfShare', input, MaxSeqNo, setValid);
                         setClassOfShare(input);
                       }}
                       value={ classOfShare }              
@@ -238,7 +238,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('Price', input, MaxPrice, setValid);
+                        onlyInt('Price', input, MaxPrice, setValid);
                         setPrice(input);
                       }}
                       value={ price }
@@ -287,7 +287,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('Obligor', input, MaxUserNo, setValid);
+                        onlyInt('Obligor', input, MaxUserNo, setValid);
                         setObligor(input);
                       }}
                       value={ obligor }              
