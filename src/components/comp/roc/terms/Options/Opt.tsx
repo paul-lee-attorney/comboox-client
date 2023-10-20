@@ -27,7 +27,7 @@ export function Opt({ optWrap }: OptProps) {
     >
       <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-        <Chip label={ longSnParser(optWrap.opt.head.seqOfOpt.toString()) } color={ optWrap.opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'} sx={{m:1, minWidth:128 }} />
+        <Chip label={ 'Opt: ' + longSnParser(optWrap.opt.head.seqOfOpt.toString()) } color={ optWrap.opt.head.typeOfOpt % 2 == 0 ? 'primary' : 'success'} sx={{m:1, minWidth:128 }} />
 
         <ContentOfOpt opt={optWrap.opt} />
 

@@ -245,7 +245,9 @@ export function onlyInt(id: string, input: string, max: bigint, setValid:Dispatc
 }
 
 export function strNumToBigInt(input:string, dec:number): bigint {
-  let dif = dec - (input.length - input.indexOf('.') - 1);
+  let len = input.length;
+  let pos = input.indexOf('.');
+  let dif = dec - (pos > 0 ? len - 1 - pos : 0);
   return BigInt(input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : ''));
 }
 

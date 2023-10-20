@@ -16,7 +16,7 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { dateParser, longDataParser, longSnParser } from "../../../../../scripts/common/toolsKit";
+import { bigIntToStrNum, dateParser, longDataParser, longSnParser } from "../../../../../scripts/common/toolsKit";
 import { Option, typeOfOpts } from "../../../../../scripts/comp/roo";
 
 export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
@@ -113,7 +113,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(opt.body.paid.toString()) }              
+                  value={ longDataParser( bigIntToStrNum(opt.body.paid, 2)) }              
                 />
 
                 <TextField 
@@ -125,7 +125,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(opt.body.par.toString()) }              
+                  value={ longDataParser( bigIntToStrNum(opt.body.par, 2)) }              
                 />
 
                 <TextField 
@@ -153,7 +153,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(opt.head.rate.toString()) }              
+                  value={ longDataParser( bigIntToStrNum(BigInt(opt.head.rate), 2)) }              
                 />
 
                 <TextField 

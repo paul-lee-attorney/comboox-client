@@ -68,7 +68,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ dateParser(rule.triggerDate.toString()) }              
+                  value={ dateParser(rule.triggerDate.toString()) }
                 />
                 
                 <TextField 
@@ -85,7 +85,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
 
                 <TextField 
                   variant='outlined'
-                  label='ShareRatioThreshold (BP)'
+                  label='ShareRatioThreshold (%)'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
@@ -104,7 +104,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(rule.rate.toString()) }              
+                  value={ longDataParser((Number(rule.rate) / 100).toString()) }              
                 />
 
               </Stack>

@@ -20,7 +20,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 
-import { AddrZero, HexType, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
+import { AddrZero, HexType, MaxPrice, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
 
 import {
   AddCircle,
@@ -40,8 +40,8 @@ import dayjs from "dayjs";
 import { AlongLinks } from "./AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
-import { AlongLink, StrLinkRule, defaultStrLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 
 interface AlongsProps extends SetShaTermProps {
@@ -52,7 +52,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
 
   const [ links, setLinks ] = useState<AlongLink[]>();
   const [ drager, setDrager ] = useState<string>('0');
-  const [ rule, setRule ] = useState<StrLinkRule>(defaultStrLinkRule);
+  const [ rule, setRule ] = useState<LinkRule>(defaultLinkRule);
   const [ open, setOpen ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -202,6 +202,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         helperText=' '
                         sx={{
                           m:1,
+                          ml:8.5,
                           minWidth: 218,
                         }} 
                         size="small"
@@ -236,7 +237,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
 
                       <TextField 
                         variant='outlined'
-                        label='ShareRatioThreshold (BP)'
+                        label='ShareRatioThreshold (%)'
                         size="small"
                         error={ valid['ShareRatioThreshold']?.error }
                         helperText={ valid['ShareRatioThreshold']?.helpTx ?? ' ' }
@@ -246,7 +247,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyInt('ShareRatioThreshold', input, MaxRatio, setValid);
+                          onlyNum('ShareRatioThreshold', input, MaxRatio, 2, setValid);
                           setRule((v) => ({
                             ...v,
                             shareRatioThreshold: input,
@@ -259,7 +260,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
 
                     <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                      <FormControl variant="outlined" sx={{ m: 1, minWidth: 218 }}>
+                      <FormControl variant="outlined" sx={{ m:1, ml:8.5, minWidth: 218 }}>
                         <InputLabel id="triggerType-label">TypeOfTrigger</InputLabel>
                         <Select
                           size="small"
@@ -291,7 +292,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyInt('Rate', input, MaxRatio, setValid);
+                          onlyNum('Rate', input, MaxPrice, 2, setValid);
                           setRule((v) => ({
                             ...v,
                             rate: input,
@@ -383,7 +384,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                     >
                       <IconButton 
                         disabled={ addFollowerLoading || hasError(valid) || loadingAddFlr}
-                        sx={{width: 20, height: 20, mt:2, ml: 10,}} 
+                        sx={{width: 20, height: 20, mt:2, ml: 14.3,}} 
                         onClick={ () => addFollower?.() }
                         color="primary"
                       >

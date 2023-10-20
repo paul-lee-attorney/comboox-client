@@ -3,7 +3,7 @@ import { HexType } from "../common";
 import { alongsABI } from "../../generated";
 import { Deal } from "./ia";
 
-export interface StrLinkRule{
+export interface LinkRule{
   triggerDate: number;
   effectiveDays: string;
   triggerType: string;
@@ -17,7 +17,7 @@ export interface StrLinkRule{
   data: string;
 }
 
-export interface LinkRule{
+export interface OrgLinkRule{
   triggerDate: number;
   effectiveDays: number;
   triggerType: number;
@@ -31,7 +31,7 @@ export interface LinkRule{
   data: bigint;
 }
 
-export const defaultStrLinkRule: StrLinkRule = {
+export const defaultLinkRule: LinkRule = {
   triggerDate: 0,
   effectiveDays: '0',
   triggerType: '0',
@@ -45,45 +45,32 @@ export const defaultStrLinkRule: StrLinkRule = {
   data: '0'
 }
 
+export function convertOrgLinkRule(rule: OrgLinkRule): LinkRule {
 
-export const defaultLinkRule: LinkRule = {
-  triggerDate: 0,
-  effectiveDays: 0,
-  triggerType: 0,
-  shareRatioThreshold: 0,
-  rate: 0,
-  proRata: false,
-  seq: 0,
-  para: 0,
-  argu: 0,
-  ref: 0,
-  data: 0n
-}
-
-export function linkRuleSnParser(sn: HexType): LinkRule {
   let out: LinkRule = {
-    triggerDate: parseInt(sn.substring(2, 14), 16),
-    effectiveDays: parseInt(sn.substring(14, 18), 16),
-    triggerType: parseInt(sn.substring(18, 20), 16),
-    shareRatioThreshold: parseInt(sn.substring(20, 24), 16),
-    rate: parseInt(sn.substring(24, 32), 16),
-    proRata: parseInt(sn.substring(32, 34), 16) == 1,
-    seq: 0,
-    para: 0,
-    argu: 0,
-    ref: 0,
-    data: 0n
+    triggerDate: 0,
+    effectiveDays: rule.effectiveDays.toString(),
+    triggerType: rule.triggerType.toString(),
+    shareRatioThreshold: (rule.shareRatioThreshold / 100).toFixed(2).toString(),
+    rate: (rule.rate / 100).toFixed(2).toString(),
+    proRata: rule.proRata,
+    seq: rule.seq.toString(),
+    para: rule.para.toString(),
+    argu: rule.argu.toString(),
+    ref: rule.ref.toString(),
+    data: '0',
   }
+
   return out;
 }
 
-export function linkRuleCodifier(rule: StrLinkRule): HexType {
+export function linkRuleCodifier(rule: LinkRule): HexType {
   let out: HexType = `0x${
     rule.triggerDate.toString(16).padStart(12, '0') +
     Number(rule.effectiveDays).toString(16).padStart(4, '0') +
     Number(rule.triggerType).toString(16).padStart(2, '0') +
-    Number(rule.shareRatioThreshold).toString(16).padStart(4, '0') +
-    Number(rule.rate).toString(16).padStart(8, '0') +
+    parseInt((Number(rule.shareRatioThreshold) * 100).toFixed(0)).toString(16).padStart(4, '0') +
+    parseInt((Number(rule.rate) * 100).toFixed(0)).toString(16).padStart(8, '0') +
     (rule.proRata ? '01' : '00') +
     '0'.padEnd(32, '0')
   }`;
@@ -129,21 +116,7 @@ export async function getLinkRule(addr: HexType, dragger: string): Promise<LinkR
     args: [ BigInt(dragger)],
   })
 
-  // let out: LinkRule = {
-  //   triggerDate: res.triggerDate,
-  //   effectiveDays: res.effectiveDays,
-  //   triggerType: res.triggerType,
-  //   shareRatioThreshold: res.shareRatioThreshold,
-  //   rate: res.rate,
-  //   proRata: res.proRata,
-  //   seq: res.seq,
-  //   para: res.para,
-  //   argu: res.argu,
-  //   ref: res.ref,
-  //   data: res.data,   
-  // }
-
-  return res;
+  return convertOrgLinkRule(res);
 }
 
 export async function isFollower(addr: HexType, dragger: number, follower: number): Promise<boolean>{

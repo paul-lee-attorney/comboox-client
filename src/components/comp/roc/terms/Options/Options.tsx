@@ -56,13 +56,14 @@ import {
   StrBodyOfOpt
 } from "../../../../../scripts/comp/roo";
 import { getOpts } from "../../../../../scripts/comp/op";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
 
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
-  const [ opts, setOpts ] = useState<readonly OptWrap[]>();
+  const [ opts, setOpts ] = useState<readonly OptWrap[]>(); 
   const [ open, setOpen ] = useState(false);
+
   const [ head, setHead ] = useState<StrHeadOfOpt>(defaultStrHeadOfOpt);
   const [ cond, setCond ] = useState<StrCond>(defaultStrCond);
   const [ body, setBody ] = useState<StrBodyOfOpt>(defaultStrBodyOfOpt);
@@ -81,21 +82,22 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addOpt
   } = useOptionsCreateOption({
     address: term,
-    args: !hasError(valid)
-      ? [ 
-          optHeadCodifier(head), 
-          condCodifier(cond), 
-          BigInt(body.rightholder),
-          BigInt(body.paid),
-          BigInt(body.par)
-        ]
-      : undefined, 
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshAdd);
     },    
   });
+
+  const addOptClick = ()=>{
+    addOpt({args:[
+      optHeadCodifier(head), 
+      condCodifier(cond), 
+      BigInt(body.rightholder),
+      strNumToBigInt(body.paid, 2),
+      strNumToBigInt(body.par, 2)
+    ]});
+  }
   
   const [ loadingRemove, setLoadingRemove ] = useState(false);
   const refreshRemove = ()=> {
@@ -108,13 +110,16 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeOpt, 
   } = useOptionsDelOption({
     address: term,
-    args: head.seqOfOpt && !hasError(valid) ? [ BigInt(head.seqOfOpt) ] : undefined,
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshRemove);
     },    
   });
+
+  const removeOptClick = ()=> {
+    removeOpt({args:[BigInt(head.seqOfOpt)]});
+  }
 
   const [ obligor, setObligor ] = useState<string>('0');
 
@@ -129,15 +134,19 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addObligor, 
   } = useOptionsAddObligorIntoOpt({
     address: term,
-    args: head.seqOfOpt && obligor && !hasError(valid)
-      ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
-      : undefined, 
     onSuccess(data) {
       setLoadingAddObr(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshAddObr);
     },    
   });
+
+  const addObligorClick = ()=>{
+    addObligor({args:[
+      BigInt(head.seqOfOpt),
+      BigInt(obligor),
+    ]});
+  }
 
   const [ loadingRemoveObr, setLoadingRemoveObr ] = useState(false);
   const refreshRemoveObr = ()=> {
@@ -150,9 +159,6 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeObligor 
   } = useOptionsRemoveObligorFromOpt({
     address: term,
-    args: head.seqOfOpt && obligor && !hasError(valid)
-      ? [ BigInt(head.seqOfOpt), BigInt(obligor)] 
-      : undefined, 
     onSuccess(data) {
       setLoadingRemoveObr(true);
       let hash: HexType = data.hash;
@@ -160,6 +166,13 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     },    
   });
   
+  const removeObligorClick = ()=>{
+    removeObligor({args:[
+      BigInt(head.seqOfOpt),
+      BigInt(obligor),
+    ]});
+  }
+
   useEffect(()=>{
     if (term != AddrZero) {
       getOpts(term).then(
@@ -268,7 +281,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyInt('Paid', input, MaxData, setValid);
+                          onlyNum('Paid', input, MaxData, 2, setValid);
                           setBody((v) => ({
                             ...v,
                             paid: e.target.value,
@@ -289,7 +302,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyInt('Par', input, MaxData, setValid);
+                          onlyNum('Par', input, MaxData, 2, setValid);
                           setBody((v) => ({
                             ...v,
                             par: input,
@@ -335,7 +348,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyInt('RateOfOption', input, MaxPrice, setValid);
+                          onlyNum('RateOfOption', input, MaxPrice, 2, setValid);
                           setHead((v) => ({
                             ...v,
                             rate: input,
@@ -598,7 +611,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <IconButton 
                         disabled={ addOptLoading || hasError(valid) || loadingAdd}
                         sx={{width: 20, height: 20, mt:2, ml: 5 }} 
-                        onClick={ () => addOpt?.() }
+                        onClick={ addOptClick }
                         color="primary"
                       >
                         <AddCircle/>
@@ -634,7 +647,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <IconButton
                         disabled={ removeOptLoading || hasError(valid) || loadingRemove} 
                         sx={{width: 20, height: 20, mt:2, mr: 10, }} 
-                        onClick={ () => removeOpt?.() }
+                        onClick={ removeOptClick }
                         color="primary"
                       >
                         <RemoveCircle/>
@@ -649,7 +662,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <IconButton 
                         disabled={ addObligorLoading || hasError(valid) || loadingAddObr}
                         sx={{width: 20, height: 20, mt:2, ml: 10,}} 
-                        onClick={ () => addObligor?.() }
+                        onClick={ addObligorClick }
                         color="primary"
                       >
                         <AddCircle/>
@@ -684,7 +697,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                       <IconButton
                         disabled={ removeObligorLoading || hasError(valid) || loadingRemoveObr} 
                         sx={{width: 20, height: 20, mt:2, mr: 10}} 
-                        onClick={ () => removeObligor?.() }
+                        onClick={ removeObligorClick }
                         color="primary"
                       >
                         <RemoveCircle/>
