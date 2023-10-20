@@ -3,7 +3,7 @@ import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Sele
 
 import { useRegCenterLockConsideration } from '../../../generated';
 
-import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxLockValue, MaxSeqNo, MaxUserNo } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
@@ -135,20 +135,22 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
               variant='outlined'
               label='Amount (CBP)'
               error={ valid['Amount(CBP)']?.error }
-              helperText={ valid['Amount(CBP)']?.helpTx ?? ' ' }                            sx={{
+              helperText={ valid['Amount(CBP)']?.helpTx ?? ' ' }                            
+              sx={{
                 m:1,
                 minWidth: 218,
               }}
               value={ amt }
               onChange={e => {
                 let input = e.target.value ?? '0';
-                onlyNum('Amount(CBP)', input, 9, setValid);
+                onlyNum('Amount(CBP)', input, MaxLockValue, 9, setValid);
                 setAmt(input);
               }}
             />
 
             <DateTimeField
               label='ExpireDate'
+              helperText=' '
               sx={{
                 m:1,
                 minWidth: 218,

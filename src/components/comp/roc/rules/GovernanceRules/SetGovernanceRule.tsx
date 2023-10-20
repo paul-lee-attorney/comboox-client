@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxByte, MaxRatio, MaxSeqNo } from '../../../../../scripts/common';
-import { FormResults, dateParser, defFormResults, longDataParser, onlyInt, toPercent } from '../../../../../scripts/common/toolsKit';
+import { FormResults, dateParser, defFormResults, longDataParser, onlyInt, onlyNum, toPercent } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { getRule } from '../../../../../scripts/comp/sha';
 
@@ -63,19 +63,19 @@ export function strGRParser(hexRule: HexType): GovernanceRule {
   let rule: GovernanceRule = {
     fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16).toString(),
     basedOnPar: hexRule.substring(10, 12) === '01',
-    proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16).toString(),
-    proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16).toString(),
-    proposeHeadRatioOfDirectorsInGM: parseInt(hexRule.substring(20, 24), 16).toString(),
-    proposeHeadRatioOfDirectorsInBoard: parseInt(hexRule.substring(24, 28), 16).toString(),
+    proposeWeightRatioOfGM: (Number(parseInt(hexRule.substring(12,16), 16)) / 100).toFixed(2).toString(),
+    proposeHeadRatioOfMembers: (Number(parseInt(hexRule.substring(16, 20), 16)) / 100).toFixed(2).toString(),
+    proposeHeadRatioOfDirectorsInGM: (Number(parseInt(hexRule.substring(20, 24), 16)) / 100).toFixed(2).toString(),
+    proposeHeadRatioOfDirectorsInBoard: (Number(parseInt(hexRule.substring(24, 28), 16)) / 100).toFixed(2).toString(),
     maxQtyOfMembers: parseInt(hexRule.substring(28, 32), 16).toString(),
-    quorumOfGM: parseInt(hexRule.substring(32, 36), 16).toString(),
+    quorumOfGM: (Number(parseInt(hexRule.substring(32, 36), 16)) / 100).toFixed(2).toString(),
     maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16).toString(),
     tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16).toString(),
-    quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16).toString(),
+    quorumOfBoardMeeting: (Number(parseInt(hexRule.substring(42, 46), 16)) / 100).toFixed(2).toString(),
     establishedDate: parseInt(hexRule.substring(46, 58), 16),
     businessTermInYears: parseInt(hexRule.substring(58, 60), 16).toString(),
     typeOfComp: parseInt(hexRule.substring(60, 62), 16).toString(),
-    minVoteRatioOnChain: parseInt(hexRule.substring(62, 66), 16).toString(),    
+    minVoteRatioOnChain: (Number(parseInt(hexRule.substring(62, 66), 16)) / 100).toFixed(2).toString(),    
   };
 
   return rule;
@@ -85,103 +85,26 @@ export function strGRCodifier(rule: GovernanceRule): HexType {
   let hexGR: HexType = `0x${
     Number(rule.fundApprovalThreshold).toString(16).padStart(8, '0') +
     (rule.basedOnPar ? '01' : '00') +
-    Number(rule.proposeWeightRatioOfGM).toString(16).padStart(4, '0') +
-    Number(rule.proposeHeadRatioOfMembers).toString(16).padStart(4, '0') + 
-    Number(rule.proposeHeadRatioOfDirectorsInGM).toString(16).padStart(4, '0') + 
-    Number(rule.proposeHeadRatioOfDirectorsInBoard).toString(16).padStart(4, '0') + 
+    (Number(rule.proposeWeightRatioOfGM) * 100).toString(16).padStart(4, '0') +
+    (Number(rule.proposeHeadRatioOfMembers) * 100).toString(16).padStart(4, '0') + 
+    (Number(rule.proposeHeadRatioOfDirectorsInGM) * 100).toString(16).padStart(4, '0') + 
+    (Number(rule.proposeHeadRatioOfDirectorsInBoard) * 100).toString(16).padStart(4, '0') + 
     Number(rule.maxQtyOfMembers).toString(16).padStart(4, '0') +       
-    Number(rule.quorumOfGM).toString(16).padStart(4, '0') +       
+    (Number(rule.quorumOfGM) * 100).toString(16).padStart(4, '0') +       
     Number(rule.maxNumOfDirectors).toString(16).padStart(2, '0') +       
     Number(rule.tenureMonOfBoard).toString(16).padStart(4, '0') +       
-    Number(rule.quorumOfBoardMeeting).toString(16).padStart(4, '0') +       
+    (Number(rule.quorumOfBoardMeeting) * 100).toString(16).padStart(4, '0') +       
     rule.establishedDate.toString(16).padStart(12, '0') + 
     Number(rule.businessTermInYears).toString(16).padStart(2, '0') +                 
     Number(rule.typeOfComp).toString(16).padStart(2, '0')+                 
-    Number(rule.minVoteRatioOnChain).toString(16).padStart(4, '0')                 
+    (Number(rule.minVoteRatioOnChain) * 100).toString(16).padStart(4, '0')                 
   }`;
 
   return hexGR;
 }
 
-// export interface GovernanceRule {
-//   fundApprovalThreshold: number;
-//   basedOnPar: boolean ;
-//   proposeWeightRatioOfGM: number ;
-//   proposeHeadRatioOfMembers: number ;
-//   proposeHeadRatioOfDirectorsInGM: number ;
-//   proposeHeadRatioOfDirectorsInBoard: number ;
-//   maxQtyOfMembers: number ;
-//   quorumOfGM: number ;
-//   maxNumOfDirectors: number ;
-//   tenureMonOfBoard: number ;
-//   quorumOfBoardMeeting: number ;
-//   establishedDate: number ;
-//   businessTermInYears: number ;
-//   typeOfComp: number ; 
-//   minVoteRatioOnChain: number;
-// }
+export const typesOfComp = ['Limited Liability', 'Private Joint Stock', 'Public Listed'];
 
-// const defaultGR: GovernanceRule = {
-//   fundApprovalThreshold: 0,
-//   basedOnPar: false,
-//   proposeWeightRatioOfGM: 1000,
-//   proposeHeadRatioOfMembers: 0,
-//   proposeHeadRatioOfDirectorsInGM: 3333,
-//   proposeHeadRatioOfDirectorsInBoard: 1000,
-//   maxQtyOfMembers: 50,
-//   quorumOfGM: 5000,
-//   maxNumOfDirectors: 5,
-//   tenureMonOfBoard: 36,
-//   quorumOfBoardMeeting: 5000,
-//   establishedDate: 0,
-//   businessTermInYears: 20,
-//   typeOfComp: 1,
-//   minVoteRatioOnChain: 500,   
-// }
-
-// export function grCodifier(rule: GovernanceRule): HexType {
-//   let hexGR: HexType = `0x${
-//     rule.fundApprovalThreshold.toString(16).padStart(8, '0') +
-//     (rule.basedOnPar ? '01' : '00') +
-//     rule.proposeWeightRatioOfGM.toString(16).padStart(4, '0') +
-//     rule.proposeHeadRatioOfMembers.toString(16).padStart(4, '0') + 
-//     rule.proposeHeadRatioOfDirectorsInGM.toString(16).padStart(4, '0') + 
-//     rule.proposeHeadRatioOfDirectorsInBoard.toString(16).padStart(4, '0') + 
-//     rule.maxQtyOfMembers.toString(16).padStart(4, '0') +       
-//     rule.quorumOfGM.toString(16).padStart(4, '0') +       
-//     rule.maxNumOfDirectors.toString(16).padStart(2, '0') +       
-//     rule.tenureMonOfBoard.toString(16).padStart(4, '0') +       
-//     rule.quorumOfBoardMeeting.toString(16).padStart(4, '0') +       
-//     rule.establishedDate.toString(16).padStart(12, '0') + 
-//     rule.businessTermInYears.toString(16).padStart(2, '0') +                 
-//     rule.typeOfComp.toString(16).padStart(2, '0')+                 
-//     rule.minVoteRatioOnChain.toString(16).padStart(4, '0')                 
-//   }`;
-
-//   return hexGR;
-// }
-
-// export function grParser(hexRule: HexType): GovernanceRule {
-//   let rule: GovernanceRule = {
-//     fundApprovalThreshold: parseInt(hexRule.substring(2, 10), 16),
-//     basedOnPar: hexRule.substring(10, 12) === '01',
-//     proposeWeightRatioOfGM: parseInt(hexRule.substring(12,16), 16),
-//     proposeHeadRatioOfMembers: parseInt(hexRule.substring(16, 20), 16),
-//     proposeHeadRatioOfDirectorsInGM: parseInt(hexRule.substring(20, 24), 16),
-//     proposeHeadRatioOfDirectorsInBoard: parseInt(hexRule.substring(24, 28), 16),
-//     maxQtyOfMembers: parseInt(hexRule.substring(28, 32), 16),
-//     quorumOfGM: parseInt(hexRule.substring(32, 36), 16),
-//     maxNumOfDirectors: parseInt(hexRule.substring(36, 38), 16),
-//     tenureMonOfBoard: parseInt(hexRule.substring(38, 42), 16),
-//     quorumOfBoardMeeting: parseInt(hexRule.substring(42, 46), 16),
-//     establishedDate: parseInt(hexRule.substring(46, 58), 16),
-//     businessTermInYears: parseInt(hexRule.substring(58, 60), 16),
-//     typeOfComp: parseInt(hexRule.substring(60, 62), 16),
-//     minVoteRatioOnChain: parseInt(hexRule.substring(62, 66), 16),    
-//   };
-
-//   return rule;
-// }
 
 export interface RulesEditProps {
   sha: HexType;
@@ -269,15 +192,15 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                       <Select
                         labelId="basedOnPar-label"
                         id="basedOnPar-select"
-                        value={ objGR.basedOnPar ? '1' : '0' }
+                        value={ objGR.basedOnPar ? '01' : '00' }
                         onChange={(e) => setObjGR((v) => ({
                           ...v,
-                          proRata: e.target.value == '01',
+                          basedOnPar: e.target.value == '01',
                         }))}
                         label="BasedOnPar ?"
                       >
-                        <MenuItem value={'1'}>True</MenuItem>
-                        <MenuItem value={'0'}>False</MenuItem>
+                        <MenuItem value={'01'}>True</MenuItem>
+                        <MenuItem value={'00'}>False</MenuItem>
                       </Select>
                       <FormHelperText>{' '}</FormHelperText>
                     </FormControl>
@@ -299,7 +222,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                 
                   <TextField 
                     variant='outlined'
-                    label={ 'PropWROfMembers ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'PropWROfMembers (%)' }
                     size='small'
                     error={ valid['PropWROfMembers']?.error }
                     helperText={ valid['PropWROfMembers']?.helpTx ?? ' ' }        
@@ -310,21 +233,21 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('PropWROfMembers', input, MaxRatio, setValid);
+                      onlyNum('PropWROfMembers', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeWeightRatioOfGM: input,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.proposeWeightRatioOfGM) : objGR.proposeWeightRatioOfGM}
+                    value={ objGR.proposeWeightRatioOfGM } 
                   />
 
                   <TextField 
                     variant='outlined'
-                    label={ 'PropHROfMembers ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'PropHROfMembers (%)' }
                     size='small'
                     error={ valid['PropHROfMembers']?.error }
-                    helperText={ valid['PropHROfMembers']?.helpTx ?? ' ' }        
+                    helperText={ valid['PropHROfMembers']?.helpTx ?? ' ' }
                     inputProps={{readOnly: isFinalized}}
                     sx={{
                       m:1,
@@ -332,18 +255,18 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('PropHROfMembers', input, MaxRatio, setValid);
+                      onlyNum('PropHROfMembers', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeHeadRatioOfMembers: input,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfMembers) : objGR.proposeHeadRatioOfMembers}
+                    value={ objGR.proposeHeadRatioOfMembers }
                   />
 
                   <TextField 
                     variant='outlined'
-                    label={ 'PropHROfDirectorsInGM ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'PropHROfDirectorsInGM (%)' }
                     size='small'
                     error={ valid['PropHROfDirectorsInGM']?.error }
                     helperText={ valid['PropHROfDirectorsInGM']?.helpTx ?? ' ' }        
@@ -354,18 +277,18 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('PropHROfDirectorsInGM', input, MaxRatio, setValid);
+                      onlyNum('PropHROfDirectorsInGM', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeHeadRatioOfDirectorsInGM: e.target.value,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfDirectorsInGM) : objGR.proposeHeadRatioOfDirectorsInGM }
+                    value={ objGR.proposeHeadRatioOfDirectorsInGM }
                   />
 
                   <TextField 
                     variant='outlined'
-                    label={ 'PropHROfDirectorsInBM ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'PropHROfDirectorsInBM (%)' }
                     size='small'
                     error={ valid['PropHROfDirectorsInBM']?.error }
                     helperText={ valid['PropHROfDirectorsInBM']?.helpTx ?? ' ' }        
@@ -376,7 +299,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('PropHROfDirectorsInBM', input, MaxRatio, setValid);
+                      onlyNum('PropHROfDirectorsInBM', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         proposeHeadRatioOfDirectorsInBoard: input,
@@ -413,7 +336,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
 
                   <TextField 
                     variant='outlined'
-                    label={ 'QuorumOfGM ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'QuorumOfGM (%)' }
                     size='small'
                     error={ valid['QuorumOfGM']?.error }
                     helperText={ valid['QuorumOfGM']?.helpTx ?? ' ' }        
@@ -424,7 +347,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('QuorumOfGM', input, MaxRatio, setValid);
+                      onlyNum('QuorumOfGM', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         quorumOfGM: input,
@@ -479,7 +402,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
 
                   <TextField 
                     variant='outlined'
-                    label={ 'QuorumOfBoardMeeting ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'QuorumOfBoardMeeting (%)' }
                     size='small'
                     error={ valid['QuorumOfBoardMeeting']?.error }
                     helperText={ valid['QuorumOfBoardMeeting']?.helpTx ?? ' ' }
@@ -490,13 +413,13 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('QuorumOfBoardMeeting', input, MaxRatio, setValid);
+                      onlyNum('QuorumOfBoardMeeting', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         quorumOfBoardMeeting: input,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.quorumOfBoardMeeting) : objGR.quorumOfBoardMeeting }   
+                    value={ objGR.quorumOfBoardMeeting }   
                   />
 
                 </Stack>
@@ -558,31 +481,29 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     value={ objGR.businessTermInYears }
                   />
 
-                  <TextField 
-                    variant='outlined'
-                    label='TypeOfComp'
-                    size='small'
-                    error={ valid['TypeOfComp']?.error }
-                    helperText={ valid['TypeOfComp']?.helpTx ?? ' ' }
-                    inputProps={{readOnly: isFinalized}}
-                      sx={{
-                      m:1,
-                      minWidth:218,
-                    }}
-                    onChange={(e) => {
-                      let input = e.target.value;
-                      onlyInt('TypeOfComp', input, MaxByte, setValid);
-                      setObjGR((v) => ({
+                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                    <InputLabel id="typeOfComp-label">TypeOfComp</InputLabel>
+                    <Select
+                      inputProps={{readOnly: isFinalized}}
+                      labelId="typeOfComp-label"
+                      id="typeOfDeal-select"
+                      label="TypeOfComp"
+                      value={ Number(objGR.typeOfComp) }
+                      onChange={(e) => setObjGR((v) => ({
                         ...v,
-                        typeOfComp: input,
-                      }));
-                    }}
-                    value={ objGR.typeOfComp }
-                  />
+                        typeOfComp: e.target.value.toString(),
+                      }))}
+                    >
+                      {typesOfComp.map((v,i) => (
+                        <MenuItem key={i} value={i+1}>{v}</MenuItem>
+                      ))}
+                    </Select>
+                    <FormHelperText>{' '}</FormHelperText>
+                  </FormControl>
 
                   <TextField 
                     variant='outlined'
-                    label={ 'MinVoteRatioOnChain ' + (isFinalized ? '(%)' : 'BP') }
+                    label={ 'VoteRatioReportThreshold (%)' }
                     size='small'
                     error={ valid['MinVoteRatioOnChain']?.error }
                     helperText={ valid['MinVoteRatioOnChain']?.helpTx ?? ' ' }
@@ -593,18 +514,18 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                     }}
                     onChange={(e) => {
                       let input = e.target.value;
-                      onlyInt('MinVoteRatioOnChain', input, MaxRatio, setValid);
+                      onlyNum('MinVoteRatioOnChain', input, MaxRatio, 2, setValid);
                       setObjGR((v) => ({
                         ...v,
                         minVoteRatioOnChain: input,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.minVoteRatioOnChain) : objGR.minVoteRatioOnChain }
+                    value={ objGR.minVoteRatioOnChain }
                   />
 
                   <TextField 
                     variant='outlined'
-                    label='FundThreshold  (CBP/ETH)'
+                    label='PaymentApprovalThreshold (CBP/ETH)'
                     size='small'
                     error={ valid['FundThreshold']?.error }
                     helperText={ valid['FundThreshold']?.helpTx ?? ' ' }

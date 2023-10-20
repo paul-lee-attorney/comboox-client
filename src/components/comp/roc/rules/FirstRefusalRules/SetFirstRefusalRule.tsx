@@ -220,7 +220,7 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                       labelId="typeOfDeal-label"
                       id="typeOfDeal-select"
                       label="TypeOfDeal"
-                      value={ Number(objFR.typeOfDeal) - 1 }
+                      value={ Number(objFR.typeOfDeal) }
                       onChange={(e) => setObjFR((v) => ({
                         ...v,
                         typeOfDeal: e.target.value.toString(),

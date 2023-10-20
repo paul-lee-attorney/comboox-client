@@ -12,10 +12,11 @@ export const AcctZero:string = '0'.padEnd(10,'0');
 export const DateZero:string = '0'.padEnd(12,'0');
 export const DataZero:string = '0'.padEnd(16,'0');
 
+export const MaxLockValue: bigint = 2n**128n-1n;
+export const MaxData: bigint = 2n**64n-1n;
+export const MaxPrice: bigint = 2n**32n-1n;
 export const MaxUserNo: bigint = 2n**40n-1n;
 export const MaxSeqNo: bigint = 2n**16n-1n;
-export const MaxPrice: bigint = 2n**32n-1n;
-export const MaxData: bigint = 2n**64n-1n;
 export const MaxRatio: bigint = 10000n;
 export const MaxByte: bigint = 255n;
 

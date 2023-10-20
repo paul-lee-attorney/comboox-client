@@ -199,6 +199,8 @@ export async function refreshAfterTx(hash: HexType, refresh:()=>void ) {
   refresh();
 } 
 
+// ==== Input Validation ====
+
 export interface Result {
   error: boolean;
   helpTx: string;
@@ -242,22 +244,36 @@ export function onlyInt(id: string, input: string, max: bigint, setValid:Dispatc
   });
 }
 
-export function onlyNum(id: string, input: string, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {
+function toBigInt(input:string, dec:number): bigint {
+  let dif = dec - (input.length - input.indexOf('.') - 1);
+  return BigInt(input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : ''));
+}
+
+export function onlyNum(id: string, input: string, max:bigint, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {
   let reg = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
   let error: boolean = !reg.test(input);
-  let overflow: boolean = error
+
+  let tailTooLong: boolean = error
                         ? false
                         : maxDec == 0 || input.indexOf('.') < 0
                           ? false 
                           : (input.length - input.indexOf('.') - 1) > maxDec;
 
+  let overflow: boolean = error || tailTooLong
+                        ? false
+                        : max == 0n
+                          ? false
+                          : toBigInt(input, maxDec) > max;
+
   let result:Result = {
-    error: error || overflow,
+    error: error || overflow || tailTooLong,
     helpTx: error 
           ? 'Only Number'
           : overflow
-            ? 'Dec Length Over Flow'
-            : ' ',
+            ? 'Over Flow'
+            : tailTooLong
+              ? 'Tail Too Long'
+              : ' ',
   }
 
   setValid( v => {

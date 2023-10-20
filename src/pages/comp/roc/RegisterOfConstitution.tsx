@@ -44,7 +44,7 @@ function RegisterOfConstitution() {
     write: createSha,
   } = useGeneralKeeperCreateSha({
     address: gk,
-    args: version && !hasError(valid) ? [BigInt(version)] : undefined,
+    args: version ? [BigInt(version)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -105,7 +105,7 @@ function RegisterOfConstitution() {
                   />
 
                   <LoadingButton 
-                    disabled={ createShaLoading }
+                    disabled={ createShaLoading || hasError(valid) }
                     loading = {loading}
                     loadingPosition="end"
                     sx={{ m: 1, minWidth: 120, height: 40 }} 

@@ -95,7 +95,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           value={ amt }
           onChange={e => {
             let input = e.target.value ?? '0';
-            onlyNum('Amount(CBP)', input, 9, setValid);
+            onlyNum('Amount(CBP)', input, 0n, 9, setValid);
             setAmt(input);
           }}
         />

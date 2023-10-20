@@ -98,7 +98,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           value={ amt }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('Amt(CBP)', input, 9, setValid);
+            onlyNum('Amt(CBP)', input, 0n, 9, setValid);
             setAmt(input);
           }}
         />

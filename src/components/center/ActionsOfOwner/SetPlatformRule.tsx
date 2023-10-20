@@ -5,7 +5,7 @@ import {
   useRegCenterSetPlatformRule,
 } from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../scripts/center/rc';
@@ -55,7 +55,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.eoaRewards }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('EOA_Rewards', input, 9, setValid);
+            onlyNum('EOA_Rewards', input, MaxUserNo, 9, setValid);
             setRule(v => ({
               ...v,
               eoaRewards: input, 
@@ -76,7 +76,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.coaRewards }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('COA_Rewards', input, 9, setValid);            
+            onlyNum('COA_Rewards', input, MaxUserNo, 9, setValid);            
             setRule(v => ({
               ...v,
               coaRewards: input, 
@@ -97,7 +97,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.floor }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('FloorOfRoyalty', input, 9, setValid);
+            onlyNum('FloorOfRoyalty', input, MaxUserNo, 9, setValid);
             setRule(v => ({
               ...v,
               floor: input, 
@@ -118,7 +118,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           value={ rule.rate }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('OffRate', input, 2, setValid);
+            onlyNum('OffRate', input, 2000n, 2, setValid);
             setRule(v =>({
                 ...v,
                 rate: input, 

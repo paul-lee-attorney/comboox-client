@@ -5,7 +5,7 @@ import {
   useRegCenterMintAndLockPoints,
 } from '../../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero, HexType, MaxUserNo } from '../../../scripts/common';
+import { AddrOfRegCenter, Bytes32Zero, HexType, MaxLockValue, MaxUserNo } from '../../../scripts/common';
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
@@ -94,7 +94,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
               value={ amt }
               onChange={e => {
                 let input = e.target.value ?? '0';
-                onlyNum('Amount(CBP)', input, 9, setValid);
+                onlyNum('Amount(CBP)', input, MaxLockValue, 9, setValid);
                 setAmt(input);
               }}
             />

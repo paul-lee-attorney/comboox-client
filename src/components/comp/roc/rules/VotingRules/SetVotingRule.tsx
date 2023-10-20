@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxByte, MaxRatio, MaxSeqNo, MaxUserNo } from '../../../../../scripts/common';
-import { FormResults, defFormResults, longSnParser, onlyInt, toPercent } from '../../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, longSnParser, onlyInt, onlyNum, } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
@@ -26,28 +26,6 @@ import { getRule } from '../../../../../scripts/comp/sha';
 // ==== Str Interface ====
 
 export interface VotingRule {
-  seqOfRule: number;
-  qtyOfSubRule: number;
-  seqOfSubRule: number;
-  authority: number;
-  headRatio: number;
-  amountRatio: number;
-  onlyAttendance: boolean;
-  impliedConsent: boolean;
-  partyAsConsent: boolean;
-  againstShallBuy: boolean;
-  frExecDays: number;
-  dtExecDays: number;
-  dtConfirmDays: number;
-  invExitDays: number;
-  votePrepareDays: number;
-  votingDays: number;
-  execDaysForPutOpt: number;
-  vetoers: readonly number[];
-  para: number;
-}
-
-export interface StrVotingRule {
   seqOfRule: string;
   qtyOfSubRule: string;
   seqOfSubRule: string;
@@ -69,40 +47,36 @@ export interface StrVotingRule {
   para: string;
 }
 
-export function vrParser(hexVr: HexType):VotingRule {
-  let rule: VotingRule = {
-    seqOfRule:parseInt(hexVr.substring(2, 6), 16), 
-    qtyOfSubRule:parseInt(hexVr.substring(6, 8), 16),
-    seqOfSubRule:parseInt(hexVr.substring(8, 10), 16),
-    authority: parseInt(hexVr.substring(10, 12), 16),
-    headRatio: parseInt(hexVr.substring(12, 16), 16),
-    amountRatio: parseInt(hexVr.substring(16, 20), 16),
-    onlyAttendance: hexVr.substring(20, 22) === '01',
-    impliedConsent: hexVr.substring(22, 24) === '01',
-    partyAsConsent: hexVr.substring(24, 26) === '01',
-    againstShallBuy: hexVr.substring(26, 28) === '01',
-    frExecDays: parseInt(hexVr.substring(28, 30), 16),
-    dtExecDays: parseInt(hexVr.substring(30, 32), 16),
-    dtConfirmDays: parseInt(hexVr.substring(32, 34), 16),
-    invExitDays: parseInt(hexVr.substring(34, 36), 16),
-    votePrepareDays: parseInt(hexVr.substring(36, 38), 16),
-    votingDays: parseInt(hexVr.substring(38, 40), 16),
-    execDaysForPutOpt: parseInt(hexVr.substring(40, 42), 16),
-    vetoers: [parseInt(hexVr.substring(42, 52), 16), parseInt(hexVr.substring(52, 62), 16)],
-    para: 0,    
-  }
-  return rule;
+export interface OrgVotingRule {
+  seqOfRule: number;
+  qtyOfSubRule: number;
+  seqOfSubRule: number;
+  authority: number;
+  headRatio: number;
+  amountRatio: number;
+  onlyAttendance: boolean;
+  impliedConsent: boolean;
+  partyAsConsent: boolean;
+  againstShallBuy: boolean;
+  frExecDays: number;
+  dtExecDays: number;
+  dtConfirmDays: number;
+  invExitDays: number;
+  votePrepareDays: number;
+  votingDays: number;
+  execDaysForPutOpt: number;
+  vetoers: readonly number[];
+  para: number;
 }
 
-
-export function strVRParser(hexVr: HexType):StrVotingRule {
-  let rule: StrVotingRule = {
+export function vrParser(hexVr: HexType):VotingRule {
+  let rule: VotingRule = {
     seqOfRule:parseInt(hexVr.substring(2, 6), 16).toString(), 
     qtyOfSubRule:parseInt(hexVr.substring(6, 8), 16).toString(),
     seqOfSubRule:parseInt(hexVr.substring(8, 10), 16).toString(),
     authority: parseInt(hexVr.substring(10, 12), 16).toString(),
-    headRatio: parseInt(hexVr.substring(12, 16), 16).toString(),
-    amountRatio: parseInt(hexVr.substring(16, 20), 16).toString(),
+    headRatio: (Number(parseInt(hexVr.substring(12, 16), 16)) / 100).toFixed(2).toString(),
+    amountRatio: (Number(parseInt(hexVr.substring(16, 20), 16)) / 100).toFixed(2).toString(),
     onlyAttendance: hexVr.substring(20, 22) === '01',
     impliedConsent: hexVr.substring(22, 24) === '01',
     partyAsConsent: hexVr.substring(24, 26) === '01',
@@ -120,14 +94,14 @@ export function strVRParser(hexVr: HexType):StrVotingRule {
   return rule;
 }
 
-export function vrCodifier(objVr: StrVotingRule, seq: number ): HexType {
+export function vrCodifier(objVr: VotingRule, seq: number ): HexType {
   let hexVr: HexType = `0x${
     (seq.toString(16).padStart(4, '0')) +
     (Number(objVr.qtyOfSubRule).toString(16).padStart(2, '0')) +
     (Number(objVr.seqOfSubRule).toString(16).padStart(2, '0')) +
     (Number(objVr.authority).toString(16).padStart(2, '0')) +
-    (Number(objVr.headRatio).toString(16).padStart(4, '0')) +
-    (Number(objVr.amountRatio).toString(16).padStart(4, '0')) +
+    ((Number(objVr.headRatio) * 100).toString(16).padStart(4, '0')) +
+    ((Number(objVr.amountRatio) * 100).toString(16).padStart(4, '0')) +
     (objVr.onlyAttendance ? '01' : '00' )+
     (objVr.impliedConsent ? '01' : '00' )+
     (objVr.partyAsConsent ? '01' : '00' )+
@@ -145,7 +119,6 @@ export function vrCodifier(objVr: StrVotingRule, seq: number ): HexType {
   }`;
   return hexVr;
 }
-
 
 export const authorities:string[] = ['ShareholdersMeeting', 'Board'];
 
@@ -167,7 +140,7 @@ const subTitles: string[] = [
 
 export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
-  const strDefVR: StrVotingRule =
+  const strDefVR: VotingRule =
       { seqOfRule: seq.toString(), 
         qtyOfSubRule: seq.toString(), 
         seqOfSubRule: seq.toString(),
@@ -191,13 +164,13 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
 
   let subTitle: string = (seq < 13) ? subTitles[seq - 1] : subTitles[12];
 
-  const [ objVR, setObjVR ] = useState<StrVotingRule>(strDefVR);   
+  const [ objVR, setObjVR ] = useState<VotingRule>(strDefVR);   
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ open, setOpen ] = useState(false);
 
   useEffect(()=>{
     getRule(sha, seq).then(
-      res => setObjVR(strVRParser(res))
+      res => setObjVR(vrParser(res))
     );
   }, [sha, seq, time])
 
@@ -256,46 +229,29 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                {!isFinalized && (
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="authority-label">Authority</InputLabel>
-                    <Select
-                      labelId="authority-label"
-                      id="authority-select"
-                      label="Authority"
-                      value={ objVR.authority }
-                      onChange={(e) => setObjVR((v) => ({
-                        ...v,
-                        authority: e.target.value,
-                      }))}
-                    >
-                      <MenuItem value={1}>ShareholdersMeeting</MenuItem>
-                      <MenuItem value={2}>BoardMeeting</MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-                )}
-
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Authority'
-                    inputProps={{readOnly: true}}
-                    helperText=' '
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    placeholder='Authority'
-                    value={ authorities[(Number(objVR.authority) > 0 ? Number(objVR.authority) : 1) - 1] }
-                  />
-                )}
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="authority-label">Authority</InputLabel>
+                  <Select
+                    labelId="authority-label"
+                    id="authority-select"
+                    label="Authority"
+                    value={ objVR.authority }
+                    inputProps={{readOnly: isFinalized}}
+                    onChange={(e) => setObjVR((v) => ({
+                      ...v,
+                      authority: e.target.value,
+                    }))}
+                  >
+                    <MenuItem value={1}>ShareholdersMeeting</MenuItem>
+                    <MenuItem value={2}>BoardMeeting</MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label={'HeadRatio ' + (isFinalized ? '(%)' : 'BP')}
+                  label={ 'HeadRatio (%)' }
                   error={ valid['HeadRatio']?.error }
                   helperText={ valid['HeadRatio']?.helpTx ?? ' '}
                   inputProps={{readOnly: isFinalized}}
@@ -305,19 +261,19 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('HeadRatio', input, MaxRatio, setValid);
+                    onlyNum('HeadRatio', input, MaxRatio, 2, setValid);
                     setObjVR((v) => ({
                       ...v,
                       headRatio:input,
                     }));
                   }}
-                  value={ isFinalized ? toPercent(objVR.headRatio) : objVR.headRatio }              
+                  value={ objVR.headRatio }              
                 />
 
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label={'AmountRatio ' + (isFinalized ? '(%)' : 'BP')}
+                  label={'AmountRatio (%)'}
                   error={ valid['AmountRatio']?.error }
                   helperText={ valid['AmountRatio']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
@@ -327,13 +283,13 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('AmountRatio', input, MaxRatio, setValid);
+                    onlyNum('AmountRatio', input, MaxRatio, 2, setValid);
                     setObjVR((v) => ({
                       ...v,
                       amountRatio: input,
                     }));
                   }}
-                  value={ isFinalized ? toPercent(objVR.amountRatio) : objVR.amountRatio }                               
+                  value={ objVR.amountRatio }                               
                 />
 
                 <TextField 
@@ -360,213 +316,131 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
 
               </Stack>
 
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='OnlyAttendance ?'
-                    helperText=' '
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objVR.onlyAttendance ? 'True' : 'False' }
-                  />
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="onlyAttendance-label">OnlyAttendance ?</InputLabel>
+                  <Select
+                    labelId="onlyAttendance-label"
+                    id="onlyAttendance-select"
+                    label="OnlyAttendance ?"
+                    inputProps={{ readOnly:isFinalized }}
+                    value={ objVR.onlyAttendance ? '1' : '0' }
+                    onChange={(e) => setObjVR((v) => ({
+                      ...v,
+                      onlyAttendance: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={ '1' } > True </MenuItem>
+                    <MenuItem value={ '0' } > False </MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='ImpliedConsent ?'
-                    helperText=' '
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objVR.impliedConsent ? 'True' : 'False' }
-                  />
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="impliedConsent-label">ImpliedConsent ?</InputLabel>
+                  <Select
+                    labelId="impliedConsent-label"
+                    id="impliedConsent-select"
+                    label="ImpliedConsent ?"
+                    inputProps={{ readOnly:isFinalized }}
+                    value={ objVR.impliedConsent ? '1' : '0' }
+                    onChange={(e) => setObjVR((v) => ({
+                      ...v,
+                      impliedConsent: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={ '1' } > True </MenuItem>
+                    <MenuItem value={ '0' } > False </MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='PartyAsConsent ?'
-                    helperText=' '
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ objVR.partyAsConsent ? 'True' : 'False' }
-                  />
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="partyAsConsent-label">PartyAsConsent ?</InputLabel>
+                  <Select
+                    labelId="partyAsConsent-label"
+                    id="partyAsConsent-select"
+                    label="PartyAsConsent ?"
+                    inputProps={{ readOnly:isFinalized }}
+                    value={ objVR.partyAsConsent ? '1' : '0' }
+                    onChange={(e) => setObjVR((v) => ({
+                      ...v,
+                      partyAsConsent: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={ '1' } > True </MenuItem>
+                    <MenuItem value={ '0' } > False </MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='AgainstShallBuy ?'
-                    helperText=' '
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objVR.againstShallBuy ? 'True' : 'False'}
-                  />
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="againstShallBuy-label">AgainstShallBuy ?</InputLabel>
+                  <Select
+                    labelId="againstShallBuy-label"
+                    id="againstShallBuy-select"
+                    label="AgainstShallBuy ?"
+                    inputProps={{ readOnly:isFinalized }}
+                    value={ objVR.againstShallBuy ? '1' : '0' }
+                    onChange={(e) => setObjVR((v) => ({
+                      ...v,
+                      againstShallBuy: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={ '1' } > True </MenuItem>
+                    <MenuItem value={ '0' } > False </MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Vetoer_1'
-                    helperText=' '
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objVR.vetoers[0]) }
-                  />
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Vetoer_1'
+                  error={ valid['Vetoer_1']?.error }
+                  helperText={ valid['Vetoer_1']?.helpTx ?? ' ' }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyInt('Vetoer_1', input, MaxUserNo, setValid);
+                    setObjVR((v) => {
+                      let arr = [...v.vetoers];
+                      arr[0] = input;
+                      return {...v, vetoers:arr};
+                    });
+                  }}
+                  value={ isFinalized ? longSnParser(objVR.vetoers[0]) : objVR.vetoers[0] }   
+                />
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Vetoer_2'
-                    helperText=' '
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ longSnParser(objVR.vetoers[1])}
-                  />
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Vetoer_2'
+                  error={ valid['Vetoer_2']?.error }
+                  helperText={ valid['Vetoer_2']?.helpTx ?? ' ' }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyInt('Vetoer_2', input, MaxUserNo, setValid);
+                    setObjVR((v) => {
+                      let arr = [...v.vetoers];
+                      arr[1] = input;
+                      return {...v, vetoers:arr};
+                    });
+                  }}
+                  value={ isFinalized ? longSnParser(objVR.vetoers[1]) : objVR.vetoers[1] }
+                />
 
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="onlyAttendance-label">OnlyAttendance ?</InputLabel>
-                    <Select
-                      labelId="onlyAttendance-label"
-                      id="onlyAttendance-select"
-                      label="OnlyAttendance ?"
-                      value={ objVR.onlyAttendance ? '1' : '0' }
-                      onChange={(e) => setObjVR((v) => ({
-                        ...v,
-                        onlyAttendance: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={ '1' } > True </MenuItem>
-                      <MenuItem value={ '0' } > False </MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="impliedConsent-label">ImpliedConsent ?</InputLabel>
-                    <Select
-                      labelId="impliedConsent-label"
-                      id="impliedConsent-select"
-                      label="ImpliedConsent ?"
-                      value={ objVR.impliedConsent ? '1' : '0' }
-                      onChange={(e) => setObjVR((v) => ({
-                        ...v,
-                        impliedConsent: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={ '1' } > True </MenuItem>
-                      <MenuItem value={ '0' } > False </MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="partyAsConsent-label">PartyAsConsent ?</InputLabel>
-                    <Select
-                      labelId="partyAsConsent-label"
-                      id="partyAsConsent-select"
-                      label="PartyAsConsent ?"
-                      value={ objVR.partyAsConsent ? '1' : '0' }
-                      onChange={(e) => setObjVR((v) => ({
-                        ...v,
-                        partyAsConsent: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={ '1' } > True </MenuItem>
-                      <MenuItem value={ '0' } > False </MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="againstShallBuy-label">AgainstShallBuy ?</InputLabel>
-                    <Select
-                      labelId="againstShallBuy-label"
-                      id="againstShallBuy-select"
-                      label="AgainstShallBuy ?"
-                      value={ objVR.againstShallBuy ? '1' : '0' }
-                      onChange={(e) => setObjVR((v) => ({
-                        ...v,
-                        againstShallBuy: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={ '1' } > True </MenuItem>
-                      <MenuItem value={ '0' } > False </MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Vetoer_1'
-                    error={ valid['Vetoer_1']?.error }
-                    helperText={ valid['Vetoer_1']?.helpTx ?? ' ' }
-                    inputProps={{readOnly: isFinalized}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => {
-                      let input = e.target.value;
-                      onlyInt('Vetoer_1', input, MaxUserNo, setValid);
-                      setObjVR((v) => {
-                        let arr = [...v.vetoers];
-                        arr[0] = input;
-                        return {...v, vetoers:arr};
-                      });
-                    }}
-                    value={ objVR.vetoers[0]}   
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='Vetoer_2'
-                    error={ valid['Vetoer_2']?.error }
-                    helperText={ valid['Vetoer_2']?.helpTx ?? ' ' }
-                    inputProps={{readOnly: isFinalized}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    onChange={(e) => {
-                      let input = e.target.value;
-                      onlyInt('Vetoer_2', input, MaxUserNo, setValid);
-                      setObjVR((v) => {
-                        let arr = [...v.vetoers];
-                        arr[1] = input;
-                        return {...v, vetoers:arr};
-                      });
-                    }}
-                    value={ objVR.vetoers[1]}
-                  />
-
-                </Stack>
-              )}
+              </Stack>
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 

@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { AddrZero, HexType } from ".";
 import { meetingMinutesABI } from "../../generated";
-import { VotingRule } from "../../components/comp/roc/rules/VotingRules/SetVotingRule";
+import { OrgVotingRule, VotingRule, vrParser } from "../../components/comp/roc/rules/VotingRules/SetVotingRule";
 
 export interface Action {
   target: HexType;
@@ -145,7 +145,7 @@ export interface BodyOfMotion {
 export interface Motion {
   head: HeadOfMotion,
   body: BodyOfMotion,
-  votingRule: VotingRule,
+  votingRule: OrgVotingRule,
   contents: bigint,
 }
 
@@ -163,7 +163,7 @@ export function motionSnParser(sn: HexType): HeadOfMotion {
 }
 
 export async function getMotion(bog: HexType, seq: bigint): Promise<Motion> {
-  let motion:Motion = await readContract({
+  let motion = await readContract({
     address: bog,
     abi: meetingMinutesABI,
     functionName: 'getMotion',

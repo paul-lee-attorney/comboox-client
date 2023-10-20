@@ -1,6 +1,6 @@
 
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
-import { AddrZero, booxMap } from "../../../../../scripts/common";
+import { AddrZero, Bytes32Zero, booxMap } from "../../../../../scripts/common";
 import { useRegisterOfConstitutionPointer } from "../../../../../generated";
 import { VotingRule, authorities, vrParser } from "./SetVotingRule";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, } from "@mui/material";
@@ -25,7 +25,10 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
     onSuccess(res) {
       if (res != AddrZero)
         getRule(res, seq).then(
-          rule => setObjVr(vrParser(rule))
+          rule => {
+            if (rule != Bytes32Zero) 
+                setObjVr(vrParser(rule));
+          }
         )
     }
   })
@@ -90,7 +93,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.headRatio != 0 && (
+                  {Number(objVr.headRatio) != 0 && (
                     <TextField 
                       variant='outlined'
                       label='HeadRatio'
@@ -104,7 +107,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.amountRatio != 0 && (
+                  {Number(objVr.amountRatio) != 0 && (
                     <TextField 
                       variant='outlined'
                       label='AmountRatio'
@@ -177,7 +180,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                 </Stack>
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-                  {objVr.vetoers[0] != 0 && (
+                  {objVr.vetoers[0] != '0' && (
                     <TextField 
                       variant='outlined'
                       label='Vetoer_1'
@@ -191,7 +194,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.vetoers[1] != 0 && (
+                  {objVr.vetoers[1] != '0' && (
                     <TextField 
                       variant='outlined'
                       label='Vetoer_2'
@@ -209,7 +212,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  {objVr.frExecDays != 0 && (
+                  {objVr.frExecDays != '0' && (
                     <TextField 
                       variant='outlined'
                       label='FRExecDays'
@@ -223,7 +226,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.dtExecDays != 0 && (
+                  {objVr.dtExecDays != '0' && (
                     <TextField 
                       variant='outlined'
                       label='DTExecDays'
@@ -237,7 +240,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.dtConfirmDays != 0 && (
+                  {objVr.dtConfirmDays != '0' && (
                     <TextField 
                       variant='outlined'
                       label='DTConfirmDays'
@@ -255,7 +258,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
 
                 <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  {objVr.invExitDays != 0 && (
+                  {objVr.invExitDays != '0' && (
                     <TextField 
                       variant='outlined'
                       label='InvExitDays'
@@ -269,7 +272,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     />
                   )}
 
-                  {objVr.votePrepareDays != 0 && (
+                  {objVr.votePrepareDays != '0' && (
                     <TextField 
                       variant='outlined'
                       label='VotePrepareDays'
@@ -295,7 +298,7 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                     value={objVr.votingDays}
                   />
 
-                  {objVr.execDaysForPutOpt != 0 && (
+                  {objVr.execDaysForPutOpt != '0' && (
                     <TextField 
                       variant='outlined'
                       label='ExecDaysForPutOpt'

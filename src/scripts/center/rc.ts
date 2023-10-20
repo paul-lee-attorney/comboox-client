@@ -113,8 +113,8 @@ export function codifyStrRoyaltyRule(rule: StrKey):HexType {
   let out: HexType = `0x${
     '0'.padEnd(40, '0') +
     Number(rule.discount).toString(16).padStart(4, '0') +
-    (Number(rule.gift) * (10 ** 9)).toString(16).padStart(10, '0') +
-    (Number(rule.coupon) * (10 ** 9)).toString(16).padStart(10, '0')
+    Number(rule.gift).toString(16).padStart(10, '0') +
+    Number(rule.coupon).toString(16).padStart(10, '0')
   }`;
 
   return out;

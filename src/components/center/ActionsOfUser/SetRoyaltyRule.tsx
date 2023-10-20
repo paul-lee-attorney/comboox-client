@@ -10,7 +10,7 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../scripts/center/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
@@ -66,7 +66,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='GiftAmt (CBP)'
+          label='GiftAmt (GLee)'
           error={ valid['GiftAmt']?.error }
           helperText={ valid['GiftAmt']?.helpTx ?? ' ' }                                  
           sx={{
@@ -76,7 +76,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           value={ rule.gift }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('GiftAmt', input, 6, setValid);
+            onlyInt('GiftAmt', input, 0n, setValid);
             setRule(v => ({
               ...v,
               gift: input, 
@@ -97,7 +97,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           value={ rule.coupon }
           onChange={e => {
             let input = e.target.value;
-            onlyNum('CouponAmt', input, 6, setValid);
+            onlyInt('CouponAmt', input, 0n, setValid);
             setRule(v => ({
               ...v,
               coupon: input, 
