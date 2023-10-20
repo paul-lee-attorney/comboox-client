@@ -29,13 +29,16 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
     write: handoverCenterKey
   } = useRegCenterHandoverCenterKey({
     address: AddrOfRegCenter,
-    args: hasError(valid) ? undefined : [newKeeper],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handoverCenterKeyClick = ()=>{
+    handoverCenterKey({args:[newKeeper]});
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -64,9 +67,7 @@ export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
           disabled={ handoverCenterKeyLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            handoverCenterKey?.()
-          }}
+          onClick={handoverCenterKeyClick}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       

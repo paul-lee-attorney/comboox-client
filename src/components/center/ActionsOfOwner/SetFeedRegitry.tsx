@@ -30,13 +30,17 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
     write: setFeedReg
   } = useRegCenterSetFeedRegistry({
     address: AddrOfRegCenter,
-    args: hasError(valid) ? undefined : [newFeed],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const setFeedRegClick = ()=>{
+    setFeedReg({args:[newFeed]});
+  }
+
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -64,9 +68,7 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
           disabled={ setFeedRegLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            setFeedReg?.()
-          }}
+          onClick={ setFeedRegClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       

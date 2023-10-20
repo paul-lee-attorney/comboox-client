@@ -30,13 +30,18 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
     write: setRoyaltyRule
   } = useRegCenterSetRoyaltyRule({
     address: AddrOfRegCenter,
-    args: !hasError(valid) ? [ codifyStrRoyaltyRule(rule)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const setRoyaltyRuleClick = () => {
+    setRoyaltyRule({
+      args: [codifyStrRoyaltyRule(rule)]
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -109,7 +114,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           disabled={ setRoyaltyRuleLoading || hasError(valid)} 
           loading={loading}
           loadingPosition='end'
-          onClick={() => setRoyaltyRule?.()}
+          onClick={ setRoyaltyRuleClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}

@@ -35,13 +35,19 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
     write: pickupPoints
   } = useRegCenterPickupPoints({
     address: AddrOfRegCenter,
-    args: hashKey ? [hashLock, hashKey] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const pickupPointsClick = ()=>{
+    if (hashKey) 
+      pickupPoints({
+        args:[hashLock, hashKey]  
+      });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >    
@@ -64,9 +70,7 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
           disabled={ pickupPointsLoading } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            pickupPoints?.()
-          }}
+          onClick={ pickupPointsClick }
           variant='contained'
           sx={{ m:1, minWidth:128 }} 
           endIcon={<Redo />}       

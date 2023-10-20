@@ -30,13 +30,18 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
     write: setBackupKey
   } = useRegCenterSetBackupKey({
     address: AddrOfRegCenter,
-    args: !hasError(valid) ? [key] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const setBackupKeyClick = ()=>{
+    setBackupKey({
+      args:[key]
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -64,9 +69,7 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
           disabled={ setBackupKeyLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            setBackupKey?.()
-          }}
+          onClick={ setBackupKeyClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       

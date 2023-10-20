@@ -30,13 +30,18 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
     write: setPlatformRule
   } = useRegCenterSetPlatformRule({
     address: AddrOfRegCenter,
-    args: hasError(valid) ? undefined : [ codifyPlatformStrRule(rule)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const setPlatformRuleClick = ()=>{
+    setPlatformRule({args:[
+      codifyPlatformStrRule(rule)
+    ]})
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -130,7 +135,7 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
           disabled={ setPlatformRuleLoading || hasError(valid)} 
           loading={loading}
           loadingPosition='end'
-          onClick={() => setPlatformRule?.()}
+          onClick={ setPlatformRuleClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}

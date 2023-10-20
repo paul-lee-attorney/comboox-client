@@ -42,20 +42,23 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     write: lockPoints,
   } = useRegCenterLockPoints({
     address: AddrOfRegCenter,
-    args: !hasError(valid) && head.expireDate
-        ? [ 
-            BigInt(head.to),
-            BigInt(Number(amt) * (10 ** 9)),
-            BigInt(head.expireDate),
-            hashLock
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const lockPointsClick = ()=>{
+    lockPoints({
+      args:[
+        BigInt(head.to),
+        BigInt(Number(amt) * (10 ** 9)),
+        BigInt(head.expireDate),
+        hashLock
+      ]
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -147,12 +150,10 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
         <Divider orientation='vertical' sx={{m:1}} flexItem />
 
         <LoadingButton 
-          disabled={ !lockPoints || lockPointsLoading || hasError(valid)} 
+          disabled={ lockPointsLoading || hasError(valid)} 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            lockPoints?.()
-          }}
+          onClick={ lockPointsClick }
           variant='contained'
           sx={{ m:1, minWidth:128 }} 
           endIcon={<LockClockOutlined />}       

@@ -1,5 +1,5 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
+import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterTransferIpr
@@ -29,12 +29,6 @@ export function TransferIPR() {
     write: transferIPR
   } = useRegCenterTransferIpr({
     address: AddrOfRegCenter,
-    args: !hasError(valid)
-        ? [ BigInt(typeOfDoc), 
-            BigInt(version),
-            BigInt(transferee)
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -57,6 +51,16 @@ export function TransferIPR() {
       )
     }
   })
+
+  const transferIPRClick = ()=>{
+    transferIPR({
+      args:[ 
+          BigInt(typeOfDoc), 
+          BigInt(version),
+          BigInt(transferee)
+      ],
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -120,7 +124,7 @@ export function TransferIPR() {
           disabled={ transferIPRLoading || hasError(valid)}
           loading={loading}
           loadingPosition='end' 
-          onClick={() => transferIPR?.()}
+          onClick={ transferIPRClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128, height:40 }} 
           endIcon={<BorderColor />}

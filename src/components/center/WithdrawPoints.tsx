@@ -34,13 +34,18 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
     write: withdrawPoints
   } = useRegCenterWithdrawPoints({
     address: AddrOfRegCenter,
-    args: [ hashLock ],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const withdrawPointsClick = ()=>{
+    withdrawPoints({
+      args: [ hashLock ],
+    })
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >    
@@ -51,9 +56,7 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
           disabled={  withdrawPointsLoading } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            withdrawPoints?.()
-          }}
+          onClick={ withdrawPointsClick }
           variant='contained'
           sx={{ m:1, minWidth:128 }} 
           endIcon={<Undo />}       

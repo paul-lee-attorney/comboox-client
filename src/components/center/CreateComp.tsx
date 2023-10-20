@@ -31,7 +31,6 @@ export function CreateComp() {
     write: createComp,
   } = useRegCenterCreateComp({
     address: AddrOfRegCenter,
-    args: !hasError(valid) && dk ? [dk] : undefined, 
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -50,6 +49,13 @@ export function CreateComp() {
     }
   })
 
+  const createCompClick = ()=>{
+    if (dk) 
+      createComp({
+        args: [dk], 
+      });
+  }
+
   return (
     <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
@@ -67,9 +73,9 @@ export function CreateComp() {
               <Tooltip title={"Register My Company"} placement='right' arrow >
                 <span>
                   <IconButton
-                    disabled={ createCompLoading || dk == undefined || dk == '0x' || hasError(valid) || loading}
+                    disabled={ createCompLoading || hasError(valid) || loading}
                     color='primary'
-                    onClick={ ()=>createComp?.() }
+                    onClick={ createCompClick }
                     edge="end"
                   >
                     <BorderColor />

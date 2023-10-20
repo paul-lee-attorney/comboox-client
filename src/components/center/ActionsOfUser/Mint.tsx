@@ -33,10 +33,6 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
     write: mintPoints
   } = useRegCenterMint({
     address: AddrOfRegCenter,
-    args: hasError(valid) ? undefined
-      : [ BigInt(to), 
-          BigInt(Number(amt) * (10 ** 9)) * (10n ** 9n)
-        ],
     onSuccess(data) {
       setLoading(true);
       setOpen(false);
@@ -60,6 +56,14 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
     }
   })
 
+  const mintPointsClick = ()=>{
+    mintPoints({
+      args: [ 
+        BigInt(to), 
+        BigInt(Number(amt) * (10 ** 9)) * (10n ** 9n)
+      ]
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -105,9 +109,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           disabled={ mintPointsLoading || hasError(valid)} 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            mintPoints?.()
-          }}
+          onClick={ mintPointsClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128, height:40 }} 
           endIcon={<Flare />}       

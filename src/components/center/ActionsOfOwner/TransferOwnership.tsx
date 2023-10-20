@@ -30,13 +30,18 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
     write: transferOwnership
   } = useRegCenterTransferOwnership({
     address: AddrOfRegCenter,
-    args: hasError(valid) ? undefined : [newOwner],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const transferOwnershipClick = ()=>{
+    transferOwnership({args:[
+      newOwner,
+    ]})
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -65,9 +70,7 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
           disabled={ transferOwnershipLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            transferOwnership?.()
-          }}
+          onClick={ transferOwnershipClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}

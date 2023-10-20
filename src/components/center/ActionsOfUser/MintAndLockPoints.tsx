@@ -36,20 +36,23 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
     write: mintAndLockPoints,
   } = useRegCenterMintAndLockPoints({
     address: AddrOfRegCenter,
-    args: !hasError(valid) && head.expireDate
-        ? [ 
-            BigInt(head.to),
-            BigInt(Number(amt) * (10 ** 9)),
-            BigInt(head.expireDate),
-            hashLock
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const mintAndLockPointsClick = ()=> {
+    mintAndLockPoints({
+      args: [ 
+        BigInt(head.to),
+        BigInt(Number(amt) * (10 ** 9)),
+        BigInt(head.expireDate),
+        hashLock
+      ]
+    })
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -99,27 +102,6 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
               }}
             />
 
-            {/* <TextField 
-              size="small"
-              variant='outlined'
-              label='Amount (GLee)'
-              error={ valid['Amount(GLee)']?.error }
-              helperText={ valid['Amount(GLee)']?.helpTx ?? ' ' }          
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              value={ amt.glee }
-              onChange={e => {
-                let input = e.target.value ?? '0';
-                onlyInt('Amount(GLee)', input, 0n, setValid);
-                setAmt(v=>({
-                  ...v,
-                  glee: input,
-                }));
-              }}
-            /> */}
-
             <DateTimeField
               label='ExpireDate'
               helperText=' '
@@ -166,9 +148,7 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
           disabled={ mintAndLockPointsLoading || hasError(valid)} 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            mintAndLockPoints?.()
-          }}
+          onClick={ mintAndLockPointsClick }
           variant='contained'
           sx={{ m:1, minWidth:128 }} 
           endIcon={<LockClockOutlined />}       

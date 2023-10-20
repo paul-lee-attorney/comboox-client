@@ -1,5 +1,5 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
+import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterTransfer, 
@@ -9,7 +9,7 @@ import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
-import { FormResults, HexParser, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyHex, onlyInt, onlyNum } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyNum } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
 
@@ -36,10 +36,6 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
     write: transferPoints
   } = useRegCenterTransfer({
     address: AddrOfRegCenter,
-    args: !hasError(valid)
-      ? [ to, 
-          BigInt(Number(amt) * (10 ** 9)) * (10n ** 9n)]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -62,6 +58,14 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
     }
   })
 
+  const transferPointsClick = ()=>{
+    transferPoints({
+      args:[
+        to, 
+        BigInt((Number(amt) * (10 ** 9)).toFixed(0)) * (10n ** 9n)
+      ]
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -107,9 +111,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
           disabled={ transferPointsLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            transferPoints?.()
-          }}
+          onClick={ transferPointsClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
           endIcon={<ArrowCircleRightOutlined />}       

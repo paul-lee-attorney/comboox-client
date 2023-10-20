@@ -83,22 +83,25 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     write: lockConsideration,
   } = useRegCenterLockConsideration({
     address: AddrOfRegCenter,
-    args: !hasError(valid) && head.expireDate
-        ? [ 
-            BigInt(head.to),
-            BigInt(Number(amt) * (10 ** 9)),
-            BigInt(head.expireDate),
-            counterLocker,
-            constructPayload(func, paras),
-            hashLock
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   })
+
+  const lockConsiderationClick = ()=>{
+    lockConsideration({
+      args:[ 
+        BigInt(head.to),
+        BigInt(Number(amt) * (10 ** 9)),
+        BigInt(head.expireDate),
+        counterLocker,
+        constructPayload(func, paras),
+        hashLock
+      ]
+    });
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -363,12 +366,10 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
         <Divider orientation='vertical' sx={{ m:1 }} flexItem />
 
         <LoadingButton 
-          disabled={ !lockConsideration || lockConsiderationLoading || hasError(valid)} 
+          disabled={ lockConsiderationLoading || hasError(valid)} 
           loading={loading}
           loadingPosition='end'
-          onClick={() => {
-            lockConsideration?.()
-          }}
+          onClick={ lockConsiderationClick }
           variant='contained'
           sx={{ m:1, minWidth:128 }} 
           endIcon={<LockClockOutlined />}       
