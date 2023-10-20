@@ -157,7 +157,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             helperText={ valid['HashLock']?.helpTx ?? ' ' }    
             sx={{
               m:1,
-              minWidth: 618,
+              minWidth: 630,
             }}
             onChange={(e) => {
               let input = HexParser( e.target.value );
@@ -196,6 +196,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
 
           <DateTimeField
             label='ExpireDate'
+            helperText=' '
             sx={{
               m:1,
               minWidth: 218,
@@ -258,7 +259,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             label='HashKey'
             sx={{
               m:1,
-              minWidth: 618,
+              minWidth: 630,
             }}
             onChange={(e) => setKey(e.target.value ?? '')}
             value={ key }

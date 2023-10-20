@@ -30,11 +30,11 @@ import {
 } from "../../../../../generated";
 
 
-import { Benchmark } from "../Alongs/Benchmark";
+import { Benchmark } from "./Benchmark";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { BenchmarkType, getBenchmarks } from "../../../../../scripts/comp/ad";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -65,7 +65,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
   } = useAntiDilutionAddBenchmark({
     address: term,
     args: classOfShare && price && !hasError(valid)
-        ? [BigInt(classOfShare), BigInt(price)] 
+        ? [BigInt(classOfShare), BigInt(Number(price) * 100)] 
         : undefined,
     onSuccess(data) {
       setLoadingAdd(true);
@@ -238,7 +238,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyInt('Price', input, MaxPrice, setValid);
+                        onlyNum('Price', input, MaxPrice, 2, setValid);
                         setPrice(input);
                       }}
                       value={ price }
