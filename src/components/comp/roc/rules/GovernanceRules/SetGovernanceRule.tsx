@@ -169,14 +169,16 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                   </Toolbar>
                 </Box>
 
-                <AddRule 
-                  sha={ sha }
-                  rule={ strGRCodifier(objGR) }
-                  isFinalized={ isFinalized }
-                  valid = {valid}
-                  refresh = { refresh }
-                  setOpen = { setOpen }
-                />
+                {!isFinalized && (
+                  <AddRule 
+                    sha={ sha }
+                    rule={ strGRCodifier(objGR) }
+                    isFinalized={ isFinalized }
+                    valid = {valid}
+                    refresh = { refresh }
+                    setOpen = { setOpen }
+                  />
+                )}
                 
               </Stack>
 

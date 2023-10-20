@@ -132,14 +132,16 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                 </Toolbar>
               </Box>
 
-              <AddRule 
-                sha={ sha }
-                rule={ guoCodifier(objGuo, seq) }
-                isFinalized = { isFinalized }
-                valid={valid}
-                refresh = { refresh }
-                setOpen = { setOpen }
-              />
+              {!isFinalized && (
+                <AddRule 
+                  sha={ sha }
+                  rule={ guoCodifier(objGuo, seq) }
+                  isFinalized = { isFinalized }
+                  valid={valid}
+                  refresh = { refresh }
+                  setOpen = { setOpen }
+                />
+              )}
             </Stack>
 
             <Stack direction={'column'} spacing={1} >

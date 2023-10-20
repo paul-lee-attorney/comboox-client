@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { AddRule } from '../AddRule';
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from '../../../../../scripts/common';
-import { FormResults, centToDollar, defFormResults, onlyInt, toPercent } from '../../../../../scripts/common/toolsKit';
+import { FormResults, bigIntToStrNum, defFormResults, longDataParser, onlyInt, onlyNum, strNumToBigInt, } from '../../../../../scripts/common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { titleOfPositions } from '../PositionAllocationRules/SetPositionAllocateRule';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
@@ -57,13 +57,13 @@ export function lrParser(hexLr: HexType):ListingRule {
     seqOfRule: parseInt(hexLr.substring(2, 6), 16), 
     titleOfIssuer: parseInt(hexLr.substring(6, 10), 16).toString(),
     classOfShare: parseInt(hexLr.substring(10, 14), 16).toString(),
-    maxTotalPar: BigInt('0x' + hexLr.substring(14, 30)).toString(),
+    maxTotalPar: bigIntToStrNum(BigInt('0x' + hexLr.substring(14, 30)), 2),
     titleOfVerifier: parseInt(hexLr.substring(30, 34), 16).toString(),
     maxQtyOfInvestors: parseInt(hexLr.substring(34, 38), 16).toString(),
-    ceilingPrice: parseInt(hexLr.substring(38, 46), 16).toString(),
-    floorPrice: parseInt(hexLr.substring(46, 54), 16).toString(),
+    ceilingPrice: (Number(parseInt(hexLr.substring(38, 46), 16)) / 100).toFixed(2).toString(),
+    floorPrice: (Number(parseInt(hexLr.substring(46, 54), 16)) / 100).toFixed(2).toString(),
     lockupDays: parseInt(hexLr.substring(54, 58), 16).toString(),
-    offPrice: parseInt(hexLr.substring(58, 62), 16).toString(),
+    offPrice: (Number(parseInt(hexLr.substring(58, 62), 16)) / 100).toFixed(2).toString(),
     votingWeight: parseInt(hexLr.substring(62, 66), 16).toString(),  
   }
   return rule;
@@ -74,14 +74,14 @@ export function lrCodifier(objLr: ListingRule, seq: number ): HexType {
     (seq.toString(16).padStart(4, '0')) +
     (Number(objLr.titleOfIssuer).toString(16).padStart(4, '0')) +
     (Number(objLr.classOfShare).toString(16).padStart(4, '0')) +
-    (BigInt(objLr.maxTotalPar).toString(16).padStart(16, '0')) +
+    (strNumToBigInt(objLr.maxTotalPar, 2).toString(16).padStart(16, '0')) +
     (Number(objLr.titleOfVerifier).toString(16).padStart(4, '0')) +
     (Number(objLr.maxQtyOfInvestors).toString(16).padStart(4, '0')) +
-    (Number(objLr.ceilingPrice).toString(16).padStart(8, '0')) +
-    (Number(objLr.floorPrice).toString(16).padStart(8, '0')) +
+    (Number(objLr.ceilingPrice) * 100).toString(16).padStart(8, '0') +
+    (Number(objLr.floorPrice) * 100).toString(16).padStart(8, '0') +
     (Number(objLr.lockupDays).toString(16).padStart(4, '0')) +
-    (Number(objLr.offPrice).toString(16).padStart(4, '0')) +
-    (Number(objLr.votingWeight).toString(16).padStart(4, '0'))
+    (Number(objLr.offPrice) * 100).toString(16).padStart(4, '0') +
+    Number(objLr.votingWeight).toString(16).padStart(4, '0')
   }`;
   return hexLr;
 }
@@ -138,14 +138,16 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                 </Toolbar>
               </Box>
 
-              <AddRule
-                sha={ sha }
-                rule={ lrCodifier(objLR, seq) }
-                isFinalized={ isFinalized }
-                valid={valid}
-                refresh={refresh}
-                setOpen={setOpen}
-              />
+              {!isFinalized && (
+                <AddRule
+                  sha={ sha }
+                  rule={ lrCodifier(objLR, seq) }
+                  isFinalized={ isFinalized }
+                  valid={valid}
+                  refresh={refresh}
+                  setOpen={setOpen}
+                />
+              )}
               
             </Stack>
 
@@ -178,45 +180,31 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   value={ objLR.classOfShare }
                 />
 
-                {!isFinalized && (
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="titleOfIssuer-label">TitleOfIssuer</InputLabel>
-                    <Select
-                      labelId="titleOfIssuer-label"
-                      id="titleOfIssuer-select"
-                      label="TitleOfIssuer"
-                      value={ objLR.titleOfIssuer }
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        titleOfIssuer: e.target.value.toString(),
-                      }))}
-                    >
-                      {titleOfPositions.map((v, i) => (
-                        <MenuItem key={i} value={i + 1}>{v}</MenuItem>
-                      )) }
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="titleOfIssuer-label">TitleOfIssuer</InputLabel>
+                  <Select
+                    labelId="titleOfIssuer-label"
+                    id="titleOfIssuer-select"
+                    label="TitleOfIssuer"
+                    inputProps={{readOnly:isFinalized}}
+                    value={ objLR.titleOfIssuer }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      titleOfIssuer: e.target.value.toString(),
+                    }))}
+                  >
+                    {titleOfPositions.map((v, i) => (
+                      <MenuItem key={i} value={i+1}>{v}</MenuItem>
+                    )) }
 
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-                )}
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfIssuer'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[ (Number(objLR.titleOfIssuer) < 1 ? 1 : Number(objLR.titleOfIssuer)) - 1 ] }
-                  />
-                )}
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label={'MaxTotalPar ' + (isFinalized ? '(Dollar)' : '(Cent)')}
+                  label={ 'MaxTotalPar' }
                   error={ valid['MaxTotalPar']?.error }
                   helperText={ valid['MaxTotalPar']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
@@ -226,58 +214,44 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('MxTotalPar', input, MaxData, setValid);
+                    onlyNum('MaxTotalPar', input, MaxData, 2, setValid);
                     setObjLR((v) => ({
                       ...v,
                       maxTotalPar: input,
                     }));
                   }}
-                  value={ isFinalized ? centToDollar(objLR.maxTotalPar) : objLR.maxTotalPar }
+                  value={ isFinalized ? longDataParser(objLR.maxTotalPar) : objLR.maxTotalPar }
                 />
 
-                {!isFinalized && (
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="titleOfVerifier-label">TitleOfVerifier</InputLabel>
-                    <Select
-                      labelId="titleOfVerifier-label"
-                      id="titleOfVerifier-select"
-                      label="TitleOfIssuer"
-                      value={ objLR.titleOfVerifier }
-                      onChange={(e) => setObjLR((v) => ({
-                        ...v,
-                        titleOfVerifier: e.target.value.toString(),
-                      }))}
-                    >
-                  
-                      {titleOfPositions.map((v, i) => (
-                        <MenuItem key={i} value={i + 1}>{v}</MenuItem>
-                      )) }
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="titleOfVerifier-label">TitleOfVerifier</InputLabel>
+                  <Select
+                    labelId="titleOfVerifier-label"
+                    id="titleOfVerifier-select"
+                    label="TitleOfIssuer"
+                    inputProps={{readOnly:isFinalized}}
+                    value={ objLR.titleOfVerifier }
+                    onChange={(e) => setObjLR((v) => ({
+                      ...v,
+                      titleOfVerifier: e.target.value.toString(),
+                    }))}
+                  >
+                
+                    {titleOfPositions.map((v, i) => (
+                      <MenuItem key={i} value={i+1}>{v}</MenuItem>
+                    )) }
 
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-                )}
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfVerifier'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[ (Number(objLR.titleOfVerifier) < 1 ? 1 : Number(objLR.titleOfVerifier)) - 1 ] }
-                  />
-                )}
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
                 <TextField 
                   variant='outlined'
                   size='small'
                   label='MaxQtyOfInvestors'
+                  inputProps={{readOnly: isFinalized}}
                   error={ valid['MaxQtyOfInvestors']?.error }
                   helperText={ valid['MaxQtyOfInvestors']?.helpTx ?? ' ' }
-                  inputProps={{readOnly: isFinalized}}
                   sx={{
                     m:1,
                     minWidth: 218,
@@ -300,7 +274,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label={'CeilingPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
+                  label={'CeilingPrice '}
                   error={ valid['CeilingPrice']?.error }
                   helperText={ valid['CeilingPrice']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
@@ -310,19 +284,19 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('CeilingPrice', input, MaxPrice, setValid);
+                    onlyNum('CeilingPrice', input, MaxPrice, 2, setValid);
                     setObjLR((v) => ({
                       ...v,
                       ceilingPrice: input,
                     }));
                   }}
-                  value={ isFinalized ? centToDollar(objLR.ceilingPrice) : objLR.ceilingPrice }   
+                  value={ isFinalized ? longDataParser(objLR.ceilingPrice) : objLR.ceilingPrice }   
                 />
 
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label={'FloorPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
+                  label={'FloorPrice ' }
                   error={ valid['FloorPrice']?.error }
                   helperText={ valid['FloorPrice']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
@@ -332,19 +306,19 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('FloorPrice', input, MaxPrice, setValid);
+                    onlyNum('FloorPrice', input, MaxPrice, 2, setValid);
                     setObjLR((v) => ({
                       ...v,
                       floorPrice: input,
                     }));
                   }}
-                  value={ isFinalized ? centToDollar(objLR.floorPrice) : objLR.floorPrice }   
+                  value={ isFinalized ? longDataParser(objLR.floorPrice) : objLR.floorPrice }   
                 />
 
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label={'OffPrice ' + (isFinalized ? '(Dollar)' : '(Cent)')}
+                  label={'OffPrice '}
                   error={ valid['OffPrice']?.error }
                   helperText={ valid['OffPrice']?.helpTx ?? ' ' }
                   inputProps={{readOnly: isFinalized}}
@@ -354,13 +328,13 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('OffPrice', input, MaxSeqNo, setValid);
+                    onlyNum('OffPrice', input, MaxSeqNo, 2, setValid);
                     setObjLR((v) => ({
                       ...v,
                       offPrice: input,
                     }));
                   }}
-                  value={ isFinalized ? centToDollar(objLR.offPrice) : objLR.offPrice }
+                  value={ isFinalized ? longDataParser(objLR.offPrice) : objLR.offPrice }
                 />
 
                 <TextField 
@@ -404,7 +378,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                       votingWeight: input,
                     }));
                   }}
-                  value={ isFinalized ? toPercent(objLR.votingWeight) : objLR.votingWeight }   
+                  value={ objLR.votingWeight }   
                 />
 
               </Stack>

@@ -157,14 +157,17 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                 </Toolbar>
               </Box>
 
-              <AddRule 
-                sha={ sha } 
-                rule={ prCodifier(objPR, seq) } 
-                isFinalized={isFinalized}
-                valid={valid}
-                refresh={refresh}
-                setOpen={setOpen}
-              />
+              {!isFinalized && (
+                <AddRule 
+                  sha={ sha } 
+                  rule={ prCodifier(objPR, seq) } 
+                  isFinalized={isFinalized}
+                  valid={valid}
+                  refresh={refresh}
+                  setOpen={setOpen}
+                />
+              )}
+              
             </Stack>
 
             <Stack 
@@ -196,40 +199,25 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   value={ objPR.qtyOfSubRule }
                 />
 
-                {!isFinalized && (
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="removePos-label">RemovePos ?</InputLabel>
-                    <Select
-                      labelId="removePos-label"
-                      id="removePos-select"
-                      label="RemovePos ?"
-                      value={ objPR.removePos ? '1' : '0' }
-                      onChange={(e) => setObjPR((v) => ({
-                        ...v,
-                        removePos: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={ '1' } > True </MenuItem>
-                      <MenuItem value={ '0' } > False </MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-                )}
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="removePos-label">RemovePos ?</InputLabel>
+                  <Select
+                    labelId="removePos-label"
+                    id="removePos-select"
+                    label="RemovePos ?"
+                    inputProps={{ readOnly: isFinalized }}
+                    value={ objPR.removePos ? '1' : '0' }
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      removePos: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={ '1' } > True </MenuItem>
+                    <MenuItem value={ '0' } > False </MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
                   
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='RemovePos ?'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objPR.removePos ? 'True' : 'False'}
-                  />
-                )}
-
                 <TextField 
                   variant='outlined'
                   size='small'
@@ -252,41 +240,27 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   value={ objPR.seqOfPos }              
                 />
 
-                {!isFinalized && (
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
-                    <Select
-                      labelId="titleOfPos-label"
-                      id="titleOfPos-select"
-                      label="TitleOfPos"
-                      value={ objPR.titleOfPos }
-                      onChange={(e) => setObjPR((v) => ({
-                        ...v,
-                        titleOfPos: e.target.value,
-                      }))}
-                    >
-                      { titleOfPositions.map( (v, i) => (
-                        <MenuItem key={v} value={i+1}> { v } </MenuItem>
-                      ))}
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="titleOfPos-label">TitleOfPos</InputLabel>
+                  <Select
+                    labelId="titleOfPos-label"
+                    id="titleOfPos-select"
+                    label="TitleOfPos"
+                    inputProps={{ readOnly:isFinalized }}
+                    value={ objPR.titleOfPos }
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      titleOfPos: e.target.value,
+                    }))}
+                  >
+                    { titleOfPositions.map( (v, i) => (
+                      <MenuItem key={v} value={i+1}> { v } </MenuItem>
+                    ))}
 
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-                )}
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfPos'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[Number(objPR.titleOfPos) - 1] ?? 'Director' }
-                  />
-                )}
-
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
+ 
               </Stack>
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
@@ -313,40 +287,26 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   value={ isFinalized ? longSnParser(objPR.nominator) : objPR.nominator }                                        
                 />
 
-                {!isFinalized && (
-                  <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
-                    <Select
-                      labelId="titleOfNominator-label"
-                      id="titleOfNominator-select"
-                      label="TitleOfNominator"
-                      value={ !objPR ? '1' : objPR.titleOfNominator }
-                      onChange={(e) => setObjPR((v) => ({
-                        ...v,
-                        titleOfNominator: e.target.value,
-                      }))}
-                    >
-                      { titleOfPositions.map( (v, i) => (
-                        <MenuItem key={v} value={i+1}> { v } </MenuItem>
-                      ))}
+                <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="titleOfNominator-label">TitleOfNominator</InputLabel>
+                  <Select
+                    labelId="titleOfNominator-label"
+                    id="titleOfNominator-select"
+                    label="TitleOfNominator"
+                    inputProps={{readOnly: isFinalized}}
+                    value={ !objPR ? '1' : objPR.titleOfNominator }
+                    onChange={(e) => setObjPR((v) => ({
+                      ...v,
+                      titleOfNominator: e.target.value,
+                    }))}
+                  >
+                    { titleOfPositions.map( (v, i) => (
+                      <MenuItem key={v} value={i+1}> { v } </MenuItem>
+                    ))}
 
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
-                )}
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TitleOfNominator'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ titleOfPositions[Number(objPR.titleOfNominator) - 1] ?? 'Shareholder'}
-                  />
-                )}
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
                 <TextField 
                   variant='outlined'
@@ -369,37 +329,23 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                   }}
                   value={ objPR.seqOfVR }                                        
                 />
-                {!isFinalized && (
-                  <DateTimeField
-                    label='EndDate'
-                    size='small'
-                    readOnly={isFinalized}
-                    helperText=' '
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }} 
-                    value={ dayjs.unix(objPR.endDate) }
-                    onChange={(date) => setObjPR((v) => ({
-                      ...v,
-                      endDate: date ? date.unix() : 0,
-                    }))}
-                    format='YYYY-MM-DD HH:mm:ss'
-                  />
-                )}
-                {isFinalized && (
-                  <TextField 
-                    variant='outlined'
-                    label='EndDate'
-                    inputProps={{readOnly: true}}
-                    size='small'
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ dateParser(objPR.endDate.toString()) }
-                  />                  
-                )}
+
+                <DateTimeField
+                  label='EndDate'
+                  size='small'
+                  readOnly={isFinalized}
+                  helperText=' '
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }} 
+                  value={ dayjs.unix(objPR.endDate) }
+                  onChange={(date) => setObjPR((v) => ({
+                    ...v,
+                    endDate: date ? date.unix() : 0,
+                  }))}
+                  format='YYYY-MM-DD HH:mm:ss'
+                />
 
               </Stack>
 

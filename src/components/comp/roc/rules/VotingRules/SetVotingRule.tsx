@@ -211,14 +211,16 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                 </Toolbar>
               </Box>
 
-              <AddRule 
-                sha={ sha } 
-                rule={ vrCodifier(objVR, seq) } 
-                isFinalized={ isFinalized }
-                valid={valid}
-                refresh={ refresh }
-                setOpen={ setOpen }
-              />
+              {!isFinalized && (
+                <AddRule 
+                  sha={ sha } 
+                  rule={ vrCodifier(objVR, seq) } 
+                  isFinalized={ isFinalized }
+                  valid={valid}
+                  refresh={ refresh }
+                  setOpen={ setOpen }
+                />
+              )}
               
             </Stack>
 

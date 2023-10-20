@@ -244,7 +244,7 @@ export function onlyInt(id: string, input: string, max: bigint, setValid:Dispatc
   });
 }
 
-function toBigInt(input:string, dec:number): bigint {
+export function strNumToBigInt(input:string, dec:number): bigint {
   let dif = dec - (input.length - input.indexOf('.') - 1);
   return BigInt(input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : ''));
 }
@@ -263,7 +263,7 @@ export function onlyNum(id: string, input: string, max:bigint, maxDec: number, s
                         ? false
                         : max == 0n
                           ? false
-                          : toBigInt(input, maxDec) > max;
+                          : strNumToBigInt(input, maxDec) > max;
 
   let result:Result = {
     error: error || overflow || tailTooLong,
@@ -319,4 +319,11 @@ export function hasError(valid: FormResults): boolean {
   return false;
 }
 
+export function bigIntToStrNum(input: bigint, dec: number): string {
+  let strInput = input.toString();
+  let len = strInput.length;
+  let front = len > dec ? strInput.substring(0,  (len - dec)) : '0';
+  let end = len > dec ? strInput.substring(len - dec, len) : strInput;
 
+  return front + '.' + end;
+}

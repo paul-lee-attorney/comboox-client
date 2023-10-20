@@ -143,154 +143,106 @@ export function SetFirstRefusalRule({ sha, seq, isFinalized, time, refresh }: Ru
                 </Toolbar>
               </Box>
 
-              <AddRule 
-                sha={ sha }
-                rule={ frCodifier(objFR, seq) }
-                isFinalized={isFinalized}
-                valid={valid}
-                refresh={refresh}
-                setOpen={setOpen}
-              />
+              {!isFinalized && (
+                <AddRule 
+                  sha={ sha }
+                  rule={ frCodifier(objFR, seq) }
+                  isFinalized={isFinalized}
+                  valid={valid}
+                  refresh={refresh}
+                  setOpen={setOpen}
+                />
+              )}
+              
             </Stack>
 
             <Stack 
               direction={'column'} 
               spacing={1} 
             >
-              {isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='TypeOfDeal'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={ typesOfDeal[Number(objFR.typeOfDeal) -1] }
-                  />
+              <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='MembersEqual ?'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objFR.membersEqual ? 'True' : 'False'}
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='ProRata ?'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objFR.proRata ? 'True' : 'False'}
-                  />
-
-                  <TextField 
-                    variant='outlined'
-                    size='small'
-                    label='BasedOnPar ?'
-                    inputProps={{readOnly: true}}
-                    sx={{
-                      m:1,
-                      minWidth: 218,
-                    }}
-                    value={objFR.basedOnPar ? 'True' : 'False'}
-                  />
-
-                </Stack>
-              )}
-
-              {!isFinalized && (
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
-
-                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="typeOfDeal-label">TypeOfDeal</InputLabel>
-                    <Select
-                      labelId="typeOfDeal-label"
-                      id="typeOfDeal-select"
-                      label="TypeOfDeal"
-                      value={ Number(objFR.typeOfDeal) }
-                      onChange={(e) => setObjFR((v) => ({
-                        ...v,
-                        typeOfDeal: e.target.value.toString(),
-                      }))}
-                    >
-                      {typesOfDeal.map((v,i) => (
-                        <MenuItem key={i} value={i+1}>{v}</MenuItem>
-                      ))}
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
+                <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="typeOfDeal-label">TypeOfDeal</InputLabel>
+                  <Select
+                    labelId="typeOfDeal-label"
+                    id="typeOfDeal-select"
+                    label="TypeOfDeal"
+                    inputProps={{readOnly: isFinalized}}
+                    value={ Number(objFR.typeOfDeal) }
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      typeOfDeal: e.target.value.toString(),
+                    }))}
+                  >
+                    {typesOfDeal.map((v,i) => (
+                      <MenuItem key={i} value={i+1}>{v}</MenuItem>
+                    ))}
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
 
-                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="membersEqual-label">MembersEqual ?</InputLabel>
-                    <Select
-                      labelId="membersEqual-label"
-                      id="membersEqual-select"
-                      label="MembersEqual ?"
-                      value={ objFR?.membersEqual ? '1' : '0' }
-                      onChange={(e) => setObjFR((v) => ({
-                        ...v,
-                        membersEqual: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={'1'}>True</MenuItem>
-                      <MenuItem value={'0'}>False</MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
+                <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="membersEqual-label">MembersEqual ?</InputLabel>
+                  <Select
+                    labelId="membersEqual-label"
+                    id="membersEqual-select"
+                    label="MembersEqual ?"
+                    inputProps={{readOnly: isFinalized}}
+                    value={ objFR?.membersEqual ? '1' : '0' }
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      membersEqual: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={'1'}>True</MenuItem>
+                    <MenuItem value={'0'}>False</MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
 
-                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="proRata-label">ProRata ?</InputLabel>
-                    <Select
-                      labelId="proRata-label"
-                      id="proRata-select"
-                      label="ProRata ?"
-                      value={ objFR.proRata ? '1' : '0' }
-                      onChange={(e) => setObjFR((v) => ({
-                        ...v,
-                        proRata: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={'1'}>True</MenuItem>
-                      <MenuItem value={'0'}>False</MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
+                <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="proRata-label">ProRata ?</InputLabel>
+                  <Select
+                    labelId="proRata-label"
+                    id="proRata-select"
+                    label="ProRata ?"
+                    inputProps={{readOnly: isFinalized}}
+                    value={ objFR.proRata ? '1' : '0' }
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      proRata: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={'1'}>True</MenuItem>
+                    <MenuItem value={'0'}>False</MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
-                  <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
-                    <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
-                    <Select
-                      labelId="basedOnPar-label"
-                      id="basedOnPar-select"
-                      label="BasedOnPar ?"
-                      value={ objFR.basedOnPar ? '1' : '0' }
-                      onChange={(e) => setObjFR((v) => ({
-                        ...v,
-                        basedOnPar: e.target.value == '1',
-                      }))}
-                    >
-                      <MenuItem value={'1'}>True</MenuItem>
-                      <MenuItem value={'0'}>False</MenuItem>
-                    </Select>
-                    <FormHelperText>{' '}</FormHelperText>
-                  </FormControl>
+                <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+                  <InputLabel id="basedOnPar-label">BasedOnPar ?</InputLabel>
+                  <Select
+                    labelId="basedOnPar-label"
+                    id="basedOnPar-select"
+                    label="BasedOnPar ?"
+                    inputProps={{readOnly: isFinalized}}
+                    value={ objFR.basedOnPar ? '1' : '0' }
+                    onChange={(e) => setObjFR((v) => ({
+                      ...v,
+                      basedOnPar: e.target.value == '1',
+                    }))}
+                  >
+                    <MenuItem value={'1'}>True</MenuItem>
+                    <MenuItem value={'0'}>False</MenuItem>
+                  </Select>
+                  <FormHelperText>{' '}</FormHelperText>
+                </FormControl>
 
-                </Stack>
-              )}
+              </Stack>
 
               <Stack direction={'row'} sx={{ alignItems: 'center' }} >
 

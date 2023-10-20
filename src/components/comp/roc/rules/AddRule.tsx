@@ -46,24 +46,22 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
 
   return (
     <>
-      {!isFinalized && (
-        <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
-          
-          <LoadingButton 
-            disabled = { isLoading || isFinalized || hasError(valid) }
-            loading = {loading}
-            loadingPosition='end'
-            sx={{ m: 1, minWidth: 120, height: 40 }} 
-            variant="contained" 
-            endIcon={<EditNote />}
-            onClick={handleClick}
-            size='small'
-          >
-            Update
-          </LoadingButton>
+      <Stack direction='row' sx={{m:1, mr:5, p:1, alignItems:'center', justifyItems:'center'}}>
+        
+        <LoadingButton 
+          disabled = { isLoading || isFinalized || hasError(valid) }
+          loading = {loading}
+          loadingPosition='end'
+          sx={{ m: 1, minWidth: 120, height: 40 }} 
+          variant="contained" 
+          endIcon={<EditNote />}
+          onClick={handleClick}
+          size='small'
+        >
+          Update
+        </LoadingButton>
 
-        </Stack>
-      )}
+      </Stack>
     </>
   )
 }
