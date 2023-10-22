@@ -31,9 +31,6 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     write: createTerm,
   } = useShareholdersAgreementCreateTerm({
     address: sha,
-    args: version && !hasError(valid)
-      ? [BigInt(title), BigInt(version)]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
@@ -49,6 +46,15 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     }
   });
 
+  const addTermClick = ()=>{
+    createTerm({
+      args: [
+        BigInt(title), 
+        BigInt(version)
+      ],
+    });
+  };
+
   const refresh = ()=> {
     setLoading(false);
     setTerms(v=>{
@@ -56,7 +62,6 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
       out[title-1] = AddrZero;
       return out;
     });
-
   }
 
   const {
@@ -106,7 +111,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
               height: 40,
             }}
             endIcon={ <PlaylistAdd /> }
-            onClick={() => createTerm?.()}
+            onClick={ addTermClick }
           >
             Create
           </LoadingButton>

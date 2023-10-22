@@ -12,8 +12,8 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  const [ buyer, setBuyer ] = useState<string>();
-  const [ amt, setAmt ] = useState<string>();
+  const [ buyer, setBuyer ] = useState<string>('0');
+  const [ amt, setAmt ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -29,19 +29,23 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: transferPledge,
   } = useGeneralKeeperTransferPledge({
     address: gk,
-    args: buyer && amt && !hasError(valid)
-      ? [ BigInt(pld.head.seqOfShare), 
-          BigInt(pld.head.seqOfPld), 
-          BigInt(buyer),
-          BigInt(amt)
-        ]
-      : undefined,
-      onSuccess(data) {
-        setLoading(true);
-        let hash: HexType = data.hash;
-        refreshAfterTx(hash, updateResults);
-      }    
-    });
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }    
+  });
+
+  const handleClick = ()=>{
+    transferPledge({
+      args: [ 
+        BigInt(pld.head.seqOfShare), 
+        BigInt(pld.head.seqOfPld), 
+        BigInt(buyer),
+        BigInt(amt)
+      ],
+    })
+  }
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -91,7 +95,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <CurrencyExchange /> }
-          onClick={()=>transferPledge?.() }
+          onClick={ handleClick }
           size='small'
         >
           Transfer

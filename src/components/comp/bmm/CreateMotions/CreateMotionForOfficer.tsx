@@ -11,7 +11,6 @@ import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { loadingButtonClasses } from "@mui/lab";
 
 export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
 
@@ -33,15 +32,23 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     write: addOfficer,
   } = useGeneralKeeperNominateOfficer({
     address: gk,
-    args: seqOfPos && candidate && !hasError(valid)
-          ? [BigInt(seqOfPos), BigInt(candidate)]
-          : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const addOfficerClick = ()=>{
+    if (seqOfPos && candidate) {
+      addOfficer({
+        args: [
+          BigInt(seqOfPos), 
+          BigInt(candidate)
+        ],
+      });
+    } 
+  }
 
   const [ loadingRemove, setLoadingRemove ] = useState(false);
   const updateResultsRemove = ()=>{
@@ -55,15 +62,22 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     write: removeOfficer
   } = useGeneralKeeperCreateMotionToRemoveOfficer({
     address: gk,
-    args: seqOfPos && !hasError(valid) 
-          ? [ BigInt(seqOfPos)]
-          : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResultsRemove);
     }
   });
+
+  const removeOfficerClick = ()=> {
+    if (seqOfPos) {
+      removeOfficer({
+        args: [ 
+          BigInt(seqOfPos)
+        ],
+      });
+    }
+  };
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -76,9 +90,9 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !addOfficer || addOfficerLoading || hasError(valid) || loading}
+            disabled={ addOfficerLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
-            onClick={()=>addOfficer?.()}
+            onClick={ addOfficerClick }
             color="primary"
           >
             <PersonAdd />
@@ -129,9 +143,9 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !removeOfficer || removeOfficerLoading || hasError(valid) || loadingRemove}
+            disabled={ removeOfficerLoading || hasError(valid) || loadingRemove}
             sx={{width:20, height:20, m:1}}
-            onClick={()=>removeOfficer?.()}
+            onClick={ removeOfficerClick }
             color="primary"
           >
             <PersonRemove />

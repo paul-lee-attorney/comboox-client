@@ -23,9 +23,6 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
     write:regInvestor,
   } = useGeneralKeeperRegInvestor({
     address: gk,
-    args: !hasError(valid) 
-        ? [ BigInt(groupRep), idHash]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -33,6 +30,15 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
     }
   });
       
+  const handleClick = ()=>{
+    regInvestor({
+      args: [ 
+        BigInt(groupRep), 
+        idHash
+      ],
+    })
+  }
+
   return (
 
     <Paper elevation={3} sx={{
@@ -87,7 +93,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<BorderColor />}
-          onClick={()=> regInvestor?.()}
+          onClick={ handleClick }
           size='small'
         >
           Register

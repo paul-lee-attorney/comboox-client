@@ -31,15 +31,18 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
     write: signIa
   } = useGeneralKeeperSignIa({
     address: gk,
-    args: sigHash && !hasError(valid)
-      ? [addr, sigHash]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=> {
+    signIa({
+      args: [addr, sigHash],
+    })
+  }
   
   useEffect(()=>{
     getParasOfPage(addr, true).then(
@@ -78,7 +81,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, minWidth:218, height:40 }}
-        onClick={()=>signIa?.()}
+        onClick={ handleClick }
       >
         Sign Ia
       </LoadingButton>

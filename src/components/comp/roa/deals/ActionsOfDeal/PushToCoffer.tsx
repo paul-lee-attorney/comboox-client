@@ -33,16 +33,24 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
     write: pushToCoffer,
   } = useGeneralKeeperPushToCoffer({
     address: gk,
-    args: !hasError(valid) && closingDate 
-      ? [addr, BigInt(deal.head.seqOfDeal), hashLock, BigInt(closingDate) ] 
-      : undefined,
     onSuccess(data) {
       setLoading(true)
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
-  
+
+  const handleClick = ()=> {
+    pushToCoffer({
+      args: [
+        addr, 
+        BigInt(deal.head.seqOfDeal), 
+        hashLock, 
+        BigInt(closingDate) 
+      ], 
+    });
+  };
+
   return (
 
     <Paper elevation={3} sx={{
@@ -84,13 +92,13 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
         />
 
         <LoadingButton 
-          disabled = {!pushToCoffer || pushToCofferLoading || deal.body.state > 1 || hasError(valid)}
+          disabled = { pushToCofferLoading || deal.body.state > 1 || hasError(valid)}
           loading = {loading}
           loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<LockClock />}
-          onClick={()=> pushToCoffer?.()}
+          onClick={ handleClick }
           size='small'
         >
           Lock Share

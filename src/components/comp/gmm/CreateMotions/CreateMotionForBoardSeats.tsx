@@ -32,15 +32,23 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
     write: addDirector,
   } = useGeneralKeeperNominateDirector({
     address: gk,
-    args: seqOfPos && candidate && !hasError(valid)
-          ? [BigInt(seqOfPos), BigInt(candidate)]
-          : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const addDirectorClick = ()=>{
+    if (seqOfPos && candidate) {
+      addDirector({
+        args: [
+          BigInt(seqOfPos), 
+          BigInt(candidate)
+        ],
+      });
+    }
+  };
 
   const [ loadingRemove, setLoadingRemove ] = useState(false);
   const updateResultsRemove = () => {
@@ -53,15 +61,20 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
     write: removeDirector
   } = useGeneralKeeperCreateMotionToRemoveDirector({
     address: gk,
-    args: seqOfPos 
-          ? [ BigInt(seqOfPos)]
-          : undefined,
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResultsRemove);
     }
   });
+
+  const removeDirectorClick = ()=> {
+    if (seqOfPos) {
+      removeDirector({
+        args: [ BigInt(seqOfPos)],
+      });
+    }
+  };
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
@@ -76,7 +89,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
           <IconButton
             disabled={ !addDirector || addDirectorLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
-            onClick={()=>addDirector?.()}
+            onClick={ addDirectorClick }
             color="primary"
           >
             <PersonAdd />
@@ -129,7 +142,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
           <IconButton
             disabled={ !removeDirector || removeDirectorLoading || hasError(valid) || loadingRemove}
             sx={{width:20, height:20, m:1}}
-            onClick={()=>removeDirector?.()}
+            onClick={ removeDirectorClick }
             color="primary"
           >
             <PersonRemove />

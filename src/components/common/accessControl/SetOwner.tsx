@@ -54,16 +54,17 @@ export function SetOwner({ addr }: AccessControlProps) {
     write: setOwnr,
   } = useAccessControlSetOwner({
     address: addr,
-    args: !hasError(valid) ? [ owner ] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
-    }    
+    }
   });
 
   const handleClick = () => {
-    setOwnr?.();
+    setOwnr({
+      args: [ owner ],
+    });
   }
 
   return (

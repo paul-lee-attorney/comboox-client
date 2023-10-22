@@ -29,20 +29,24 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
     write: requestToBuy,
   } = useGeneralKeeperRequestToBuy({
     address: gk,
-    args: !hasError(valid)
-        ? [ addr,
-            BigInt(deal.head.seqOfDeal), 
-            BigInt(paidOfTarget), 
-            BigInt(seqOfPledge)
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true)
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
-      
+
+  const handleClick = ()=> {
+    requestToBuy({
+      args: [ 
+          addr,
+          BigInt(deal.head.seqOfDeal), 
+          BigInt(paidOfTarget), 
+          BigInt(seqOfPledge)
+      ],
+    });
+  };
+
   return (
 
     <Paper elevation={3} sx={{
@@ -90,13 +94,13 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
           />
 
           <LoadingButton 
-            disabled = {!requestToBuy || requestToBuyLoading || hasError(valid)}
+            disabled = { requestToBuyLoading || hasError(valid)}
             loading = {loading}
             loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<PanToolOutlined />}
-            onClick={()=> requestToBuy?.()}
+            onClick={ handleClick }
             size='small'
           >
             Request To Buy

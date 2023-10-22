@@ -3,7 +3,6 @@ import { Bytes32Zero, HexType, booxMap } from "../../../../../scripts/common";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperExecFirstRefusal } from "../../../../../generated";
 import { 
-  Button, 
   Divider, 
   FormControl, 
   FormHelperText, 
@@ -17,7 +16,6 @@ import {
 import { EmojiPeopleOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-// import { FirstRefusalRule } from "../../../roc/rules/FirstRefusalRules/SetFirstRefusalRule";
 import { getFirstRefusalRules } from "../../../../../scripts/comp/sha";
 import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyHex, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { getSha } from "../../../../../scripts/comp/roc";
@@ -61,21 +59,25 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
     write: execFirstRefusal,
   } = useGeneralKeeperExecFirstRefusal({
     address: gk,
-    args: !hasError(valid)
-        ? [ BigInt(seqOfRule),
-            BigInt(seqOfRightholder),
-            addr, 
-            BigInt(deal.head.seqOfDeal), 
-            sigHash 
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
-      
+
+  const handleClick = ()=> {
+    execFirstRefusal({
+      args:[ 
+        BigInt(seqOfRule),
+        BigInt(seqOfRightholder),
+        addr, 
+        BigInt(deal.head.seqOfDeal), 
+        sigHash 
+      ],
+    });
+  };
+
   const typesOfDeal = ['Capital Increase', 'Share Transfer (Ext)'];
 
   return (
@@ -150,13 +152,13 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
           <Divider orientation="vertical" flexItem />
 
           <LoadingButton 
-            disabled = {!execFirstRefusal || execFirstRefusalLoading || hasError(valid)}
+            disabled = { execFirstRefusalLoading || hasError(valid) }
             loading={loading}
             loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<EmojiPeopleOutlined />}
-            onClick={()=> execFirstRefusal?.()}
+            onClick={ handleClick }
             size='small'
           >
             First Refusal

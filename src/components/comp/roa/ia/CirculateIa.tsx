@@ -29,13 +29,22 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
     write
   } = useGeneralKeeperCirculateIa({
     address: gk,
-    args: !hasError(valid) ? [addr, docUrl, docHash] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    write({
+      args: [
+        addr, 
+        docUrl, 
+        docHash
+      ],
+    });
+  };
 
   return (
 
@@ -85,7 +94,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
         variant="contained"
         endIcon={<Recycling />}
         sx={{ m:1, minWidth:218 }}
-        onClick={()=>write?.()}
+        onClick={ handleClick }
       >
         Circulate Ia
       </LoadingButton>

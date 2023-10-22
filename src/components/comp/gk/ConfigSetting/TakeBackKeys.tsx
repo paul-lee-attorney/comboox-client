@@ -23,13 +23,18 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
     write: takeBackKeys,
   } = useAccessControlTakeBackKeys({
     address: docAddr,
-    args: !hasError(valid) ? [ target ] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    takeBackKeys({
+      args: [ target ],
+    });
+  };
 
   return (
 
@@ -90,7 +95,7 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Update />}
-          onClick={()=> takeBackKeys?.()}
+          onClick={ handleClick }
           size='small'
         >
           Update

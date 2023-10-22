@@ -25,13 +25,22 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
     write: regKeeper,
   } = useGeneralKeeperRegKeeper({
     address: gk,
-    args: !hasError(valid) ? [BigInt(title), book] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    regKeeper({
+      args: [
+        BigInt(title), 
+        book
+      ],
+    });
+  };
+
 
   return (
 
@@ -84,7 +93,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<Create />}
-            onClick={()=> regKeeper?.()}
+            onClick={ handleClick }
             size='small'
           >
             Register Keeper

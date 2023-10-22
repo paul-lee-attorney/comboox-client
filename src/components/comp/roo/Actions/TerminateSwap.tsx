@@ -12,7 +12,7 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
 
   const { gk } = useComBooxContext();
 
-  const [ seqOfSwap, setSeqOfSwap ] = useState<string>();
+  const [ seqOfSwap, setSeqOfSwap ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -28,16 +28,21 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
     write: terminateSwap,
   } = useGeneralKeeperTerminateSwap({
     address: gk,
-    args: seqOfSwap && !hasError(valid)
-      ? [ BigInt(seqOfOpt), 
-          BigInt(seqOfSwap)]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handleClick = ()=> {
+    terminateSwap({
+      args:[ 
+        BigInt(seqOfOpt), 
+        BigInt(seqOfSwap)
+      ],
+    });
+  };
   
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -69,7 +74,7 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <CancelOutlined /> }
-          onClick={()=>terminateSwap?.() }
+          onClick={ handleClick }
           size='small'
         >
           Terminate Swap

@@ -1,6 +1,7 @@
 import { readContract, getWalletClient, getContract, waitForTransaction } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../common";
 import { regCenterABI } from "../../generated";
+import { strNumToBigInt } from "../common/toolsKit";
 
 // ==== StrLocker === 
 
@@ -112,7 +113,7 @@ export const defaultStrKey:StrKey = {
 export function codifyStrRoyaltyRule(rule: StrKey):HexType {
   let out: HexType = `0x${
     '0'.padEnd(40, '0') +
-    Number(rule.discount).toString(16).padStart(4, '0') +
+    strNumToBigInt(rule.discount, 2).toString(16).padStart(4, '0') +
     Number(rule.gift).toString(16).padStart(10, '0') +
     Number(rule.coupon).toString(16).padStart(10, '0')
   }`;

@@ -32,19 +32,26 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
     write: proposeAction,
   } = useGeneralKeeperCreateActionOfGm({
     address: gk,
-    args: seqOfVr && desHash && executor && !hasError(valid)
-        ? [BigInt(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigInt(executor)]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    if (seqOfVr && desHash && executor) {
+      proposeAction({
+        args: [
+          BigInt(seqOfVr), 
+          actions.map(v => (v.target)), 
+          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (v.params)),
+          desHash, BigInt(executor)
+        ],
+      });
+    }
+  };
 
   const addAction = () => {
     setActions(v => {
@@ -162,7 +169,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:218 }}
-            onClick={()=>proposeAction?.()}
+            onClick={ handleClick }
           >
             Propose
           </LoadingButton>

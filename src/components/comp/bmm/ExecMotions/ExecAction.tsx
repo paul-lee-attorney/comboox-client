@@ -7,7 +7,6 @@ import {
 } from "../../../../generated";
 
 import { 
-  Button, 
   IconButton, 
   Paper, 
   Stack, 
@@ -51,20 +50,27 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
     write: execAction,
   } = useGeneralKeeperExecAction({
     address: gk,
-    args: seqOfVr && desHash && seqOfMotion && !hasError(valid)
-        ? [BigInt(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigInt(seqOfMotion)]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
-    
+
+  const execActionClick = ()=>{
+    if (seqOfVr && desHash && seqOfMotion) {
+      execAction({
+        args: [
+          BigInt(seqOfVr), 
+          actions.map(v => (v.target)), 
+          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (v.params)),
+          desHash, BigInt(seqOfMotion)
+        ],
+      });
+    }
+  }
+
   const addAction = () => {
     setActions(v => {
       let arr = [...v];
@@ -143,7 +149,7 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
         variant="contained"
         endIcon={<Surfing />}
         sx={{ m:1, minWidth:218 }}
-        onClick={()=>execAction?.()}
+        onClick={ execActionClick }
       >
         Execute
       </LoadingButton>

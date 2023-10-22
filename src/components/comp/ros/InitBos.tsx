@@ -47,21 +47,23 @@ export function InitBos({nextStep}: InitCompProps) {
     write: issueShare,
   } = useRegisterOfSharesIssueShare({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: share.body.payInDeadline && share.body.paid &&
-          share.body.par 
-      ? [ 
-          codifyHeadOfStrShare(share.head),
-          BigInt((share.body.payInDeadline ?? 0)),
-          BigInt((Number(share.body.paid) ?? 0) * 100),
-          BigInt((Number(share.body.par) ?? 0) * 100)
-        ] 
-      : undefined,
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshAdd);
     }    
   });
+
+  const issueShareClick = ()=>{
+    issueShare({
+      args: [ 
+        codifyHeadOfStrShare(share.head),
+        BigInt((share.body.payInDeadline ?? 0)),
+        BigInt((Number(share.body.paid) ?? 0) * 100),
+        BigInt((Number(share.body.par) ?? 0) * 100)
+      ],
+    });
+  };
 
   const [ loadingRemove, setLoadingRemove ] = useState<boolean>(false);
   const refreshRemove = () => {
@@ -74,20 +76,22 @@ export function InitBos({nextStep}: InitCompProps) {
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
     address: boox ? boox[booxMap.ROS] : undefined,
-    args: share.head.seqOfShare && share.body.paid && 
-          share.body.par
-        ? [ 
-            BigInt(share.head.seqOfShare ?? 0), 
-            BigInt((Number(share.body.paid) ?? 0)* 100), 
-            BigInt((Number(share.body.par) ?? 0) * 100) 
-          ]
-        : undefined,
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshRemove);
     }
   });
+
+  const delShareClick = ()=> {
+    delShare({
+      args: [ 
+        BigInt(share.head.seqOfShare ?? 0), 
+        BigInt((Number(share.body.paid) ?? 0)* 100), 
+        BigInt((Number(share.body.par) ?? 0) * 100) 
+      ],
+    });
+  };
 
   useEffect(()=>{
     if (boox) {
@@ -147,8 +151,8 @@ export function InitBos({nextStep}: InitCompProps) {
               startIcon={<AddCircle />}
               loading={loadingAdd}
               loadingPosition='start'
-              disabled={!issueShare || issueShareLoading || hasError(valid) }
-              onClick={()=>issueShare?.()}
+              disabled={ issueShareLoading || hasError(valid) }
+              onClick={ issueShareClick }
               size="small"
             >
               Add Share
@@ -391,8 +395,8 @@ export function InitBos({nextStep}: InitCompProps) {
                 loading={ loadingRemove }
                 loadingPosition='end'
                 endIcon={<RemoveCircle />}
-                disabled={ !delShare || delShareLoading || hasError(valid) }
-                onClick={()=>delShare?.()}
+                disabled={ delShareLoading || hasError(valid) }
+                onClick={ delShareClick }
                 size="small"
               >
                 Remove Share

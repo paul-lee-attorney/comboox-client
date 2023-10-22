@@ -2,6 +2,7 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { alongsABI } from "../../generated";
 import { Deal } from "./ia";
+import { strNumToBigInt } from "../common/toolsKit";
 
 export interface LinkRule{
   triggerDate: number;
@@ -69,8 +70,8 @@ export function linkRuleCodifier(rule: LinkRule): HexType {
     rule.triggerDate.toString(16).padStart(12, '0') +
     Number(rule.effectiveDays).toString(16).padStart(4, '0') +
     Number(rule.triggerType).toString(16).padStart(2, '0') +
-    parseInt((Number(rule.shareRatioThreshold) * 100).toFixed(0)).toString(16).padStart(4, '0') +
-    parseInt((Number(rule.rate) * 100).toFixed(0)).toString(16).padStart(8, '0') +
+    strNumToBigInt(rule.shareRatioThreshold, 2).toString(16).padStart(4, '0') +
+    strNumToBigInt(rule.rate, 2).toString(16).padStart(8, '0') +
     (rule.proRata ? '01' : '00') +
     '0'.padEnd(32, '0')
   }`;

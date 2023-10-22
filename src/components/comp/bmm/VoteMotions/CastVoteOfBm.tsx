@@ -1,14 +1,11 @@
 import { useState } from "react";
 
-import { 
-  useGeneralKeeperCastVote,
-} from "../../../../generated";
+import { useGeneralKeeperCastVote } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { 
   Box, 
-  Button, 
   Collapse, 
   FormControl, 
   FormHelperText, 
@@ -41,7 +38,6 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
-
   const updateResults = ()=>{
     refresh();
     setOpen(false);
@@ -53,15 +49,22 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
     write: castVote,
   } = useGeneralKeeperCastVote({
     address: gk,
-    args: attitude && !hasError(valid)
-        ? [seqOfMotion, BigInt(attitude), sigHash]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const castVoteClick = ()=> {
+    castVote({
+      args: [
+        seqOfMotion, 
+        BigInt(attitude), 
+        sigHash
+      ],
+    });
+  };
 
   const [ appear, setAppear ] = useState(false);
 
@@ -135,7 +138,7 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
             variant="contained"
             endIcon={<HowToVote />}
             sx={{ m:1, minWidth:118 }}
-            onClick={()=>castVote?.()}
+            onClick={ castVoteClick }
           >
             Vote
           </LoadingButton>

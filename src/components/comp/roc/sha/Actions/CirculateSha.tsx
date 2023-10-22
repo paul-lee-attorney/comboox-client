@@ -32,13 +32,22 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
     write
   } = useGeneralKeeperCirculateSha({
     address: gk,
-    args: !hasError(valid) ? [addr, docUrl, docHash] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    write({
+      args:[
+        addr, 
+        docUrl, 
+        docHash
+      ],
+    });
+  };
 
   return (
     <Stack direction='row' sx={{m:1, alignItems:'center'}}>
@@ -82,13 +91,13 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
       <Divider orientation="vertical" sx={{ m:1 }} flexItem />
       
       <LoadingButton
-        disabled={!write || isLoading || hasError(valid)}
+        disabled={ isLoading || hasError(valid)}
         loading = {loading}
         loadingPosition="end"
         variant="contained"
         endIcon={<Recycling />}
         sx={{ m:1, minWidth:218 }}
-        onClick={()=>write?.()}
+        onClick={ handleClick }
       >
         Circulate Sha
       </LoadingButton>

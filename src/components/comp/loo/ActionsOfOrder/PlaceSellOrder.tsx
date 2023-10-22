@@ -1,4 +1,4 @@
-import { Button, Checkbox, FormControlLabel, Paper, Stack, TextField } from "@mui/material";
+import { Checkbox, FormControlLabel, Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { Loyalty } from "@mui/icons-material";
@@ -29,21 +29,25 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     write:placeSellOrder,
   } = useGeneralKeeperPlaceSellOrder({
     address: gk,
-    args: !hasError(valid)
-        ? [ BigInt(classOfShare),
-            BigInt(order.execHours), 
-            BigInt(order.paid), 
-            BigInt(order.price), 
-            BigInt(order.seqOfLR),
-            fromHead, 
-           ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    placeSellOrder({
+      args: [ 
+        BigInt(classOfShare),
+        BigInt(order.execHours), 
+        BigInt(order.paid), 
+        BigInt(order.price), 
+        BigInt(order.seqOfLR),
+        fromHead, 
+      ],
+    });
+  };
 
   return (
 
@@ -169,7 +173,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Loyalty />}
-          onClick={()=> placeSellOrder?.()}
+          onClick={ handleClick }
           size='small'
         >
           Sell

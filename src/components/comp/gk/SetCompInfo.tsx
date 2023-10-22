@@ -64,17 +64,22 @@ export function SetCompInfo({nextStep}: InitCompProps) {
     write: setInfo, 
    } = useGeneralKeeperSetCompInfo({
     address: gk,
-    args: [ 
-            compInfo.currency, 
-            `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
-            compInfo.name 
-          ],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    setInfo({
+      args: [ 
+        compInfo.currency, 
+        `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
+        compInfo.name 
+      ],
+    });
+  };
 
   useEffect(()=>{
     if (gk) {
@@ -205,7 +210,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
               sx={{ m: 1, minWidth: 120, height: 40 }} 
               variant="contained" 
               endIcon={<Update />}
-              onClick={()=> setInfo?.()}
+              onClick={ handleClick }
               size='small'
             >
               Update

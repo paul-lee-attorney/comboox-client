@@ -12,7 +12,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  const [ days, setDays ] = useState<string>();
+  const [ days, setDays ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -28,12 +28,6 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: extendPledge,
   } = useGeneralKeeperExtendPledge({
     address: gk,
-    args: days && !hasError(valid)
-      ? [ BigInt(pld.head.seqOfShare), 
-          BigInt(pld.head.seqOfPld), 
-          BigInt(days)
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -41,6 +35,16 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     }    
   });
   
+  const handleClick = ()=>{
+    extendPledge({
+      args: [ 
+          BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
+          BigInt(days)
+      ],
+    });
+  }
+
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
@@ -71,7 +75,7 @@ export function ExtendPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Start /> }
-          onClick={()=>extendPledge?.() }
+          onClick={ handleClick }
           size='small'
         >
           Extend

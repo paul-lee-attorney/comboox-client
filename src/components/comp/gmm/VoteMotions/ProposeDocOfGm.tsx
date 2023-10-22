@@ -31,17 +31,22 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
     write
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: seqOfVR && executor && !hasError(valid)
-      ? [ BigInt(`0x${addr.substring(2).padStart(64, '0')}`), 
-          BigInt(seqOfVR), 
-          BigInt(executor) ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    write({
+      args: [ 
+        BigInt(`0x${addr.substring(2).padStart(64, '0')}`), 
+        BigInt(seqOfVR), 
+        BigInt(executor) 
+      ],
+    });
+  };
   
   return (
     <Stack direction='row' sx={{m:1, p:1, justifyContent:'start', alignItems:'start'}}>
@@ -70,7 +75,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
         variant="contained"
         endIcon={<EmojiPeople />}
         sx={{ m:1, minWidth:218, }}
-        onClick={()=>write?.()}
+        onClick={ handleClick }
       >
         Propose
       </LoadingButton>

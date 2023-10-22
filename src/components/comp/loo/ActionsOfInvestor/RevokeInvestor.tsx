@@ -28,15 +28,21 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
     write:revokeInvestor,
   } = useGeneralKeeperRevokeInvestor({
     address: gk,
-    args: !hasError(valid)
-        ? [ BigInt(userNo), BigInt(seqOfLR)]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    revokeInvestor({
+      args: [ 
+        BigInt(userNo), 
+        BigInt(seqOfLR)
+      ],
+    });
+  };
       
   return (
 
@@ -91,7 +97,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<PersonRemoveOutlined />}
-            onClick={()=> revokeInvestor?.()}
+            onClick={ handleClick }
             size='small'
           >
             Revoke

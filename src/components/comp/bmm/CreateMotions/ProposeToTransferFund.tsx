@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
-import { Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
@@ -35,23 +35,26 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
     write: proposeToTransferFund
   } = useGeneralKeeperProposeToTransferFund({
     address: gk,
-    args: !hasError(valid) && paras.expireDate
-      ? [
-          true, 
-          paras.to, 
-          paras.isCBP, 
-          BigInt(paras.amt), 
-          BigInt(paras.expireDate), 
-          BigInt(seqOfVR), 
-          BigInt(executor)
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handleClick = ()=> {
+    proposeToTransferFund({
+      args: [
+        true, 
+        paras.to, 
+        paras.isCBP, 
+        BigInt(paras.amt), 
+        BigInt(paras.expireDate), 
+        BigInt(seqOfVR), 
+        BigInt(executor)
+      ],
+    });
+  }
 
   return (
 
@@ -185,7 +188,6 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
-
         <LoadingButton
           disabled={ proposeToTransferFundLoading || hasError(valid)}
           loading={loading}
@@ -193,7 +195,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:128 }}
-          onClick={()=>proposeToTransferFund?.()}
+          onClick={ handleClick }
         >
           Propose
         </LoadingButton>

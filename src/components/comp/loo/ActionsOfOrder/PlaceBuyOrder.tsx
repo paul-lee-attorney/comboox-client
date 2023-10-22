@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceBuyOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { FormResults, defFormResults, hasError, longDataParser, onlyInt, refreshAfterTx, removeKiloSymbol } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, longDataParser, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
 import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
@@ -30,15 +30,6 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     write:placeBuyOrder,
   } = useGeneralKeeperPlaceBuyOrder({
     address: gk,
-    args: !hasError(valid)
-        ? [ BigInt(classOfShare),
-            BigInt(order.paid), 
-            BigInt(order.price)
-          ]
-        : undefined,
-    value: !hasError(valid) 
-        ? BigInt(value) * (10n ** 9n) 
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -46,12 +37,23 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     }
   });
 
+  const handleClick = ()=>{
+    placeBuyOrder({
+      args: [ 
+        BigInt(classOfShare),
+        strNumToBigInt(order.paid, 2),
+        strNumToBigInt(order.price, 2),
+      ],
+      value: BigInt(value) * (10n ** 9n),
+    });
+  };
+
   const [ valueOfOrder, setValueOfOrder ] = useState<bigint>(BigInt(0));
   const [ open, setOpen ] = useState<boolean>(false);
   const getValueOfOrder = async () => {
     if ( gk ) {
       let centPrice = await getCentPrice( gk );
-      let output = centPrice * BigInt(order.paid) * BigInt(order.price) / BigInt(100);
+      let output = centPrice * strNumToBigInt(order.paid, 2) * strNumToBigInt(order.price, 2) / BigInt(100);
       setValueOfOrder(output);
       setOpen(true);
     }
@@ -72,7 +74,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         <TextField 
           variant='outlined'
           size="small"
-          label='Paid (Cent)'
+          label='Paid'
           error={ valid['Paid']?.error }
           helperText={ valid['Paid']?.helpTx ?? ' ' }
           sx={{
@@ -81,7 +83,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyInt('Paid', input, MaxData, setValid);
+            onlyNum('Paid', input, MaxData, 2, setValid);
             setOrder( v => ({
               ...v,
               paid: input,
@@ -94,7 +96,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         <TextField 
           variant='outlined'
           size="small"
-          label='Price (Cent)'
+          label='Price'
           error={ valid['Price']?.error }
           helperText={ valid['Price']?.helpTx ?? ' ' }
           sx={{
@@ -103,7 +105,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyInt('Price', input, MaxPrice, setValid);
+            onlyNum('Price', input, MaxPrice, 2, setValid);
             setOrder( v => ({
               ...v,
               price: input,
@@ -138,7 +140,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<ShoppingCartOutlined />}
-          onClick={()=> placeBuyOrder?.()}
+          onClick={ handleClick }
           size='small'
         >
           Buy

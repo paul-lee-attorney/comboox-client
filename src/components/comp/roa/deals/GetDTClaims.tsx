@@ -122,13 +122,22 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     write: acceptAlongDeal,
   } = useGeneralKeeperAcceptAlongDeal({
     address: gk,
-    args: [ addr, BigInt(deal.head.seqOfDeal), sigHash],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const acceptADClick= ()=>{
+    acceptAlongDeal({
+      args: [ 
+        addr, 
+        BigInt(deal.head.seqOfDeal), 
+        sigHash
+      ],
+    });
+  };
 
   return (
     <>
@@ -200,7 +209,7 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
                     sx={{ m: 1, minWidth: 218, height: 40 }} 
                     variant="contained" 
                     endIcon={<HandshakeOutlined />}
-                    onClick={()=> acceptAlongDeal?.()}
+                    onClick={ acceptADClick }
                     size='small'
                   >
                     Accept

@@ -27,13 +27,22 @@ export function PickupShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfD
     write: closeDeal
   } = useGeneralKeeperCloseDeal({
     address: gk,
-    args: [addr, BigInt(deal.head.seqOfDeal), hashKey],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    closeDeal({
+      args: [
+        addr, 
+        BigInt(deal.head.seqOfDeal), 
+        hashKey
+      ],
+    });
+  };
 
   return (
 
@@ -64,7 +73,7 @@ export function PickupShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfD
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<LockOpen />}
-            onClick={()=> closeDeal?.()}
+            onClick={ handleClick }
             size='small'
           >
             Pickup Share

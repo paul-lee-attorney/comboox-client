@@ -49,8 +49,6 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
     write: removeAttorney,
   } = useAccessControlRevokeRole({
     address: addr,
-    args: !hasError(valid) 
-      ? [ATTORNEYS, acct] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
@@ -59,7 +57,12 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
   });
 
   const handleClick = () => {
-    removeAttorney?.();
+    removeAttorney({
+      args:[
+        ATTORNEYS, 
+        acct
+      ],
+    });
   }
 
   return (

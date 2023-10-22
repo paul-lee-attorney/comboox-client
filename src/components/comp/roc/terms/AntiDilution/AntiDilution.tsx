@@ -47,8 +47,8 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
   const [ newMarks, setNewMarks ] = useState<BenchmarkType[]>();
 
-  const [ classOfShare, setClassOfShare ] = useState<string>();
-  const [ price, setPrice ] = useState<string>();
+  const [ classOfShare, setClassOfShare ] = useState<string>('0');
+  const [ price, setPrice ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ time, setTime ] = useState<number>(0);
@@ -64,15 +64,21 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: addMark 
   } = useAntiDilutionAddBenchmark({
     address: term,
-    args: classOfShare && price && !hasError(valid)
-        ? [BigInt(classOfShare), BigInt(Number(price) * 100)] 
-        : undefined,
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshAdd);
     }
   });
+
+  const addMarkClick = ()=>{
+    addMark({
+      args: [
+        BigInt(classOfShare), 
+        BigInt(Number(price) * 100)
+      ],      
+    });
+  };
 
   const [ loadingRemove, setLoadingRemove ] = useState(false);
   const refreshRemove = ()=> {
@@ -201,7 +207,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       <IconButton 
                         disabled={ addMarkLoading || hasError(valid) || loadingAdd}
                         sx={{width: 20, height: 20, mt: 2, ml: 5 }} 
-                        onClick={ () => addMark?.() }
+                        onClick={ addMarkClick }
                         color="primary"
                       >
                         <AddCircle/>

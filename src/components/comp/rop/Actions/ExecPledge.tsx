@@ -58,21 +58,25 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: execPledge,
   } = useGeneralKeeperExecPledge({
     address: gk,
-    args: !hasError(valid)
-        ? [ codifyHeadOfDeal(head),
-            BigInt(pld.head.seqOfPld),
-            BigInt(version),
-            BigInt(body.buyer),
-            BigInt(body.groupOfBuyer) 
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
   });
-        
+
+  const handleClick = ()=>{
+    execPledge({
+      args: [ 
+        codifyHeadOfDeal(head),
+        BigInt(pld.head.seqOfPld),
+        BigInt(version),
+        BigInt(body.buyer),
+        BigInt(body.groupOfBuyer) 
+      ],
+    });
+  };
+
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
@@ -184,7 +188,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <DoneOutline /> }
-          onClick={()=>execPledge?.() }
+          onClick={ handleClick }
           size='small'
         >
           Exercise

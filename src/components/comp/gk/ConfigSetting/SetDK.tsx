@@ -24,13 +24,20 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     write: updateDK,
   } = useAccessControlSetDirectKeeper({
     address: docAddr,
-    args: !hasError(valid) ? [ keeper ] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    updateDK({
+      args: [ 
+        keeper 
+      ],
+    });
+  };
 
   return (
 
@@ -91,7 +98,7 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Update />}
-          onClick={()=> updateDK?.()}
+          onClick={ handleClick }
           size='small'
         >
           Update

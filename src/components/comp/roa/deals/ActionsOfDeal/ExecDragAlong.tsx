@@ -1,4 +1,4 @@
-import { Button, Divider, Paper, Stack, TextField } from "@mui/material";
+import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperExecDragAlong } from "../../../../../generated";
@@ -7,7 +7,7 @@ import {  AgricultureOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
@@ -31,21 +31,25 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
     write: execDragAlong,
   } = useGeneralKeeperExecDragAlong({
     address: gk,
-    args: !hasError(valid)
-        ? [ addr, 
-            BigInt(deal.head.seqOfDeal), 
-            BigInt(targetShare.seqOfShare),
-            BigInt(targetShare.paid),
-            BigInt(targetShare.par),
-            sigHash
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=> {
+    execDragAlong({
+      args: [ 
+          addr, 
+          BigInt(deal.head.seqOfDeal), 
+          BigInt(targetShare.seqOfShare),
+          strNumToBigInt(targetShare.paid, 2),
+          strNumToBigInt(targetShare.par, 2),
+          sigHash
+      ],
+    });
+  };
       
   return (
 
@@ -84,7 +88,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
               <TextField 
                 variant='outlined'
                 size="small"
-                label='Paid (Cent)'
+                label='Paid'
                 error={ valid['Paid']?.error }
                 helperText={ valid['Paid']?.helpTx ?? ' ' }
                 sx={{
@@ -93,7 +97,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyInt('Paid', input, MaxData, setValid);
+                  onlyNum('Paid', input, MaxData, 2, setValid);
                   setTargetShare(v => ({
                     ...v,
                     paid: input,
@@ -105,7 +109,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
               <TextField 
                 variant='outlined'
                 size="small"
-                label='Par (Cent)'
+                label='Par'
                 error={ valid['Par']?.error }
                 helperText={ valid['Par']?.helpTx ?? ' ' }
                 sx={{
@@ -114,7 +118,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyInt('Par', input, MaxData, setValid);
+                  onlyNum('Par', input, MaxData, 2, setValid);
                   setTargetShare(v => ({
                     ...v,
                     par: input,
@@ -155,7 +159,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<AgricultureOutlined />}
-            onClick={()=> execDragAlong?.()}
+            onClick={ handleClick }
             size='small'
           >
             Drag Along

@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { Loyalty } from "@mui/icons-material";
@@ -7,7 +7,7 @@ import { useGeneralKeeperPlaceInitialOffer } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -28,14 +28,6 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
     write:placeInitOffer,
   } = useGeneralKeeperPlaceInitialOffer({
     address: gk,
-    args: !hasError(valid)
-        ? [ BigInt(classOfShare),
-            BigInt(offer.execHours), 
-            BigInt(offer.paid), 
-            BigInt(offer.price), 
-            BigInt(offer.seqOfLR), 
-           ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -43,6 +35,18 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
     }
   });
       
+  const handleClick = ()=> {
+    placeInitOffer({
+      args: [
+        BigInt(classOfShare),
+        BigInt(offer.execHours),
+        strNumToBigInt(offer.paid, 2),
+        strNumToBigInt(offer.price, 2), 
+        BigInt(offer.seqOfLR), 
+      ],
+    });
+  };
+
   return (
 
     <Paper elevation={3} sx={{
@@ -72,7 +76,7 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
               execHours: input,
             }));
           }}
-          value={ offer.execHours.toString() } 
+          value={ offer.execHours } 
         />
 
         <TextField 
@@ -93,13 +97,13 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
               seqOfLR: input,
             }));
           }}
-          value={ offer.seqOfLR.toString() } 
+          value={ offer.seqOfLR } 
         />
 
         <TextField 
           variant='outlined'
           size="small"
-          label='Paid (Cent)'
+          label='Paid'
           error={ valid['Paid']?.error }
           helperText={ valid['Paid']?.helpTx ?? ' ' }
           sx={{
@@ -108,13 +112,13 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyInt('Paid', input, MaxData, setValid);
+            onlyNum('Paid', input, MaxData, 2, setValid);
             setOffer( v => ({
               ...v,
               paid: input,
             }));
           }}
-          value={ offer.paid.toString() } 
+          value={ offer.paid } 
         />
 
         <TextField 
@@ -129,14 +133,14 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyInt('Price', input, MaxPrice, setValid);
+            onlyNum('Price', input, MaxPrice, 2, setValid);
             setOffer( v => ({
               ...v,
               price: input,
             }));
         }}
 
-          value={ offer.price.toString() } 
+          value={ offer.price } 
         />
 
         <LoadingButton 
@@ -146,7 +150,7 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Loyalty />}
-          onClick={()=> placeInitOffer?.()}
+          onClick={ handleClick }
           size='small'
         >
           Offer

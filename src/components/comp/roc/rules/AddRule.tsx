@@ -31,7 +31,6 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
     write,
   } = useShareholdersAgreementAddRule({
     address: sha,
-    args: !hasError(valid) ? [rule] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -40,8 +39,9 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
   });
 
   const handleClick = ()=>{
-    console.log('rule: ', rule);
-    write?.();
+    write({
+      args: [rule],
+    });
   }
 
   return (
@@ -55,7 +55,7 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
           endIcon={<EditNote />}
-          onClick={handleClick}
+          onClick={ handleClick }
           size='small'
         >
           Update

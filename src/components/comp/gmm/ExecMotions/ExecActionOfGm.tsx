@@ -2,11 +2,9 @@ import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Bytes32Zero, HexType } from "../../../../scripts/common";
 
-import { 
-  useGeneralKeeperExecActionOfGm, 
-} from "../../../../generated";
+import { useGeneralKeeperExecActionOfGm } from "../../../../generated";
 
-import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
@@ -32,19 +30,24 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
     write: execAction,
   } = useGeneralKeeperExecActionOfGm({
     address: gk,
-    args: seqOfVr && desHash && seqOfMotion && !hasError(valid)
-        ? [BigInt(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigInt(seqOfMotion)]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=> {
+    execAction({
+      args: [
+        BigInt(seqOfVr), 
+        actions.map(v => (v.target)), 
+        actions.map(v => (BigInt(v.value))),
+        actions.map(v => (v.params)),
+        desHash, BigInt(seqOfMotion)
+      ],
+    });
+  };
 
   const addAction = () => {
     setActions(v => {
@@ -60,10 +63,6 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
       arr.pop();      
       return arr;
     })
-  }
-
-  const handleClick = () => {
-    execAction();
   }
 
   return (
@@ -122,7 +121,7 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
       />
 
       <LoadingButton
-        disabled={ !execAction || execActionLoading || hasError(valid)}
+        disabled={ execActionLoading || hasError(valid)}
         loading={loading}
         loadingPosition="end"
         variant="contained"

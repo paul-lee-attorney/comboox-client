@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import {
-  Button, 
   Paper, 
   Toolbar,
   TextField,
@@ -43,13 +42,18 @@ function RegisterOfAgreements() {
     write: createIa,
   } = useGeneralKeeperCreateIa({
     address: gk,
-    args: version ? [BigInt(version)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    createIa({
+      args: [BigInt(version)],
+    });
+  };
 
   useEffect(()=>{
     if (boox) {
@@ -108,7 +112,7 @@ function RegisterOfAgreements() {
                       sx={{ m: 1, minWidth: 120, height: 40 }} 
                       variant="contained" 
                       endIcon={ <Create /> }
-                      onClick={() => createIa?.() }
+                      onClick={ handleClick }
                       size='small'
                     >
                       Create IA

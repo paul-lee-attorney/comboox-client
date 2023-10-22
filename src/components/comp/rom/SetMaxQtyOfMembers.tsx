@@ -54,13 +54,18 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
     write: setMaxQty, 
   } = useRegisterOfMembersSetMaxQtyOfMembers({
     address: boox ? boox[booxMap.ROM] : undefined,
-    args: !hasError(valid) ? [BigInt(inputMax)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    setMaxQty({
+      args:[BigInt(inputMax)],
+    })
+  }
 
   return (    
     <Paper elevation={3} sx={{m:1, p:1, width:'100%', alignItems:'center', justifyContent:'center' }} >
@@ -137,7 +142,7 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
               sx={{ m: 1, minWidth: 120, height: 40 }} 
               variant="contained" 
               endIcon={<Update />}
-              onClick={()=> setMaxQty?.()}
+              onClick={ handleClick }
               size='small'
             >
               Update

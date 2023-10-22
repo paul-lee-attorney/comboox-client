@@ -12,7 +12,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  const [ amt, setAmt ] = useState<string>();
+  const [ amt, setAmt ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -28,12 +28,6 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: refundDebt,
   } = useGeneralKeeperRefundDebt({
     address: gk,
-    args: amt && !hasError(valid)
-      ? [ BigInt(pld.head.seqOfShare), 
-          BigInt(pld.head.seqOfPld), 
-          BigInt(amt)
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -41,6 +35,16 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     }    
   });
   
+  const handleClick = ()=>{
+    refundDebt({
+      args: [ 
+        BigInt(pld.head.seqOfShare), 
+        BigInt(pld.head.seqOfPld), 
+        BigInt(amt)
+      ],
+    });
+  };
+
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 

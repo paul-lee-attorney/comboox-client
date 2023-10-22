@@ -12,7 +12,7 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
   const { gk } = useComBooxContext();
   
-  const [ key, setKey ] = useState<string>();
+  const [ key, setKey ] = useState<string>('');
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -26,12 +26,6 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: releasePledge,
   } = useGeneralKeeperReleasePledge({
     address: gk,
-    args: key
-      ? [ BigInt(pld.head.seqOfShare), 
-          BigInt(pld.head.seqOfPld), 
-          key
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -39,6 +33,16 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     }    
   });
   
+  const handleClick =()=>{
+    releasePledge({
+      args: [ 
+          BigInt(pld.head.seqOfShare), 
+          BigInt(pld.head.seqOfPld), 
+          key
+      ],
+    })
+  }
+
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
@@ -57,13 +61,13 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         />
 
         <LoadingButton 
-          disabled={ !releasePledge || releasePledgeLoading }
+          disabled={ releasePledgeLoading }
           loading={loading}
           loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Key /> }
-          onClick={()=>releasePledge?.() }
+          onClick={ handleClick }
           size='small'
         >
           Release

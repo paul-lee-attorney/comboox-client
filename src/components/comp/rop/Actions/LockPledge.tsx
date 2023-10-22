@@ -28,19 +28,23 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: lockPledge,
   } = useGeneralKeeperLockPledge({
     address: gk,
-    args: hashLock && !hasError(valid)
-      ? [ BigInt(pld.head.seqOfShare), 
-          BigInt(pld.head.seqOfPld), 
-          hashLock
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }    
   });
-  
+
+  const handleClick = ()=>{
+    lockPledge({
+      args: [ 
+        BigInt(pld.head.seqOfShare), 
+        BigInt(pld.head.seqOfPld), 
+        hashLock
+      ],
+    });
+  }
+
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
@@ -65,13 +69,13 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         />
 
         <LoadingButton 
-          disabled={ !lockPledge || lockPledgeLoading || hasError(valid)}
+          disabled={ lockPledgeLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <LockOutlined /> }
-          onClick={()=>lockPledge?.() }
+          onClick={ handleClick }
           size='small'
         >
           Lock

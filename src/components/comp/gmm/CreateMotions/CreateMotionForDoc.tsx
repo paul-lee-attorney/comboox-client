@@ -29,15 +29,24 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
     write: proposeDocOfGm,
   } = useGeneralKeeperProposeDocOfGm({
     address: gk,
-    args: doc && seqOfVr && executor && !hasError(valid)
-          ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
-          : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = () => {
+    if ( doc && seqOfVr && executor) {
+      proposeDocOfGm({
+        args: [ 
+          BigInt(doc), 
+          BigInt(seqOfVr), 
+          BigInt(executor) 
+        ],
+      });
+    }
+  };
 
   return (
 
@@ -100,7 +109,7 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:218 }}
-          onClick={()=>proposeDocOfGm?.()}
+          onClick={ handleClick }
         >
           Propose
         </LoadingButton>

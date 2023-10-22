@@ -31,7 +31,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
 
   const [ flag, setFlag ] = useState<boolean>();
   const [ open, setOpen ] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
     setLoading(false);
@@ -47,8 +47,6 @@ export function AppointAttorney({ addr }: AccessControlProps) {
     write: grantRole,
   } = useAccessControlGrantRole({
     address: addr,
-    args: !hasError(valid) 
-      ? [ATTORNEYS, acct] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
@@ -57,7 +55,12 @@ export function AppointAttorney({ addr }: AccessControlProps) {
   });
 
   const handleClick = () => {
-    grantRole?.();
+    grantRole({
+      args: [
+        ATTORNEYS, 
+        acct
+      ],
+    });
   }
 
   return (

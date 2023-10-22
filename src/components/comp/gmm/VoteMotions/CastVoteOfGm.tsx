@@ -65,15 +65,22 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     address: gk,
-    args: attitude && !hasError(valid)
-        ? [seqOfMotion, BigInt(attitude), sigHash]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    castVote({
+      args: [
+        seqOfMotion, 
+        BigInt(attitude), 
+        sigHash
+      ],
+    });
+  }
 
   const [ appear, setAppear ] = useState(false);
 
@@ -141,13 +148,13 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
           />                                            
 
           <LoadingButton
-            disabled={ !castVote || castVoteLoading || hasError(valid)}
+            disabled={ castVoteLoading || hasError(valid)}
             loading={loading}
             loadingPosition="end"
             variant="contained"
             endIcon={<HowToVote />}
             sx={{ m:1, minWidth:128 }}
-            onClick={()=>castVote?.()}
+            onClick={ handleClick }
           >
             Vote
           </LoadingButton>

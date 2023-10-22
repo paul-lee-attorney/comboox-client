@@ -30,14 +30,19 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
     write: payOffApprovedDeal
   } = useGeneralKeeperPayOffApprovedDeal({
     address: gk,
-    args: !hasError(valid) ? [addr, BigInt(deal.head.seqOfDeal)] : undefined,
-    value: !hasError(valid) ? BigInt(value) * (10n ** 9n) : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    payOffApprovedDeal({
+      args: [addr, BigInt(deal.head.seqOfDeal)],
+      value: BigInt(value) * (10n ** 9n),  
+    });
+  };
 
   return (
 
@@ -74,7 +79,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Payment />}
-          onClick={()=> payOffApprovedDeal?.()}
+          onClick={ handleClick }
           size='small'
         >
           Pay Off

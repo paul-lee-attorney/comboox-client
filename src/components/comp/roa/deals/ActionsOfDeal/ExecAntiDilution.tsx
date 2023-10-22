@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Bytes32Zero, HexType, MaxPrice } from "../../../../../scripts/common";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperExecAntiDilution } from "../../../../../generated";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { LocalDrinkOutlined } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
@@ -31,20 +31,24 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
     write: execAntiDilution,
   } = useGeneralKeeperExecAntiDilution({
     address: gk,
-    args: !hasError(valid)
-        ? [ addr, 
-            BigInt(deal.head.seqOfDeal), 
-            BigInt(seqOfShare),
-            sigHash
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
-      
+     
+  const handleClick = ()=> {
+    execAntiDilution({
+      args: [ 
+          addr, 
+          BigInt(deal.head.seqOfDeal), 
+          BigInt(seqOfShare),
+          sigHash
+      ],
+    });
+  };
+
   return (
 
     <Paper elevation={3} sx={{
@@ -92,13 +96,13 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
           />
 
           <LoadingButton 
-            disabled = {!execAntiDilution || execAntiDilutionLoading || deal.body.state > 1 || hasError(valid)}
+            disabled = {execAntiDilutionLoading || deal.body.state > 1 || hasError(valid)}
             loading = {loading}
             loadingPosition="end"
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<LocalDrinkOutlined />}
-            onClick={()=> execAntiDilution?.()}
+            onClick={ handleClick }
             size='small'
           >
             Anti Dilution

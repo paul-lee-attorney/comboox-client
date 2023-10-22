@@ -51,17 +51,6 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
     write: proposeToTransferFund
   } = useGeneralKeeperProposeToTransferFund({
     address: gk,
-    args: !hasError(valid) && paras.expireDate
-      ? [
-          false, 
-          paras.to, 
-          paras.isCBP, 
-          BigInt(paras.amt), 
-          BigInt(paras.expireDate), 
-          BigInt(seqOfVR), 
-          BigInt(executor)
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -69,6 +58,19 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
     }
   });
 
+  const handleClick = ()=> {
+    proposeToTransferFund({
+      args: [
+        false, 
+        paras.to, 
+        paras.isCBP, 
+        BigInt(paras.amt), 
+        BigInt(paras.expireDate), 
+        BigInt(seqOfVR), 
+        BigInt(executor)
+      ],
+    });
+  };
 
   return (
 
@@ -211,7 +213,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
           variant="contained"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:128 }}
-          onClick={()=>proposeToTransferFund?.()}
+          onClick={ handleClick }
         >
           Propose
         </LoadingButton>

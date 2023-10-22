@@ -1,6 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { registerOfOptionsABI } from "../../generated";
 import { HexType } from "../common";
+import { strNumToBigInt } from "../common/toolsKit";
 
 export interface StrHeadOfOpt{
   seqOfOpt: string;
@@ -70,7 +71,7 @@ export function optHeadCodifier(head: StrHeadOfOpt): HexType {
     Number(head.seqOfOpt).toString(16).padStart(8, '0') +
     Number(head.typeOfOpt).toString(16).padStart(2, '0') +
     Number(head.classOfShare).toString(16).padStart(4, '0') +
-    parseInt((Number(head.rate) * 100).toFixed(0)).toString(16).padStart(8, '0') +
+    strNumToBigInt(head.rate, 2).toString(16).padStart(8, '0') +
     head.issueDate.toString(16).padStart(12, '0') +
     head.triggerDate.toString(16).padStart(12, '0') +
     Number(head.execDays).toString(16).padStart(4, '0') +

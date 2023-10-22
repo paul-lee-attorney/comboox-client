@@ -32,15 +32,23 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
     write: entrustDelegaterForBm,
   } = useGeneralKeeperEntrustDelegaterForBoardMeeting({
     address: gk,
-    args: delegater && !hasError(valid)
-        ? [seqOfMotion, BigInt(delegater) ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=> {
+    if (delegater) {
+      entrustDelegaterForBm({
+        args: [
+          seqOfMotion, 
+          BigInt(delegater)
+        ],
+      });
+    }
+  }
     
   return (
     <Stack direction="row" sx={{ alignItems:'center' }} >
@@ -70,7 +78,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
         variant="contained"
         endIcon={<HandshakeOutlined />}
         sx={{ m:1, minWidth:118 }}
-        onClick={()=>entrustDelegaterForBm?.()}
+        onClick={ handleClick }
       >
         Entrust
       </LoadingButton>

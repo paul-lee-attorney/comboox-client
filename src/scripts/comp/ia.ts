@@ -2,6 +2,7 @@ import { readContract } from "@wagmi/core";
 import { Bytes32Zero, HexType } from "../common";
 import { investmentAgreementABI } from "../../generated";
 import { Swap } from "./roo";
+import { strNumToBigInt } from "../common/toolsKit";
 
 export const TypeOfDeal = [
   'CapitalIncrease', 
@@ -239,8 +240,8 @@ export function codifyHeadOfDeal(head: StrHead): HexType {
     (Number(head.classOfShare).toString(16).padStart(4, '0')) +
     (Number(head.seqOfShare).toString(16).padStart(8, '0')) +
     (Number(head.seller).toString(16).padStart(10, '0')) +
-    (Number(head.priceOfPaid).toString(16).padStart(8, '0')) +
-    (Number(head.priceOfPar).toString(16).padStart(8, '0')) +
+    strNumToBigInt(head.priceOfPaid, 2).toString(16).padStart(8, '0') +
+    strNumToBigInt(head.priceOfPar, 2).toString(16).padStart(8, '0') +
     (Number(head.closingDeadline).toString(16).padStart(12, '0')) + 
     (Number(head.votingWeight).toString(16).padStart(4, '0'))
   }`;

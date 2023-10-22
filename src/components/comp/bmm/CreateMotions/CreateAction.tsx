@@ -17,9 +17,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
 
   const [ seqOfVr, setSeqOfVr ] = useState<string>();
   const [ executor, setExecutor ] = useState<string>();
-
   const [ actions, setActions ] = useState<Action[]>([ defaultAction ]);
-
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -35,19 +33,26 @@ export function CreateAction({refresh}:CreateMotionProps) {
     write: proposeAction,
   } = useGeneralKeeperCreateAction({
     address: gk,
-    args: seqOfVr && desHash && executor && !hasError(valid)
-        ? [BigInt(seqOfVr), 
-          actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
-          actions.map(v => (v.params)),
-          desHash, BigInt(executor)]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const proposeActionClick = ()=>{
+    if (seqOfVr && desHash && executor) {
+      proposeAction({
+        args:[
+          BigInt(seqOfVr), 
+          actions.map(v => (v.target)), 
+          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (v.params)),
+          desHash, BigInt(executor)
+        ],
+      });
+    }
+  }
 
   const addAction = () => {
     setActions(v => {
@@ -160,13 +165,13 @@ export function CreateAction({refresh}:CreateMotionProps) {
           />
 
           <LoadingButton
-            disabled={ !proposeAction || proposeActionLoading || hasError(valid) }
+            disabled={ proposeActionLoading || hasError(valid) }
             loading={loading}
             loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:218 }}
-            onClick={()=>proposeAction?.()}
+            onClick={ proposeActionClick }
           >
             Propose
           </LoadingButton>

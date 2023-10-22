@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, TextField, } from "@mui/material";
+import { Paper, Stack, TextField, } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { PersonAddAlt } from "@mui/icons-material";
@@ -29,15 +29,21 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
     write:approveInvestor,
   } = useGeneralKeeperApproveInvestor({
     address: gk,
-    args: !hasError(valid) 
-        ? [ BigInt(userNo), BigInt(seqOfLR)]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    approveInvestor({
+      args: [ 
+        BigInt(userNo), 
+        BigInt(seqOfLR)
+      ],
+    });
+  };
       
   return (
 
@@ -92,7 +98,7 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<PersonAddAlt />}
-            onClick={()=> approveInvestor?.()}
+            onClick={ handleClick }
             size='small'
           >
             Approve

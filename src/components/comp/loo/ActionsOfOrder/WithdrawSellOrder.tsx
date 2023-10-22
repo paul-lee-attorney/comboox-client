@@ -1,4 +1,4 @@
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { RedoOutlined } from "@mui/icons-material";
@@ -28,11 +28,6 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
     write:withdrawSellOrder,
   } = useGeneralKeeperWithdrawSellOrder({
     address: gk,
-    args: !hasError(valid)
-        ? [ BigInt(classOfShare),
-            BigInt(offer.seqOfOrder)
-           ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -40,6 +35,15 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
     }
   });
       
+  const handleClick = ()=> {
+    withdrawSellOrder({
+      args: [ 
+        BigInt(classOfShare),
+        BigInt(offer.seqOfOrder)
+      ],
+    });
+  };
+
   return (
 
     <Paper elevation={3} sx={{
@@ -81,7 +85,7 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<RedoOutlined />}
-          onClick={()=> withdrawSellOrder?.()}
+          onClick={ handleClick }
           size='small'
         >
           Withdraw

@@ -3,7 +3,7 @@ import {
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper } from "@mui/material";
+import { Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 import { TakePositionProps } from "./TakePosition";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";

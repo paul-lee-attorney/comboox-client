@@ -1,4 +1,4 @@
-import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Select, Stack, TextField } from "@mui/material";
 import { 
   useGeneralKeeperCastVoteOfGm,
 } from "../../../../generated";
@@ -41,15 +41,22 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     address: gk,
-    args: attitude && sigHash && !hasError(valid)
-        ? [ seqOfMotion, BigInt(attitude), sigHash ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    castVote({
+      args: [ 
+        seqOfMotion, 
+        BigInt(attitude), 
+        sigHash 
+      ],
+    });
+  };
 
   return (
     <Stack direction='column' sx={{m:1, p:1, justifyContent:'center'}} >
@@ -91,13 +98,13 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
         />                                            
 
         <LoadingButton
-          disabled={!castVote || castVoteLoading || hasError(valid)} 
+          disabled={ castVoteLoading || hasError(valid)} 
           loading={loading}
           loadingPosition="end"
           variant="contained"
           endIcon={<HowToVote />}
           sx={{ m:1, minWidth:218 }}
-          onClick={()=>castVote?.()}
+          onClick={ handleClick }
         >
           Cast Vote
         </LoadingButton>

@@ -5,7 +5,7 @@ import {
 } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Stack, TextField, } from "@mui/material";
+import { Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 import { HexType, MaxUserNo } from "../../../../scripts/common";
@@ -16,7 +16,7 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
 
   const { gk } = useComBooxContext();
 
-  const [ delegater, setDelegater ] = useState<string>();
+  const [ delegater, setDelegater ] = useState<string>('0');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
@@ -31,15 +31,21 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
     write: entrustDelegaterOfMember,
   } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
     address: gk,
-    args: delegater && !hasError(valid)
-        ? [seqOfMotion, BigInt(delegater) ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    entrustDelegaterOfMember({
+      args:[
+        seqOfMotion, 
+        BigInt(delegater)
+      ],
+    });
+  };
 
   return (
     <Stack direction="row" sx={{ alignItems:'stretch' }} >
@@ -63,13 +69,13 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
       />
 
       <LoadingButton
-        disabled={ !entrustDelegaterOfMember || entrustDelegaterOfMemberLoading || hasError(valid)}
+        disabled={ entrustDelegaterOfMemberLoading || hasError(valid)}
         loading={loading}
         loadingPosition="end"
         variant="contained"
         endIcon={<HandshakeOutlined />}
         sx={{ m:1, minWidth:128 }}
-        onClick={()=>entrustDelegaterOfMember?.()}
+        onClick={ handleClick }
       >
         Entrust
       </LoadingButton>

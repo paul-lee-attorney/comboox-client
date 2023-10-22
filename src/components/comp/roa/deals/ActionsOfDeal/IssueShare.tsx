@@ -26,13 +26,18 @@ export function IssueShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDe
     write: issueNewShare
   } = useGeneralKeeperIssueNewShare({
     address: gk,
-    args: [addr, BigInt(deal.head.seqOfDeal)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    issueNewShare({
+      args: [addr, BigInt(deal.head.seqOfDeal)],      
+    });
+  };
 
   return (
 
@@ -51,7 +56,7 @@ export function IssueShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDe
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<RocketLaunch />}
-            onClick={()=> issueNewShare?.()}
+            onClick={ handleClick }
             size='small'
           >
             Issue

@@ -12,9 +12,9 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
   const { gk } = useComBooxContext();
 
-  const [ seqOfTarget, setSeqOfTarget ] = useState<string>();
-  const [ paidOfTarget, setPaidOfTarget ] = useState<string>();
-  const [ seqOfPledge, setSeqOfPledge ] = useState<string>();
+  const [ seqOfTarget, setSeqOfTarget ] = useState<string>('0');
+  const [ paidOfTarget, setPaidOfTarget ] = useState<string>('0');
+  const [ seqOfPledge, setSeqOfPledge ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -30,18 +30,23 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
     write: createSwap,
   } = useGeneralKeeperCreateSwap({
     address: gk,
-    args: seqOfTarget && paidOfTarget && seqOfPledge && !hasError(valid)
-      ? [ BigInt(seqOfOpt), 
-          BigInt(seqOfTarget), 
-          BigInt(paidOfTarget), 
-          BigInt(seqOfPledge)]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handleClick = ()=>{
+    createSwap({
+      args: [ 
+          BigInt(seqOfOpt), 
+          BigInt(seqOfTarget), 
+          BigInt(paidOfTarget), 
+          BigInt(seqOfPledge)
+      ],
+    });
+  };
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -109,7 +114,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <SwapHorizOutlined /> }
-          onClick={()=>createSwap?.() }
+          onClick={ handleClick }
           size='small'
         >
           Create Swap

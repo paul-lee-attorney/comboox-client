@@ -10,7 +10,7 @@ import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../scripts/center/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
@@ -50,7 +50,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='DiscountRate (BP)'
+          label='DiscountRate (%)'
           error={ valid['DiscountRate']?.error }
           helperText={ valid['DiscountRate']?.helpTx ?? ' ' }                        
           sx={{
@@ -60,7 +60,7 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
           value={ rule.discount }
           onChange={e => {
             let input = e.target.value;
-            onlyInt('DiscountRate', input, 10000n, setValid);
+            onlyNum('DiscountRate', input, 10000n, 2, setValid);
             setRule(v => ({
               ...v,
               discount: input, 

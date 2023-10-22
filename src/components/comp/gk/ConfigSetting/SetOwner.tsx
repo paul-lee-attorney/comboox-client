@@ -29,13 +29,20 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     write: updateOwner,
   } = useAccessControlSetOwner({
     address: docAddr,
-    args: !hasError(valid) ? [ owner ] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    updateOwner({
+      args: [ 
+        owner 
+      ],
+    });
+  };
 
   return (
 
@@ -96,7 +103,7 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={<Update />}
-          onClick={()=> updateOwner?.()}
+          onClick={ handleClick }
           size='small'
         >
           Update

@@ -2,11 +2,11 @@ import { useState } from "react";
 import { useGeneralKeeperCreatePledge } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { StrBody, StrHead, codifyHeadOfPledge, defaultStrBody, defaultStrHead } from "../../../scripts/comp/rop";
-import { Button, Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { getShare } from "../../../scripts/comp/ros";
 import { Create } from "@mui/icons-material";
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -38,20 +38,24 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
     write: createPledge,
   } = useGeneralKeeperCreatePledge({
     address: gk,
-    args: !hasError(valid)
-      ? [ codifyHeadOfPledge(head), 
-          BigInt(body.paid),
-          BigInt(body.par),
-          BigInt(body.guaranteedAmt),
-          BigInt(body.execDays)
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    createPledge({
+      args: [ 
+        codifyHeadOfPledge(head), 
+        strNumToBigInt(body.paid, 2),
+        strNumToBigInt(body.par, 2),
+        strNumToBigInt(body.guaranteedAmt, 2),
+        BigInt(body.execDays)
+      ],
+    });
+  };
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -209,7 +213,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='PledgedPaid (Cent)'
+              label='PledgedPaid'
               error={ valid['PledgedPaid']?.error }
               helperText={ valid['PledgedPaid']?.helpTx ?? ' ' }
               sx={{
@@ -218,7 +222,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('PledgedPaid', input, MaxData, setValid);
+                onlyNum('PledgedPaid', input, MaxData, 2, setValid);
                 setBody((v) => ({
                   ...v,
                   paid: input,
@@ -231,7 +235,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='PledgedPar (Cent)'
+              label='PledgedPar'
               error={ valid['PledgedPar']?.error }
               helperText={ valid['PledgedPar']?.helpTx ?? ' ' }
               sx={{
@@ -240,7 +244,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('PledgedPar', input, MaxData, setValid);
+                onlyNum('PledgedPar', input, MaxData, 2, setValid);
                 setBody((v) => ({
                   ...v,
                   par: input,
@@ -253,7 +257,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='GuaranteedAmount (Cent)'
+              label='GuaranteedAmount'
               error={ valid['GuaranteedAmount']?.error }
               helperText={ valid['GuaranteedAmount']?.helpTx ?? ' ' }
               sx={{
@@ -262,7 +266,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('GuaranteedAmount', input, MaxData, setValid);
+                onlyNum('GuaranteedAmount', input, MaxData, 2, setValid);
                 setBody((v) => ({
                   ...v,
                   guaranteedAmt: input,
@@ -308,7 +312,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
           sx={{ m: 3, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Create /> }
-          onClick={ ()=>createPledge?.() }
+          onClick={ handleClick }
           size='small'
         >
           Create

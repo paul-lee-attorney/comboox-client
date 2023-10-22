@@ -6,7 +6,7 @@ import {
   useGeneralKeeperCreateMotionToApproveDoc, 
 } from "../../../../generated";
 
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
@@ -34,15 +34,24 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
     write: proposeDoc,
   } = useGeneralKeeperCreateMotionToApproveDoc({
     address: gk,
-    args: doc && seqOfVr && executor && !hasError(valid)
-          ? [ BigInt(doc), BigInt(seqOfVr), BigInt(executor) ]
-          : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const proposeDocClick = ()=> {
+    if ( doc && seqOfVr && executor ) {
+      proposeDoc({
+        args:[ 
+          BigInt(doc), 
+          BigInt(seqOfVr), 
+          BigInt(executor) 
+        ],
+      });
+    }
+  }
 
   return (
 
@@ -105,13 +114,13 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
         />
 
         <LoadingButton
-          disabled={ !proposeDoc || proposeDocLoading || hasError(valid)}
+          disabled={ proposeDocLoading || hasError(valid)}
           variant="contained"
           loading={loading}
           loadingPosition="end"
           endIcon={<EmojiPeople />}
           sx={{ m:1, minWidth:218 }}
-          onClick={()=>proposeDoc?.()}
+          onClick={ proposeDocClick }
         >
           Propose
         </LoadingButton>

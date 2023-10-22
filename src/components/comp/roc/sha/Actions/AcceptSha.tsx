@@ -28,13 +28,18 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
     write
   } = useGeneralKeeperAcceptSha({
     address: gk,
-    args: !hasError(valid) ? [ sigHash ] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=> {
+    write({
+      args: [ sigHash ],
+    });
+  }
 
   return (
     <Stack direction='row' sx={{ alignItems:'start' }}>
@@ -62,7 +67,7 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, mt:3, height:40, minWidth:218 }}
-        onClick={()=>write?.()}
+        onClick={ handleClick }
       >
         Accept Sha
       </LoadingButton>

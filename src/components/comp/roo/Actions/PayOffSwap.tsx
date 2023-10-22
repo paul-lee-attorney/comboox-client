@@ -29,17 +29,23 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
     write: payOffSwap,
   } = useGeneralKeeperPayOffSwap({
     address: gk,
-    args: seqOfSwap && !hasError(valid)
-      ? [ BigInt(seqOfOpt), 
-          BigInt(seqOfSwap)]
-      : undefined,
-    value: !hasError(valid) ? BigInt(value) * (10n ** 9n) : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handleClick = ()=>{
+    payOffSwap({
+      args: [ 
+          BigInt(seqOfOpt), 
+          BigInt(seqOfSwap)
+      ],
+    value: BigInt(value) * (10n ** 9n),
+    })
+  }
+
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -89,7 +95,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           sx={{ m: 1, minWidth: 218, height: 40 }} 
           variant="contained" 
           endIcon={ <Payment /> }
-          onClick={()=>payOffSwap?.() }
+          onClick={ handleClick }
           size='small'
         >
           Pay Off Swap

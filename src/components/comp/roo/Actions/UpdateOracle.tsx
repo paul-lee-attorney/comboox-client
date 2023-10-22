@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperUpdateOracle } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxData } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
@@ -39,19 +39,23 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
     write: updateOracle,
   } = useGeneralKeeperUpdateOracle({
     address: gk,
-    args: !hasError(valid)
-      ? [ BigInt(seqOfOpt), 
-          BigInt(paras.p1), 
-          BigInt(paras.p2), 
-          BigInt(paras.p3)
-        ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handleClick = () => {
+    updateOracle({
+      args: [ 
+          BigInt(seqOfOpt), 
+          BigInt(paras.p1), 
+          BigInt(paras.p2), 
+          BigInt(paras.p3)
+      ],
+    });
+  };
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >

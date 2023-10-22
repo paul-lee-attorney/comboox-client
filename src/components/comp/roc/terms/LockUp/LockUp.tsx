@@ -42,8 +42,8 @@ import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
-  const [ lockers, setLockers ] = useState<Locker[]>();
-  const [ seqOfShare, setSeqOfShare ] = useState<string>();
+  const [ lockers, setLockers ] = useState<Locker[]>([]);
+  const [ seqOfShare, setSeqOfShare ] = useState<string>('0');
   const [ dueDate, setDueDate ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
 
@@ -61,16 +61,22 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addLocker 
   } = useLockUpSetLocker({
     address: term,
-    args: seqOfShare && dueDate && !hasError(valid)
-      ? [ BigInt(seqOfShare), BigInt(dueDate) ]
-      : undefined,
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshAdd);
     },    
   });
-  
+
+  const addLockerClick = ()=>{
+    addLocker({
+      args: [ 
+        BigInt(seqOfShare),
+        BigInt(dueDate) 
+      ],
+    });
+  };
+
   const [ loadingRemove, setLoadingRemove ] = useState(false);
   const refreshRemove = ()=> {
     setTime(Date.now());
@@ -82,7 +88,6 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeLocker 
   } = useLockUpDelLocker({
     address: term,
-    args: seqOfShare && !hasError(valid) ? [ BigInt(seqOfShare) ] : undefined,
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
@@ -90,7 +95,13 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     },    
   });
 
-  const [ keyholder, setKeyholder ] = useState<string>();
+  const removeLockerClick =  ()=> {
+    removeLocker({
+      args: [ BigInt(seqOfShare) ],
+    })
+  }
+
+  const [ keyholder, setKeyholder ] = useState<string>('0');
 
   const [ loadingAddKlr, setLoadingAddKlr ] = useState(false);
   const refreshAddKlr = ()=> {
@@ -103,16 +114,22 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addKeyholder,
   } = useLockUpAddKeyholder({
     address: term,
-    args: seqOfShare && keyholder && !hasError(valid)
-      ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
-      :   undefined,
     onSuccess(data) {
       setLoadingAddKlr(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshAddKlr);
     },    
   });
-  
+
+  const addKeyholderClick = ()=>{
+    addKeyholder({
+      args: [ 
+        BigInt(seqOfShare), 
+        BigInt(keyholder) 
+      ],
+    });
+  };
+
   const [ loadingRemoveKlr, setLoadingRemoveKlr ] = useState(false);
   const refreshRemoveKlr = ()=> {
     setTime(Date.now());
@@ -124,9 +141,6 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeKeyholder,
   } = useLockUpRemoveKeyholder({
     address: term,
-    args: seqOfShare && keyholder && !hasError(valid)
-      ?  [ BigInt(seqOfShare), BigInt(keyholder) ]
-      :   undefined,
     onSuccess(data) {
       setLoadingRemoveKlr(true);
       let hash: HexType = data.hash;
@@ -134,6 +148,15 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     },    
   });
   
+  const removeKeyholderClick = ()=>{
+    removeKeyholder({
+      args: [ 
+        BigInt(seqOfShare), 
+        BigInt(keyholder) 
+      ],
+    });
+  };
+
   useEffect(()=>{
     if (term != AddrZero) {
       getLockers(term).then(
@@ -195,7 +218,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         <IconButton 
                           disabled={ addLockerLoading || hasError(valid) || loadingAdd}
                           sx={{width: 20, height: 20, mt: 2, ml: 5 }} 
-                          onClick={ () => addLocker?.() }
+                          onClick={ addLockerClick }
                           color="primary"
                         >
                           <AddCircle/>
@@ -256,7 +279,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         <IconButton 
                           disabled={ addKeyholderLoading || hasError(valid) || loadingAddKlr}
                           sx={{width: 20, height: 20, mt:2, ml: 10,}} 
-                          onClick={ () => addKeyholder?.() }
+                          onClick={ addKeyholderClick }
                           color="primary"
                         >
                           <AddCircle/>
@@ -291,7 +314,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         <IconButton
                           disabled={ removeKeyholderLoading || hasError(valid) || loadingRemoveKlr} 
                           sx={{width: 20, height: 20, mt:2, mr: 10}} 
-                          onClick={ () => removeKeyholder?.() }
+                          onClick={ removeKeyholderClick }
                           color="primary"
                         >
                           <RemoveCircle/>

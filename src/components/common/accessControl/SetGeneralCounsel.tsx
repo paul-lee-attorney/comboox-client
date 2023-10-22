@@ -56,7 +56,6 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
     write: setGeneralCounsel,
   } = useAccessControlSetRoleAdmin({
     address: addr,
-    args: !hasError(valid) ? [ ATTORNEYS, gc] : undefined,
     onSuccess(data) {
       setLoading(true);
       setOpen(false);
@@ -66,7 +65,12 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
   });
 
   const handleClick = () => {
-    setGeneralCounsel?.();
+    setGeneralCounsel({
+      args: [
+        ATTORNEYS, 
+        gc,
+      ],
+    });
   }
 
   return (

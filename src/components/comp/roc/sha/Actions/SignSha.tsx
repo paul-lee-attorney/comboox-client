@@ -28,15 +28,21 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
     write: signSha
   } = useGeneralKeeperSignSha({
     address: gk,
-    args: sigHash && !hasError(valid) 
-        ? [addr, sigHash]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    signSha({
+      args: [
+        addr, 
+        sigHash
+      ],
+    });
+  };
 
   useEffect(()=>{
     getParasOfPage(addr, true).then(
@@ -75,7 +81,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         variant="contained"
         endIcon={<DriveFileRenameOutline />}
         sx={{ m:1, height:42, minWidth:218 }}
-        onClick={()=>signSha?.()}
+        onClick={ handleClick }
       >
         Sign Sha
       </LoadingButton>

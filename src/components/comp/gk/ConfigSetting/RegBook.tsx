@@ -1,4 +1,4 @@
-import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { Dispatch, SetStateAction, useState, } from "react";
 import { Create, } from "@mui/icons-material";
 import { useGeneralKeeperRegBook } from "../../../../generated";
@@ -33,13 +33,21 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
     write: regBook,
   } = useGeneralKeeperRegBook({
     address: gk,
-    args: !hasError(valid) ? [BigInt(title), book] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    regBook({
+      args: [
+        BigInt(title), 
+        book
+      ],
+    });
+  };
 
   return (
 
@@ -92,7 +100,7 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
             sx={{ m: 1, minWidth: 218, height: 40 }} 
             variant="contained" 
             endIcon={<Create />}
-            onClick={()=> regBook?.()}
+            onClick={ handleClick }
             size='small'
           >
             Register Book

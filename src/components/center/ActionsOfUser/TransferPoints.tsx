@@ -9,7 +9,7 @@ import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
-import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyNum } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyNum, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
 
@@ -61,8 +61,8 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
   const transferPointsClick = ()=>{
     transferPoints({
       args:[
-        to, 
-        BigInt((Number(amt) * (10 ** 9)).toFixed(0)) * (10n ** 9n)
+        to,
+        strNumToBigInt(amt, 9) * (10n ** 9n)
       ]
     });
   }

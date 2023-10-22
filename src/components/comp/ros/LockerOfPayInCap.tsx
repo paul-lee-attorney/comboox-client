@@ -35,7 +35,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
   }
 
   const [ locker, setLocker ] = useState<StrLocker>(defaultStrLocker);
-  const [ key, setKey ] = useState<string>();
+  const [ key, setKey ] = useState<string>('');
 
   const [ open, setOpen ] = useState<boolean>(false);
 
@@ -44,20 +44,24 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     write: setPayInAmt,
   } = useGeneralKeeperSetPayInAmt({
     address: gk,
-    args: !hasError(valid) && locker.head.expireDate
-        ? [ BigInt(share.head.seqOfShare), 
-            BigInt(locker.head.value), 
-            BigInt(locker.head.expireDate),
-            locker.hashLock
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshLockers);
     }    
   });
-    
+
+  const setPayInAmtClick = ()=>{
+    setPayInAmt({
+      args: [ 
+        BigInt(share.head.seqOfShare), 
+        BigInt(locker.head.value), 
+        BigInt(locker.head.expireDate),
+        locker.hashLock
+      ],
+    });
+  };
+
   const updateResults = ()=>{
     refresh();
     setLoading(false);
@@ -69,9 +73,6 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     write: requestPaidInCapital,
   } = useGeneralKeeperRequestPaidInCapital({
     address: gk,
-    args: locker.hashLock && key && !hasError(valid)
-      ? [ locker.hashLock, key ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -79,20 +80,32 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     }    
   });
 
+  const requestPaidInCapClick = ()=>{
+    requestPaidInCapital({
+      args: [ locker.hashLock, key ],
+    });
+  };
+
   const {
     isLoading: withdrawPayInAmtLoading,
     write: withdrawPayInAmt,     
   } = useGeneralKeeperWithdrawPayInAmt({
     address: gk,
-    args: locker.hashLock && !hasError(valid)
-      ? [ locker.hashLock, BigInt(share.head.seqOfShare) ]
-      : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshLockers);
     }    
   });
+
+  const withdrawPayInAmtClick = ()=>{
+    withdrawPayInAmt({
+      args: [ 
+        locker.hashLock, 
+        BigInt(share.head.seqOfShare) 
+      ],
+    });
+  };
 
   useEffect(()=>{
     if (boox && locker.hashLock ) {
@@ -142,7 +155,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
               <IconButton
                 disabled={ setPayInAmtLoading || hasError(valid) || loading}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
-                onClick={ () => setPayInAmt?.() }
+                onClick={ setPayInAmtClick }
                 color="primary"            
               >
                 < ExitToApp />
@@ -222,7 +235,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
               <IconButton
                 disabled={ withdrawPayInAmtLoading || valid['HashLock']?.error || loading}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
-                onClick={ () => withdrawPayInAmt?.() }
+                onClick={ withdrawPayInAmtClick }
                 color="primary"            
               >
                 <Output />
@@ -245,7 +258,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
               <IconButton
                 disabled={ requestPaidInCapitalLoading || valid['HashLock']?.error || loading}
                 sx={{width: 20, height: 20, m: 1, p: 1}} 
-                onClick={ () => requestPaidInCapital?.() }
+                onClick={ requestPaidInCapClick }
                 color="primary"            
               >
                 < IosShare />

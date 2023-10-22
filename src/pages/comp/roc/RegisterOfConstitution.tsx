@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { 
-  Button, 
   Paper, 
   Toolbar,
   TextField,
@@ -44,13 +43,18 @@ function RegisterOfConstitution() {
     write: createSha,
   } = useGeneralKeeperCreateSha({
     address: gk,
-    args: version ? [BigInt(version)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const handleClick = ()=>{
+    createSha({
+      args: [BigInt(version)],
+    });
+  };
 
   useEffect(()=>{
     if (boox) {
@@ -111,7 +115,7 @@ function RegisterOfConstitution() {
                     sx={{ m: 1, minWidth: 120, height: 40 }} 
                     variant="contained" 
                     endIcon={ <Create /> }
-                    onClick={()=>createSha() }
+                    onClick={ handleClick }
                     size='small'
                   >
                     Create SHA

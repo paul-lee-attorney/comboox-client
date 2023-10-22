@@ -30,6 +30,15 @@ export interface ParasOfSigPage {
   closingDays: number,
 }
 
+export const defParasOfSigPage = {
+  circulateDate: 0,
+  established: false,
+  counterOfBlanks: 0,
+  counterOfSigs: 0,
+  signingDays: 0,
+  closingDays: 0,
+}
+
 export function parseParasOfPage(sig: Sig): ParasOfSigPage {
   let output: ParasOfSigPage = {
     circulateDate: sig.sigDate,
@@ -259,4 +268,30 @@ export async function getSigsOfPage(addr:HexType, initPage: boolean): Promise<[r
 
   return [sigsOfBuyers, sigsOfSellers];
 }
+
+// ==== Special ====
+
+export async function getSigsOfRole( addr: HexType, initPage: boolean, parties: readonly bigint[] ): Promise<StrSig[]> {
+
+  let len = parties.length;
+  let output: StrSig[] = [];
+
+  while (len > 0) {
+
+    let item = await getSigOfParty(addr, initPage, parties[len - 1]);
+
+    output.push({
+      signer: Number(parties[len-1]),
+      sigDate: item[1].sigDate,
+      blocknumber: item[1].blocknumber.toString(),
+      sigHash: item[2],
+    });
+
+    len--;
+  }
+
+  return output;
+}
+
+
 

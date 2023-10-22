@@ -5,7 +5,6 @@ import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../
 import { useInvestmentAgreementAddDeal } from "../../../../generated";
 
 import { 
-  Button, 
   Divider, 
   FormControl, 
   FormHelperText, 
@@ -25,7 +24,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export interface CreateDealProps{
@@ -53,21 +52,25 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
     address: addr,
-    args: !hasError(valid)
-        ? [ codifyHeadOfDeal(head),
-            BigInt(body.buyer),
-            BigInt(body.groupOfBuyer),
-            BigInt(body.paid),
-            BigInt(body.par)
-          ]
-        : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
-      
+
+  const handleClick = ()=>{
+    addDeal({
+      args: [ 
+          codifyHeadOfDeal(head),
+          BigInt(body.buyer),
+          BigInt(body.groupOfBuyer),
+          strNumToBigInt(body.paid, 2),
+          strNumToBigInt(body.par, 2),
+      ],
+    });
+  };
+
   const handleSeqChanged = (e:ChangeEvent<HTMLInputElement>)=> {
 
     let input = e.target.value;
@@ -168,7 +171,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='PriceOfPar (Cent)'
+              label='PriceOfPar'
               error={ valid['PriceOfPar']?.error }
               helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
               sx={{
@@ -177,7 +180,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('PriceOfPar', input, MaxData, setValid);
+                onlyNum('PriceOfPar', input, MaxPrice, 2, setValid);
                 setHead((v) => ({
                   ...v,
                   priceOfPar: input,
@@ -189,7 +192,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='PriceOfPaid (Cent)'
+              label='PriceOfPaid'
               error={ valid['PriceOfPaid']?.error }
               helperText={ valid['PriceOfPaid']?.helpTx ?? ' ' }
               sx={{
@@ -198,7 +201,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('PriceOfPaid', input, MaxData, setValid);
+                onlyNum('PriceOfPaid', input, MaxPrice, 2, setValid);
                 setHead((v) => ({
                   ...v,
                   priceOfPaid: input,
@@ -271,7 +274,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='Par (Cent)'
+              label='Par'
               error={ valid['Par']?.error }
               helperText={ valid['Par']?.helpTx ?? ' ' }
               sx={{
@@ -280,10 +283,10 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('Par', input, MaxData, setValid);
+                onlyNum('Par', input, MaxData, 2, setValid);
                 setBody((v) => ({
-                ...v,
-                par: input,
+                  ...v,
+                  par: input,
                 }))
               }}
               value={ body.par }
@@ -292,7 +295,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
             <TextField 
               variant='outlined'
               size="small"
-              label='Paid (Cent)'
+              label='Paid'
               error={ valid['Paid']?.error }
               helperText={ valid['Paid']?.helpTx ?? ' ' }
               sx={{
@@ -301,10 +304,10 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('Paid', input, MaxData, setValid);
+                onlyNum('Paid', input, MaxData, 2, setValid);
                 setBody((v) => ({
-                ...v,
-                paid: input,
+                  ...v,
+                  paid: input,
                 }));
               }}
               value={ body.paid }
@@ -338,13 +341,13 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
         <Divider orientation="vertical" sx={{ m:1 }} flexItem />
 
         <LoadingButton 
-          disabled = {!addDeal || addDealLoading || hasError(valid)}
+          disabled = { addDealLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           sx={{ m:1, mr:5, p:1, minWidth: 120, height: 40 }} 
           variant="contained" 
           endIcon={<AddCircle />}
-          onClick={()=> addDeal?.()}
+          onClick={ handleClick }
           size='small'
         >
           Add Deal

@@ -34,7 +34,7 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
     write: proposeMotionToBoard,
   } = useGeneralKeeperProposeMotionToBoard({
     address: gk,
-    args: [BigInt(seqOfMotion)],
+    args: [ seqOfMotion ],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
