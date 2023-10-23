@@ -175,7 +175,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValueOfParBalance" 
                     label="ValueOfParBalance" 
                     variant="outlined"
-                    value = { centToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar)).toString()) }
+                    value = { centToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar) / 100n).toString()) }
                     size='small'
                   />                
                 </td>
@@ -217,7 +217,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValueOfPaid" 
                     label="ValueOfPaid" 
                     variant="outlined"
-                    value = { centToDollar((share.body.paid * BigInt(share.head.priceOfPaid)/BigInt(100)).toString()) }
+                    value = { centToDollar((share.body.paid * BigInt(share.head.priceOfPaid) / 100n).toString()) }
                     size='small'
                   />                
                 </td>
@@ -259,8 +259,8 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValue" 
                     label="Value" 
                     variant="outlined"
-                    value = { centToDollar(((share.body.paid * BigInt(share.head.priceOfPaid) / BigInt(100)) + (
-                      (share.body.par - share.body.paid) * BigInt(share.head.priceOfPar) / BigInt(100))).toString())
+                    value = { centToDollar(((share.body.paid * BigInt(share.head.priceOfPaid) / 100n) 
+                      + ((share.body.par - share.body.paid) * BigInt(share.head.priceOfPar) / 100n)).toString())
                     }
                     size='small'
                   />                                

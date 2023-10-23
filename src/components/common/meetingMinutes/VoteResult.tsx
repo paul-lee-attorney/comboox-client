@@ -1,7 +1,7 @@
 
 import { BallotsList } from "./BallotsList";
 import { HexType } from "../../../scripts/common";
-import { VoteCase, defaultVoteCase, getCaseOfAttitude } from "../../../scripts/common/meetingMinutes";
+import { VoteCase, defaultVoteCase, getCaseOfAttitude, getVoteResult } from "../../../scripts/common/meetingMinutes";
 import { useEffect, useState } from "react";
 
 interface VoteResultProps {
@@ -19,21 +19,9 @@ export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
   ]);
 
   useEffect(()=>{
-
-    let i = 0;
-    while (i < 4) {
-      getCaseOfAttitude(addr, seqOfMotion, BigInt(i)).then(
-        res => {
-          setVoteResult(v => {
-            let out = [...v];
-            out[i] = res;
-            return out;
-          })
-        }
-      )
-      i++;
-    }
-
+    getVoteResult(addr, seqOfMotion).then(
+      res => setVoteResult(res)
+    );
   })
 
   return (

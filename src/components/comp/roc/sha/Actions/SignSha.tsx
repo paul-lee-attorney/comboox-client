@@ -17,9 +17,11 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
+  const [ time, setTime ] = useState<number>(0);
   const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
+    setTime(Date.now());
     setLoading(false);
   }
 
@@ -53,7 +55,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
         if (flag) setNextStep(3);
       }
     )
-  }, [addr, signSha, setNextStep])
+  }, [addr, setParasOfPage, setNextStep, time]);
 
   return (
     <Stack direction={'row'} sx={{m:1, p:1, alignItems:'start'}}>

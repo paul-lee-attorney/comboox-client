@@ -78,7 +78,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
 
     let seq = input;
 
-    if (Number(seq) > 0 && boox) {
+    if (parseInt(seq) > 0 && boox) {
       getShare(boox[booxMap.ROS], seq).then(
         res => {
           if (res)
@@ -220,7 +220,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               sx={{
                 m:1,
                 minWidth: 218,
-              }} 
+              }}
+              helperText=' '
               value={ dayjs.unix(head.closingDeadline) }
               onChange={(date) => setHead((v) => ({
                 ...v,

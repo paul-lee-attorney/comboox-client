@@ -7,7 +7,6 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { 
   Box, 
-  Button, 
   Collapse, 
   FormControl, 
   FormHelperText, 
@@ -35,29 +34,24 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
 
   const { gk, boox } = useComBooxContext();
 
-  const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
+  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>([]);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
-  useEffect(()=>{
-    if (boox) {
-      getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
-        list => setVoteResult(list)
-      )
-    }
-  }, [seqOfMotion, boox]);
+  // useEffect(()=>{
+  //   if (boox) {
+  //     getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
+  //       list => setVoteResult(list)
+  //     )
+  //   }
+  // }, [seqOfMotion, boox]);
 
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
 
   const updateResults = ()=>{
-    if (boox) {
-      getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
-        list => setVoteResult(list)
-      );
-      refresh();
-      setOpen(false);
-    }
+    refresh();
+    setOpen(false);
   };
 
   const {
@@ -112,7 +106,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
 
       <Collapse in={ !appear } >
 
-        <Stack direction="row" sx={{ alignItems:'stretch' }} >
+        <Stack direction="row" sx={{ alignItems:'start' }} >
 
           <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="attitude-lable">Attitude</InputLabel>
@@ -160,9 +154,9 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
           </LoadingButton>
         </Stack>
 
-        {voteResult && boox && (
-          <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} />
-        )}
+          {boox && (
+            <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} />
+          )}
 
       </Collapse>
 

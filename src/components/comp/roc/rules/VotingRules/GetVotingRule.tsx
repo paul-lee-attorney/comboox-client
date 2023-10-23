@@ -110,14 +110,14 @@ export function GetVotingRule({seq}: GetVotingRuleProps) {
                   {Number(objVr.amountRatio) != 0 && (
                     <TextField 
                       variant='outlined'
-                      label='AmountRatio'
+                      label='AmountRatio (%)'
                       inputProps={{readOnly: true}}
                       size="small"
                       sx={{
                         m:1,
                         minWidth: 218,
                       }}
-                      value={toPercent(objVr.amountRatio.toString())}
+                      value={ objVr.amountRatio }
                     />
                   )}
 

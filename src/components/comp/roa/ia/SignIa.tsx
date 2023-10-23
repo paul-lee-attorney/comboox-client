@@ -56,7 +56,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   }, [addr, setNextStep, time]);
 
   return (
-    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'center'}}>
+    <Stack direction={'row'} sx={{m:1, p:1, alignItems:'start'}}>
 
       <TextField
         sx={{ m: 1, minWidth: 650 }} 
@@ -91,7 +91,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
           <Alert 
             variant='outlined' 
             severity='info' 
-            sx={{ height: 45, p:0.5 }} 
+            sx={{ height: 42, p:0.5, m:1 }} 
           >
             Sigers / Parties: { parasOfPage?.counterOfSigs +'/'+ parasOfPage?.counterOfBlanks } 
           </Alert>

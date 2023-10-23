@@ -9,7 +9,7 @@ import { SwapsListProps } from "./SwapsList";
 
 export function CheckValueOfDeal({addr, deal}: SwapsListProps) {
 
-  const [ value, setValue ] = useState<bigint>(BigInt(0));
+  const [ value, setValue ] = useState<bigint>(0n);
 
   useEffect(()=>{
     checkValueOfDeal(addr, deal.head.seqOfDeal).then(

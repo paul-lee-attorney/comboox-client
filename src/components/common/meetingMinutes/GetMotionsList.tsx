@@ -20,7 +20,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
     {
       field: 'sn',
       headerName: 'Sn',
-      valueGetter: p => longDataParser(p.row.head.seqOfMotion),
+      valueGetter: p => longSnParser(p.row.head.seqOfMotion.toString()),
       width: 120,    
     },
     {

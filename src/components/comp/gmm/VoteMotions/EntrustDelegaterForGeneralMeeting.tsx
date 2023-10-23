@@ -48,7 +48,7 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
   };
 
   return (
-    <Stack direction="row" sx={{ alignItems:'stretch' }} >
+    <Stack direction="row" sx={{ alignItems:'start' }} >
 
       <TextField 
         variant='outlined'

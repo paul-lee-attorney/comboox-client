@@ -17,7 +17,7 @@ export function GetOfficersList({ list, title }:GetOfficersListProps) {
     {
       field: 'sn',
       headerName: 'Sn',
-      valueGetter: p => longDataParser(p.row.seqOfPos),
+      valueGetter: p => longSnParser(p.row.seqOfPos.toString()),
       renderCell: ({ value }) => (
         <GetPosition seq={value} />
       ),

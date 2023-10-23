@@ -87,7 +87,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
         >
           <span>
           <IconButton
-            disabled={ !addDirector || addDirectorLoading || hasError(valid) || loading}
+            disabled={ addDirectorLoading || hasError(valid) || loading}
             sx={{width:20, height:20, m:1}}
             onClick={ addDirectorClick }
             color="primary"

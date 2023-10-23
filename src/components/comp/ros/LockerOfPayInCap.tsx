@@ -13,7 +13,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { Share, getLocker } from "../../../scripts/comp/ros";
 import { StrLocker, defaultStrLocker } from "../../../scripts/center/rc";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx, strNumToBigInt } from "../../../scripts/common/toolsKit";
 
 interface LockerOfPayInCapProps {
   share: Share;
@@ -55,7 +55,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
     setPayInAmt({
       args: [ 
         BigInt(share.head.seqOfShare), 
-        BigInt(locker.head.value), 
+        strNumToBigInt(locker.head.value, 2), 
         BigInt(locker.head.expireDate),
         locker.hashLock
       ],
@@ -144,7 +144,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
       </Stack>
 
       <Collapse in={ open } >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
           <Tooltip
             title='LockAmt'
@@ -154,7 +154,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             <span>
               <IconButton
                 disabled={ setPayInAmtLoading || hasError(valid) || loading}
-                sx={{width: 20, height: 20, m: 1, p: 1}} 
+                sx={{width: 20, height: 20, m: 1, mt: 2, p: 1}} 
                 onClick={ setPayInAmtClick }
                 color="primary"            
               >
@@ -164,7 +164,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           </Tooltip>
 
           <TextField 
-            variant='filled'
+            variant='outlined'
             label='HashLock'
             error={ valid['HashLock']?.error }
             helperText={ valid['HashLock']?.helpTx ?? ' ' }    
@@ -185,7 +185,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
           />
 
           <TextField 
-            variant='filled'
+            variant='outlined'
             label='Amount'
             error={ valid['Amount']?.error }
             helperText={ valid['Amount']?.helpTx ?? ' ' }    
@@ -234,7 +234,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
             <span>
               <IconButton
                 disabled={ withdrawPayInAmtLoading || valid['HashLock']?.error || loading}
-                sx={{width: 20, height: 20, m: 1, p: 1}} 
+                sx={{width: 20, height: 20, m:1, mt:2, p: 1}} 
                 onClick={ withdrawPayInAmtClick }
                 color="primary"            
               >
@@ -268,7 +268,7 @@ export function LockerOfPayInCap({ share, setDialogOpen, refresh }: LockerOfPayI
 
 
           <TextField 
-            variant='filled'
+            variant='outlined'
             label='HashKey'
             sx={{
               m:1,

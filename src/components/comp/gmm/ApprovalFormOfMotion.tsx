@@ -84,7 +84,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
       sx={{m:1, p:1}} 
     >
       <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
-        <h4>{"Form of Motion"}</h4>
+        {"Form of Motion"}
       </DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >

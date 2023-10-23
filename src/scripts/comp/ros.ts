@@ -2,6 +2,7 @@ import { HexType } from "../common";
 import { readContract } from "@wagmi/core";
 import { registerOfSharesABI } from "../../generated";
 import { StrLocker, parasParser } from "../center/rc";
+import { bigIntToStrNum } from "../common/toolsKit";
 
 export interface StrHead {
   class: string; // 股票类别/轮次编号
@@ -299,7 +300,7 @@ export async function getLocker(ros: HexType, hashLock: HexType): Promise<StrLoc
       from: res.head.from.toString(),
       to: res.head.to.toString(),
       expireDate: res.head.expireDate,
-      value: res.head.value.toString(),
+      value: bigIntToStrNum(res.head.value, 2),
     },
     body: 
       { 

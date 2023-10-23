@@ -255,7 +255,7 @@ export async function getVoteResult(minutes: HexType, seqOfMotion: bigint): Prom
 
   while (i < 4) {
     let item = await getCaseOfAttitude(minutes, seqOfMotion, BigInt(i));
-    list.push(item);    
+    list.push(item);
     i++;
   }
 
