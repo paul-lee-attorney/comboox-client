@@ -10,6 +10,7 @@ import { AppointAttorney } from "./AppointAttorney";
 import { RemoveAttorney } from "./RemoveAttorney";
 import { QuitAttorney } from "./QuitAttorney";
 import { FinalizeSha } from "../../comp/roc/sha/Actions/FinalizeSha";
+import { FinalizeIa } from "../../comp/roa/ia/FinalizeIa";
 
 interface AgrmtAccessControlProps{
   isSha: boolean;
@@ -23,7 +24,10 @@ export function AgrmtAccessControl({ isSha, agrmt }:AgrmtAccessControlProps) {
       <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
         <SetOwner addr={ agrmt } />
         <SetGeneralCounsel addr={ agrmt } />
-        <FinalizeSha isSha={isSha} addr={ agrmt } setIsFinalized={()=>{}} setNextStep={()=>{}} />           
+        {isSha 
+          ? <FinalizeSha addr={ agrmt } setIsFinalized={()=>{}} setNextStep={()=>{}} />           
+          : <FinalizeIa addr={ agrmt } setIsFinalized={()=>{}} setNextStep={()=>{}} />  
+        }
       </Paper>
 
       <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >

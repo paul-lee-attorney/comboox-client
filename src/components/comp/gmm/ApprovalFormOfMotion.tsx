@@ -7,7 +7,8 @@ import {
   DialogTitle, 
   Paper, 
   TextField, 
-  Toolbar 
+  Toolbar, 
+  Typography
 } from "@mui/material";
 
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
@@ -84,7 +85,9 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
       sx={{m:1, p:1}} 
     >
       <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
-        {"Form of Motion"}
+        <Typography variant="h5">
+         <b>Form of Motion</b>
+        </Typography>
       </DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
@@ -93,7 +96,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
               <tr>
                 <td colSpan={2}>
                   <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h4> General Meeting of Members - {motionType[motion.head.typeOfMotion-1]} </h4>
+                    General Meeting of Members - {motionType[motion.head.typeOfMotion-1]}
                   </Toolbar>
                 </td>
                 <td colSpan={2}>

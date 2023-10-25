@@ -18,6 +18,7 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  Typography,
 } from "@mui/material";
 
 import { AddrZero, HexType, MaxPrice, MaxRatio, MaxSeqNo, MaxUserNo } from "../../../../../scripts/common";
@@ -200,7 +201,9 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Stack direction={'row'}>
                   <Toolbar sx={{ textDecoration:'underline' }}>
-                    <h3> {seqOfTitle == 3 ? 'Drag Along' : 'Tag Along' }</h3>
+                    <Typography variant="h5">
+                      {seqOfTitle == 3 ? 'Drag Along' : 'Tag Along' }
+                    </Typography>
                   </Toolbar>
 
                   <CopyLongStrSpan title="Addr"  src={term} />

@@ -6,7 +6,7 @@ import { useRegCenterLockConsideration } from '../../../generated';
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxLockValue, MaxSeqNo, MaxUserNo } from '../../../scripts/common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
@@ -94,7 +94,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     lockConsideration({
       args:[ 
         BigInt(head.to),
-        BigInt(Number(amt) * (10 ** 9)),
+        strNumToBigInt(amt, 9),
         BigInt(head.expireDate),
         counterLocker,
         constructPayload(func, paras),
@@ -347,7 +347,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                   value={ parseInt(paras[1]?.substring(0x3c,0x40) ?? '0x00',0x10).toString()  }
                   onChange={e => {
                     let input = e.target.value ?? '0';
-                    onlyInt('SeqConsider', input, BigInt(2*16-1), setValid);
+                    onlyInt('SeqConsider', input, MaxSeqNo, setValid);
                     setParas(v => {
                       let out = [...v];
                       let seq = parseInt(input).toString(16).padStart(0x40, '0');

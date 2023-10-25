@@ -34,7 +34,7 @@ import { Benchmark } from "./Benchmark";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { BenchmarkType, getBenchmarks } from "../../../../../scripts/comp/ad";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -75,7 +75,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     addMark({
       args: [
         BigInt(classOfShare), 
-        BigInt(Number(price) * 100)
+        strNumToBigInt(price, 2),
       ],      
     });
   };
@@ -91,15 +91,20 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: removeMark 
   } = useAntiDilutionRemoveBenchmark({
     address: term,
-    args: classOfShare && !hasError(valid) 
-        ? [BigInt(classOfShare)] 
-        :  undefined,
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshRemove);
     },    
   });
+
+  const removeMarkClick = ()=>{
+    removeMark({
+      args: [
+        BigInt(classOfShare)
+      ]
+    });
+  }
 
   const [ obligor, setObligor ] = useState<string>();
 
@@ -114,9 +119,6 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: addObligor 
   } = useAntiDilutionAddObligor({
     address: term,
-    args: classOfShare && obligor && !hasError(valid)
-        ? [ BigInt(classOfShare), BigInt(obligor)] 
-        :   undefined,
     onSuccess(data) {
       setLoadingAddObl(true);
       let hash: HexType = data.hash;
@@ -124,6 +126,16 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     },    
   });
     
+  const addObligorClick = ()=>{
+    if (obligor)
+      addObligor({
+        args: [ 
+          BigInt(classOfShare), 
+          BigInt(obligor)
+        ], 
+      });
+  };
+
   const [ loadingRemoveObl, setLoadingRemoveObl ] = useState(false);
   const refreshRemoveObl = ()=> {
     setTime(Date.now());
@@ -135,16 +147,23 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: removeObligor 
   } = useAntiDilutionRemoveObligor({
     address: term,
-    args: classOfShare && obligor && !hasError(valid)
-        ? [ BigInt(classOfShare), BigInt(obligor)] 
-        :   undefined, 
     onSuccess(data) {
       setLoadingRemoveObl(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, refreshRemoveObl);
     },    
   });
-    
+
+  const removeObligorClick = ()=>{
+    if (obligor)
+      removeObligor({
+        args: [ 
+          BigInt(classOfShare), 
+          BigInt(obligor)
+        ]  
+      });
+  };
+
   useEffect(()=>{
     if (term != AddrZero) {
       getBenchmarks(term).then(
@@ -258,7 +277,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       <IconButton
                         disabled={ removeMarkIsLoading || hasError(valid) || loadingRemove} 
                         sx={{width: 20, height: 20, mt: 2, mr: 10, }} 
-                        onClick={ () => removeMark?.() }
+                        onClick={ removeMarkClick }
                         color="primary"
                       >
                         <RemoveCircle/>
@@ -273,7 +292,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       <IconButton 
                         disabled={ addObligorIsLoading || loadingAddObl}
                         sx={{width: 20, height: 20, mt: 2, ml: 10,}} 
-                        onClick={ () => addObligor?.() }
+                        onClick={ addObligorClick }
                         color="primary"
                       >
                         <AddCircle/>
@@ -308,7 +327,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       <IconButton
                         disabled={ removeObligorIsLoading || hasError(valid) || loadingRemoveObl} 
                         sx={{width: 20, height: 20, mt: 2, mr: 10}} 
-                        onClick={ () => removeObligor?.() }
+                        onClick={ removeObligorClick }
                         color="primary"
                       >
                         <RemoveCircle/>

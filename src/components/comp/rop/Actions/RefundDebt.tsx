@@ -76,7 +76,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <VolunteerActivismOutlined /> }
-          onClick={()=>refundDebt?.() }
+          onClick={ handleClick }
           size='small'
         >
           Refund Debt

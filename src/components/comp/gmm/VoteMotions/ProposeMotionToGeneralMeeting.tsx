@@ -30,13 +30,18 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }:
     write: proposeMotionToGm,
   } = useGeneralKeeperProposeMotionToGeneralMeeting({
     address: gk,
-    args: [BigInt(seqOfMotion)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    proposeMotionToGm({
+      args: [BigInt(seqOfMotion)],
+    })
+  }
 
   const [ appear, setAppear ] = useState(false);
 
@@ -76,7 +81,7 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }:
             variant="contained"
             endIcon={<EmojiPeople />}
             sx={{ m:1, minWidth:118 }}
-            onClick={()=>proposeMotionToGm?.()}
+            onClick={ handleClick }
           >
             Propose
           </LoadingButton>

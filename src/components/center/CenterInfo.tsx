@@ -249,7 +249,7 @@ export function CenterInfo() {
                         m:1,
                         minWidth:218,
                       }}
-                      value={ longDataParser((platformRule.floor / (10**9)).toFixed(4).toString()) }
+                      value={ longDataParser((platformRule.floor / (10**9)).toFixed(9).toString()) }
                     />
                   </td>
 

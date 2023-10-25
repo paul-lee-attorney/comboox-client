@@ -1,11 +1,11 @@
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx, removeKiloSymbol } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
 
@@ -40,7 +40,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
   const handleClick = ()=>{
     payOffApprovedDeal({
       args: [addr, BigInt(deal.head.seqOfDeal)],
-      value: BigInt(value) * (10n ** 9n),  
+      value: strNumToBigInt(value, 9) * (10n ** 9n),  
     });
   };
 
@@ -52,11 +52,11 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
           <TextField 
             variant='outlined'
-            label='Consideration (GWei)'
+            label='Consideration (ETH)'
             size="small"
             error={ valid['Consideration']?.error }
             helperText={ valid['Consideration']?.helpTx ?? ' ' }
@@ -67,7 +67,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
             value={ value }
             onChange={(e)=>{
               let input = removeKiloSymbol(e.target.value);
-              onlyInt('Consideration', input, 0n, setValid); 
+              onlyNum('Consideration', input, 0n, 9, setValid); 
               setValue(input);
             }}
           />
@@ -76,7 +76,7 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
           disabled = { payOffApprovedDealLoading || deal.body.state > 2 || hasError(valid)}
           loading={loading}
           loadingPosition="end"
-          sx={{ m: 1, minWidth: 218, height: 40 }} 
+          sx={{ m: 1, minWidth: 128, height: 40 }} 
           variant="contained" 
           endIcon={<Payment />}
           onClick={ handleClick }

@@ -2,7 +2,7 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { alongsABI } from "../../generated";
 import { Deal } from "./ia";
-import { strNumToBigInt } from "../common/toolsKit";
+import { bigIntToStrNum, strNumToBigInt } from "../common/toolsKit";
 
 export interface LinkRule{
   triggerDate: number;
@@ -52,8 +52,8 @@ export function convertOrgLinkRule(rule: OrgLinkRule): LinkRule {
     triggerDate: 0,
     effectiveDays: rule.effectiveDays.toString(),
     triggerType: rule.triggerType.toString(),
-    shareRatioThreshold: (rule.shareRatioThreshold / 100).toFixed(2).toString(),
-    rate: (rule.rate / 100).toFixed(2).toString(),
+    shareRatioThreshold: bigIntToStrNum(BigInt(rule.shareRatioThreshold), 2),
+    rate: bigIntToStrNum(BigInt(rule.rate), 2),
     proRata: rule.proRata,
     seq: rule.seq.toString(),
     para: rule.para.toString(),

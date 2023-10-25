@@ -109,7 +109,7 @@ export function ShaLifecycle({sha, finalized}: ShaLifecycleProps) {
                   <Typography>
                     Finalize terms & conditions of SHA (only for Owner of SHA).
                   </Typography>
-                  <FinalizeSha isSha={true} addr={ sha } setIsFinalized={setIsFinalized} setNextStep={ setActiveStep } />
+                  <FinalizeSha addr={ sha } setIsFinalized={setIsFinalized} setNextStep={ setActiveStep } />
                 </StepContent>
 
               </Step>

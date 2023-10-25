@@ -69,13 +69,18 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     write: removeTerm,
   } = useShareholdersAgreementRemoveTerm({
     address: sha,
-    args: !hasError(valid) ? [BigInt(title)] : undefined,
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
       refreshAfterTx(hash, refresh);
     }
   });
+
+  const removeTermClick = ()=>{
+    removeTerm({
+      args: [BigInt(title)],
+    })
+  }
 
   return (
     <>
@@ -130,7 +135,7 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             mr: 5,
           }}
           endIcon={ <Delete /> }
-          onClick={() => removeTerm?.()}
+          onClick={ removeTermClick }
         >
           Remove
         </LoadingButton>

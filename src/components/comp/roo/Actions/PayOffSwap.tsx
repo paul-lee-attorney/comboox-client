@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useState } from "react";
 import { HexType, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
@@ -42,10 +42,9 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           BigInt(seqOfOpt), 
           BigInt(seqOfSwap)
       ],
-    value: BigInt(value) * (10n ** 9n),
+    value:  strNumToBigInt(value, 9) * (10n**9n) ,
     })
   }
-
 
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -72,7 +71,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
         <TextField 
           variant='outlined'
-          label='AmtOfETH (Gwei)'
+          label='Amount (Eth)'
           error={ valid['AmtOfGwei']?.error }
           helperText={ valid['AmtOfGwei']?.helpTx ?? ' ' }  
           sx={{
@@ -81,7 +80,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('AmtOfGwei', input, 0n, setValid);
+            onlyNum('AmtOfGwei', input, 0n, 9, setValid);
             setValue(input);
           }}
           value={ value }

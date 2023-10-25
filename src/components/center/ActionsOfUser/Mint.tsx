@@ -10,7 +10,7 @@ import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyInt, onlyNum } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyInt, onlyNum, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 import { LoadingButton } from '@mui/lab';
 
@@ -60,7 +60,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
     mintPoints({
       args: [ 
         BigInt(to), 
-        BigInt(Number(amt) * (10 ** 9)) * (10n ** 9n)
+        strNumToBigInt(amt, 9) * (10n ** 9n)
       ]
     });
   }

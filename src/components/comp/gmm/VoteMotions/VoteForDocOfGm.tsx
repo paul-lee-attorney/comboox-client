@@ -61,7 +61,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
   return (
     <Stack direction='column' sx={{m:1, p:1, justifyContent:'center'}} >
 
-      <Stack direction={'row'} sx={{m:1, p:1, alignItems:'stretch'}}>
+      <Stack direction={'row'} sx={{m:1, p:1, alignItems:'start'}}>
 
         <FormControl variant="outlined" sx={{ m: 1, minWidth: 120 }}>
           <InputLabel id="attitude-lable">Attitude</InputLabel>
@@ -103,7 +103,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
           loadingPosition="end"
           variant="contained"
           endIcon={<HowToVote />}
-          sx={{ m:1, minWidth:218 }}
+          sx={{ m:1, height:40, minWidth:128 }}
           onClick={ handleClick }
         >
           Cast Vote

@@ -30,13 +30,18 @@ export function QuitPosition({seq, setOpen, refresh}: QuitPositionProps) {
     write: quitPosition,
   } = useGeneralKeeperQuitPosition({
     address: gk,
-    args: [BigInt(seq)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   })
+
+  const handleClick = ()=>{
+    quitPosition({
+      args: [BigInt(seq)],
+    })
+  }
 
   return(
     <LoadingButton
@@ -46,7 +51,7 @@ export function QuitPosition({seq, setOpen, refresh}: QuitPositionProps) {
       variant="outlined"
       color="error" 
       disabled={ quitPositionLoading }
-      onClick={ ()=>quitPosition?.() }
+      onClick={ handleClick }
       endIcon={<FollowTheSigns />}
     >
       Quit

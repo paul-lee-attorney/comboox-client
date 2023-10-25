@@ -24,7 +24,7 @@ import { DateTimeField } from "@mui/x-date-pickers";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../../scripts/comp/ia";
 import { getShare } from "../../../../scripts/comp/ros";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
+import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export interface CreateDealProps{
@@ -84,6 +84,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
           if (res)
             setHead(v => ({
               ...v,
+              priceOfPaid: bigIntToStrNum(BigInt(res.head.priceOfPaid), 2),
+              priceOfPar: bigIntToStrNum(BigInt(res.head.priceOfPar), 2),
               classOfShare: res.head.class.toString(),
               seqOfShare: seq,
               seller: res.head.shareholder.toString(),
@@ -94,6 +96,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
     } else {
       setHead(v => ({
         ...v,
+        priceOfPaid: '0',
+        priceOfPar: '0',
         classOfShare: '0',
         seqOfShare: '0',
         seller: '0',

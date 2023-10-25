@@ -104,13 +104,18 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     write: computeFirstRefusal,
   } = useGeneralKeeperComputeFirstRefusal({
     address: gk,
-    args: [ addr, BigInt(deal.head.seqOfDeal)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const computeClick = ()=>{
+    computeFirstRefusal({
+      args: [ addr, BigInt(deal.head.seqOfDeal)],
+    })
+  }
 
   return (
     <>
@@ -169,7 +174,7 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
                     sx={{ m: 1, minWidth: 168, height: 40 }} 
                     variant="contained" 
                     endIcon={<Calculate />}
-                    onClick={()=> computeFirstRefusal?.()}
+                    onClick={ computeClick }
                     size='small'
                   >
                     Compute

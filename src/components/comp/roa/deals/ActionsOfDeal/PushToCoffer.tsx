@@ -3,7 +3,7 @@ import { Bytes32Zero, HexType } from "../../../../../scripts/common";
 import { defaultDeal } from "../../../../../scripts/comp/ia";
 import dayjs, { Dayjs } from "dayjs";
 import { useGeneralKeeperPushToCoffer } from "../../../../../generated";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { LockClock } from "@mui/icons-material";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
@@ -59,7 +59,7 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
       borderColor:'divider' 
       }} 
     >
-      <Stack direction={'row'} sx={{ alignItems:'center'}} >
+      <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
         <TextField 
           variant='outlined'
@@ -82,6 +82,7 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
         <DateTimeField
           label='ClosingDate'
           size="small"
+          helperText=' '
           sx={{
             m:1,
             minWidth: 218,

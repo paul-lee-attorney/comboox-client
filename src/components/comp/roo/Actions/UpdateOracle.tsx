@@ -132,7 +132,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           sx={{ m: 1, minWidth: 168, height: 40 }} 
           variant="contained" 
           endIcon={ <Update /> }
-          onClick={()=>updateOracle?.() }
+          onClick={ handleClick }
           size='small'
         >
           Update

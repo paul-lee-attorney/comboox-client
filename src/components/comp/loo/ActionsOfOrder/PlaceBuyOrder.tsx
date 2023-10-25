@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useGeneralKeeperPlaceBuyOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../../../scripts/comp/loo";
-import { FormResults, defFormResults, hasError, longDataParser, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../scripts/common/toolsKit";
+import { FormResults, bigIntToStrNum, defFormResults, hasError, longDataParser, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { getCentPrice } from "../../../../scripts/comp/gk";
 import { HexType, MaxData, MaxPrice } from "../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
@@ -44,16 +44,16 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         strNumToBigInt(order.paid, 2),
         strNumToBigInt(order.price, 2),
       ],
-      value: BigInt(value) * (10n ** 9n),
+      value: strNumToBigInt(value, 9) * (10n ** 9n),
     });
   };
 
-  const [ valueOfOrder, setValueOfOrder ] = useState<bigint>(BigInt(0));
+  const [ valueOfOrder, setValueOfOrder ] = useState<bigint>(0n);
   const [ open, setOpen ] = useState<boolean>(false);
   const getValueOfOrder = async () => {
     if ( gk ) {
       let centPrice = await getCentPrice( gk );
-      let output = centPrice * strNumToBigInt(order.paid, 2) * strNumToBigInt(order.price, 2) / BigInt(100);
+      let output = centPrice * strNumToBigInt(order.paid, 2) * strNumToBigInt(order.price, 2) / 100n;
       setValueOfOrder(output);
       setOpen(true);
     }
@@ -68,9 +68,8 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
       }} 
     >
 
-      <Stack direction={'row'} sx={{ alignItems:'center'}} >
+      <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
-          
         <TextField 
           variant='outlined'
           size="small"
@@ -117,7 +116,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
 
         <TextField 
           variant='outlined'
-          label='Consideration (GWei)'
+          label='Consideration (ETH)'
           size="small"
           error={ valid['Consideration']?.error }
           helperText={ valid['Consideration']?.helpTx ?? ' ' }
@@ -128,7 +127,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           value={ value }
           onChange={(e)=>{
             let input = removeKiloSymbol(e.target.value);
-            onlyInt('Consideration', input, 0n, setValid);
+            onlyNum('Consideration', input, 0n, 9, setValid);
             setValue(input);
           }}
         />
@@ -179,7 +178,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
             severity='info'
             sx={{ height: 50,  m: 1, }} 
           >
-            {longDataParser( (valueOfOrder / BigInt(10**9) ).toString() ) + ' (GWei)'}
+            { bigIntToStrNum((valueOfOrder / (10n**9n)), 9) + ' (ETH)'}
           </Alert>
         </Collapse>
 

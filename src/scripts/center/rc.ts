@@ -71,29 +71,6 @@ export interface Locker {
 
 // ==== Locker ====
 
-// export function headOfLockerCodifier(head:HeadOfLocker):HexType {
-//   let sn:HexType = `0x${
-//     (head.from.toString(16).padStart(10, '0')) +
-//     (head.to.toString(16).padStart(10, '0')) +
-//     (head.expireDate.toString(16).padStart(12, '0')) +
-//     (head.value.toString(16).substring(2).padStart(32, '0'))
-//   }`;
-//   return sn;
-// }
-
-// export function headOfLockerParser(sn:HexType):HeadOfLocker {
-
-//   let head:HeadOfLocker = {
-//     from: parseInt(sn.substring(2, 12), 16),
-//     to: parseInt(sn.substring(12, 22), 16),
-//     expireDate: parseInt(sn.substring(22, 34), 16),
-//     value: BigInt(`0x${sn.substring(34, 66)}`),
-//   };
-
-//   return head;
-// }
-
-
 // ==== User ====
 
 export interface StrKey {

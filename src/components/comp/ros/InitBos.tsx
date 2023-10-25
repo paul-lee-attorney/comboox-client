@@ -23,7 +23,7 @@ import dayjs, {Dayjs} from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { InitCompProps } from '../gk/SetCompInfo';
 import { LoadingButton } from '@mui/lab';
 
@@ -59,8 +59,8 @@ export function InitBos({nextStep}: InitCompProps) {
       args: [ 
         codifyHeadOfStrShare(share.head),
         BigInt((share.body.payInDeadline ?? 0)),
-        BigInt((Number(share.body.paid) ?? 0) * 100),
-        BigInt((Number(share.body.par) ?? 0) * 100)
+        strNumToBigInt(share.body.paid, 2),
+        strNumToBigInt(share.body.par, 2),
       ],
     });
   };
@@ -87,8 +87,8 @@ export function InitBos({nextStep}: InitCompProps) {
     delShare({
       args: [ 
         BigInt(share.head.seqOfShare ?? 0), 
-        BigInt((Number(share.body.paid) ?? 0)* 100), 
-        BigInt((Number(share.body.par) ?? 0) * 100) 
+        strNumToBigInt(share.body.paid, 2),
+        strNumToBigInt(share.body.par, 2)
       ],
     });
   };

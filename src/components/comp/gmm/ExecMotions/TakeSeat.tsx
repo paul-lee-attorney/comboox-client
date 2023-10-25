@@ -24,13 +24,18 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionP
     write: takeSeat,
   } = useGeneralKeeperTakeSeat({
     address: gk,
-    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    takeSeat({
+      args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
+    })  
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
@@ -42,7 +47,7 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionP
         variant="contained"
         endIcon={<Chair />}
         sx={{ m:1, mr:6 }}
-        onClick={()=>takeSeat?.()}
+        onClick={ handleClick }
       >
         Take Seat
       </LoadingButton>

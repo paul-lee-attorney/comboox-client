@@ -106,7 +106,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
         size="sm"
         thickness={38}
         value={ allVote.sumOfWeight > 0 
-          ? Number(voteCase.sumOfWeight * BigInt(100) / allVote.sumOfWeight)
+          ? Number(voteCase.sumOfWeight * 100n / allVote.sumOfWeight)
           : 0 }
         sx={{
           '--LinearProgress-radius': '0px',
@@ -132,7 +132,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
             {attitudes[attitude-1].name} Ratio: 
             ({voteCase.sumOfHead}/{allVote.sumOfHead}) 
             {` ${ allVote.sumOfWeight > 0
-                ? Math.round(Number(voteCase.sumOfWeight*BigInt(100) / allVote.sumOfWeight))
+                ? Math.round(Number(voteCase.sumOfWeight * 100n / allVote.sumOfWeight))
                 : 0 
             }%`} 
           </Typography>            
@@ -162,7 +162,7 @@ export function BallotsList({ addr, seqOfMotion, allVote, attitude, voteCase }: 
                 attitudes[attitude-1].name + 
                 ' (' + voteCase.sumOfHead.toString() + '/' + allVote.sumOfHead.toString() + ') ' + 
                 `${ allVote.sumOfWeight > 0
-                  ? Math.round(Number(voteCase.sumOfWeight * BigInt(100) / allVote.sumOfWeight))
+                  ? Math.round(Number(voteCase.sumOfWeight * 100n / allVote.sumOfWeight))
                   : ''
                 }%`              
               }

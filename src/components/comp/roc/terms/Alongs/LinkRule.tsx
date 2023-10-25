@@ -9,13 +9,14 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  Typography,
 } from "@mui/material";
 
 import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { dateParser, longDataParser, toPercent } from "../../../../../scripts/common/toolsKit";
+import { bigIntToStrNum, dateParser, longDataParser, toPercent } from "../../../../../scripts/common/toolsKit";
 import { LinkRule, triggerTypes } from "../../../../../scripts/comp/da";
 
 interface LinkRuleProps {
@@ -50,7 +51,9 @@ export function LinkRule({ rule }: LinkRuleProps) {
         <DialogContent>
 
           <Toolbar sx={{ textDecoration:'underline' }}>
-            <h4> Along Link Rule </h4>
+            <Typography variant="h5" >
+              <b>Along Link Rule</b>
+            </Typography> 
           </Toolbar>
 
           <Paper elevation={3} sx={{ m:1 , p:1, border:1, borderColor:'divider' }}>
@@ -92,7 +95,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ toPercent(rule.shareRatioThreshold.toString()) }              
+                  value={ rule.shareRatioThreshold }              
                 />
 
                 <TextField 
@@ -104,7 +107,7 @@ export function LinkRule({ rule }: LinkRuleProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser((Number(rule.rate) / 100).toString()) }              
+                  value={ rule.rate }              
                 />
 
               </Stack>

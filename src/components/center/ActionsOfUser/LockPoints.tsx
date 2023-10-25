@@ -11,7 +11,7 @@ import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 export interface LockPointsProps{
@@ -53,7 +53,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     lockPoints({
       args:[
         BigInt(head.to),
-        BigInt(Number(amt) * (10 ** 9)),
+        strNumToBigInt(amt, 9),
         BigInt(head.expireDate),
         hashLock
       ]

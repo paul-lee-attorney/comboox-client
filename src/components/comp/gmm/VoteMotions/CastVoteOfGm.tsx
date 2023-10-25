@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   useGeneralKeeperCastVoteOfGm,
@@ -25,7 +25,6 @@ import { HowToVote, } from "@mui/icons-material";
 import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
 import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
 import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
-import { VoteCase, getVoteResult } from "../../../../scripts/common/meetingMinutes";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 import { LoadingButton } from "@mui/lab";
@@ -34,17 +33,8 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
 
   const { gk, boox } = useComBooxContext();
 
-  // const [ voteResult, setVoteResult ] = useState<VoteCase[]>([]);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
-
-  // useEffect(()=>{
-  //   if (boox) {
-  //     getVoteResult(boox[booxMap.GMM], seqOfMotion).then(
-  //       list => setVoteResult(list)
-  //     )
-  //   }
-  // }, [seqOfMotion, boox]);
 
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
@@ -147,7 +137,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
             loadingPosition="end"
             variant="contained"
             endIcon={<HowToVote />}
-            sx={{ m:1, minWidth:128 }}
+            sx={{ m:1, height:40, minWidth:128 }}
             onClick={ handleClick }
           >
             Vote

@@ -31,13 +31,18 @@ export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDe
     write: deleteDeal
   } = useInvestmentAgreementDelDeal({
     address: addr,
-    args: [ BigInt(seqOfDeal) ],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    deleteDeal({
+      args: [ BigInt(seqOfDeal) ],
+    })
+  }
 
   return (
     <LoadingButton
@@ -46,7 +51,7 @@ export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDe
       loadingPosition="end"
       endIcon={<Delete/>} 
       sx={{ mr:5 }}
-      onClick={()=>deleteDeal?.()} 
+      onClick={ handleClick } 
     >
       Delete
     </LoadingButton>

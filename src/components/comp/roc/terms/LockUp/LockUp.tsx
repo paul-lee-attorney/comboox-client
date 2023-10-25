@@ -264,7 +264,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         <IconButton
                           disabled={ removeLockerLoading || hasError(valid) || loadingRemove} 
                           sx={{width: 20, height: 20, mt: 2, mr: 10, }} 
-                          onClick={ () => removeLocker?.() }
+                          onClick={ removeLockerClick }
                           color="primary"
                         >
                           <RemoveCircle/>

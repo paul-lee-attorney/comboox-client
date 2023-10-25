@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
 import { Help } from "@mui/icons-material";
-import { getEthPart, getGWeiPart, getWeiPart, weiToEth } from "../../../../scripts/common/toolsKit";
+import { getEthPart, getGWeiPart, getWeiPart, longDataParser, weiToEth } from "../../../../scripts/common/toolsKit";
 import { checkValueOfDeal } from "../../../../scripts/comp/ia";
 import { SwapsListProps } from "./SwapsList";
 
@@ -51,15 +51,7 @@ export function CheckValueOfDeal({addr, deal}: SwapsListProps) {
           <Paper elevation={3} sx={{ m:1, p:3, border:1, borderColor:'divider' }} >
 
             <Typography variant="h6">
-              {'ETH: ' + getEthPart(value.toString())}
-            </Typography>
-
-            <Typography variant="h6">
-              {'Gwei: ' + getGWeiPart(value.toString())}
-            </Typography>
-
-            <Typography variant="h6">
-              {'Wei: ' + getWeiPart(value.toString())}
+              {'ETH: ' +  longDataParser(weiToEth(value.toString())) }
             </Typography>
 
           </Paper>

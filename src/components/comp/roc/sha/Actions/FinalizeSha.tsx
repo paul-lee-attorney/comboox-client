@@ -12,13 +12,12 @@ import { refreshAfterTx } from '../../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 
 interface FinalizeShaProps {
-  isSha: boolean;
   addr: HexType;
   setIsFinalized: Dispatch<SetStateAction<boolean>>;
   setNextStep: Dispatch<SetStateAction<number>>;
 }
 
-export function FinalizeSha({ isSha, addr, setIsFinalized, setNextStep }: FinalizeShaProps) {
+export function FinalizeSha({ addr, setIsFinalized, setNextStep }: FinalizeShaProps) {
 
   const [ flag, setFlag ] = useState<boolean>(false);
   const [ open, setOpen ] = useState(false);
@@ -56,7 +55,7 @@ export function FinalizeSha({ isSha, addr, setIsFinalized, setNextStep }: Finali
         endIcon={<StopCircleOutlined />}
         onClick={ () => finalizeSha?.() }
       >
-        Finalize
+        Finalize SHA
       </LoadingButton>
 
       <Collapse in={open} sx={{width:"50%"}}>        

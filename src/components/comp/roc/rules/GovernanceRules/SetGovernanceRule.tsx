@@ -527,7 +527,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
 
                   <TextField 
                     variant='outlined'
-                    label='PaymentApprovalThreshold (CBP/ETH)'
+                    label='PaymentThreshold (CBP/ETH)'
                     size='small'
                     error={ valid['FundThreshold']?.error }
                     helperText={ valid['FundThreshold']?.helpTx ?? ' ' }

@@ -25,13 +25,18 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePos
     write: removeDirector,
   } = useGeneralKeeperRemoveDirector({
     address: gk,
-    args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    removeDirector({
+      args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
+    })
+  }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
@@ -43,7 +48,7 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePos
         variant="contained"
         endIcon={<FollowTheSigns />}
         sx={{ m:1, mr:6 }}
-        onClick={()=>removeDirector?.()}
+        onClick={ handleClick }
       >
         Remove Director
       </LoadingButton>
