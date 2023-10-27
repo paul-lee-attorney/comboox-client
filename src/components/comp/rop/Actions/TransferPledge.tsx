@@ -10,7 +10,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   
   const [ buyer, setBuyer ] = useState<string>('0');
   const [ amt, setAmt ] = useState<string>('0');
@@ -29,6 +29,9 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: transferPledge,
   } = useGeneralKeeperTransferPledge({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

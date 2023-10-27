@@ -24,7 +24,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ rules, setRules ] = useState<FirstRefusalRule[]>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -59,6 +59,9 @@ export function ExecFirstRefusal({addr, deal, setOpen, setDeal, refresh}:Actions
     write: execFirstRefusal,
   } = useGeneralKeeperExecFirstRefusal({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

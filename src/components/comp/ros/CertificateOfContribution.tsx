@@ -3,6 +3,7 @@ import { LockerOfPayInCap } from "./LockerOfPayInCap";
 import { centToDollar, dateParser, longDataParser, longSnParser, } from "../../../scripts/common/toolsKit";
 import { Share, codifyHeadOfShare } from "../../../scripts/comp/ros";
 import { Dispatch, SetStateAction } from "react";
+import { ActionsOfCap } from "./ActionsOfCap";
 
 
 export interface CertificateOfContributionProps{
@@ -271,7 +272,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                 <td colSpan={4}>
 
                   {share && (share.body.par != share.body.paid) && (
-                    <LockerOfPayInCap share={share} setDialogOpen={setOpen} refresh={refresh} />
+                    <ActionsOfCap share={share} setDialogOpen={setOpen} refresh={refresh} />
                   )}
 
                 </td>

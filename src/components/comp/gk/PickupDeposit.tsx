@@ -13,7 +13,7 @@ interface PickupDepositProps{
 
 export function PickupDeposit({ refresh }:PickupDepositProps) {
   
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -26,6 +26,9 @@ export function PickupDeposit({ refresh }:PickupDepositProps) {
     write: pickupDeposit,
   } = useGeneralKeeperPickupDeposit({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -10,7 +10,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=>{
@@ -24,6 +24,9 @@ export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSw
   } = useGeneralKeeperPickupPledgedShare({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

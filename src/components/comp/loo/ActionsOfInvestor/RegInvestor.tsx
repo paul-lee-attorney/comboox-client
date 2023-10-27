@@ -11,7 +11,7 @@ import { LoadingButton } from "@mui/lab";
 
 
 export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
   const [ idHash, setIdHash ] = useState<HexType>(Bytes32Zero);
@@ -23,6 +23,9 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
     write:regInvestor,
   } = useGeneralKeeperRegInvestor({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

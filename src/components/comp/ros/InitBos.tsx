@@ -28,7 +28,7 @@ import { InitCompProps } from '../gk/SetCompInfo';
 import { LoadingButton } from '@mui/lab';
 
 export function InitBos({nextStep}: InitCompProps) {
-  const { boox } = useComBooxContext();
+  const { boox, setErrMsg } = useComBooxContext();
 
   const [sharesList, setSharesList] = useState<readonly Share[]>();
   const [share, setShare] = useState<StrShare>(defStrShare);
@@ -47,6 +47,9 @@ export function InitBos({nextStep}: InitCompProps) {
     write: issueShare,
   } = useRegisterOfSharesIssueShare({
     address: boox ? boox[booxMap.ROS] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
@@ -76,6 +79,9 @@ export function InitBos({nextStep}: InitCompProps) {
     write: delShare
   } = useRegisterOfSharesDecreaseCapital({
     address: boox ? boox[booxMap.ROS] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;

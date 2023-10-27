@@ -11,7 +11,7 @@ import { useState } from "react";
 
 
 export function TransferShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -28,6 +28,9 @@ export function TransferShare({ addr, deal, setOpen, setDeal, refresh}: ActionsO
   } = useGeneralKeeperTransferTargetShare({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true)
       let hash: HexType = data.hash;

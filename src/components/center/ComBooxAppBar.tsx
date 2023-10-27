@@ -59,6 +59,7 @@ import { AcctPage } from './AcctPage';
 import { useRouter } from 'next/router';
 import { CopyLongStrSpan } from '../common/utils/CopyLongStr';
 import { GetTimestamp } from '../common/utils/GetTimestamp';
+import { ErrMsg } from '../common/utils/ErrMsg';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -111,7 +112,6 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 type ComBooxAppBarType = {
   children: any
 }
-
 
 export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const { setUserNo, gk, setGK, setBoox } = useComBooxContext();
@@ -326,6 +326,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
       <Main open={ appBarOpen } >
         <DrawerHeader />
         { children }
+        <ErrMsg />
       </Main>
 
     </Box>

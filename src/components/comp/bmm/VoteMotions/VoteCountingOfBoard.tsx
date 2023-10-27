@@ -21,7 +21,7 @@ export interface VoteCountingOfBoard extends ProposeMotionProps {
 
 export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfBoard) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -44,6 +44,9 @@ export function VoteCountingOfBoard({ seqOfMotion, setResult, setNextStep, setOp
   } = useGeneralKeeperVoteCounting({
     address: gk,
     args: [ seqOfMotion ],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

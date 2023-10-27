@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export function PayOffSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -26,6 +26,9 @@ export function PayOffSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps)
   } = useGeneralKeeperPayOffRejectedDeal({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

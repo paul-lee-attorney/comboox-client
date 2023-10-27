@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -25,6 +25,9 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePos
     write: removeDirector,
   } = useGeneralKeeperRemoveDirector({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

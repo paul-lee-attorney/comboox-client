@@ -13,6 +13,7 @@ import { ActionsOfUserProps } from '../ActionsOfUser';
 import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyInt, onlyNum, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 interface Receipt{
   to: string;
@@ -21,18 +22,23 @@ interface Receipt{
 
 export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
+  const { setErrMsg } = useComBooxContext();
+
   const [ to, setTo ] = useState<string>('0');
   const [ amt, setAmt ] = useState<string>('0');
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
-  const [loading, setLoading] = useState(false);
+  const [ loading, setLoading ] = useState(false);
 
   const {
     isLoading: mintPointsLoading,
     write: mintPoints
   } = useRegCenterMint({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       setOpen(false);

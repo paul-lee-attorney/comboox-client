@@ -15,7 +15,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfBoard ) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -39,6 +39,9 @@ export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen,
   } = useGeneralKeeperVoteCountingOfGm({
     address: gk,
     args: [ seqOfMotion ],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true)
       let hash: HexType = data.hash;

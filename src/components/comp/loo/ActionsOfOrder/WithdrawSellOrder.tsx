@@ -12,7 +12,7 @@ import { LoadingButton } from "@mui/lab";
 
 
 export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -28,6 +28,9 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
     write:withdrawSellOrder,
   } = useGeneralKeeperWithdrawSellOrder({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

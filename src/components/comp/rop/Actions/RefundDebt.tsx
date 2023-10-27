@@ -10,7 +10,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   
   const [ amt, setAmt ] = useState<string>('0');
 
@@ -28,6 +28,9 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: refundDebt,
   } = useGeneralKeeperRefundDebt({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

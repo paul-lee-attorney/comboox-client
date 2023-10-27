@@ -5,6 +5,7 @@ import { useAccessControlSetOwner } from "../../../../generated";
 import { AddrZero, HexType } from "../../../../scripts/common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 export interface AccessControlProps{
   docAddr: HexType;
@@ -14,6 +15,8 @@ export interface AccessControlProps{
 
 
 export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -29,6 +32,9 @@ export function SetOwner({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     write: updateOwner,
   } = useAccessControlSetOwner({
     address: docAddr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

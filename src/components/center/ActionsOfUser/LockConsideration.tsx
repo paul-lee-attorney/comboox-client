@@ -12,6 +12,7 @@ import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { LockPointsProps } from './LockPoints';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 
 export interface Selector {
@@ -57,6 +58,8 @@ function calDefaultParas(hashLock:HexType, offSet:number):string[]{
 
 export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPointsProps) {
 
+  const { setErrMsg } = useComBooxContext();
+
   const [ amt, setAmt ] = useState('0');
 
   const [ head, setHead ] = useState<StrHeadOfLocker>(defaultStrHeadOfLocker);
@@ -83,6 +86,9 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     write: lockConsideration,
   } = useRegCenterLockConsideration({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

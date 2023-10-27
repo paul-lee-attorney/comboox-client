@@ -6,8 +6,11 @@ import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ target, setTarget ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -23,6 +26,9 @@ export function TakeBackKeys({docAddr, setDocAddr, setOpen}:AccessControlProps) 
     write: takeBackKeys,
   } = useAccessControlTakeBackKeys({
     address: docAddr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

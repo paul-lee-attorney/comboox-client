@@ -11,6 +11,7 @@ import { Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 
 interface AddTermProps {
@@ -22,6 +23,8 @@ interface AddTermProps {
 
 export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
 
+  const { setErrMsg } = useComBooxContext();
+
   const [ version, setVersion ] = useState<string>('1');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -31,6 +34,9 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     write: createTerm,
   } = useShareholdersAgreementCreateTerm({
     address: sha,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
@@ -69,6 +75,9 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
     write: removeTerm,
   } = useShareholdersAgreementRemoveTerm({
     address: sha,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

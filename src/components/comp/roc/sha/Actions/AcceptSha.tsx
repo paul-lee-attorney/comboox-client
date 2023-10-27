@@ -13,7 +13,7 @@ interface AcceptShaProps {
 
 export function AcceptSha({ setTime }:AcceptShaProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -28,6 +28,9 @@ export function AcceptSha({ setTime }:AcceptShaProps) {
     write
   } = useGeneralKeeperAcceptSha({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

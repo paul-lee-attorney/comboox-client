@@ -13,7 +13,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
   const [ closingDate, setClosingDate ] = useState<number>(0);
@@ -33,6 +33,9 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
     write: pushToCoffer,
   } = useGeneralKeeperPushToCoffer({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true)
       let hash: HexType = data.hash;

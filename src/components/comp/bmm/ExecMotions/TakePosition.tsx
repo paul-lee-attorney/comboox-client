@@ -19,7 +19,7 @@ export interface TakePositionProps extends ProposeMotionProps {
 
 export function TakePosition({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
@@ -34,6 +34,9 @@ export function TakePosition({seqOfMotion, seqOfPos, setOpen, refresh}:TakePosit
   } = useGeneralKeeperTakePosition({
     address: gk,
     args: [seqOfMotion, BigInt(seqOfPos)],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

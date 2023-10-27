@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
   const updateResults = ()=>{
@@ -25,6 +25,9 @@ export function ExecOption({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
   } = useGeneralKeeperExecOption({
     address: gk,
     args: [ BigInt(seqOfOpt) ],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

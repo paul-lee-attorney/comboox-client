@@ -14,7 +14,7 @@ import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "
 
 export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ seqOfPos, setSeqOfPos ] = useState<string>();
   const [ candidate, setCandidate ] = useState<string>();
@@ -32,6 +32,9 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     write: addOfficer,
   } = useGeneralKeeperNominateOfficer({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -62,6 +65,9 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
     write: removeOfficer
   } = useGeneralKeeperCreateMotionToRemoveOfficer({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -24,7 +24,7 @@ import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "
 import { LoadingButton } from "@mui/lab";
 
 function RegisterOfConstitution() {
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
   const [ time, setTime ] = useState(0);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -43,6 +43,9 @@ function RegisterOfConstitution() {
     write: createSha,
   } = useGeneralKeeperCreateSha({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

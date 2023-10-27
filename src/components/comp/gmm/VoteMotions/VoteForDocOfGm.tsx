@@ -20,7 +20,7 @@ interface VoteForDocOfGMProps {
 export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
 
   const [ voteResult, setVoteResult ] = useState<VoteCase[]>();
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ attitude, setAttitude ] = useState<string>('1');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
@@ -41,6 +41,9 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

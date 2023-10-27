@@ -30,8 +30,11 @@ import {
 
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { ParasOfPageProps } from "./ParasOfPage";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 export function BlanksEditor({ addr, initPage, isSha, setTime }: ParasOfPageProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -49,6 +52,9 @@ export function BlanksEditor({ addr, initPage, isSha, setTime }: ParasOfPageProp
     write: addBlank,
   } = useSigPageAddBlank({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAddBlk(true);
       let hash: HexType = data.hash;
@@ -79,6 +85,9 @@ export function BlanksEditor({ addr, initPage, isSha, setTime }: ParasOfPageProp
     write: removeBlank,
   } = useSigPageRemoveBlank({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemoveBlk(true);
       let hash: HexType = data.hash;

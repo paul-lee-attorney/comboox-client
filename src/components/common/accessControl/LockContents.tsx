@@ -13,6 +13,7 @@ import { HexType } from '../../../scripts/common';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 interface LockContentsProps {
   addr: HexType;
@@ -21,6 +22,8 @@ interface LockContentsProps {
 }
 
 export function LockContents({ addr, setIsFinalized, setNextStep }: LockContentsProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -35,6 +38,9 @@ export function LockContents({ addr, setIsFinalized, setNextStep }: LockContents
     write: lockContents,
   } = useAccessControlLockContents({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

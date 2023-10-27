@@ -12,10 +12,13 @@ import { ActionsOfOwner } from "./ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
 import { useWalletClient } from "wagmi";
 import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetFeedRegistryAddress, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../generated";
+import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 
 
 export function CenterInfo() {
-  
+
+  const { setErrMsg } = useComBooxContext();
+
   const { data:signer } = useWalletClient();
 
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
@@ -29,6 +32,9 @@ export function CenterInfo() {
     refetch: getOwner
   } = useRegCenterGetOwner({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setOwner(data);
     }
@@ -38,6 +44,9 @@ export function CenterInfo() {
     refetch: getBookeeper
   } = useRegCenterGetBookeeper({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setKeeper(data);
     }
@@ -47,6 +56,9 @@ export function CenterInfo() {
     refetch: getPlatformRule
   } = useRegCenterGetPlatformRule({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setPlatformRule(data);
     }
@@ -56,6 +68,9 @@ export function CenterInfo() {
     refetch: getCounterOfUsers
   } = useRegCenterCounterOfUsers({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setCounterOfUsers(data);
     }
@@ -65,6 +80,9 @@ export function CenterInfo() {
     refetch: getTotalSupply
   } = useRegCenterTotalSupply({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setTotalSupply(data.toString());
     }
@@ -74,6 +92,9 @@ export function CenterInfo() {
     refetch: getFeedReg
   } = useRegCenterGetFeedRegistryAddress({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setFeedReg(data);
     }

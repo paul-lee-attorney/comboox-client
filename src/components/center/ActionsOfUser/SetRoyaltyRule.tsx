@@ -12,8 +12,11 @@ import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../scripts/ce
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ rule, setRule ] = useState<StrKey>(defaultStrKey);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -30,6 +33,9 @@ export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
     write: setRoyaltyRule
   } = useRegCenterSetRoyaltyRule({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

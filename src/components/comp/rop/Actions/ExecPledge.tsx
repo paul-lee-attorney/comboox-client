@@ -15,7 +15,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
   
   const [ head, setHead ] = useState<StrHead>(defaultStrHead);
   const [ body, setBody ] = useState<StrBody>(defaultStrBody);
@@ -58,6 +58,9 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: execPledge,
   } = useGeneralKeeperExecPledge({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

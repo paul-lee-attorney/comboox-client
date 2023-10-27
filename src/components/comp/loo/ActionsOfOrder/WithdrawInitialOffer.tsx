@@ -11,7 +11,7 @@ import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "
 import { LoadingButton } from "@mui/lab";
 
 export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg} = useComBooxContext();
 
   const [ offer, setOffer ] = useState<InitOffer>(defaultOffer);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -27,6 +27,9 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
     write:withdrawInitOffer,
   } = useGeneralKeeperWithdrawInitialOffer({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

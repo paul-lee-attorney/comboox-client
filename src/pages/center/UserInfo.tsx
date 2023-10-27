@@ -15,7 +15,7 @@ import { balanceOfWei } from "../../scripts/comp/gk";
 
 function UserInfo() {
 
-  const { userNo } = useComBooxContext();
+  const { userNo, setErrMsg } = useComBooxContext();
 
   const [ user, setUser ] = useState<User>();
 
@@ -28,6 +28,9 @@ function UserInfo() {
     abi: regCenterABI,
     functionName: 'getUser',
     account: signer?.account ,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       if (signer) setUser(data);
       else setUser(undefined);
@@ -38,6 +41,9 @@ function UserInfo() {
 
   useRegCenterGetOwner({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(owner) {
       if (owner == signer?.account.address)
         setIsOwner(true);
@@ -51,6 +57,9 @@ function UserInfo() {
     refetch: getLocksList
   } = useRegCenterGetLocksList({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(ls) {
       const obtainLockers = async ()=>{
         let len = ls.length;
@@ -76,6 +85,9 @@ function UserInfo() {
   } = useRegCenterBalanceOf({
     address: AddrOfRegCenter,
     args: user ? [ user.primeKey.pubKey ] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(amt) {
       setBalance(amt.toString());
     }

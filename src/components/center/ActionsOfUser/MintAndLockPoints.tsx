@@ -14,8 +14,11 @@ import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOfUserProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ amt, setAmt ] = useState('0');
 
@@ -36,6 +39,9 @@ export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOf
     write: mintAndLockPoints,
   } = useRegCenterMintAndLockPoints({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

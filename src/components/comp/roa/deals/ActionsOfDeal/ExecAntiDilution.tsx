@@ -11,7 +11,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:ActionsOfDealProps) {
 
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ seqOfShare, setSeqOfShare ] = useState<string>('0');
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
@@ -31,6 +31,9 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
     write: execAntiDilution,
   } = useGeneralKeeperExecAntiDilution({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

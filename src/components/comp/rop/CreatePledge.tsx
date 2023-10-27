@@ -21,7 +21,7 @@ interface CreatePledgeProps{
 
 export function CreatePledge({refresh}:CreatePledgeProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ head, setHead ] = useState<StrHead>(defaultStrHead);
   const [ body, setBody ] = useState<StrBody>(defaultStrBody);
@@ -38,6 +38,9 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
     write: createPledge,
   } = useGeneralKeeperCreatePledge({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

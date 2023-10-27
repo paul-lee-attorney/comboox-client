@@ -49,7 +49,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
   const [ newInfo, setNewInfo] = useState<CompInfo>(defaultInfo);
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ time, setTime ] = useState(0);
   
   const [ loading, setLoading ] = useState(false);
@@ -64,6 +64,9 @@ export function SetCompInfo({nextStep}: InitCompProps) {
     write: setInfo, 
    } = useGeneralKeeperSetCompInfo({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

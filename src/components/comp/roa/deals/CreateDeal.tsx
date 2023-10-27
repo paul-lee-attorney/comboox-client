@@ -34,7 +34,7 @@ export interface CreateDealProps{
 
 export function CreateDeal({addr, refresh}: CreateDealProps) {
 
-  const { boox } = useComBooxContext();
+  const { boox, setErrMsg } = useComBooxContext();
 
   const [ head, setHead ] = useState<StrHead>(defaultStrHead);
   const [ body, setBody ] = useState<StrBody>(defaultStrBody);
@@ -52,6 +52,9 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
     write: addDeal,
   } = useInvestmentAgreementAddDeal({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

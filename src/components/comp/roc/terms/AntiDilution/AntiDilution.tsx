@@ -35,6 +35,7 @@ import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { BenchmarkType, getBenchmarks } from "../../../../../scripts/comp/ad";
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export interface SetShaTermProps {
   sha: HexType,
@@ -44,6 +45,8 @@ export interface SetShaTermProps {
 }
 
 export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ newMarks, setNewMarks ] = useState<BenchmarkType[]>();
 
@@ -64,6 +67,9 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: addMark 
   } = useAntiDilutionAddBenchmark({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
@@ -91,6 +97,9 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: removeMark 
   } = useAntiDilutionRemoveBenchmark({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
@@ -119,6 +128,9 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: addObligor 
   } = useAntiDilutionAddObligor({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAddObl(true);
       let hash: HexType = data.hash;
@@ -147,6 +159,9 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     write: removeObligor 
   } = useAntiDilutionRemoveObligor({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemoveObl(true);
       let hash: HexType = data.hash;

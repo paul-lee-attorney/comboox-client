@@ -31,7 +31,7 @@ export interface ExecActionProps extends ProposeMotionProps {
 
 export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ actions, setActions ] = useState<Action[]>([defaultAction]);
   const [ desHash, setDesHash ] = useState<HexType>();
@@ -50,6 +50,9 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
     write: execAction,
   } = useGeneralKeeperExecAction({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -23,8 +23,11 @@ import { AddrZero, HexType } from '../../../scripts/common';
 import { ATTORNEYS, hasRole } from '../../../scripts/common/accessControl';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { AccessControlProps } from './SetOwner';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export function AppointAttorney({ addr }: AccessControlProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [acct, setAcct] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -47,6 +50,9 @@ export function AppointAttorney({ addr }: AccessControlProps) {
     write: grantRole,
   } = useAccessControlGrantRole({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

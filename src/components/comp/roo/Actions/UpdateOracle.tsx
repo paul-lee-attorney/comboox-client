@@ -22,7 +22,7 @@ const defaultParas:Paras = {
 
 export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [paras, setParas] = useState<Paras>(defaultParas);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -39,6 +39,9 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
     write: updateOracle,
   } = useGeneralKeeperUpdateOracle({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

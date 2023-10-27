@@ -20,7 +20,7 @@ interface VoteCountingProps {
 
 export function VoteCounting({ seqOfMotion, sha, setNextStep }: VoteCountingProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const refresh = ()=> {
@@ -38,6 +38,9 @@ export function VoteCounting({ seqOfMotion, sha, setNextStep }: VoteCountingProp
   } = useGeneralKeeperVoteCountingOfGm({
     address: gk,
     args: seqOfMotion ? [ seqOfMotion ] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

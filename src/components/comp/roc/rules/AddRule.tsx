@@ -6,6 +6,7 @@ import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { FormResults, hasError, refreshAfterTx } from '../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 interface AddRuleProps {
   sha: HexType;
@@ -17,6 +18,8 @@ interface AddRuleProps {
 }
 
 export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: AddRuleProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -31,6 +34,9 @@ export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: Add
     write,
   } = useShareholdersAgreementAddRule({
     address: sha,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

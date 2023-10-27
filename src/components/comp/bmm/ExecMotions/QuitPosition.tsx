@@ -16,7 +16,7 @@ interface QuitPositionProps{
 
 export function QuitPosition({seq, setOpen, refresh}: QuitPositionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -30,6 +30,9 @@ export function QuitPosition({seq, setOpen, refresh}: QuitPositionProps) {
     write: quitPosition,
   } = useGeneralKeeperQuitPosition({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

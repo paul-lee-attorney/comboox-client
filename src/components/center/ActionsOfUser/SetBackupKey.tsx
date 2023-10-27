@@ -11,10 +11,13 @@ import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 
 export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
 
+  const { setErrMsg } = useComBooxContext();
+  
   const [ key, setKey ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [loading, setLoading] = useState(false);
@@ -30,6 +33,9 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
     write: setBackupKey
   } = useRegCenterSetBackupKey({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

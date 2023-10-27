@@ -22,7 +22,7 @@ export const defaultTargetShare: TargetShare = {
 }
 
 export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
@@ -42,6 +42,9 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
     write: execTagAlong,
   } = useGeneralKeeperExecTagAlong({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -29,7 +29,7 @@ import { LoadingButton } from '@mui/lab';
 
 export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
 
-  const { boox } = useComBooxContext();
+  const { boox, setErrMsg } = useComBooxContext();
   const [time, setTime] = useState<number>(0);
   const [max, setMax] = useState<string>('');
   const [inputMax, setInputMax] = useState<string>('50');
@@ -54,6 +54,9 @@ export function SetMaxQtyOfMembers({nextStep}: InitCompProps) {
     write: setMaxQty, 
   } = useRegisterOfMembersSetMaxQtyOfMembers({
     address: boox ? boox[booxMap.ROM] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

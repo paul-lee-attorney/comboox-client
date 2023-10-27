@@ -20,7 +20,7 @@ export interface ProposeMotionProps {
 
 export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -35,6 +35,9 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
   } = useGeneralKeeperProposeMotionToBoard({
     address: gk,
     args: [ seqOfMotion ],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

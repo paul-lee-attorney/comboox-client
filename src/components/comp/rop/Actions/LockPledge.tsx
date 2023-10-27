@@ -10,7 +10,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   
   const [ hashLock, setHashLock ] = useState<HexType>(Bytes32Zero);
 
@@ -28,6 +28,9 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
     write: lockPledge,
   } = useGeneralKeeperLockPledge({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

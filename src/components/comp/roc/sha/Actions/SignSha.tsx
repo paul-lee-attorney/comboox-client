@@ -13,7 +13,7 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
 
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage>();
   
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [sigHash, setSigHash] = useState<HexType>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -30,6 +30,9 @@ export function SignSha({ addr, setNextStep }: FileHistoryProps) {
     write: signSha
   } = useGeneralKeeperSignSha({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -57,9 +57,12 @@ import {
 } from "../../../../../scripts/comp/roo";
 import { getOpts } from "../../../../../scripts/comp/op";
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 
 export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ opts, setOpts ] = useState<readonly OptWrap[]>(); 
   const [ open, setOpen ] = useState(false);
@@ -82,6 +85,9 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addOpt
   } = useOptionsCreateOption({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
@@ -110,6 +116,9 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeOpt, 
   } = useOptionsDelOption({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
@@ -134,6 +143,9 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addObligor, 
   } = useOptionsAddObligorIntoOpt({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAddObr(true);
       let hash: HexType = data.hash;
@@ -159,6 +171,9 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeObligor 
   } = useOptionsRemoveObligorFromOpt({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemoveObr(true);
       let hash: HexType = data.hash;

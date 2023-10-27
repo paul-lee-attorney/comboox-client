@@ -10,7 +10,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ seqOfTarget, setSeqOfTarget ] = useState<string>('0');
   const [ paidOfTarget, setPaidOfTarget ] = useState<string>('0');
@@ -30,6 +30,9 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
     write: createSwap,
   } = useGeneralKeeperCreateSwap({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

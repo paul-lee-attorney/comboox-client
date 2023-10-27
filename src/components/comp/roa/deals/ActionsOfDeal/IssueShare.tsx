@@ -11,7 +11,7 @@ import { useState } from "react";
 
 
 export function IssueShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -26,6 +26,9 @@ export function IssueShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDe
     write: issueNewShare
   } = useGeneralKeeperIssueNewShare({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

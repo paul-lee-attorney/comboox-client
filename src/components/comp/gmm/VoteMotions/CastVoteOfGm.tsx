@@ -31,7 +31,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -49,6 +49,9 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
     write: castVote,
   } = useGeneralKeeperCastVoteOfGm({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

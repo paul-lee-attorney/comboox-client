@@ -10,6 +10,7 @@ import { HexType } from '../../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { refreshAfterTx } from '../../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../../../scripts/common/ComBooxContext';
 
 interface FinalizeShaProps {
   addr: HexType;
@@ -18,6 +19,8 @@ interface FinalizeShaProps {
 }
 
 export function FinalizeSha({ addr, setIsFinalized, setNextStep }: FinalizeShaProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ flag, setFlag ] = useState<boolean>(false);
   const [ open, setOpen ] = useState(false);
@@ -36,6 +39,9 @@ export function FinalizeSha({ addr, setIsFinalized, setNextStep }: FinalizeShaPr
     write: finalizeSha,
   } = useShareholdersAgreementFinalizeSha({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

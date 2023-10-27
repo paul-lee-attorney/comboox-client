@@ -15,13 +15,16 @@ interface GetVotingRuleProps{
 }
 
 export function GetVotingRule({seq}: GetVotingRuleProps) {
-  const { boox } = useComBooxContext();
+  const { boox, setErrMsg } = useComBooxContext();
 
   const [ objVr, setObjVr] = useState<VotingRule>();
   const [ open, setOpen ] = useState(false);
   
   useRegisterOfConstitutionPointer({
     address: boox ? boox[booxMap.ROC] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(res) {
       if (res != AddrZero)
         getRule(res, seq).then(

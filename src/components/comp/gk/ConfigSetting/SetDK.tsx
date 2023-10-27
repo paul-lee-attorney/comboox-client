@@ -6,8 +6,11 @@ import { AddrZero, HexType } from "../../../../scripts/common";
 import { AccessControlProps } from "./SetOwner";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ keeper, setKeeper ] = useState<HexType>(AddrZero);
 
@@ -24,6 +27,9 @@ export function SetDK({docAddr, setDocAddr, setOpen}:AccessControlProps) {
     write: updateDK,
   } = useAccessControlSetDirectKeeper({
     address: docAddr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

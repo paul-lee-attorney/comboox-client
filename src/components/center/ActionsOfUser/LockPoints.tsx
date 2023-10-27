@@ -13,6 +13,7 @@ import dayjs from 'dayjs';
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export interface LockPointsProps{
   refreshList: ()=>void;
@@ -21,6 +22,8 @@ export interface LockPointsProps{
 }
 
 export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ amt, setAmt ] = useState('0');
 
@@ -42,6 +45,9 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     write: lockPoints,
   } = useRegCenterLockPoints({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

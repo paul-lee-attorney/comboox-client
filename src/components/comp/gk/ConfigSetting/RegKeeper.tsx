@@ -10,7 +10,7 @@ import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 
 export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps) {
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -25,6 +25,9 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
     write: regKeeper,
   } = useGeneralKeeperRegKeeper({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

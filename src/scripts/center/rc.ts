@@ -69,6 +69,17 @@ export interface Locker {
   body: BodyOfLocker;
 }
 
+
+export interface BodyOfOrgLocker {
+  counterLocker: HexType;
+  payload: HexType;
+}
+export interface OrgLocker {
+  head: HeadOfLocker;
+  body: BodyOfOrgLocker;
+}
+
+
 // ==== Locker ====
 
 // ==== User ====
@@ -477,6 +488,27 @@ export function parasParser(input: string):string[] {
   return out;
 }
 
+export function parseOrgLocker(hashLock: HexType, input: OrgLocker): StrLocker {
+
+  let lk: StrLocker = {
+    hashLock: hashLock,
+    head: {
+      from: input.head.from.toString(),
+      to: input.head.to.toString(),
+      expireDate: input.head.expireDate,
+      value: input.head.value.toString(),
+    },
+    body: 
+      { 
+        counterLocker: input.body.counterLocker,
+        selector: `0x${input.body.payload.substring(2,10)}`,
+        paras: parasParser(input.body.payload.substring(10)),
+      }
+  };
+
+  return lk;
+}
+
 export async function getLocker(hashLock: HexType): Promise<StrLocker>{
   let res = await readContract({
     address: AddrOfRegCenter,
@@ -485,23 +517,7 @@ export async function getLocker(hashLock: HexType): Promise<StrLocker>{
     args: [ hashLock ]
   });
 
-  let locker:StrLocker = {
-    hashLock: hashLock,
-    head: {
-      from: res.head.from.toString(),
-      to: res.head.to.toString(),
-      expireDate: res.head.expireDate,
-      value: res.head.value.toString(),
-    },
-    body: 
-      { 
-        counterLocker: res.body.counterLocker,
-        selector: `0x${res.body.payload.substring(2,10)}`,
-        paras: parasParser(res.body.payload.substring(10)),
-      }
-  }
-
-  return locker;
+  return parseOrgLocker( hashLock, res);
 }
 
 export async function getLocksList(): Promise<readonly HexType[]>{

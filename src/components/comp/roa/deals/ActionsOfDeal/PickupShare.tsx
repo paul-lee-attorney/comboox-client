@@ -10,7 +10,7 @@ import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function PickupShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ hashKey, setHashKey ] = useState<string>('Input your key string here');
   const [ loading, setLoading ] = useState(false);
@@ -27,6 +27,9 @@ export function PickupShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfD
     write: closeDeal
   } = useGeneralKeeperCloseDeal({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

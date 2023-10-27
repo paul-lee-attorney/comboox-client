@@ -11,8 +11,11 @@ import { useState } from 'react';
 import { getReceipt } from '../../../scripts/common/common';
 import { FormResults, defFormResults, hasError, longSnParser, onlyInt } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export function TransferIPR() {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ typeOfDoc, setTypeOfDoc ] = useState<string>('0');
   const [ version, setVersion ] = useState<string>('0');
@@ -29,6 +32,9 @@ export function TransferIPR() {
     write: transferIPR
   } = useRegCenterTransferIpr({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

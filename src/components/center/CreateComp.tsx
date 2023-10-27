@@ -18,7 +18,7 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex } from '../..
 import { waitForTransaction } from '@wagmi/core';
 
 export function CreateComp() {
-  const { setGK } = useComBooxContext();
+  const { setGK, setErrMsg } = useComBooxContext();
   const router = useRouter();
 
   const [ dk, setDK ] = useState<HexType>();
@@ -31,6 +31,9 @@ export function CreateComp() {
     write: createComp,
   } = useRegCenterCreateComp({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

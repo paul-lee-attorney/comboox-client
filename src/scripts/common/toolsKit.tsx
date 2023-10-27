@@ -255,10 +255,13 @@ export function strNumToBigInt(input:string, dec:number): bigint {
   } else return 0n;
 }
 
-export function onlyNum(id: string, input: string, max:bigint, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {
+export function isNum(input: string): boolean {
   let reg = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
-  let error: boolean = !reg.test(input);
+  return reg.test(input);
+}
 
+export function onlyNum(id: string, input: string, max:bigint, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {
+  let error: boolean = !isNum(input);
   let tailTooLong: boolean = error
                         ? false
                         : maxDec == 0 || input.indexOf('.') < 0
@@ -289,9 +292,13 @@ export function onlyNum(id: string, input: string, max:bigint, maxDec: number, s
   });
 }
 
-export function onlyHex(id: string, input: string, len: number, setValid:Dispatch<SetStateAction<FormResults>>){
+export function isHex(input: string): boolean {
   let reg = /^((0x|\$)[a-f0-9A-F]+)$/;
-  let error: boolean = !reg.test(input);
+  return reg.test(input);
+}
+
+export function onlyHex(id: string, input: string, len: number, setValid:Dispatch<SetStateAction<FormResults>>){
+  let error: boolean = !isHex(input);
   let overflow: boolean = error
                         ? false
                         : len == 0

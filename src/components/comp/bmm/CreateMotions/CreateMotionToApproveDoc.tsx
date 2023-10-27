@@ -14,7 +14,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ doc, setDoc ] = useState<HexType>();
   const [ seqOfVr, setSeqOfVr ] = useState<string>();
@@ -34,6 +34,9 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
     write: proposeDoc,
   } = useGeneralKeeperCreateMotionToApproveDoc({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

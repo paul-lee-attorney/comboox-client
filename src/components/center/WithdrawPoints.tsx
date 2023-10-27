@@ -10,6 +10,7 @@ import { Undo } from '@mui/icons-material';
 import { refreshAfterTx } from '../../scripts/common/toolsKit';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 
 interface WithdrawPointsProps{
   hashLock: HexType;
@@ -19,6 +20,8 @@ interface WithdrawPointsProps{
 }
 
 export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:WithdrawPointsProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [loading, setLoading] = useState(false);
 
@@ -34,6 +37,9 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
     write: withdrawPoints
   } = useRegCenterWithdrawPoints({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

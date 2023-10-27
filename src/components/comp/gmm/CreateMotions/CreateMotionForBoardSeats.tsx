@@ -14,7 +14,7 @@ import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "
 
 export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ seqOfPos, setSeqOfPos ] = useState<string>();
   const [ candidate, setCandidate ] = useState<string>();
@@ -32,6 +32,9 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
     write: addDirector,
   } = useGeneralKeeperNominateDirector({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
@@ -61,6 +64,9 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
     write: removeDirector
   } = useGeneralKeeperCreateMotionToRemoveDirector({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;

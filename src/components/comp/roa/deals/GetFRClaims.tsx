@@ -14,7 +14,7 @@ import { HexType, booxMap } from "../../../../scripts/common";
 import { LoadingButton } from "@mui/lab";
 
 export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ claims, setClaims ] = useState<readonly FRClaim[]>([]);
   const [ appear, setAppear ] = useState(false);
@@ -104,6 +104,9 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     write: computeFirstRefusal,
   } = useGeneralKeeperComputeFirstRefusal({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

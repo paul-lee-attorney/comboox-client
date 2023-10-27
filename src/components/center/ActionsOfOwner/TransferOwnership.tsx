@@ -11,9 +11,12 @@ import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 
 export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ newOwner, setNewOwner ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -30,10 +33,13 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
     write: transferOwnership
   } = useRegCenterTransferOwnership({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 

@@ -22,6 +22,7 @@ import {
 } from "../../../../../generated";
 import { HexType } from "../../../../../scripts/common";
 import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export interface VotingRuleWrap {
   subTitle: string,
@@ -37,6 +38,8 @@ export interface GroupRulesSettingProps {
 }
 
 export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const mandatoryRules: number[] = [1,2,3,4,5,6,7,8,9,10,11,12];
 
@@ -86,6 +89,9 @@ export function VotingRules({sha, initSeqList, isFinalized, time, refresh}: Grou
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: [BigInt(cp[cp.length - 1])],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -24,8 +24,11 @@ import { SetListingRule } from "./SetListingRule";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 import { HexType } from "../../../../../scripts/common";
 import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const mandatoryRule: number[] = isFinalized ? [] : [1024];
   const [ cp, setCp ] = useState(mandatoryRule);
@@ -74,6 +77,9 @@ export function ListingRules({sha, initSeqList, isFinalized, time, refresh}: Gro
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: cp && cp.length > 0 ? [BigInt(cp[cp.length - 1])] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -12,6 +12,7 @@ import { getReceipt } from '../../../scripts/common/common';
 import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyNum, strNumToBigInt } from '../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 interface Receipt{
   from: string;
@@ -20,6 +21,8 @@ interface Receipt{
 }
 
 export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ to, setTo ] = useState<HexType>(AddrZero);
   const [ amt, setAmt ] = useState('0');
@@ -36,6 +39,9 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
     write: transferPoints
   } = useRegCenterTransfer({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

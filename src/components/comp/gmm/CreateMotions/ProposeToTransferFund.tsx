@@ -32,7 +32,7 @@ export const defaultParasOfTransfer: ParasOfTransfer = {
 
 export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
   const [ seqOfVR, setSeqOfVR ] = useState<string>('9');
@@ -51,6 +51,9 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
     write: proposeToTransferFund
   } = useGeneralKeeperProposeToTransferFund({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

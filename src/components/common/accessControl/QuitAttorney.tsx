@@ -17,8 +17,11 @@ import { ATTORNEYS } from '../../../scripts/common/accessControl';
 import { HexType } from '../../../scripts/common';
 import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export function QuitAttorney({ addr }: AccessControlProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ flag, setFlag ] = useState(false);
   const [ open, setOpen ] = useState(false);
@@ -37,6 +40,9 @@ export function QuitAttorney({ addr }: AccessControlProps) {
   } = useAccessControlRenounceRole({
     address: addr,
     args: [ ATTORNEYS ],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

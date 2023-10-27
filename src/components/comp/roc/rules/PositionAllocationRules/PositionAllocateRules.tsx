@@ -23,8 +23,11 @@ import { SetPositionAllocateRule } from "./SetPositionAllocateRule";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 import { HexType } from "../../../../../scripts/common";
 import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const mandatoryRules: number[] = isFinalized ? [] : [256];
   const [ cp, setCp ] = useState<number[]>(mandatoryRules);
@@ -65,6 +68,9 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refr
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: cp && cp.length > 0 ? [BigInt(cp[cp.length - 1])] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

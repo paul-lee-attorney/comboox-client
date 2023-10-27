@@ -11,7 +11,7 @@ import { LoadingButton } from "@mui/lab";
 
 
 export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ userNo, setUserNo ] = useState<string>(acct);
   const [ seqOfLR, setSeqOfLR ] = useState<string>('1024');
@@ -29,6 +29,9 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
     write:approveInvestor,
   } = useGeneralKeeperApproveInvestor({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

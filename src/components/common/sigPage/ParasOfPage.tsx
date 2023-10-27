@@ -23,6 +23,7 @@ import { ParasOfSigPage, defParasOfSigPage, getParasOfPage, parseParasOfPage } f
 import { FormResults, dateParser, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { SigPageProps } from "./Signatures";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 export interface ParasOfPageProps extends SigPageProps {
   time: number;
@@ -30,6 +31,8 @@ export interface ParasOfPageProps extends SigPageProps {
 }
 
 export function ParasOfPage({ addr, initPage, finalized, time, setTime }: ParasOfPageProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ parasOfPage, setParasOfPage ] = useState<ParasOfSigPage >(defParasOfSigPage);
 
@@ -66,6 +69,9 @@ export function ParasOfPage({ addr, initPage, finalized, time, setTime }: ParasO
     write: writeSetTiming,
   } = useSigPageSetTiming({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

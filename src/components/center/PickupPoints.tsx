@@ -10,6 +10,7 @@ import { Redo } from '@mui/icons-material';
 import { useState } from 'react';
 import { refreshAfterTx } from '../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../scripts/common/ComBooxContext';
 
 interface PickupPointsProps{
   hashLock: HexType;
@@ -19,6 +20,8 @@ interface PickupPointsProps{
 }
 
 export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPointsProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ hashKey, setHashKey ] = useState<string>();
   const [ loading, setLoading ] = useState(false);
@@ -35,6 +38,9 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
     write: pickupPoints
   } = useRegCenterPickupPoints({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

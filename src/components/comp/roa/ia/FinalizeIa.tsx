@@ -13,6 +13,7 @@ import { HexType } from '../../../../scripts/common';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { refreshAfterTx } from '../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 interface FinalizeIaProps {
   addr: HexType;
@@ -21,6 +22,8 @@ interface FinalizeIaProps {
 }
 
 export function FinalizeIa({ addr, setIsFinalized, setNextStep }: FinalizeIaProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ flag, setFlag ] = useState<boolean>(false);
   const [ open, setOpen ] = useState(false);
@@ -38,6 +41,9 @@ export function FinalizeIa({ addr, setIsFinalized, setNextStep }: FinalizeIaProp
     write: finalizeIa,
   } = useInvestmentAgreementFinalizeIa({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -11,7 +11,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) {
 
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ paidOfTarget, setPaidOfTarget ] = useState<string>('0');
   const [ seqOfPledge, setSeqOfPledge ] = useState<string>('0');
@@ -29,6 +29,9 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
     write: requestToBuy,
   } = useGeneralKeeperRequestToBuy({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true)
       let hash: HexType = data.hash;

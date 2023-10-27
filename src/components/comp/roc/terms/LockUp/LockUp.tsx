@@ -38,9 +38,12 @@ import { AddTerm } from "../AddTerm";
 import { LockerOfShare } from "./LockerOfShare";
 import { Locker, getLockers } from "../../../../../scripts/comp/lu";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 
 export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ lockers, setLockers ] = useState<Locker[]>([]);
   const [ seqOfShare, setSeqOfShare ] = useState<string>('0');
@@ -61,6 +64,9 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addLocker 
   } = useLockUpSetLocker({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
@@ -88,6 +94,9 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeLocker 
   } = useLockUpDelLocker({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
@@ -114,6 +123,9 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: addKeyholder,
   } = useLockUpAddKeyholder({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAddKlr(true);
       let hash: HexType = data.hash;
@@ -141,6 +153,9 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
     write: removeKeyholder,
   } = useLockUpRemoveKeyholder({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemoveKlr(true);
       let hash: HexType = data.hash;

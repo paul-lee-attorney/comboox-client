@@ -44,12 +44,15 @@ import { CopyLongStrSpan } from "../../../../common/utils/CopyLongStr";
 import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "../../../../../scripts/comp/da";
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 interface AlongsProps extends SetShaTermProps {
   seqOfTitle: number;
 }
 
 export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ links, setLinks ] = useState<AlongLink[]>([]);
   const [ drager, setDrager ] = useState<string>('0');
@@ -70,6 +73,9 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: addLink 
   } = useAlongsAddDragger({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAdd(true);
       let hash: HexType = data.hash;
@@ -97,6 +103,9 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: removeLink, 
   } = useAlongsRemoveDragger({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemove(true);
       let hash: HexType = data.hash;
@@ -123,6 +132,9 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: addFollower, 
   } = useAlongsAddFollower({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingAddFlr(true);
       let hash: HexType = data.hash;
@@ -150,6 +162,9 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
     write: removeFollower 
   } = useAlongsRemoveFollower({
     address: term,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRemoveFlr(true);
       let hash: HexType = data.hash;

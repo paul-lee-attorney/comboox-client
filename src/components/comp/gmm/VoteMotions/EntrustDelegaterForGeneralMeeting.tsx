@@ -14,7 +14,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ delegater, setDelegater ] = useState<string>('0');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -31,6 +31,9 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
     write: entrustDelegaterOfMember,
   } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

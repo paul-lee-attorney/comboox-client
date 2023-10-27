@@ -6,6 +6,7 @@ import { Button } from "@mui/material";
 import { Delete } from "@mui/icons-material";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 
 interface DeleteDealProps {
@@ -17,6 +18,8 @@ interface DeleteDealProps {
 }
 
 export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDealProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -31,6 +34,9 @@ export function DeleteDeal({addr, seqOfDeal, setOpen, setDeal, refresh}:DeleteDe
     write: deleteDeal
   } = useInvestmentAgreementDelDeal({
     address: addr,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

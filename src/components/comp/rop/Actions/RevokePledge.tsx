@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -25,6 +25,9 @@ export function RevokePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   } = useGeneralKeeperRevokePledge({
     address: gk,
     args: [BigInt(pld.head.seqOfShare), BigInt(pld.head.seqOfPld)],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

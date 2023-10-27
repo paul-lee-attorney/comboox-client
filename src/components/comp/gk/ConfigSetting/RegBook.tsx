@@ -18,7 +18,7 @@ export interface RegBookProps{
 
 
 export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) {
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -33,6 +33,9 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
     write: regBook,
   } = useGeneralKeeperRegBook({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -14,7 +14,7 @@ import { CopyLongStrSpan } from "../../../common/utils/CopyLongStr";
 import { LoadingButton } from "@mui/lab";
 
 export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ claims, setClaims ] = useState<readonly DTClaim[]>([]);
   const [ appear, setAppear ] = useState(false);
@@ -122,6 +122,9 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     write: acceptAlongDeal,
   } = useGeneralKeeperAcceptAlongDeal({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

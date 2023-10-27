@@ -15,7 +15,7 @@ export interface ConfigSettingProps{
 }
 
 export function SetCompInfo({setOpen}:ConfigSettingProps) {
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
   const [ loading, setLoading ] = useState(false);
@@ -30,6 +30,9 @@ export function SetCompInfo({setOpen}:ConfigSettingProps) {
     write: setInfo, 
    } = useGeneralKeeperSetCompInfo({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

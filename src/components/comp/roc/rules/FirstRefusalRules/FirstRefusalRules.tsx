@@ -21,8 +21,11 @@ import { useShareholdersAgreementRemoveRule } from "../../../../../generated";
 import { GroupRulesSettingProps } from "../VotingRules/VotingRules";
 import { HexType } from "../../../../../scripts/common";
 import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 
 export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}: GroupRulesSettingProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const mandatoryRules = [512, 513];
 
@@ -76,6 +79,9 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
   } = useShareholdersAgreementRemoveRule({
     address: sha,
     args: [BigInt(cp[cp.length - 1] ?? '513')],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

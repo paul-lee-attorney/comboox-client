@@ -13,7 +13,7 @@ import { useState } from "react";
 
 export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ loading, setLoading ] = useState(false);
 
@@ -28,6 +28,9 @@ export function ActivateSha({ addr, setNextStep }: FileHistoryProps) {
   } = useGeneralKeeperActivateSha({
     address: gk,
     args: [ addr ],
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

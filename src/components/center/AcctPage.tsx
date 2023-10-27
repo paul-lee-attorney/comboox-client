@@ -18,7 +18,7 @@ export function AcctPage({ flag }:AcctPageProps) {
 
   const { data: signer } = useWalletClient();
 
-  const { userNo, setUserNo } = useComBooxContext();
+  const { userNo, setUserNo, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const {
@@ -26,6 +26,9 @@ export function AcctPage({ flag }:AcctPageProps) {
   } = useRegCenterGetMyUserNo({
     address: AddrOfRegCenter,
     account: signer?.account,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(res) {
       if (signer) setUserNo(res);
       else setUserNo(undefined);
@@ -42,6 +45,9 @@ export function AcctPage({ flag }:AcctPageProps) {
     write: regUser
   } = useRegCenterRegUser({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;

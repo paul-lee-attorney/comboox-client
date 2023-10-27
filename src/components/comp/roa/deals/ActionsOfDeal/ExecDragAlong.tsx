@@ -11,7 +11,7 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onl
 import { LoadingButton } from "@mui/lab";
 
 export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
-  const {gk} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ targetShare, setTargetShare ] = useState<TargetShare>(defaultTargetShare);
   const [ sigHash, setSigHash ] = useState<HexType>(Bytes32Zero);
@@ -31,6 +31,9 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
     write: execDragAlong,
   } = useGeneralKeeperExecDragAlong({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

@@ -27,7 +27,7 @@ import { InitCompProps } from './SetCompInfo';
 import { LoadingButton } from '@mui/lab';
 
 export function TurnKey({ nextStep }:InitCompProps) {
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
   const [ time, setTime ] = useState(0);
 
   const [romKeeper, setRomKeeper] = useState<HexType>();
@@ -54,6 +54,9 @@ export function TurnKey({ nextStep }:InitCompProps) {
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[booxMap.ROM] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRom(true);
       let hash: HexType = data.hash;
@@ -85,6 +88,9 @@ export function TurnKey({ nextStep }:InitCompProps) {
   } = useAccessControlSetDirectKeeper({
     address: boox ? boox[booxMap.ROS] : undefined,
     args: romKeeper ? [ romKeeper ] : undefined,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoadingRos(true);
       let hash: HexType = data.hash;

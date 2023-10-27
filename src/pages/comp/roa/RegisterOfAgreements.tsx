@@ -24,7 +24,7 @@ import { refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 function RegisterOfAgreements() {
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
   const [ time, setTime ] = useState(0);
   const [ loading, setLoading ] = useState(false);
 
@@ -42,6 +42,9 @@ function RegisterOfAgreements() {
     write: createIa,
   } = useGeneralKeeperCreateIa({
     address: gk,
+    onError(err){
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

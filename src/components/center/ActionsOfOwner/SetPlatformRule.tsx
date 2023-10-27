@@ -12,8 +12,11 @@ import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../scripts
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ rule, setRule ] = useState<StrRule>(defaultStrRule);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -30,6 +33,9 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
     write: setPlatformRule
   } = useRegCenterSetPlatformRule({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;

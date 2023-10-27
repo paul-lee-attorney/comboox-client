@@ -11,9 +11,12 @@ import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 
 export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
+
+  const { setErrMsg } = useComBooxContext();
 
   const [ newFeed, setNewFeed ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -30,17 +33,19 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
     write: setFeedReg
   } = useRegCenterSetFeedRegistry({
     address: AddrOfRegCenter,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 
   const setFeedRegClick = ()=>{
     setFeedReg({args:[newFeed]});
   }
-
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >

@@ -15,7 +15,7 @@ import { LoadingButton } from "@mui/lab";
 
 export function CreateMotionForAction({refresh}:CreateMotionProps) {
 
-  const { gk } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ seqOfVr, setSeqOfVr ] = useState<string>();
   const [ executor, setExecutor ] = useState<string>();
@@ -32,6 +32,9 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
     write: proposeAction,
   } = useGeneralKeeperCreateActionOfGm({
     address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
