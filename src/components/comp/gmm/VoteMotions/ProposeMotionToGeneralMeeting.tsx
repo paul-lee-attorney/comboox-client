@@ -80,7 +80,7 @@ export function ProposeMotionToGeneralMeeting({ seqOfMotion, setOpen, refresh }:
             loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
-            sx={{ m:1, minWidth:118 }}
+            sx={{ m:1, minWidth:128 }}
             onClick={ handleClick }
           >
             Propose

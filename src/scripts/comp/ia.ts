@@ -54,8 +54,8 @@ export const defaultStrHead: StrHead = {
   classOfShare: '0',
   seqOfShare: '0',
   seller: '0',
-  priceOfPaid: '100',
-  priceOfPar: '100',
+  priceOfPaid: '0.00',
+  priceOfPar: '0.00',
   closingDeadline: 0,
   votingWeight: '100',  
 }
@@ -73,41 +73,6 @@ export interface Head {
   votingWeight: number,
 }
 
-// export function convertHead(head: StrHead):Head {
-//   let out:Head = {
-//     typeOfDeal: Number(head.typeOfDeal),
-//     seqOfDeal: Number(head.seqOfDeal),
-//     preSeq: Number(head.preSeq),
-//     classOfShare: Number(head.classOfShare),
-//     seqOfShare: Number(head.seqOfShare),
-//     seller: Number(head.seller),
-//     priceOfPaid: Number(head.priceOfPaid),
-//     priceOfPar: Number(head.priceOfPar),
-//     closingDeadline: Number(head.closingDeadline),
-//     votingWeight: Number(head.votingWeight),    
-//   };
-
-//   return out;
-// }
-
-// export function parseOrgHead(head: Head):StrHead {
-//   let out:StrHead = {
-//     typeOfDeal: head.typeOfDeal.toString(),
-//     seqOfDeal: head.seqOfDeal.toString(),
-//     preSeq: head.preSeq.toString(),
-//     classOfShare: head.classOfShare.toString(),
-//     seqOfShare: head.seqOfShare.toString(),
-//     seller: head.seller.toString(),
-//     priceOfPaid: head.priceOfPaid.toString(),
-//     priceOfPar: head.priceOfPar.toString(),
-//     closingDeadline: head.closingDeadline.toString(),
-//     votingWeight: head.votingWeight.toString(),    
-//   };
-
-//   return out;
-// }
-
-
 export const defaultHead: Head = {
   typeOfDeal: 2,
   seqOfDeal: 0,
@@ -115,8 +80,8 @@ export const defaultHead: Head = {
   classOfShare: 0,
   seqOfShare: 0,
   seller: 0,
-  priceOfPaid: 100,
-  priceOfPar: 100,
+  priceOfPaid: 1,
+  priceOfPar: 1,
   closingDeadline: 0,
   votingWeight: 100,  
 }

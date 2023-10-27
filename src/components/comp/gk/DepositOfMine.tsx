@@ -2,7 +2,7 @@ import { Alert, Collapse, IconButton, Stack, Tooltip } from "@mui/material";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { Close, HelpOutline, } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { getEthPart, getGEthPart, getGWeiPart, getWeiPart } from "../../../scripts/common/toolsKit";
+import { bigIntToStrNum, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longSnParser } from "../../../scripts/common/toolsKit";
 import { depositOfMine } from "../../../scripts/comp/gk";
 
 
@@ -10,12 +10,12 @@ export function DepositOfMine() {
   
   const { gk, userNo } = useComBooxContext();
 
-  const [ deposit, setDeposit ] = useState<string>('0');
+  const [ deposit, setDeposit ] = useState<bigint>(0n);
 
   useEffect(()=>{
     if (gk && userNo) {
       depositOfMine(gk, userNo).then(
-        res => setDeposit(res.toString())
+        res => setDeposit(res)
       );
     }
   }, [ gk, userNo ]);
@@ -63,7 +63,7 @@ export function DepositOfMine() {
           severity='info' 
           sx={{ height: 45, p:0.5 }} 
         >
-          Deposit of {userNo}: {getGEthPart(deposit) != '-' ? getGEthPart(deposit) + 'GEth, ' : ''} {getEthPart(deposit) != '-' ? getEthPart(deposit) + 'Eth, ' : ''} { getGWeiPart(deposit) != '-' ? getGWeiPart(deposit) + 'GWei, ' : ''} {getWeiPart(deposit) + 'Wei'}
+          Deposit of User ({longSnParser((userNo ?? 0).toString())}) : { bigIntToStrNum((deposit / (10n**9n)), 9) + ' (ETH)' }
         </Alert>          
       </Collapse>
 

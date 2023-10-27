@@ -74,7 +74,7 @@ export function ProposeDocOfGm({ addr, seqOfVR, setNextStep }: ProposeDocOfGmPro
         loadingPosition="end"
         variant="contained"
         endIcon={<EmojiPeople />}
-        sx={{ m:1, minWidth:218, }}
+        sx={{ m:1, minWidth:128, height:40 }}
         onClick={ handleClick }
       >
         Propose

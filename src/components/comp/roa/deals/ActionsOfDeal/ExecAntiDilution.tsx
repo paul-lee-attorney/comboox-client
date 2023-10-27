@@ -57,7 +57,7 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
           <TextField 
             variant='outlined'
@@ -99,7 +99,7 @@ export function ExecAntiDilution({addr, deal, setOpen, setDeal, refresh}:Actions
             disabled = {execAntiDilutionLoading || deal.body.state > 1 || hasError(valid)}
             loading = {loading}
             loadingPosition="end"
-            sx={{ m: 1, minWidth: 218, height: 40 }} 
+            sx={{ m: 1, minWidth: 128, height: 40 }} 
             variant="contained" 
             endIcon={<LocalDrinkOutlined />}
             onClick={ handleClick }

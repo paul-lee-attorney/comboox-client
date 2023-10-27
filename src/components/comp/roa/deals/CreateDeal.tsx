@@ -137,19 +137,44 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               <FormHelperText>{' '}</FormHelperText>
             </FormControl>
 
-            <TextField 
-              variant='outlined'
-              size="small"
-              label='SeqOfShare'
-              error={ valid['SeqOfShare']?.error }
-              helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={ handleSeqChanged }
-              value={ head.seqOfShare } 
-            />
+            {head.typeOfDeal != '1' && (
+              <TextField 
+                variant='outlined'
+                size="small"
+                label='SeqOfShare'
+                error={ valid['SeqOfShare']?.error }
+                helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                onChange={ handleSeqChanged }
+                value={ head.seqOfShare } 
+              />
+            )}
+
+            {head.typeOfDeal == '1' && (
+              <TextField 
+                variant='outlined'
+                size="small"
+                label='VotingWeight (%)'
+                error={ valid['VotingWeight']?.error }
+                helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                onChange={(e) => {
+                  let input = e.target.value;
+                  onlyInt('VotingWeight', input, MaxSeqNo, setValid);
+                  setHead((v) => ({
+                    ...v,
+                    votingWeight: input,
+                  }));
+                }}
+                value={ head.votingWeight }
+              />
+            )}
 
             <TextField 
               variant='outlined'
@@ -167,7 +192,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 setHead((v) => ({
                   ...v,
                   classOfShare: input,
-                  }));
+                }));
               }}
               value={ head.classOfShare }
             />
@@ -316,27 +341,6 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 }));
               }}
               value={ body.paid }
-            />
-
-            <TextField 
-              variant='outlined'
-              size="small"
-              label='VotingWeight (%)'
-              error={ valid['VotingWeight']?.error }
-              helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => {
-                let input = e.target.value;
-                onlyInt('VotingWeight', input, MaxSeqNo, setValid);
-                setHead((v) => ({
-                  ...v,
-                  votingWeight: input,
-                }));
-              }}
-              value={ head.votingWeight }
             />
 
           </Stack>

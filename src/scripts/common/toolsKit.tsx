@@ -248,7 +248,11 @@ export function strNumToBigInt(input:string, dec:number): bigint {
   let len = input.length;
   let pos = input.indexOf('.');
   let dif = dec - (pos > 0 ? len - 1 - pos : 0);
-  return BigInt(input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : ''));
+  
+  let regNum = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
+  if (regNum.test(input)) {
+    return BigInt(input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : ''));
+  } else return 0n;
 }
 
 export function onlyNum(id: string, input: string, max:bigint, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {

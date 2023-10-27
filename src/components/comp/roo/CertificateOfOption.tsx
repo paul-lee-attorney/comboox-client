@@ -35,7 +35,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
   const [ swaps, setSwaps ] = useState<readonly Swap[]>();
 
   useEffect(()=>{
-    if (boox) {
+    if (boox && optWrap.opt.head.seqOfOpt > 0) {
       getAllOraclesOfOption(boox[booxMap.ROO], optWrap.opt.head.seqOfOpt)
         .then(res => setOracles(res));
       getAllSwapsOfOption(boox[booxMap.ROO], optWrap.opt.head.seqOfOpt)

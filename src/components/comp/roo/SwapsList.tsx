@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, Stack, TextField, Typography } from "@mui/material";
 
-import { centToDollar, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { bigIntToStrNum, centToDollar, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { useState } from "react";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { Swap, checkValueOfSwap} from "../../../scripts/comp/roo";
@@ -203,14 +203,14 @@ export function SwapsList({ list, seqOfOpt }: SwapsListProps) {
                 <TextField 
                   variant='outlined'
                   size='small'
-                  label='ValueOfSwap (GLee)'
+                  label='ValueOfSwap (ETH))'
                   inputProps={{readOnly: true}}
                   sx={{
                     m:5,
                     ml:1,
                     minWidth: 388,
                   }}
-                  value={ longDataParser((swapWithValue?.value / BigInt(10 ** 9) ?? '0').toString()) }
+                  value={ bigIntToStrNum((swapWithValue?.value / (10n ** 9n) ?? 0n), 9) }
                 />
               )}
 

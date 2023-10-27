@@ -5,7 +5,7 @@ import { Button, Paper, Stack, TextField } from "@mui/material";
 import { VolunteerActivismOutlined } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxData } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
@@ -40,7 +40,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
       args: [ 
         BigInt(pld.head.seqOfShare), 
         BigInt(pld.head.seqOfPld), 
-        BigInt(amt)
+        strNumToBigInt(amt, 2),
       ],
     });
   };
@@ -52,7 +52,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
 
         <TextField 
           variant='outlined'
-          label='Amount (Cent)'
+          label='Amount'
           size="small"
           error={ valid['Amount']?.error }
           helperText={ valid['Amount']?.helpTx ?? ' ' }
@@ -63,7 +63,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Amount', input, MaxData, setValid);
+            onlyNum('Amount', input, MaxData, 2, setValid);
             setAmt(input);
           }}
           value={ amt?.toString() }
