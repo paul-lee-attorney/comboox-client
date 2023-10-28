@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
-import { Help } from "@mui/icons-material";
+import { HelpOutline } from "@mui/icons-material";
 import { getEthPart, getGWeiPart, getWeiPart, weiToEth } from "../../../../../scripts/common/toolsKit";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { checkValueOfSwap } from "../../../../../scripts/comp/roo";
@@ -26,7 +26,7 @@ export function CheckValueOfSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwap
     <>
       <Button
         variant="outlined"
-        startIcon={<Help />}
+        startIcon={<HelpOutline />}
         sx={{ m:1, height: 40, minWidth:218 }}
         onClick={ handleClick }
       >

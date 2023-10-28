@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Typography } from "@mui/material";
-import { Help } from "@mui/icons-material";
-import { getEthPart, getGWeiPart, getWeiPart, longDataParser, weiToEth } from "../../../../scripts/common/toolsKit";
+import { HelpOutline } from "@mui/icons-material";
+import { longDataParser, weiToEth } from "../../../../scripts/common/toolsKit";
 import { checkValueOfDeal } from "../../../../scripts/comp/ia";
 import { SwapsListProps } from "./SwapsList";
 
@@ -28,7 +28,7 @@ export function CheckValueOfDeal({addr, deal}: SwapsListProps) {
       <Button
         variant="outlined"
         fullWidth
-        startIcon={<Help />}
+        startIcon={<HelpOutline />}
         sx={{ m:1, height: 40 }}
         onClick={ handleClick }
       >

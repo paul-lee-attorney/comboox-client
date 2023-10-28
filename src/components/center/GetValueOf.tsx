@@ -3,7 +3,7 @@ import { getCentPrice } from "../../scripts/comp/gk";
 import { useComBooxContext } from "../../scripts/common/ComBooxContext";
 import { bigIntToStrNum, isNum, strNumToBigInt } from "../../scripts/common/toolsKit";
 import { Alert, Collapse, IconButton, Stack, Tooltip } from "@mui/material";
-import { Close, Help } from "@mui/icons-material";
+import { Close, HelpOutline } from "@mui/icons-material";
 
 interface GetValueOfProps {
   amt: string;
@@ -36,7 +36,7 @@ export function GetValueOf({ amt }:GetValueOfProps ) {
             onClick={ handleClick }
             edge="end"
           >
-            <Help />
+            <HelpOutline />
           </IconButton>
         </span>
       </Tooltip>
