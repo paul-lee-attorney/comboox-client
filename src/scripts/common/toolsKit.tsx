@@ -3,7 +3,6 @@ import { keccak256, toHex } from "viem";
 import { HexType } from ".";
 import { waitForTransaction } from "@wagmi/core";
 import { Dispatch, SetStateAction } from "react";
-import { error } from "console";
 
 export function toPercent(strNum: string): string {
   let num = Number(strNum);
@@ -244,47 +243,58 @@ export function onlyInt(id: string, input: string, max: bigint, setValid:Dispatc
   });
 }
 
-export function strNumToBigInt(input:string, dec:number): bigint {
+export function removeDotFromStrNum(input:string, dec:number): string {
+  if (!isNum(input)) return '0';
+
   let len = input.length;
   let pos = input.indexOf('.');
   let dif = dec - (pos > 0 ? len - 1 - pos : 0);
-  
-  let regNum = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
-  if (regNum.test(input)) {
-    return BigInt(input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : ''));
-  } else return 0n;
+  let output = input.replace('.', '') + (dif > 0 ? '0'.padEnd(dif, '0') : '');
+
+  return output; 
+}
+
+export function strNumToBigInt(input:string, dec:number): bigint {
+  let output = BigInt(removeDotFromStrNum(input, dec));
+
+  return output; 
 }
 
 export function isNum(input: string): boolean {
   let reg = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
-  return reg.test(input);
+  let output = reg.test(input);
+
+  return output;
+}
+
+export function tailTooLong(input:string, maxDec:number):boolean {
+  let output = maxDec == 0 || input.indexOf('.') < 0
+            ? false 
+            : (input.length - input.indexOf('.') - 1) > maxDec;
+
+  return output;
+}
+
+export function overflow(input:string, max:bigint, maxDec:number):boolean {
+  let output = max == 0n
+            ? false
+            : strNumToBigInt(input, maxDec) > max;
+
+  return output;
 }
 
 export function onlyNum(id: string, input: string, max:bigint, maxDec: number, setValid:Dispatch<SetStateAction<FormResults>>) {
-  let error: boolean = !isNum(input);
-  let tailTooLong: boolean = error
-                        ? false
-                        : maxDec == 0 || input.indexOf('.') < 0
-                          ? false 
-                          : (input.length - input.indexOf('.') - 1) > maxDec;
 
-  let overflow: boolean = error || tailTooLong
-                        ? false
-                        : max == 0n
-                          ? false
-                          : strNumToBigInt(input, maxDec) > max;
-
-  let result:Result = {
-    error: error || overflow || tailTooLong,
-    helpTx: error 
-          ? 'Only Number'
-          : overflow
-            ? 'Over Flow'
-            : tailTooLong
-              ? 'Tail Too Long'
-              : ' ',
+  let result:Result = {error:false, helpTx:' '} ;
+  
+  if (!isNum(input)) {
+    result = {error: true, helpTx: 'Only Number'};
+  } else if (tailTooLong(input, maxDec)) {
+    result = {error: true, helpTx: 'Tail Too Long'};
+  } else if (overflow(input, max, maxDec)) {
+    result = {error: true, helpTx: 'Value Overflow'};
   }
-
+  
   setValid( v => {
     let out = {...v};
     out[id] = result;

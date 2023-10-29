@@ -19,7 +19,7 @@ import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from '../../
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { DateTimeField } from '@mui/x-date-pickers';
-import dayjs, {Dayjs} from 'dayjs';
+import dayjs from 'dayjs';
 
 import { SharesList } from './SharesList';
 import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../../../scripts/comp/ros';

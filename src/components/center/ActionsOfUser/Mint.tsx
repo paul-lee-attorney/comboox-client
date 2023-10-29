@@ -1,5 +1,5 @@
 
-import { Alert, Button, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
+import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterMint, 
@@ -142,8 +142,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            { longDataParser((Number(BigInt(receipt?.amt ?? '0') / (10n ** 12n)) / (10 ** 6)).toString() ) + ' CBP'} 
-            minted to Address 
+            { longDataParser((Number(BigInt(receipt?.amt ?? '0') / (10n ** 12n)) / (10 ** 6)).toString() ) + ' CBP minted to Address: '}               
             ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66) })
           </Alert>          
         </Collapse>
