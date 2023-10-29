@@ -148,6 +148,7 @@ export function RequestPaidInCap({ share, setDialogOpen, refresh }: ActionsOfCap
             variant="contained"
             disabled={ requestPaidInCapitalLoading || hasError(valid)}
             loading={ loading }
+            loadingPosition="end"
             sx={{minWidth: 128, m: 1 }} 
             onClick={ requestPaidInCapClick }
             color="primary"

@@ -133,6 +133,7 @@ export function WithdrawPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCap
         variant="contained"
         disabled={ withdrawPayInAmtLoading || hasError(valid)}
         loading={ loading }
+        loadingPosition="end"
         sx={{minWidth: 128, m: 1,}} 
         onClick={ withdrawPayInAmtClick }
         color="primary"

@@ -111,6 +111,7 @@ export function PayInCap({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
           variant='contained'
           disabled={ payInCapLoading || hasError(valid)}
           loading={ loading }
+          loadingPosition="end"
           sx={{minWidth: 128, m: 1, }} 
           onClick={ payInCapClick }
           color="primary"

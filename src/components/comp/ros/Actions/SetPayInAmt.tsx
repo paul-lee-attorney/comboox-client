@@ -136,11 +136,13 @@ export function SetPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCapProps
 
         <LoadingButton
           variant="contained"
-          disabled={ setPayInAmtLoading || hasError(valid) || loading}
+          disabled={ setPayInAmtLoading || hasError(valid)}
+          loading={ loading }
+          loadingPosition="end"
           sx={{width: 128, m: 1 }} 
           onClick={ setPayInAmtClick }
           color="primary"
-          endIcon={< Lock />}    
+          endIcon={< Lock />}
         >
           Lock
         </LoadingButton>
