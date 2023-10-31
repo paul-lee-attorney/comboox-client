@@ -1,7 +1,9 @@
 import Smart from "./contracts-address.json";
 // import Smart from "../../../../comboox/server/src/contracts/contracts-address.json";
 
-export const AddrOfRegCenter:HexType = `0x${Smart.RegCenter.substring(2)}`;
+export const AddrOfRegCenter:HexType = process.env.NODE_ENV == 'test'
+                                    ? `0x${'AA2997e98504048492046a4D2946CbD9477Fe4E8'}`
+                                    : `0x${Smart.RegCenter.substring(2)}`;
 
 export const Bytes32Zero:HexType = `0x${'0'.padEnd(64,'0')}`;
 export const AddrZero:HexType = `0x${'0'.padEnd(40,'0')}`;
