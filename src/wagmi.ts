@@ -12,15 +12,13 @@ import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
   [ mainnet,
-    ...(process.env.NETWORK === 'sepolia' 
+    ...(process.env.NODE_ENV === 'development' 
       ? [sepolia] 
-      : process.env.NETWORK === 'hardhat'
-        ? [hardhat]
-        : []), 
+      : []), 
   ],
   [
     alchemyProvider({
-      apiKey: process.env.NETWORK === 'sepolia'
+      apiKey: process.env.NODE_ENV === 'development'
         ? 'vyxCJHabQX9OYFc6uVOLCY_aL4FJfgkc'
         : 'dmKNIrJbJnIPmnn1V7WD1x5MZfWKU0QY',
       // stallTimeout: 2_000,

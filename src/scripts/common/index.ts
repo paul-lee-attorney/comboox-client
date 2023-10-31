@@ -1,7 +1,7 @@
 import Smart from "./contracts-address.json";
 // import Smart from "../../../../comboox/server/src/contracts/contracts-address.json";
 
-export const AddrOfRegCenter:HexType = process.env.NETWORK == 'sepolia'
+export const AddrOfRegCenter:HexType = process.env.NODE_ENV == 'development'
                                     ? `0x${'AA2997e98504048492046a4D2946CbD9477Fe4E8'}`
                                     : `0x${Smart.RegCenter.substring(2)}`;
 
