@@ -15,8 +15,6 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
-        // ? 'vyxCJHabQX9OYFc6uVOLCY_aL4FJfgkc'
-        // : 'dmKNIrJbJnIPmnn1V7WD1x5MZfWKU0QY',
       // stallTimeout: 2_000,
     }),
     publicProvider(),
