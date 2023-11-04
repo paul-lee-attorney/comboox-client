@@ -1,5 +1,10 @@
 
+
+// export const AddrOfRegCenter:HexType = `0x${'5FeaeBfB4439F3516c74939A9D04e95AFE82C4ae'}`;
+// export const AddrOfTank:HexType = `0x${'74Cf9087AD26D541930BaC724B7ab21bA8F00a27'}`;
+
 export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
+export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
 
 export const Bytes32Zero:HexType = `0x${'0'.padEnd(64,'0')}`;
 export const AddrZero:HexType = `0x${'0'.padEnd(40,'0')}`;
