@@ -135,15 +135,6 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
   return info;
 }
 
-export async function balanceOfWei(gk: HexType):Promise<bigint>{
-  let res = await fetchBalance({
-    address: gk,
-    formatUnits: 'wei'
-  })
-
-  return res.value;
-}
-
 export async function getCentPrice(gk: HexType):Promise<bigint>{
   let res = await readContract({
     address: gk,

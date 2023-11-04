@@ -3,14 +3,14 @@ import { Paper, Stack } from '@mui/material';
 
 import { 
   useRegCenterWithdrawPoints,
-} from '../../generated';
+} from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../scripts/common';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { Undo } from '@mui/icons-material';
-import { refreshAfterTx } from '../../scripts/common/toolsKit';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 interface WithdrawPointsProps{
   hashLock: HexType;

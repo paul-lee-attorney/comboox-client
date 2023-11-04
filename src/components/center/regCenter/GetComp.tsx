@@ -1,13 +1,13 @@
-import { AddrZero, HexType, MaxUserNo } from '../../scripts/common';
-import Link from '../../scripts/common/Link';
+import { AddrZero, HexType, MaxUserNo } from '../../../scripts/common';
+import Link from '../../../scripts/common/Link';
 
-import { useComBooxContext } from '../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 import { useState } from 'react';
 import { Alert, Button, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 import { CenterInfo } from './CenterInfo';
-import { getDocByUserNo } from '../../scripts/center/rc';
-import { FormResults, defFormResults, hasError, onlyInt } from '../../scripts/common/toolsKit';
+import { getDocByUserNo } from '../../../scripts/center/rc';
+import { FormResults, defFormResults, hasError, onlyInt } from '../../../scripts/common/toolsKit';
 
 export interface Head {
   typeOfDoc: number,

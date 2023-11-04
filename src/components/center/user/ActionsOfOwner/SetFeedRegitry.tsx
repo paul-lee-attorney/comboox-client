@@ -2,36 +2,36 @@
 import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterSetBackupKey
-} from '../../../generated';
+  useRegCenterSetFeedRegistry,
+} from '../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
-import { ActionsOfUserProps } from '../ActionsOfUser';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../scripts/common/toolsKit';
+import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 
-export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
+export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
 
   const { setErrMsg } = useComBooxContext();
-  
-  const [ key, setKey ] = useState<HexType>(AddrZero);
+
+  const [ newFeed, setNewFeed ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const [loading, setLoading] = useState(false);
 
-  const refresh = () => {
-    getUser();
-    refreshList();
+  const updateResults = ()=>{
+    refresh();
     setLoading(false);
   }
 
   const {
-    isLoading: setBackupKeyLoading,
-    write: setBackupKey
-  } = useRegCenterSetBackupKey({
+    isLoading: setFeedRegLoading,
+    write: setFeedReg
+  } = useRegCenterSetFeedRegistry({
     address: AddrOfRegCenter,
     onError(err) {
       setErrMsg(err.message);
@@ -39,14 +39,12 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 
-  const setBackupKeyClick = ()=>{
-    setBackupKey({
-      args:[key]
-    });
+  const setFeedRegClick = ()=>{
+    setFeedReg({args:[newFeed]});
   }
 
   return (
@@ -56,26 +54,26 @@ export function SetBackupKey({ refreshList, getUser }:ActionsOfUserProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='BackupKey'
-          error={ valid['BackupKey']?.error }
-          helperText={ valid['BackupKey']?.helpTx ?? ' ' }                    
+          label='FeedRegistry'
+          error={ valid['FeedRegistry']?.error }
+          helperText={ valid['FeedRegistry']?.helpTx ?? ' ' }          
           sx={{
             m:1,
             minWidth: 456,
           }}
-          value={ key }
+          value={ newFeed }
           onChange={e => {
             let input = HexParser( e.target.value );
-            onlyHex('BackupKey', input, 40, setValid);
-            setKey(input);
+            onlyHex('FeedRegistry', input, 40, setValid);
+            setNewFeed(input);          
           }}
         />
 
         <LoadingButton 
-          disabled={ setBackupKeyLoading || hasError(valid) } 
+          disabled={ setFeedRegLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ setBackupKeyClick }
+          onClick={ setFeedRegClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
           endIcon={<BorderColor />}       

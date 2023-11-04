@@ -1,37 +1,36 @@
 
-import { Button, Paper, Stack, TextField } from '@mui/material';
+import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterTransferOwnership
-} from '../../../generated';
+  useRegCenterHandoverCenterKey,
+} from '../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
-import { BorderColor } from '@mui/icons-material';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
+import { BorderColor, } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
-
-export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
+export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 
   const { setErrMsg } = useComBooxContext();
 
-  const [ newOwner, setNewOwner ] = useState<HexType>(AddrZero);
+  const [ newKeeper, setNewKeeper ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [loading, setLoading] = useState(false);
 
-  const updateResults = ()=> {
+  const updateResults = ()=>{
     refresh();
     setLoading(false);
   }
 
   const {
-    isLoading: transferOwnershipLoading,
-    write: transferOwnership
-  } = useRegCenterTransferOwnership({
+    isLoading: handoverCenterKeyLoading,
+    write: handoverCenterKey
+  } = useRegCenterHandoverCenterKey({
     address: AddrOfRegCenter,
     onError(err) {
       setErrMsg(err.message);
@@ -43,10 +42,8 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
     }
   })
 
-  const transferOwnershipClick = ()=>{
-    transferOwnership({args:[
-      newOwner,
-    ]})
+  const handoverCenterKeyClick = ()=>{
+    handoverCenterKey({args:[newKeeper]});
   }
 
   return (
@@ -56,30 +53,30 @@ export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='NewOwner'
-          error = { valid['NewOwner']?.error }
-          helperText = { valid['NewOwner']?.helpTx ?? ' ' }
-          
+          label='NewKeeper'
+          error={ valid['NewKeeper']?.error }
+          helperText={ valid['NewKeeper']?.helpTx ?? ' ' }
           sx={{
             m:1,
+            mb:3,
             minWidth: 456,
           }}
-          value={ newOwner }
+          value={ newKeeper }
           onChange={e => {
             let input = HexParser( e.target.value );
-            onlyHex('NewOwner', input, 40, setValid);
-            setNewOwner(input);
+            onlyHex('NewKeeper', input, 40, setValid);
+            setNewKeeper( input );
           }}
         />
 
         <LoadingButton 
-          disabled={ transferOwnershipLoading || hasError(valid) } 
+          disabled={ handoverCenterKeyLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ transferOwnershipClick }
+          onClick={handoverCenterKeyClick}
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
-          endIcon={<BorderColor />}
+          endIcon={<BorderColor />}       
         >
           Set
         </LoadingButton>

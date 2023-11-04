@@ -1,4 +1,4 @@
-import { readContract, getWalletClient, getContract, waitForTransaction } from "@wagmi/core";
+import { readContract, getWalletClient, getContract, waitForTransaction, fetchBalance } from "@wagmi/core";
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "../common";
 import { regCenterABI } from "../../generated";
 import { strNumToBigInt } from "../common/toolsKit";
@@ -571,4 +571,13 @@ export async function balanceOf(acct:HexType): Promise<bigint>{
   });
 
   return res;
+}
+
+export async function balanceOfWei(addr: HexType):Promise<bigint>{
+  let res = await fetchBalance({
+    address: addr,
+    formatUnits: 'wei'
+  })
+
+  return res.value;
 }

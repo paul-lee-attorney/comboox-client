@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useState } from "react";
-import { Bytes32Zero, HexType } from "../../scripts/common";
-import { StrLocker, getLocker } from "../../scripts/center/rc";
+import { Bytes32Zero, HexType } from "../../../scripts/common";
+import { StrLocker, getLocker } from "../../../scripts/center/rc";
 import { Button, Stack, TextField } from "@mui/material";
 import { Search } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex } from "../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex } from "../../../scripts/common/toolsKit";
 
 interface LockerFinderProps{
   setLocker: Dispatch<SetStateAction<StrLocker>>;

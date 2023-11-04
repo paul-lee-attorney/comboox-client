@@ -3,16 +3,16 @@ import { Button, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetPlatformRule,
-} from '../../../generated';
+} from '../../../../generated';
 
-import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../scripts/center/rc';
+import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../../scripts/center/rc';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
 

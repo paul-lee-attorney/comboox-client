@@ -1,37 +1,37 @@
 
-import { Paper, Stack, TextField } from '@mui/material';
+import { Button, Paper, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterSetFeedRegistry,
-} from '../../../generated';
+  useRegCenterTransferOwnership
+} from '../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../scripts/common/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 
-export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
+export function TransferOwnership({ refresh }:ActionsOfOwnerProps) {
 
   const { setErrMsg } = useComBooxContext();
 
-  const [ newFeed, setNewFeed ] = useState<HexType>(AddrZero);
+  const [ newOwner, setNewOwner ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [loading, setLoading] = useState(false);
 
-  const updateResults = ()=>{
+  const updateResults = ()=> {
     refresh();
     setLoading(false);
   }
 
   const {
-    isLoading: setFeedRegLoading,
-    write: setFeedReg
-  } = useRegCenterSetFeedRegistry({
+    isLoading: transferOwnershipLoading,
+    write: transferOwnership
+  } = useRegCenterTransferOwnership({
     address: AddrOfRegCenter,
     onError(err) {
       setErrMsg(err.message);
@@ -43,8 +43,10 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
     }
   })
 
-  const setFeedRegClick = ()=>{
-    setFeedReg({args:[newFeed]});
+  const transferOwnershipClick = ()=>{
+    transferOwnership({args:[
+      newOwner,
+    ]})
   }
 
   return (
@@ -54,29 +56,30 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='FeedRegistry'
-          error={ valid['FeedRegistry']?.error }
-          helperText={ valid['FeedRegistry']?.helpTx ?? ' ' }          
+          label='NewOwner'
+          error = { valid['NewOwner']?.error }
+          helperText = { valid['NewOwner']?.helpTx ?? ' ' }
+          
           sx={{
             m:1,
             minWidth: 456,
           }}
-          value={ newFeed }
+          value={ newOwner }
           onChange={e => {
             let input = HexParser( e.target.value );
-            onlyHex('FeedRegistry', input, 40, setValid);
-            setNewFeed(input);          
+            onlyHex('NewOwner', input, 40, setValid);
+            setNewOwner(input);
           }}
         />
 
         <LoadingButton 
-          disabled={ setFeedRegLoading || hasError(valid) } 
+          disabled={ transferOwnershipLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ setFeedRegClick }
+          onClick={ transferOwnershipClick }
           variant='contained'
           sx={{ m:1, ml:2, minWidth:128 }} 
-          endIcon={<BorderColor />}       
+          endIcon={<BorderColor />}
         >
           Set
         </LoadingButton>

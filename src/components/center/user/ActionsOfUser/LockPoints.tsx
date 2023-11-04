@@ -3,17 +3,17 @@ import { Divider, Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterLockPoints,
-} from '../../../generated';
+} from '../../../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero, HexType, MaxLockValue, MaxUserNo } from '../../../scripts/common';
+import { AddrOfRegCenter, Bytes32Zero, HexType, MaxLockValue, MaxUserNo } from '../../../../scripts/common';
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../scripts/center/rc';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../scripts/common/toolsKit';
+import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../../scripts/center/rc';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 export interface LockPointsProps{
   refreshList: ()=>void;

@@ -26,7 +26,7 @@ import {
   Stack,
 } from '@mui/material';
 
-import Link from '../../scripts/common/Link';
+import Link from '../../../scripts/common/Link';
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
 
@@ -44,22 +44,23 @@ import {
   Diversity1Outlined,
   QuizOutlined,
   ChevronLeft,
-  CurrencyExchange
+  CurrencyExchange,
+  LocalGasStationOutlined
 }  from '@mui/icons-material';
 
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { useAccount, useConnect, useDisconnect, } from 'wagmi';
 
-import { useComBooxContext } from '../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
-import { CompInfo, getBoox, getCompInfo } from '../../scripts/comp/gk';
-import { longSnParser } from '../../scripts/common/toolsKit';
-import { AcctPage } from './AcctPage';
+import { CompInfo, getBoox, getCompInfo } from '../../../scripts/comp/gk';
+import { longSnParser } from '../../../scripts/common/toolsKit';
+import { AcctPage } from '../user/AcctPage';
 import { useRouter } from 'next/router';
-import { CopyLongStrSpan } from '../common/utils/CopyLongStr';
-import { GetTimestamp } from '../common/utils/GetTimestamp';
-import { ErrMsg } from '../common/utils/ErrMsg';
+import { CopyLongStrSpan } from '../../common/utils/CopyLongStr';
+import { GetTimestamp } from '../../common/utils/GetTimestamp';
+import { ErrMsg } from '../../common/utils/ErrMsg';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -162,6 +163,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
+    {href: '/', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
+    {href: '/center/FuleTank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
     {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
     {href: '/comp/roc/RegisterOfConstitution', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
     {href: '/comp/roa/RegisterOfAgreements', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
@@ -211,18 +214,18 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
                 {gk && compInfo && (
                   <Typography variant="h6" component="div" sx={{ mx:1 }} >
-                    { compInfo.symbol } 
+                    {compInfo.symbol}
                   </Typography>
                 )}
 
                 {gk && compInfo && (
                   <Typography variant="h6" component="div" sx={{ mx:1 }} >
-                    ( { longSnParser(compInfo.regNum.toString()) } )
+                    ({longSnParser(compInfo.regNum.toString())})
                   </Typography>
                 )}
 
                 {gk && (
-                  <CopyLongStrSpan title='Addr' src={gk.toLowerCase()} />                       
+                  <CopyLongStrSpan title='Addr' src={gk.toLowerCase()} />
                 )}
               </Stack>
 
@@ -280,23 +283,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         <Divider />
 
         <List>
-
-          <ListItem disablePadding >
-            <Tooltip title={"Registration Center"} placement='right' arrow >
-              <ListItemButton 
-                LinkComponent={ Link }
-                href={"/"}
-                onClick={ backToCenter }
-              >
-                <ListItemIcon>
-                  {<AssuredWorkload />}
-                </ListItemIcon>
-                <ListItemText primary={"RegCenter"} />
-              </ListItemButton>
-            </Tooltip>
-          </ListItem>
-
-          <Divider />
 
           {items.map((v, i)=>(
             <div key={i}>

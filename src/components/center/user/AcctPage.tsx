@@ -2,11 +2,11 @@ import { AccountCircle, BorderColor } from "@mui/icons-material";
 import { Button } from "@mui/material";
 
 import Link from "next/link";
-import { longSnParser, refreshAfterTx } from "../../scripts/common/toolsKit";
+import { longSnParser, refreshAfterTx } from "../../../scripts/common/toolsKit";
 import { useWalletClient } from "wagmi";
-import { AddrOfRegCenter, HexType } from "../../scripts/common";
-import { useRegCenterGetMyUserNo, useRegCenterRegUser } from "../../generated";
-import { useComBooxContext } from "../../scripts/common/ComBooxContext";
+import { AddrOfRegCenter, HexType } from "../../../scripts/common";
+import { useRegCenterGetMyUserNo, useRegCenterRegUser } from "../../../generated";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 

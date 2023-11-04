@@ -3,14 +3,14 @@ import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterPickupPoints,
-} from '../../generated';
+} from '../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../scripts/common';
+import { AddrOfRegCenter, HexType } from '../../../scripts/common';
 import { Redo } from '@mui/icons-material';
 import { useState } from 'react';
-import { refreshAfterTx } from '../../scripts/common/toolsKit';
+import { refreshAfterTx } from '../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
 
 interface PickupPointsProps{
   hashLock: HexType;

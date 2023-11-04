@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../scripts/common";
+import { AddrOfRegCenter, AddrZero, HexType } from "../../../scripts/common";
 import { 
   Rule, 
   defaultRule, 
-} from "../../scripts/center/rc";
+} from "../../../scripts/center/rc";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField } from "@mui/material";
-import { CopyLongStrTF } from "../common/utils/CopyLongStr";
-import { getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, toPercent } from "../../scripts/common/toolsKit";
-import { ActionsOfOwner } from "./ActionsOfOwner";
+import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
+import { getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, toPercent } from "../../../scripts/common/toolsKit";
+import { ActionsOfOwner } from "../user/ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
 import { useWalletClient } from "wagmi";
-import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetFeedRegistryAddress, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../generated";
-import { useComBooxContext } from "../../scripts/common/ComBooxContext";
+import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetFeedRegistryAddress, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../../generated";
+import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 
 
 export function CenterInfo() {

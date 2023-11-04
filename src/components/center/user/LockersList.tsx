@@ -3,8 +3,8 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
-import { dateParser, longDataParser, longSnParser } from '../../scripts/common/toolsKit';
-import { StrLocker } from '../../scripts/center/rc';
+import { dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
+import { StrLocker } from '../../../scripts/center/rc';
 import { LockerFinder } from './LockerFinder';
 import { Dispatch, SetStateAction } from 'react';
 

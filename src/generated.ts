@@ -3062,6 +3062,84 @@ export const filesFolderABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// FuleTank
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const fuleTankABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: '_regCenter', internalType: 'address', type: 'address' },
+      { name: '_rate', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'owner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'rate',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [],
+    name: 'refule',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'regCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_owner', internalType: 'address', type: 'address' }],
+    name: 'setOwner',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_rate', internalType: 'uint256', type: 'uint256' }],
+    name: 'setRate',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_regCenter', internalType: 'address', type: 'address' }],
+    name: 'setRegCenter',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'sum',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdrawIncome',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // GMMKeeper
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -14474,6 +14552,25 @@ export const iRegisterOfSharesABI = [
         indexed: true,
       },
       {
+        name: 'newPrice',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'UpdatePriceOfPaid',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfShare',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
         name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
@@ -14915,6 +15012,16 @@ export const iRegisterOfSharesABI = [
       { name: 'paidInDeadline', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'updatePaidInDeadline',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
+      { name: 'newPrice', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updatePriceOfPaid',
     outputs: [],
   },
   {
@@ -26725,6 +26832,25 @@ export const registerOfSharesABI = [
         indexed: true,
       },
       {
+        name: 'newPrice',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'UpdatePriceOfPaid',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfShare',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
         name: 'amount',
         internalType: 'uint256',
         type: 'uint256',
@@ -27288,6 +27414,16 @@ export const registerOfSharesABI = [
       { name: 'deadline', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'updatePaidInDeadline',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
+      { name: 'newPrice', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updatePriceOfPaid',
     outputs: [],
   },
   {
@@ -37210,6 +37346,352 @@ export function useFilesFolderUpdateStateOfFileEvent(
     eventName: 'UpdateStateOfFile',
     ...config,
   } as UseContractEventConfig<typeof filesFolderABI, 'UpdateStateOfFile'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__.
+ */
+export function useFuleTankRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: fuleTankABI,
+    ...config,
+  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"owner"`.
+ */
+export function useFuleTankOwner<
+  TFunctionName extends 'owner',
+  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: fuleTankABI,
+    functionName: 'owner',
+    ...config,
+  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"rate"`.
+ */
+export function useFuleTankRate<
+  TFunctionName extends 'rate',
+  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: fuleTankABI,
+    functionName: 'rate',
+    ...config,
+  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"regCenter"`.
+ */
+export function useFuleTankRegCenter<
+  TFunctionName extends 'regCenter',
+  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: fuleTankABI,
+    functionName: 'regCenter',
+    ...config,
+  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"sum"`.
+ */
+export function useFuleTankSum<
+  TFunctionName extends 'sum',
+  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: fuleTankABI,
+    functionName: 'sum',
+    ...config,
+  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__.
+ */
+export function useFuleTankWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof fuleTankABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, TFunctionName, TMode>({
+    abi: fuleTankABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"refule"`.
+ */
+export function useFuleTankRefule<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'refule'
+        >['request']['abi'],
+        'refule',
+        TMode
+      > & { functionName?: 'refule' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'refule', TMode> & {
+        abi?: never
+        functionName?: 'refule'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'refule', TMode>({
+    abi: fuleTankABI,
+    functionName: 'refule',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setOwner"`.
+ */
+export function useFuleTankSetOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'setOwner'
+        >['request']['abi'],
+        'setOwner',
+        TMode
+      > & { functionName?: 'setOwner' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'setOwner', TMode> & {
+        abi?: never
+        functionName?: 'setOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'setOwner', TMode>({
+    abi: fuleTankABI,
+    functionName: 'setOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRate"`.
+ */
+export function useFuleTankSetRate<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'setRate'
+        >['request']['abi'],
+        'setRate',
+        TMode
+      > & { functionName?: 'setRate' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'setRate', TMode> & {
+        abi?: never
+        functionName?: 'setRate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'setRate', TMode>({
+    abi: fuleTankABI,
+    functionName: 'setRate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRegCenter"`.
+ */
+export function useFuleTankSetRegCenter<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'setRegCenter'
+        >['request']['abi'],
+        'setRegCenter',
+        TMode
+      > & { functionName?: 'setRegCenter' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'setRegCenter', TMode> & {
+        abi?: never
+        functionName?: 'setRegCenter'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'setRegCenter', TMode>({
+    abi: fuleTankABI,
+    functionName: 'setRegCenter',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawIncome"`.
+ */
+export function useFuleTankWithdrawIncome<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'withdrawIncome'
+        >['request']['abi'],
+        'withdrawIncome',
+        TMode
+      > & { functionName?: 'withdrawIncome' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'withdrawIncome', TMode> & {
+        abi?: never
+        functionName?: 'withdrawIncome'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'withdrawIncome', TMode>({
+    abi: fuleTankABI,
+    functionName: 'withdrawIncome',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__.
+ */
+export function usePrepareFuleTankWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"refule"`.
+ */
+export function usePrepareFuleTankRefule(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'refule'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'refule',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'refule'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setOwner"`.
+ */
+export function usePrepareFuleTankSetOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'setOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setOwner'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRate"`.
+ */
+export function usePrepareFuleTankSetRate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'setRate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRegCenter"`.
+ */
+export function usePrepareFuleTankSetRegCenter(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRegCenter'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'setRegCenter',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRegCenter'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawIncome"`.
+ */
+export function usePrepareFuleTankWithdrawIncome(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawIncome'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'withdrawIncome',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawIncome'>)
 }
 
 /**
@@ -70419,6 +70901,41 @@ export function useIRegisterOfSharesUpdatePaidInDeadline<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"updatePriceOfPaid"`.
+ */
+export function useIRegisterOfSharesUpdatePriceOfPaid<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegisterOfSharesABI,
+          'updatePriceOfPaid'
+        >['request']['abi'],
+        'updatePriceOfPaid',
+        TMode
+      > & { functionName?: 'updatePriceOfPaid' }
+    : UseContractWriteConfig<
+        typeof iRegisterOfSharesABI,
+        'updatePriceOfPaid',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'updatePriceOfPaid'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iRegisterOfSharesABI,
+    'updatePriceOfPaid',
+    TMode
+  >({
+    abi: iRegisterOfSharesABI,
+    functionName: 'updatePriceOfPaid',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"withdrawPayInAmt"`.
  */
 export function useIRegisterOfSharesWithdrawPayInAmt<
@@ -70693,6 +71210,28 @@ export function usePrepareIRegisterOfSharesUpdatePaidInDeadline(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"updatePriceOfPaid"`.
+ */
+export function usePrepareIRegisterOfSharesUpdatePriceOfPaid(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iRegisterOfSharesABI,
+      'updatePriceOfPaid'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegisterOfSharesABI,
+    functionName: 'updatePriceOfPaid',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iRegisterOfSharesABI,
+    'updatePriceOfPaid'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"withdrawPayInAmt"`.
  */
 export function usePrepareIRegisterOfSharesWithdrawPayInAmt(
@@ -70883,6 +71422,22 @@ export function useIRegisterOfSharesUpdatePaidInDeadlineEvent(
     typeof iRegisterOfSharesABI,
     'UpdatePaidInDeadline'
   >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `eventName` set to `"UpdatePriceOfPaid"`.
+ */
+export function useIRegisterOfSharesUpdatePriceOfPaidEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iRegisterOfSharesABI, 'UpdatePriceOfPaid'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iRegisterOfSharesABI,
+    eventName: 'UpdatePriceOfPaid',
+    ...config,
+  } as UseContractEventConfig<typeof iRegisterOfSharesABI, 'UpdatePriceOfPaid'>)
 }
 
 /**
@@ -104408,6 +104963,41 @@ export function useRegisterOfSharesUpdatePaidInDeadline<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"updatePriceOfPaid"`.
+ */
+export function useRegisterOfSharesUpdatePriceOfPaid<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfSharesABI,
+          'updatePriceOfPaid'
+        >['request']['abi'],
+        'updatePriceOfPaid',
+        TMode
+      > & { functionName?: 'updatePriceOfPaid' }
+    : UseContractWriteConfig<
+        typeof registerOfSharesABI,
+        'updatePriceOfPaid',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'updatePriceOfPaid'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof registerOfSharesABI,
+    'updatePriceOfPaid',
+    TMode
+  >({
+    abi: registerOfSharesABI,
+    functionName: 'updatePriceOfPaid',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"withdrawPayInAmt"`.
  */
 export function useRegisterOfSharesWithdrawPayInAmt<
@@ -104854,6 +105444,28 @@ export function usePrepareRegisterOfSharesUpdatePaidInDeadline(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"updatePriceOfPaid"`.
+ */
+export function usePrepareRegisterOfSharesUpdatePriceOfPaid(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof registerOfSharesABI,
+      'updatePriceOfPaid'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfSharesABI,
+    functionName: 'updatePriceOfPaid',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfSharesABI,
+    'updatePriceOfPaid'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"withdrawPayInAmt"`.
  */
 export function usePrepareRegisterOfSharesWithdrawPayInAmt(
@@ -105118,6 +105730,22 @@ export function useRegisterOfSharesUpdatePaidInDeadlineEvent(
     typeof registerOfSharesABI,
     'UpdatePaidInDeadline'
   >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfSharesABI}__ and `eventName` set to `"UpdatePriceOfPaid"`.
+ */
+export function useRegisterOfSharesUpdatePriceOfPaidEvent(
+  config: Omit<
+    UseContractEventConfig<typeof registerOfSharesABI, 'UpdatePriceOfPaid'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: registerOfSharesABI,
+    eventName: 'UpdatePriceOfPaid',
+    ...config,
+  } as UseContractEventConfig<typeof registerOfSharesABI, 'UpdatePriceOfPaid'>)
 }
 
 /**

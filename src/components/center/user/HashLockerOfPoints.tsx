@@ -1,7 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { StrLocker } from "../../scripts/center/rc";
-import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../scripts/common/toolsKit";
-import { AddrZero } from "../../scripts/common";
+import { StrLocker } from "../../../scripts/center/rc";
+import { dateParser, longDataParser, longSnParser, splitStrArr } from "../../../scripts/common/toolsKit";
+import { AddrZero } from "../../../scripts/common";
 import { PickupPoints } from "./PickupPoints";
 import { WithdrawPoints } from "./WithdrawPoints";
 import { Dispatch, SetStateAction } from "react";

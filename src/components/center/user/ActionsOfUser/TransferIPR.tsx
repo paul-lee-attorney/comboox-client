@@ -3,15 +3,15 @@ import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/mater
 
 import { 
   useRegCenterTransferIpr
-} from '../../../generated';
+} from '../../../../generated';
 
-import { AddrOfRegCenter, HexType, MaxPrice, MaxUserNo } from '../../../scripts/common';
+import { AddrOfRegCenter, HexType, MaxPrice, MaxUserNo } from '../../../../scripts/common';
 import { BorderColor, Close } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../../scripts/common/common';
-import { FormResults, defFormResults, hasError, longSnParser, onlyInt } from '../../../scripts/common/toolsKit';
+import { getReceipt } from '../../../../scripts/common/common';
+import { FormResults, defFormResults, hasError, longSnParser, onlyInt } from '../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
 
 export function TransferIPR() {
 

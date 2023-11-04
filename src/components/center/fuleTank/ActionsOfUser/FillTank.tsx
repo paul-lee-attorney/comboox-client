@@ -3,28 +3,22 @@ import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/mater
 
 import { 
   useRegCenterTransfer, 
-} from '../../../generated';
+} from '../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType } from '../../../scripts/common';
-import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
+import { AddrOfRegCenter, AddrOfTank, HexType } from '../../../../scripts/common';
+import { Close, OilBarrelOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../../scripts/common/common';
-import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyNum, strNumToBigInt } from '../../../scripts/common/toolsKit';
-import { ActionsOfUserProps } from '../ActionsOfUser';
+import { getReceipt } from '../../../../scripts/common/common';
+import { FormResults, bigIntToStrNum, defFormResults, hasError, longDataParser, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+import { ActionOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { Receipt } from '../../user/ActionsOfUser/TransferPoints';
 
-interface Receipt{
-  from: string;
-  to: string;
-  amt: string;
-}
-
-export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
+export function FillTank({ refresh }: ActionOfUserProps) {
 
   const { setErrMsg } = useComBooxContext();
 
-  const [ to, setTo ] = useState<HexType>(AddrZero);
   const [ amt, setAmt ] = useState('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -35,8 +29,8 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
   const [loading, setLoading] = useState(false);
 
   const {
-    isLoading: transferPointsLoading,
-    write: transferPoints
+    isLoading: fillTankLoading,
+    write: fillTank
   } = useRegCenterTransfer({
     address: AddrOfRegCenter,
     onError(err) {
@@ -56,18 +50,18 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
               };
             setReceipt(rpt);
             setOpen(true);
-            getBalanceOf();
             setLoading(false);
+            refresh();
           }
         }
       )
     }
   })
 
-  const transferPointsClick = ()=>{
-    transferPoints({
+  const fillTankClick = ()=>{
+    fillTank({
       args:[
-        to,
+        AddrOfTank,
         strNumToBigInt(amt, 9) * (10n ** 9n)
       ]
     });
@@ -76,24 +70,6 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
       <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
-
-        <TextField 
-          size="small"
-          variant='outlined'
-          label='To (Addr)'
-          error={ valid['To(Addr)']?.error }
-          helperText={ valid['To(Addr)']?.helpTx ?? ' ' }                                  
-          sx={{
-            m:1,
-            minWidth: 550,
-          }}
-          value={ to }
-          onChange={e => {
-            let input = HexParser(e.target.value ?? '0');
-            onlyHex('To(Addr)', input, 40, setValid);
-            setTo(input);
-          }}
-        />
 
         <TextField 
           size="small"
@@ -114,15 +90,15 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
         />
 
         <LoadingButton 
-          disabled={ transferPointsLoading || hasError(valid) } 
+          disabled={ fillTankLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ transferPointsClick }
+          onClick={ fillTankClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
-          endIcon={<ArrowCircleRightOutlined />}       
+          endIcon={<OilBarrelOutlined />}       
         >
-          Transfer
+          Fill
         </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >
@@ -144,7 +120,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {  longDataParser(receipt?.amt ?? '0') + ' CBP' } transfered to Addr ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
+            Add { bigIntToStrNum(BigInt(receipt?.amt ?? '0') / (10n**9n), 9) + ' CBP' } to Account ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
           </Alert>          
         </Collapse>
 

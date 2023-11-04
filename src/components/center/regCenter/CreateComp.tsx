@@ -5,16 +5,16 @@ import { BorderColor } from '@mui/icons-material';
 
 import { 
   useRegCenterCreateComp,
-} from '../../generated';
+} from '../../../generated';
 
 import { 
   AddrOfRegCenter, AddrZero, HexType,
-} from '../../scripts/common';
+} from '../../../scripts/common';
 
-import { useComBooxContext } from '../../scripts/common/ComBooxContext';
-import { getDocAddr } from '../../scripts/center/rc';
+import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { getDocAddr } from '../../../scripts/center/rc';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex } from '../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex } from '../../../scripts/common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 
 export function CreateComp() {

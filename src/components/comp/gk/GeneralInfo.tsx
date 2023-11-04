@@ -12,9 +12,9 @@ import { GetOfficersList } from "../rod/GetOfficersList";
 
 import { ConfigSetting } from "./ConfigSetting";
 import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
-import { balanceOf } from "../../../scripts/center/rc";
+import { balanceOf, balanceOfWei } from "../../../scripts/center/rc";
 import { booxMap } from "../../../scripts/common";
-import { CompInfo, balanceOfWei, getCompInfo, totalDeposits } from "../../../scripts/comp/gk";
+import { CompInfo, getCompInfo, totalDeposits } from "../../../scripts/comp/gk";
 import { getControllor, getOwnersEquity, votesOfGroup } from "../../../scripts/comp/rom";
 import { PickupDeposit } from "./PickupDeposit";
 import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";

@@ -346,7 +346,7 @@ export function bigIntToStrNum(input: bigint, dec: number): string {
   let strInput = input.toString();
   let len = strInput.length;
   let front = len > dec ? strInput.substring(0,  (len - dec)) : '0';
-  let end = len > dec ? strInput.substring(len - dec, len) : strInput;
+  let end = len > dec ? strInput.substring(len - dec, len) : strInput.padStart(dec, '0');
 
   return front + '.' + end;
 }

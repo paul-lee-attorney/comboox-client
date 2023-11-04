@@ -1,7 +1,7 @@
 
 import { Stack } from '@mui/material';
-import { CreateComp } from '../components/center/CreateComp';
-import { GetComp } from '../components/center/GetComp';
+import { CreateComp } from '../components/center/regCenter/CreateComp';
+import { GetComp } from '../components/center/regCenter/GetComp';
 
 function FrontPage() {
 
