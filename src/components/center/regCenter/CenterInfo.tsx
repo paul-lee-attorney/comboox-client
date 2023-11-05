@@ -1,4 +1,6 @@
 import { useState } from "react";
+import { useWalletClient } from "wagmi";
+
 import { AddrOfRegCenter, AddrZero, HexType } from "../../../scripts/common";
 import { 
   Rule, 
@@ -10,7 +12,6 @@ import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
 import { getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, toPercent } from "../../../scripts/common/toolsKit";
 import { ActionsOfOwner } from "../user/ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
-import { useWalletClient } from "wagmi";
 import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetFeedRegistryAddress, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 

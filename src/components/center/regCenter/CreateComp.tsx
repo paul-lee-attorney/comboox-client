@@ -1,6 +1,16 @@
 import { useRouter } from 'next/navigation';
 
-import { FormControl, FormHelperText, IconButton, InputAdornment, InputLabel, OutlinedInput, Stack, Tooltip } from '@mui/material';
+import { 
+  FormControl, 
+  FormHelperText, 
+  IconButton, 
+  InputAdornment, 
+  InputLabel, 
+  OutlinedInput, 
+  Stack, 
+  Tooltip 
+} from '@mui/material';
+
 import { BorderColor } from '@mui/icons-material';
 
 import { 
@@ -8,7 +18,7 @@ import {
 } from '../../../generated';
 
 import { 
-  AddrOfRegCenter, AddrZero, HexType,
+  AddrOfRegCenter, HexType,
 } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';

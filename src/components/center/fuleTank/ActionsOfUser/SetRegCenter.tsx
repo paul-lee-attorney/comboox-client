@@ -1,10 +1,10 @@
 
 import { Paper, Stack, TextField } from '@mui/material';
 
-import { useFuleTankSetOwner, useFuleTankSetRegCenter } from '../../../../generated';
+import { useFuleTankSetRegCenter } from '../../../../generated';
 
 import { AddrOfTank, AddrZero, HexType } from '../../../../scripts/common';
-import { ManageAccountsOutlined, SettingsOutlined } from '@mui/icons-material';
+import { SettingsOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../scripts/common/toolsKit';
 import { LoadingButton } from '@mui/lab';
