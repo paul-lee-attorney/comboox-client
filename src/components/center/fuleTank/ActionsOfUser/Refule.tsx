@@ -108,7 +108,7 @@ export function Refule({ refresh }: ActionOfUserProps) {
           sx={{ m:1, mx:2, minWidth:128 }} 
           endIcon={<LocalGasStationOutlined />}       
         >
-          Refule
+          Refule CBP
         </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >
