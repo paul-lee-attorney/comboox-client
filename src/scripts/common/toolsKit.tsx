@@ -342,11 +342,24 @@ export function hasError(valid: FormResults): boolean {
   return false;
 }
 
+export function trimZeroInTail(input: string):string {
+  let out = input;
+  let len = input.length;
+
+  while(len > 1) {
+    if (out.substring(len-1, len) != '0') break;
+    len--;
+  }
+
+  if (len > 1) return out.substring(0, len);
+  else return out[0];
+}
+
 export function bigIntToStrNum(input: bigint, dec: number): string {
   let strInput = input.toString();
   let len = strInput.length;
   let front = len > dec ? strInput.substring(0,  (len - dec)) : '0';
   let end = len > dec ? strInput.substring(len - dec, len) : strInput.padStart(dec, '0');
 
-  return front + '.' + end;
+  return front + '.' + trimZeroInTail(end);
 }
