@@ -1,4 +1,17 @@
-import { Button, Collapse, Dialog, DialogActions, DialogContent, DialogTitle, Paper, TextField, Toolbar } from "@mui/material";
+import { 
+  Button, 
+  Dialog, 
+  DialogActions, 
+  DialogContent, 
+  DialogTitle, 
+  Grid, 
+  Paper, 
+  Stack, 
+  TextField, 
+  Toolbar, 
+  Typography 
+} from "@mui/material";
+
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
 import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../rod/GetPosition";
@@ -9,14 +22,9 @@ import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { Motion, voteEnded } from "../../../scripts/common/meetingMinutes";
 import { getSnOfFile } from "../../../scripts/common/filesFolder";
-import { ProposeMotionToBoardMeeting } from "./VoteMotions/ProposeMotionToBoardMeeting";
-import { CastVoteOfBm } from "./VoteMotions/CastVoteOfBm";
-import { VoteCountingOfBoard } from "./VoteMotions/VoteCountingOfBoard";
-import { TakePosition } from "./ExecMotions/TakePosition";
 
 import { VoteResult } from "../../common/meetingMinutes/VoteResult";
-import { RemoveOfficer } from "./ExecMotions/RemoveOfficer";
-import { ExecAction } from "./ExecMotions/ExecAction";
+import { ActionsOnMotionOfBoard } from "./ActionsOnMotionOfBoard";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
@@ -46,7 +54,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
     }
   }, [motion, addrOfDoc, boox]);
 
-  const [voteIsEnd, setVoteIsEnd] = useState<boolean>();
+  const [voteIsEnd, setVoteIsEnd] = useState<boolean>(false);
 
   useEffect(()=>{
     voteEnded(minutes, motion.head.seqOfMotion).then(
@@ -55,8 +63,6 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
       }
     )
   }, [minutes, motion]);
-
-  const [ voteIsPassed, setVoteIsPassed ] = useState<boolean>(false);
 
   return (
     <Dialog
@@ -67,242 +73,195 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
       sx={{m:1, p:1}} 
     >
       <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }}>
-        <h4>{"Approval Form of Motion"}</h4>
+        <Typography variant="h5">
+          <b>Approval Form of Motion</b>
+        </Typography>
       </DialogTitle>
       <DialogContent>
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
-          <table width={1580} >
-            <thead> 
-              <tr>
-                <td colSpan={2}>
-                  <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h4> Motion Of Board Meeting - {motionType[motion.head.typeOfMotion-1]} </h4>
-                  </Toolbar>
-                </td>
-                <td colSpan={2}>
-                  <Toolbar sx={{ color:'black', textDecoration:'underline' }} >
-                    <h6> No. ( { longSnParser(motion.head.seqOfMotion.toString()) } ) </h6>
-                  </Toolbar>
-                </td>
-              </tr>
-            </thead>
 
-            <tbody>
-              <tr>
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfCreator" 
-                    label="Creator" 
-                    variant="outlined"
-                    value = { longSnParser(motion.head.creator.toString()) }
-                    size='small'
-                  />
-                </td>            
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfCreateDate" 
-                    label="CreateDate" 
-                    variant="outlined"
-                    value = { dateParser(motion.head.createDate.toString()) }
-                    size='small'
-                  />
-                </td>            
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfProposer" 
-                    label="Proposer" 
-                    variant="outlined"
-                    value = { longSnParser(motion.body.proposer.toString()) }
-                    size='small'
-                  />
-                </td>            
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfProposeDate" 
-                    label="ProposeDate" 
-                    variant="outlined"
-                    value = { dateParser(motion.body.proposeDate.toString()) }
-                    size='small'
-                  />
-                </td>
+          <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between' }} >
+            <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
+              <b>Motion of Board Meeting - {motionType[motion.head.typeOfMotion-1]}</b>
+            </Toolbar>
+            <Toolbar sx={{ color:'black', textDecoration:'underline' }} >
+                No. ({longSnParser(motion.head.seqOfMotion.toString())})
+            </Toolbar>
+          </Stack>
+            
+          <Grid container direction='row' spacing={2} >
+            <Grid item xs={3}>
+              <TextField 
+                fullWidth={true}
+                inputProps={{readOnly: true}}
+                sx={{ m: 1 }} 
+                id="tfCreator" 
+                label="Creator" 
+                variant="outlined"
+                value = { longSnParser(motion.head.creator.toString()) }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField 
+                fullWidth={true}
+                inputProps={{readOnly: true}}
+                sx={{ m: 1 }} 
+                id="tfCreateDate" 
+                label="CreateDate" 
+                variant="outlined"
+                value = { dateParser(motion.head.createDate.toString()) }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField 
+                fullWidth={true}
+                inputProps={{readOnly: true}}
+                sx={{ m: 1 }} 
+                id="tfProposer" 
+                label="Proposer" 
+                variant="outlined"
+                value = { longSnParser(motion.body.proposer.toString()) }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <TextField 
+                fullWidth={true}
+                inputProps={{readOnly: true}}
+                sx={{ m: 1 }} 
+                id="tfProposeDate" 
+                label="ProposeDate" 
+                variant="outlined"
+                value = { dateParser(motion.body.proposeDate.toString()) }
+                size='small'
+              />
+            </Grid>
+          </Grid>
 
-              </tr>
+          <Grid container direction='row' spacing={2} >
+            <Grid item xs={3}>
+              <TextField 
+                fullWidth
+                inputProps={{readOnly: true}}
+                sx={{ m: 1 }} 
+                id="tfExectuor" 
+                label={ motion.head.typeOfMotion == 1 ? "Candidate" : "Executor" } 
+                variant="outlined"
+                value = { longSnParser(motion.head.executor.toString()) }
+                size='small'
+              />
+            </Grid>
+            <Grid item xs={3}>
+              <GetVotingRule seq={motion.head.seqOfVR} />          
+            </Grid>
+            <Grid item xs={6}>
+              {motion.head.typeOfMotion < 3 && (
+                <GetPosition seq={Number(motion.contents)} />
+              )}
 
-              <tr>
-                <td>
-                  <TextField 
+              {motion.head.typeOfMotion == 3 && snOfDoc && (
+                <Link
+                  href={{
+                    pathname: motion.head.seqOfVR == 8
+                            ? '/comp/roc/Sha'
+                            : '/comp/roa/Ia'
+                    ,
+                    query: {
+                      addr: addrOfDoc,
+                      snOfDoc: snOfDoc.substring(6, 26),
+                    }
+                  }}
+                  as={motion.head.seqOfVR == 8
+                      ? '/comp/roc/Sha'
+                      : '/comp/roa/Ia'}
+                >            
+                  <Button
+                    variant="outlined"
                     fullWidth
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfExectuor" 
-                    label={ motion.head.typeOfMotion == 1 ? "Candidate" : "Executor" } 
-                    variant="outlined"
-                    value = { longSnParser(motion.head.executor.toString()) }
-                    size='small'
-                  />
-                </td>
-
-                <td>
-                  <GetVotingRule seq={motion.head.seqOfVR} />
-                </td>
-
-                <td colSpan={2}>
-                  {motion.head.typeOfMotion < 3 && (
-                    <GetPosition seq={Number(motion.contents)} />
-                  )}
-
-                  {motion.head.typeOfMotion == 3 && snOfDoc && (
-                    <Link
-                      href={{
-                        pathname: motion.head.seqOfVR == 8
-                                ? '/comp/roc/Sha'
-                                : '/comp/roa/Ia'
-                        ,
-                        query: {
-                          addr: addrOfDoc,
-                          snOfDoc: snOfDoc.substring(6, 26),
-                        }
-                      }}
-                      as={motion.head.seqOfVR == 8
-                          ? '/comp/roc/Sha'
-                          : '/comp/roa/Ia'}
-                    >            
-                      <Button
-                        variant="outlined"
-                        fullWidth
-                        startIcon={<Article />}
-                        sx={{ m:1 }}
-                      >
-                        Doc: {addrOfDoc}
-                      </Button>
-                    </Link>
-                  )}
-
-                  {motion.head.typeOfMotion == 4 && (
-                    <TextField 
-                      fullWidth
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfHashOfAction" 
-                      label="HashOfAction" 
-                      variant="outlined"
-                      value = { motion.contents.toString(16) }
-                      size='small'
-                    />                                            
-                  )}
-
-                </td>
-              </tr>
-
-              {motion.body.state > 1 && (
-                <tr>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfShareRegDate" 
-                      label="ShareRegDate" 
-                      variant="outlined"
-                      value = { dateParser(motion.body.shareRegDate.toString()) }
-                      size='small'
-                    />
-                  </td>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfVoteStartDate" 
-                      label="VoteStartDate" 
-                      variant="outlined"
-                      value = { dateParser(motion.body.voteStartDate.toString()) }
-                      size='small'
-                    />
-                  </td>
-                  <td>
-                    <TextField 
-                      fullWidth={true}
-                      inputProps={{readOnly: true}}
-                      sx={{ m: 1 }} 
-                      id="tfVoteEndDate" 
-                      label="VoteEndDate" 
-                      variant="outlined"
-                      value = { dateParser(motion.body.voteEndDate.toString()) }
-                      size='small'
-                    />
-                  </td>
-                </tr>
+                    startIcon={<Article />}
+                    sx={{ m:1 }}
+                  >
+                    Doc: {addrOfDoc}
+                  </Button>
+                </Link>
               )}
 
-              {motion.body.state > 2 && (
-                <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
+              {motion.head.typeOfMotion == 4 && (
+                <TextField 
+                  fullWidth
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfHashOfAction" 
+                  label="HashOfAction" 
+                  variant="outlined"
+                  value = { motion.contents.toString(16) }
+                  size='small'
+                />                                            
               )}
+              
+            </Grid>
+          </Grid>
 
-              {motion.body.state == 1 && (
-                <tr>
-                  <td colSpan={4}>
-                    <ProposeMotionToBoardMeeting seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />
-                  </td>
-                </tr>
-              )}
+          {motion.body.state > 1 && (
+            <Grid container direction='row' spacing={2} >
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfShareRegDate" 
+                  label="ShareRegDate" 
+                  variant="outlined"
+                  value = { dateParser(motion.body.shareRegDate.toString()) }
+                  size='small'
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfVoteStartDate" 
+                  label="VoteStartDate" 
+                  variant="outlined"
+                  value = { dateParser(motion.body.voteStartDate.toString()) }
+                  size='small'
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfVoteEndDate" 
+                  label="VoteEndDate" 
+                  variant="outlined"
+                  value = { dateParser(motion.body.voteEndDate.toString()) }
+                  size='small'
+                />
+              </Grid>
+            </Grid>
+          )}
 
-              {motion.body.state == 2 && (
-                <tr>
-                  <td colSpan={4}>
-                    <Collapse in={voteIsEnd == false}>
-                      <CastVoteOfBm seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />
-                    </Collapse>
-                    <Collapse in={voteIsEnd == true}>
-                      <VoteCountingOfBoard seqOfMotion={motion.head.seqOfMotion} setResult={setVoteIsPassed} setNextStep={()=>{}} setOpen={setOpen} refresh={refresh} />
-                    </Collapse>
-                  </td>
-                </tr>
-              )}
+          {motion.body.state > 2 && (
+            <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
+          )}
 
-              {motion.body.state == 3 && motion.head.typeOfMotion == 1 && (
-                <tr>
-                  <td colSpan={4}>
-                    <TakePosition seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} refresh={refresh} />
-                  </td>
-                </tr>
-              )}
+          <Grid container direction='row' spacing={2} >
+            <Grid item xs={12}>
+              <ActionsOnMotionOfBoard motion={motion} voteIsEnd={voteIsEnd} setOpen={setOpen} refresh={refresh} />
+            </Grid>
+          </Grid>
 
-              {motion.body.state == 3 && motion.head.typeOfMotion == 2 && (
-                <tr>
-                  <td colSpan={4}>
-                    <RemoveOfficer seqOfMotion={motion.head.seqOfMotion} seqOfPos={Number(motion.contents)} setOpen={setOpen} refresh={refresh} />
-                  </td>
-                </tr>
-              )}
-
-              {motion.body.state == 3 && motion.head.typeOfMotion == 4 && (
-                <tr>
-                  <td colSpan={4}>
-                    <ExecAction seqOfMotion={motion.head.seqOfMotion} seqOfVr={motion.head.seqOfVR} setOpen={setOpen} refresh={refresh} />
-                  </td>
-                </tr>
-              )}
-
-            </tbody>
-          </table>
         </Paper>
       </DialogContent>
+
       <DialogActions>
         <Button onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
+
     </Dialog>
 
   )

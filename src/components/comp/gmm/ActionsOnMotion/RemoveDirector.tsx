@@ -1,19 +1,17 @@
-import { 
-  useGeneralKeeperRemoveOfficer, 
-} from "../../../../generated";
-
+import { useGeneralKeeperRemoveDirector } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
-import { TakePositionProps } from "./TakePosition";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { HexType } from "../../../../scripts/common";
-import { useState } from "react";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useState } from "react";
+import { ActionsOnMotionProps } from "../ActionsOnMotion";
 
-export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
+export function RemoveDirector({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
-  const {gk, setErrMsg} = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
+
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -23,9 +21,9 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, refresh}:TakePosi
   }
 
   const {
-    isLoading: removeOfficerLoading,
-    write: removeOfficer,
-  } = useGeneralKeeperRemoveOfficer({
+    isLoading: removeDirectorLoading,
+    write: removeDirector,
+  } = useGeneralKeeperRemoveDirector({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -38,8 +36,8 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, refresh}:TakePosi
   });
 
   const handleClick = ()=>{
-    removeOfficer({
-      args: [seqOfMotion, BigInt(seqOfPos)],
+    removeDirector({
+      args: [motion.head.seqOfMotion, motion.contents],
     })
   }
 
@@ -47,7 +45,7 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, refresh}:TakePosi
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <LoadingButton
-        disabled={ removeOfficerLoading }
+        disabled={ !removeDirector || removeDirectorLoading}
         loading={loading}
         loadingPosition="end"
         variant="contained"
@@ -55,7 +53,7 @@ export function RemoveOfficer({seqOfMotion, seqOfPos, setOpen, refresh}:TakePosi
         sx={{ m:1, mr:6 }}
         onClick={ handleClick }
       >
-        Remove Officer
+        Remove Director
       </LoadingButton>
 
     </Paper>

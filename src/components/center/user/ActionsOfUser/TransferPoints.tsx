@@ -9,7 +9,7 @@ import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../../scripts/common/common';
-import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+import { FormResults, HexParser, bigIntToStrNum, defFormResults, hasError, longDataParser, onlyHex, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
@@ -144,7 +144,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
             severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            {  longDataParser(receipt?.amt ?? '0') + ' CBP' } transfered to Addr ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
+            {  bigIntToStrNum(BigInt(receipt?.amt ?? '0') / (10n**9n), 9) + ' CBP' } transfered to Addr ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
           </Alert>          
         </Collapse>
 

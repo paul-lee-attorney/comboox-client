@@ -1,8 +1,9 @@
 
 import { BallotsList } from "./BallotsList";
 import { HexType } from "../../../scripts/common";
-import { VoteCase, defaultVoteCase, getCaseOfAttitude, getVoteResult } from "../../../scripts/common/meetingMinutes";
+import { VoteCase, defaultVoteCase, getVoteResult } from "../../../scripts/common/meetingMinutes";
 import { useEffect, useState } from "react";
+import { Grid } from "@mui/material";
 
 interface VoteResultProps {
   addr: HexType;
@@ -25,37 +26,34 @@ export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
   })
 
   return (
-    <table>
-      <tr>
-        <td>
-          <BallotsList 
-            addr={addr} 
-            seqOfMotion={seqOfMotion}
-            attitude={ 1 } 
-            allVote={voteResult[0]} 
-            voteCase={voteResult[1]} 
-          />
-        </td>
-        <td>
-          <BallotsList 
-            addr={addr} 
-            seqOfMotion={seqOfMotion}
-            attitude ={ 3 } 
-            allVote={voteResult[0]} 
-            voteCase={voteResult[3]} 
-          />
-        </td>
-        <td>
-          <BallotsList 
-            addr={addr} 
-            seqOfMotion={seqOfMotion}
-            attitude = { 2 } 
-            allVote={voteResult[0]} 
-            voteCase={voteResult[2]} 
-          />
-        </td>
-      </tr>
-    </table>
+    <Grid container direction='row' spacing={2} >
+      <Grid item xs={3}>
+        <BallotsList 
+          addr={addr} 
+          seqOfMotion={seqOfMotion}
+          attitude={ 1 } 
+          allVote={voteResult[0]} 
+          voteCase={voteResult[1]} 
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <BallotsList 
+          addr={addr} 
+          seqOfMotion={seqOfMotion}
+          attitude ={ 3 } 
+          allVote={voteResult[0]} 
+          voteCase={voteResult[3]} 
+        />
+      </Grid>
+      <Grid item xs={3}>
+        <BallotsList 
+          addr={addr} 
+          seqOfMotion={seqOfMotion}
+          attitude = { 2 } 
+          allVote={voteResult[0]} 
+          voteCase={voteResult[2]} 
+        />
+      </Grid>
+    </Grid>
   )
-
 }

@@ -20,16 +20,22 @@ import {
   RemoveCircle, 
   Surfing 
 } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
+
+import { 
+  FormResults, 
+  HexParser, 
+  defFormResults, 
+  hasError, 
+  onlyHex, 
+  onlyInt, 
+  refreshAfterTx 
+} from "../../../../scripts/common/toolsKit";
+
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
+import { ActionsOnMotionProps } from "../../gmm/ActionsOnMotion";
 
-export interface ExecActionProps extends ProposeMotionProps {
-  seqOfVr: number;
-}
-
-export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionProps) {
+export function ExecAction({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
@@ -41,8 +47,8 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
 
   const updateResults = ()=>{
     refresh();
-    setOpen(false);
     setLoading(false);
+    setOpen(false);
   }
 
   const {
@@ -61,14 +67,14 @@ export function ExecAction({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionPr
   });
 
   const execActionClick = ()=>{
-    if (seqOfVr && desHash && seqOfMotion) {
+    if (motion.votingRule.seqOfRule && desHash && motion.head.seqOfMotion) {
       execAction({
         args: [
-          BigInt(seqOfVr), 
+          BigInt(motion.votingRule.seqOfRule), 
           actions.map(v => (v.target)), 
           actions.map(v => (BigInt(v.value))),
           actions.map(v => (v.params)),
-          desHash, BigInt(seqOfMotion)
+          desHash, motion.head.seqOfMotion
         ],
       });
     }

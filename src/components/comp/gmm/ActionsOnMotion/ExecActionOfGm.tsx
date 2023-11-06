@@ -8,15 +8,16 @@ import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/m
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
-import { ExecActionProps } from "../../bmm/ExecMotions/ExecAction";
 import { LoadingButton } from "@mui/lab";
+import { ActionsOnMotionProps } from "../ActionsOnMotion";
 
-export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActionProps) {
+export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
   const [ actions, setActions ] = useState<Action[]>([ defaultAction ]);
   const [ desHash, setDesHash ] = useState<HexType>(Bytes32Zero);
+  
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
@@ -43,11 +44,11 @@ export function ExecActionOfGm({seqOfVr, seqOfMotion, setOpen, refresh}:ExecActi
   const handleClick = ()=> {
     execAction({
       args: [
-        BigInt(seqOfVr), 
+        BigInt(motion.votingRule.seqOfRule),
         actions.map(v => (v.target)), 
         actions.map(v => (BigInt(v.value))),
         actions.map(v => (v.params)),
-        desHash, BigInt(seqOfMotion)
+        desHash, motion.head.seqOfMotion
       ],
     });
   };

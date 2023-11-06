@@ -13,12 +13,12 @@ import {
 
 import { HexType, booxMap } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
+import { VoteCountingOfGm } from "../../gmm/ActionsOnMotion/VoteCountingOfGm";
 import { voteEnded } from "../../../../scripts/common/meetingMinutes";
 import { SignIa } from "./SignIa";
 import { CirculateIa } from "./CirculateIa";
-import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
-import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
+import { ProposeDocOfGm } from "../../gmm/ActionsOnMotion/ProposeDocOfGm";
+import { VoteForDocOfGm } from "../../gmm/ActionsOnMotion/VoteForDocOfGm";
 import { FinalizeIa } from "./FinalizeIa";
 import { getTypeOfIA } from "../../../../scripts/comp/ia";
 import { established } from "../../../../scripts/common/sigPage";

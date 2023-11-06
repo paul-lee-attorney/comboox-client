@@ -1,40 +1,34 @@
-import { Dispatch, SetStateAction, useState } from "react";
-
-import { 
-  useGeneralKeeperProposeMotionToBoard,
-} from "../../../../generated";
-
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Box, Button, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { HexType } from "../../../../scripts/common";
-import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
-export interface ProposeMotionProps {
-  seqOfMotion: bigint,
-  setOpen: Dispatch<SetStateAction<boolean>>,
-  refresh: ()=>void;
-}
+import { useGeneralKeeperProposeMotionToGeneralMeeting } from "../../../../generated";
+import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 
-export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
+import { ActionsOnMotionProps } from "../ActionsOnMotion";
+
+import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
+
+export function ProposeMotionToGeneralMeeting({ motion, setOpen, refresh }: ActionsOnMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
-  const [ loading, setLoading ] = useState(false);
 
+  const [ loading, setLoading ] = useState(false);
+  
   const updateResults = ()=>{
     refresh();
-    setOpen(false);
     setLoading(false);
+    setOpen(false);
   }
 
   const {
-    isLoading: proposeMotionToBoardLoading,
-    write: proposeMotionToBoard,
-  } = useGeneralKeeperProposeMotionToBoard({
+    isLoading: proposeMotionToGmLoading,
+    write: proposeMotionToGm,
+  } = useGeneralKeeperProposeMotionToGeneralMeeting({
     address: gk,
-    args: [ seqOfMotion ],
     onError(err) {
       setErrMsg(err.message);
     },
@@ -44,6 +38,12 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
       refreshAfterTx(hash, updateResults);
     }
   });
+
+  const handleClick = ()=>{
+    proposeMotionToGm({
+      args: [ motion.head.seqOfMotion ],
+    })
+  }
 
   const [ appear, setAppear ] = useState(false);
 
@@ -77,13 +77,13 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
       <Collapse in={ !appear } >
         <Stack direction="row" sx={{ alignItems:'center' }} >
          <LoadingButton
-            disabled={ !proposeMotionToBoard || proposeMotionToBoardLoading }
+            disabled={ !proposeMotionToGm || proposeMotionToGmLoading }
             loading={loading}
             loadingPosition="end"
             variant="contained"
             endIcon={<EmojiPeople />}
-            sx={{ m:1, minWidth:118 }}
-            onClick={()=>proposeMotionToBoard?.()}
+            sx={{ m:1, minWidth:128 }}
+            onClick={ handleClick }
           >
             Propose
           </LoadingButton>
@@ -91,10 +91,10 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterForBoardMeeting 
-          seqOfMotion={seqOfMotion} 
-          setOpen={setOpen} 
-          refresh={refresh} 
+        <EntrustDelegaterForGeneralMeeting 
+          motion={motion}
+          setOpen={setOpen}
+          refresh={refresh}
         />
       </Collapse>
 

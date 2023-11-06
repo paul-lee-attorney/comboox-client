@@ -6,7 +6,7 @@ import { AssignmentInd } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
 import { titleOfPositions } from "../roc/rules/PositionAllocationRules/SetPositionAllocateRule";
 import { Position, getPosition } from "../../../scripts/comp/rod";
-import { QuitPosition } from "../bmm/ExecMotions/QuitPosition";
+import { QuitPosition } from "../bmm/ActionsOnMotion/QuitPosition";
 import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
 import { booxMap } from "../../../scripts/common";
 

@@ -1,30 +1,32 @@
-import { useGeneralKeeperRemoveDirector } from "../../../../generated";
+
+import { useGeneralKeeperTakePosition } from "../../../../generated";
+
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Paper } from "@mui/material";
-import { FollowTheSigns } from "@mui/icons-material";
-import { TakePositionProps } from "../../bmm/ExecMotions/TakePosition";
-import { HexType } from "../../../../scripts/common";
+import { Chair } from "@mui/icons-material";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { LoadingButton } from "@mui/lab";
+import { HexType } from "../../../../scripts/common";
 import { useState } from "react";
+import { LoadingButton } from "@mui/lab";
+import { ActionsOnMotionProps } from "../../gmm/ActionsOnMotion";
 
-export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
+export function TakePosition({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
-
   const [ loading, setLoading ] = useState(false);
-
+  
   const updateResults = ()=>{
     refresh();
-    setOpen(false);
     setLoading(false);
+    setOpen(false);
   }
 
   const {
-    isLoading: removeDirectorLoading,
-    write: removeDirector,
-  } = useGeneralKeeperRemoveDirector({
+    isLoading: takePositionLoading,
+    write: takePosition,
+  } = useGeneralKeeperTakePosition({
     address: gk,
+    args: [motion.head.seqOfMotion, motion.contents],
     onError(err) {
       setErrMsg(err.message);
     },
@@ -35,25 +37,19 @@ export function RemoveDirector({seqOfMotion, seqOfPos, setOpen, refresh}:TakePos
     }
   });
 
-  const handleClick = ()=>{
-    removeDirector({
-      args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
-    })
-  }
-
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <LoadingButton
-        disabled={ !removeDirector || removeDirectorLoading}
+        disabled={ !takePosition || takePositionLoading}
         loading={loading}
         loadingPosition="end"
         variant="contained"
-        endIcon={<FollowTheSigns />}
+        endIcon={<Chair />}
         sx={{ m:1, mr:6 }}
-        onClick={ handleClick }
+        onClick={()=>takePosition?.()}
       >
-        Remove Director
+        Take Position
       </LoadingButton>
 
     </Paper>

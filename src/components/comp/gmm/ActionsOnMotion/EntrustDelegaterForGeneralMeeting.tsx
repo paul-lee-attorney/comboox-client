@@ -7,12 +7,12 @@ import {
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
-import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 import { HexType, MaxUserNo } from "../../../../scripts/common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { ActionsOnMotionProps } from "../ActionsOnMotion";
 
-export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
+export function EntrustDelegaterForGeneralMeeting({ motion, setOpen, refresh }: ActionsOnMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
@@ -44,7 +44,7 @@ export function EntrustDelegaterForGeneralMeeting({ seqOfMotion, setOpen, refres
   const handleClick = ()=>{
     entrustDelegaterOfMember({
       args:[
-        seqOfMotion, 
+        motion.head.seqOfMotion, 
         BigInt(delegater)
       ],
     });

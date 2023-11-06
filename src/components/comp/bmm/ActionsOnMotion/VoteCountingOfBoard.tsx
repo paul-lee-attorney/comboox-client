@@ -1,39 +1,32 @@
 
-import { 
-  useGeneralKeeperTakePosition, 
-} from "../../../../generated";
+import { Paper } from "@mui/material";
+import { useGeneralKeeperVoteCounting } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper } from "@mui/material";
-import { Chair } from "@mui/icons-material";
-import { ProposeMotionProps } from "../VoteMotions/ProposeMotionToBoardMeeting";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { Calculate } from "@mui/icons-material";
 import { HexType } from "../../../../scripts/common";
+import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { useState } from "react";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
-export interface TakePositionProps extends ProposeMotionProps {
-  seqOfPos: number;
-}
-
-
-export function TakePosition({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
+export function VoteCountingOfBoard({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
-  
+
   const updateResults = ()=>{
     refresh();
-    setOpen(false);
     setLoading(false);
+    setOpen(false);
   }
 
   const {
-    isLoading: takePositionLoading,
-    write: takePosition,
-  } = useGeneralKeeperTakePosition({
+    isLoading: voteCountingLoading,
+    write: voteCounting,
+  } = useGeneralKeeperVoteCounting({
     address: gk,
-    args: [seqOfMotion, BigInt(seqOfPos)],
+    args: [ seqOfMotion ],
     onError(err) {
       setErrMsg(err.message);
     },
@@ -48,17 +41,18 @@ export function TakePosition({seqOfMotion, seqOfPos, setOpen, refresh}:TakePosit
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <LoadingButton
-        disabled={ !takePosition || takePositionLoading}
+        disabled={ voteCountingLoading }
         loading={loading}
         loadingPosition="end"
         variant="contained"
-        endIcon={<Chair />}
+        endIcon={<Calculate />}
         sx={{ m:1, mr:6 }}
-        onClick={()=>takePosition?.()}
+        onClick={()=>voteCounting?.()}
       >
-        Take Position
+        Count
       </LoadingButton>
 
     </Paper>
-  );
+  )
+
 }

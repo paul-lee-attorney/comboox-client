@@ -1,10 +1,9 @@
 import { useState } from "react";
 
-import { 
-  useGeneralKeeperCastVoteOfGm,
-} from "../../../../generated";
+import { useGeneralKeeperCastVoteOfGm } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
+
 import { 
   Box, 
   Collapse, 
@@ -21,15 +20,25 @@ import {
   Typography 
 } from "@mui/material";
 
-import { HowToVote, } from "@mui/icons-material";
-import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
-import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
-import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { ProposeMotionProps } from "../../bmm/VoteMotions/ProposeMotionToBoardMeeting";
 import { LoadingButton } from "@mui/lab";
 
-export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
+import { HowToVote, } from "@mui/icons-material";
+
+import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
+import { 
+  FormResults, 
+  HexParser, 
+  defFormResults, 
+  hasError, 
+  onlyHex, 
+  refreshAfterTx 
+} from "../../../../scripts/common/toolsKit";
+
+import { EntrustDelegaterForGeneralMeeting } from "./EntrustDelegaterForGeneralMeeting";
+import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
+import { ActionsOnMotionProps } from "../ActionsOnMotion";
+
+export function CastVoteOfGm({ motion, setOpen, refresh }: ActionsOnMotionProps) {
 
   const { gk, boox, setErrMsg } = useComBooxContext();
 
@@ -62,7 +71,7 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
   const handleClick = ()=>{
     castVote({
       args: [
-        seqOfMotion, 
+        motion.head.seqOfMotion, 
         BigInt(attitude), 
         sigHash
       ],
@@ -148,13 +157,13 @@ export function CastVoteOfGm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
         </Stack>
 
           {boox && (
-            <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={seqOfMotion} />
+            <VoteResult addr={boox[booxMap.GMM]} seqOfMotion={motion.head.seqOfMotion} />
           )}
 
       </Collapse>
 
       <Collapse in={ appear } >
-        <EntrustDelegaterForGeneralMeeting seqOfMotion={seqOfMotion} setOpen={setOpen} refresh={refresh} />
+        <EntrustDelegaterForGeneralMeeting motion={motion} setOpen={setOpen} refresh={refresh} />
       </Collapse>
 
     </Paper>

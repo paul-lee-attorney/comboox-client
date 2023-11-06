@@ -1,19 +1,25 @@
 
+import { Dispatch, SetStateAction, useState } from "react";
+
 import { Paper } from "@mui/material";
-import { 
-  useGeneralKeeperVoteCountingOfGm, 
-} from "../../../../generated";
+import { useGeneralKeeperVoteCountingOfGm } from "../../../../generated";
 
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
 import { isPassed } from "../../../../scripts/common/meetingMinutes";
 import { HexType, booxMap } from "../../../../scripts/common";
-import { VoteCountingOfBoard } from "../../bmm/VoteMotions/VoteCountingOfBoard";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 
-export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfBoard ) {
+export interface VoteCountingOfGMProps {
+  seqOfMotion: bigint;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  refresh: ()=>void;
+  setResult: (flag:boolean)=>void;
+  setNextStep: (i:number)=>void;
+}
+
+export function VoteCountingOfGm({ seqOfMotion, setResult, setNextStep, setOpen, refresh }: VoteCountingOfGMProps ) {
 
   const { gk, boox, setErrMsg } = useComBooxContext();
 

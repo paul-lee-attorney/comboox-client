@@ -1,18 +1,21 @@
-import { useGeneralKeeperTakeSeat } from "../../../../generated";
+import { 
+  useGeneralKeeperRemoveOfficer, 
+} from "../../../../generated";
+
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { HexType } from "../../../../scripts/common";
-import { Button, Paper } from "@mui/material";
-import { Chair } from "@mui/icons-material";
-import { TakePositionProps } from "../../bmm/ExecMotions/TakePosition";
+import { Paper } from "@mui/material";
+import { FollowTheSigns } from "@mui/icons-material";
 import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType } from "../../../../scripts/common";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
+import { ActionsOnMotionProps } from "../../gmm/ActionsOnMotion";
 
-export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionProps) {
+export function RemoveOfficer({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
-  const { gk, setErrMsg } = useComBooxContext();
+  const {gk, setErrMsg} = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
-  
+
   const updateResults = ()=>{
     refresh();
     setOpen(false);
@@ -20,9 +23,9 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionP
   }
 
   const {
-    isLoading: takeSeatLoading,
-    write: takeSeat,
-  } = useGeneralKeeperTakeSeat({
+    isLoading: removeOfficerLoading,
+    write: removeOfficer,
+  } = useGeneralKeeperRemoveOfficer({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -35,24 +38,24 @@ export function TakeSeat({seqOfMotion, seqOfPos, setOpen, refresh}:TakePositionP
   });
 
   const handleClick = ()=>{
-    takeSeat({
-      args: [BigInt(seqOfMotion), BigInt(seqOfPos)],
-    })  
+    removeOfficer({
+      args: [motion.head.seqOfMotion, motion.contents],
+    })
   }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <LoadingButton
-        disabled={ !takeSeat || takeSeatLoading}
+        disabled={ removeOfficerLoading }
         loading={loading}
         loadingPosition="end"
         variant="contained"
-        endIcon={<Chair />}
+        endIcon={<FollowTheSigns />}
         sx={{ m:1, mr:6 }}
         onClick={ handleClick }
       >
-        Take Seat
+        Remove Officer
       </LoadingButton>
 
     </Paper>

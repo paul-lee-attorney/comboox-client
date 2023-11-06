@@ -11,13 +11,13 @@ import {
 } from "@mui/material";
 import { AddrZero, HexType, booxMap } from "../../../../scripts/common";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { VoteCountingOfGm } from "../../gmm/VoteMotions/VoteCountingOfGm";
+import { VoteCountingOfGm } from "../../gmm/ActionsOnMotion/VoteCountingOfGm";
 import { voteEnded } from "../../../../scripts/common/meetingMinutes";
 import { getHeadOfFile } from "../../../../scripts/common/filesFolder";
 import { CirculateSha } from "./Actions/CirculateSha";
 import { SignSha } from "./Actions/SignSha";
-import { ProposeDocOfGm } from "../../gmm/VoteMotions/ProposeDocOfGm";
-import { VoteForDocOfGm } from "../../gmm/VoteMotions/VoteForDocOfGm";
+import { ProposeDocOfGm } from "../../gmm/ActionsOnMotion/ProposeDocOfGm";
+import { VoteForDocOfGm } from "../../gmm/ActionsOnMotion/VoteForDocOfGm";
 import { ActivateSha } from "./Actions/ActivateSha";
 import { FinalizeSha } from "./Actions/FinalizeSha";
 import { established } from "../../../../scripts/common/sigPage";
