@@ -11,12 +11,12 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ hardhat ],
+  [ mainnet, sepolia, hardhat ],
   [
-    // alchemyProvider({
-    //   apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
-    //   // stallTimeout: 2_000,
-    // }),
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
+      // stallTimeout: 2_000,
+    }),
     publicProvider(),
   ],
 )
