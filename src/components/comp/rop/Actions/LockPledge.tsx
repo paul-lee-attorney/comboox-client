@@ -51,7 +51,7 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
-      <Stack direction='row' sx={{ alignItems:'stretch' }} >
+      <Stack direction='row' sx={{ alignItems:'start' }} >
 
         <TextField 
           variant='outlined'
