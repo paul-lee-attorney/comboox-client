@@ -25,7 +25,7 @@ const columns: GridColDef[] = [
   },
   { 
     field: 'weight', 
-    headerName: 'Weight (Dollar)',
+    headerName: 'Weight',
     valueGetter: p =>  centToDollar(p.row.weight.toString()),
     headerAlign: 'right',
     align:'right',

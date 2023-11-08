@@ -25,7 +25,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'par',
-    headerName: 'Par (Dollar)',
+    headerName: 'Par',
     valueGetter: (p) => centToDollar(p.row.par.toString()),
     width: 330,
     headerAlign: 'right',
@@ -33,7 +33,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'paid',
-    headerName: 'Paid (Dollar)',
+    headerName: 'Paid',
     valueGetter: (p) => centToDollar(p.row.paid.toString()),
     width: 330,
     headerAlign: 'right',
@@ -41,7 +41,7 @@ const columns: GridColDef[] = [
   },
   {
     field: 'clean',
-    headerName: 'CleanPaid (Dollar)',
+    headerName: 'CleanPaid',
     valueGetter: (p) => centToDollar(p.row.cleanPaid.toString()),
     width: 330,
     headerAlign: 'right',

@@ -61,7 +61,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     },
     {
       field: 'par',
-      headerName: 'Par (Dollar)',
+      headerName: 'Par',
       valueGetter: p => centToDollar(p.row.body.par.toString()),
       width: 218,
       headerAlign:'right',
@@ -69,7 +69,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     },
     {
       field: 'paid',
-      headerName: 'Paid (Dollar)',
+      headerName: 'Paid',
       valueGetter: p => centToDollar(p.row.body.paid.toString()),
       width: 218,
       headerAlign:'right',
@@ -77,7 +77,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     },
     {
       field: 'priceOfPaid',
-      headerName: 'PriceOfPaid (Dollar)',
+      headerName: 'PriceOfPaid',
       valueGetter: p => centToDollar(p.row.head.priceOfPaid.toString()),
       width: 218,
       headerAlign:'right',

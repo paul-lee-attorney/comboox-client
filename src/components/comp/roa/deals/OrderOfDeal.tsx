@@ -297,7 +297,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='Par (Dollar)'
+                  label='Par'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
@@ -310,7 +310,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='Paid (Dollar)'
+                  label='Paid'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
