@@ -176,7 +176,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
                 m:1,
                 minWidth: 218,
               }}
-              helperText=''
+              helperText=' '
               value={ dayjs.unix(paras.expireDate) }
               onChange={(date) => setParas((v) => ({
                 ...v,
