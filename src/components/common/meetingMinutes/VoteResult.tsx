@@ -27,7 +27,7 @@ export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
 
   return (
     <Grid container direction='row' spacing={2} >
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <BallotsList 
           addr={addr} 
           seqOfMotion={seqOfMotion}
@@ -36,7 +36,7 @@ export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
           voteCase={voteResult[1]} 
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <BallotsList 
           addr={addr} 
           seqOfMotion={seqOfMotion}
@@ -45,7 +45,7 @@ export function VoteResult({ addr, seqOfMotion }: VoteResultProps) {
           voteCase={voteResult[3]} 
         />
       </Grid>
-      <Grid item xs={3}>
+      <Grid item xs={4}>
         <BallotsList 
           addr={addr} 
           seqOfMotion={seqOfMotion}
