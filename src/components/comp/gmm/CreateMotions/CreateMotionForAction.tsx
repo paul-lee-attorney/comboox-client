@@ -6,7 +6,7 @@ import {
   useGeneralKeeperCreateActionOfGm, 
 } from "../../../../generated";
 
-import { Button, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
@@ -76,7 +76,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
 
       <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-        <Stack direction="row" sx={{ alignItems:'center' }} >
+        <Stack direction="row" sx={{ alignItems:'start' }} >
 
           <Tooltip
             title='AddSmartContract'
@@ -182,7 +182,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
 
       {actions.map((v, i)=>(
         <Paper key={i} elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
-          <Stack  direction="row" sx={{ alignItems:'center' }} >
+          <Stack  direction="row" sx={{ alignItems:'start' }} >
 
             <Typography color='black' sx={{ml:1, mr:2}}  >
               Step: {i+1}

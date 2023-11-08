@@ -6,7 +6,7 @@ import { AddrZero, HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/comm
 
 import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
 
-import { Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
@@ -175,7 +175,8 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               sx={{
                 m:1,
                 minWidth: 218,
-              }} 
+              }}
+              helperText=''
               value={ dayjs.unix(paras.expireDate) }
               onChange={(date) => setParas((v) => ({
                 ...v,

@@ -60,7 +60,7 @@ export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
 
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
 
-      <Stack direction="row" sx={{ alignItems:'center' }} >
+      <Stack direction="row" sx={{ alignItems:'start' }} >
 
         <TextField 
           variant='outlined'

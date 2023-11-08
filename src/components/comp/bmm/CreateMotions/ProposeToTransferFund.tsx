@@ -67,7 +67,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
         <Stack direction="column" >
 
-          <Stack direction="row" sx={{ alignItems:'center' }} >
+          <Stack direction="row" sx={{ alignItems:'start' }} >
 
             <TextField 
               variant='outlined'
@@ -159,6 +159,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
                 m:1,
                 minWidth: 218,
               }} 
+              helperText=''
               value={ dayjs.unix(paras.expireDate) }
               onChange={(date) => setParas((v) => ({
                 ...v,

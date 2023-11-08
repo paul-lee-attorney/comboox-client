@@ -78,7 +78,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
 
       <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
 
-        <Stack direction="row" sx={{ alignItems:'center' }} >
+        <Stack direction="row" sx={{ alignItems:'start' }} >
 
           <Tooltip
             title='AddSmartContract'
@@ -186,7 +186,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
       {actions.map((v, i)=>(
         <Paper key={i} elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
 
-          <Stack direction="row" sx={{ alignItems:'center' }} >
+          <Stack direction="row" sx={{ alignItems:'start' }} >
 
             <Typography color='black' sx={{ml:1, mr:2}}  >
               Step: {i+1}
