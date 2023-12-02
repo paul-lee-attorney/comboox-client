@@ -27,7 +27,13 @@ export default function Copyright() {
 
       <Typography variant="body2" color="text.secondary" align="center" sx={{mt:20, ml:10}}>
         <Link href="https://github.com/paul-lee-attorney/comboox">
-          GitHub
+          GitHub (Smart Contracts)
+        </Link>
+      </Typography>      
+
+      <Typography variant="body2" color="text.secondary" align="center" sx={{mt:20, ml:10}}>
+        <Link href="https://github.com/paul-lee-attorney/comboox-client">
+          GitHub (Dapp UI)
         </Link>
       </Typography>      
     </Stack>
