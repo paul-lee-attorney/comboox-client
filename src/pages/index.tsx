@@ -14,7 +14,7 @@ function FrontPage() {
       }} 
     >
       <h1>ComBoox</h1>
-      <h3>A Blockchain-Based Statutory Books Keeping System</h3>            
+      <h3>A Blockchain-Based Company Book-Entry System</h3>            
       <CreateComp />
       <GetComp />
     </Stack>

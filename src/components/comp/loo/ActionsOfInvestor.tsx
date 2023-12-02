@@ -1,5 +1,5 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { RegInvestor } from "./ActionsOfInvestor/RegInvestor";
 import { ApproveInvestor } from "./ActionsOfInvestor/ApproveInvestor";
 import { RevokeInvestor } from "./ActionsOfInvestor/RevokeInvestor";
