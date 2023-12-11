@@ -40,7 +40,7 @@ function BoardMeetingMinutes() {
           <h3>BMM - Board Meeting Minutes </h3>
         </Toolbar>
         {boox && (
-          <CopyLongStrSpan  title="Addr" src={ boox[booxMap.ROD].toLowerCase() } />
+          <CopyLongStrSpan  title="Addr" src={ boox[booxMap.BMM].toLowerCase() } />
         )}
       </Stack>
       <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
