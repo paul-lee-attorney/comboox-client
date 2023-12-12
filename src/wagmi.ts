@@ -1,6 +1,6 @@
 import { createConfig, configureChains } from 'wagmi'
 
-import { mainnet, hardhat, sepolia } from 'wagmi/chains'
+import { mainnet, hardhat, sepolia, arbitrum } from 'wagmi/chains'
 
 import { MetaMaskConnector } from 'wagmi/connectors/metaMask'
 import { CoinbaseWalletConnector } from 'wagmi/connectors/coinbaseWallet'
@@ -11,7 +11,7 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ mainnet, sepolia, hardhat ],
+  [ arbitrum, mainnet, sepolia, hardhat ],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
