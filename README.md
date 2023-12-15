@@ -1,3 +1,8 @@
+
+![ComBoox_Logo](./assets/ComBoox_Logo_ColorOnWhite_Trimmed.jpg)
+
+
+
 # Welcome to ComBoox!
 
 ## ---- A Company Book-Entry System Linking To Web 3.0 Capital Market 
@@ -18,7 +23,7 @@ Please visit blow websites for:
 
 1. [White Paper](http://combooxgitbook.io/whitepaper "White Paper of ComBoox");
 2. [Test Net (Sepolia) App](http://comboox-sepolia.vercel.app "Test Net (Sepolia) App of ComBoox"); and
-3. [Ethereum Main Net App](http://comboox.vercel.app "Ethereum Main Net App of ComBoox").
+3. [App on ArbitrumOne](http://comboox.vercel.app "App on ArbitrumOne").
 
 ***
 
@@ -47,7 +52,7 @@ Please visit blow websites for:
 
 1. [白皮书](http://combooxgitbook.io/whitepaper "ComBoox白皮书");
 2. [测试链(Sepolia)App](http://comboox-sepolia.vercel.app "测试链(Sepolia)App");及
-3. [以太坊主网App](http://comboox.vercel.app "以太坊主网App")。
+3. [ArbitrumOne网络App](http://comboox.vercel.app "ArbitrumOne网络App")。
 
 
 ****
