@@ -251,11 +251,12 @@ export async function getPlatformRule(): Promise<Rule>{
   return res;
 }
 
-export async function getFeedRegistryAddress(): Promise<HexType>{
+export async function getPriceFeed(seq: bigint): Promise<HexType>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
-    functionName: 'getFeedRegistryAddress'
+    args: [ seq ],
+    functionName: 'getPriceFeed'
   });
 
   return res;
