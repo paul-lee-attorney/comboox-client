@@ -3,6 +3,9 @@ import { Stack } from '@mui/material';
 import { CreateComp } from '../components/center/regCenter/CreateComp';
 import { GetComp } from '../components/center/regCenter/GetComp';
 
+import Logo from '/assets/ComBoox_Logo_ColorOnWhite.png';
+import Image from 'next/image';
+
 function FrontPage() {
 
   return (
@@ -13,7 +16,11 @@ function FrontPage() {
         width:'100%',
       }} 
     >
-      <h1>ComBoox</h1>
+      <br/>
+      {/* <h1>ComBoox</h1> */}
+      <Image src={Logo} alt='ComBoox Logo' />
+      <br/>
+      <br/>
       <h3>A Blockchain-Based Company Book-Entry System</h3>            
       <CreateComp />
       <GetComp />

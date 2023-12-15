@@ -12,9 +12,8 @@ import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
 import { getEthPart, getGEthPart, getGWeiPart, getWeiPart, longDataParser, toPercent } from "../../../scripts/common/toolsKit";
 import { ActionsOfOwner } from "../user/ActionsOfOwner";
 import { Close, Refresh, Settings } from "@mui/icons-material";
-import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetFeedRegistryAddress, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../../generated";
+import { useRegCenterCounterOfUsers, useRegCenterGetBookeeper, useRegCenterGetOwner, useRegCenterGetPlatformRule, useRegCenterTotalSupply } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-
 
 export function CenterInfo() {
 
@@ -89,17 +88,17 @@ export function CenterInfo() {
     }
   })
 
-  const {
-    refetch: getFeedReg
-  } = useRegCenterGetFeedRegistryAddress({
-    address: AddrOfRegCenter,
-    onError(err) {
-      setErrMsg(err.message);
-    },
-    onSuccess(data) {
-      setFeedReg(data);
-    }
-  })
+  // const {
+  //   refetch: getFeedReg
+  // } = useRegCenterGetPriceFeed({
+  //   address: AddrOfRegCenter,
+  //   onError(err) {
+  //     setErrMsg(err.message);
+  //   },
+  //   onSuccess(data) {
+  //     setFeedReg(data);
+  //   }
+  // })
 
   const refresh = ()=>{
     getOwner();
@@ -107,7 +106,7 @@ export function CenterInfo() {
     getPlatformRule();
     getCounterOfUsers();
     getTotalSupply();
-    getFeedReg();
+    // getFeedReg();
   }
 
   const [ open, setOpen ] = useState(false);

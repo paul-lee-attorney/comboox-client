@@ -5,7 +5,7 @@ import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { 
   useGeneralKeeperPayInCapital,
 } from "../../../../generated";
-import { Divider, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { Payment, } from "@mui/icons-material";
 import { 
   FormResults, 
@@ -72,7 +72,7 @@ export function PayInCap({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
 
         <TextField 
           variant='outlined'
-          label='Amount'
+          label='Amount (Fiat)'
           error={ valid['Amt']?.error }
           helperText={ valid['Amt']?.helpTx ?? ' ' }    
           sx={{
@@ -90,7 +90,7 @@ export function PayInCap({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
 
         <TextField 
           variant='outlined'
-          label='Value'
+          label='Value (ETH)'
           error={ valid['Value']?.error }
           helperText={ valid['Value']?.helpTx ?? ' ' }    
           sx={{

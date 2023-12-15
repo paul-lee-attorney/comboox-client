@@ -1,8 +1,8 @@
 import { IconButton, Tooltip } from "@mui/material";
 import { useGeneralKeeperPickupDeposit } from "../../../generated";
 import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { Savings, SavingsOutlined } from "@mui/icons-material";
-import { Dispatch, SetStateAction, useState } from "react";
+import { SavingsOutlined } from "@mui/icons-material";
+import { useState } from "react";
 import { HexType } from "../../../scripts/common";
 import { refreshAfterTx } from "../../../scripts/common/toolsKit";
 

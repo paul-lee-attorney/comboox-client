@@ -3100,7 +3100,7 @@ export const fuleTankABI = [
     type: 'function',
     inputs: [],
     name: 'regCenter',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+    outputs: [{ name: '', internalType: 'contract IERC20', type: 'address' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -3129,6 +3129,13 @@ export const fuleTankABI = [
     inputs: [],
     name: 'sum',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdrawFule',
+    outputs: [],
   },
   {
     stateMutability: 'nonpayable',
@@ -7276,19 +7283,6 @@ export const iGeneralKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const iInvestmentAgreementABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfDeal',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'AddDeal',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'CirculateDoc' },
   {
     type: 'event',
@@ -7386,6 +7380,19 @@ export const iInvestmentAgreementABI = [
       },
     ],
     name: 'PayOffSwap',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfDeal',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RegDeal',
   },
   {
     type: 'event',
@@ -9672,6 +9679,34 @@ export const iPriceConsumerABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IPriceConsumer2
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iPriceConsumer2ABI = [
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'quote', internalType: 'address', type: 'address' }],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
+    name: 'getCentPriceInWei',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
+    name: 'getPriceFeed',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IROAKeeper
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -10321,19 +10356,6 @@ export const iRegCenterABI = [
     anonymous: false,
     inputs: [
       {
-        name: 'registry',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'SetFeedRegistry',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
         name: 'snOfRule',
         internalType: 'bytes32',
         type: 'bytes32',
@@ -10341,6 +10363,20 @@ export const iRegCenterABI = [
       },
     ],
     name: 'SetPlatformRule',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'seq', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'priceFeed',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetPriceFeed',
   },
   {
     type: 'event',
@@ -10479,6 +10515,13 @@ export const iRegCenterABI = [
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'burn',
+    outputs: [],
+  },
+  {
     stateMutability: 'view',
     type: 'function',
     inputs: [
@@ -10589,9 +10632,7 @@ export const iRegCenterABI = [
   {
     stateMutability: 'view',
     type: 'function',
-    inputs: [
-      { name: 'seqOfCurrency', internalType: 'uint256', type: 'uint256' },
-    ],
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
     name: 'getCentPriceInWei',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
@@ -10681,13 +10722,6 @@ export const iRegCenterABI = [
         ],
       },
     ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getFeedRegistryAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -10789,6 +10823,13 @@ export const iRegCenterABI = [
         ],
       },
     ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
+    name: 'getPriceFeed',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -10975,15 +11016,18 @@ export const iRegCenterABI = [
   {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: 'registry_', internalType: 'address', type: 'address' }],
-    name: 'setFeedRegistry',
+    inputs: [{ name: 'snOfRule', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'setPlatformRule',
     outputs: [],
   },
   {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: 'snOfRule', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'setPlatformRule',
+    inputs: [
+      { name: 'seq', internalType: 'uint256', type: 'uint256' },
+      { name: 'feed_', internalType: 'address', type: 'address' },
+    ],
+    name: 'setPriceFeed',
     outputs: [],
   },
   {
@@ -15784,19 +15828,6 @@ export const iSigPageABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const investmentAgreementABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfDeal',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'AddDeal',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'CirculateDoc' },
   {
     type: 'event',
@@ -15926,6 +15957,19 @@ export const investmentAgreementABI = [
       },
     ],
     name: 'PayOffSwap',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfDeal',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'RegDeal',
   },
   {
     type: 'event',
@@ -18885,20 +18929,14 @@ export const mockFeedRegistryABI = [
   {
     stateMutability: 'pure',
     type: 'function',
-    inputs: [
-      { name: 'base', internalType: 'address', type: 'address' },
-      { name: 'quote', internalType: 'address', type: 'address' },
-    ],
+    inputs: [],
     name: 'decimals',
     outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
   },
   {
     stateMutability: 'view',
     type: 'function',
-    inputs: [
-      { name: 'base', internalType: 'address', type: 'address' },
-      { name: 'quote', internalType: 'address', type: 'address' },
-    ],
+    inputs: [],
     name: 'latestRoundData',
     outputs: [
       { name: 'roundID', internalType: 'uint80', type: 'uint80' },
@@ -19624,6 +19662,35 @@ export const priceConsumerABI = [
     type: 'function',
     inputs: [],
     name: 'getFeedRegistryAddress',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PriceConsumer2
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const priceConsumer2ABI = [
+  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'quote', internalType: 'address', type: 'address' }],
+    name: 'decimals',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
+    name: 'getCentPriceInWei',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
+    name: 'getPriceFeed',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
 ] as const
@@ -21383,19 +21450,6 @@ export const regCenterABI = [
     anonymous: false,
     inputs: [
       {
-        name: 'registry',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'SetFeedRegistry',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
         name: 'snOfRule',
         internalType: 'bytes32',
         type: 'bytes32',
@@ -21403,6 +21457,20 @@ export const regCenterABI = [
       },
     ],
     name: 'SetPlatformRule',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'seq', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'priceFeed',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetPriceFeed',
   },
   {
     type: 'event',
@@ -21541,6 +21609,13 @@ export const regCenterABI = [
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'burn',
+    outputs: [],
+  },
+  {
     stateMutability: 'view',
     type: 'function',
     inputs: [
@@ -21668,9 +21743,7 @@ export const regCenterABI = [
   {
     stateMutability: 'view',
     type: 'function',
-    inputs: [
-      { name: 'seqOfCurrency', internalType: 'uint256', type: 'uint256' },
-    ],
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
     name: 'getCentPriceInWei',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
@@ -21760,13 +21833,6 @@ export const regCenterABI = [
         ],
       },
     ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getFeedRegistryAddress',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -21868,6 +21934,13 @@ export const regCenterABI = [
         ],
       },
     ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
+    name: 'getPriceFeed',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -22071,15 +22144,18 @@ export const regCenterABI = [
   {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: 'registry_', internalType: 'address', type: 'address' }],
-    name: 'setFeedRegistry',
+    inputs: [{ name: 'snOfRule', internalType: 'bytes32', type: 'bytes32' }],
+    name: 'setPlatformRule',
     outputs: [],
   },
   {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: 'snOfRule', internalType: 'bytes32', type: 'bytes32' }],
-    name: 'setPlatformRule',
+    inputs: [
+      { name: 'seq', internalType: 'uint256', type: 'uint256' },
+      { name: 'feed_', internalType: 'address', type: 'address' },
+    ],
+    name: 'setPriceFeed',
     outputs: [],
   },
   {
@@ -37573,6 +37649,33 @@ export function useFuleTankSetRegCenter<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawFule"`.
+ */
+export function useFuleTankWithdrawFule<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'withdrawFule'
+        >['request']['abi'],
+        'withdrawFule',
+        TMode
+      > & { functionName?: 'withdrawFule' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'withdrawFule', TMode> & {
+        abi?: never
+        functionName?: 'withdrawFule'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'withdrawFule', TMode>({
+    abi: fuleTankABI,
+    functionName: 'withdrawFule',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawIncome"`.
  */
 export function useFuleTankWithdrawIncome<
@@ -37676,6 +37779,22 @@ export function usePrepareFuleTankSetRegCenter(
     functionName: 'setRegCenter',
     ...config,
   } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRegCenter'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawFule"`.
+ */
+export function usePrepareFuleTankWithdrawFule(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawFule'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'withdrawFule',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawFule'>)
 }
 
 /**
@@ -54821,22 +54940,6 @@ export function useIInvestmentAgreementEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iInvestmentAgreementABI}__ and `eventName` set to `"AddDeal"`.
- */
-export function useIInvestmentAgreementAddDealEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iInvestmentAgreementABI, 'AddDeal'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iInvestmentAgreementABI,
-    eventName: 'AddDeal',
-    ...config,
-  } as UseContractEventConfig<typeof iInvestmentAgreementABI, 'AddDeal'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iInvestmentAgreementABI}__ and `eventName` set to `"CirculateDoc"`.
  */
 export function useIInvestmentAgreementCirculateDocEvent(
@@ -54936,6 +55039,22 @@ export function useIInvestmentAgreementPayOffSwapEvent(
     eventName: 'PayOffSwap',
     ...config,
   } as UseContractEventConfig<typeof iInvestmentAgreementABI, 'PayOffSwap'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iInvestmentAgreementABI}__ and `eventName` set to `"RegDeal"`.
+ */
+export function useIInvestmentAgreementRegDealEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iInvestmentAgreementABI, 'RegDeal'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iInvestmentAgreementABI,
+    eventName: 'RegDeal',
+    ...config,
+  } as UseContractEventConfig<typeof iInvestmentAgreementABI, 'RegDeal'>)
 }
 
 /**
@@ -58429,6 +58548,113 @@ export function useIPriceConsumerGetFeedRegistryAddress<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPriceConsumer2ABI}__.
+ */
+export function useIPriceConsumer2Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iPriceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPriceConsumer2ABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPriceConsumer2ABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPriceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPriceConsumer2ABI}__ and `functionName` set to `"decimals"`.
+ */
+export function useIPriceConsumer2Decimals<
+  TFunctionName extends 'decimals',
+  TSelectData = ReadContractResult<typeof iPriceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPriceConsumer2ABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPriceConsumer2ABI,
+    functionName: 'decimals',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPriceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPriceConsumer2ABI}__ and `functionName` set to `"getCentPriceInWei"`.
+ */
+export function useIPriceConsumer2GetCentPriceInWei<
+  TFunctionName extends 'getCentPriceInWei',
+  TSelectData = ReadContractResult<typeof iPriceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPriceConsumer2ABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPriceConsumer2ABI,
+    functionName: 'getCentPriceInWei',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPriceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPriceConsumer2ABI}__ and `functionName` set to `"getPriceFeed"`.
+ */
+export function useIPriceConsumer2GetPriceFeed<
+  TFunctionName extends 'getPriceFeed',
+  TSelectData = ReadContractResult<typeof iPriceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPriceConsumer2ABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPriceConsumer2ABI,
+    functionName: 'getPriceFeed',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPriceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iroaKeeperABI}__.
  */
 export function useIroaKeeperWrite<
@@ -60837,25 +61063,6 @@ export function useIRegCenterGetDocsList<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"getFeedRegistryAddress"`.
- */
-export function useIRegCenterGetFeedRegistryAddress<
-  TFunctionName extends 'getFeedRegistryAddress',
-  TSelectData = ReadContractResult<typeof iRegCenterABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iRegCenterABI,
-    functionName: 'getFeedRegistryAddress',
-    ...config,
-  } as UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>)
-}
-
-/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"getHeadByBody"`.
  */
 export function useIRegCenterGetHeadByBody<
@@ -60927,6 +61134,25 @@ export function useIRegCenterGetOwner<
   return useContractRead({
     abi: iRegCenterABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"getPriceFeed"`.
+ */
+export function useIRegCenterGetPriceFeed<
+  TFunctionName extends 'getPriceFeed',
+  TSelectData = ReadContractResult<typeof iRegCenterABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegCenterABI,
+    functionName: 'getPriceFeed',
     ...config,
   } as UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>)
 }
@@ -61094,6 +61320,31 @@ export function useIRegCenterApprove<
   return useContractWrite<typeof iRegCenterABI, 'approve', TMode>({
     abi: iRegCenterABI,
     functionName: 'approve',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"burn"`.
+ */
+export function useIRegCenterBurn<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegCenterABI,
+          'burn'
+        >['request']['abi'],
+        'burn',
+        TMode
+      > & { functionName?: 'burn' }
+    : UseContractWriteConfig<typeof iRegCenterABI, 'burn', TMode> & {
+        abi?: never
+        functionName?: 'burn'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iRegCenterABI, 'burn', TMode>({
+    abi: iRegCenterABI,
+    functionName: 'burn',
     ...config,
   } as any)
 }
@@ -61460,33 +61711,6 @@ export function useIRegCenterSetBackupKey<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"setFeedRegistry"`.
- */
-export function useIRegCenterSetFeedRegistry<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iRegCenterABI,
-          'setFeedRegistry'
-        >['request']['abi'],
-        'setFeedRegistry',
-        TMode
-      > & { functionName?: 'setFeedRegistry' }
-    : UseContractWriteConfig<typeof iRegCenterABI, 'setFeedRegistry', TMode> & {
-        abi?: never
-        functionName?: 'setFeedRegistry'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iRegCenterABI, 'setFeedRegistry', TMode>({
-    abi: iRegCenterABI,
-    functionName: 'setFeedRegistry',
-    ...config,
-  } as any)
-}
-
-/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"setPlatformRule"`.
  */
 export function useIRegCenterSetPlatformRule<
@@ -61509,6 +61733,33 @@ export function useIRegCenterSetPlatformRule<
   return useContractWrite<typeof iRegCenterABI, 'setPlatformRule', TMode>({
     abi: iRegCenterABI,
     functionName: 'setPlatformRule',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"setPriceFeed"`.
+ */
+export function useIRegCenterSetPriceFeed<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegCenterABI,
+          'setPriceFeed'
+        >['request']['abi'],
+        'setPriceFeed',
+        TMode
+      > & { functionName?: 'setPriceFeed' }
+    : UseContractWriteConfig<typeof iRegCenterABI, 'setPriceFeed', TMode> & {
+        abi?: never
+        functionName?: 'setPriceFeed'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iRegCenterABI, 'setPriceFeed', TMode>({
+    abi: iRegCenterABI,
+    functionName: 'setPriceFeed',
     ...config,
   } as any)
 }
@@ -61742,6 +61993,22 @@ export function usePrepareIRegCenterApprove(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"burn"`.
+ */
+export function usePrepareIRegCenterBurn(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iRegCenterABI, 'burn'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegCenterABI,
+    functionName: 'burn',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iRegCenterABI, 'burn'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"createComp"`.
  */
 export function usePrepareIRegCenterCreateComp(
@@ -61950,22 +62217,6 @@ export function usePrepareIRegCenterSetBackupKey(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"setFeedRegistry"`.
- */
-export function usePrepareIRegCenterSetFeedRegistry(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iRegCenterABI, 'setFeedRegistry'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iRegCenterABI,
-    functionName: 'setFeedRegistry',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iRegCenterABI, 'setFeedRegistry'>)
-}
-
-/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"setPlatformRule"`.
  */
 export function usePrepareIRegCenterSetPlatformRule(
@@ -61979,6 +62230,22 @@ export function usePrepareIRegCenterSetPlatformRule(
     functionName: 'setPlatformRule',
     ...config,
   } as UsePrepareContractWriteConfig<typeof iRegCenterABI, 'setPlatformRule'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"setPriceFeed"`.
+ */
+export function usePrepareIRegCenterSetPriceFeed(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iRegCenterABI, 'setPriceFeed'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegCenterABI,
+    functionName: 'setPriceFeed',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iRegCenterABI, 'setPriceFeed'>)
 }
 
 /**
@@ -62224,22 +62491,6 @@ export function useIRegCenterPickupPointsEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iRegCenterABI}__ and `eventName` set to `"SetFeedRegistry"`.
- */
-export function useIRegCenterSetFeedRegistryEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iRegCenterABI, 'SetFeedRegistry'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iRegCenterABI,
-    eventName: 'SetFeedRegistry',
-    ...config,
-  } as UseContractEventConfig<typeof iRegCenterABI, 'SetFeedRegistry'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iRegCenterABI}__ and `eventName` set to `"SetPlatformRule"`.
  */
 export function useIRegCenterSetPlatformRuleEvent(
@@ -62253,6 +62504,22 @@ export function useIRegCenterSetPlatformRuleEvent(
     eventName: 'SetPlatformRule',
     ...config,
   } as UseContractEventConfig<typeof iRegCenterABI, 'SetPlatformRule'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iRegCenterABI}__ and `eventName` set to `"SetPriceFeed"`.
+ */
+export function useIRegCenterSetPriceFeedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iRegCenterABI, 'SetPriceFeed'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iRegCenterABI,
+    eventName: 'SetPriceFeed',
+    ...config,
+  } as UseContractEventConfig<typeof iRegCenterABI, 'SetPriceFeed'>)
 }
 
 /**
@@ -76675,22 +76942,6 @@ export function useInvestmentAgreementEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"AddDeal"`.
- */
-export function useInvestmentAgreementAddDealEvent(
-  config: Omit<
-    UseContractEventConfig<typeof investmentAgreementABI, 'AddDeal'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: investmentAgreementABI,
-    eventName: 'AddDeal',
-    ...config,
-  } as UseContractEventConfig<typeof investmentAgreementABI, 'AddDeal'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"CirculateDoc"`.
  */
 export function useInvestmentAgreementCirculateDocEvent(
@@ -76819,6 +77070,22 @@ export function useInvestmentAgreementPayOffSwapEvent(
     eventName: 'PayOffSwap',
     ...config,
   } as UseContractEventConfig<typeof investmentAgreementABI, 'PayOffSwap'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"RegDeal"`.
+ */
+export function useInvestmentAgreementRegDealEvent(
+  config: Omit<
+    UseContractEventConfig<typeof investmentAgreementABI, 'RegDeal'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: investmentAgreementABI,
+    eventName: 'RegDeal',
+    ...config,
+  } as UseContractEventConfig<typeof investmentAgreementABI, 'RegDeal'>)
 }
 
 /**
@@ -83848,6 +84115,97 @@ export function usePriceConsumerGetFeedRegistryAddress<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link priceConsumer2ABI}__.
+ */
+export function usePriceConsumer2Read<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof priceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof priceConsumer2ABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: priceConsumer2ABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof priceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link priceConsumer2ABI}__ and `functionName` set to `"decimals"`.
+ */
+export function usePriceConsumer2Decimals<
+  TFunctionName extends 'decimals',
+  TSelectData = ReadContractResult<typeof priceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof priceConsumer2ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: priceConsumer2ABI,
+    functionName: 'decimals',
+    ...config,
+  } as UseContractReadConfig<
+    typeof priceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link priceConsumer2ABI}__ and `functionName` set to `"getCentPriceInWei"`.
+ */
+export function usePriceConsumer2GetCentPriceInWei<
+  TFunctionName extends 'getCentPriceInWei',
+  TSelectData = ReadContractResult<typeof priceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof priceConsumer2ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: priceConsumer2ABI,
+    functionName: 'getCentPriceInWei',
+    ...config,
+  } as UseContractReadConfig<
+    typeof priceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link priceConsumer2ABI}__ and `functionName` set to `"getPriceFeed"`.
+ */
+export function usePriceConsumer2GetPriceFeed<
+  TFunctionName extends 'getPriceFeed',
+  TSelectData = ReadContractResult<typeof priceConsumer2ABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof priceConsumer2ABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: priceConsumer2ABI,
+    functionName: 'getPriceFeed',
+    ...config,
+  } as UseContractReadConfig<
+    typeof priceConsumer2ABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link roaKeeperABI}__.
  */
 export function useRoaKeeperRead<
@@ -90054,25 +90412,6 @@ export function useRegCenterGetDocsList<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"getFeedRegistryAddress"`.
- */
-export function useRegCenterGetFeedRegistryAddress<
-  TFunctionName extends 'getFeedRegistryAddress',
-  TSelectData = ReadContractResult<typeof regCenterABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: regCenterABI,
-    functionName: 'getFeedRegistryAddress',
-    ...config,
-  } as UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>)
-}
-
-/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"getHeadByBody"`.
  */
 export function useRegCenterGetHeadByBody<
@@ -90182,6 +90521,25 @@ export function useRegCenterGetPlatformRule<
   return useContractRead({
     abi: regCenterABI,
     functionName: 'getPlatformRule',
+    ...config,
+  } as UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"getPriceFeed"`.
+ */
+export function useRegCenterGetPriceFeed<
+  TFunctionName extends 'getPriceFeed',
+  TSelectData = ReadContractResult<typeof regCenterABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: regCenterABI,
+    functionName: 'getPriceFeed',
     ...config,
   } as UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>)
 }
@@ -90387,6 +90745,31 @@ export function useRegCenterApprove<
   return useContractWrite<typeof regCenterABI, 'approve', TMode>({
     abi: regCenterABI,
     functionName: 'approve',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"burn"`.
+ */
+export function useRegCenterBurn<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof regCenterABI,
+          'burn'
+        >['request']['abi'],
+        'burn',
+        TMode
+      > & { functionName?: 'burn' }
+    : UseContractWriteConfig<typeof regCenterABI, 'burn', TMode> & {
+        abi?: never
+        functionName?: 'burn'
+      } = {} as any,
+) {
+  return useContractWrite<typeof regCenterABI, 'burn', TMode>({
+    abi: regCenterABI,
+    functionName: 'burn',
     ...config,
   } as any)
 }
@@ -90761,33 +91144,6 @@ export function useRegCenterSetBackupKey<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"setFeedRegistry"`.
- */
-export function useRegCenterSetFeedRegistry<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof regCenterABI,
-          'setFeedRegistry'
-        >['request']['abi'],
-        'setFeedRegistry',
-        TMode
-      > & { functionName?: 'setFeedRegistry' }
-    : UseContractWriteConfig<typeof regCenterABI, 'setFeedRegistry', TMode> & {
-        abi?: never
-        functionName?: 'setFeedRegistry'
-      } = {} as any,
-) {
-  return useContractWrite<typeof regCenterABI, 'setFeedRegistry', TMode>({
-    abi: regCenterABI,
-    functionName: 'setFeedRegistry',
-    ...config,
-  } as any)
-}
-
-/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"setPlatformRule"`.
  */
 export function useRegCenterSetPlatformRule<
@@ -90810,6 +91166,33 @@ export function useRegCenterSetPlatformRule<
   return useContractWrite<typeof regCenterABI, 'setPlatformRule', TMode>({
     abi: regCenterABI,
     functionName: 'setPlatformRule',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"setPriceFeed"`.
+ */
+export function useRegCenterSetPriceFeed<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof regCenterABI,
+          'setPriceFeed'
+        >['request']['abi'],
+        'setPriceFeed',
+        TMode
+      > & { functionName?: 'setPriceFeed' }
+    : UseContractWriteConfig<typeof regCenterABI, 'setPriceFeed', TMode> & {
+        abi?: never
+        functionName?: 'setPriceFeed'
+      } = {} as any,
+) {
+  return useContractWrite<typeof regCenterABI, 'setPriceFeed', TMode>({
+    abi: regCenterABI,
+    functionName: 'setPriceFeed',
     ...config,
   } as any)
 }
@@ -91070,6 +91453,22 @@ export function usePrepareRegCenterApprove(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"burn"`.
+ */
+export function usePrepareRegCenterBurn(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof regCenterABI, 'burn'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: regCenterABI,
+    functionName: 'burn',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof regCenterABI, 'burn'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"createComp"`.
  */
 export function usePrepareRegCenterCreateComp(
@@ -91278,22 +91677,6 @@ export function usePrepareRegCenterSetBackupKey(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"setFeedRegistry"`.
- */
-export function usePrepareRegCenterSetFeedRegistry(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof regCenterABI, 'setFeedRegistry'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: regCenterABI,
-    functionName: 'setFeedRegistry',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof regCenterABI, 'setFeedRegistry'>)
-}
-
-/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"setPlatformRule"`.
  */
 export function usePrepareRegCenterSetPlatformRule(
@@ -91307,6 +91690,22 @@ export function usePrepareRegCenterSetPlatformRule(
     functionName: 'setPlatformRule',
     ...config,
   } as UsePrepareContractWriteConfig<typeof regCenterABI, 'setPlatformRule'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"setPriceFeed"`.
+ */
+export function usePrepareRegCenterSetPriceFeed(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof regCenterABI, 'setPriceFeed'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: regCenterABI,
+    functionName: 'setPriceFeed',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof regCenterABI, 'setPriceFeed'>)
 }
 
 /**
@@ -91568,22 +91967,6 @@ export function useRegCenterPickupPointsEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link regCenterABI}__ and `eventName` set to `"SetFeedRegistry"`.
- */
-export function useRegCenterSetFeedRegistryEvent(
-  config: Omit<
-    UseContractEventConfig<typeof regCenterABI, 'SetFeedRegistry'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: regCenterABI,
-    eventName: 'SetFeedRegistry',
-    ...config,
-  } as UseContractEventConfig<typeof regCenterABI, 'SetFeedRegistry'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link regCenterABI}__ and `eventName` set to `"SetPlatformRule"`.
  */
 export function useRegCenterSetPlatformRuleEvent(
@@ -91597,6 +91980,22 @@ export function useRegCenterSetPlatformRuleEvent(
     eventName: 'SetPlatformRule',
     ...config,
   } as UseContractEventConfig<typeof regCenterABI, 'SetPlatformRule'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link regCenterABI}__ and `eventName` set to `"SetPriceFeed"`.
+ */
+export function useRegCenterSetPriceFeedEvent(
+  config: Omit<
+    UseContractEventConfig<typeof regCenterABI, 'SetPriceFeed'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: regCenterABI,
+    eventName: 'SetPriceFeed',
+    ...config,
+  } as UseContractEventConfig<typeof regCenterABI, 'SetPriceFeed'>)
 }
 
 /**

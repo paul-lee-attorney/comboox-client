@@ -48,6 +48,10 @@ import {
   LocalGasStationOutlined
 }  from '@mui/icons-material';
 
+import Image from 'next/image';
+
+import Logo from '/assets/Symbol_white_xs.png';
+
 import MenuIcon from '@mui/icons-material/Menu';
 
 import { useAccount, useConnect, useDisconnect, } from 'wagmi';
@@ -203,7 +207,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                   <MenuIcon />
                 </IconButton>
               
-                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                <Image src={Logo} alt='ComBoox Symbol' />
+
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml:2}}>
                   ComBoox
                 </Typography>
 

@@ -1,8 +1,8 @@
 
-import { Paper, Stack, TextField } from '@mui/material';
+import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
 import { 
-  useRegCenterSetFeedRegistry,
+  useRegCenterSetPriceFeed,
 } from '../../../../generated';
 
 import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
@@ -12,12 +12,14 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfter
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { currencies } from '../../../comp/gk/GeneralInfo';
 
 
 export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
 
   const { setErrMsg } = useComBooxContext();
 
+  const [ seq, setSeq ] = useState(0);
   const [ newFeed, setNewFeed ] = useState<HexType>(AddrZero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -31,7 +33,7 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
   const {
     isLoading: setFeedRegLoading,
     write: setFeedReg
-  } = useRegCenterSetFeedRegistry({
+  } = useRegCenterSetPriceFeed({
     address: AddrOfRegCenter,
     onError(err) {
       setErrMsg(err.message);
@@ -44,12 +46,27 @@ export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {
   })
 
   const setFeedRegClick = ()=>{
-    setFeedReg({args:[newFeed]});
+    setFeedReg({args:[ BigInt(seq), newFeed]});
   }
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
       <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
+
+        <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 218 }}>
+          <InputLabel id="seqOfCurrency-label">seqOfCurrency</InputLabel>
+          <Select
+            labelId="seqOfCurrency-label"
+            id="seqOfCurrency-select"
+            label="SeqOfCurrency"
+            value={ seq.toString() }
+            onChange={(e) => setSeq(Number(e.target.value))}
+          >
+            {currencies.map((v, i) => (
+              <MenuItem key={i} value={i.toString()}>{v}</MenuItem>
+            ))}
+          </Select>
+        </FormControl>
 
         <TextField 
           size="small"
