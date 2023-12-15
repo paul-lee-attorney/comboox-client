@@ -21,7 +21,6 @@ function FrontPage() {
       <Image src={Logo} alt='ComBoox Logo' />
       <br/>
       <br/>
-      <h3>A Blockchain-Based Company Book-Entry System</h3>            
       <CreateComp />
       <GetComp />
     </Stack>
