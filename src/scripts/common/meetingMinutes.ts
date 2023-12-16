@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { AddrZero, HexType } from ".";
 import { meetingMinutesABI } from "../../generated";
-import { OrgVotingRule, VotingRule, vrParser } from "../../components/comp/roc/rules/VotingRules/SetVotingRule";
+import { OrgVotingRule } from "../../components/comp/roc/rules/VotingRules/SetVotingRule";
 
 export interface Action {
   target: HexType;
@@ -95,30 +95,6 @@ export async function getDelegateOf(minutes: HexType, seqOfMotion: bigint, acct:
 
   return delegate;
 }
-
-// export async function getLeavesWeightAtDate(minutes: HexType, seqOfMotion: bigint, acct: bigint, baseDate: bigint, rom: HexType): Promise<LeavesInfo> {
-
-//   let info:LeavesInfo = await readContract({
-//     address: minutes,
-//     abi: meetingMinutesABI,
-//     functionName: 'getLeavesWeightAtDate',
-//     args: [ seqOfMotion, acct, baseDate, rom ],
-//   })
-
-//   return info;
-// }
-
-// export async function getLeavesHeadcountOfDirectors(minutes: HexType, seqOfMotion: bigint, acct: bigint, bod: HexType): Promise<number> {
-
-//   let head:number = await readContract({
-//     address: minutes,
-//     abi: meetingMinutesABI,
-//     functionName: 'getLeavesHeadcountOfDirectors',
-//     args: [ seqOfMotion, acct, bod ],
-//   })
-
-//   return head;
-// }
 
 // ==== Motion ====
 

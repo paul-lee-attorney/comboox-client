@@ -1,6 +1,6 @@
 
 import { NoteAltOutlined } from '@mui/icons-material';
-import { Alert, Button, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar, Stack, Tooltip, Typography } from '@mui/material';
+import { Alert, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInput, Snackbar, Stack, Tooltip, Typography } from '@mui/material';
 import copy from 'copy-to-clipboard';
 
 import { useState } from "react";

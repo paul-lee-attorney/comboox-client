@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
 import { useGeneralKeeperProposeDocOfGm } from "../../../../generated";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { CreateMotionProps } from "../../bmm/CreateMotionOfBoardMeeting";

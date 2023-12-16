@@ -9,7 +9,7 @@ import { AddrOfRegCenter, AddrOfTank, HexType } from '../../../../scripts/common
 import { Close, OilBarrelOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { getReceipt } from '../../../../scripts/common/common';
-import { FormResults, bigIntToStrNum, defFormResults, hasError, longDataParser, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
 import { ActionOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';

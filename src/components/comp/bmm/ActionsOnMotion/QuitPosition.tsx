@@ -1,6 +1,5 @@
 import { useGeneralKeeperQuitPosition } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { HexType } from "../../../../scripts/common";
