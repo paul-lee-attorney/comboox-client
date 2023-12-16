@@ -1,6 +1,6 @@
 /* eslint-disable react/no-unescaped-entities */
 import { Paper, Typography } from  "@mui/material";
-import Logo from '/assets/ComBoox_FullSlogan.png';
+import Logo from '/public/assets/ComBoox_FullSlogan.png';
 import Image from "next/image";
 
 

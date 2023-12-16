@@ -3,7 +3,7 @@ import { Stack } from '@mui/material';
 import { CreateComp } from '../components/center/regCenter/CreateComp';
 import { GetComp } from '../components/center/regCenter/GetComp';
 
-import Logo from '/assets/ComBoox_FullSlogan.png';
+import Logo from '/public/assets/ComBoox_FullSlogan.png';
 import Image from 'next/image';
 
 function FrontPage() {
