@@ -7,9 +7,16 @@ import Link from '../../../scripts/common/Link';
 export default function Copyright() {
   return (
     <Stack direction='row' sx={{ justifyContent:'center' }} >
+
+      <Typography variant="body2" color="primary" align="center" sx={{mt:20, mr: 10}}>
+        <MuiLink color="inherit" href="https://comboox.gitbook.io/whitepaper-en">
+          WhitePaper
+        </MuiLink>
+      </Typography>
+
       <Typography variant="body2" color="primary" align="center" sx={{mt:20, mr: 10}}>
         <MuiLink color="inherit" href="https://comboox.gitbook.io/whitepaper">
-          Documentation
+          白皮书
         </MuiLink>
       </Typography>
 

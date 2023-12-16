@@ -1,10 +1,15 @@
 /* eslint-disable react/no-unescaped-entities */
-import { Card, Paper, Toolbar, Typography } from  "@mui/material";
+import { Paper, Typography } from  "@mui/material";
+import Logo from '/assets/ComBoox_FullSlogan.png';
+import Image from "next/image";
 
 
 function License() {
   return (
     <Paper elevation={3} sx={{alignItems:'center', justifyItems:'center', m:1, p:1, border:1, borderColor:'divider' }} >
+
+      <Image src={Logo} alt="ComBoox Logo" />
+
       <Typography variant="h4" sx={{ mx:8, my:5, textDecoration:'underline' }} >
         <b>ComBoox Software License 1.0</b>
       </Typography>
@@ -105,6 +110,8 @@ function License() {
       </Typography>
       
       <hr/>
+
+      <Image src={Logo} alt="ComBoox Logo" />
 
 
       <Typography variant="h4" sx={{ mx:8, my:5, textDecoration:'underline' }} >
