@@ -24,7 +24,7 @@ function ListOfOrders() {
 
   useEffect(()=>{
     if (boox) {
-      counterOfClasses(boox[booxMap.LOO]).then(
+      counterOfClasses(boox[booxMap.ROS]).then(
         res => {
           let i = 1;
           let list: number[] = [1];

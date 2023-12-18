@@ -18,6 +18,12 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
+  const updateResults = ()=>{
+    refresh();
+    setLoading(false);
+  }
+
+
   const {
     isLoading: regInvestorLoading,
     write:regInvestor,
@@ -29,7 +35,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
       
@@ -51,7 +57,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
       }} 
     >
 
-      <Stack direction="row" sx={{ alignItems:'center' }} >
+      <Stack direction="row" sx={{ alignItems:'start' }} >
 
         <TextField 
           variant='outlined'

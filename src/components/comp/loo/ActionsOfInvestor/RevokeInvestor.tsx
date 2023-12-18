@@ -55,7 +55,7 @@ export function RevokeInvestor({ acct, refresh }: ActionsOfInvestorProps) {
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
           <TextField 
             variant='outlined'

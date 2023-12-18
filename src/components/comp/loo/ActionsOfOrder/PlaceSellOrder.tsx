@@ -7,8 +7,9 @@ import { useGeneralKeeperPlaceSellOrder } from "../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../../../scripts/comp/loo";
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { Exo_2 } from "next/font/google";
 
 export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const { gk, setErrMsg} = useComBooxContext();
@@ -44,8 +45,10 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
       args: [ 
         BigInt(classOfShare),
         BigInt(order.execHours), 
-        BigInt(order.paid), 
-        BigInt(order.price), 
+        strNumToBigInt(order.paid, 2),
+        strNumToBigInt(order.price, 2),
+        // BigInt(order.paid), 
+        // BigInt(order.price), 
         BigInt(order.seqOfLR),
         fromHead, 
       ],
@@ -61,7 +64,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
       }} 
     >
 
-      <Stack direction="row" sx={{ alignItems:'center' }} >
+      <Stack direction="row" sx={{ alignItems:'start' }} >
 
         <TextField 
           variant='outlined'
@@ -119,7 +122,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyInt('Paid', input, MaxData, setValid);
+            onlyNum('Paid', input, MaxData, 2, setValid);
             setOrder( v => ({
               ...v,
               paid: input,
@@ -141,7 +144,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyInt('Price', input, MaxPrice, setValid);
+            onlyNum('Price', input, MaxPrice, 2, setValid);
             setOrder( v => ({
               ...v,
               price: input,
@@ -160,8 +163,8 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           control={
             <Checkbox 
               sx={{
-                m: 1,
-                height: 64,
+                mx:1,
+                height: 30,
               }}
               onChange={e => setFromHead(e.target.checked)}
               checked={ fromHead }

@@ -3,7 +3,7 @@ import {
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
-import { dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
+import { bigIntToStrNum, dateParser, longDataParser, longSnParser } from '../../../scripts/common/toolsKit';
 import { StrLocker } from '../../../scripts/center/rc';
 import { LockerFinder } from './LockerFinder';
 import { Dispatch, SetStateAction } from 'react';
@@ -43,7 +43,7 @@ const columns: GridColDef[] = [
   { 
     field: 'amt', 
     headerName: 'Amount',
-    valueGetter: p => longDataParser(p.row.head.value),
+    valueGetter: p => bigIntToStrNum(BigInt(p.row.head.value), 9),
     headerAlign: 'right',
     align:'right',
     width: 330,
