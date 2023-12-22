@@ -1,20 +1,17 @@
-import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperTerminateSwap } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { HexType, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { ActionsOfSwapProps } from "../ActionsOfSwap";
 
-export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
+export function TerminateSwap({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfSwapProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
-  const [ seqOfSwap, setSeqOfSwap ] = useState<string>('0');
-
-  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -55,23 +52,17 @@ export function TerminateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps)
         <TextField 
           variant='outlined'
           label='seqOfSwap'
-          error={ valid['SeqOfSwap']?.error }
-          helperText={ valid['SeqOfSwap']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => {
-            let input = e.target.value;
-            onlyInt('SeqOfSwap', input, MaxSeqNo, setValid);
-            setSeqOfSwap(input);
-          }}
+          inputProps={{readOnly: true}}
           value={ seqOfSwap }
           size='small'
         />
 
         <LoadingButton 
-          disabled={ terminateSwapLoading || hasError(valid) }
+          disabled={ seqOfSwap == 0 || terminateSwapLoading }
           loading={loading}
           loadingPosition="end"
           sx={{ m: 1, minWidth: 218, height: 40 }} 

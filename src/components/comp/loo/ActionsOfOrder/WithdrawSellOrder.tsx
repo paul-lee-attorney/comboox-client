@@ -56,7 +56,7 @@ export function WithdrawSellOrder({ classOfShare, refresh }: ActionsOfOrderProps
       }} 
     >
       
-      <Stack direction="row" sx={{ alignItems:'center' }} >
+      <Stack direction="row" sx={{ alignItems:'start' }} >
 
         <TextField 
           variant='outlined'

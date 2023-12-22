@@ -71,7 +71,7 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
       if (deal.head.typeOfDeal == 1) activeSteps = [ 1 ];
       else activeSteps = [];
 
-  } else if ( timestamp < timeline.votingDeadline && timeline.stateOfFile < 3 ) {
+  } else if ( timeline.stateOfFile < 3 ) {
       activeSteps = [ 10 ];
 
   } else if ( timestamp < timeline.closingDeadline ) {
@@ -91,10 +91,10 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
 
         } else activeSteps = [];
 
-      } else if (timeline.stateOfFile == 5) {
+      } else if (timeline.stateOfFile >= 5) {
         activeSteps = [ 10 ];
         if (deal.head.typeOfDeal == 2 || deal.head.typeOfDeal == 3) 
-          activeSteps.push(8);
+          activeSteps = [ 10, 8 ];
       } 
 
   } else if ( timestamp >= timeline.closingDeadline && timeline.stateOfFile > 1 ) {

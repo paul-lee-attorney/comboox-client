@@ -17,16 +17,13 @@ export function ActionsOfOption({seqOfOpt, setOpen, refresh}: ActionsOfOptionPro
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
   const typesOfAction = [
-    'Update Oracle', 'Exec Option', 'Create Swap', 
-    'Pay Off Swap', 'Terminate Swap'
+    'Update Oracle', 'Exec Option', 'Create Swap',
   ]
   
   const compsOfAction = [
     <UpdateOracle key={0} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
     <ExecOption key={1} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
     <CreateSwap key={2} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
-    <PayOffSwap key={3} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />, 
-    <TerminateSwap key={4} seqOfOpt={seqOfOpt} setOpen={ setOpen } refresh={ refresh } />,
   ]
 
   return(

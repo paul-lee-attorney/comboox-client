@@ -54,10 +54,10 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
   }
     
   return (
-    <Stack direction="row" sx={{ alignItems:'center' }} >
+    <Stack direction="row" sx={{ alignItems:'start' }} >
 
       <TextField 
-        variant='filled'
+        variant='outlined'
         label='Delegater'
         error={ valid['Delegater']?.error }
         helperText={ valid['Delegater']?.helpTx ?? ' ' }

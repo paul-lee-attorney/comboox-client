@@ -1,22 +1,33 @@
-import { ActionsOfOptionProps } from "../ActionsOfOption";
 import { useGeneralKeeperPayOffSwap } from "../../../../generated";
 import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
-import { useState } from "react";
-import { HexType, MaxSeqNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
+import { useEffect, useState } from "react";
+import { HexType, booxMap } from "../../../../scripts/common";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { checkValueOfSwap } from "../../../../scripts/comp/roo";
+import { ShowValueOf } from "../../../center/ShowValueOf";
+import { ActionsOfSwapProps } from "../ActionsOfSwap";
 
-export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
+export function PayOffSwap({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfSwapProps) {
 
-  const { gk, setErrMsg } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
-  const [ seqOfSwap, setSeqOfSwap ] = useState<string>('0');
   const [ value, setValue ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
+
+  const [ valueOfSwap, setValueOfSwap ] = useState(0n);
+
+  useEffect(()=>{
+    if (boox) {
+      checkValueOfSwap(boox[booxMap.ROO], seqOfOpt, seqOfSwap).then(
+        res => setValueOfSwap(res)
+      );
+    }
+  }, [boox, seqOfOpt, seqOfSwap]);
 
   const updateResults = ()=>{
     refresh();
@@ -45,7 +56,7 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           BigInt(seqOfOpt), 
           BigInt(seqOfSwap)
       ],
-    value:  strNumToBigInt(value, 9) * (10n**9n) ,
+    value: strNumToBigInt(value, 9) * (10n**9n),
     })
   }
 
@@ -57,17 +68,11 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='SeqOfSwap'
-          error={ valid['SeqOfSwap']?.error }
-          helperText={ valid['SeqOfSwap']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
-          onChange={(e) => {
-            let input = e.target.value;
-            onlyInt('SeqOfSwap', input, MaxSeqNo, setValid);
-            setSeqOfSwap(input);
-          }}
+          inputProps={{readOnly: true}}
           value={ seqOfSwap }
           size='small'
         />
@@ -75,15 +80,15 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         <TextField 
           variant='outlined'
           label='Amount (Eth)'
-          error={ valid['AmtOfGwei']?.error }
-          helperText={ valid['AmtOfGwei']?.helpTx ?? ' ' }  
+          error={ valid['AmtOfEth']?.error }
+          helperText={ valid['AmtOfEth']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('AmtOfGwei', input, 0n, 9, setValid);
+            onlyNum('AmtOfEth', input, 0n, 9, setValid);
             setValue(input);
           }}
           value={ value }
@@ -91,18 +96,19 @@ export function PayOffSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
         />
 
         <LoadingButton 
-          disabled={ payOffSwapLoading || hasError(valid) }
+          disabled={ seqOfSwap == 0 || payOffSwapLoading || hasError(valid) }
           loading={loading}
           loadingPosition="end"
-          sx={{ m: 1, minWidth: 218, height: 40 }} 
+          sx={{ m: 1, minWidth: 88, height: 40 }} 
           variant="contained" 
           endIcon={ <Payment /> }
           onClick={ handleClick }
           size='small'
         >
-          Pay Off Swap
-        </LoadingButton>        
+          Pay
+        </LoadingButton>
 
+        <ShowValueOf value={valueOfSwap} />
       </Stack>
     </Paper>
     

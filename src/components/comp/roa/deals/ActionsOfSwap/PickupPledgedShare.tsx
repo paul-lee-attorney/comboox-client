@@ -1,4 +1,4 @@
-import { Paper } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { LockOpen } from "@mui/icons-material";
 import { useGeneralKeeperPickupPledgedShare } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
@@ -8,14 +8,15 @@ import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
 
-export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
+export function PickUpPledgedShare({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
-  const refresh = ()=>{
+  const update = ()=>{
+    refresh();
     setLoading(false);
-    setShow(false);
+    setOpen(false);
   }
 
   const {
@@ -23,14 +24,14 @@ export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSw
     write: pickupPledgedShare,
   } = useGeneralKeeperPickupPledgedShare({
     address: gk,
-    args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
+    args: [ia, BigInt(seqOfDeal), BigInt(seqOfSwap)],
     onError(err) {
       setErrMsg(err.message);
     },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, update);
     }
   });
 
@@ -41,18 +42,33 @@ export function PickupPledgedShare({addr, deal, seqOfSwap, setShow}: ActionsOfSw
       borderColor:'divider' 
       }} 
     >
+      <Stack direction='row' sx={{ alignItems:'start'  }}>
 
-      <LoadingButton
-        variant="outlined"
-        disabled={ pickupPledgedShareLoading || !seqOfSwap }
-        loading = {loading}
-        loadingPosition="end"
-        endIcon={<LockOpen />}
-        sx={{ m:1, height: 40, minWidth:218 }}
-        onClick={ ()=>pickupPledgedShare?.() }
-      >
-        Pickup 
-      </LoadingButton>
+        <TextField 
+          variant='outlined'
+          label='seqOfSwap'
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          inputProps={{readOnly: true}}
+          value={ seqOfSwap }
+          size='small'
+        />
+
+        <LoadingButton
+          variant="contained"
+          disabled={ seqOfSwap == 0 || pickupPledgedShareLoading || !seqOfSwap }
+          loading = {loading}
+          loadingPosition="end"
+          endIcon={<LockOpen />}
+          sx={{ m:1, height: 40, minWidth:128 }}
+          onClick={ ()=>pickupPledgedShare?.() }
+        >
+          Pickup 
+        </LoadingButton>
+      
+      </Stack>
 
     </Paper>
   );

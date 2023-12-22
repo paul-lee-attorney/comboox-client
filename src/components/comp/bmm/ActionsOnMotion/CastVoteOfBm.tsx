@@ -99,9 +99,9 @@ export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionPro
 
       <Collapse in={ !appear } >
 
-        <Stack direction="row" sx={{ alignItems:'center' }} >
+        <Stack direction="row" sx={{ alignItems:'start' }} >
 
-          <FormControl variant="filled" sx={{ m: 1, minWidth: 120 }}>
+          <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 120 }}>
             <InputLabel id="attitude-lable">Attitude</InputLabel>
             <Select
               labelId="attitude-lable"

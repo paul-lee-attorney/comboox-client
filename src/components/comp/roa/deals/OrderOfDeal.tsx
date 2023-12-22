@@ -326,8 +326,6 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   label='TotalAmount'
                   inputProps={{readOnly: true}}
                   size="small"
-                  // multiline
-                  // rows={ 3.5 }
                   sx={{
                     m:1,
                   }}
@@ -366,10 +364,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                 <GetFRClaims addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} timeline={timeline} timestamp={timestamp}/>
               </td>
               <td>
-                <SwapsList addr={addr} deal={deal} />
-              </td>
-              <td>
-                <CheckValueOfDeal addr={addr} deal={deal} />
+                <SwapsList addr={addr} deal={deal} refresh={refresh} />
               </td>
             </tr>
 

@@ -1,19 +1,20 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip, } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, } from "@mui/material";
 
-import { longDataParser, longSnParser } from "../../../../scripts/common/toolsKit";
 import { useEffect, useState } from "react";
-import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { Swap } from "../../../../scripts/comp/roo";
 import { ListAltOutlined } from "@mui/icons-material";
-import { Deal, getAllSwaps, statesOfSwap } from "../../../../scripts/comp/ia";
+import { Deal, getAllSwaps } from "../../../../scripts/comp/ia";
 import { HexType } from "../../../../scripts/common";
+import { ShowSwapsList } from "../../roo/ShowSwapsList";
+import { ActionsOfSwap } from "./ActionsOfSwap";
 
 export interface SwapsListProps {
   addr: HexType;
   deal: Deal;
+  refresh: ()=>void;
 }
 
-export function SwapsList({ addr, deal }: SwapsListProps) {
+export function SwapsList({ addr, deal, refresh }: SwapsListProps) {
 
   const [ list, setList ] = useState<readonly Swap[]>([]);
 
@@ -29,90 +30,7 @@ export function SwapsList({ addr, deal }: SwapsListProps) {
     setShow(true);
   }
 
-  const [ seqOfSwap, setSeqOfSwap ] = useState<string>('0');
-
-  const handleRowSelect = (ids: GridRowSelectionModel) => setSeqOfSwap(ids[0].toString());
-
-  const columns: GridColDef[] = [
-    { 
-      field: 'seq', 
-      headerName: 'Seq',
-      valueGetter: p => longSnParser(p.row.seqOfSwap.toString()),
-      width: 88,
-    },
-    { 
-      field: 'seqOfPledge', 
-      headerName: 'SeqOfPledge',
-      valueGetter: p => longSnParser(p.row.seqOfPledge.toString()),
-      width: 128,
-    },
-    { 
-      field: 'paidOfPledge', 
-      headerName: 'PaidOfPledge',
-      valueGetter: p => longDataParser(p.row.paidOfPledge.toString()),
-      headerAlign: 'right',
-      align:'right',
-      width: 168,
-    },  
-    { 
-      field: 'seqOfTarget', 
-      headerName: 'SeqOfTarget',
-      valueGetter: p => longDataParser(p.row.seqOfTarget.toString()),
-      headerAlign: 'right',
-      align:'right',
-      width: 168,
-    },  
-  
-    { 
-      field: 'paidOfTarget', 
-      headerName: 'PaidOfTarget',
-      valueGetter: p => longDataParser(p.row.paidOfTarget.toString()),
-      headerAlign: 'right',
-      align:'right',
-      width: 168,
-    },  
-    { 
-      field: 'priceOfDeal', 
-      headerName: 'PriceOfDeal',
-      valueGetter: p => longDataParser(p.row.priceOfDeal.toString()),
-      headerAlign: 'right',
-      align:'right',
-      width: 168,
-    },  
-    { 
-      field: 'optType', 
-      headerName: 'TypeOfOpt',
-      valueGetter: p => p.row.isPutOpt ? 'Put' : 'Call',
-      headerAlign: 'center',
-      align:'center',
-      width: 128,
-    },  
-    {
-      field: 'state',
-      headerName: 'State',
-      valueGetter: p => p.row.state,
-      width: 128,
-      headerAlign:'center',
-      align: 'center',
-      renderCell: ({ value }) => (
-        <Chip 
-          variant='filled'
-          label={ 
-            statesOfSwap[value]
-          } 
-          color={
-            value == 3
-            ? 'warning'
-            : value == 2
-              ? 'success'
-              : value == 1
-                ? 'primary'
-                : 'default'
-          }
-        />
-      )
-    }  
-  ];
+  const [ seqOfSwap, setSeqOfSwap ] = useState<number>(0);
 
   return (
     <>
@@ -144,18 +62,12 @@ export function SwapsList({ addr, deal }: SwapsListProps) {
 
         <DialogContent>
 
-          <Box sx={{minWidth: '880' }}>
-            {list && (
-              <DataGrid 
-                initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
-                pageSizeOptions={[5, 10, 15, 20]} 
-                getRowId={row => row.seqOfSwap} 
-                rows={ list } 
-                columns={ columns }
-                onRowSelectionModelChange={ handleRowSelect }
-              />      
-            )}
-          </Box>
+          <Stack direction='column' sx={{m:1, p:1}} >
+
+            <ShowSwapsList list={list}  setSeqOfSwap={setSeqOfSwap} />
+            <ActionsOfSwap ia={addr} seqOfDeal={deal.head.seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setShow} refresh={refresh} />
+
+          </Stack>
 
         </DialogContent>
 

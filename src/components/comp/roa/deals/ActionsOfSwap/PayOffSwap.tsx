@@ -1,23 +1,39 @@
 
-import { Paper } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useGeneralKeeperPayOffRejectedDeal } from "../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { HexType } from "../../../../../scripts/common";
-import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { checkValueOfSwap } from "../../../../../scripts/comp/ia";
+import { ShowValueOf } from "../../../../center/ShowValueOf";
 
-export function PayOffSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps) {
+export function PayOffSwap({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
+  const [ value, setValue ] = useState<string>('0');
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
-  const refresh = ()=>{
+  const [ valueOfSwap, setValueOfSwap ] = useState<bigint>(0n);
+
+  useEffect(()=>{
+    if (seqOfSwap > 0) {
+      checkValueOfSwap(ia, seqOfDeal, seqOfSwap).then(
+        res => setValueOfSwap(res)
+      );
+    }
+  }, [ia, seqOfDeal, seqOfSwap]);
+
+  const update = ()=>{
+    refresh();
     setLoading(false);
-    setShow(false);
+    setOpen(false);
   }
 
   const {
@@ -25,16 +41,26 @@ export function PayOffSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps)
     write: payOffSwap,
   } = useGeneralKeeperPayOffRejectedDeal({
     address: gk,
-    args: [addr, BigInt(deal.head.seqOfDeal), BigInt(seqOfSwap)],
     onError(err) {
       setErrMsg(err.message);
     },
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, update);
     }
   });
+
+  const handleClick = ()=>{
+    payOffSwap({
+      args: [
+        ia,
+        BigInt(seqOfDeal),
+        BigInt(seqOfSwap)
+      ],
+      value: strNumToBigInt(value, 9) * (10n ** 9n),
+    })
+  }
 
   return (
     <Paper elevation={3} sx={{
@@ -44,17 +70,53 @@ export function PayOffSwap({addr, deal, seqOfSwap, setShow}: ActionsOfSwapProps)
       }} 
     >
 
-      <LoadingButton
-        variant="outlined"
-        disabled={ payOffSwapLoading || !seqOfSwap }
-        loading = {loading}
-        loadingPosition="end"
-        endIcon={<Payment />}
-        sx={{ m:1, height: 40, minWidth:218 }}
-        onClick={ ()=>payOffSwap?.() }
-      >
-        Payoff 
-      </LoadingButton>
+      <Stack direction='row' sx={{ alignItems:'start' }} >
+
+      <TextField
+          variant='outlined'
+          label='SeqOfSwap'
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          inputProps={{readOnly: true}}
+          value={ seqOfSwap }
+          size='small'
+        />
+
+        <TextField 
+          variant='outlined'
+          label='Amount (Eth)'
+          error={ valid['AmtOfEth']?.error }
+          helperText={ valid['AmtOfEth']?.helpTx ?? ' ' }  
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={(e) => {
+            let input = e.target.value;
+            onlyNum('AmtOfEth', input, 0n, 9, setValid);
+            setValue(input);
+          }}
+          value={ value }
+          size='small'
+        />
+
+        <LoadingButton
+          variant="contained"
+          disabled={ seqOfSwap == 0 || payOffSwapLoading || !seqOfSwap }
+          loading = {loading}
+          loadingPosition="end"
+          endIcon={<Payment />}
+          sx={{ m:1, height: 40, minWidth:128 }}
+          onClick={ handleClick }
+        >
+          Pay
+        </LoadingButton>
+
+        <ShowValueOf value={valueOfSwap} />
+
+      </Stack>
 
     </Paper>
   );

@@ -76,7 +76,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
         <TextField 
           variant='outlined'
-          label='paidOfTarget'
+          label='PaidOfTarget'
           error={ valid['PaidOfTarget']?.error }
           helperText={ valid['PaidOfTarget']?.helpTx ?? ' ' }
           sx={{
@@ -94,7 +94,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
 
         <TextField 
           variant='outlined'
-          label='seqOfPledge'
+          label='SeqOfPledge'
           error={ valid['SeqOfPledge']?.error }
           helperText={ valid['SeqOfPledge']?.helpTx ?? ' ' }
           sx={{

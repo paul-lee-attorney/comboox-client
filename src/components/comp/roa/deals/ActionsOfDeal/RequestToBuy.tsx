@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 import { PanToolOutlined } from "@mui/icons-material";
 import { useGeneralKeeperRequestToBuy } from "../../../../../generated";
 import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexType, MaxData, MaxPrice } from "../../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 
@@ -44,7 +44,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
       args: [ 
           addr,
           BigInt(deal.head.seqOfDeal), 
-          BigInt(paidOfTarget), 
+          strNumToBigInt(paidOfTarget, 2), 
           BigInt(seqOfPledge)
       ],
     });
@@ -58,7 +58,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
           <TextField 
             variant='outlined'
@@ -72,7 +72,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyInt('PaidOfTarget', input, MaxData, setValid);
+              onlyNum('PaidOfTarget', input, MaxData, 2, setValid);
               setPaidOfTarget(input);
             }}
             value={ paidOfTarget }

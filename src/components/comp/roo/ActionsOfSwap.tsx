@@ -1,28 +1,26 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
-import { HexType } from "../../../../scripts/common";
-import { PickUpPledgedShare } from "./ActionsOfSwap/PickupPledgedShare";
-import { PayOffSwap } from "./ActionsOfSwap/PayOffSwap";
+import { PayOffSwap } from "./Actions/PayOffSwap";
+import { TerminateSwap } from "./Actions/TerminateSwap";
 
 export interface ActionsOfSwapProps{
-  ia: HexType;
-  seqOfDeal: number;
+  seqOfOpt: number;
   seqOfSwap: number;
   setOpen: Dispatch<SetStateAction<boolean>>;
   refresh: ()=>void;
 }
 
-export function ActionsOfSwap({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
+export function ActionsOfSwap({seqOfOpt, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
   const typesOfAction = [
-    'Pay Off Swap', 'Pickup Pledged Share'
+    'Pay Off Swap', 'Terminate Swap'
   ]
   
   const compsOfAction = [
-    <PayOffSwap key={0} ia={ia} seqOfDeal={seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setOpen} refresh={refresh} />,  
-    <PickUpPledgedShare key={1} ia={ia} seqOfDeal={seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setOpen} refresh={refresh} />,  
+    <PayOffSwap key={0} seqOfOpt={seqOfOpt} seqOfSwap={seqOfSwap} setOpen={ setOpen } refresh={ refresh } />, 
+    <TerminateSwap key={1} seqOfOpt={seqOfOpt} seqOfSwap={seqOfSwap} setOpen={ setOpen } refresh={ refresh } />,
   ]
 
   return(

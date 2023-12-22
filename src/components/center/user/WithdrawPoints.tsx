@@ -17,9 +17,10 @@ interface WithdrawPointsProps{
   refreshList: ()=>void;
   getUser: ()=>void;
   setOpen: (flag: boolean)=>void;
+  getBalanceOf: () => void;
 }
 
-export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:WithdrawPointsProps) {
+export function WithdrawPoints({hashLock, refreshList, getUser, setOpen, getBalanceOf}:WithdrawPointsProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -30,6 +31,7 @@ export function WithdrawPoints({hashLock, refreshList, getUser, setOpen}:Withdra
     getUser();
     setOpen(false);
     setLoading(false);
+    getBalanceOf();
   }
 
   const {

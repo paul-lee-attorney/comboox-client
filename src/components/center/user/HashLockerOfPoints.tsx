@@ -14,9 +14,10 @@ export interface HashLockerOfPointsProps{
   setOpen: Dispatch<SetStateAction<boolean>>,
   refreshList: () => void,
   getUser: () => void,
+  getBalanceOf: () => void,
 }
 
-export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, getUser}: HashLockerOfPointsProps) {
+export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, getUser, getBalanceOf}: HashLockerOfPointsProps) {
 
   return (
     <Dialog
@@ -153,10 +154,10 @@ export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, 
               <tr>
                 <td colSpan={3}>
                   {userNo == Number(locker.head.to) && (
-                    <PickupPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} />
+                    <PickupPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} getBalanceOf={getBalanceOf} />
                   )}
                   {userNo == Number(locker.head.from) && (
-                    <WithdrawPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} />
+                    <WithdrawPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} getBalanceOf={getBalanceOf} />
                   )}
                 </td>
               </tr>

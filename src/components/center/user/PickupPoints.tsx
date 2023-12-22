@@ -17,9 +17,10 @@ interface PickupPointsProps{
   refreshList: ()=>void;
   getUser: ()=>void;
   setOpen: (flag: boolean)=>void;
+  getBalanceOf: () => void;
 }
 
-export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPointsProps) {
+export function PickupPoints({hashLock, refreshList, getUser, setOpen, getBalanceOf}:PickupPointsProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -31,6 +32,7 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
     getUser();
     setOpen(false);
     setLoading(false);
+    getBalanceOf();
   }
 
   const {
@@ -56,12 +58,12 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen}:PickupPoi
   }
 
   return (
-    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >    
+    <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
       <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
         <TextField 
           size="small"
-          variant='filled'
+          variant='outlined'
           label='HashKey'
           sx={{
             m:1,

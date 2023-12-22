@@ -41,12 +41,12 @@ export function VoteCountingOfBoard({ seqOfMotion, setOpen, refresh }: ProposeMo
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
       <LoadingButton
-        disabled={ voteCountingLoading }
+        disabled={!voteCounting || voteCountingLoading }
         loading={loading}
         loadingPosition="end"
         variant="contained"
         endIcon={<Calculate />}
-        sx={{ m:1, mr:6 }}
+        sx={{ m:1, mr:6, width:218 }}
         onClick={()=>voteCounting?.()}
       >
         Count

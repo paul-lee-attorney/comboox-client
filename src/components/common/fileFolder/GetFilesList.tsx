@@ -80,7 +80,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'creator',
       headerName: 'Creator',
-      valueGetter: p => longSnParser(parseInt(`0x${p.row.sn.substring(34, 44)}`).toString()),
+      valueGetter: p => longSnParser(parseInt(`0x${p.row.sn.substring(44, 54)}`).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -94,7 +94,7 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
     {
       field: 'createDate',
       headerName: 'CreateDate',
-      valueGetter: p => dateParser(parseInt(`0x${p.row.sn.substring(44, 56)}`).toString()),
+      valueGetter: p => dateParser(parseInt(`0x${p.row.sn.substring(54, 66)}`).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',

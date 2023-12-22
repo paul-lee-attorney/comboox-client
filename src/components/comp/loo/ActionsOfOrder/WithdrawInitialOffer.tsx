@@ -56,7 +56,7 @@ export function WithdrawInitialOffer({ classOfShare, refresh }: ActionsOfOrderPr
       }} 
     >
       
-      <Stack direction="row" sx={{ alignItems:'center' }} >
+      <Stack direction="row" sx={{ alignItems:'start' }} >
 
         <TextField 
           variant='outlined'
