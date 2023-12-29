@@ -261,7 +261,7 @@ export function strNumToBigInt(input:string, dec:number): bigint {
 }
 
 export function isNum(input: string): boolean {
-  let reg = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])$/;
+  let reg = /^([1-9]\d*\.?\d*)|(0\.\d*[1-9])|(0)$/;
   let output = reg.test(input);
 
   return output;
