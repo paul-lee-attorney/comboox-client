@@ -213,6 +213,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                       variant='outlined'
                       label='BasedOnPar ?'
                       inputProps={{readOnly: isFinalized}}
+                      helperText=' '
                       size='small'
                       sx={{
                         m:1,
@@ -307,7 +308,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                         proposeHeadRatioOfDirectorsInBoard: input,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.proposeHeadRatioOfDirectorsInBoard) : objGR.proposeHeadRatioOfDirectorsInBoard }
+                    value={ objGR.proposeHeadRatioOfDirectorsInBoard }
                   />
 
                 </Stack>
@@ -355,7 +356,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                         quorumOfGM: input,
                       }));
                     }}
-                    value={ isFinalized ? toPercent(objGR.quorumOfGM) : objGR.quorumOfGM }
+                    value={ objGR.quorumOfGM }
                   />
 
                   <TextField 
@@ -426,7 +427,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
 
                 </Stack>
 
-                <Stack direction={'row'} sx={{ alignItems: 'center' }} >
+                <Stack direction={'row'} sx={{ alignItems: 'start' }} >
 
                   {!isFinalized && (
                     <DateTimeField
@@ -453,6 +454,7 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                       label='EstablishedDate'
                       inputProps={{readOnly: true}}
                       size='small'
+                      helperText=' '
                       sx={{
                         m:1,
                         minWidth: 218,
