@@ -28,27 +28,23 @@ export function GroupUpdateOrders({sha, initSeqList, isFinalized, time, refresh 
   const { setErrMsg } = useComBooxContext();
 
   const mandatoryRule: number[] = isFinalized ? [] : [768];
-  const [ cp, setCp ] = useState(mandatoryRule);
+  const [ cp, setCp ] = useState<number[]>(mandatoryRule);
   const [open, setOpen] = useState(false);
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
-      if (!isFinalized) {
-        setCp(v => {
-          let setRules = new Set([...v]);
-          initSeqList.forEach(k => {
-            setRules.add(k)
-          });
-          let arrRules = Array.from(setRules).sort(
-            (a, b) => (a-b)
-          );
-          return arrRules;
-        })
-      } else {
-        setCp(initSeqList);
-      }
+      setCp(v => {
+        let setRules = new Set([...v]);
+        initSeqList.forEach(k => {
+          setRules.add(k)
+        });
+        let arrRules = Array.from(setRules).sort(
+          (a, b) => (a-b)
+        );
+        return arrRules;
+      })
     } 
-  }, [initSeqList, isFinalized]);
+  }, [initSeqList]);
 
   const addCp = () => {
     setCp(v => {

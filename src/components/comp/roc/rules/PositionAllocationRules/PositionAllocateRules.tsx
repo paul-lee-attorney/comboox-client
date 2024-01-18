@@ -35,7 +35,16 @@ export function PositionAllocateRules({sha, initSeqList, isFinalized, time, refr
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
-      setCp([...initSeqList]);
+      setCp(v => {
+        let setRules = new Set([...v]);
+        initSeqList.forEach(k => {
+          setRules.add(k)
+        });
+        let arrRules = Array.from(setRules).sort(
+          (a, b) => (a-b)
+        );
+        return arrRules;
+      })
     }
   }, [initSeqList]);
 
