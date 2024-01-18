@@ -35,7 +35,16 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
 
   useEffect(()=>{
     if (initSeqList && initSeqList.length > 0) {
-      setCp([...initSeqList]);
+      setCp(v => {
+        let setRules = new Set([...v]);
+        initSeqList.forEach(k => {
+          setRules.add(k)
+        });
+        let arrRules = Array.from(setRules).sort(
+          (a, b) => (a-b)
+        );
+        return arrRules;
+      })
     }
   }, [initSeqList]);
 
@@ -51,7 +60,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
     if (cp.length > 1) {
       setCp(v => {
         let arr = [...v];
-        arr.pop();      
+        arr.pop();
         return arr;
       });
     }
