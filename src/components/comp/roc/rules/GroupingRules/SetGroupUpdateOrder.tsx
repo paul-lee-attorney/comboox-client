@@ -196,6 +196,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
                     label='AddMember ?'
                     inputProps={{readOnly: true}}
                     size="small"
+                    helperText=' '
                     sx={{
                       m:1,
                       minWidth: 218,
