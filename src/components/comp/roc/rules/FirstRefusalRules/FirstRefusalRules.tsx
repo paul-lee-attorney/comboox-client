@@ -27,7 +27,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
 
   const { setErrMsg } = useComBooxContext();
 
-  const mandatoryRules: number[] = isFinalized ? [] : [512, 513];
+  const mandatoryRules: number[] = isFinalized ? [] : [512];
   const [ cp, setCp ] = useState<number[]>(mandatoryRules);
   const [ open, setOpen ] = useState(false);
 
@@ -48,7 +48,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
   }
 
   const udpateResults = ()=> {
-    if (cp.length > 2) {
+    if (cp.length > 1) {
       setCp(v => {
         let arr = [...v];
         arr.pop();      
@@ -64,7 +64,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
     write: removeRule,
   } = useShareholdersAgreementRemoveRule({
     address: sha,
-    args: [BigInt(cp[cp.length - 1] ?? '513')],
+    args: cp && cp.length > 0 ? [BigInt(cp[cp.length - 1])] : undefined,
     onError(err) {
       setErrMsg(err.message);
     },
@@ -102,6 +102,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
                 <Toolbar sx={{ textDecoration:'underline' }}>
                   <h4>First Refusal Rules</h4>
                 </Toolbar>
+
                 {!isFinalized && (
                   <>
                     <IconButton 
@@ -112,7 +113,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
                       <AddCircle/>
                     </IconButton>
                     <IconButton
-                      disabled={ cp.length < 2 || removeRuleLoading || !removeRule || loading} 
+                      disabled={ removeRuleLoading || !removeRule || loading} 
                       sx={{width: 20, height: 20, m: 1, p: 1, }} 
                       onClick={ () => removeRule?.() }
                       color="primary"
@@ -127,7 +128,7 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
               <Grid container spacing={0.5} >
 
                 {cp.map((v)=> (
-                  <Grid key={ v } item xs={3}>
+                  <Grid key={v} item xs={3}>
                     <SetFirstRefusalRule  sha={ sha } seq={ v } isFinalized={ isFinalized } time={time} refresh={refresh} />
                   </Grid>
                 ))}
