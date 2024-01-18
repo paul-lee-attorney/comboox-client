@@ -27,31 +27,17 @@ export function FirstRefusalRules({sha, initSeqList, isFinalized, time, refresh}
 
   const { setErrMsg } = useComBooxContext();
 
-  const mandatoryRules = [512, 513];
-
-  const [ cp, setCp ] = useState(mandatoryRules);
-  const [open, setOpen] = useState(false);
+  const mandatoryRules: number[] = isFinalized ? [] : [512, 513];
+  const [ cp, setCp ] = useState<number[]>(mandatoryRules);
+  const [ open, setOpen ] = useState(false);
 
   const [ loading, setLoading ] = useState(false);
 
   useEffect(()=>{
-    if (initSeqList) {
-      if (!isFinalized) {
-        setCp(v => {
-          let setRules = new Set([...v]);
-          initSeqList.forEach(k => {
-            setRules.add(k)
-          });
-          let arrRules = Array.from(setRules).sort(
-            (a, b) => (a-b)
-          );
-          return arrRules;
-        })
-      } else {
-        setCp(initSeqList);
-      }
-    } 
-  }, [initSeqList, isFinalized]);
+    if (initSeqList && initSeqList.length > 0) {
+      setCp([...initSeqList]);
+    }
+  }, [initSeqList]);
 
   const addCp = () => {
     setCp(v => {
