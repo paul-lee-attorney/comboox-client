@@ -249,11 +249,13 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
             <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
           )}
 
-          <Grid container direction='row' spacing={2} >
-            <Grid item xs={12}>
-              <ActionsOnMotionOfBoard motion={motion} voteIsEnd={voteIsEnd} setOpen={setOpen} refresh={refresh} />
+          {motion.body.state < 4 && (
+            <Grid container direction='row' spacing={2} >
+              <Grid item xs={12}>
+                <ActionsOnMotionOfBoard motion={motion} voteIsEnd={voteIsEnd} setOpen={setOpen} refresh={refresh} />
+              </Grid>
             </Grid>
-          </Grid>
+          )}
 
         </Paper>
       </DialogContent>
