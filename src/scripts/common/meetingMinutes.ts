@@ -173,7 +173,7 @@ export async function getMotionsList(minutes: HexType): Promise<Motion[]> {
     i++;
   }
 
-  return ls;
+  return ls.toReversed();
 }
 
 // ==== Voting ====
