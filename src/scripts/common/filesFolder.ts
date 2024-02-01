@@ -143,7 +143,7 @@ export async function getFilesList(folder: HexType):Promise<readonly HexType[]> 
     functionName: 'getFilesList',
   })
 
-  return list.toReversed();
+  return list;
 }
 
 export async function isRegistered(folder: HexType, body: HexType):Promise<boolean>{
