@@ -192,7 +192,7 @@ export async function getFilesListWithInfo(addr: HexType):Promise<InfoOfFile[]>{
 
   }
 
-  return list;
+  return list.toReversed();
 }
 
 export async function getFilesInfoList(addr: HexType, ls: readonly HexType[]):Promise<InfoOfFile[]>{
