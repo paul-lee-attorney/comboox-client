@@ -15,9 +15,7 @@ import {
 
 import { Approval, Close }  from '@mui/icons-material';
 
-import { 
-  useAccessControlSetOwner,
-} from '../../../generated';
+import { useAccessControlTransferOwnership } from '../../../generated';
 
 import { AddrZero, HexType } from '../../../scripts/common';
 import { getOwner } from '../../../scripts/common/accessControl';
@@ -56,7 +54,7 @@ export function SetOwner({ addr }: AccessControlProps) {
   const {
     isLoading: setOwnrLoading,
     write: setOwnr,
-  } = useAccessControlSetOwner({
+  } = useAccessControlTransferOwnership({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

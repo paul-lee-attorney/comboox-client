@@ -582,3 +582,16 @@ export async function balanceOfWei(addr: HexType):Promise<bigint>{
 
   return res.value;
 }
+
+export async function getCentPriceInWei(curr:number): Promise<bigint>{
+
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: regCenterABI,
+    functionName: 'getCentPriceInWei',
+    args: [ BigInt(curr) ]
+  });
+
+  return res;
+}
+

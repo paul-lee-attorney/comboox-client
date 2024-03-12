@@ -19,37 +19,6 @@ import {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const accessControlABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -68,9 +37,14 @@ export const accessControlABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -105,6 +79,13 @@ export const accessControlABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -134,11 +115,19 @@ export const accessControlABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -183,7 +172,7 @@ export const accessControlABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -495,37 +484,6 @@ export const aggregatorV3InterfaceABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const alongsABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -544,9 +502,14 @@ export const alongsABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -645,6 +608,13 @@ export const alongsABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -674,11 +644,19 @@ export const alongsABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -862,7 +840,7 @@ export const alongsABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -889,37 +867,6 @@ export const alongsABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const antiDilutionABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -938,9 +885,14 @@ export const antiDilutionABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -1027,6 +979,13 @@ export const antiDilutionABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -1056,11 +1015,19 @@ export const antiDilutionABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -1192,7 +1159,7 @@ export const antiDilutionABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -1297,37 +1264,6 @@ export const arrayUtilsABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const bmmKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -1346,9 +1282,14 @@ export const bmmKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -1458,6 +1399,13 @@ export const bmmKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -1487,11 +1435,19 @@ export const bmmKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -1572,7 +1528,7 @@ export const bmmKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -1751,6 +1707,64 @@ export const condsRepoABI = [
         ],
       },
     ],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// CreateNewComp
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const createNewCompABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'dk', internalType: 'address', type: 'address' }],
+    name: 'createComp',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
+    outputs: [],
   },
 ] as const
 
@@ -2626,37 +2640,6 @@ export const feedRegistryInterfaceABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const filesFolderABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -2675,9 +2658,14 @@ export const filesFolderABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -2879,6 +2867,13 @@ export const filesFolderABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -2908,11 +2903,19 @@ export const filesFolderABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -2991,7 +2994,7 @@ export const filesFolderABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -3151,37 +3154,6 @@ export const fuleTankABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const gmmKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -3200,9 +3172,14 @@ export const gmmKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -3312,6 +3289,13 @@ export const gmmKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -3341,11 +3325,19 @@ export const gmmKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -3451,7 +3443,7 @@ export const gmmKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -3513,37 +3505,6 @@ export const generalKeeperABI = [
     ],
     name: 'ExecAction',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -3562,9 +3523,14 @@ export const generalKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -4140,6 +4106,13 @@ export const generalKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -4182,11 +4155,19 @@ export const generalKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -4589,7 +4570,7 @@ export const generalKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -4849,37 +4830,6 @@ export const goldChainABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const iAccessControlABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -4893,14 +4843,6 @@ export const iAccessControlABI = [
       },
     ],
     name: 'SetDirectKeeper',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
-    ],
-    name: 'SetOwner',
   },
   {
     type: 'event',
@@ -4923,13 +4865,6 @@ export const iAccessControlABI = [
     type: 'function',
     inputs: [],
     name: 'getDK',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getOwner',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
@@ -4963,12 +4898,10 @@ export const iAccessControlABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
-      { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
     ],
-    name: 'init',
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -5007,13 +4940,6 @@ export const iAccessControlABI = [
     type: 'function',
     inputs: [{ name: 'keeper', internalType: 'address', type: 'address' }],
     name: 'setDirectKeeper',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
     outputs: [],
   },
   {
@@ -5526,6 +5452,20 @@ export const ibmmKeeperABI = [
     type: 'function',
     inputs: [{ name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' }],
     name: 'voteCounting',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ICreateNewComp
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iCreateNewCompABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'dk', internalType: 'address', type: 'address' }],
+    name: 'createComp',
     outputs: [],
   },
 ] as const
@@ -6379,6 +6319,18 @@ export const iGeneralKeeperABI = [
     type: 'function',
     inputs: [{ name: 'version', internalType: 'uint256', type: 'uint256' }],
     name: 'createSHA',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfOpt', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTarget', internalType: 'uint256', type: 'uint256' },
+      { name: 'paidOfTarget', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfPledge', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createSwap',
     outputs: [],
   },
   {
@@ -9649,6 +9601,591 @@ export const iOptionsABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IOwnable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iOwnableABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IPayrollOfProject
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iPayrollOfProjectABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'EnrollTeam',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'deltaQty',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'IncreaseBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'exRate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'PayWages',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'PickupDeposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'leader',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'ReplaceLeader',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'estimated',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'currency',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetCurrency',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'manager',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetManager',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'userNo',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyMemberWork',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyTeamWork',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'hrs', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'applyWorkingHour',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'enrollMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'enrollTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'extendPeriod',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'fixBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'getBalanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrency',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getListOfTeams',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getMemberInfo',
+    outputs: [
+      {
+        name: 'm',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMembersOfTeam',
+    outputs: [
+      {
+        name: 'ls',
+        internalType: 'struct TeamsRepo.Member[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getPayroll',
+    outputs: [{ name: 'list', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getProjectInfo',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamInfo',
+    outputs: [
+      {
+        name: 'info',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamMembersList',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'inPayroll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'deltaQty', internalType: 'uint256', type: 'uint256' }],
+    name: 'increaseBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseTeamBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isEnrolledMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'isManager',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isTeamLeader',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [],
+    name: 'payWages',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'pickupDeposit',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'qtyOfTeams',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'removeMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'leader', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'replaceLeader',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'restoreMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'currency', internalType: 'uint8', type: 'uint8' }],
+    name: 'setCurrency',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'setManager',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'teamIsEnrolled',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyMemberWork',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyTeamWork',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // IPriceConsumer
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -10555,13 +11092,6 @@ export const iRegCenterABI = [
   {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: 'dk', internalType: 'address', type: 'address' }],
-    name: 'createComp',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
     inputs: [
       { name: 'snOfDoc', internalType: 'bytes32', type: 'bytes32' },
       { name: 'primeKeyOfOwner', internalType: 'address', type: 'address' },
@@ -10634,6 +11164,13 @@ export const iRegCenterABI = [
     type: 'function',
     inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
     name: 'getCentPriceInWei',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'from', internalType: 'address', type: 'address' }],
+    name: 'getDepositAmt',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
@@ -15882,37 +16419,6 @@ export const investmentAgreementABI = [
     ],
     name: 'CreateSwap',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -15988,9 +16494,14 @@ export const investmentAgreementABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -16329,6 +16840,13 @@ export const investmentAgreementABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -16490,11 +17008,19 @@ export const investmentAgreementABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -16718,7 +17244,7 @@ export const investmentAgreementABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -16808,37 +17334,6 @@ export const investmentAgreementABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const looKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -16857,9 +17352,14 @@ export const looKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -16905,6 +17405,13 @@ export const looKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -16934,11 +17441,19 @@ export const looKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -17047,7 +17562,7 @@ export const looKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -17136,37 +17651,6 @@ export const listOfOrdersABI = [
       },
     ],
     name: 'GetBalance',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
   },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
@@ -17277,9 +17761,14 @@ export const listOfOrdersABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -17435,6 +17924,13 @@ export const listOfOrdersABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -17482,11 +17978,19 @@ export const listOfOrdersABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -17673,7 +18177,7 @@ export const listOfOrdersABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -17734,37 +18238,6 @@ export const listOfOrdersABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const lockUpABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -17783,9 +18256,14 @@ export const lockUpABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -17847,6 +18325,13 @@ export const lockUpABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -17876,11 +18361,19 @@ export const lockUpABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -18064,7 +18557,7 @@ export const lockUpABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -18261,37 +18754,6 @@ export const meetingMinutesABI = [
     ],
     name: 'ExecResolution',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -18348,9 +18810,14 @@ export const meetingMinutesABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -18670,6 +19137,13 @@ export const meetingMinutesABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -18729,11 +19203,19 @@ export const meetingMinutesABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -18845,7 +19327,7 @@ export const meetingMinutesABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -19059,37 +19541,6 @@ export const officersRepoABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const optionsABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -19108,9 +19559,14 @@ export const optionsABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -19334,6 +19790,13 @@ export const optionsABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -19370,11 +19833,19 @@ export const optionsABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -19453,7 +19924,7 @@ export const optionsABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -19582,6 +20053,635 @@ export const ordersRepoABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Ownable
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const ownableABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// PayrollOfProject
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const payrollOfProjectABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'EnrollTeam',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'deltaQty',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'IncreaseBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'exRate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'PayWages',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'PickupDeposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'leader',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'ReplaceLeader',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'estimated',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'currency',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetCurrency',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'manager',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetManager',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'userNo',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyMemberWork',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyTeamWork',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'hrs', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'applyWorkingHour',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'enrollMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'enrollTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'extendPeriod',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'fixBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'getBalanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrency',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getListOfTeams',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getMemberInfo',
+    outputs: [
+      {
+        name: 'm',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMembersOfTeam',
+    outputs: [
+      {
+        name: 'ls',
+        internalType: 'struct TeamsRepo.Member[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getPayroll',
+    outputs: [{ name: 'list', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getProjectInfo',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamInfo',
+    outputs: [
+      {
+        name: 'info',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
+          { name: 'applied', internalType: 'uint16', type: 'uint16' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamMembersList',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'inPayroll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'deltaQty', internalType: 'uint256', type: 'uint256' }],
+    name: 'increaseBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseTeamBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isEnrolledMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'isManager',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isTeamLeader',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [],
+    name: 'payWages',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'pickupDeposit',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'qtyOfTeams',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'removeMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'leader', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'replaceLeader',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'restoreMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'setBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'currency', internalType: 'uint8', type: 'uint8' }],
+    name: 'setCurrency',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'setManager',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'teamIsEnrolled',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyMemberWork',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyTeamWork',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // PledgesRepo
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -19700,37 +20800,6 @@ export const priceConsumer2ABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const roaKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -19749,9 +20818,14 @@ export const roaKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -19820,6 +20894,13 @@ export const roaKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -19849,11 +20930,19 @@ export const roaKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -19934,7 +21023,7 @@ export const roaKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -19994,37 +21083,6 @@ export const roaKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const rocKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -20043,9 +21101,14 @@ export const rocKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -20123,6 +21186,13 @@ export const rocKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -20152,11 +21222,19 @@ export const rocKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -20201,7 +21279,7 @@ export const rocKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -20239,37 +21317,6 @@ export const rocKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const rodKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -20288,9 +21335,14 @@ export const rodKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -20325,6 +21377,13 @@ export const rodKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -20354,11 +21413,19 @@ export const rodKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -20435,7 +21502,7 @@ export const rodKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -20484,37 +21551,6 @@ export const rodKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const romKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -20533,9 +21569,14 @@ export const romKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -20581,6 +21622,13 @@ export const romKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -20610,11 +21658,19 @@ export const romKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -20688,7 +21744,7 @@ export const romKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -20747,37 +21803,6 @@ export const romKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const rooKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -20796,9 +21821,14 @@ export const rooKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -20856,6 +21886,13 @@ export const rooKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -20885,11 +21922,19 @@ export const rooKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -20984,7 +22029,7 @@ export const rooKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -21034,37 +22079,6 @@ export const rooKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const ropKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -21083,9 +22097,14 @@ export const ropKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -21161,6 +22180,13 @@ export const ropKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -21190,11 +22216,19 @@ export const ropKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -21285,7 +22319,7 @@ export const ropKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -21649,13 +22683,6 @@ export const regCenterABI = [
   {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: 'dk', internalType: 'address', type: 'address' }],
-    name: 'createComp',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
     inputs: [
       { name: 'snOfDoc', internalType: 'bytes32', type: 'bytes32' },
       { name: 'primeKeyOfOwner', internalType: 'address', type: 'address' },
@@ -21745,6 +22772,13 @@ export const regCenterABI = [
     type: 'function',
     inputs: [{ name: 'seq', internalType: 'uint256', type: 'uint256' }],
     name: 'getCentPriceInWei',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'from', internalType: 'address', type: 'address' }],
+    name: 'getDepositAmt',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
@@ -22325,37 +23359,6 @@ export const registerOfAgreementsABI = [
     ],
     name: 'ExecAlongRight',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -22374,9 +23377,14 @@ export const registerOfAgreementsABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -22758,6 +23766,13 @@ export const registerOfAgreementsABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -22821,11 +23836,19 @@ export const registerOfAgreementsABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -22960,7 +23983,7 @@ export const registerOfAgreementsABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -23048,37 +24071,6 @@ export const registerOfConstitutionABI = [
     ],
     name: 'ChangePointer',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -23097,9 +24089,14 @@ export const registerOfConstitutionABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -23308,6 +24305,13 @@ export const registerOfConstitutionABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -23337,11 +24341,19 @@ export const registerOfConstitutionABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -23427,7 +24439,7 @@ export const registerOfConstitutionABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -23515,37 +24527,6 @@ export const registerOfDirectorsABI = [
     ],
     name: 'AddPosition',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -23609,9 +24590,14 @@ export const registerOfDirectorsABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -23776,6 +24762,13 @@ export const registerOfDirectorsABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -23835,11 +24828,19 @@ export const registerOfDirectorsABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -23936,7 +24937,7 @@ export const registerOfDirectorsABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -24100,37 +25101,6 @@ export const registerOfMembersABI = [
     ],
     name: 'ChangeGroupRep',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -24196,9 +25166,14 @@ export const registerOfMembersABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -24422,6 +25397,13 @@ export const registerOfMembersABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -24520,11 +25502,19 @@ export const registerOfMembersABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -24751,7 +25741,7 @@ export const registerOfMembersABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -24937,37 +25927,6 @@ export const registerOfOptionsABI = [
     anonymous: false,
     inputs: [
       {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
         name: 'seqOfOpt',
         internalType: 'uint256',
         type: 'uint256',
@@ -25057,9 +26016,14 @@ export const registerOfOptionsABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -25475,6 +26439,13 @@ export const registerOfOptionsABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -25537,11 +26508,19 @@ export const registerOfOptionsABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -25739,7 +26718,7 @@ export const registerOfOptionsABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -25882,37 +26861,6 @@ export const registerOfPledgesABI = [
     ],
     name: 'ExtendPledge',
   },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -26025,9 +26973,14 @@ export const registerOfPledgesABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -26313,6 +27266,13 @@ export const registerOfPledgesABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -26349,11 +27309,19 @@ export const registerOfPledgesABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -26609,7 +27577,7 @@ export const registerOfPledgesABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -26753,37 +27721,6 @@ export const registerOfSharesABI = [
     anonymous: false,
     inputs: [
       {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
         name: 'shareNumber',
         internalType: 'bytes32',
         type: 'bytes32',
@@ -26831,9 +27768,14 @@ export const registerOfSharesABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -27146,6 +28088,13 @@ export const registerOfSharesABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -27348,11 +28297,19 @@ export const registerOfSharesABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -27436,7 +28393,7 @@ export const registerOfSharesABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -27753,37 +28710,6 @@ export const rulesParserABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const shaKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -27802,9 +28728,14 @@ export const shaKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -27905,6 +28836,13 @@ export const shaKeeperABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -27934,11 +28872,19 @@ export const shaKeeperABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -27983,7 +28929,7 @@ export const shaKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -28022,37 +28968,6 @@ export const shaKeeperABI = [
 
 export const shareholdersAgreementABI = [
   { type: 'event', anonymous: false, inputs: [], name: 'CirculateDoc' },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -28071,9 +28986,14 @@ export const shareholdersAgreementABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -28222,6 +29142,13 @@ export const shareholdersAgreementABI = [
     outputs: [
       { name: 'parties', internalType: 'uint256[]', type: 'uint256[]' },
     ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
     stateMutability: 'view',
@@ -28389,9 +29316,7 @@ export const shareholdersAgreementABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
     outputs: [],
@@ -28401,6 +29326,16 @@ export const shareholdersAgreementABI = [
     type: 'function',
     inputs: [],
     name: 'initDefaultRules',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -28536,7 +29471,7 @@ export const shareholdersAgreementABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -28690,37 +29625,6 @@ export const sharesRepoABI = [
 
 export const sigPageABI = [
   { type: 'event', anonymous: false, inputs: [], name: 'CirculateDoc' },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'directKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      {
-        name: 'regCenter',
-        internalType: 'address',
-        type: 'address',
-        indexed: false,
-      },
-      {
-        name: 'generalKeeper',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'Init',
-  },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
   {
     type: 'event',
@@ -28739,9 +29643,14 @@ export const sigPageABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'acct', internalType: 'address', type: 'address', indexed: true },
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
     ],
-    name: 'SetOwner',
+    name: 'SetNewOwner',
   },
   {
     type: 'event',
@@ -28870,6 +29779,13 @@ export const sigPageABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'role', internalType: 'bytes32', type: 'bytes32' }],
     name: 'getRoleAdmin',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
@@ -28991,11 +29907,19 @@ export const sigPageABI = [
     type: 'function',
     inputs: [
       { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'directKeeper', internalType: 'address', type: 'address' },
       { name: 'regCenter', internalType: 'address', type: 'address' },
-      { name: 'generalKeeper', internalType: 'address', type: 'address' },
     ],
     name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'dk', internalType: 'address', type: 'address' },
+      { name: 'gk', internalType: 'address', type: 'address' },
+    ],
+    name: 'initKeepers',
     outputs: [],
   },
   {
@@ -29103,7 +30027,7 @@ export const sigPageABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -29296,6 +30220,29 @@ export function useAccessControlGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useAccessControlGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof accessControlABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof accessControlABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: accessControlABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<
+    typeof accessControlABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useAccessControlGetRoleAdmin<
@@ -29472,6 +30419,33 @@ export function useAccessControlInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useAccessControlInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof accessControlABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof accessControlABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof accessControlABI, 'initKeepers', TMode>({
+    abi: accessControlABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useAccessControlLockContents<
@@ -29584,28 +30558,28 @@ export function useAccessControlSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useAccessControlSetOwner<
+export function useAccessControlSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof accessControlABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof accessControlABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof accessControlABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof accessControlABI, 'setOwner', TMode>({
+  return useContractWrite<typeof accessControlABI, 'setNewOwner', TMode>({
     abi: accessControlABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -29728,6 +30702,22 @@ export function usePrepareAccessControlInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareAccessControlInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof accessControlABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: accessControlABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof accessControlABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareAccessControlLockContents(
@@ -29795,19 +30785,19 @@ export function usePrepareAccessControlSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link accessControlABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareAccessControlSetOwner(
+export function usePrepareAccessControlSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof accessControlABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof accessControlABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: accessControlABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof accessControlABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof accessControlABI, 'setNewOwner'>)
 }
 
 /**
@@ -29858,22 +30848,6 @@ export function useAccessControlEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accessControlABI}__ and `eventName` set to `"Init"`.
- */
-export function useAccessControlInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof accessControlABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: accessControlABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof accessControlABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accessControlABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useAccessControlLockContentsEvent(
@@ -29906,19 +30880,19 @@ export function useAccessControlSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accessControlABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link accessControlABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useAccessControlSetOwnerEvent(
+export function useAccessControlSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof accessControlABI, 'SetOwner'>,
+    UseContractEventConfig<typeof accessControlABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: accessControlABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof accessControlABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof accessControlABI, 'SetNewOwner'>)
 }
 
 /**
@@ -30836,6 +31810,25 @@ export function useAlongsGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useAlongsGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof alongsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof alongsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: alongsABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof alongsABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useAlongsGetRoleAdmin<
@@ -31120,6 +32113,33 @@ export function useAlongsInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useAlongsInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof alongsABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof alongsABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof alongsABI, 'initKeepers', TMode>({
+    abi: alongsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useAlongsLockContents<
@@ -31282,26 +32302,28 @@ export function useAlongsSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useAlongsSetOwner<TMode extends WriteContractMode = undefined>(
+export function useAlongsSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof alongsABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof alongsABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof alongsABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof alongsABI, 'setOwner', TMode>({
+  return useContractWrite<typeof alongsABI, 'setNewOwner', TMode>({
     abi: alongsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -31456,6 +32478,22 @@ export function usePrepareAlongsInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareAlongsInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof alongsABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: alongsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof alongsABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareAlongsLockContents(
@@ -31552,19 +32590,19 @@ export function usePrepareAlongsSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link alongsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareAlongsSetOwner(
+export function usePrepareAlongsSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof alongsABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof alongsABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: alongsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof alongsABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof alongsABI, 'setNewOwner'>)
 }
 
 /**
@@ -31615,22 +32653,6 @@ export function useAlongsEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link alongsABI}__ and `eventName` set to `"Init"`.
- */
-export function useAlongsInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof alongsABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: alongsABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof alongsABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link alongsABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useAlongsLockContentsEvent(
@@ -31663,19 +32685,19 @@ export function useAlongsSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link alongsABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link alongsABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useAlongsSetOwnerEvent(
+export function useAlongsSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof alongsABI, 'SetOwner'>,
+    UseContractEventConfig<typeof alongsABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: alongsABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof alongsABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof alongsABI, 'SetNewOwner'>)
 }
 
 /**
@@ -31846,6 +32868,29 @@ export function useAntiDilutionGetOwner<
   return useContractRead({
     abi: antiDilutionABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof antiDilutionABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useAntiDilutionGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof antiDilutionABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof antiDilutionABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: antiDilutionABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof antiDilutionABI,
@@ -32154,6 +33199,33 @@ export function useAntiDilutionInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useAntiDilutionInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof antiDilutionABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof antiDilutionABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof antiDilutionABI, 'initKeepers', TMode>({
+    abi: antiDilutionABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useAntiDilutionLockContents<
@@ -32324,28 +33396,28 @@ export function useAntiDilutionSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useAntiDilutionSetOwner<
+export function useAntiDilutionSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof antiDilutionABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof antiDilutionABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof antiDilutionABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof antiDilutionABI, 'setOwner', TMode>({
+  return useContractWrite<typeof antiDilutionABI, 'setNewOwner', TMode>({
     abi: antiDilutionABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -32500,6 +33572,22 @@ export function usePrepareAntiDilutionInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareAntiDilutionInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof antiDilutionABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: antiDilutionABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof antiDilutionABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareAntiDilutionLockContents(
@@ -32596,19 +33684,19 @@ export function usePrepareAntiDilutionSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link antiDilutionABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareAntiDilutionSetOwner(
+export function usePrepareAntiDilutionSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof antiDilutionABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof antiDilutionABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: antiDilutionABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof antiDilutionABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof antiDilutionABI, 'setNewOwner'>)
 }
 
 /**
@@ -32659,22 +33747,6 @@ export function useAntiDilutionEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link antiDilutionABI}__ and `eventName` set to `"Init"`.
- */
-export function useAntiDilutionInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof antiDilutionABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: antiDilutionABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof antiDilutionABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link antiDilutionABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useAntiDilutionLockContentsEvent(
@@ -32707,19 +33779,19 @@ export function useAntiDilutionSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link antiDilutionABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link antiDilutionABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useAntiDilutionSetOwnerEvent(
+export function useAntiDilutionSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof antiDilutionABI, 'SetOwner'>,
+    UseContractEventConfig<typeof antiDilutionABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: antiDilutionABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof antiDilutionABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof antiDilutionABI, 'SetNewOwner'>)
 }
 
 /**
@@ -32941,6 +34013,25 @@ export function useBmmKeeperGetOwner<
   return useContractRead({
     abi: bmmKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof bmmKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useBmmKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof bmmKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof bmmKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: bmmKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof bmmKeeperABI, TFunctionName, TSelectData>)
 }
@@ -33294,6 +34385,33 @@ export function useBmmKeeperInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useBmmKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof bmmKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof bmmKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof bmmKeeperABI, 'initKeepers', TMode>({
+    abi: bmmKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useBmmKeeperLockContents<
@@ -33491,28 +34609,28 @@ export function useBmmKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useBmmKeeperSetOwner<
+export function useBmmKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof bmmKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof bmmKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof bmmKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof bmmKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof bmmKeeperABI, 'setNewOwner', TMode>({
     abi: bmmKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -33803,6 +34921,22 @@ export function usePrepareBmmKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareBmmKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof bmmKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: bmmKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof bmmKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareBmmKeeperLockContents(
@@ -33921,19 +35055,19 @@ export function usePrepareBmmKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link bmmKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareBmmKeeperSetOwner(
+export function usePrepareBmmKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof bmmKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof bmmKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: bmmKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof bmmKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof bmmKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -34016,22 +35150,6 @@ export function useBmmKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link bmmKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useBmmKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof bmmKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: bmmKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof bmmKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link bmmKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useBmmKeeperLockContentsEvent(
@@ -34064,19 +35182,19 @@ export function useBmmKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link bmmKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link bmmKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useBmmKeeperSetOwnerEvent(
+export function useBmmKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof bmmKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof bmmKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: bmmKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof bmmKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof bmmKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -34225,6 +35343,275 @@ export function useCondsRepoSnParser<
     functionName: 'snParser',
     ...config,
   } as UseContractReadConfig<typeof condsRepoABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link createNewCompABI}__.
+ */
+export function useCreateNewCompRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof createNewCompABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof createNewCompABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: createNewCompABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof createNewCompABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"getOwner"`.
+ */
+export function useCreateNewCompGetOwner<
+  TFunctionName extends 'getOwner',
+  TSelectData = ReadContractResult<typeof createNewCompABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof createNewCompABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: createNewCompABI,
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof createNewCompABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useCreateNewCompGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof createNewCompABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof createNewCompABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: createNewCompABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<
+    typeof createNewCompABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link createNewCompABI}__.
+ */
+export function useCreateNewCompWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof createNewCompABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof createNewCompABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof createNewCompABI, TFunctionName, TMode>({
+    abi: createNewCompABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"createComp"`.
+ */
+export function useCreateNewCompCreateComp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof createNewCompABI,
+          'createComp'
+        >['request']['abi'],
+        'createComp',
+        TMode
+      > & { functionName?: 'createComp' }
+    : UseContractWriteConfig<typeof createNewCompABI, 'createComp', TMode> & {
+        abi?: never
+        functionName?: 'createComp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof createNewCompABI, 'createComp', TMode>({
+    abi: createNewCompABI,
+    functionName: 'createComp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"init"`.
+ */
+export function useCreateNewCompInit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof createNewCompABI,
+          'init'
+        >['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof createNewCompABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof createNewCompABI, 'init', TMode>({
+    abi: createNewCompABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function useCreateNewCompSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof createNewCompABI,
+          'setNewOwner'
+        >['request']['abi'],
+        'setNewOwner',
+        TMode
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof createNewCompABI, 'setNewOwner', TMode> & {
+        abi?: never
+        functionName?: 'setNewOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof createNewCompABI, 'setNewOwner', TMode>({
+    abi: createNewCompABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link createNewCompABI}__.
+ */
+export function usePrepareCreateNewCompWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof createNewCompABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: createNewCompABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof createNewCompABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"createComp"`.
+ */
+export function usePrepareCreateNewCompCreateComp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof createNewCompABI, 'createComp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: createNewCompABI,
+    functionName: 'createComp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof createNewCompABI, 'createComp'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"init"`.
+ */
+export function usePrepareCreateNewCompInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof createNewCompABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: createNewCompABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof createNewCompABI, 'init'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link createNewCompABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePrepareCreateNewCompSetNewOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof createNewCompABI, 'setNewOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: createNewCompABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof createNewCompABI, 'setNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link createNewCompABI}__.
+ */
+export function useCreateNewCompEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof createNewCompABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: createNewCompABI,
+    ...config,
+  } as UseContractEventConfig<typeof createNewCompABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link createNewCompABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function useCreateNewCompSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof createNewCompABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: createNewCompABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof createNewCompABI, 'SetNewOwner'>)
 }
 
 /**
@@ -36381,6 +37768,25 @@ export function useFilesFolderGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useFilesFolderGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof filesFolderABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof filesFolderABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: filesFolderABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof filesFolderABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useFilesFolderGetRoleAdmin<
@@ -36692,6 +38098,33 @@ export function useFilesFolderInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useFilesFolderInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof filesFolderABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof filesFolderABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof filesFolderABI, 'initKeepers', TMode>({
+    abi: filesFolderABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useFilesFolderLockContents<
@@ -36858,28 +38291,28 @@ export function useFilesFolderSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useFilesFolderSetOwner<
+export function useFilesFolderSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof filesFolderABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof filesFolderABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof filesFolderABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof filesFolderABI, 'setOwner', TMode>({
+  return useContractWrite<typeof filesFolderABI, 'setNewOwner', TMode>({
     abi: filesFolderABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -37119,6 +38552,22 @@ export function usePrepareFilesFolderInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareFilesFolderInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof filesFolderABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: filesFolderABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof filesFolderABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareFilesFolderLockContents(
@@ -37215,19 +38664,19 @@ export function usePrepareFilesFolderSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link filesFolderABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareFilesFolderSetOwner(
+export function usePrepareFilesFolderSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof filesFolderABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof filesFolderABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: filesFolderABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof filesFolderABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof filesFolderABI, 'setNewOwner'>)
 }
 
 /**
@@ -37329,22 +38778,6 @@ export function useFilesFolderEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link filesFolderABI}__ and `eventName` set to `"Init"`.
- */
-export function useFilesFolderInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof filesFolderABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: filesFolderABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof filesFolderABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link filesFolderABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useFilesFolderLockContentsEvent(
@@ -37377,19 +38810,19 @@ export function useFilesFolderSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link filesFolderABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link filesFolderABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useFilesFolderSetOwnerEvent(
+export function useFilesFolderSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof filesFolderABI, 'SetOwner'>,
+    UseContractEventConfig<typeof filesFolderABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: filesFolderABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof filesFolderABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof filesFolderABI, 'SetNewOwner'>)
 }
 
 /**
@@ -37870,6 +39303,25 @@ export function useGmmKeeperGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useGmmKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof gmmKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof gmmKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: gmmKeeperABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof gmmKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useGmmKeeperGetRoleAdmin<
@@ -38214,6 +39666,33 @@ export function useGmmKeeperInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useGmmKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof gmmKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof gmmKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof gmmKeeperABI, 'initKeepers', TMode>({
+    abi: gmmKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useGmmKeeperLockContents<
@@ -38477,28 +39956,28 @@ export function useGmmKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useGmmKeeperSetOwner<
+export function useGmmKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof gmmKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof gmmKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof gmmKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof gmmKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof gmmKeeperABI, 'setNewOwner', TMode>({
     abi: gmmKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -38783,6 +40262,22 @@ export function usePrepareGmmKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareGmmKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: gmmKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareGmmKeeperLockContents(
@@ -38942,19 +40437,19 @@ export function usePrepareGmmKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareGmmKeeperSetOwner(
+export function usePrepareGmmKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: gmmKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -39037,22 +40532,6 @@ export function useGmmKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link gmmKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useGmmKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof gmmKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: gmmKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof gmmKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link gmmKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useGmmKeeperLockContentsEvent(
@@ -39085,19 +40564,19 @@ export function useGmmKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link gmmKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link gmmKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useGmmKeeperSetOwnerEvent(
+export function useGmmKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof gmmKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof gmmKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: gmmKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof gmmKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof gmmKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -39544,6 +41023,29 @@ export function useGeneralKeeperGetRos<
   return useContractRead({
     abi: generalKeeperABI,
     functionName: 'getROS',
+    ...config,
+  } as UseContractReadConfig<
+    typeof generalKeeperABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useGeneralKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof generalKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof generalKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: generalKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof generalKeeperABI,
@@ -40746,6 +42248,33 @@ export function useGeneralKeeperInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useGeneralKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof generalKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof generalKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof generalKeeperABI, 'initKeepers', TMode>({
+    abi: generalKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"issueNewShare"`.
  */
 export function useGeneralKeeperIssueNewShare<
@@ -41888,28 +43417,28 @@ export function useGeneralKeeperSetMaxQtyOfMembers<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useGeneralKeeperSetOwner<
+export function useGeneralKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof generalKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof generalKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof generalKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof generalKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof generalKeeperABI, 'setNewOwner', TMode>({
     abi: generalKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -43101,6 +44630,22 @@ export function usePrepareGeneralKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareGeneralKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof generalKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: generalKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof generalKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"issueNewShare"`.
  */
 export function usePrepareGeneralKeeperIssueNewShare(
@@ -43775,19 +45320,19 @@ export function usePrepareGeneralKeeperSetMaxQtyOfMembers(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareGeneralKeeperSetOwner(
+export function usePrepareGeneralKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof generalKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof generalKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: generalKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof generalKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof generalKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -44147,22 +45692,6 @@ export function useGeneralKeeperExecActionEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useGeneralKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof generalKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: generalKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof generalKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useGeneralKeeperLockContentsEvent(
@@ -44195,19 +45724,19 @@ export function useGeneralKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useGeneralKeeperSetOwnerEvent(
+export function useGeneralKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof generalKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof generalKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: generalKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof generalKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof generalKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -44319,29 +45848,6 @@ export function useIAccessControlGetDk<
   return useContractRead({
     abi: iAccessControlABI,
     functionName: 'getDK',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iAccessControlABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"getOwner"`.
- */
-export function useIAccessControlGetOwner<
-  TFunctionName extends 'getOwner',
-  TSelectData = ReadContractResult<typeof iAccessControlABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof iAccessControlABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iAccessControlABI,
-    functionName: 'getOwner',
     ...config,
   } as UseContractReadConfig<
     typeof iAccessControlABI,
@@ -44500,28 +46006,28 @@ export function useIAccessControlGrantRole<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"init"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"initKeepers"`.
  */
-export function useIAccessControlInit<
+export function useIAccessControlInitKeepers<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof iAccessControlABI,
-          'init'
+          'initKeepers'
         >['request']['abi'],
-        'init',
+        'initKeepers',
         TMode
-      > & { functionName?: 'init' }
-    : UseContractWriteConfig<typeof iAccessControlABI, 'init', TMode> & {
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof iAccessControlABI, 'initKeepers', TMode> & {
         abi?: never
-        functionName?: 'init'
+        functionName?: 'initKeepers'
       } = {} as any,
 ) {
-  return useContractWrite<typeof iAccessControlABI, 'init', TMode>({
+  return useContractWrite<typeof iAccessControlABI, 'initKeepers', TMode>({
     abi: iAccessControlABI,
-    functionName: 'init',
+    functionName: 'initKeepers',
     ...config,
   } as any)
 }
@@ -44647,33 +46153,6 @@ export function useIAccessControlSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"setOwner"`.
- */
-export function useIAccessControlSetOwner<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iAccessControlABI,
-          'setOwner'
-        >['request']['abi'],
-        'setOwner',
-        TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof iAccessControlABI, 'setOwner', TMode> & {
-        abi?: never
-        functionName?: 'setOwner'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iAccessControlABI, 'setOwner', TMode>({
-    abi: iAccessControlABI,
-    functionName: 'setOwner',
-    ...config,
-  } as any)
-}
-
-/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"setRoleAdmin"`.
  */
 export function useIAccessControlSetRoleAdmin<
@@ -44783,19 +46262,19 @@ export function usePrepareIAccessControlGrantRole(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"init"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"initKeepers"`.
  */
-export function usePrepareIAccessControlInit(
+export function usePrepareIAccessControlInitKeepers(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof iAccessControlABI, 'init'>,
+    UsePrepareContractWriteConfig<typeof iAccessControlABI, 'initKeepers'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: iAccessControlABI,
-    functionName: 'init',
+    functionName: 'initKeepers',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof iAccessControlABI, 'init'>)
+  } as UsePrepareContractWriteConfig<typeof iAccessControlABI, 'initKeepers'>)
 }
 
 /**
@@ -44866,22 +46345,6 @@ export function usePrepareIAccessControlSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"setOwner"`.
- */
-export function usePrepareIAccessControlSetOwner(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iAccessControlABI, 'setOwner'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iAccessControlABI,
-    functionName: 'setOwner',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iAccessControlABI, 'setOwner'>)
-}
-
-/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iAccessControlABI}__ and `functionName` set to `"setRoleAdmin"`.
  */
 export function usePrepareIAccessControlSetRoleAdmin(
@@ -44929,22 +46392,6 @@ export function useIAccessControlEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iAccessControlABI}__ and `eventName` set to `"Init"`.
- */
-export function useIAccessControlInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iAccessControlABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iAccessControlABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof iAccessControlABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iAccessControlABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useIAccessControlLockContentsEvent(
@@ -44974,22 +46421,6 @@ export function useIAccessControlSetDirectKeeperEvent(
     eventName: 'SetDirectKeeper',
     ...config,
   } as UseContractEventConfig<typeof iAccessControlABI, 'SetDirectKeeper'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iAccessControlABI}__ and `eventName` set to `"SetOwner"`.
- */
-export function useIAccessControlSetOwnerEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iAccessControlABI, 'SetOwner'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iAccessControlABI,
-    eventName: 'SetOwner',
-    ...config,
-  } as UseContractEventConfig<typeof iAccessControlABI, 'SetOwner'>)
 }
 
 /**
@@ -46349,6 +47780,90 @@ export function usePrepareIbmmKeeperVoteCounting(
     functionName: 'voteCounting',
     ...config,
   } as UsePrepareContractWriteConfig<typeof ibmmKeeperABI, 'voteCounting'>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iCreateNewCompABI}__.
+ */
+export function useICreateNewCompWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iCreateNewCompABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof iCreateNewCompABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iCreateNewCompABI, TFunctionName, TMode>({
+    abi: iCreateNewCompABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iCreateNewCompABI}__ and `functionName` set to `"createComp"`.
+ */
+export function useICreateNewCompCreateComp<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iCreateNewCompABI,
+          'createComp'
+        >['request']['abi'],
+        'createComp',
+        TMode
+      > & { functionName?: 'createComp' }
+    : UseContractWriteConfig<typeof iCreateNewCompABI, 'createComp', TMode> & {
+        abi?: never
+        functionName?: 'createComp'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iCreateNewCompABI, 'createComp', TMode>({
+    abi: iCreateNewCompABI,
+    functionName: 'createComp',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iCreateNewCompABI}__.
+ */
+export function usePrepareICreateNewCompWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iCreateNewCompABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iCreateNewCompABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iCreateNewCompABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iCreateNewCompABI}__ and `functionName` set to `"createComp"`.
+ */
+export function usePrepareICreateNewCompCreateComp(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iCreateNewCompABI, 'createComp'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iCreateNewCompABI,
+    functionName: 'createComp',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iCreateNewCompABI, 'createComp'>)
 }
 
 /**
@@ -49429,6 +50944,33 @@ export function useIGeneralKeeperCreateSha<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"createSwap"`.
+ */
+export function useIGeneralKeeperCreateSwap<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iGeneralKeeperABI,
+          'createSwap'
+        >['request']['abi'],
+        'createSwap',
+        TMode
+      > & { functionName?: 'createSwap' }
+    : UseContractWriteConfig<typeof iGeneralKeeperABI, 'createSwap', TMode> & {
+        abi?: never
+        functionName?: 'createSwap'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iGeneralKeeperABI, 'createSwap', TMode>({
+    abi: iGeneralKeeperABI,
+    functionName: 'createSwap',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function useIGeneralKeeperDistributeProfits<
@@ -51736,6 +53278,22 @@ export function usePrepareIGeneralKeeperCreateSha(
     functionName: 'createSHA',
     ...config,
   } as UsePrepareContractWriteConfig<typeof iGeneralKeeperABI, 'createSHA'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"createSwap"`.
+ */
+export function usePrepareIGeneralKeeperCreateSwap(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iGeneralKeeperABI, 'createSwap'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iGeneralKeeperABI,
+    functionName: 'createSwap',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iGeneralKeeperABI, 'createSwap'>)
 }
 
 /**
@@ -58457,6 +60015,1855 @@ export function usePrepareIOptionsRemoveObligorFromOpt(
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iOwnableABI}__.
+ */
+export function useIOwnableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iOwnableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iOwnableABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iOwnableABI,
+    ...config,
+  } as UseContractReadConfig<typeof iOwnableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iOwnableABI}__ and `functionName` set to `"getOwner"`.
+ */
+export function useIOwnableGetOwner<
+  TFunctionName extends 'getOwner',
+  TSelectData = ReadContractResult<typeof iOwnableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iOwnableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iOwnableABI,
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof iOwnableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iOwnableABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useIOwnableGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof iOwnableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iOwnableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iOwnableABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof iOwnableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iOwnableABI}__.
+ */
+export function useIOwnableWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iOwnableABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof iOwnableABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iOwnableABI, TFunctionName, TMode>({
+    abi: iOwnableABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iOwnableABI}__ and `functionName` set to `"init"`.
+ */
+export function useIOwnableInit<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iOwnableABI,
+          'init'
+        >['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof iOwnableABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iOwnableABI, 'init', TMode>({
+    abi: iOwnableABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iOwnableABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function useIOwnableSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iOwnableABI,
+          'setNewOwner'
+        >['request']['abi'],
+        'setNewOwner',
+        TMode
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof iOwnableABI, 'setNewOwner', TMode> & {
+        abi?: never
+        functionName?: 'setNewOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iOwnableABI, 'setNewOwner', TMode>({
+    abi: iOwnableABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iOwnableABI}__.
+ */
+export function usePrepareIOwnableWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iOwnableABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iOwnableABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iOwnableABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iOwnableABI}__ and `functionName` set to `"init"`.
+ */
+export function usePrepareIOwnableInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iOwnableABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iOwnableABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iOwnableABI, 'init'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iOwnableABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePrepareIOwnableSetNewOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iOwnableABI, 'setNewOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iOwnableABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iOwnableABI, 'setNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iOwnableABI}__.
+ */
+export function useIOwnableEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof iOwnableABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iOwnableABI,
+    ...config,
+  } as UseContractEventConfig<typeof iOwnableABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iOwnableABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function useIOwnableSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iOwnableABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iOwnableABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof iOwnableABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
+ */
+export function useIPayrollOfProjectRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getBalanceOf"`.
+ */
+export function useIPayrollOfProjectGetBalanceOf<
+  TFunctionName extends 'getBalanceOf',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getBalanceOf',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getCurrency"`.
+ */
+export function useIPayrollOfProjectGetCurrency<
+  TFunctionName extends 'getCurrency',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getCurrency',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getListOfTeams"`.
+ */
+export function useIPayrollOfProjectGetListOfTeams<
+  TFunctionName extends 'getListOfTeams',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getListOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getMemberInfo"`.
+ */
+export function useIPayrollOfProjectGetMemberInfo<
+  TFunctionName extends 'getMemberInfo',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getMemberInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getMembersOfTeam"`.
+ */
+export function useIPayrollOfProjectGetMembersOfTeam<
+  TFunctionName extends 'getMembersOfTeam',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getMembersOfTeam',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getPayroll"`.
+ */
+export function useIPayrollOfProjectGetPayroll<
+  TFunctionName extends 'getPayroll',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getProjectInfo"`.
+ */
+export function useIPayrollOfProjectGetProjectInfo<
+  TFunctionName extends 'getProjectInfo',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getProjectInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getTeamInfo"`.
+ */
+export function useIPayrollOfProjectGetTeamInfo<
+  TFunctionName extends 'getTeamInfo',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getTeamInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getTeamMembersList"`.
+ */
+export function useIPayrollOfProjectGetTeamMembersList<
+  TFunctionName extends 'getTeamMembersList',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'getTeamMembersList',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"inPayroll"`.
+ */
+export function useIPayrollOfProjectInPayroll<
+  TFunctionName extends 'inPayroll',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'inPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isEnrolledMember"`.
+ */
+export function useIPayrollOfProjectIsEnrolledMember<
+  TFunctionName extends 'isEnrolledMember',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'isEnrolledMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isManager"`.
+ */
+export function useIPayrollOfProjectIsManager<
+  TFunctionName extends 'isManager',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'isManager',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isMember"`.
+ */
+export function useIPayrollOfProjectIsMember<
+  TFunctionName extends 'isMember',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'isMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isTeamLeader"`.
+ */
+export function useIPayrollOfProjectIsTeamLeader<
+  TFunctionName extends 'isTeamLeader',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'isTeamLeader',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"qtyOfTeams"`.
+ */
+export function useIPayrollOfProjectQtyOfTeams<
+  TFunctionName extends 'qtyOfTeams',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'qtyOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"teamIsEnrolled"`.
+ */
+export function useIPayrollOfProjectTeamIsEnrolled<
+  TFunctionName extends 'teamIsEnrolled',
+  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iPayrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iPayrollOfProjectABI,
+    functionName: 'teamIsEnrolled',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
+ */
+export function useIPayrollOfProjectWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, TFunctionName, TMode>({
+    abi: iPayrollOfProjectABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function useIPayrollOfProjectApplyWorkingHour<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'applyWorkingHour'
+        >['request']['abi'],
+        'applyWorkingHour',
+        TMode
+      > & { functionName?: 'applyWorkingHour' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'applyWorkingHour',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'applyWorkingHour'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iPayrollOfProjectABI,
+    'applyWorkingHour',
+    TMode
+  >({
+    abi: iPayrollOfProjectABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function useIPayrollOfProjectCreateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'createTeam'
+        >['request']['abi'],
+        'createTeam',
+        TMode
+      > & { functionName?: 'createTeam' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'createTeam',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'createTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'createTeam', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'createTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function useIPayrollOfProjectEnrollMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'enrollMember'
+        >['request']['abi'],
+        'enrollMember',
+        TMode
+      > & { functionName?: 'enrollMember' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'enrollMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'enrollMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'enrollMember', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function useIPayrollOfProjectEnrollTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'enrollTeam'
+        >['request']['abi'],
+        'enrollTeam',
+        TMode
+      > & { functionName?: 'enrollTeam' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'enrollTeam',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'enrollTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'enrollTeam', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
+ */
+export function useIPayrollOfProjectExtendPeriod<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'extendPeriod'
+        >['request']['abi'],
+        'extendPeriod',
+        TMode
+      > & { functionName?: 'extendPeriod' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'extendPeriod',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extendPeriod'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'extendPeriod', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'extendPeriod',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function useIPayrollOfProjectFixBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'fixBudget'
+        >['request']['abi'],
+        'fixBudget',
+        TMode
+      > & { functionName?: 'fixBudget' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'fixBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'fixBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'fixBudget', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function useIPayrollOfProjectIncreaseBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'increaseBudget'
+        >['request']['abi'],
+        'increaseBudget',
+        TMode
+      > & { functionName?: 'increaseBudget' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'increaseBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'increaseBudget', TMode>(
+    {
+      abi: iPayrollOfProjectABI,
+      functionName: 'increaseBudget',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function useIPayrollOfProjectIncreaseTeamBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'increaseTeamBudget'
+        >['request']['abi'],
+        'increaseTeamBudget',
+        TMode
+      > & { functionName?: 'increaseTeamBudget' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'increaseTeamBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseTeamBudget'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iPayrollOfProjectABI,
+    'increaseTeamBudget',
+    TMode
+  >({
+    abi: iPayrollOfProjectABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"payWages"`.
+ */
+export function useIPayrollOfProjectPayWages<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'payWages'
+        >['request']['abi'],
+        'payWages',
+        TMode
+      > & { functionName?: 'payWages' }
+    : UseContractWriteConfig<typeof iPayrollOfProjectABI, 'payWages', TMode> & {
+        abi?: never
+        functionName?: 'payWages'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'payWages', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'payWages',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function useIPayrollOfProjectPickupDeposit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'pickupDeposit'
+        >['request']['abi'],
+        'pickupDeposit',
+        TMode
+      > & { functionName?: 'pickupDeposit' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'pickupDeposit',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'pickupDeposit'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'pickupDeposit', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function useIPayrollOfProjectRemoveMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'removeMember'
+        >['request']['abi'],
+        'removeMember',
+        TMode
+      > & { functionName?: 'removeMember' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'removeMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'removeMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'removeMember', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'removeMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function useIPayrollOfProjectReplaceLeader<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'replaceLeader'
+        >['request']['abi'],
+        'replaceLeader',
+        TMode
+      > & { functionName?: 'replaceLeader' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'replaceLeader',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'replaceLeader'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'replaceLeader', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function useIPayrollOfProjectRestoreMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'restoreMember'
+        >['request']['abi'],
+        'restoreMember',
+        TMode
+      > & { functionName?: 'restoreMember' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'restoreMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'restoreMember', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function useIPayrollOfProjectSetBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'setBudget'
+        >['request']['abi'],
+        'setBudget',
+        TMode
+      > & { functionName?: 'setBudget' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'setBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'setBudget', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'setBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function useIPayrollOfProjectSetCurrency<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'setCurrency'
+        >['request']['abi'],
+        'setCurrency',
+        TMode
+      > & { functionName?: 'setCurrency' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'setCurrency',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setCurrency'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'setCurrency', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setManager"`.
+ */
+export function useIPayrollOfProjectSetManager<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'setManager'
+        >['request']['abi'],
+        'setManager',
+        TMode
+      > & { functionName?: 'setManager' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'setManager',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setManager'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'setManager', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'setManager',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function useIPayrollOfProjectUpdateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'updateTeam'
+        >['request']['abi'],
+        'updateTeam',
+        TMode
+      > & { functionName?: 'updateTeam' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'updateTeam',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'updateTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'updateTeam', TMode>({
+    abi: iPayrollOfProjectABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function useIPayrollOfProjectVerifyMemberWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'verifyMemberWork'
+        >['request']['abi'],
+        'verifyMemberWork',
+        TMode
+      > & { functionName?: 'verifyMemberWork' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'verifyMemberWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyMemberWork'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iPayrollOfProjectABI,
+    'verifyMemberWork',
+    TMode
+  >({
+    abi: iPayrollOfProjectABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function useIPayrollOfProjectVerifyTeamWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iPayrollOfProjectABI,
+          'verifyTeamWork'
+        >['request']['abi'],
+        'verifyTeamWork',
+        TMode
+      > & { functionName?: 'verifyTeamWork' }
+    : UseContractWriteConfig<
+        typeof iPayrollOfProjectABI,
+        'verifyTeamWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyTeamWork'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iPayrollOfProjectABI, 'verifyTeamWork', TMode>(
+    {
+      abi: iPayrollOfProjectABI,
+      functionName: 'verifyTeamWork',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
+ */
+export function usePrepareIPayrollOfProjectWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    TFunctionName
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function usePrepareIPayrollOfProjectApplyWorkingHour(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iPayrollOfProjectABI,
+      'applyWorkingHour'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'applyWorkingHour'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function usePrepareIPayrollOfProjectCreateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'createTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'createTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'createTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function usePrepareIPayrollOfProjectEnrollMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'enrollMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'enrollMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function usePrepareIPayrollOfProjectEnrollTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'enrollTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'enrollTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
+ */
+export function usePrepareIPayrollOfProjectExtendPeriod(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'extendPeriod'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'extendPeriod',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'extendPeriod'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function usePrepareIPayrollOfProjectFixBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'fixBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'fixBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function usePrepareIPayrollOfProjectIncreaseBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iPayrollOfProjectABI,
+      'increaseBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'increaseBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function usePrepareIPayrollOfProjectIncreaseTeamBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iPayrollOfProjectABI,
+      'increaseTeamBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'increaseTeamBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"payWages"`.
+ */
+export function usePrepareIPayrollOfProjectPayWages(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'payWages'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'payWages',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'payWages'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function usePrepareIPayrollOfProjectPickupDeposit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'pickupDeposit'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'pickupDeposit'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function usePrepareIPayrollOfProjectRemoveMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'removeMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'removeMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'removeMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function usePrepareIPayrollOfProjectReplaceLeader(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'replaceLeader'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'replaceLeader'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function usePrepareIPayrollOfProjectRestoreMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'restoreMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'restoreMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function usePrepareIPayrollOfProjectSetBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'setBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function usePrepareIPayrollOfProjectSetCurrency(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setCurrency'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'setCurrency'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setManager"`.
+ */
+export function usePrepareIPayrollOfProjectSetManager(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setManager'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'setManager',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setManager'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function usePrepareIPayrollOfProjectUpdateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'updateTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'updateTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function usePrepareIPayrollOfProjectVerifyMemberWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iPayrollOfProjectABI,
+      'verifyMemberWork'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'verifyMemberWork'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function usePrepareIPayrollOfProjectVerifyTeamWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iPayrollOfProjectABI,
+      'verifyTeamWork'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iPayrollOfProjectABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iPayrollOfProjectABI,
+    'verifyTeamWork'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
+ */
+export function useIPayrollOfProjectEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"EnrollTeam"`.
+ */
+export function useIPayrollOfProjectEnrollTeamEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'EnrollTeam'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'EnrollTeam',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'EnrollTeam'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"IncreaseBudget"`.
+ */
+export function useIPayrollOfProjectIncreaseBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'IncreaseBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'IncreaseBudget',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'IncreaseBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"PayWages"`.
+ */
+export function useIPayrollOfProjectPayWagesEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'PayWages'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'PayWages',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'PayWages'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"PickupDeposit"`.
+ */
+export function useIPayrollOfProjectPickupDepositEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'PickupDeposit'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'PickupDeposit',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'PickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"ReplaceLeader"`.
+ */
+export function useIPayrollOfProjectReplaceLeaderEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'ReplaceLeader'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'ReplaceLeader',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'ReplaceLeader'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"SetBudget"`.
+ */
+export function useIPayrollOfProjectSetBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'SetBudget',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"SetCurrency"`.
+ */
+export function useIPayrollOfProjectSetCurrencyEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetCurrency'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'SetCurrency',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetCurrency'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"SetManager"`.
+ */
+export function useIPayrollOfProjectSetManagerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetManager'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'SetManager',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetManager'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"VerifyMemberWork"`.
+ */
+export function useIPayrollOfProjectVerifyMemberWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyMemberWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'VerifyMemberWork',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyMemberWork'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"VerifyTeamWork"`.
+ */
+export function useIPayrollOfProjectVerifyTeamWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyTeamWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iPayrollOfProjectABI,
+    eventName: 'VerifyTeamWork',
+    ...config,
+  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyTeamWork'>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPriceConsumerABI}__.
  */
 export function useIPriceConsumerRead<
@@ -61006,6 +64413,25 @@ export function useIRegCenterGetCentPriceInWei<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"getDepositAmt"`.
+ */
+export function useIRegCenterGetDepositAmt<
+  TFunctionName extends 'getDepositAmt',
+  TSelectData = ReadContractResult<typeof iRegCenterABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegCenterABI,
+    functionName: 'getDepositAmt',
+    ...config,
+  } as UseContractReadConfig<typeof iRegCenterABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"getDoc"`.
  */
 export function useIRegCenterGetDoc<
@@ -61345,33 +64771,6 @@ export function useIRegCenterBurn<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof iRegCenterABI, 'burn', TMode>({
     abi: iRegCenterABI,
     functionName: 'burn',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"createComp"`.
- */
-export function useIRegCenterCreateComp<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iRegCenterABI,
-          'createComp'
-        >['request']['abi'],
-        'createComp',
-        TMode
-      > & { functionName?: 'createComp' }
-    : UseContractWriteConfig<typeof iRegCenterABI, 'createComp', TMode> & {
-        abi?: never
-        functionName?: 'createComp'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iRegCenterABI, 'createComp', TMode>({
-    abi: iRegCenterABI,
-    functionName: 'createComp',
     ...config,
   } as any)
 }
@@ -62006,22 +65405,6 @@ export function usePrepareIRegCenterBurn(
     functionName: 'burn',
     ...config,
   } as UsePrepareContractWriteConfig<typeof iRegCenterABI, 'burn'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegCenterABI}__ and `functionName` set to `"createComp"`.
- */
-export function usePrepareIRegCenterCreateComp(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iRegCenterABI, 'createComp'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iRegCenterABI,
-    functionName: 'createComp',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iRegCenterABI, 'createComp'>)
 }
 
 /**
@@ -74751,6 +78134,36 @@ export function useInvestmentAgreementGetParties<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useInvestmentAgreementGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<
+    typeof investmentAgreementABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof investmentAgreementABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: investmentAgreementABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<
+    typeof investmentAgreementABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useInvestmentAgreementGetRoleAdmin<
@@ -75635,6 +79048,37 @@ export function useInvestmentAgreementInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useInvestmentAgreementInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof investmentAgreementABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof investmentAgreementABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof investmentAgreementABI, 'initKeepers', TMode>({
+    abi: investmentAgreementABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useInvestmentAgreementLockContents<
@@ -76027,32 +79471,32 @@ export function useInvestmentAgreementSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useInvestmentAgreementSetOwner<
+export function useInvestmentAgreementSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof investmentAgreementABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
+      > & { functionName?: 'setNewOwner' }
     : UseContractWriteConfig<
         typeof investmentAgreementABI,
-        'setOwner',
+        'setNewOwner',
         TMode
       > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof investmentAgreementABI, 'setOwner', TMode>({
+  return useContractWrite<typeof investmentAgreementABI, 'setNewOwner', TMode>({
     abi: investmentAgreementABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -76529,6 +79973,25 @@ export function usePrepareInvestmentAgreementInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareInvestmentAgreementInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof investmentAgreementABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: investmentAgreementABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof investmentAgreementABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareInvestmentAgreementLockContents(
@@ -76772,19 +80235,22 @@ export function usePrepareInvestmentAgreementSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link investmentAgreementABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareInvestmentAgreementSetOwner(
+export function usePrepareInvestmentAgreementSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof investmentAgreementABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof investmentAgreementABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: investmentAgreementABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof investmentAgreementABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<
+    typeof investmentAgreementABI,
+    'setNewOwner'
+  >)
 }
 
 /**
@@ -77006,22 +80472,6 @@ export function useInvestmentAgreementCreateSwapEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"Init"`.
- */
-export function useInvestmentAgreementInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof investmentAgreementABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: investmentAgreementABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof investmentAgreementABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useInvestmentAgreementLockContentsEvent(
@@ -77105,19 +80555,19 @@ export function useInvestmentAgreementSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link investmentAgreementABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useInvestmentAgreementSetOwnerEvent(
+export function useInvestmentAgreementSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof investmentAgreementABI, 'SetOwner'>,
+    UseContractEventConfig<typeof investmentAgreementABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: investmentAgreementABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof investmentAgreementABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof investmentAgreementABI, 'SetNewOwner'>)
 }
 
 /**
@@ -77220,6 +80670,25 @@ export function useLooKeeperGetOwner<
   return useContractRead({
     abi: looKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof looKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useLooKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof looKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof looKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: looKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof looKeeperABI, TFunctionName, TSelectData>)
 }
@@ -77409,6 +80878,33 @@ export function useLooKeeperInit<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof looKeeperABI, 'init', TMode>({
     abi: looKeeperABI,
     functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useLooKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof looKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof looKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof looKeeperABI, 'initKeepers', TMode>({
+    abi: looKeeperABI,
+    functionName: 'initKeepers',
     ...config,
   } as any)
 }
@@ -77661,28 +81157,28 @@ export function useLooKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useLooKeeperSetOwner<
+export function useLooKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof looKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof looKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof looKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof looKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof looKeeperABI, 'setNewOwner', TMode>({
     abi: looKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -77883,6 +81379,22 @@ export function usePrepareLooKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareLooKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof looKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: looKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof looKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareLooKeeperLockContents(
@@ -78027,19 +81539,19 @@ export function usePrepareLooKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link looKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareLooKeeperSetOwner(
+export function usePrepareLooKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof looKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof looKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: looKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof looKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof looKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -78125,22 +81637,6 @@ export function useLooKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useLooKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof looKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: looKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof looKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useLooKeeperLockContentsEvent(
@@ -78173,19 +81669,19 @@ export function useLooKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useLooKeeperSetOwnerEvent(
+export function useLooKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof looKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof looKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: looKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof looKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof looKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -78402,6 +81898,29 @@ export function useListOfOrdersGetQtyOfInvestors<
   return useContractRead({
     abi: listOfOrdersABI,
     functionName: 'getQtyOfInvestors',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfOrdersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useListOfOrdersGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof listOfOrdersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfOrdersABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfOrdersABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof listOfOrdersABI,
@@ -78825,6 +82344,33 @@ export function useListOfOrdersInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useListOfOrdersInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfOrdersABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof listOfOrdersABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfOrdersABI, 'initKeepers', TMode>({
+    abi: listOfOrdersABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useListOfOrdersLockContents<
@@ -79053,28 +82599,28 @@ export function useListOfOrdersSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useListOfOrdersSetOwner<
+export function useListOfOrdersSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof listOfOrdersABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof listOfOrdersABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof listOfOrdersABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof listOfOrdersABI, 'setOwner', TMode>({
+  return useContractWrite<typeof listOfOrdersABI, 'setNewOwner', TMode>({
     abi: listOfOrdersABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -79244,6 +82790,22 @@ export function usePrepareListOfOrdersInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareListOfOrdersInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfOrdersABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfOrdersABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfOrdersABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareListOfOrdersLockContents(
@@ -79372,19 +82934,19 @@ export function usePrepareListOfOrdersSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfOrdersABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareListOfOrdersSetOwner(
+export function usePrepareListOfOrdersSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof listOfOrdersABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof listOfOrdersABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: listOfOrdersABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof listOfOrdersABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof listOfOrdersABI, 'setNewOwner'>)
 }
 
 /**
@@ -79502,22 +83064,6 @@ export function useListOfOrdersGetBalanceEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfOrdersABI}__ and `eventName` set to `"Init"`.
- */
-export function useListOfOrdersInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof listOfOrdersABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: listOfOrdersABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof listOfOrdersABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfOrdersABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useListOfOrdersLockContentsEvent(
@@ -79630,19 +83176,19 @@ export function useListOfOrdersSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfOrdersABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfOrdersABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useListOfOrdersSetOwnerEvent(
+export function useListOfOrdersSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof listOfOrdersABI, 'SetOwner'>,
+    UseContractEventConfig<typeof listOfOrdersABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: listOfOrdersABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof listOfOrdersABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof listOfOrdersABI, 'SetNewOwner'>)
 }
 
 /**
@@ -79749,6 +83295,25 @@ export function useLockUpGetOwner<
   return useContractRead({
     abi: lockUpABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof lockUpABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useLockUpGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof lockUpABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof lockUpABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: lockUpABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof lockUpABI, TFunctionName, TSelectData>)
 }
@@ -80036,6 +83601,33 @@ export function useLockUpInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useLockUpInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof lockUpABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof lockUpABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof lockUpABI, 'initKeepers', TMode>({
+    abi: lockUpABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useLockUpLockContents<
@@ -80196,26 +83788,28 @@ export function useLockUpSetLocker<TMode extends WriteContractMode = undefined>(
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useLockUpSetOwner<TMode extends WriteContractMode = undefined>(
+export function useLockUpSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof lockUpABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof lockUpABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof lockUpABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof lockUpABI, 'setOwner', TMode>({
+  return useContractWrite<typeof lockUpABI, 'setNewOwner', TMode>({
     abi: lockUpABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -80370,6 +83964,22 @@ export function usePrepareLockUpInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareLockUpInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof lockUpABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: lockUpABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof lockUpABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareLockUpLockContents(
@@ -80466,19 +84076,19 @@ export function usePrepareLockUpSetLocker(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link lockUpABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareLockUpSetOwner(
+export function usePrepareLockUpSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof lockUpABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof lockUpABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: lockUpABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof lockUpABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof lockUpABI, 'setNewOwner'>)
 }
 
 /**
@@ -80529,22 +84139,6 @@ export function useLockUpEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link lockUpABI}__ and `eventName` set to `"Init"`.
- */
-export function useLockUpInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof lockUpABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: lockUpABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof lockUpABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link lockUpABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useLockUpLockContentsEvent(
@@ -80577,19 +84171,19 @@ export function useLockUpSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link lockUpABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link lockUpABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useLockUpSetOwnerEvent(
+export function useLockUpSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof lockUpABI, 'SetOwner'>,
+    UseContractEventConfig<typeof lockUpABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: lockUpABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof lockUpABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof lockUpABI, 'SetNewOwner'>)
 }
 
 /**
@@ -80816,6 +84410,29 @@ export function useMeetingMinutesGetOwner<
   return useContractRead({
     abi: meetingMinutesABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof meetingMinutesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useMeetingMinutesGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof meetingMinutesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof meetingMinutesABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: meetingMinutesABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof meetingMinutesABI,
@@ -81548,6 +85165,33 @@ export function useMeetingMinutesInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useMeetingMinutesInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof meetingMinutesABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof meetingMinutesABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof meetingMinutesABI, 'initKeepers', TMode>({
+    abi: meetingMinutesABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useMeetingMinutesLockContents<
@@ -81769,28 +85413,28 @@ export function useMeetingMinutesSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useMeetingMinutesSetOwner<
+export function useMeetingMinutesSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof meetingMinutesABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof meetingMinutesABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof meetingMinutesABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof meetingMinutesABI, 'setOwner', TMode>({
+  return useContractWrite<typeof meetingMinutesABI, 'setNewOwner', TMode>({
     abi: meetingMinutesABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -82207,6 +85851,22 @@ export function usePrepareMeetingMinutesInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareMeetingMinutesInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: meetingMinutesABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareMeetingMinutesLockContents(
@@ -82337,19 +85997,19 @@ export function usePrepareMeetingMinutesSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareMeetingMinutesSetOwner(
+export function usePrepareMeetingMinutesSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: meetingMinutesABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'setNewOwner'>)
 }
 
 /**
@@ -82521,22 +86181,6 @@ export function useMeetingMinutesExecResolutionEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link meetingMinutesABI}__ and `eventName` set to `"Init"`.
- */
-export function useMeetingMinutesInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof meetingMinutesABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: meetingMinutesABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof meetingMinutesABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link meetingMinutesABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useMeetingMinutesLockContentsEvent(
@@ -82607,19 +86251,19 @@ export function useMeetingMinutesSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link meetingMinutesABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link meetingMinutesABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useMeetingMinutesSetOwnerEvent(
+export function useMeetingMinutesSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof meetingMinutesABI, 'SetOwner'>,
+    UseContractEventConfig<typeof meetingMinutesABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: meetingMinutesABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof meetingMinutesABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof meetingMinutesABI, 'SetNewOwner'>)
 }
 
 /**
@@ -82991,6 +86635,25 @@ export function useOptionsGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useOptionsGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof optionsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof optionsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: optionsABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof optionsABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useOptionsGetRoleAdmin<
@@ -83304,6 +86967,33 @@ export function useOptionsInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useOptionsInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof optionsABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof optionsABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof optionsABI, 'initKeepers', TMode>({
+    abi: optionsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useOptionsLockContents<
@@ -83443,26 +87133,28 @@ export function useOptionsSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useOptionsSetOwner<TMode extends WriteContractMode = undefined>(
+export function useOptionsSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof optionsABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof optionsABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof optionsABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof optionsABI, 'setOwner', TMode>({
+  return useContractWrite<typeof optionsABI, 'setNewOwner', TMode>({
     abi: optionsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -83633,6 +87325,22 @@ export function usePrepareOptionsInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareOptionsInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof optionsABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: optionsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof optionsABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareOptionsLockContents(
@@ -83713,19 +87421,19 @@ export function usePrepareOptionsSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link optionsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareOptionsSetOwner(
+export function usePrepareOptionsSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof optionsABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof optionsABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: optionsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof optionsABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof optionsABI, 'setNewOwner'>)
 }
 
 /**
@@ -83776,22 +87484,6 @@ export function useOptionsEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link optionsABI}__ and `eventName` set to `"Init"`.
- */
-export function useOptionsInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof optionsABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: optionsABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof optionsABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link optionsABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useOptionsLockContentsEvent(
@@ -83824,19 +87516,19 @@ export function useOptionsSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link optionsABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link optionsABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useOptionsSetOwnerEvent(
+export function useOptionsSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof optionsABI, 'SetOwner'>,
+    UseContractEventConfig<typeof optionsABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: optionsABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof optionsABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof optionsABI, 'SetNewOwner'>)
 }
 
 /**
@@ -83965,6 +87657,1985 @@ export function useOrdersRepoParseSn<
     functionName: 'parseSn',
     ...config,
   } as UseContractReadConfig<typeof ordersRepoABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ownableABI}__.
+ */
+export function useOwnableRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof ownableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ownableABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ownableABI,
+    ...config,
+  } as UseContractReadConfig<typeof ownableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ownableABI}__ and `functionName` set to `"getOwner"`.
+ */
+export function useOwnableGetOwner<
+  TFunctionName extends 'getOwner',
+  TSelectData = ReadContractResult<typeof ownableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ownableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ownableABI,
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof ownableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ownableABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useOwnableGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof ownableABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ownableABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ownableABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof ownableABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownableABI}__.
+ */
+export function useOwnableWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<typeof ownableABI, string>['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof ownableABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownableABI, TFunctionName, TMode>({
+    abi: ownableABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownableABI}__ and `functionName` set to `"init"`.
+ */
+export function useOwnableInit<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<typeof ownableABI, 'init'>['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof ownableABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownableABI, 'init', TMode>({
+    abi: ownableABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ownableABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function useOwnableSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ownableABI,
+          'setNewOwner'
+        >['request']['abi'],
+        'setNewOwner',
+        TMode
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof ownableABI, 'setNewOwner', TMode> & {
+        abi?: never
+        functionName?: 'setNewOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof ownableABI, 'setNewOwner', TMode>({
+    abi: ownableABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownableABI}__.
+ */
+export function usePrepareOwnableWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownableABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownableABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ownableABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownableABI}__ and `functionName` set to `"init"`.
+ */
+export function usePrepareOwnableInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownableABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownableABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ownableABI, 'init'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ownableABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePrepareOwnableSetNewOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ownableABI, 'setNewOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ownableABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ownableABI, 'setNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ownableABI}__.
+ */
+export function useOwnableEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof ownableABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ownableABI,
+    ...config,
+  } as UseContractEventConfig<typeof ownableABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ownableABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function useOwnableSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof ownableABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: ownableABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof ownableABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__.
+ */
+export function usePayrollOfProjectRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getBalanceOf"`.
+ */
+export function usePayrollOfProjectGetBalanceOf<
+  TFunctionName extends 'getBalanceOf',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getBalanceOf',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getCurrency"`.
+ */
+export function usePayrollOfProjectGetCurrency<
+  TFunctionName extends 'getCurrency',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getCurrency',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getListOfTeams"`.
+ */
+export function usePayrollOfProjectGetListOfTeams<
+  TFunctionName extends 'getListOfTeams',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getListOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getMemberInfo"`.
+ */
+export function usePayrollOfProjectGetMemberInfo<
+  TFunctionName extends 'getMemberInfo',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getMemberInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getMembersOfTeam"`.
+ */
+export function usePayrollOfProjectGetMembersOfTeam<
+  TFunctionName extends 'getMembersOfTeam',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getMembersOfTeam',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getOwner"`.
+ */
+export function usePayrollOfProjectGetOwner<
+  TFunctionName extends 'getOwner',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getPayroll"`.
+ */
+export function usePayrollOfProjectGetPayroll<
+  TFunctionName extends 'getPayroll',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getProjectInfo"`.
+ */
+export function usePayrollOfProjectGetProjectInfo<
+  TFunctionName extends 'getProjectInfo',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getProjectInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function usePayrollOfProjectGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getTeamInfo"`.
+ */
+export function usePayrollOfProjectGetTeamInfo<
+  TFunctionName extends 'getTeamInfo',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getTeamInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getTeamMembersList"`.
+ */
+export function usePayrollOfProjectGetTeamMembersList<
+  TFunctionName extends 'getTeamMembersList',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'getTeamMembersList',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"inPayroll"`.
+ */
+export function usePayrollOfProjectInPayroll<
+  TFunctionName extends 'inPayroll',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'inPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isEnrolledMember"`.
+ */
+export function usePayrollOfProjectIsEnrolledMember<
+  TFunctionName extends 'isEnrolledMember',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'isEnrolledMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isManager"`.
+ */
+export function usePayrollOfProjectIsManager<
+  TFunctionName extends 'isManager',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'isManager',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isMember"`.
+ */
+export function usePayrollOfProjectIsMember<
+  TFunctionName extends 'isMember',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'isMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isTeamLeader"`.
+ */
+export function usePayrollOfProjectIsTeamLeader<
+  TFunctionName extends 'isTeamLeader',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'isTeamLeader',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"qtyOfTeams"`.
+ */
+export function usePayrollOfProjectQtyOfTeams<
+  TFunctionName extends 'qtyOfTeams',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'qtyOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"teamIsEnrolled"`.
+ */
+export function usePayrollOfProjectTeamIsEnrolled<
+  TFunctionName extends 'teamIsEnrolled',
+  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof payrollOfProjectABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: payrollOfProjectABI,
+    functionName: 'teamIsEnrolled',
+    ...config,
+  } as UseContractReadConfig<
+    typeof payrollOfProjectABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__.
+ */
+export function usePayrollOfProjectWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, TFunctionName, TMode>({
+    abi: payrollOfProjectABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function usePayrollOfProjectApplyWorkingHour<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'applyWorkingHour'
+        >['request']['abi'],
+        'applyWorkingHour',
+        TMode
+      > & { functionName?: 'applyWorkingHour' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'applyWorkingHour',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'applyWorkingHour'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof payrollOfProjectABI,
+    'applyWorkingHour',
+    TMode
+  >({
+    abi: payrollOfProjectABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function usePayrollOfProjectCreateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'createTeam'
+        >['request']['abi'],
+        'createTeam',
+        TMode
+      > & { functionName?: 'createTeam' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'createTeam',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'createTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'createTeam', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'createTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function usePayrollOfProjectEnrollMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'enrollMember'
+        >['request']['abi'],
+        'enrollMember',
+        TMode
+      > & { functionName?: 'enrollMember' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'enrollMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'enrollMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'enrollMember', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function usePayrollOfProjectEnrollTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'enrollTeam'
+        >['request']['abi'],
+        'enrollTeam',
+        TMode
+      > & { functionName?: 'enrollTeam' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'enrollTeam',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'enrollTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'enrollTeam', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
+ */
+export function usePayrollOfProjectExtendPeriod<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'extendPeriod'
+        >['request']['abi'],
+        'extendPeriod',
+        TMode
+      > & { functionName?: 'extendPeriod' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'extendPeriod',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'extendPeriod'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'extendPeriod', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'extendPeriod',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function usePayrollOfProjectFixBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'fixBudget'
+        >['request']['abi'],
+        'fixBudget',
+        TMode
+      > & { functionName?: 'fixBudget' }
+    : UseContractWriteConfig<typeof payrollOfProjectABI, 'fixBudget', TMode> & {
+        abi?: never
+        functionName?: 'fixBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'fixBudget', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function usePayrollOfProjectIncreaseBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'increaseBudget'
+        >['request']['abi'],
+        'increaseBudget',
+        TMode
+      > & { functionName?: 'increaseBudget' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'increaseBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'increaseBudget', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function usePayrollOfProjectIncreaseTeamBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'increaseTeamBudget'
+        >['request']['abi'],
+        'increaseTeamBudget',
+        TMode
+      > & { functionName?: 'increaseTeamBudget' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'increaseTeamBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseTeamBudget'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof payrollOfProjectABI,
+    'increaseTeamBudget',
+    TMode
+  >({
+    abi: payrollOfProjectABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"init"`.
+ */
+export function usePayrollOfProjectInit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'init'
+        >['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof payrollOfProjectABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'init', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"payWages"`.
+ */
+export function usePayrollOfProjectPayWages<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'payWages'
+        >['request']['abi'],
+        'payWages',
+        TMode
+      > & { functionName?: 'payWages' }
+    : UseContractWriteConfig<typeof payrollOfProjectABI, 'payWages', TMode> & {
+        abi?: never
+        functionName?: 'payWages'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'payWages', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'payWages',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function usePayrollOfProjectPickupDeposit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'pickupDeposit'
+        >['request']['abi'],
+        'pickupDeposit',
+        TMode
+      > & { functionName?: 'pickupDeposit' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'pickupDeposit',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'pickupDeposit'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'pickupDeposit', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function usePayrollOfProjectRemoveMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'removeMember'
+        >['request']['abi'],
+        'removeMember',
+        TMode
+      > & { functionName?: 'removeMember' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'removeMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'removeMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'removeMember', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'removeMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function usePayrollOfProjectReplaceLeader<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'replaceLeader'
+        >['request']['abi'],
+        'replaceLeader',
+        TMode
+      > & { functionName?: 'replaceLeader' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'replaceLeader',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'replaceLeader'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'replaceLeader', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function usePayrollOfProjectRestoreMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'restoreMember'
+        >['request']['abi'],
+        'restoreMember',
+        TMode
+      > & { functionName?: 'restoreMember' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'restoreMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'restoreMember', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function usePayrollOfProjectSetBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'setBudget'
+        >['request']['abi'],
+        'setBudget',
+        TMode
+      > & { functionName?: 'setBudget' }
+    : UseContractWriteConfig<typeof payrollOfProjectABI, 'setBudget', TMode> & {
+        abi?: never
+        functionName?: 'setBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'setBudget', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'setBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function usePayrollOfProjectSetCurrency<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'setCurrency'
+        >['request']['abi'],
+        'setCurrency',
+        TMode
+      > & { functionName?: 'setCurrency' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'setCurrency',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setCurrency'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'setCurrency', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setManager"`.
+ */
+export function usePayrollOfProjectSetManager<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'setManager'
+        >['request']['abi'],
+        'setManager',
+        TMode
+      > & { functionName?: 'setManager' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'setManager',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setManager'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'setManager', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'setManager',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePayrollOfProjectSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'setNewOwner'
+        >['request']['abi'],
+        'setNewOwner',
+        TMode
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'setNewOwner',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setNewOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'setNewOwner', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function usePayrollOfProjectUpdateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'updateTeam'
+        >['request']['abi'],
+        'updateTeam',
+        TMode
+      > & { functionName?: 'updateTeam' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'updateTeam',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'updateTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'updateTeam', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function usePayrollOfProjectVerifyMemberWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'verifyMemberWork'
+        >['request']['abi'],
+        'verifyMemberWork',
+        TMode
+      > & { functionName?: 'verifyMemberWork' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'verifyMemberWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyMemberWork'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof payrollOfProjectABI,
+    'verifyMemberWork',
+    TMode
+  >({
+    abi: payrollOfProjectABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function usePayrollOfProjectVerifyTeamWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof payrollOfProjectABI,
+          'verifyTeamWork'
+        >['request']['abi'],
+        'verifyTeamWork',
+        TMode
+      > & { functionName?: 'verifyTeamWork' }
+    : UseContractWriteConfig<
+        typeof payrollOfProjectABI,
+        'verifyTeamWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyTeamWork'
+      } = {} as any,
+) {
+  return useContractWrite<typeof payrollOfProjectABI, 'verifyTeamWork', TMode>({
+    abi: payrollOfProjectABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__.
+ */
+export function usePreparePayrollOfProjectWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function usePreparePayrollOfProjectApplyWorkingHour(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof payrollOfProjectABI,
+      'applyWorkingHour'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'applyWorkingHour'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function usePreparePayrollOfProjectCreateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'createTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'createTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'createTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function usePreparePayrollOfProjectEnrollMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'enrollMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'enrollMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function usePreparePayrollOfProjectEnrollTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'enrollTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'enrollTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
+ */
+export function usePreparePayrollOfProjectExtendPeriod(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'extendPeriod'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'extendPeriod',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'extendPeriod'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function usePreparePayrollOfProjectFixBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'fixBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'fixBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function usePreparePayrollOfProjectIncreaseBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'increaseBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'increaseBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function usePreparePayrollOfProjectIncreaseTeamBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof payrollOfProjectABI,
+      'increaseTeamBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'increaseTeamBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"init"`.
+ */
+export function usePreparePayrollOfProjectInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'init'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"payWages"`.
+ */
+export function usePreparePayrollOfProjectPayWages(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'payWages'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'payWages',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'payWages'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function usePreparePayrollOfProjectPickupDeposit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'pickupDeposit'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'pickupDeposit'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function usePreparePayrollOfProjectRemoveMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'removeMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'removeMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'removeMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function usePreparePayrollOfProjectReplaceLeader(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'replaceLeader'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'replaceLeader'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function usePreparePayrollOfProjectRestoreMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'restoreMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'restoreMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function usePreparePayrollOfProjectSetBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'setBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function usePreparePayrollOfProjectSetCurrency(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setCurrency'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setCurrency'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setManager"`.
+ */
+export function usePreparePayrollOfProjectSetManager(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setManager'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'setManager',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setManager'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePreparePayrollOfProjectSetNewOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setNewOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setNewOwner'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function usePreparePayrollOfProjectUpdateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'updateTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'updateTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function usePreparePayrollOfProjectVerifyMemberWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof payrollOfProjectABI,
+      'verifyMemberWork'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'verifyMemberWork'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function usePreparePayrollOfProjectVerifyTeamWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'verifyTeamWork'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: payrollOfProjectABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof payrollOfProjectABI,
+    'verifyTeamWork'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__.
+ */
+export function usePayrollOfProjectEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"EnrollTeam"`.
+ */
+export function usePayrollOfProjectEnrollTeamEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'EnrollTeam'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'EnrollTeam',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'EnrollTeam'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"IncreaseBudget"`.
+ */
+export function usePayrollOfProjectIncreaseBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'IncreaseBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'IncreaseBudget',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'IncreaseBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"PayWages"`.
+ */
+export function usePayrollOfProjectPayWagesEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'PayWages'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'PayWages',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'PayWages'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"PickupDeposit"`.
+ */
+export function usePayrollOfProjectPickupDepositEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'PickupDeposit'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'PickupDeposit',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'PickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"ReplaceLeader"`.
+ */
+export function usePayrollOfProjectReplaceLeaderEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'ReplaceLeader'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'ReplaceLeader',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'ReplaceLeader'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetBudget"`.
+ */
+export function usePayrollOfProjectSetBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'SetBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'SetBudget',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetCurrency"`.
+ */
+export function usePayrollOfProjectSetCurrencyEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'SetCurrency'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'SetCurrency',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetCurrency'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetManager"`.
+ */
+export function usePayrollOfProjectSetManagerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'SetManager'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'SetManager',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetManager'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function usePayrollOfProjectSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"VerifyMemberWork"`.
+ */
+export function usePayrollOfProjectVerifyMemberWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyMemberWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'VerifyMemberWork',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyMemberWork'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"VerifyTeamWork"`.
+ */
+export function usePayrollOfProjectVerifyTeamWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyTeamWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: payrollOfProjectABI,
+    eventName: 'VerifyTeamWork',
+    ...config,
+  } as UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyTeamWork'>)
 }
 
 /**
@@ -84262,6 +89933,25 @@ export function useRoaKeeperGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRoaKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof roaKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof roaKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: roaKeeperABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof roaKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useRoaKeeperGetRoleAdmin<
@@ -84505,6 +90195,33 @@ export function useRoaKeeperInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRoaKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof roaKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof roaKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof roaKeeperABI, 'initKeepers', TMode>({
+    abi: roaKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"issueNewShare"`.
  */
 export function useRoaKeeperIssueNewShare<
@@ -84698,28 +90415,28 @@ export function useRoaKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRoaKeeperSetOwner<
+export function useRoaKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof roaKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof roaKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof roaKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof roaKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof roaKeeperABI, 'setNewOwner', TMode>({
     abi: roaKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -84973,6 +90690,22 @@ export function usePrepareRoaKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRoaKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof roaKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: roaKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof roaKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"issueNewShare"`.
  */
 export function usePrepareRoaKeeperIssueNewShare(
@@ -85085,19 +90818,19 @@ export function usePrepareRoaKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link roaKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRoaKeeperSetOwner(
+export function usePrepareRoaKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof roaKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof roaKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: roaKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof roaKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof roaKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -85199,22 +90932,6 @@ export function useRoaKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link roaKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useRoaKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof roaKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: roaKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof roaKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link roaKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRoaKeeperLockContentsEvent(
@@ -85247,19 +90964,19 @@ export function useRoaKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link roaKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link roaKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRoaKeeperSetOwnerEvent(
+export function useRoaKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof roaKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof roaKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: roaKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof roaKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof roaKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -85330,6 +91047,25 @@ export function useRocKeeperGetOwner<
   return useContractRead({
     abi: rocKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof rocKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRocKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof rocKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof rocKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: rocKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof rocKeeperABI, TFunctionName, TSelectData>)
 }
@@ -85605,6 +91341,33 @@ export function useRocKeeperInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRocKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof rocKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof rocKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof rocKeeperABI, 'initKeepers', TMode>({
+    abi: rocKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useRocKeeperLockContents<
@@ -85713,28 +91476,28 @@ export function useRocKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRocKeeperSetOwner<
+export function useRocKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof rocKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof rocKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof rocKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof rocKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof rocKeeperABI, 'setNewOwner', TMode>({
     abi: rocKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -85948,6 +91711,22 @@ export function usePrepareRocKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRocKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof rocKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: rocKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof rocKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRocKeeperLockContents(
@@ -86012,19 +91791,19 @@ export function usePrepareRocKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rocKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRocKeeperSetOwner(
+export function usePrepareRocKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof rocKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof rocKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: rocKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof rocKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof rocKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -86091,22 +91870,6 @@ export function useRocKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rocKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useRocKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof rocKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: rocKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof rocKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rocKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRocKeeperLockContentsEvent(
@@ -86139,19 +91902,19 @@ export function useRocKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rocKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rocKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRocKeeperSetOwnerEvent(
+export function useRocKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof rocKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof rocKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: rocKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof rocKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof rocKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -86222,6 +91985,25 @@ export function useRodKeeperGetOwner<
   return useContractRead({
     abi: rodKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof rodKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRodKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof rodKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof rodKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: rodKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof rodKeeperABI, TFunctionName, TSelectData>)
 }
@@ -86384,6 +92166,33 @@ export function useRodKeeperInit<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof rodKeeperABI, 'init', TMode>({
     abi: rodKeeperABI,
     functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRodKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof rodKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof rodKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof rodKeeperABI, 'initKeepers', TMode>({
+    abi: rodKeeperABI,
+    functionName: 'initKeepers',
     ...config,
   } as any)
 }
@@ -86578,28 +92387,28 @@ export function useRodKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRodKeeperSetOwner<
+export function useRodKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof rodKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof rodKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof rodKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof rodKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof rodKeeperABI, 'setNewOwner', TMode>({
     abi: rodKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -86776,6 +92585,22 @@ export function usePrepareRodKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRodKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof rodKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: rodKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof rodKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRodKeeperLockContents(
@@ -86888,19 +92713,19 @@ export function usePrepareRodKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rodKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRodKeeperSetOwner(
+export function usePrepareRodKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof rodKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof rodKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: rodKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof rodKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof rodKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -86983,22 +92808,6 @@ export function useRodKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rodKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useRodKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof rodKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: rodKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof rodKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rodKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRodKeeperLockContentsEvent(
@@ -87031,19 +92840,19 @@ export function useRodKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rodKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rodKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRodKeeperSetOwnerEvent(
+export function useRodKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof rodKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof rodKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: rodKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof rodKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof rodKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -87114,6 +92923,25 @@ export function useRomKeeperGetOwner<
   return useContractRead({
     abi: romKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof romKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRomKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof romKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof romKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: romKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof romKeeperABI, TFunctionName, TSelectData>)
 }
@@ -87303,6 +93131,33 @@ export function useRomKeeperInit<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof romKeeperABI, 'init', TMode>({
     abi: romKeeperABI,
     functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRomKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof romKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof romKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof romKeeperABI, 'initKeepers', TMode>({
+    abi: romKeeperABI,
+    functionName: 'initKeepers',
     ...config,
   } as any)
 }
@@ -87505,28 +93360,28 @@ export function useRomKeeperSetMaxQtyOfMembers<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRomKeeperSetOwner<
+export function useRomKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof romKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof romKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof romKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof romKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof romKeeperABI, 'setNewOwner', TMode>({
     abi: romKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -87750,6 +93605,22 @@ export function usePrepareRomKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRomKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof romKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: romKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof romKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRomKeeperLockContents(
@@ -87865,19 +93736,19 @@ export function usePrepareRomKeeperSetMaxQtyOfMembers(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link romKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRomKeeperSetOwner(
+export function usePrepareRomKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof romKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof romKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: romKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof romKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof romKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -87979,22 +93850,6 @@ export function useRomKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link romKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useRomKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof romKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: romKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof romKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link romKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRomKeeperLockContentsEvent(
@@ -88027,19 +93882,19 @@ export function useRomKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link romKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link romKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRomKeeperSetOwnerEvent(
+export function useRomKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof romKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof romKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: romKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof romKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof romKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -88110,6 +93965,25 @@ export function useRooKeeperGetOwner<
   return useContractRead({
     abi: rooKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof rooKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRooKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof rooKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof rooKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: rooKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof rooKeeperABI, TFunctionName, TSelectData>)
 }
@@ -88326,6 +94200,33 @@ export function useRooKeeperInit<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof rooKeeperABI, 'init', TMode>({
     abi: rooKeeperABI,
     functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRooKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof rooKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof rooKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof rooKeeperABI, 'initKeepers', TMode>({
+    abi: rooKeeperABI,
+    functionName: 'initKeepers',
     ...config,
   } as any)
 }
@@ -88555,28 +94456,28 @@ export function useRooKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRooKeeperSetOwner<
+export function useRooKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof rooKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof rooKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof rooKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof rooKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof rooKeeperABI, 'setNewOwner', TMode>({
     abi: rooKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -88785,6 +94686,22 @@ export function usePrepareRooKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRooKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof rooKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: rooKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof rooKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRooKeeperLockContents(
@@ -88913,19 +94830,19 @@ export function usePrepareRooKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link rooKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRooKeeperSetOwner(
+export function usePrepareRooKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof rooKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof rooKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: rooKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof rooKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof rooKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -89008,22 +94925,6 @@ export function useRooKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rooKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useRooKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof rooKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: rooKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof rooKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rooKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRooKeeperLockContentsEvent(
@@ -89056,19 +94957,19 @@ export function useRooKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rooKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link rooKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRooKeeperSetOwnerEvent(
+export function useRooKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof rooKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof rooKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: rooKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof rooKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof rooKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -89139,6 +95040,25 @@ export function useRopKeeperGetOwner<
   return useContractRead({
     abi: ropKeeperABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof ropKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRopKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof ropKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ropKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ropKeeperABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof ropKeeperABI, TFunctionName, TSelectData>)
 }
@@ -89387,6 +95307,33 @@ export function useRopKeeperInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRopKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof ropKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof ropKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof ropKeeperABI, 'initKeepers', TMode>({
+    abi: ropKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useRopKeeperLockContents<
@@ -89603,28 +95550,28 @@ export function useRopKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRopKeeperSetOwner<
+export function useRopKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof ropKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof ropKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof ropKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof ropKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof ropKeeperABI, 'setNewOwner', TMode>({
     abi: ropKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -89822,6 +95769,22 @@ export function usePrepareRopKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRopKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof ropKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: ropKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof ropKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRopKeeperLockContents(
@@ -89950,19 +95913,19 @@ export function usePrepareRopKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link ropKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRopKeeperSetOwner(
+export function usePrepareRopKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof ropKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof ropKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: ropKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof ropKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof ropKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -90029,22 +95992,6 @@ export function useRopKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ropKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useRopKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof ropKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: ropKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof ropKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ropKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRopKeeperLockContentsEvent(
@@ -90077,19 +96024,19 @@ export function useRopKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ropKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ropKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRopKeeperSetOwnerEvent(
+export function useRopKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof ropKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof ropKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: ropKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof ropKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof ropKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -90350,6 +96297,25 @@ export function useRegCenterGetCentPriceInWei<
   return useContractRead({
     abi: regCenterABI,
     functionName: 'getCentPriceInWei',
+    ...config,
+  } as UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"getDepositAmt"`.
+ */
+export function useRegCenterGetDepositAmt<
+  TFunctionName extends 'getDepositAmt',
+  TSelectData = ReadContractResult<typeof regCenterABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: regCenterABI,
+    functionName: 'getDepositAmt',
     ...config,
   } as UseContractReadConfig<typeof regCenterABI, TFunctionName, TSelectData>)
 }
@@ -90770,33 +96736,6 @@ export function useRegCenterBurn<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof regCenterABI, 'burn', TMode>({
     abi: regCenterABI,
     functionName: 'burn',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"createComp"`.
- */
-export function useRegCenterCreateComp<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof regCenterABI,
-          'createComp'
-        >['request']['abi'],
-        'createComp',
-        TMode
-      > & { functionName?: 'createComp' }
-    : UseContractWriteConfig<typeof regCenterABI, 'createComp', TMode> & {
-        abi?: never
-        functionName?: 'createComp'
-      } = {} as any,
-) {
-  return useContractWrite<typeof regCenterABI, 'createComp', TMode>({
-    abi: regCenterABI,
-    functionName: 'createComp',
     ...config,
   } as any)
 }
@@ -91466,22 +97405,6 @@ export function usePrepareRegCenterBurn(
     functionName: 'burn',
     ...config,
   } as UsePrepareContractWriteConfig<typeof regCenterABI, 'burn'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link regCenterABI}__ and `functionName` set to `"createComp"`.
- */
-export function usePrepareRegCenterCreateComp(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof regCenterABI, 'createComp'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: regCenterABI,
-    functionName: 'createComp',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof regCenterABI, 'createComp'>)
 }
 
 /**
@@ -92560,6 +98483,36 @@ export function useRegisterOfAgreementsGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfAgreementsGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<
+    typeof registerOfAgreementsABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfAgreementsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfAgreementsABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfAgreementsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useRegisterOfAgreementsGetRoleAdmin<
@@ -93371,6 +99324,39 @@ export function useRegisterOfAgreementsInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfAgreementsInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfAgreementsABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfAgreementsABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfAgreementsABI, 'initKeepers', TMode>(
+    {
+      abi: registerOfAgreementsABI,
+      functionName: 'initKeepers',
+      ...config,
+    } as any,
+  )
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useRegisterOfAgreementsLockContents<
@@ -93641,34 +99627,36 @@ export function useRegisterOfAgreementsSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfAgreementsSetOwner<
+export function useRegisterOfAgreementsSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfAgreementsABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
+      > & { functionName?: 'setNewOwner' }
     : UseContractWriteConfig<
         typeof registerOfAgreementsABI,
-        'setOwner',
+        'setNewOwner',
         TMode
       > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfAgreementsABI, 'setOwner', TMode>({
-    abi: registerOfAgreementsABI,
-    functionName: 'setOwner',
-    ...config,
-  } as any)
+  return useContractWrite<typeof registerOfAgreementsABI, 'setNewOwner', TMode>(
+    {
+      abi: registerOfAgreementsABI,
+      functionName: 'setNewOwner',
+      ...config,
+    } as any,
+  )
 }
 
 /**
@@ -94078,6 +100066,28 @@ export function usePrepareRegisterOfAgreementsInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfAgreementsInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof registerOfAgreementsABI,
+      'initKeepers'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfAgreementsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfAgreementsABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRegisterOfAgreementsLockContents(
@@ -94245,21 +100255,24 @@ export function usePrepareRegisterOfAgreementsSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfAgreementsSetOwner(
+export function usePrepareRegisterOfAgreementsSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfAgreementsABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<
+      typeof registerOfAgreementsABI,
+      'setNewOwner'
+    >,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfAgreementsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof registerOfAgreementsABI,
-    'setOwner'
+    'setNewOwner'
   >)
 }
 
@@ -94465,22 +100478,6 @@ export function useRegisterOfAgreementsExecAlongRightEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfAgreementsInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfAgreementsABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfAgreementsABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfAgreementsABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRegisterOfAgreementsLockContentsEvent(
@@ -94516,19 +100513,19 @@ export function useRegisterOfAgreementsSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfAgreementsSetOwnerEvent(
+export function useRegisterOfAgreementsSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfAgreementsABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfAgreementsABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfAgreementsABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfAgreementsABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfAgreementsABI, 'SetNewOwner'>)
 }
 
 /**
@@ -94827,6 +100824,36 @@ export function useRegisterOfConstitutionGetOwner<
   return useContractRead({
     abi: registerOfConstitutionABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfConstitutionABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfConstitutionGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<
+    typeof registerOfConstitutionABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfConstitutionABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfConstitutionABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfConstitutionABI,
@@ -95337,6 +101364,41 @@ export function useRegisterOfConstitutionInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfConstitutionInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfConstitutionABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfConstitutionABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof registerOfConstitutionABI,
+    'initKeepers',
+    TMode
+  >({
+    abi: registerOfConstitutionABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useRegisterOfConstitutionLockContents<
@@ -95543,32 +101605,36 @@ export function useRegisterOfConstitutionSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfConstitutionSetOwner<
+export function useRegisterOfConstitutionSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfConstitutionABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
+      > & { functionName?: 'setNewOwner' }
     : UseContractWriteConfig<
         typeof registerOfConstitutionABI,
-        'setOwner',
+        'setNewOwner',
         TMode
       > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfConstitutionABI, 'setOwner', TMode>({
+  return useContractWrite<
+    typeof registerOfConstitutionABI,
+    'setNewOwner',
+    TMode
+  >({
     abi: registerOfConstitutionABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -95895,6 +101961,28 @@ export function usePrepareRegisterOfConstitutionInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfConstitutionInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof registerOfConstitutionABI,
+      'initKeepers'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfConstitutionABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfConstitutionABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRegisterOfConstitutionLockContents(
@@ -96024,21 +102112,24 @@ export function usePrepareRegisterOfConstitutionSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfConstitutionSetOwner(
+export function usePrepareRegisterOfConstitutionSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfConstitutionABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<
+      typeof registerOfConstitutionABI,
+      'setNewOwner'
+    >,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfConstitutionABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof registerOfConstitutionABI,
-    'setOwner'
+    'setNewOwner'
   >)
 }
 
@@ -96187,22 +102278,6 @@ export function useRegisterOfConstitutionChangePointerEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfConstitutionInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfConstitutionABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfConstitutionABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfConstitutionABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRegisterOfConstitutionLockContentsEvent(
@@ -96238,19 +102313,19 @@ export function useRegisterOfConstitutionSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfConstitutionABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfConstitutionSetOwnerEvent(
+export function useRegisterOfConstitutionSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfConstitutionABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfConstitutionABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfConstitutionABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfConstitutionABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfConstitutionABI, 'SetNewOwner'>)
 }
 
 /**
@@ -96672,6 +102747,36 @@ export function useRegisterOfDirectorsGetPosition<
   return useContractRead({
     abi: registerOfDirectorsABI,
     functionName: 'getPosition',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfDirectorsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfDirectorsGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<
+    typeof registerOfDirectorsABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfDirectorsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfDirectorsABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfDirectorsABI,
@@ -97135,6 +103240,37 @@ export function useRegisterOfDirectorsInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfDirectorsInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfDirectorsABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfDirectorsABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfDirectorsABI, 'initKeepers', TMode>({
+    abi: registerOfDirectorsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useRegisterOfDirectorsLockContents<
@@ -97370,32 +103506,32 @@ export function useRegisterOfDirectorsSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfDirectorsSetOwner<
+export function useRegisterOfDirectorsSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfDirectorsABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
+      > & { functionName?: 'setNewOwner' }
     : UseContractWriteConfig<
         typeof registerOfDirectorsABI,
-        'setOwner',
+        'setNewOwner',
         TMode
       > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfDirectorsABI, 'setOwner', TMode>({
+  return useContractWrite<typeof registerOfDirectorsABI, 'setNewOwner', TMode>({
     abi: registerOfDirectorsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -97631,6 +103767,25 @@ export function usePrepareRegisterOfDirectorsInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfDirectorsInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof registerOfDirectorsABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfDirectorsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfDirectorsABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRegisterOfDirectorsLockContents(
@@ -97782,19 +103937,22 @@ export function usePrepareRegisterOfDirectorsSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfDirectorsSetOwner(
+export function usePrepareRegisterOfDirectorsSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfDirectorsABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof registerOfDirectorsABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfDirectorsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof registerOfDirectorsABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfDirectorsABI,
+    'setNewOwner'
+  >)
 }
 
 /**
@@ -97917,22 +104075,6 @@ export function useRegisterOfDirectorsAddPositionEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfDirectorsInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfDirectorsABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfDirectorsABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfDirectorsABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRegisterOfDirectorsLockContentsEvent(
@@ -98013,19 +104155,19 @@ export function useRegisterOfDirectorsSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfDirectorsABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfDirectorsSetOwnerEvent(
+export function useRegisterOfDirectorsSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfDirectorsABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfDirectorsABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfDirectorsABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfDirectorsABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfDirectorsABI, 'SetNewOwner'>)
 }
 
 /**
@@ -98375,6 +104517,33 @@ export function useRegisterOfMembersGetOwner<
   return useContractRead({
     abi: registerOfMembersABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfMembersGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof registerOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfMembersABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfMembersABI,
@@ -99507,6 +105676,37 @@ export function useRegisterOfMembersInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfMembersInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfMembersABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfMembersABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfMembersABI, 'initKeepers', TMode>({
+    abi: registerOfMembersABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useRegisterOfMembersLockContents<
@@ -99775,28 +105975,32 @@ export function useRegisterOfMembersSetMinVoteRatioOnChain<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfMembersSetOwner<
+export function useRegisterOfMembersSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfMembersABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof registerOfMembersABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<
+        typeof registerOfMembersABI,
+        'setNewOwner',
+        TMode
+      > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfMembersABI, 'setOwner', TMode>({
+  return useContractWrite<typeof registerOfMembersABI, 'setNewOwner', TMode>({
     abi: registerOfMembersABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -100065,6 +106269,25 @@ export function usePrepareRegisterOfMembersInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfMembersInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof registerOfMembersABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfMembersABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfMembersABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareRegisterOfMembersLockContents(
@@ -100229,19 +106452,22 @@ export function usePrepareRegisterOfMembersSetMinVoteRatioOnChain(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfMembersSetOwner(
+export function usePrepareRegisterOfMembersSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfMembersABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof registerOfMembersABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfMembersABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof registerOfMembersABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfMembersABI,
+    'setNewOwner'
+  >)
 }
 
 /**
@@ -100429,22 +106655,6 @@ export function useRegisterOfMembersChangeGroupRepEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfMembersABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfMembersInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfMembersABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfMembersABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfMembersABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfMembersABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRegisterOfMembersLockContentsEvent(
@@ -100578,19 +106788,19 @@ export function useRegisterOfMembersSetMinVoteRatioOnChainEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfMembersABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfMembersABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfMembersSetOwnerEvent(
+export function useRegisterOfMembersSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfMembersABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfMembersABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfMembersABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfMembersABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfMembersABI, 'SetNewOwner'>)
 }
 
 /**
@@ -100994,6 +107204,33 @@ export function useRegisterOfOptionsGetOwner<
   return useContractRead({
     abi: registerOfOptionsABI,
     functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfOptionsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfOptionsGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof registerOfOptionsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfOptionsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfOptionsABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfOptionsABI,
@@ -101547,6 +107784,37 @@ export function useRegisterOfOptionsInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfOptionsInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfOptionsABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfOptionsABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfOptionsABI, 'initKeepers', TMode>({
+    abi: registerOfOptionsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"issueOption"`.
  */
 export function useRegisterOfOptionsIssueOption<
@@ -101805,28 +108073,32 @@ export function useRegisterOfOptionsSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfOptionsSetOwner<
+export function useRegisterOfOptionsSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfOptionsABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof registerOfOptionsABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<
+        typeof registerOfOptionsABI,
+        'setNewOwner',
+        TMode
+      > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfOptionsABI, 'setOwner', TMode>({
+  return useContractWrite<typeof registerOfOptionsABI, 'setNewOwner', TMode>({
     abi: registerOfOptionsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -102098,6 +108370,25 @@ export function usePrepareRegisterOfOptionsInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfOptionsInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof registerOfOptionsABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfOptionsABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfOptionsABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"issueOption"`.
  */
 export function usePrepareRegisterOfOptionsIssueOption(
@@ -102253,19 +108544,22 @@ export function usePrepareRegisterOfOptionsSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfOptionsABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfOptionsSetOwner(
+export function usePrepareRegisterOfOptionsSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfOptionsABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof registerOfOptionsABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfOptionsABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof registerOfOptionsABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfOptionsABI,
+    'setNewOwner'
+  >)
 }
 
 /**
@@ -102408,22 +108702,6 @@ export function useRegisterOfOptionsExecOptEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfOptionsABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfOptionsInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfOptionsABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfOptionsABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfOptionsABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfOptionsABI}__ and `eventName` set to `"IssueOpt"`.
  */
 export function useRegisterOfOptionsIssueOptEvent(
@@ -102523,19 +108801,19 @@ export function useRegisterOfOptionsSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfOptionsABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfOptionsABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfOptionsSetOwnerEvent(
+export function useRegisterOfOptionsSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfOptionsABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfOptionsABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfOptionsABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfOptionsABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfOptionsABI, 'SetNewOwner'>)
 }
 
 /**
@@ -102766,6 +109044,33 @@ export function useRegisterOfPledgesGetPledgesOfShare<
   return useContractRead({
     abi: registerOfPledgesABI,
     functionName: 'getPledgesOfShare',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfPledgesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfPledgesGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof registerOfPledgesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfPledgesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfPledgesABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfPledgesABI,
@@ -103122,6 +109427,37 @@ export function useRegisterOfPledgesInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfPledgesInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfPledgesABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfPledgesABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfPledgesABI, 'initKeepers', TMode>({
+    abi: registerOfPledgesABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"issuePledge"`.
  */
 export function useRegisterOfPledgesIssuePledge<
@@ -103436,28 +109772,32 @@ export function useRegisterOfPledgesSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfPledgesSetOwner<
+export function useRegisterOfPledgesSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfPledgesABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof registerOfPledgesABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<
+        typeof registerOfPledgesABI,
+        'setNewOwner',
+        TMode
+      > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfPledgesABI, 'setOwner', TMode>({
+  return useContractWrite<typeof registerOfPledgesABI, 'setNewOwner', TMode>({
     abi: registerOfPledgesABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -103681,6 +110021,25 @@ export function usePrepareRegisterOfPledgesInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfPledgesInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof registerOfPledgesABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfPledgesABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfPledgesABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"issuePledge"`.
  */
 export function usePrepareRegisterOfPledgesIssuePledge(
@@ -103862,19 +110221,22 @@ export function usePrepareRegisterOfPledgesSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfPledgesABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfPledgesSetOwner(
+export function usePrepareRegisterOfPledgesSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfPledgesABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof registerOfPledgesABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfPledgesABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof registerOfPledgesABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfPledgesABI,
+    'setNewOwner'
+  >)
 }
 
 /**
@@ -104001,22 +110363,6 @@ export function useRegisterOfPledgesExtendPledgeEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfPledgesABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfPledgesInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfPledgesABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfPledgesABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfPledgesABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfPledgesABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useRegisterOfPledgesLockContentsEvent(
@@ -104113,19 +110459,19 @@ export function useRegisterOfPledgesSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfPledgesABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfPledgesABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfPledgesSetOwnerEvent(
+export function useRegisterOfPledgesSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfPledgesABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfPledgesABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfPledgesABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfPledgesABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfPledgesABI, 'SetNewOwner'>)
 }
 
 /**
@@ -104421,6 +110767,33 @@ export function useRegisterOfSharesGetQtyOfSharesInClass<
   return useContractRead({
     abi: registerOfSharesABI,
     functionName: 'getQtyOfSharesInClass',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useRegisterOfSharesGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof registerOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfSharesABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfSharesABI,
@@ -104953,6 +111326,37 @@ export function useRegisterOfSharesInit<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useRegisterOfSharesInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfSharesABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof registerOfSharesABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfSharesABI, 'initKeepers', TMode>({
+    abi: registerOfSharesABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"issueShare"`.
  */
 export function useRegisterOfSharesIssueShare<
@@ -105176,28 +111580,32 @@ export function useRegisterOfSharesSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useRegisterOfSharesSetOwner<
+export function useRegisterOfSharesSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof registerOfSharesABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof registerOfSharesABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<
+        typeof registerOfSharesABI,
+        'setNewOwner',
+        TMode
+      > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof registerOfSharesABI, 'setOwner', TMode>({
+  return useContractWrite<typeof registerOfSharesABI, 'setNewOwner', TMode>({
     abi: registerOfSharesABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -105599,6 +112007,22 @@ export function usePrepareRegisterOfSharesInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareRegisterOfSharesInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfSharesABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"issueShare"`.
  */
 export function usePrepareRegisterOfSharesIssueShare(
@@ -105732,19 +112156,19 @@ export function usePrepareRegisterOfSharesSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareRegisterOfSharesSetOwner(
+export function usePrepareRegisterOfSharesSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: registerOfSharesABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'setNewOwner'>)
 }
 
 /**
@@ -105969,22 +112393,6 @@ export function useRegisterOfSharesIncreaseEquityOfClassEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfSharesABI}__ and `eventName` set to `"Init"`.
- */
-export function useRegisterOfSharesInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof registerOfSharesABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: registerOfSharesABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof registerOfSharesABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfSharesABI}__ and `eventName` set to `"IssueShare"`.
  */
 export function useRegisterOfSharesIssueShareEvent(
@@ -106049,19 +112457,19 @@ export function useRegisterOfSharesSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfSharesABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfSharesABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useRegisterOfSharesSetOwnerEvent(
+export function useRegisterOfSharesSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof registerOfSharesABI, 'SetOwner'>,
+    UseContractEventConfig<typeof registerOfSharesABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: registerOfSharesABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof registerOfSharesABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof registerOfSharesABI, 'SetNewOwner'>)
 }
 
 /**
@@ -106371,6 +112779,25 @@ export function useShaKeeperGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useShaKeeperGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof shaKeeperABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof shaKeeperABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: shaKeeperABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof shaKeeperABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"getRoleAdmin"`.
  */
 export function useShaKeeperGetRoleAdmin<
@@ -106672,6 +113099,33 @@ export function useShaKeeperInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useShaKeeperInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof shaKeeperABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof shaKeeperABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof shaKeeperABI, 'initKeepers', TMode>({
+    abi: shaKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useShaKeeperLockContents<
@@ -106780,28 +113234,28 @@ export function useShaKeeperSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useShaKeeperSetOwner<
+export function useShaKeeperSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof shaKeeperABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof shaKeeperABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof shaKeeperABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof shaKeeperABI, 'setOwner', TMode>({
+  return useContractWrite<typeof shaKeeperABI, 'setNewOwner', TMode>({
     abi: shaKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -107034,6 +113488,22 @@ export function usePrepareShaKeeperInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareShaKeeperInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof shaKeeperABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: shaKeeperABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof shaKeeperABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareShaKeeperLockContents(
@@ -107098,19 +113568,19 @@ export function usePrepareShaKeeperSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shaKeeperABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareShaKeeperSetOwner(
+export function usePrepareShaKeeperSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof shaKeeperABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof shaKeeperABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: shaKeeperABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof shaKeeperABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof shaKeeperABI, 'setNewOwner'>)
 }
 
 /**
@@ -107177,22 +113647,6 @@ export function useShaKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shaKeeperABI}__ and `eventName` set to `"Init"`.
- */
-export function useShaKeeperInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof shaKeeperABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: shaKeeperABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof shaKeeperABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shaKeeperABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useShaKeeperLockContentsEvent(
@@ -107225,19 +113679,19 @@ export function useShaKeeperSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shaKeeperABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shaKeeperABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useShaKeeperSetOwnerEvent(
+export function useShaKeeperSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof shaKeeperABI, 'SetOwner'>,
+    UseContractEventConfig<typeof shaKeeperABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: shaKeeperABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof shaKeeperABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof shaKeeperABI, 'SetNewOwner'>)
 }
 
 /**
@@ -107577,6 +114031,36 @@ export function useShareholdersAgreementGetParties<
   return useContractRead({
     abi: shareholdersAgreementABI,
     functionName: 'getParties',
+    ...config,
+  } as UseContractReadConfig<
+    typeof shareholdersAgreementABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useShareholdersAgreementGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<
+    typeof shareholdersAgreementABI,
+    TFunctionName
+  >,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof shareholdersAgreementABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: shareholdersAgreementABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<
     typeof shareholdersAgreementABI,
@@ -108540,6 +115024,41 @@ export function useShareholdersAgreementInitDefaultRules<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useShareholdersAgreementInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof shareholdersAgreementABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<
+        typeof shareholdersAgreementABI,
+        'initKeepers',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof shareholdersAgreementABI,
+    'initKeepers',
+    TMode
+  >({
+    abi: shareholdersAgreementABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useShareholdersAgreementLockContents<
@@ -108810,32 +115329,36 @@ export function useShareholdersAgreementSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useShareholdersAgreementSetOwner<
+export function useShareholdersAgreementSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof shareholdersAgreementABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
+      > & { functionName?: 'setNewOwner' }
     : UseContractWriteConfig<
         typeof shareholdersAgreementABI,
-        'setOwner',
+        'setNewOwner',
         TMode
       > & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof shareholdersAgreementABI, 'setOwner', TMode>({
+  return useContractWrite<
+    typeof shareholdersAgreementABI,
+    'setNewOwner',
+    TMode
+  >({
     abi: shareholdersAgreementABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -109179,6 +115702,28 @@ export function usePrepareShareholdersAgreementInitDefaultRules(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareShareholdersAgreementInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof shareholdersAgreementABI,
+      'initKeepers'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: shareholdersAgreementABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof shareholdersAgreementABI,
+    'initKeepers'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareShareholdersAgreementLockContents(
@@ -109349,21 +115894,24 @@ export function usePrepareShareholdersAgreementSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareShareholdersAgreementSetOwner(
+export function usePrepareShareholdersAgreementSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof shareholdersAgreementABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<
+      typeof shareholdersAgreementABI,
+      'setNewOwner'
+    >,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: shareholdersAgreementABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as UsePrepareContractWriteConfig<
     typeof shareholdersAgreementABI,
-    'setOwner'
+    'setNewOwner'
   >)
 }
 
@@ -109481,22 +116029,6 @@ export function useShareholdersAgreementCirculateDocEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `eventName` set to `"Init"`.
- */
-export function useShareholdersAgreementInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof shareholdersAgreementABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: shareholdersAgreementABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof shareholdersAgreementABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useShareholdersAgreementLockContentsEvent(
@@ -109532,19 +116064,19 @@ export function useShareholdersAgreementSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link shareholdersAgreementABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useShareholdersAgreementSetOwnerEvent(
+export function useShareholdersAgreementSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof shareholdersAgreementABI, 'SetOwner'>,
+    UseContractEventConfig<typeof shareholdersAgreementABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: shareholdersAgreementABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof shareholdersAgreementABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof shareholdersAgreementABI, 'SetNewOwner'>)
 }
 
 /**
@@ -109842,6 +116374,25 @@ export function useSigPageGetParties<
   return useContractRead({
     abi: sigPageABI,
     functionName: 'getParties',
+    ...config,
+  } as UseContractReadConfig<typeof sigPageABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useSigPageGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof sigPageABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof sigPageABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: sigPageABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof sigPageABI, TFunctionName, TSelectData>)
 }
@@ -110245,6 +116796,33 @@ export function useSigPageInit<TMode extends WriteContractMode = undefined>(
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function useSigPageInitKeepers<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof sigPageABI,
+          'initKeepers'
+        >['request']['abi'],
+        'initKeepers',
+        TMode
+      > & { functionName?: 'initKeepers' }
+    : UseContractWriteConfig<typeof sigPageABI, 'initKeepers', TMode> & {
+        abi?: never
+        functionName?: 'initKeepers'
+      } = {} as any,
+) {
+  return useContractWrite<typeof sigPageABI, 'initKeepers', TMode>({
+    abi: sigPageABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"lockContents"`.
  */
 export function useSigPageLockContents<
@@ -110405,26 +116983,28 @@ export function useSigPageSetDirectKeeper<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useSigPageSetOwner<TMode extends WriteContractMode = undefined>(
+export function useSigPageSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof sigPageABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof sigPageABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof sigPageABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof sigPageABI, 'setOwner', TMode>({
+  return useContractWrite<typeof sigPageABI, 'setNewOwner', TMode>({
     abi: sigPageABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -110631,6 +117211,22 @@ export function usePrepareSigPageInit(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"initKeepers"`.
+ */
+export function usePrepareSigPageInitKeepers(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof sigPageABI, 'initKeepers'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: sigPageABI,
+    functionName: 'initKeepers',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof sigPageABI, 'initKeepers'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"lockContents"`.
  */
 export function usePrepareSigPageLockContents(
@@ -110727,19 +117323,19 @@ export function usePrepareSigPageSetDirectKeeper(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link sigPageABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareSigPageSetOwner(
+export function usePrepareSigPageSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof sigPageABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof sigPageABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: sigPageABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof sigPageABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof sigPageABI, 'setNewOwner'>)
 }
 
 /**
@@ -110838,22 +117434,6 @@ export function useSigPageCirculateDocEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link sigPageABI}__ and `eventName` set to `"Init"`.
- */
-export function useSigPageInitEvent(
-  config: Omit<
-    UseContractEventConfig<typeof sigPageABI, 'Init'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: sigPageABI,
-    eventName: 'Init',
-    ...config,
-  } as UseContractEventConfig<typeof sigPageABI, 'Init'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link sigPageABI}__ and `eventName` set to `"LockContents"`.
  */
 export function useSigPageLockContentsEvent(
@@ -110886,19 +117466,19 @@ export function useSigPageSetDirectKeeperEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link sigPageABI}__ and `eventName` set to `"SetOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link sigPageABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useSigPageSetOwnerEvent(
+export function useSigPageSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof sigPageABI, 'SetOwner'>,
+    UseContractEventConfig<typeof sigPageABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: sigPageABI,
-    eventName: 'SetOwner',
+    eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof sigPageABI, 'SetOwner'>)
+  } as UseContractEventConfig<typeof sigPageABI, 'SetNewOwner'>)
 }
 
 /**

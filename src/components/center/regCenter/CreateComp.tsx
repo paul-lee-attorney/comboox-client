@@ -14,11 +14,12 @@ import {
 import { BorderColor } from '@mui/icons-material';
 
 import { 
-  useRegCenterCreateComp,
+  useCreateNewCompCreateComp,
 } from '../../../generated';
 
 import { 
-  AddrOfRegCenter, HexType,
+  AddrOfCNC,
+  HexType,
 } from '../../../scripts/common';
 
 import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
@@ -39,8 +40,8 @@ export function CreateComp() {
   const {
     isLoading: createCompLoading, 
     write: createComp,
-  } = useRegCenterCreateComp({
-    address: AddrOfRegCenter,
+  } = useCreateNewCompCreateComp({
+    address: AddrOfCNC,
     onError(err) {
       setErrMsg(err.message);
     },
