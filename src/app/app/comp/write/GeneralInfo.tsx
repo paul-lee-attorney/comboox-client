@@ -2,25 +2,28 @@ import { useEffect, useState } from "react";
 
 import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
+import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
-import { centToDollar, dateParser, getEthPart, getGEthPart, getGWeiPart, getWeiPart, longSnParser } from "../../../scripts/common/toolsKit";
+import { booxMap, currencies } from "../../read";
+import { centToDollar, dateParser, getEthPart, getGEthPart, 
+  getGWeiPart, getWeiPart, longSnParser 
+} from "../../read/toolsKit";
+import { CopyLongStrTF } from "../../read/CopyLongStr";
 
-import { MembersEquityList } from "../rom/MembersList";
-import { Position, getDirectorsFullPosInfo } from "../../../scripts/comp/rod";
-import { GetOfficersList } from "../rod/GetOfficersList";
+import { CompInfo, getCompInfo, totalDeposits } from "../read/gk";
+import { getDK } from "../read/accessControl";
+
+import { balanceOf, balanceOfWei } from "../../center/read/rc";
+
+import { Position, getDirectorsFullPosInfo } from "../rod/read/rod";
+import { GetOfficersList } from "../rod/read/GetOfficersList";
+import { MembersEquityList } from "../rom/read/MembersList";
+import { getControllor, getOwnersEquity, votesOfGroup } from "../rom/read/rom";
+import { InvHistoryOfMember } from "../rom/read/InvHistoryOfMember";
 
 import { ConfigSetting } from "./ConfigSetting";
-import { CopyLongStrTF } from "../../common/utils/CopyLongStr";
-import { balanceOf, balanceOfWei } from "../../../scripts/center/rc";
-import { booxMap } from "../../../scripts/common";
-import { CompInfo, getCompInfo, totalDeposits } from "../../../scripts/comp/gk";
-import { getControllor, getOwnersEquity, votesOfGroup } from "../../../scripts/comp/rom";
 import { PickupDeposit } from "./PickupDeposit";
-import { InvHistoryOfMember } from "../rom/InvHistoryOfMember";
-import { DepositOfMine } from "./DepositOfMine";
-import { getDK } from "../../../scripts/common/accessControl";
-import { currencies } from "../../../app/app/read";
+import { DepositOfMine } from "../read/DepositOfMine";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();

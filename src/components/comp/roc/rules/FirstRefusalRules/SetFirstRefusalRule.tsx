@@ -22,19 +22,20 @@ import { ListAlt } from '@mui/icons-material';
 import { FormResults, defFormResults, longSnParser, onlyInt } from '../../../../../scripts/common/toolsKit';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
 import { getRule } from '../../../../../scripts/comp/sha';
+import { FirstRefusalRule, frParser } from '../../../../../app/app/comp/roc/sha/read/sha';
 
-export interface FirstRefusalRule {
-  seqOfRule: string;
-  qtyOfSubRule: string;
-  seqOfSubRule: string;
-  typeOfDeal: string;
-  membersEqual: boolean;
-  proRata: boolean;
-  basedOnPar: boolean;
-  rightholders: string[];
-  para: string;
-  argu: string;
-}
+// export interface FirstRefusalRule {
+//   seqOfRule: string;
+//   qtyOfSubRule: string;
+//   seqOfSubRule: string;
+//   typeOfDeal: string;
+//   membersEqual: boolean;
+//   proRata: boolean;
+//   basedOnPar: boolean;
+//   rightholders: string[];
+//   para: string;
+//   argu: string;
+// }
 
 export function frCodifier(rule: FirstRefusalRule, seq: number): HexType {
   let hexFR: HexType = `0x${
@@ -56,27 +57,27 @@ export function frCodifier(rule: FirstRefusalRule, seq: number): HexType {
   return hexFR;
 }
 
-export function frParser(hexRule: HexType ): FirstRefusalRule {
-  let rule: FirstRefusalRule = {
-    seqOfRule: parseInt(hexRule.substring(2, 6), 16).toString(), 
-    qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16).toString(),
-    seqOfSubRule: parseInt(hexRule.substring(8, 10), 16).toString(),
-    typeOfDeal: parseInt(hexRule.substring(10, 12), 16).toString(),
-    membersEqual: hexRule.substring(12, 14) === '01',
-    proRata: hexRule.substring(14, 16) === '01',
-    basedOnPar: hexRule.substring(16, 18) === '01',
-    rightholders: [
-      parseInt(hexRule.substring(18, 28), 16).toString(),
-      parseInt(hexRule.substring(28, 38), 16).toString(),
-      parseInt(hexRule.substring(38, 48), 16).toString(),
-      parseInt(hexRule.substring(48, 58), 16).toString(),
-    ],
-    para: parseInt(hexRule.substring(58, 62), 16).toString(),
-    argu: parseInt(hexRule.substring(62, 66), 16).toString(),
-  }; 
+// export function frParser(hexRule: HexType ): FirstRefusalRule {
+//   let rule: FirstRefusalRule = {
+//     seqOfRule: parseInt(hexRule.substring(2, 6), 16).toString(), 
+//     qtyOfSubRule: parseInt(hexRule.substring(6, 8), 16).toString(),
+//     seqOfSubRule: parseInt(hexRule.substring(8, 10), 16).toString(),
+//     typeOfDeal: parseInt(hexRule.substring(10, 12), 16).toString(),
+//     membersEqual: hexRule.substring(12, 14) === '01',
+//     proRata: hexRule.substring(14, 16) === '01',
+//     basedOnPar: hexRule.substring(16, 18) === '01',
+//     rightholders: [
+//       parseInt(hexRule.substring(18, 28), 16).toString(),
+//       parseInt(hexRule.substring(28, 38), 16).toString(),
+//       parseInt(hexRule.substring(38, 48), 16).toString(),
+//       parseInt(hexRule.substring(48, 58), 16).toString(),
+//     ],
+//     para: parseInt(hexRule.substring(58, 62), 16).toString(),
+//     argu: parseInt(hexRule.substring(62, 66), 16).toString(),
+//   }; 
   
-  return rule;
-} 
+//   return rule;
+// } 
 
 export const typesOfDeal = ['Capital Increase', 'External Transfer', 'Internal Transfer', 
   'CI & EXT', 'EXT & INT', 'CI & EXT & INT', 'CI & EXT'];

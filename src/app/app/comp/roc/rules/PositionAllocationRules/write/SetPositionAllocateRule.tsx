@@ -18,12 +18,13 @@ import {
   DialogActions,
   FormHelperText,
 } from '@mui/material';
-import { AddRule } from './../AddRule';
-import { FormResults, dateParser, defFormResults, longSnParser, onlyInt } from '../../../../../scripts/common/toolsKit';
+import { AddRule } from '../../AddRule';
+import { FormResults, defFormResults, longSnParser, onlyInt } from '../../../../../read/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { HexType, MaxSeqNo, MaxUserNo, SeqZero } from '../../../../../scripts/common';
-import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
-import { getRule, titleOfPositions } from '../../../../../scripts/comp/sha';
+import { HexType, MaxSeqNo, MaxUserNo, SeqZero } from '../../../../../read';
+
+import { getRule, titleOfPositions } from '../../../sha/read/sha';
+import { RulesEditProps } from '../../GovernanceRules/write/SetGovernanceRule';
 
 // ==== Str Interface ====
 

@@ -1,10 +1,9 @@
+import { Stack } from "@mui/material"
 
-import { Stack } from '@mui/material';
-import { CreateComp } from '../components/center/regCenter/CreateComp';
-import { GetComp } from '../components/center/regCenter/GetComp';
-
+import Image from "next/image"
 import Logo from '/public/assets/ComBoox_FullSlogan.png';
-import Image from 'next/image';
+import { CreateComp } from "./write/CreateComp";
+import { GetComp } from "./write/GetComp";
 
 function FrontPage() {
 
@@ -17,8 +16,7 @@ function FrontPage() {
       }} 
     >
       <br/>
-      {/* <h1>ComBoox</h1> */}
-      <Image src={Logo} alt='ComBoox Logo' />
+      <Image src={ Logo } alt='ComBoox Logo' />
       <br/>
       <br/>
       <h2>A Company Book-Entry System On Blockchain</h2>
