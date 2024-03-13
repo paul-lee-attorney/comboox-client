@@ -1,8 +1,8 @@
 import { readContract } from "@wagmi/core";
-import { bigIntToStrNum, strNumToBigInt } from "../../../../read/toolsKit";
-import { HexType } from "../../../../read";
-import { alongsABI } from "../../../../../../generated";
-import { Deal } from "../../../roa/ia/ia";
+import { bigIntToStrNum, strNumToBigInt } from "../../../../../read/toolsKit";
+import { HexType } from "../../../../../read";
+import { alongsABI } from "../../../../../../../generated";
+import { Deal } from "../../../../roa/ia/read/ia";
 
 export interface LinkRule{
   triggerDate: number;

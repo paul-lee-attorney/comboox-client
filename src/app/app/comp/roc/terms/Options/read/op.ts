@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../../../../read";
-import { optionsABI } from "../../../../../../generated";
-import { OptWrap, Option } from "../../../roo/roo";
+import { HexType } from "../../../../../read";
+import { optionsABI } from "../../../../../../../generated";
+import { OptWrap, Option } from "../../../../roo/read/roo";
 
 export async function counterOfOptions(term:HexType):Promise<number>{
   let res = await readContract({

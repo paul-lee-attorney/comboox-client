@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
-import { lockUpABI } from "../../../../../../generated";
-import { HexType } from "../../../../read";
-import { Deal } from "../../../roa/ia/ia";
+import { lockUpABI } from "../../../../../../../generated";
+import { HexType } from "../../../../../read";
+import { Deal } from "../../../../roa/ia/read/ia";
 
 
 export interface Locker {

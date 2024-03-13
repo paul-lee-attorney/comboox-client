@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../../read";
-import { strNumToBigInt } from "../../read/toolsKit";
-import { registerOfOptionsABI } from "../../../../generated";
+import { HexType } from "../../../read";
+import { strNumToBigInt } from "../../../read/toolsKit";
+import { registerOfOptionsABI } from "../../../../../generated";
 
 export interface StrHeadOfOpt{
   seqOfOpt: string;

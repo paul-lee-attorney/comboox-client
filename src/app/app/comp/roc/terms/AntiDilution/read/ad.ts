@@ -1,8 +1,8 @@
 import { readContract } from "@wagmi/core";
-import { antiDilutionABI } from "../../../../../../generated";
-import { HexType } from "../../../../read";
-import { longDataParser, longSnParser } from "../../../../read/toolsKit";
-import { Deal } from "../../../roa/ia/ia";
+import { antiDilutionABI } from "../../../../../../../generated";
+import { HexType } from "../../../../../read";
+import { longDataParser, longSnParser } from "../../../../../read/toolsKit";
+import { Deal } from "../../../../roa/ia/read/ia";
 
 export interface BenchmarkType {
   classOfShare: string,

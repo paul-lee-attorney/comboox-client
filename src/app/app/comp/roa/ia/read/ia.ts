@@ -1,8 +1,8 @@
 import { readContract } from "@wagmi/core";
-import { Bytes32Zero, HexType } from "../../../read";
-import { strNumToBigInt } from "../../../read/toolsKit";
-import { investmentAgreementABI } from "../../../../../generated";
-import { Swap } from "../../roo/roo";
+import { Bytes32Zero, HexType } from "../../../../read";
+import { strNumToBigInt } from "../../../../read/toolsKit";
+import { investmentAgreementABI } from "../../../../../../generated";
+import { Swap } from "../../../roo/read/roo";
 
 export const TypeOfDeal = [
   'CapitalIncrease', 
