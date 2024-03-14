@@ -1,17 +1,17 @@
 
 import { useRouter } from "next/router";
 
-import { HexType } from "../../../scripts/common";
+import { HexType } from "../../../read";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
-import { HeadOfDoc, getHeadByBody } from "../../../scripts/center/rc";
-import { dateParser } from "../../../scripts/common/toolsKit";
-import { OwnerPage } from "../../../components/center/lop/Owner/OwnerPage";
-import { ManagerPage } from "../../../components/center/lop/Manager/ManagerPage";
-import { LeaderPage } from "../../../components/center/lop/Leader/LeaderPage";
+import { HeadOfDoc, getHeadByBody } from "../../../center/read/rc";
+import { dateParser } from "../../../read/toolsKit";
+import { OwnerPage } from "./Owner/write/OwnerPage";
+import { ManagerPage } from "./Manager/write/ManagerPage";
+import { LeaderPage } from "./Leader/write/LeaderPage";
 
 function Payroll() {
 
@@ -30,9 +30,6 @@ function Payroll() {
       );
     }
   })
-
-  const [ open, setOpen ] = useState(false);
-  const [ finalized, setFinalized ] = useState<boolean>(false);
 
   return (
     <Stack direction='column' width='100%' height='100%' >

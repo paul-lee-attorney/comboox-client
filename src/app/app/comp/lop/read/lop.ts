@@ -1,6 +1,6 @@
 import { readContract, fetchBalance } from "@wagmi/core";
-import { HexType } from "../../read";
-import { payrollOfProjectABI } from "../../../../generated";
+import { HexType } from "../../../read";
+import { payrollOfProjectABI } from "../../../../../generated";
 
 // ==== Member ====
 

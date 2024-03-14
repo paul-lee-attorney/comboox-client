@@ -1,34 +1,25 @@
+"use client"
+
 import { useEffect, useState } from "react";
 
-import {
-  Paper, 
-  Toolbar,
-  TextField,
-  Stack,
-} from "@mui/material";
-
-import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
+import {Paper, Toolbar, TextField, Stack } from "@mui/material";
 
 import { Create } from "@mui/icons-material";
 
-import {
-  useRegCenterCreateDoc, 
-} from "../../../generated";
+import { useRegCenterCreateDoc } from "../../../../generated";
 
-import { CopyLongStrSpan } from "../../../components/common/utils/CopyLongStr";
-import { AddrOfRegCenter, AddrZero, HexType } from "../../../scripts/common";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../scripts/common/toolsKit";
+import { CopyLongStrSpan } from "../../read/CopyLongStr";
+import { AddrOfRegCenter, AddrZero, HexType } from "../../read";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
-import { Doc, getDocsList } from "../../../scripts/center/rc";
-import { GetDocsList } from "../../../components/center/pop/GetDocsList";
-import { useRouter } from "next/router";
+import { Doc, getDocsList } from "../../center/read/rc";
+import { GetDocsList } from "./read/GetDocsList";
+import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
-function PayrollOfProjects() {
+function ListOfProjects() {
   const { gk, boox, setErrMsg } = useComBooxContext();
   const [ time, setTime ] = useState(0);
   const [ loading, setLoading ] = useState(false);
-
-  const router = useRouter();
 
   const refresh = ()=>{
     setTime(Date.now());
@@ -76,7 +67,7 @@ function PayrollOfProjects() {
         <Stack direction='row' sx={{ alignContent:'space-between' }}>
 
           <Toolbar sx={{ textDecoration:'underline' }}>
-            <h3>POP - Payroll Of Projects</h3>
+            <h3>LOP - List Of Projects</h3>
           </Toolbar>
 
           {AddrOfRegCenter && (
@@ -143,4 +134,4 @@ function PayrollOfProjects() {
   );
 } 
 
-export default PayrollOfProjects;
+export default ListOfProjects;
