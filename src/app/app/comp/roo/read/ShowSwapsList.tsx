@@ -1,9 +1,9 @@
 import { Chip } from "@mui/material";
 
-import { centToDollar, longDataParser, longSnParser } from "../../../scripts/common/toolsKit";
+import { centToDollar, longDataParser, longSnParser } from "../../../read/toolsKit";
 import { Dispatch, SetStateAction } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
-import { Swap } from "../../../scripts/comp/roo";
+import { Swap } from "./roo";
 
 const statesOfSwap = [
   'Pending', 'Issued', 'Closed', 'Terminated'
