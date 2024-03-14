@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { listOfOrdersABI } from "../../../../generated";
-import { HexType } from "../../read";
+import { listOfOrdersABI } from "../../../../../generated";
+import { HexType } from "../../../read";
 
 
 export const statesOfInvestor = [
