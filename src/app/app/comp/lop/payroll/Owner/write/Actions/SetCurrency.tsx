@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { usePayrollOfProjectSetCurrency } from "../../../../../generated";
-import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { usePayrollOfProjectSetCurrency } from "../../../../../../../../generated";
 import { FormControl, InputLabel, MenuItem, Paper, Select, Stack } from "@mui/material";
 import { Update } from "@mui/icons-material";
-import { HexType } from "../../../../../scripts/common";
-import { refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { HexType, currencies } from "../../../../../../read";
+import { refreshAfterTx } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../ActionsOfOwner";
-import { currencies } from "../../../../comp/gk/GeneralInfo";
+import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
 
 
 export function SetCurrency({ addr, refresh }: ActionsOfOwnerProps ) {

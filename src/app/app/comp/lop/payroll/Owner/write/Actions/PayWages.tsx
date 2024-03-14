@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { usePayrollOfProjectPayWages } from "../../../../../generated";
-import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
-import { HexType } from "../../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../scripts/common/toolsKit";
+
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../ActionsOfOwner";
+import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
+import { usePayrollOfProjectPayWages } from "../../../../../../../../generated";
+import { HexType } from "../../../../../../read";
 
 export function PayWages({ addr, refresh }: ActionsOfOwnerProps ) {
 

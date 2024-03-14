@@ -1,20 +1,20 @@
 
-import { Button, Divider, Paper, Stack, TextField, } from '@mui/material';
+import { Divider, Paper, Stack, TextField, } from '@mui/material';
 
 import { 
   useRegCenterMintAndLockPoints,
-} from '../../../../generated';
+} from '../../../../../../generated';
 
-import { AddrOfRegCenter, Bytes32Zero, HexType, MaxLockValue, MaxUserNo } from '../../../../scripts/common';
+import { AddrOfRegCenter, Bytes32Zero, HexType, MaxLockValue, MaxUserNo } from '../../../../read';
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../../scripts/center/rc';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../read/rc';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../../read/toolsKit';
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
 export function MintAndLockPoints({refreshList, getUser, getBalanceOf}:ActionsOfUserProps) {
 

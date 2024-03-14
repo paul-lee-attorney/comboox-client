@@ -11,8 +11,8 @@ import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../read/toolsKit';
 
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../../scripts/common/ComBooxContext';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
+import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 
 export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 

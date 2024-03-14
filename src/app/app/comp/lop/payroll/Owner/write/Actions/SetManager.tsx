@@ -1,13 +1,12 @@
 import { useState } from "react";
-import { usePayrollOfProjectSetManager } from "../../../../../generated";
-import { useComBooxContext } from "../../../../../scripts/common/ComBooxContext";
+import { usePayrollOfProjectSetManager } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
-import { HexType, MaxUserNo } from "../../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../scripts/common/toolsKit";
+import { HexType, MaxUserNo } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../ActionsOfOwner";
-
+import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
 
 export function SetManager({ addr, refresh }: ActionsOfOwnerProps ) {
 

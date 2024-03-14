@@ -3,16 +3,16 @@ import { Paper, Stack, TextField } from '@mui/material';
 
 import { 
   useRegCenterSetRoyaltyRule
-} from '../../../../generated';
+} from '../../../../../../generated';
 
-import { AddrOfRegCenter, HexType } from '../../../../scripts/common';
+import { AddrOfRegCenter, HexType } from '../../../../read';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../../scripts/center/rc';
+import { StrKey, codifyStrRoyaltyRule, defaultStrKey } from '../../../read/rc';
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from '../../../../read/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
 export function SetRoyaltyRule({ refreshList, getUser }:ActionsOfUserProps) {
 

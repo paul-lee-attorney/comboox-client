@@ -1,11 +1,11 @@
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { useState } from "react";
 
-import { HexType } from "../../../../scripts/common";
+import { HexType } from "../../../../../read";
 import { SetCurrency } from "./Actions/SetCurrency";
 import { SetManager } from "./Actions/SetManager";
 import { PayWages } from "./Actions/PayWages";
-import { TransferOwnership } from "../../user/ActionsOfOwner/TransferOwnership";
+import { SetNewOwner } from "./Actions/SetNewOwner";
 
 export interface ActionsOfOwnerProps{
   addr: HexType;
@@ -24,7 +24,7 @@ export function ActionsOfOwner({addr, refresh}: ActionsOfOwnerProps) {
     <SetCurrency key={0} addr={addr} refresh={refresh} />,
     <SetManager key={1} addr={addr} refresh={refresh} />,
     <PayWages key={2} addr={addr} refresh={refresh} />,
-    <TransferOwnership key={3} addr={addr} refresh={refresh} />,
+    <SetNewOwner key={3} addr={addr} refresh={refresh} />,
   ]
 
   return(

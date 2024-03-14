@@ -1,18 +1,18 @@
 import { useState } from "react";
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
-import { useGeneralKeeperProposeToTransferFund } from "../../../../generated";
+import { useGeneralKeeperProposeToTransferFund } from "../../../../../../generated";
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { ParasOfTransfer, defaultParasOfTransfer } from "../../gmm/CreateMotions/ProposeToTransferFund";
-import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../read";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { ParasOfTransfer, defaultParasOfTransfer } from "../../../gmm/write/CreateMotions/ProposeToTransferFund";
 
 export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 

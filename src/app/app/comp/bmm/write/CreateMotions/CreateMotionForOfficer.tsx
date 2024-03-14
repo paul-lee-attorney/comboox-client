@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { 
   useGeneralKeeperCreateMotionToRemoveOfficer, 
   useGeneralKeeperNominateOfficer, 
-} from "../../../../generated";
+} from "../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { PersonAdd, PersonRemove } from "@mui/icons-material";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
-import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../read";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
 

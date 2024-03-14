@@ -7,7 +7,7 @@ import {  Close, HelpOutline, ShoppingCartOutlined } from "@mui/icons-material";
 import { useGeneralKeeperPlaceBuyOrder } from "../../../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../read/loo";
-import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../scripts/common/toolsKit";
+import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../read/toolsKit";
 import { getCentPrice } from "../../../read/gk";
 import { HexType, MaxData, MaxPrice } from "../../../../read";
 import { LoadingButton } from "@mui/lab";

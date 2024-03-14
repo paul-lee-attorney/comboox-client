@@ -1,16 +1,16 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
+import { HexType, MaxSeqNo, MaxUserNo } from "../../../../read";
 
 import { 
   useGeneralKeeperCreateMotionToApproveDoc, 
-} from "../../../../generated";
+} from "../../../../../../generated";
 
 import { Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function CreateMotionToApproveDoc({refresh}:CreateMotionProps) {
 

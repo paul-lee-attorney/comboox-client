@@ -6,11 +6,12 @@ import { defaultDeal } from "../../../read/ia";
 import { useGeneralKeeperExecDragAlong } from "../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  AgricultureOutlined } from "@mui/icons-material";
-import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../../../../scripts/common";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, 
+  onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
+import { Bytes32Zero, HexType, MaxData, MaxPrice } from "../../../../../../read";
 
 export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
   const { gk, setErrMsg } = useComBooxContext();

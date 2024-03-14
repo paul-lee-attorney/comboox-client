@@ -8,12 +8,12 @@ import { Lock }  from '@mui/icons-material';
 
 import { 
   useAccessControlLockContents,
-} from '../../../generated';
-import { HexType } from '../../../scripts/common';
-import { refreshAfterTx } from '../../../scripts/common/toolsKit';
+} from '../../../../../../../generated';
+import { HexType } from '../../../../../read';
+import { refreshAfterTx } from '../../../../../read/toolsKit';
 import { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../../_providers/ComBooxContextProvider';
 
 interface LockContentsProps {
   addr: HexType;

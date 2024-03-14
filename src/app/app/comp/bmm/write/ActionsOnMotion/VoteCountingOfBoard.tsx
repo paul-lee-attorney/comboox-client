@@ -1,14 +1,14 @@
 
 import { Paper } from "@mui/material";
-import { useGeneralKeeperVoteCounting } from "../../../../generated";
+import { useGeneralKeeperVoteCounting } from "../../../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Calculate } from "@mui/icons-material";
-import { HexType } from "../../../../scripts/common";
+import { HexType } from "../../../../read";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { useState } from "react";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { refreshAfterTx } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function VoteCountingOfBoard({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 

@@ -1,15 +1,15 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../scripts/common";
+import { Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../read";
 
-import { useGeneralKeeperCreateAction } from "../../../../generated";
+import { useGeneralKeeperCreateAction } from "../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
-import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { Action, defaultAction } from "../../../gmm/read/meetingMinutes";
 
 export function CreateAction({refresh}:CreateMotionProps) {
 
