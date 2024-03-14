@@ -1,30 +1,22 @@
-import { 
-  Button, 
-  Dialog, 
-  DialogActions, 
-  DialogContent, 
-  DialogTitle, 
-  Grid, 
-  Paper, 
-  Stack, 
-  TextField, 
-  Toolbar, 
-  Typography 
-} from "@mui/material";
 
-import { useComBooxContext } from "../../../scripts/common/ComBooxContext";
-import { GetVotingRule } from "../roc/rules/VotingRules/GetVotingRule";
-import { GetPosition } from "../rod/GetPosition";
-import Link from "next/link";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { HexType, booxMap } from "../../../scripts/common";
-import { Article } from "@mui/icons-material";
-import { dateParser, longSnParser } from "../../../scripts/common/toolsKit";
-import { Motion, voteEnded } from "../../../scripts/common/meetingMinutes";
-import { getSnOfFile } from "../../../scripts/common/filesFolder";
 
-import { VoteResult } from "../../common/meetingMinutes/VoteResult";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, 
+  Grid, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
+
+import { GetVotingRule } from "../../roc/rules/VotingRules/read/GetVotingRule";
+import { GetPosition } from "../../rod/read/GetPosition";
+import Link from "next/link";
+
+import { HexType, booxMap } from "../../../read";
+
+import { Article } from "@mui/icons-material";
+import { dateParser, longSnParser } from "../../../read/toolsKit";
+import { Motion, voteEnded } from "../../gmm/read/meetingMinutes";
+import { getSnOfFile } from "../../roc/read/filesFolder";
+import { VoteResult } from "../../gmm/read/VoteResult";
 import { ActionsOnMotionOfBoard } from "./ActionsOnMotionOfBoard";
+import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;

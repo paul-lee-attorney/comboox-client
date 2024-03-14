@@ -14,7 +14,7 @@ import { AddrZero, HexType, booxMap } from "../../../../read";
 import { VoteCountingOfGm } from "../../../gmm/write/ActionsOnMotion/VoteCountingOfGm";
 
 import { voteEnded } from "../../../read/meetingMinutes";
-import { getHeadOfFile } from "../../../read/filesFolder";
+import { getHeadOfFile } from "../../read/filesFolder";
 import { CirculateSha } from "./actions/CirculateSha";
 import { SignSha } from "./actions/SignSha";
 

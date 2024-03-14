@@ -2,7 +2,8 @@ import { useState } from "react";
 
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 
-import { ActionsOnMotionSelectProps } from "../gmm/ActionsOnMotion";
+import { ActionsOnMotionSelectProps } from "../../gmm/write/ActionsOnMotion";
+
 import { ProposeMotionToBoardMeeting } from "./ActionsOnMotion/ProposeMotionToBoardMeeting";
 import { CastVoteOfBm } from "./ActionsOnMotion/CastVoteOfBm";
 import { VoteCountingOfBoard } from "./ActionsOnMotion/VoteCountingOfBoard";

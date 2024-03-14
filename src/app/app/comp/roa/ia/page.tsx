@@ -15,8 +15,8 @@ import IaBodyTerms from "./write/IaBodyTerms";
 
 import { IaLifecycle } from "./write/IaLifecycle";
 import { Signatures } from "../../roc/sha/write/sigPage/Signatures";
-import { InfoOfFile, getFile } from "../../read/filesFolder";
-import { IndexCard } from "../../read/IndexCard";
+import { InfoOfFile, getFile } from "../../roc/read/filesFolder";
+import { IndexCard } from "../../roc/read/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
 import { isFinalized } from "../../read/accessControl";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";

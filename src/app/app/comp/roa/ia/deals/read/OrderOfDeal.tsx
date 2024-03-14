@@ -10,7 +10,7 @@ import { GetFRClaims } from "./GetFRClaims";
 import { Swap } from "../../../../roo/read/roo";
 import { SwapsList } from "./SwapsList";
 import { usePublicClient } from "wagmi";
-import { closingDeadline, dtExecDeadline, frExecDeadline, getFile, terminateStartpoint, votingDeadline } from "../../../../read/filesFolder";
+import { closingDeadline, dtExecDeadline, frExecDeadline, getFile, terminateStartpoint, votingDeadline } from "../../../../roc/read/filesFolder";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 
 interface OrderOfDealProps {

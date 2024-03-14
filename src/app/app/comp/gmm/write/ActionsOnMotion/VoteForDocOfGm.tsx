@@ -10,7 +10,7 @@ import { Bytes32Zero, HexType, booxMap } from "../../../../read";
 import { HowToVote } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { VoteResult } from "../../read/VoteResult";
-import { VoteCase, getVoteResult } from "../../../read/meetingMinutes";
+import { VoteCase, getVoteResult } from "../../read/meetingMinutes";
 import { FormResults, HexParser, defFormResults, hasError, 
   onlyHex, refreshAfterTx } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";

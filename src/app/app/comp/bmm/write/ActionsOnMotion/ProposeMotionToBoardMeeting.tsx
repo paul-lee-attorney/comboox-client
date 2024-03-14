@@ -1,16 +1,14 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { 
-  useGeneralKeeperProposeMotionToBoard,
-} from "../../../../generated";
+import { useGeneralKeeperProposeMotionToBoard } from "../../../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Box, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
-import { HexType } from "../../../../scripts/common";
+import { HexType } from "../../../../read";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { refreshAfterTx } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export interface ProposeMotionProps {
   seqOfMotion: bigint,

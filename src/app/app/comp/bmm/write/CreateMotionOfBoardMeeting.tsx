@@ -1,11 +1,9 @@
 import { useState } from "react";
 
-import { 
-  Box, Collapse, 
-  FormControlLabel, 
-  Paper, Radio, RadioGroup, 
-  Stack, Toolbar, 
+import { Box, Collapse, FormControlLabel, 
+  Paper, Radio, RadioGroup, Stack, Toolbar, 
 } from "@mui/material";
+
 import { CreateMotionForOfficer } from "./CreateMotions/CreateMotionForOfficer";
 import { CreateMotionToApproveDoc } from "./CreateMotions/CreateMotionToApproveDoc";
 import { CreateAction } from "./CreateMotions/CreateAction";

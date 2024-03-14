@@ -11,12 +11,12 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { BookOutlined, } from '@mui/icons-material';
 
-import Link from '../../read/Link';
+import Link from '../../../read/Link';
 
-import { dateParser, longSnParser } from '../../read/toolsKit';
+import { dateParser, longSnParser } from '../../../read/toolsKit';
 import { InfoOfFile } from './filesFolder';
 
-import { CopyLongStrSpan } from '../../read/CopyLongStr';
+import { CopyLongStrSpan } from '../../../read/CopyLongStr';
 
 interface GetFilesListProps {
   list: InfoOfFile[],

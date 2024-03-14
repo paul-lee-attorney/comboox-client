@@ -2,15 +2,15 @@ import { useState } from "react";
 
 import { 
   useGeneralKeeperEntrustDelegaterForBoardMeeting,
-} from "../../../../generated";
+} from "../../../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Stack, TextField, } from "@mui/material";
 import { HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
-import { HexType, MaxUserNo } from "../../../../scripts/common";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { HexType, MaxUserNo } from "../../../../read";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 

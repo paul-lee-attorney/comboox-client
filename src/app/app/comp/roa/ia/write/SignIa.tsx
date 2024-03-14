@@ -3,7 +3,7 @@ import { useGeneralKeeperSignIa } from "../../../../../../generated";
 import { Bytes32Zero, HexType, } from "../../../../read";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../read/sigPage";
+import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../roc/sha/read/sigPage";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { FileHistoryProps } from "../../../roc/sha/write/actions/CirculateSha";

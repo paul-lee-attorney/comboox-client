@@ -1,6 +1,6 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../../read";
-import { filesFolderABI } from "../../../../generated";
+import { HexType } from "../../../read";
+import { filesFolderABI } from "../../../../../generated";
 
 export interface Head {
   circulateDate: number;

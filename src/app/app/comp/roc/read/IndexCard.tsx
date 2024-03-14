@@ -1,12 +1,12 @@
 import { Button, Chip, Dialog, DialogActions, DialogContent, Paper, TextField, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction,  } from "react";
-import { dateParser, longDataParser } from "../../read/toolsKit";
+import { dateParser, longDataParser } from "../../../read/toolsKit";
 
 import { InfoOfFile } from "./filesFolder";
 
-import { CopyLongStrSpan, CopyLongStrTF } from "../../read/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../../read/CopyLongStr";
 
-import { GetVotingRule } from "../roc/rules/VotingRules/read/GetVotingRule";
+import { GetVotingRule } from "../rules/VotingRules/read/GetVotingRule";
 
 import { labState } from "./GetFilesList";
 

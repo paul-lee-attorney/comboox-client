@@ -14,9 +14,9 @@ import { ShaBodyTerms } from "./write/ShaBodyTerms";
 import { Signatures } from "./write/sigPage/Signatures";
 import { ShaLifecycle } from "./write/ShaLifecycle";
 
-import { InfoOfFile, getFile } from "../../read/filesFolder";
+import { InfoOfFile, getFile } from "../read/filesFolder";
 import { isFinalized } from "../../read/accessControl";
-import { IndexCard } from "../../read/IndexCard";
+import { IndexCard } from "../read/IndexCard";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 

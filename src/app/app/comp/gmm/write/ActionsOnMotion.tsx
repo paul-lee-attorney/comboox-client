@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 
-import { Motion } from "../../read/meetingMinutes";
+import { Motion } from "../read/meetingMinutes";
 
 import { ProposeMotionToGeneralMeeting } from "./ActionsOnMotion/ProposeMotionToGeneralMeeting";
 import { CastVoteOfGm } from "./ActionsOnMotion/CastVoteOfGm";

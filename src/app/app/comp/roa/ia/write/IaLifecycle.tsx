@@ -5,15 +5,15 @@ import { Stack, Paper, Box, Stepper, Step, StepLabel,
 
 import { HexType, booxMap } from "../../../../read";
 import { VoteCountingOfGm } from "../../../gmm/write/ActionsOnMotion/VoteCountingOfGm";
-import { voteEnded } from "../../../read/meetingMinutes";
+import { voteEnded } from "../../../gmm/read/meetingMinutes";
 import { SignIa } from "./SignIa";
 import { CirculateIa } from "./CirculateIa";
 import { ProposeDocOfGm } from "../../../gmm/write/ActionsOnMotion/ProposeDocOfGm";
 import { VoteForDocOfGm } from "../../../gmm/write/ActionsOnMotion/VoteForDocOfGm";
 import { FinalizeIa } from "./FinalizeIa";
 import { getTypeOfIA } from "../read/ia";
-import { established } from "../../../read/sigPage";
-import { getHeadOfFile } from "../../../read/filesFolder";
+import { established } from "../../../roc/sha/read/sigPage";
+import { getHeadOfFile } from "../../../roc/read/filesFolder";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 interface IaLifecycleProps {

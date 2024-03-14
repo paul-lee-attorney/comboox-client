@@ -11,7 +11,7 @@ import {
 
 import { HexType, booxMap } from "../../../../../read";
 import { refreshAfterTx } from "../../../../../read/toolsKit";
-import { getHeadOfFile } from "../../../../read/filesFolder";
+import { getHeadOfFile } from "../../../read/filesFolder";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 
 interface VoteCountingProps {

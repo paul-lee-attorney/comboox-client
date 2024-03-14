@@ -1,8 +1,7 @@
 import { useState } from "react";
 
-import { useGeneralKeeperCastVote } from "../../../../generated";
+import { useGeneralKeeperCastVote } from "../../../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 
 import { 
   Box, 
@@ -21,12 +20,13 @@ import {
 } from "@mui/material";
 
 import { HowToVote, } from "@mui/icons-material";
-import { Bytes32Zero, HexType, booxMap } from "../../../../scripts/common";
-import { VoteResult } from "../../../common/meetingMinutes/VoteResult";
+import { Bytes32Zero, HexType, booxMap } from "../../../../read";
+import { VoteResult } from "../../../gmm/read/VoteResult";
 import { EntrustDelegaterForBoardMeeting } from "./EntrustDelegaterForBoardMeeting";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../read/toolsKit";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { LoadingButton } from "@mui/lab";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function CastVoteOfBm({ seqOfMotion, setOpen, refresh }: ProposeMotionProps) {
 

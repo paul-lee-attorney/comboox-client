@@ -1,39 +1,19 @@
 import { useState } from "react";
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
-import { HexType } from "../../../../scripts/common";
+import { HexType } from "../../../../read";
 
-import { 
-  useGeneralKeeperExecAction,
-} from "../../../../generated";
+import { useGeneralKeeperExecAction } from "../../../../../../generated";
 
-import { 
-  IconButton, 
-  Paper, 
-  Stack, 
-  TextField, 
-  Tooltip, 
-  Typography 
-} from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 
-import { 
-  AddCircle, 
-  RemoveCircle, 
-  Surfing 
-} from "@mui/icons-material";
+import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 
-import { 
-  FormResults, 
-  HexParser, 
-  defFormResults, 
-  hasError, 
-  onlyHex, 
-  onlyInt, 
-  refreshAfterTx 
-} from "../../../../scripts/common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, 
+  onlyHex, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
 
-import { Action, defaultAction } from "../../../../scripts/common/meetingMinutes";
+import { Action, defaultAction } from "../../../gmm/read/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
-import { ActionsOnMotionProps } from "../../gmm/ActionsOnMotion";
+import { ActionsOnMotionProps } from "../../../gmm/write/ActionsOnMotion";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function ExecAction({motion, setOpen, refresh}:ActionsOnMotionProps) {
 

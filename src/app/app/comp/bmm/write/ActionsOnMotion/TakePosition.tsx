@@ -1,14 +1,14 @@
 
-import { useGeneralKeeperTakePosition } from "../../../../generated";
+import { useGeneralKeeperTakePosition } from "../../../../../../generated";
 
-import { useComBooxContext } from "../../../../scripts/common/ComBooxContext";
 import { Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
-import { refreshAfterTx } from "../../../../scripts/common/toolsKit";
-import { HexType } from "../../../../scripts/common";
+import { refreshAfterTx } from "../../../../read/toolsKit";
+import { HexType } from "../../../../read";
 import { useState } from "react";
 import { LoadingButton } from "@mui/lab";
-import { ActionsOnMotionProps } from "../../gmm/ActionsOnMotion";
+import { ActionsOnMotionProps } from "../../../gmm/write/ActionsOnMotion";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export function TakePosition({motion, setOpen, refresh}:ActionsOnMotionProps) {
 

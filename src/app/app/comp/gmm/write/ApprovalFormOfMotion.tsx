@@ -18,8 +18,8 @@ import { Article } from "@mui/icons-material";
 
 import { HexType, booxMap } from "../../../read";
 import { dateParser, longSnParser } from "../../../read/toolsKit";
-import { voteEnded } from "../../read/meetingMinutes";
-import { getFile } from "../../read/filesFolder";
+import { voteEnded } from "../read/meetingMinutes";
+import { getFile } from "../../roc/read/filesFolder";
 import { GetVotingRule } from "../../roc/rules/VotingRules/read/GetVotingRule";
 import { GetPosition } from "../../rod/read/GetPosition";
 

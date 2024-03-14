@@ -6,7 +6,7 @@ import { Paper, Stack, Toolbar } from "@mui/material";
 import { GetMotionsList } from "./read/GetMotionsList";
 
 import { CreateMotionOfGm } from "./write/CreateMotionOfGm";
-import { Motion, getMotionsList } from "../read/meetingMinutes";
+import { Motion, getMotionsList } from "./read/meetingMinutes";
 import { ApprovalFormOfMotion } from "./write/ApprovalFormOfMotion";
 import { CopyLongStrSpan } from "../../read/CopyLongStr";
 import { booxMap } from "../../read";
