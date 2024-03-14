@@ -1,4 +1,5 @@
-import { Collapse, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
+import { Collapse, FormControl, FormHelperText, InputLabel, 
+  MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { useState } from "react";
 
 import { SetPlatformRule } from "./ActionsOfOwner/SetPlatformRule";

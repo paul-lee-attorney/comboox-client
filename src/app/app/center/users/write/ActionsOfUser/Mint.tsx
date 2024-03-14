@@ -3,17 +3,17 @@ import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/mater
 
 import { 
   useRegCenterMint, 
-} from '../../../../generated';
+} from '../../../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType, MaxUserNo } from '../../../../scripts/common';
+import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../../read';
 import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
 
 import { ActionsOfUserProps } from '../ActionsOfUser';
-import { FormResults, defFormResults, getEthPart, getGEthPart, getGWeiPart, hasError, longDataParser, onlyInt, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+import { FormResults, defFormResults, hasError, longDataParser, onlyInt, onlyNum, strNumToBigInt } from '../../../../read/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
 interface Receipt{
   to: string;

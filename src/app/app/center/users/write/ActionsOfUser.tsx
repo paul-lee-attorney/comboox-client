@@ -1,4 +1,5 @@
-import { Checkbox, Collapse, FormControl, FormControlLabel, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
+import { Checkbox, Collapse, FormControl, FormControlLabel, InputLabel, 
+  MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 import { Dispatch, SetStateAction, useState } from "react";
 import { SetBackupKey } from "./ActionsOfUser/SetBackupKey";
 import { LockConsideration } from "./ActionsOfUser/LockConsideration";
@@ -7,8 +8,8 @@ import { LockPoints } from "./ActionsOfUser/LockPoints";
 import { TransferPoints } from "./ActionsOfUser/TransferPoints";
 import { MintAndLockPoints } from "./ActionsOfUser/MintAndLockPoints";
 import { SetRoyaltyRule } from "./ActionsOfUser/SetRoyaltyRule";
-import { User } from "../../../scripts/center/rc";
-import { AddrZero } from "../../../scripts/common";
+import { User } from "../../read/rc";
+import { AddrZero } from "../../../read";
 import { TransferIPR } from "./ActionsOfUser/TransferIPR";
 
 export interface ActionsOfUserProps{

@@ -1,18 +1,15 @@
 
 import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
-import { 
-  useRegCenterSetPriceFeed,
-} from '../../../../generated';
+import { useRegCenterSetPriceFeed } from '../../../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType, currencies } from '../../../../read';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../read/toolsKit';
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
-import { currencies } from '../../../comp/gk/GeneralInfo';
+import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
 
 export function SetFeedRegistry({refresh}:ActionsOfOwnerProps) {

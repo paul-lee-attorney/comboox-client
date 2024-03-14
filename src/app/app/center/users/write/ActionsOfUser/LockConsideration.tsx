@@ -1,18 +1,18 @@
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from '@mui/material';
 
-import { useRegCenterLockConsideration } from '../../../../generated';
+import { useRegCenterLockConsideration } from '../../../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxLockValue, MaxSeqNo, MaxUserNo } from '../../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxLockValue, MaxSeqNo, MaxUserNo } from '../../../../read';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier, strNumToBigInt } from '../../../../read/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
-import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../../scripts/center/rc';
+import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../read/rc';
 import { LockPointsProps } from './LockPoints';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
 
 export interface Selector {

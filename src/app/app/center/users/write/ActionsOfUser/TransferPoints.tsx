@@ -3,16 +3,19 @@ import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/mater
 
 import { 
   useRegCenterTransfer, 
-} from '../../../../generated';
+} from '../../../../../../generated';
 
-import { AddrOfRegCenter, AddrZero, HexType } from '../../../../scripts/common';
+import { AddrOfRegCenter, AddrZero, HexType } from '../../../../read';
 import { ArrowCircleRightOutlined, Close } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../../../scripts/common/common';
-import { FormResults, HexParser, bigIntToStrNum, defFormResults, hasError, longDataParser, onlyHex, onlyNum, strNumToBigInt } from '../../../../scripts/common/toolsKit';
+
+import { FormResults, HexParser, bigIntToStrNum, defFormResults, 
+  hasError, getReceipt, onlyHex, onlyNum, strNumToBigInt 
+} from '../../../../read/toolsKit';
+
 import { ActionsOfUserProps } from '../ActionsOfUser';
 import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../../scripts/common/ComBooxContext';
+import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
 export interface Receipt{
   from: string;

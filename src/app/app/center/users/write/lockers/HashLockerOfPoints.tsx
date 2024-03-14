@@ -1,11 +1,10 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { StrLocker } from "../../../read/center/rc";
-import { bigIntToStrNum, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../read/common/toolsKit";
-import { AddrZero } from "../../../read/common";
+import { StrLocker } from "../../../read/rc";
+import { bigIntToStrNum, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../../read/toolsKit";
+import { AddrZero } from "../../../../read";
 import { PickupPoints } from "./PickupPoints";
 import { WithdrawPoints } from "./WithdrawPoints";
 import { Dispatch, SetStateAction } from "react";
-
 
 export interface HashLockerOfPointsProps{
   open: boolean,
