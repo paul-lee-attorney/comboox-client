@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 
-
-import { HexType } from "../../../../scripts/common";
-
-
-import { Deal, defaultDeal, getSeqList, obtainDealsList } from "../../../../scripts/comp/ia";
-
 import { Paper } from "@mui/material";
-import { CreateDeal } from "../../../../app/app/comp/roa/ia/deals/write/CreateDeal";
-import { DealsList } from "../../../../app/app/comp/roa/ia/deals/read/DealsList";
-import { OrderOfDeal } from "../../../../app/app/comp/roa/ia/deals/read/OrderOfDeal";
+
+import { HexType } from "../../../../read";
+
+import { Deal, defaultDeal, getSeqList, obtainDealsList } from "../read/ia";
+
+import { CreateDeal } from "../deals/write/CreateDeal";
+
+
+import { DealsList } from "../deals/read/DealsList";
+import { OrderOfDeal } from "../deals/read/OrderOfDeal";
 
 export interface BodyTermsProps {
   addr: HexType;
