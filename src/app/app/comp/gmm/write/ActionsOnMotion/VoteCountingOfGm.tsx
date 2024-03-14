@@ -6,7 +6,7 @@ import { useGeneralKeeperVoteCountingOfGm } from "../../../../../../generated";
 
 import { Calculate } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
-import { isPassed } from "../../../read/meetingMinutes";
+import { isPassed } from "../../read/meetingMinutes";
 import { HexType, booxMap } from "../../../../read";
 import { refreshAfterTx } from "../../../../read/toolsKit";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
