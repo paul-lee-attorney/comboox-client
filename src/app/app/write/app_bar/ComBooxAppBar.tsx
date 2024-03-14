@@ -116,19 +116,20 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const theme = useTheme();
 
   const items = [
-    {href: '/', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
-    {href: '/center/FuleTank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
-    {href: '/comp/HomePage', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
-    {href: '/comp/roc/RegisterOfConstitution', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
-    {href: '/comp/roa/RegisterOfAgreements', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
-    {href: '/comp/rod/RegisterOfDirectors', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
-    {href: '/comp/bmm/BoardMeetingMinutes', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    {href: '/comp/rom/RegisterOfMembers', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
-    {href: '/comp/gmm/GeneralMeetingMinutes', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    {href: '/comp/ros/RegisterOfShares', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
-    {href: '/comp/rop/RegisterOfPledges', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
-    {href: '/comp/roo/RegisterOfOptions', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: true},
-    {href: '/comp/loo/ListOfOrders', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchange />, divider: false},
+    {href: '/app', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
+    {href: '/app/center/fule_tank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
+    {href: '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
+    {href: '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
+    {href: '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
+    {href: '/app/comp/rod', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
+    {href: '/app/comp/bmm', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/app/comp/rom', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
+    {href: '/app/comp/gmm', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: '/app/comp/ros', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
+    {href: '/app/comp/rop', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
+    {href: '/app/comp/roo', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: true},
+    {href: '/app/comp/loo', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchange />, divider: false},
+    {href: '/app/comp/lop', label: 'LOP', tip:'List of Projects', icon: <CurrencyExchange />, divider: false},
   ]
 
   return (

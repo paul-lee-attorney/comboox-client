@@ -26,9 +26,9 @@ export function AcctPage({ flag }:AcctPageProps) {
   } = useRegCenterGetMyUserNo({
     address: AddrOfRegCenter,
     account: signer?.account,
-    onError(err) {
-      setErrMsg(err.message);
-    },
+    // onError(err) {
+    //   setErrMsg(err.message);
+    // },
     onSuccess(res) {
       if (signer) setUserNo(res);
       else setUserNo(undefined);
