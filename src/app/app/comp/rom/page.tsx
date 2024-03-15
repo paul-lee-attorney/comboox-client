@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Paper, Stack, Toolbar } from "@mui/material";
+import { Paper, Stack, Toolbar, Typography } from "@mui/material";
 
 import { MembersEquityList } from "./read/MembersList";
 
@@ -23,9 +23,9 @@ function RegisterOfMembers() {
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
 
       <Stack direction='row' >
-        <Toolbar sx={{m:1, p:1, textDecoration:'underline' }}>
-          <h3>ROM - Register Of Members</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>ROM - Register Of Members</b>
+        </Typography>
 
         {boox && (
           <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROM].toLowerCase()} />

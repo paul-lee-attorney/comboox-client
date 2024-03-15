@@ -4,7 +4,8 @@ import {
   Paper, 
   Toolbar, 
   Chip,
-  Stack
+  Stack,
+  Typography
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
@@ -129,9 +130,9 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
 
       <Stack direction={'row'} sx={{ justifyContent: 'space-between', alignItems: 'center' }} >        
 
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>Deals List</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>Deals List</b>
+        </Typography>
 
       </Stack>
 

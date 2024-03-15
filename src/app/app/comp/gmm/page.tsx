@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { Paper, Stack, Toolbar } from "@mui/material";
+import { Paper, Stack, Toolbar, Typography } from "@mui/material";
 
 import { GetMotionsList } from "./read/GetMotionsList";
 
@@ -39,9 +39,9 @@ function GeneralMeetingMinutes() {
 
       <Stack direction="row" >
 
-        <Toolbar sx={{m:1, p:1, textDecoration:'underline'}}>
-          <h3>GMM - General Meeting Minutes</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>GMM - General Meeting Minutes</b>
+        </Typography>
 
         {boox && (
           <CopyLongStrSpan title="Addr"  src={ boox[booxMap.GMM].toLowerCase() }  />

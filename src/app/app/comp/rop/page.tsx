@@ -6,6 +6,7 @@ import {
   Paper, 
   Toolbar,
   Stack,
+  Typography,
 } from "@mui/material";
 
 import { Pledge, getAllPledges } from "./read/rop";
@@ -42,9 +43,9 @@ function RegisterOfPledges() {
 
       <Stack direction="row" >
 
-        <Toolbar sx={{ textDecoration:'underline' }} >
-          <h3>ROP - Register Of Pledges</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>ROP - Register Of Pledges</b>
+        </Typography>
 
         {boox && (
           <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROP].toLowerCase() } />

@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 
-import { Paper, Toolbar, TextField, Stack } from "@mui/material";
+import { Paper, Toolbar, TextField, Stack, Grid, Typography } from "@mui/material";
 
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
-import { booxMap, currencies } from "../../read";
+import { AddrZero, booxMap, currencies } from "../../read";
 import { baseToDollar, dateParser, getEthPart, getGEthPart, 
   getGWeiPart, getWeiPart, longSnParser 
 } from "../../read/toolsKit";
@@ -116,392 +116,347 @@ export function GeneralInfo() {
         }} 
       >
 
-        <table>
-          <tbody>
+        <Paper elevation={3} sx={{m:1, p:1 }} >
+          <Stack direction='row' sx={{ alignItems:'center' }} >
 
-            <tr >
-              <td colSpan={4}>
-                <Paper elevation={3} sx={{m:1, p:1 }} >
+            <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+              <b>General Info</b>
+            </Typography>
 
-                  <Stack direction='row' sx={{ alignItems:'center' }} >
-          
-                    <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
-                      <h3>General Info</h3>
-                    </Toolbar>
+            {compInfo && (
+              <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol } time={ time } setTime={ setTime } />
+            )}
 
-                    {compInfo && (
-                      <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol } time={ time } setTime={ setTime } />
-                    )}
+          </Stack>
 
-                  </Stack>
+          <Grid container direction='row' spacing={2} >
 
-                  <tr>
-                    <td colSpan={2}>
-                      {compInfo && (
-                        <TextField 
-                          value={ compInfo.name } 
-                          variant='outlined'
-                          size='small' 
-                          label="NameOfCompany" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            m:1,
-                          }}
-                          fullWidth
-                        />
-                      )}
-                    </td>
+            <Grid item xs={6} md={6} lg={6} >
+              <TextField 
+                value={ compInfo?.name ?? ' '} 
+                variant='outlined'
+                size='small' 
+                label="NameOfCompany" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>            
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ currencies[ compInfo?.currency ?? 0 ] } 
+                variant='outlined'
+                size='small' 
+                label="BookingCurrency" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ dateParser(compInfo?.regDate.toString() ?? '0') } 
+                variant='outlined'
+                size='small' 
+                label="RegDate" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
 
-                    <td>
-                      <TextField 
-                        value={ currencies[ compInfo?.currency ?? 0 ] } 
-                        variant='outlined'
-                        size='small' 
-                        label="BookingCurrency" 
-                        inputProps={{readOnly: true}}
-                        sx={{
-                          m:1,
-                        }}
-                        fullWidth
-                      />
-                    </td>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ longSnParser(compInfo?.regNum.toString() ?? '0') } 
+                variant='outlined'
+                size='small' 
+                label="RegNum" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  minWidth: 120,
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={compInfo?.symbol ?? ' '} 
+                variant='outlined'
+                size='small' 
+                label="SymbolOfCompany" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <CopyLongStrTF title="AddressOfCompany" src={gk ?? AddrZero} />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <CopyLongStrTF title="Secretary" src={dk ?? AddrZero} />
+            </Grid>
 
-                    <td>
-                      <TextField 
-                        value={ dateParser(compInfo?.regDate.toString() ?? '0') } 
-                        variant='outlined'
-                        size='small' 
-                        label="RegDate" 
-                        inputProps={{readOnly: true}}
-                        sx={{
-                          m:1,
-                        }}
-                        fullWidth
-                      />
-                    </td>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ longSnParser(controllor ?? AddrZero) } 
+                variant='outlined'
+                size='small' 
+                label="ActualControllor" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ baseToDollar(votesOfController ?? '0') } 
+                variant='outlined'
+                size='small' 
+                label="VotesOfController" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }} 
+                fullWidth
+              />              
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ baseToDollar(par ?? '0')} 
+                variant='outlined'
+                size='small' 
+                label="RegisteredCapital" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />              
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ baseToDollar(paid ?? '0') } 
+                variant='outlined'
+                size='small' 
+                label="PaidInCapital" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m: 1,
+                }}
+                fullWidth
+              />              
+            </Grid>
 
-                  </tr>
+          </Grid>
 
-                  <tr>        
-                    <td >
-                      {compInfo && (
-                        <TextField 
-                          value={ longSnParser(compInfo.regNum.toString()) } 
-                          variant='outlined'
-                          size='small' 
-                          label="RegNum" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            minWidth: 120,
-                            m:1,
-                          }}
-                          fullWidth
-                        />
-                      )}
-                    </td>
+        </Paper>
 
-                    <td >
-                      {compInfo && (
-                        <TextField 
-                          value={compInfo.symbol} 
-                          variant='outlined'
-                          size='small' 
-                          label="SymbolOfCompany" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            m:1,
-                          }}
-                          fullWidth
-                        />
-                      )}
-                    </td>
+        <Paper elevation={3} sx={{m:1, p:1, }} >
 
-                    <td >
-                      {gk && (
-                        <CopyLongStrTF title="AddressOfCompany" src={gk} />
-                      )}
-                    </td>
-                    <td >
-                      {dk && (
-                        <CopyLongStrTF title="Secretary" src={dk} />
-                      )}
-                    </td>
-                  </tr>
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+    
+            <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+              <b>Cash Box</b>
+            </Typography>
 
-                  <tr>
-                    <td>
-                      {controllor && (
-                        <TextField 
-                          value={ longSnParser(controllor) } 
-                          variant='outlined'
-                          size='small' 
-                          label="ActualControllor" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            m:1,
-                          }}
-                          fullWidth
-                        />
-                      )}
-                    </td>
-                    <td>
-                      {votesOfController && (
-                        <TextField 
-                          value={ baseToDollar(votesOfController) } 
-                          variant='outlined'
-                          size='small' 
-                          label="VotesOfController" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            m:1,
-                          }} 
-                          fullWidth
-                        />
-                      )}
-                    </td>
-                    <td>
-                      {par && (
-                        <TextField 
-                          value={ baseToDollar(par)} 
-                          variant='outlined'
-                          size='small' 
-                          label="RegisteredCapital" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            m:1,
-                          }}
-                          fullWidth
-                        />
-                      )}
-                    </td>
-                    <td>
-                      {paid && (
-                        <TextField 
-                          value={ baseToDollar(paid) } 
-                          variant='outlined'
-                          size='small' 
-                          label="PaidInCapital" 
-                          inputProps={{readOnly: true}}
-                          sx={{
-                            m: 1,
-                          }}
-                          fullWidth
-                        />
-                      )}
-                    </td>
-                  </tr>
+            <PickupDeposit refresh={refresh} />
 
-                </Paper>
-              </td>
-            </tr>
+            <DepositOfMine />
 
-            <tr>
-              <td colSpan={4}>
-                <Paper elevation={3} sx={{m:1, p:1, }} >
+          </Stack>
 
-                  <Stack direction='row' sx={{ alignItems:'center' }} >
-            
-                    <Toolbar sx={{ mr: 5,  textDecoration:'underline' }}>
-                      <h3>Cash Box</h3>
-                    </Toolbar>
+          <Grid container direction='row' spacing={2} >
 
-                    <PickupDeposit refresh={refresh} />
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (Giga CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGEthPart(balanceOfCBP) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (CBP)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getEthPart(balanceOfCBP) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (GLee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGWeiPart(balanceOfCBP) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfCBP (Lee)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getWeiPart(balanceOfCBP)}
+              />
+            </Grid>
 
-                    <DepositOfMine />
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (Giga ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGEthPart(balanceOfETH) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getEthPart(balanceOfETH) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (GWei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGWeiPart(balanceOfETH) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='BalanceOfETH (Wei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getWeiPart(balanceOfETH) }
+              />
+            </Grid>
 
-                  </Stack>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposits (Giga ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGEthPart(depositsOfETH) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposits (ETH)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getEthPart(depositsOfETH) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposits (GWei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getGWeiPart(depositsOfETH) }
+              />
+            </Grid>
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposits (Wei)'
+                inputProps={{readOnly: true}}
+                fullWidth
+                sx={{
+                  m:1,
+                }}
+                value={ getWeiPart(depositsOfETH) }
+              />              
+            </Grid>
 
-                  <tr>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfCBP (Giga CBP)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getGEthPart(balanceOfCBP) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfCBP (CBP)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getEthPart(balanceOfCBP) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfCBP (GLee)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getGWeiPart(balanceOfCBP) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfCBP (Lee)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getWeiPart(balanceOfCBP)}
-                      />
-                    </td>
-                  </tr>
+          </Grid>
+        </Paper>
 
-                  <tr>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfETH (Giga ETH)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getGEthPart(balanceOfETH) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfETH (ETH)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getEthPart(balanceOfETH) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfETH (GWei)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getGWeiPart(balanceOfETH) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='BalanceOfETH (Wei)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getWeiPart(balanceOfETH) }
-                      />
-                    </td>
-                  </tr>
+        <Grid container direction='row' spacing={2} >
 
-                  <tr>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='Deposits (Giga ETH)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getGEthPart(depositsOfETH) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='Deposits (ETH)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getEthPart(depositsOfETH) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='Deposits (GWei)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getGWeiPart(depositsOfETH) }
-                      />
-                    </td>
-                    <td>
-                      <TextField 
-                        size="small"
-                        variant='outlined'
-                        label='Deposits (Wei)'
-                        inputProps={{readOnly: true}}
-                        fullWidth
-                        sx={{
-                          m:1,
-                        }}
-                        value={ getWeiPart(depositsOfETH) }
-                      />
-                    </td>
-                  </tr>
+          <Grid item xs={12} md={12} lg={12} >
+            <MembersEquityList setAcct={setAcct} setOpen={setOpen} />
+            {acct > 0 && open && (
+              <InvHistoryOfMember acct={ acct } open={ open } setOpen={ setOpen } />
+            )}
+          </Grid>
 
+          <Grid item xs={12} md={12} lg={12} >
+            {directorsList && directorsList.length > 0 && (
+              <GetOfficersList list={directorsList} title="Directors List" />
+            )}
+          </Grid>
 
-                </Paper>
-              </td>
-            </tr>
+        </Grid>
 
-            <tr>
-              <td colSpan={4}>
-                <MembersEquityList setAcct={setAcct} setOpen={setOpen} />
-
-                {acct > 0 && open && (
-                  <InvHistoryOfMember acct={ acct } open={ open } setOpen={ setOpen } />
-                )}
-
-              </td>
-            </tr>
-
-            <tr>
-              <td colSpan={4}>
-                {directorsList && directorsList.length > 0 && (
-                  <GetOfficersList list={directorsList} title="Directors List" />
-                )}
-              </td>
-            </tr>
-
-          </tbody>
-        </table>
       </Paper>
     </>
   );

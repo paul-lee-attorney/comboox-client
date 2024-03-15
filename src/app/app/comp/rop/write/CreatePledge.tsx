@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useGeneralKeeperCreatePledge } from "../../../../../generated";
 import { StrBody, StrHead, codifyHeadOfPledge, defaultStrBody, defaultStrHead } from "../read/rop";
-import { Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
+import { Divider, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { getShare } from "../../ros/read/ros";
 import { Create } from "@mui/icons-material";
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from "../../../read";
@@ -62,9 +62,9 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar sx={{ textDecoration:'underline' }} >
-        <h3>Create Pledge</h3>
-      </Toolbar>
+      <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <b>Create Pledge</b>
+      </Typography>
 
       <Stack direction='row' sx={{m:1, p:1, alignItems:'center'}} >
 

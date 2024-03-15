@@ -83,10 +83,8 @@ export function GetPosition({seq}: GetPositionProps) {
               spacing={1} 
             >
               {pos && (
-                <Typography sx={{ ml:1, textDecoration:'underline' }} >
-                  <h3>
-                    Title: { titleOfPositions[pos.title - 1] }
-                  </h3>
+                <Typography variant="h5" sx={{ ml:2, textDecoration:'underline' }} >
+                  <b>Title: { titleOfPositions[pos.title - 1] }</b>                  
                 </Typography>
               )}
 

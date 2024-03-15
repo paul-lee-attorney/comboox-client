@@ -1,4 +1,4 @@
-import { Box, Chip, Paper, Toolbar } from "@mui/material";
+import { Box, Chip, Paper, Toolbar, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { dateParser, longSnParser } from "../../../read/toolsKit";
 import { Motion } from "./meetingMinutes";
@@ -135,9 +135,9 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <Box sx={{width: '100%', color: 'black' }} >
-        <Toolbar sx={{textDecoration:'underline'}}>
-          <h3>{ title }</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>{ title }</b>
+        </Typography>
         <DataGrid 
           initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
           pageSizeOptions={[5, 10, 15, 20]} 

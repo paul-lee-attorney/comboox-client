@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
+import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar, Typography } from "@mui/material";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 
@@ -76,9 +76,9 @@ function ListOfOrders() {
 
       <Stack direction="row" sx={{alignItems:'center'}} >
 
-          <Toolbar sx={{m:1, p:1, textDecoration:'underline'}}>
-            <h3>LOO - List Of Orders</h3>
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>LOO - List Of Orders</b>
+          </Typography>
 
           {boox && (
             <CopyLongStrSpan title="Addr"  src={ boox[booxMap.LOO].toLowerCase() }  />

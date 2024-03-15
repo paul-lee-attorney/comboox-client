@@ -1,4 +1,4 @@
-import { Chip, Paper, Stack, Toolbar, } from "@mui/material";
+import { Chip, Paper, Stack, Toolbar, Typography, } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { dateParser, longSnParser } from "../../../read/toolsKit";
 import { Investor } from "./loo";
@@ -101,9 +101,9 @@ export function InvestorsList({list, setAcct}:OrdersListProps) {
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
       <Stack direction={'row'} sx={{ alignItems:'center' }} >
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>Investors List</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>Investors List</b>
+        </Typography>
 
       </Stack>
       {/* <SearchPledge setPld={setPledge} setOpen={setOpen} /> */}

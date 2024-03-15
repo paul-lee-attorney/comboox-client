@@ -14,7 +14,8 @@ import {
   Select, 
   Stack, 
   TextField, 
-  Toolbar 
+  Toolbar, 
+  Typography
 } from "@mui/material";
 
 import { AddCircle } from "@mui/icons-material";
@@ -113,9 +114,9 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
 
   return (
     <Paper elevation={3} sx={{p:1, m:1, border: 1, borderColor:'divider' }} >
-      <Toolbar sx={{ textDecoration:'underline' }}>
-        <h3>Create Deal</h3>
-      </Toolbar>
+      <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <b>Create Deal</b>
+      </Typography>
 
       <Stack direction='row' sx={{ alignItems:'center' }} >
 

@@ -2,7 +2,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Stack, IconButton, Paper, Toolbar, TextField, Button,
-  Tooltip, Box, Dialog, DialogContent, DialogActions,
+  Tooltip, Box, Dialog, DialogContent, DialogActions, Typography,
 } from "@mui/material";
 import {AddCircle, RemoveCircle, ListAlt } from "@mui/icons-material"
 
@@ -202,9 +202,9 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
 
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
                 <Stack direction={'row'} >
-                  <Toolbar sx={{ textDecoration:'underline' }}>
-                    <h3>Anti Dilution</h3>
-                  </Toolbar>
+                  <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+                    <b>Anti Dilution</b>
+                  </Typography>
 
                   <CopyLongStrSpan title="Addr"  src={term.toLowerCase()} />
                 </Stack>

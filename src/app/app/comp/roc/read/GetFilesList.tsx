@@ -7,6 +7,7 @@ import {
   Toolbar, 
   Chip,
   Button,
+  Typography,
 } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { BookOutlined, } from '@mui/icons-material';
@@ -166,9 +167,9 @@ export function GetFilesList({ list, title, pathName, setFile, setOpen }:GetFile
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
 
-        <Toolbar sx={{ mr:5, textDecoration:'underline' }}>
-          <h3>{ title }</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>{ title }</b>
+        </Typography>
 
       {list && (
         <DataGrid

@@ -32,6 +32,7 @@ export function InitBos({nextStep}: InitCompProps) {
   const [time, setTime] = useState(0);
 
   const [ loadingAdd, setLoadingAdd ] = useState<boolean>(false);
+
   const refreshAdd = () => {
     setTime(Date.now());
     setLoadingAdd(false);
@@ -88,8 +89,8 @@ export function InitBos({nextStep}: InitCompProps) {
     delShare({
       args: [ 
         BigInt(share.head.seqOfShare ?? 0), 
-        strNumToBigInt(share.body.paid, 2),
-        strNumToBigInt(share.body.par, 2)
+        strNumToBigInt(share.body.paid, 4),
+        strNumToBigInt(share.body.par, 4)
       ],
     });
   };

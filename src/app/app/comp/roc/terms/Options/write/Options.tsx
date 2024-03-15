@@ -18,6 +18,7 @@ import {
   Select,
   MenuItem,
   FormHelperText,
+  Typography,
 } from "@mui/material";
 
 import { AddrZero, HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../read";
@@ -212,9 +213,9 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
               <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
 
                 <Stack direction='row' >
-                  <Toolbar sx={{ textDecoration:'underline' }} >
-                    <h3>Put/Call Options</h3>
-                  </Toolbar>
+                  <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+                    <b>Put/Call Options</b>
+                  </Typography>
 
                   <CopyLongStrSpan title="Addr"  src={term} />
                 </Stack>

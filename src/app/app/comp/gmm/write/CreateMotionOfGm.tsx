@@ -4,7 +4,7 @@ import {
   Box, Collapse, 
   FormControlLabel, 
   Paper, Radio, RadioGroup, 
-  Stack, Toolbar, 
+  Stack, Toolbar, Typography, 
 } from "@mui/material";
 
 import { CreateMotionForBoardSeats } from "./CreateMotions/CreateMotionForBoardSeats";
@@ -31,9 +31,9 @@ export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
       <Stack direction={'row'} sx={{ alignItems:'center', color:'black' }} >
 
         <Box sx={{ minWidth:200 }} >
-          <Toolbar sx={{ textDecoration:'underline' }} >
-            <h3>Create Motion - Type Of Motion: </h3>
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>Create Motion - Type Of Motion: </b>
+          </Typography>
         </Box>
 
         <RadioGroup

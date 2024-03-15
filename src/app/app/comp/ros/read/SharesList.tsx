@@ -2,6 +2,7 @@ import {
   Chip,
   Toolbar,
   Paper,
+  Typography,
 } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
@@ -122,9 +123,9 @@ export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }} >
 
-      <Toolbar sx={{ textDecoration:'underline' }} >
-        <h3>Shares List</h3>
-      </Toolbar>
+      <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <b>Shares List</b>
+      </Typography>
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
         pageSizeOptions={[5, 10, 15, 20]} 

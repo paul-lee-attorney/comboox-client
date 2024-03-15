@@ -1,5 +1,5 @@
 
-import { TableContainer, Paper, Toolbar, Chip } from '@mui/material';
+import { TableContainer, Paper, Toolbar, Chip, Typography } from '@mui/material';
 
 import Link from 'next/link';
 
@@ -75,9 +75,9 @@ export function GetDocsList({ list }:GetDocsListProps ) {
   return (
     <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
 
-        <Toolbar sx={{ mr:5, textDecoration:'underline' }}>
-          <h3>Payroll Of Projects</h3>
-        </Toolbar>
+      <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <b>Payroll Of Projects</b>
+      </Typography>
 
       {list && (
         <DataGrid

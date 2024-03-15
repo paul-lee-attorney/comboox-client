@@ -12,6 +12,7 @@ import {
   Dialog,
   DialogContent,
   DialogActions,
+  Typography,
 } from "@mui/material";
 
 import { AddrZero, HexType, MaxPrice, MaxUserNo } from "../../../../../read";
@@ -208,9 +209,9 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                 <Stack direction={'row'} sx={{ alignItems:'center', justifyContent:'space-between' }}>
 
                   <Stack direction={'row'} >
-                    <Toolbar sx={{ textDecoration:'underline' }}>
-                      <h3>Lock Up</h3>
-                    </Toolbar>
+                    <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+                      <b>Lock Up</b>
+                    </Typography>
 
                     <CopyLongStrSpan title="Addr"  src={term} />
                   </Stack>

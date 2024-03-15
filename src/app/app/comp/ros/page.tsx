@@ -8,6 +8,7 @@ import {
   Toolbar,
   TextField,
   Stack,
+  Typography,
 } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
@@ -62,9 +63,9 @@ function RegisterOfShares() {
 
         <Stack direction="row" >
 
-          <Toolbar sx={{ textDecoration:'underline' }} >
-            <h3>ROS - Register Of Shares</h3>
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>ROS - Register Of Shares</b>
+          </Typography>
 
           {boox && (
             <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROS].toLowerCase() } />

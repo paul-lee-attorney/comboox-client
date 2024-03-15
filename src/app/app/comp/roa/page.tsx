@@ -7,6 +7,7 @@ import {
   Toolbar,
   TextField,
   Stack,
+  Typography,
 } from "@mui/material";
 
 
@@ -76,9 +77,9 @@ function RegisterOfAgreements() {
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Stack direction='row' sx={{ alignContent:'space-between' }}>
 
-          <Toolbar sx={{ textDecoration:'underline' }}>
-            <h3>ROA - Register Of Agreements</h3>
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>ROA - Register Of Agreements</b>
+          </Typography>
 
           {boox && (
             <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROA].toLowerCase()} />

@@ -1,4 +1,4 @@
-import { Button, Chip, Dialog, DialogActions, DialogContent, Paper, TextField, Toolbar } from "@mui/material";
+import { Button, Chip, Dialog, DialogActions, DialogContent, Paper, TextField, Toolbar, Typography } from "@mui/material";
 import { Dispatch, SetStateAction,  } from "react";
 import { dateParser, longDataParser } from "../../../read/toolsKit";
 
@@ -32,9 +32,9 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
             <thead> 
               <tr>
                 <td >
-                  <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-                    <h3>Index Card of File</h3>
-                  </Toolbar>
+                  <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+                    <b>Index Card of File</b>
+                  </Typography>
                 </td>
                 <td>
                   <CopyLongStrSpan title="Addr" src={file.addr}  />

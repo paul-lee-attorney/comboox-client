@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Paper, Stack, Toolbar } from "@mui/material";
+import { Paper, Stack, Toolbar, Typography } from "@mui/material";
 import { GetMotionsList } from "../gmm/read/GetMotionsList";
 import { Motion, getMotionsList } from "../gmm/read/meetingMinutes";
 import { CreateMotionOfBoardMeeting } from "./write/CreateMotionOfBoardMeeting";
@@ -40,9 +40,10 @@ function BoardMeetingMinutes() {
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
       <Stack direction='row' >
-        <Toolbar sx={{ textDecoration:'underline' }} >
-          <h3>BMM - Board Meeting Minutes </h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>BMM - Board Meeting Minutes </b>
+        </Typography>
+        
         {boox && (
           <CopyLongStrSpan  title="Addr" src={ boox[booxMap.BMM].toLowerCase() } />
         )}

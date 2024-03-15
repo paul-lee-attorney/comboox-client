@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Paper, Stack, Toolbar } from "@mui/material";
+import { Paper, Stack, Toolbar, Typography } from "@mui/material";
 
 import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo, } from "./read/rod";
 
@@ -33,9 +33,9 @@ function RegisterOfDirectors() {
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth: 1680, border:1, borderColor:'divider' }} >
 
       <Stack direction='row' >
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>ROD - Register Of Directors</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>ROD - Register Of Directors</b>
+        </Typography>
 
         {boox && (
           <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROD].toLowerCase()} />

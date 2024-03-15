@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Paper, Toolbar, TextField, Stack } from "@mui/material";
+import { Paper, Toolbar, TextField, Stack, Typography } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Create } from "@mui/icons-material";
 
@@ -69,9 +69,9 @@ function RegisterOfConstitution() {
 
         <Stack direction='row' sx={{ alignItems:'center' }}>
 
-          <Toolbar sx={{ textDecoration:'underline', mr:2 }}>
-            <h3>ROC - Register Of Constitution </h3> 
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>ROC - Register Of Constitution </b> 
+          </Typography>
 
           {boox && (
               <CopyLongStrSpan  title="Addr" src={boox[booxMap.ROC].toLowerCase()} />

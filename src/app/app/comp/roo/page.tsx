@@ -6,6 +6,7 @@ import {
   Paper, 
   Toolbar,
   Stack,
+  Typography,
 } from "@mui/material";
 
 
@@ -42,9 +43,9 @@ function RegisterOfOptions() {
 
       <Stack direction="row" >
 
-        <Toolbar sx={{ textDecoration:'underline' }} >
-          <h3>ROO - Register Of Options</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>ROO - Register Of Options</b>
+        </Typography>
 
         {boox && (
           <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROO].toLowerCase() } />

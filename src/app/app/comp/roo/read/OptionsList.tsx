@@ -1,4 +1,4 @@
-import { Chip, Paper, Toolbar } from "@mui/material";
+import { Chip, Paper, Toolbar, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { baseToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
 import { Dispatch, SetStateAction } from "react";
@@ -124,9 +124,9 @@ export function OptionsList({list, setOpt, setOpen}:OptionsListProps) {
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
-      <Toolbar sx={{ textDecoration:'underline' }}>
-        <h3>Options List</h3>
-      </Toolbar>
+      <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <b>Options List</b>
+      </Typography>
       
       <SearchOption setOpt={setOpt} setOpen={setOpen} />
 

@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Paper, Toolbar, Box, TextField, Button } from '@mui/material';
+import { Paper, Toolbar, Box, TextField, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { History } from '@mui/icons-material';
 
@@ -135,10 +135,10 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
   return (
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
       <Box sx={{width: '100%', color: 'black' }} >
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>Members List</h3>
-        </Toolbar>
-
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>Members List</b>
+        </Typography>
+        
         {equityList && (
           <DataGrid
             initialState={{pagination:{paginationModel:{pageSize: 5}}}}

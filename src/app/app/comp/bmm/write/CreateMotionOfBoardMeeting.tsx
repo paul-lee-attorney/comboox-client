@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { Box, Collapse, FormControlLabel, 
-  Paper, Radio, RadioGroup, Stack, Toolbar, 
+  Paper, Radio, RadioGroup, Stack, Toolbar, Typography, 
 } from "@mui/material";
 
 import { CreateMotionForOfficer } from "./CreateMotions/CreateMotionForOfficer";
@@ -31,9 +31,9 @@ export function CreateMotionOfBoardMeeting({ refresh }: CreateMotionProps) {
       <Stack direction={'row'} sx={{ alignItems:'center', color:'black' }} >
 
         <Box sx={{ minWidth:200 }} >
-          <Toolbar sx={{ textDecoration:'underline' }} >
-            <h3>Create Motion - Type Of Motion: </h3>
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>Create Motion - Type Of Motion: </b>
+          </Typography>
         </Box>
 
         <RadioGroup

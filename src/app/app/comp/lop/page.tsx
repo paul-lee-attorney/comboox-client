@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import {Paper, Toolbar, TextField, Stack } from "@mui/material";
+import {Paper, Toolbar, TextField, Stack, Typography } from "@mui/material";
 
 import { Create } from "@mui/icons-material";
 
@@ -66,9 +66,9 @@ function ListOfProjects() {
       <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
         <Stack direction='row' sx={{ alignContent:'space-between' }}>
 
-          <Toolbar sx={{ textDecoration:'underline' }}>
-            <h3>LOP - List Of Projects</h3>
-          </Toolbar>
+          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+            <b>LOP - List Of Projects</b>
+          </Typography>
 
           {AddrOfRegCenter && (
             <CopyLongStrSpan title="Addr"  src={AddrOfRegCenter.toLowerCase()} />

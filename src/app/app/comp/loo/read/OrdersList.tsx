@@ -1,4 +1,4 @@
-import { IconButton, Paper, Stack, Toolbar, Tooltip } from "@mui/material";
+import { IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { baseToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
 import { OrderWrap } from "./loo";
@@ -77,9 +77,9 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
 
       <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
-        <Toolbar sx={{ textDecoration:'underline' }}>
-          <h3>Orders List</h3>
-        </Toolbar>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>Orders List</b>
+        </Typography>
         
         <Tooltip 
           title='Refresh List' 
