@@ -9,7 +9,7 @@ import { useGeneralKeeperSignSha } from "../../../../../../../generated";
 
 import { Bytes32Zero, HexType } from "../../../../../read";
 
-import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../../../read/sigPage";
+import { ParasOfSigPage, established, getParasOfPage, parseParasOfPage } from "../../read/sigPage";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../../read/toolsKit";
 
 import { FileHistoryProps } from "./CirculateSha";

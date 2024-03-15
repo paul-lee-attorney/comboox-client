@@ -13,7 +13,6 @@ import { AddrZero, HexType, booxMap } from "../../../../read";
 
 import { VoteCountingOfGm } from "../../../gmm/write/ActionsOnMotion/VoteCountingOfGm";
 
-import { voteEnded } from "../../../read/meetingMinutes";
 import { getHeadOfFile } from "../../read/filesFolder";
 import { CirculateSha } from "./actions/CirculateSha";
 import { SignSha } from "./actions/SignSha";
@@ -23,9 +22,10 @@ import { VoteForDocOfGm } from "../../../gmm/write/ActionsOnMotion/VoteForDocOfG
 
 import { ActivateSha } from "./actions/ActivateSha";
 import { FinalizeSha } from "./actions/FinalizeSha";
-import { established } from "../../../read/sigPage";
 import { getSHA } from "../../../read/gk";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { voteEnded } from "../../../gmm/read/meetingMinutes";
+import { established } from "../read/sigPage";
 
 interface ShaLifecycleProps {
   sha: HexType;

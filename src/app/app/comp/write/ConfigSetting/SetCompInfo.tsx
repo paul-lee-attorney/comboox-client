@@ -16,17 +16,19 @@ import { defaultInfo } from "../SetCompInfo";
 
 export interface ConfigSettingProps{
   setOpen: Dispatch<SetStateAction<boolean>>;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function SetCompInfo({setOpen}:ConfigSettingProps) {
+export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
   const { gk, setErrMsg } = useComBooxContext();
 
   const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
   const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
-    setOpen(false);
+    setTime(Date.now());
     setLoading(false);
+    setOpen(false);
   }
 
   const {

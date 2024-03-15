@@ -18,9 +18,10 @@ export interface ActionsOfSettingProps{
   setTitle: Dispatch<SetStateAction<number>>;
   setAddr: Dispatch<SetStateAction<HexType>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function ActionsOfSetting({ title, addr, setTitle, setAddr, setOpen }: ActionsOfSettingProps) {
+export function ActionsOfSetting({ title, addr, setTitle, setAddr, setOpen, setTime }: ActionsOfSettingProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
@@ -29,7 +30,7 @@ export function ActionsOfSetting({ title, addr, setTitle, setAddr, setOpen }: Ac
   ]
 
   const compsOfSetting = [
-    <SetCompInfo key={0} setOpen={setOpen} />,
+    <SetCompInfo key={0} setOpen={setOpen} setTime={setTime} />,
     <SetOwner key={1} docAddr={addr} setDocAddr={setAddr} setOpen={setOpen} />,
     <SetDK key={2} docAddr={addr} setDocAddr={setAddr} setOpen={setOpen} />,
     <TakeBackKeys key={3} docAddr={addr} setDocAddr={setAddr} setOpen={setOpen} />,

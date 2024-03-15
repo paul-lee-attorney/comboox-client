@@ -7,7 +7,7 @@ import { Close, DriveFileMove, Search } from '@mui/icons-material';
 
 import { AddrZero, MaxUserNo } from '../read';
 import { FormResults, defFormResults, hasError, onlyInt } from '../read/toolsKit';
-import Link from '../read/Link';
+import Link from 'next/link';
 import { Doc, getDocByUserNo } from '../center/read/rc';
 
 import { useComBooxContext } from '../_providers/ComBooxContextProvider';
@@ -80,22 +80,22 @@ export function GetComp() {
         <Link
           
           href={{
-            pathname: `/comp/HomePage`,
-            query: {
-              typeOfDoc: doc?.head.typeOfDoc.toString(),
-              version: doc?.head.version.toString(),
-              seqOfDoc: doc?.head.seqOfDoc.toString(16),
-              body: doc?.body.substring(2),
-              creator: doc?.head.creator.toString(16),
-              createDate: doc?.head.createDate.toString(),
-            }
+            pathname: `/app/comp`,
+            // query: {
+            //   typeOfDoc: doc?.head.typeOfDoc.toString(),
+            //   version: doc?.head.version.toString(),
+            //   seqOfDoc: doc?.head.seqOfDoc.toString(16),
+            //   body: doc?.body.substring(2),
+            //   creator: doc?.head.creator.toString(16),
+            //   createDate: doc?.head.createDate.toString(),
+            // }
           }}
           
-          as={`/comp/HomePage`}
+          // as={`/app/comp`}
 
-          variant='body1'
+          // variant='body1'
 
-          underline='hover'
+          // underline='hover'
         >
           <Button variant='outlined' sx={{m:1, width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +

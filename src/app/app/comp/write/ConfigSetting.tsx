@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, 
   DialogTitle, IconButton, TextField, Tooltip 
@@ -18,9 +18,11 @@ import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 interface ConfigSettingProps {
   companyName: string;
   symbol: string;
+  time: number;
+  setTime: Dispatch<SetStateAction<number>>;
 }
 
-export function ConfigSetting({companyName, symbol}:ConfigSettingProps) {
+export function ConfigSetting({companyName, symbol, time, setTime}:ConfigSettingProps) {
   const { gk } = useComBooxContext();
 
   const [ title, setTitle ] = useState<number>(0);
@@ -29,7 +31,9 @@ export function ConfigSetting({companyName, symbol}:ConfigSettingProps) {
   const [ keepers, setKeepers ] = useState<BookInfo[]>();
   const [ books, setBooks ] = useState<BookInfo[]>();
 
-  const refreshBooks = async () => {
+  // const [ time, setTime ] = useState<number>(0);
+
+  useEffect(() => {
     if (gk) {
       getKeepers(gk).then(
         res => setKeepers(res)
@@ -38,12 +42,12 @@ export function ConfigSetting({companyName, symbol}:ConfigSettingProps) {
         res => setBooks(res)
       );
     }
-  }
+  }, [gk, time]);
 
   const [ open, setOpen ] = useState(false);
 
   const handleClick = ()=> {
-    refreshBooks();
+    setTime(Date.now());
     setOpen(true);
   }
 
@@ -124,7 +128,7 @@ export function ConfigSetting({companyName, symbol}:ConfigSettingProps) {
 
               <tr>
                 <td colSpan={4}>
-                  <ActionsOfSetting title={title} addr={addr} setTitle={setTitle} setAddr={setAddr} setOpen={setOpen} />
+                  <ActionsOfSetting title={title} addr={addr} setTitle={setTitle} setAddr={setAddr} setOpen={setOpen} time={time} setTime={setTime} />
                 </td>
               </tr>
 

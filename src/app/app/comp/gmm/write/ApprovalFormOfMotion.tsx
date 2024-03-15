@@ -222,17 +222,17 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                 <Link
                   href={{
                     pathname: motion.head.seqOfVR == 8
-                            ? '/comp/roc/Sha'
-                            : '/comp/roa/Ia'
+                            ? '/app/comp/roc/sha'
+                            : '/app/comp/roa/ia'
                     ,
                     query: {
                       addr: addrOfDoc,
                       snOfDoc: snOfDoc.substring(6, 26),
                     }
                   }}
-                  as={motion.head.seqOfVR == 8
-                      ? '/comp/roc/Sha'
-                      : '/comp/roa/Ia'}
+                  // as={motion.head.seqOfVR == 8
+                  //     ? '/comp/roc/Sha'
+                  //     : '/comp/roa/Ia'}
                 >            
                   <Button
                     variant="outlined"

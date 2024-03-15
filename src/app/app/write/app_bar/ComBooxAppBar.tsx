@@ -48,7 +48,7 @@ import { GetTimestamp } from './components/GetTimestamp';
 import { CompSymbol } from './components/CompSymbol';
 import { LogIn } from './components/LogIn';
 import { ErrMsg } from './components/ErrMsg';
-import Link from '../../read/Link';
+import Link from 'next/link';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;

@@ -133,8 +133,8 @@ function RegisterOfAgreements() {
                   <GetFilesList 
                     list={ filesInfoList } 
                     title="Agreements List" 
-                    pathName="/comp/roa/Ia" 
-                    pathAs="/comp/roa/Ia" 
+                    pathName="/app/comp/roa/ia" 
+                    pathAs="/app/comp/roa/ia" 
                     setFile={setFile}
                     setOpen={setOpen}
                   />

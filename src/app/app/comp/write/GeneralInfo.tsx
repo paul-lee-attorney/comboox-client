@@ -47,7 +47,7 @@ export function GeneralInfo() {
       )
       
     }
-  }, [gk])
+  }, [gk, time])
 
   const [ controllor, setControllor ] = useState<string>();
   const [ votesOfController, setVotesOfController ] = useState<string>();
@@ -130,7 +130,7 @@ export function GeneralInfo() {
                     </Toolbar>
 
                     {compInfo && (
-                      <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol }  />
+                      <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol } time={ time } setTime={ setTime } />
                     )}
 
                   </Stack>

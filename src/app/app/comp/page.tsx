@@ -15,8 +15,10 @@ import { InitBos } from "./write/InitBos";
 import { TurnKey } from "./write/TurnKey";
 import { GeneralInfo } from "./write/GeneralInfo";
 import { SetCompInfo } from "./write/SetCompInfo";
+import { useSearchParams } from "next/navigation";
 
 function HomePage() {
+
   const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(4);
 

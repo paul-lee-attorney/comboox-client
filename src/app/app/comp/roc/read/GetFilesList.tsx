@@ -11,7 +11,7 @@ import {
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { BookOutlined, } from '@mui/icons-material';
 
-import Link from '../../../read/Link';
+import Link from 'next/link';
 
 import { dateParser, longSnParser } from '../../../read/toolsKit';
 import { InfoOfFile } from './filesFolder';
@@ -22,7 +22,6 @@ interface GetFilesListProps {
   list: InfoOfFile[],
   title: string,
   pathName: string,
-  pathAs: string,
   setFile: Dispatch<SetStateAction<InfoOfFile | undefined>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -30,7 +29,7 @@ interface GetFilesListProps {
 export const labState = ['Created', 'Circulated',  'Proposed', 'Approved', 
 'Rejected', 'Closed', 'Terminated'];
 
-export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }:GetFilesListProps ) {
+export function GetFilesList({ list, title, pathName, setFile, setOpen }:GetFilesListProps ) {
 
   
   const columns: GridColDef[] = [
@@ -44,12 +43,12 @@ export function GetFilesList({ list, title, pathName, pathAs, setFile, setOpen }
           href={{
             pathname: pathName,
             query: {
-              addr: p.row.addr,
+              addr: p.row.addr
               // fileInfo: p.row,
               // snOfDoc: p.row.sn.substring(10, 34),
-            }
+            },
           }}
-          as={ pathAs }
+          // as={ pathAs }
         >
           { parseInt(p.row.sn.substring(10, 18)).toString().padStart(2, '0')} - {longSnParser(parseInt(p.row.sn.substring(18, 34)).toString())}
         </Link>

@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
@@ -25,8 +25,18 @@ function Sha() {
 
   const [ index, setIndex ] = useState(0);
 
-  const query = useParams();
-  const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const searchParams = useSearchParams();
+
+  // console.log('query:', query);
+
+  const sha:HexType = `0x${searchParams.get("addr")?.substring(2) ?? ''}`;
+
+  // const sha:HexType = query.get('addr') ? `0x${query.get('addr')?.substring(2)}` : '0x';  
+
+  // console.log('sha: ', sha);
+
+  // const query = useParams();
+  // const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   const [ open, setOpen ] = useState(false);
 

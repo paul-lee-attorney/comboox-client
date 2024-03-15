@@ -1,7 +1,7 @@
 
 import { TableContainer, Paper, Toolbar, Chip } from '@mui/material';
 
-import Link from '../../../read/Link';
+import Link from 'next/link';
 
 import { dateParser, longSnParser } from '../../../read/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
@@ -23,7 +23,7 @@ export function GetDocsList({ list }:GetDocsListProps ) {
       renderCell: ( p ) => (
         <Link
           href={{
-            pathname: '/app/comp/lop/Payroll',
+            pathname: '/app/comp/lop/payroll',
             query: {
               body: p.row.body,
               seq: p.row.head.seqOfDoc,
@@ -31,7 +31,7 @@ export function GetDocsList({ list }:GetDocsListProps ) {
               createDate: p.row.head.createDate
             }
           }}
-          as={ '/comp/pop/Payroll' }
+          // as={ '/comp/pop/Payroll' }
         >
           { parseInt(p.row.head.seqOfDoc).toString().padStart(6, '0') }
         </Link>

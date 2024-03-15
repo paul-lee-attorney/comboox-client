@@ -130,8 +130,8 @@ function RegisterOfConstitution() {
                 <GetFilesList 
                   list={ filesInfoList } 
                   title="SHA List" 
-                  pathName="/comp/roc/Sha" 
-                  pathAs="/comp/roc/Sha" 
+                  pathName="/app/comp/roc/sha" 
+                  pathAs="/app/comp/roc/sha" 
                   setFile={setFile}
                   setOpen={setOpen}
                 />

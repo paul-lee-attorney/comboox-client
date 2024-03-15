@@ -52,7 +52,7 @@ export function CreateComp() {
           getDocAddr(hash).then(
             addrOfGK => {
               setGK(addrOfGK);
-              router.push('/comp/HomePage');
+              router.push('/app/comp');
             }
           );
           setLoading(false);

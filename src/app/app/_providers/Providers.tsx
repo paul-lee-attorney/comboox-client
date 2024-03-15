@@ -2,6 +2,8 @@
 import React from 'react';
 import WagmiProvider from './WagmiProvider';
 import { ComBooxContextProvider } from './ComBooxContextProvider';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 
 export type ProviderType = {
   children: React.ReactNode
@@ -11,7 +13,9 @@ const Providers = ({children}: ProviderType) => {
   return (
     <WagmiProvider>
       <ComBooxContextProvider>
-        {children}
+        <LocalizationProvider dateAdapter={AdapterDayjs} >
+          {children}
+        </LocalizationProvider>
       </ComBooxContextProvider>
     </WagmiProvider>
   )

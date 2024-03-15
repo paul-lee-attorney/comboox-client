@@ -1,29 +1,28 @@
 import * as React from 'react';
 import Typography from '@mui/material/Typography';
-import MuiLink from '@mui/material/Link';
 import { Stack } from '@mui/material';
-import Link from '../../../read/Link';
+import Link from 'next/link';
 
 export default function Copyright() {
   return (
     <Stack direction='row' sx={{ justifyContent:'center' }} >
 
       <Typography variant="body2" color="primary" align="center" sx={{mt:20, mr: 10}}>
-        <MuiLink color="inherit" href="https://comboox.gitbook.io/whitepaper-en">
+        <Link href={{pathname:'https://comboox.gitbook.io/whitepaper-en'}}>
           WhitePaper
-        </MuiLink>
+        </Link>
       </Typography>
 
       <Typography variant="body2" color="primary" align="center" sx={{mt:20, mr: 10}}>
-        <MuiLink color="inherit" href="https://comboox.gitbook.io/whitepaper">
+        <Link href={{pathname:'https://comboox.gitbook.io/whitepaper'}}>
           白皮书
-        </MuiLink>
+        </Link>
       </Typography>
 
       <Typography variant="body2" color="primary" align="center" sx={{mt:20}}>
-        <MuiLink color="inherit" href="https://jingtian.com/Content/2020/03-11/1525064223.html">
+        <Link href={{pathname:'https://jingtian.com/Content/2020/03-11/1525064223.html'}}>
           Copyright (c) 2021-2023 Li Li
-        </MuiLink>
+        </Link>
       </Typography>
 
       <Typography variant="body2" color="text.secondary" align="center" sx={{mt:20, ml:10}}>
@@ -36,13 +35,13 @@ export default function Copyright() {
         <Link href="https://github.com/paul-lee-attorney/comboox">
           GitHub (Smart Contracts)
         </Link>
-      </Typography>      
+      </Typography>
 
       <Typography variant="body2" color="text.secondary" align="center" sx={{mt:20, ml:10}}>
         <Link href="https://github.com/paul-lee-attorney/comboox-client">
           GitHub (Dapp UI)
         </Link>
-      </Typography>      
+      </Typography>
     </Stack>
   );
 }
