@@ -9,7 +9,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid';
 import { Deal, dealState } from '../../read/ia';
-import { centToDollar, longDataParser, longSnParser, } from '../../../../../read/toolsKit';
+import { baseToDollar, longDataParser, longSnParser, } from '../../../../../read/toolsKit';
 import { Dispatch, SetStateAction } from 'react';
 
 interface DealsListProps {
@@ -62,7 +62,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     {
       field: 'par',
       headerName: 'Par',
-      valueGetter: p => centToDollar(p.row.body.par.toString()),
+      valueGetter: p => baseToDollar(p.row.body.par.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
@@ -70,7 +70,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     {
       field: 'paid',
       headerName: 'Paid',
-      valueGetter: p => centToDollar(p.row.body.paid.toString()),
+      valueGetter: p => baseToDollar(p.row.body.paid.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',
@@ -78,7 +78,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     {
       field: 'priceOfPaid',
       headerName: 'PriceOfPaid',
-      valueGetter: p => centToDollar(p.row.head.priceOfPaid.toString()),
+      valueGetter: p => baseToDollar(p.row.head.priceOfPaid.toString()),
       width: 218,
       headerAlign:'right',
       align: 'right',

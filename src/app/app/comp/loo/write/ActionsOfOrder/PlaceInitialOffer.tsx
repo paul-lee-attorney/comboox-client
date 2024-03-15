@@ -43,8 +43,8 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
       args: [
         BigInt(classOfShare),
         BigInt(offer.execHours),
-        strNumToBigInt(offer.paid, 2),
-        strNumToBigInt(offer.price, 2), 
+        strNumToBigInt(offer.paid, 4),
+        strNumToBigInt(offer.price, 4), 
         BigInt(offer.seqOfLR), 
       ],
     });
@@ -115,7 +115,7 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Paid', input, MaxData, 2, setValid);
+            onlyNum('Paid', input, MaxData, 4, setValid);
             setOffer( v => ({
               ...v,
               paid: input,
@@ -136,7 +136,7 @@ export function PlaceInitialOffer({ classOfShare, refresh }: ActionsOfOrderProps
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Price', input, MaxPrice, 2, setValid);
+            onlyNum('Price', input, MaxPrice, 4, setValid);
             setOffer( v => ({
               ...v,
               price: input,

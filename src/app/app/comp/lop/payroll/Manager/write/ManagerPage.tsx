@@ -4,7 +4,7 @@ import { Card, CardContent, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Member, getCurrency, getProjectInfo, getTeamInfoList } from "../../../read/lop";
 import { ActionsOfManager } from "./ActionsOfManager";
-import { centToDollar, longDataParser, longSnParser, weiToEth } from "../../../../../read/toolsKit";
+import { baseToDollar, longDataParser, longSnParser, weiToEth } from "../../../../../read/toolsKit";
 import { PayrollProps } from "../../Owner/write/OwnerPage";
 import { GetTeamsList } from "../read/GetTeamsList";
 import { currencies } from "../../../../../read";
@@ -72,7 +72,7 @@ export function ManagerPage({ addr }:PayrollProps) {
             <hr />
 
             <Typography variant="body1" sx={{ m:1 }} >
-              Rate: { centToDollar(proInfo?.rate.toString() ?? '0') }
+              Rate: { baseToDollar(proInfo?.rate.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
               Estimated: { longDataParser(proInfo?.estimated.toString() ?? '0') }
@@ -84,16 +84,16 @@ export function ManagerPage({ addr }:PayrollProps) {
             <hr />
 
             <Typography variant="body1" sx={{ m:1 }} >
-              Budget: { centToDollar(proInfo?.budgetAmt.toString() ?? '0') }
+              Budget: { baseToDollar(proInfo?.budgetAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Verified: { centToDollar(proInfo?.receivableAmt.toString() ?? '0') }
+              Verified: { baseToDollar(proInfo?.receivableAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Paid: { centToDollar(proInfo?.paidAmt.toString() ?? '0') }
+              Paid: { baseToDollar(proInfo?.paidAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Payable: { centToDollar(proInfo?.pendingAmt.toString() ?? '0') }
+              Payable: { baseToDollar(proInfo?.pendingAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
               Payable in ETH: { weiToEth(proInfo?.pendingAmt.toString() ?? '0') }

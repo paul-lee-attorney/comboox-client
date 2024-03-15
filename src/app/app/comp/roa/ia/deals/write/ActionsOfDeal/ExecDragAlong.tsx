@@ -49,8 +49,8 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
           addr, 
           BigInt(deal.head.seqOfDeal), 
           BigInt(targetShare.seqOfShare),
-          strNumToBigInt(targetShare.paid, 2),
-          strNumToBigInt(targetShare.par, 2),
+          strNumToBigInt(targetShare.paid, 4),
+          strNumToBigInt(targetShare.par, 4),
           sigHash
       ],
     });
@@ -102,7 +102,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyNum('Paid', input, MaxData, 2, setValid);
+                  onlyNum('Paid', input, MaxData, 4, setValid);
                   setTargetShare(v => ({
                     ...v,
                     paid: input,
@@ -123,7 +123,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
                 }}
                 onChange={ e => {
                   let input = e.target.value;
-                  onlyNum('Par', input, MaxData, 2, setValid);
+                  onlyNum('Par', input, MaxData, 4, setValid);
                   setTargetShare(v => ({
                     ...v,
                     par: input,

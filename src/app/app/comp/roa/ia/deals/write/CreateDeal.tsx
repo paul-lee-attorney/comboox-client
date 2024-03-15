@@ -70,8 +70,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
           codifyHeadOfDeal(head),
           BigInt(body.buyer),
           BigInt(body.groupOfBuyer),
-          strNumToBigInt(body.paid, 2),
-          strNumToBigInt(body.par, 2),
+          strNumToBigInt(body.paid, 4),
+          strNumToBigInt(body.par, 4),
       ],
     });
   };
@@ -89,8 +89,8 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
           if (res)
             setHead(v => ({
               ...v,
-              priceOfPaid: bigIntToStrNum(BigInt(res.head.priceOfPaid), 2),
-              priceOfPar: bigIntToStrNum(BigInt(res.head.priceOfPar), 2),
+              priceOfPaid: bigIntToStrNum(BigInt(res.head.priceOfPaid), 4),
+              priceOfPar: bigIntToStrNum(BigInt(res.head.priceOfPar), 4),
               classOfShare: res.head.class.toString(),
               seqOfShare: seq,
               seller: res.head.shareholder.toString(),
@@ -214,7 +214,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PriceOfPar', input, MaxPrice, 2, setValid);
+                onlyNum('PriceOfPar', input, MaxPrice, 4, setValid);
                 setHead((v) => ({
                   ...v,
                   priceOfPar: input,
@@ -235,7 +235,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PriceOfPaid', input, MaxPrice, 2, setValid);
+                onlyNum('PriceOfPaid', input, MaxPrice, 4, setValid);
                 setHead((v) => ({
                   ...v,
                   priceOfPaid: input,
@@ -318,7 +318,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Par', input, MaxData, 2, setValid);
+                onlyNum('Par', input, MaxData, 4, setValid);
                 setBody((v) => ({
                   ...v,
                   par: input,
@@ -339,7 +339,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Paid', input, MaxData, 2, setValid);
+                onlyNum('Paid', input, MaxData, 4, setValid);
                 setBody((v) => ({
                   ...v,
                   paid: input,

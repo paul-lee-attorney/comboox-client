@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Button, Chip, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { HandshakeOutlined, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperAcceptAlongDeal, } from "../../../../../../../generated";
-import { HexParser, centToDollar, dateParser, longSnParser, refreshAfterTx } from "../../../../../read/toolsKit";
+import { HexParser, baseToDollar, dateParser, longSnParser, refreshAfterTx } from "../../../../../read/toolsKit";
 import { ActionsOfDealCenterProps } from "../write/ActionsOfDeal";
 import { DTClaim, getDTClaimsOfDeal, hasDTClaims } from "../../../read/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -47,7 +47,7 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     { 
       field: 'paid', 
       headerName: 'Paid',
-      valueGetter: p => centToDollar(p.row.paid.toString()) ,
+      valueGetter: p => baseToDollar(p.row.paid.toString()) ,
       headerAlign:'right',
       align: 'right',
       width: 218,
@@ -55,7 +55,7 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     { 
       field: 'par', 
       headerName: 'Par',
-      valueGetter: p => centToDollar(p.row.par.toString()) ,
+      valueGetter: p => baseToDollar(p.row.par.toString()) ,
       headerAlign:'right',
       align: 'right',
       width: 218,

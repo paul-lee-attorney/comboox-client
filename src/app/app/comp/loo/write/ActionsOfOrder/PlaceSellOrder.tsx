@@ -44,8 +44,8 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
       args: [ 
         BigInt(classOfShare),
         BigInt(order.execHours), 
-        strNumToBigInt(order.paid, 2),
-        strNumToBigInt(order.price, 2),
+        strNumToBigInt(order.paid, 4),
+        strNumToBigInt(order.price, 4),
         // BigInt(order.paid), 
         // BigInt(order.price), 
         BigInt(order.seqOfLR),
@@ -121,7 +121,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Paid', input, MaxData, 2, setValid);
+            onlyNum('Paid', input, MaxData, 4, setValid);
             setOrder( v => ({
               ...v,
               paid: input,
@@ -143,7 +143,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyNum('Price', input, MaxPrice, 2, setValid);
+            onlyNum('Price', input, MaxPrice, 4, setValid);
             setOrder( v => ({
               ...v,
               price: input,

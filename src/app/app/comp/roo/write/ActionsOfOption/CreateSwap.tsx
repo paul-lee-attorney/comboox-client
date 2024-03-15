@@ -85,7 +85,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('PaidOfTarget', input, MaxData, 2, setValid);
+            onlyNum('PaidOfTarget', input, MaxData, 4, setValid);
             setPaidOfTarget(input);
           }}
           value={ paidOfTarget }

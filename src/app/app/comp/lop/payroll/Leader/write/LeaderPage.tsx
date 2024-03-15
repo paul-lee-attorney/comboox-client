@@ -11,7 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import { Member, getMembersOfTeam, getTeamInfo, qtyOfTeams } from "../../../read/lop";
 import { ActionsOfLeader } from "./ActionsOfLeader";
-import { centToDollar, longDataParser, longSnParser } from "../../../../../read/toolsKit";
+import { baseToDollar, longDataParser, longSnParser } from "../../../../../read/toolsKit";
 import { PayrollProps } from "../../Owner/write/OwnerPage";
 import { GetMembersList } from "../read/GetMembersList";
 
@@ -101,7 +101,7 @@ export function LeaderPage({ addr }:PayrollProps) {
             <hr />
 
             <Typography variant="body1" sx={{ m:1 }} >
-              Rate: { centToDollar(teamInfo?.rate.toString() ?? '0') }
+              Rate: { baseToDollar(teamInfo?.rate.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
               Estimated: { longDataParser(teamInfo?.estimated.toString() ?? '0') }
@@ -113,16 +113,16 @@ export function LeaderPage({ addr }:PayrollProps) {
             <hr />
 
             <Typography variant="body1" sx={{ m:1 }} >
-              Budget: { centToDollar(teamInfo?.budgetAmt.toString() ?? '0') }
+              Budget: { baseToDollar(teamInfo?.budgetAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { centToDollar(teamInfo?.pendingAmt.toString() ?? '0') }
+              Applied: { baseToDollar(teamInfo?.pendingAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Verified: { centToDollar(teamInfo?.receivableAmt.toString() ?? '0') }
+              Verified: { baseToDollar(teamInfo?.receivableAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Paid: { centToDollar(teamInfo?.paidAmt.toString() ?? '0') }
+              Paid: { baseToDollar(teamInfo?.paidAmt.toString() ?? '0') }
             </Typography>
 
           </CardContent>

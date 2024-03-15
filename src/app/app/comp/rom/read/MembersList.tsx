@@ -4,7 +4,7 @@ import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { History } from '@mui/icons-material';
 
 import { booxMap } from '../../../read';
-import { centToDollar, dateParser, 
+import { baseToDollar, dateParser, 
   longDataParser, longSnParser, splitStrArr 
 } from '../../../read/toolsKit';
 
@@ -82,7 +82,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     {
       field: 'par',
       headerName: 'Par',
-      valueGetter: (p) => centToDollar(p.row.clip.par.toString()),
+      valueGetter: (p) => baseToDollar(p.row.clip.par.toString()),
       width: 218,
       headerAlign: 'center',
       align: 'right',
@@ -90,7 +90,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     {
       field: 'paid',
       headerName: 'Paid',
-      valueGetter: (p) => centToDollar(p.row.clip.paid.toString()),
+      valueGetter: (p) => baseToDollar(p.row.clip.paid.toString()),
       width: 218,
       headerAlign: 'center',
       align: 'right',
@@ -98,7 +98,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
     {
       field: 'clean',
       headerName: 'CleanPaid',
-      valueGetter: (p) => centToDollar(p.row.clip.cleanPaid.toString()),
+      valueGetter: (p) => baseToDollar(p.row.clip.cleanPaid.toString()),
       width: 218,
       headerAlign: 'center',
       align: 'right',

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Toolbar } from "@mui/material";
 import { Calculate, ListAltOutlined } from "@mui/icons-material";
 import { useGeneralKeeperComputeFirstRefusal } from "../../../../../../../generated";
-import { centToDollar, dateParser, longSnParser, refreshAfterTx, toPercent } from "../../../../../read/toolsKit";
+import { baseToDollar, dateParser, longSnParser, refreshAfterTx, toPercent } from "../../../../../read/toolsKit";
 import { ActionsOfDealCenterProps } from "../write/ActionsOfDeal";
 import { FRClaim, getFRClaimsOfDeal, hasFRClaims } from "../../../read/roa";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -40,7 +40,7 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
     { 
       field: 'weight', 
       headerName: 'Weight',
-      valueGetter: p => centToDollar(p.row.weight.toString()) ,
+      valueGetter: p => baseToDollar(p.row.weight.toString()) ,
       headerAlign:'right',
       align: 'right',
       width: 218,

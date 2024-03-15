@@ -9,7 +9,7 @@ import {
   Typography
 } from "@mui/material";
 
-import { centToDollar, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../read/toolsKit";
+import { baseToDollar, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../read/toolsKit";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { statesOfOpt } from "../../roc/terms/Options/read/ContentOfOpt";
@@ -97,7 +97,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfRateOfOpt" 
                   label="RateOfOpt" 
                   variant="outlined"
-                  value = { centToDollar(optWrap.opt.head.rate.toString()) }
+                  value = { baseToDollar(optWrap.opt.head.rate.toString()) }
                   size='small'
                 />
               </td>

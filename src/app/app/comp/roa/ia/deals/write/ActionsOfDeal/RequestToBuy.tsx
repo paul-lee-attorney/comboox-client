@@ -44,7 +44,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
       args: [ 
           addr,
           BigInt(deal.head.seqOfDeal), 
-          strNumToBigInt(paidOfTarget, 2), 
+          strNumToBigInt(paidOfTarget, 4), 
           BigInt(seqOfPledge)
       ],
     });
@@ -72,7 +72,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
             }}
             onChange={(e) => {
               let input = e.target.value;
-              onlyNum('PaidOfTarget', input, MaxData, 2, setValid);
+              onlyNum('PaidOfTarget', input, MaxData, 4, setValid);
               setPaidOfTarget(input);
             }}
             value={ paidOfTarget }

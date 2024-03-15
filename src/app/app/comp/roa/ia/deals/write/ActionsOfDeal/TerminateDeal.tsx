@@ -1,5 +1,5 @@
 import { Paper, Stack } from "@mui/material";
-import { defaultDeal } from "../../../../../../../../scripts/comp/ia";
+import { defaultDeal } from "../../../read/ia";
 import { useGeneralKeeperTerminateDeal } from "../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  DirectionsRun } from "@mui/icons-material";

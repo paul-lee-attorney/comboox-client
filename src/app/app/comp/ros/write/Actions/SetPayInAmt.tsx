@@ -54,7 +54,7 @@ export function SetPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCapProps
     setPayInAmt({
       args: [ 
         BigInt(share.head.seqOfShare), 
-        strNumToBigInt(locker.head.value, 2), 
+        strNumToBigInt(locker.head.value, 4), 
         BigInt(locker.head.expireDate),
         locker.hashLock
       ],
@@ -103,7 +103,7 @@ export function SetPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCapProps
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Amount', input, MaxData, 2, setValid);
+            onlyNum('Amount', input, MaxData, 4, setValid);
             setLocker(v => {
               let lk = v;
               lk.head.value = input;

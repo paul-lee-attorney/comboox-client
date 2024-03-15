@@ -1,6 +1,6 @@
 import { IconButton, Paper, Stack, Toolbar, Tooltip } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { centToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
+import { baseToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
 import { OrderWrap } from "./loo";
 import { Dispatch, SetStateAction } from "react";
 import { Refresh } from "@mui/icons-material";
@@ -35,7 +35,7 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
     { 
       field: 'paid', 
       headerName: 'Paid',
-      valueGetter: p => centToDollar(p.row.node.paid.toString()),
+      valueGetter: p => baseToDollar(p.row.node.paid.toString()),
       headerAlign: 'right',
       align:'right',
       width: 330,
@@ -43,7 +43,7 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
     { 
       field: 'price', 
       headerName: 'Price',
-      valueGetter: p => centToDollar(p.row.node.price.toString()),
+      valueGetter: p => baseToDollar(p.row.node.price.toString()),
       headerAlign: 'right',
       align:'right',
       width: 330,

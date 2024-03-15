@@ -1,7 +1,7 @@
 import { Chip, Paper, Toolbar } from "@mui/material";
 import { Pledge } from "./rop";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { centToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
+import { baseToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
 import { SearchPledge } from "./SearchPledge";
 
 export const statesOfPld = [
@@ -68,7 +68,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
     { 
       field: 'pledgedPaid', 
       headerName: 'PledgedPaid',
-      valueGetter: p => centToDollar(p.row.body.paid.toString()),
+      valueGetter: p => baseToDollar(p.row.body.paid.toString()),
       headerAlign: 'right',
       align:'right',
       width: 330,

@@ -10,7 +10,7 @@ import {
 
 import { useEffect, useState } from "react";
 import { BalanceOf, Member, balanceOfWei, getBalanceOf, getMemberInfo, qtyOfTeams } from "../../../read/lop";
-import { bigIntToStrNum, centToDollar, longDataParser, longSnParser } from "../../../../../read/toolsKit";
+import { bigIntToStrNum, baseToDollar, longDataParser, longSnParser } from "../../../../../read/toolsKit";
 import { PayrollProps } from "../../Owner/write/OwnerPage";
 import { ActionsOfMember } from "./ActionsOfMember";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
@@ -138,7 +138,7 @@ export function MemberPage({ addr }:PayrollProps) {
             <hr />
 
             <Typography variant="body1" sx={{ m:1 }} >
-              Rate: { centToDollar(member?.rate.toString() ?? '0') }
+              Rate: { baseToDollar(member?.rate.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
               Estimated: { longDataParser(member?.estimated.toString() ?? '0') }
@@ -150,16 +150,16 @@ export function MemberPage({ addr }:PayrollProps) {
             <hr />
 
             <Typography variant="body1" sx={{ m:1 }} >
-              Budget: { centToDollar(member?.budgetAmt.toString() ?? '0') }
+              Budget: { baseToDollar(member?.budgetAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { centToDollar(member?.pendingAmt.toString() ?? '0') }
+              Applied: { baseToDollar(member?.pendingAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Verified: { centToDollar(member?.receivableAmt.toString() ?? '0') }
+              Verified: { baseToDollar(member?.receivableAmt.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              Paid: { centToDollar(member?.paidAmt.toString() ?? '0') }
+              Paid: { baseToDollar(member?.paidAmt.toString() ?? '0') }
             </Typography>
 
             <hr />
@@ -168,10 +168,10 @@ export function MemberPage({ addr }:PayrollProps) {
               BalanceOfProject: { bigIntToStrNum((balanceOf?.project ?? BigInt(0)), 18) }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              CashInBox: { centToDollar(balanceOf?.cash.toString() ?? '0') }
+              CashInBox: { baseToDollar(balanceOf?.cash.toString() ?? '0') }
             </Typography>
             <Typography variant="body1" sx={{ m:1 }} >
-              BalanceOf: { centToDollar(balanceOf?.me.toString() ?? '0') }
+              BalanceOf: { baseToDollar(balanceOf?.me.toString() ?? '0') }
             </Typography>
           
 

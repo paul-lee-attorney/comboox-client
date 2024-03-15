@@ -8,7 +8,7 @@ import {
 
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { Member } from '../../../read/lop';
-import { centToDollar, longDataParser, longSnParser } from '../../../../../read/toolsKit';
+import { baseToDollar, longDataParser, longSnParser } from '../../../../../read/toolsKit';
 import { GetTeamsListProps } from '../../Manager/read/GetTeamsList';
 
 export function GetMembersList({setSeq, list }:GetTeamsListProps ) {
@@ -39,7 +39,7 @@ export function GetMembersList({setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'rate', 
       headerName: 'Rate',
-      valueGetter: p => centToDollar(p.row.rate.toString()),
+      valueGetter: p => baseToDollar(p.row.rate.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -63,7 +63,7 @@ export function GetMembersList({setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'budgetAmt', 
       headerName: 'BudgetAmt',
-      valueGetter: p => centToDollar(p.row.budgetAmt.toString()),
+      valueGetter: p => baseToDollar(p.row.budgetAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -71,7 +71,7 @@ export function GetMembersList({setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'pendingAmt', 
       headerName: 'PendingAmt',
-      valueGetter: p => centToDollar(p.row.pendingAmt.toString()),
+      valueGetter: p => baseToDollar(p.row.pendingAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -79,7 +79,7 @@ export function GetMembersList({setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'receivableAmt', 
       headerName: 'ReceivableAmt',
-      valueGetter: p => centToDollar(p.row.receivableAmt.toString()),
+      valueGetter: p => baseToDollar(p.row.receivableAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -87,7 +87,7 @@ export function GetMembersList({setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'paidAmt', 
       headerName: 'PaidAmt',
-      valueGetter: p => centToDollar(p.row.paidAmt.toString()),
+      valueGetter: p => baseToDollar(p.row.paidAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,

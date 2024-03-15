@@ -10,8 +10,8 @@ import { useFuleTankOwner, useFuleTankRate, useFuleTankRegCenter,
 import { useWalletClient } from "wagmi";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../../read/CopyLongStr";
-import { ActionsOfUser } from "../users/write/ActionsOfUser";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
+import { ActionsOfFule } from "./write/ActionsOfFule";
 
 function FuleTank() {
 
@@ -320,7 +320,7 @@ function FuleTank() {
 
             <tr>
               <td colSpan={ 3 }>
-                <ActionsOfUser user={signer.account.address} isOwner={isOwner} getFinInfo={getFinInfo} getSetting={getSetting} />
+                <ActionsOfFule user={signer.account.address} isOwner={isOwner} getFinInfo={getFinInfo} getSetting={getSetting} />
               </td>
             </tr>
 

@@ -285,7 +285,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Paid', input, MaxData, 2, setValid);
+                          onlyNum('Paid', input, MaxData, 4, setValid);
                           setBody((v) => ({
                             ...v,
                             paid: e.target.value,
@@ -306,7 +306,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Par', input, MaxData, 2, setValid);
+                          onlyNum('Par', input, MaxData, 4, setValid);
                           setBody((v) => ({
                             ...v,
                             par: input,
@@ -352,7 +352,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('RateOfOption', input, MaxPrice, 2, setValid);
+                          onlyNum('RateOfOption', input, MaxPrice, 4, setValid);
                           setHead((v) => ({
                             ...v,
                             rate: input,

@@ -332,7 +332,7 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                         }}
                         onChange={(e) => {
                           let input = e.target.value;
-                          onlyNum('Rate', input, MaxPrice, 2, setValid);
+                          onlyNum('Rate', input, MaxPrice, 4, setValid);
                           setRule((v) => ({
                             ...v,
                             rate: input,

@@ -42,7 +42,7 @@ export function CreateTeam({ addr, refresh }: ActionsOfOwnerProps ) {
   const handleClick = () => {
     createTeam({
       args: [ 
-        strNumToBigInt(rate, 2),
+        strNumToBigInt(rate, 4),
         BigInt(estimated)
       ],
     });
@@ -64,7 +64,7 @@ export function CreateTeam({ addr, refresh }: ActionsOfOwnerProps ) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Rate', input, MaxPrice, 2, setValid);
+            onlyNum('Rate', input, MaxPrice, 4, setValid);
             setRate(input);
           }}
           value={ rate }

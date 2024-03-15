@@ -59,13 +59,13 @@ export function lrParser(hexLr: HexType):ListingRule {
     seqOfRule: parseInt(hexLr.substring(2, 6), 16), 
     titleOfIssuer: parseInt(hexLr.substring(6, 10), 16).toString(),
     classOfShare: parseInt(hexLr.substring(10, 14), 16).toString(),
-    maxTotalPar: bigIntToStrNum(BigInt('0x' + hexLr.substring(14, 30)), 2),
+    maxTotalPar: bigIntToStrNum(BigInt('0x' + hexLr.substring(14, 30)), 4),
     titleOfVerifier: parseInt(hexLr.substring(30, 34), 16).toString(),
     maxQtyOfInvestors: parseInt(hexLr.substring(34, 38), 16).toString(),
-    ceilingPrice: (Number(parseInt(hexLr.substring(38, 46), 16)) / 100).toFixed(2).toString(),
-    floorPrice: (Number(parseInt(hexLr.substring(46, 54), 16)) / 100).toFixed(2).toString(),
+    ceilingPrice: bigIntToStrNum(BigInt('0x' + hexLr.substring(38, 46)), 4),
+    floorPrice: bigIntToStrNum(BigInt('0x' + hexLr.substring(46, 54)), 4),
     lockupDays: parseInt(hexLr.substring(54, 58), 16).toString(),
-    offPrice: (Number(parseInt(hexLr.substring(58, 62), 16)) / 100).toFixed(2).toString(),
+    offPrice: bigIntToStrNum(BigInt('0x' + hexLr.substring(58, 62)), 4),
     votingWeight: parseInt(hexLr.substring(62, 66), 16).toString(),  
   }
   return rule;
@@ -76,13 +76,13 @@ export function lrCodifier(objLr: ListingRule, seq: number ): HexType {
     (seq.toString(16).padStart(4, '0')) +
     (Number(objLr.titleOfIssuer).toString(16).padStart(4, '0')) +
     (Number(objLr.classOfShare).toString(16).padStart(4, '0')) +
-    (strNumToBigInt(objLr.maxTotalPar, 2).toString(16).padStart(16, '0')) +
+    (strNumToBigInt(objLr.maxTotalPar, 4).toString(16).padStart(16, '0')) +
     (Number(objLr.titleOfVerifier).toString(16).padStart(4, '0')) +
     (Number(objLr.maxQtyOfInvestors).toString(16).padStart(4, '0')) +
-    (Number(objLr.ceilingPrice) * 100).toString(16).padStart(8, '0') +
-    (Number(objLr.floorPrice) * 100).toString(16).padStart(8, '0') +
+    (strNumToBigInt(objLr.ceilingPrice, 4).toString(16).padStart(8, '0')) +
+    (strNumToBigInt(objLr.floorPrice, 4).toString(16).padStart(8, '0')) +
     (Number(objLr.lockupDays).toString(16).padStart(4, '0')) +
-    (Number(objLr.offPrice) * 100).toString(16).padStart(4, '0') +
+    (strNumToBigInt(objLr.offPrice, 4).toString(16).padStart(4, '0')) +
     Number(objLr.votingWeight).toString(16).padStart(4, '0')
   }`;
   return hexLr;
@@ -216,7 +216,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('MaxTotalPar', input, MaxData, 2, setValid);
+                    onlyNum('MaxTotalPar', input, MaxData, 4, setValid);
                     setObjLR((v) => ({
                       ...v,
                       maxTotalPar: input,
@@ -286,7 +286,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('CeilingPrice', input, MaxPrice, 2, setValid);
+                    onlyNum('CeilingPrice', input, MaxPrice, 4, setValid);
                     setObjLR((v) => ({
                       ...v,
                       ceilingPrice: input,
@@ -308,7 +308,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('FloorPrice', input, MaxPrice, 2, setValid);
+                    onlyNum('FloorPrice', input, MaxPrice, 4, setValid);
                     setObjLR((v) => ({
                       ...v,
                       floorPrice: input,
@@ -330,7 +330,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('OffPrice', input, MaxSeqNo, 2, setValid);
+                    onlyNum('OffPrice', input, MaxSeqNo, 4, setValid);
                     setObjLR((v) => ({
                       ...v,
                       offPrice: input,

@@ -1,7 +1,7 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Chip } from "@mui/material";
 import { LinearProgress, Typography } from "@mui/joy";
 
-import { centToDollar, dateParser, longDataParser, longSnParser } from "../../../read/toolsKit";
+import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../read/toolsKit";
 import { Bytes32Zero, HexType } from "../../../read";
 import { useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -26,7 +26,7 @@ const columns: GridColDef[] = [
   { 
     field: 'weight', 
     headerName: 'Weight',
-    valueGetter: p =>  centToDollar(p.row.weight.toString()),
+    valueGetter: p =>  baseToDollar(p.row.weight.toString()),
     headerAlign: 'right',
     align:'right',
     width: 180,

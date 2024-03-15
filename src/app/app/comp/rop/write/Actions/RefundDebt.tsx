@@ -43,7 +43,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
       args: [ 
         BigInt(pld.head.seqOfShare), 
         BigInt(pld.head.seqOfPld), 
-        strNumToBigInt(amt, 2),
+        strNumToBigInt(amt, 4),
       ],
     });
   };
@@ -66,7 +66,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Amount', input, MaxData, 2, setValid);
+            onlyNum('Amount', input, MaxData, 4, setValid);
             setAmt(input);
           }}
           value={ amt?.toString() }

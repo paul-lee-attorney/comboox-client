@@ -56,7 +56,7 @@ export function PayInCap({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
     payInCap({
       args: [ 
         BigInt(share.head.seqOfShare), 
-        strNumToBigInt(amt, 2) 
+        strNumToBigInt(amt, 4) 
       ],
       value: strNumToBigInt(value, 9) * (10n ** 9n),
     });
@@ -83,7 +83,7 @@ export function PayInCap({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Amt', input, MaxData, 2, setValid);
+            onlyNum('Amt', input, MaxData, 4, setValid);
             setAmt(input);
           }}
           value={ amt }

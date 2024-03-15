@@ -52,9 +52,9 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
     createPledge({
       args: [ 
         codifyHeadOfPledge(head), 
-        strNumToBigInt(body.paid, 2),
-        strNumToBigInt(body.par, 2),
-        strNumToBigInt(body.guaranteedAmt, 2),
+        strNumToBigInt(body.paid, 4),
+        strNumToBigInt(body.par, 4),
+        strNumToBigInt(body.guaranteedAmt, 4),
         BigInt(body.execDays)
       ],
     });
@@ -225,7 +225,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PledgedPaid', input, MaxData, 2, setValid);
+                onlyNum('PledgedPaid', input, MaxData, 4, setValid);
                 setBody((v) => ({
                   ...v,
                   paid: input,
@@ -247,7 +247,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('PledgedPar', input, MaxData, 2, setValid);
+                onlyNum('PledgedPar', input, MaxData, 4, setValid);
                 setBody((v) => ({
                   ...v,
                   par: input,
@@ -269,7 +269,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('GuaranteedAmount', input, MaxData, 2, setValid);
+                onlyNum('GuaranteedAmount', input, MaxData, 4, setValid);
                 setBody((v) => ({
                   ...v,
                   guaranteedAmt: input,

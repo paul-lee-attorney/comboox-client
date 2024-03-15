@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import { booxMap } from '../../../read';
-import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../read/toolsKit';
+import { baseToDollar, dateParser, longDataParser, longSnParser } from '../../../read/toolsKit';
 
 import { ShareClip, votesHistory } from '../read/rom';
 
@@ -28,7 +28,7 @@ const columns: GridColDef[] = [
   {
     field: 'par',
     headerName: 'Par',
-    valueGetter: (p) => centToDollar(p.row.par.toString()),
+    valueGetter: (p) => baseToDollar(p.row.par.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',
@@ -36,7 +36,7 @@ const columns: GridColDef[] = [
   {
     field: 'paid',
     headerName: 'Paid',
-    valueGetter: (p) => centToDollar(p.row.paid.toString()),
+    valueGetter: (p) => baseToDollar(p.row.paid.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',
@@ -44,7 +44,7 @@ const columns: GridColDef[] = [
   {
     field: 'clean',
     headerName: 'CleanPaid',
-    valueGetter: (p) => centToDollar(p.row.cleanPaid.toString()),
+    valueGetter: (p) => baseToDollar(p.row.cleanPaid.toString()),
     width: 330,
     headerAlign: 'right',
     align: 'right',

@@ -9,7 +9,7 @@ import {
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { Member } from '../../../read/lop';
 import { Dispatch, SetStateAction } from 'react';
-import { centToDollar, longDataParser, longSnParser } from '../../../../../read/toolsKit';
+import { baseToDollar, longDataParser, longSnParser } from '../../../../../read/toolsKit';
 
 export interface GetTeamsListProps {
   setSeq: Dispatch<SetStateAction<number>>;
@@ -44,7 +44,7 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'rate', 
       headerName: 'Rate',
-      valueGetter: p => centToDollar(p.row.rate.toString()),
+      valueGetter: p => baseToDollar(p.row.rate.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -76,7 +76,7 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'receivableAmt', 
       headerName: 'ReceivableAmt',
-      valueGetter: p => centToDollar(p.row.receivableAmt.toString()),
+      valueGetter: p => baseToDollar(p.row.receivableAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,

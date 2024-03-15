@@ -15,7 +15,7 @@ import { StrLocker, defaultStrLocker, parseOrgLocker } from "../../../../center/
 import { 
   FormResults, 
   HexParser, 
-  centToDollar, 
+  baseToDollar, 
   defFormResults, 
   hasError, onlyHex, 
   refreshAfterTx,
@@ -116,7 +116,7 @@ export function RequestPaidInCap({ share, setDialogOpen, refresh }: ActionsOfCap
               minWidth: 218,
             }}
 
-            value={ centToDollar(locker.head.value) }
+            value={ baseToDollar(locker.head.value) }
             size="small"
           />
 

@@ -1,6 +1,6 @@
 import { Chip } from "@mui/material";
 
-import { centToDollar, longDataParser, longSnParser } from "../../../read/toolsKit";
+import { baseToDollar, longDataParser, longSnParser } from "../../../read/toolsKit";
 import { Dispatch, SetStateAction } from "react";
 import { DataGrid, GridColDef, GridRowSelectionModel } from "@mui/x-data-grid";
 import { Swap } from "./roo";
@@ -34,7 +34,7 @@ export function ShowSwapsList({ list, setSeqOfSwap}: ShowSwapsListProps) {
     { 
       field: 'paidOfPledge', 
       headerName: 'PaidOfPledge',
-      valueGetter: p =>  centToDollar(p.row.paidOfPledge.toString()),
+      valueGetter: p =>  baseToDollar(p.row.paidOfPledge.toString()),
       headerAlign: 'right',
       align:'right',
       width: 168,
@@ -51,7 +51,7 @@ export function ShowSwapsList({ list, setSeqOfSwap}: ShowSwapsListProps) {
     { 
       field: 'paidOfTarget', 
       headerName: 'PaidOfTarget',
-      valueGetter: p =>  centToDollar(p.row.paidOfTarget.toString()),
+      valueGetter: p =>  baseToDollar(p.row.paidOfTarget.toString()),
       headerAlign: 'right',
       align:'right',
       width: 168,
@@ -59,7 +59,7 @@ export function ShowSwapsList({ list, setSeqOfSwap}: ShowSwapsListProps) {
     { 
       field: 'priceOfDeal', 
       headerName: 'PriceOfDeal',
-      valueGetter: p => centToDollar(p.row.priceOfDeal.toString()),
+      valueGetter: p => baseToDollar(p.row.priceOfDeal.toString()),
       headerAlign: 'right',
       align:'right',
       width: 168,

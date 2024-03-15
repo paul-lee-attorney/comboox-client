@@ -42,7 +42,7 @@ export function UpdateTeam({ addr, seqOfTeam, refresh }: ActionsOfManagerProps )
     updateTeam({
       args: seqOfTeam
       ? [ BigInt(seqOfTeam),
-          strNumToBigInt(rate, 2),
+          strNumToBigInt(rate, 4),
           BigInt(estimated)
         ]
       : undefined,
@@ -65,7 +65,7 @@ export function UpdateTeam({ addr, seqOfTeam, refresh }: ActionsOfManagerProps )
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Rate', input, MaxPrice, 2, setValid);
+            onlyNum('Rate', input, MaxPrice, 4, setValid);
             setRate(input);
           }}
           value={ rate }

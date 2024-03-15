@@ -57,8 +57,8 @@ export function InitBos({nextStep}: InitCompProps) {
       args: [ 
         codifyHeadOfStrShare(share.head),
         BigInt((share.body.payInDeadline ?? 0)),
-        strNumToBigInt(share.body.paid, 2),
-        strNumToBigInt(share.body.par, 2),
+        strNumToBigInt(share.body.paid, 4),
+        strNumToBigInt(share.body.par, 4),
       ],
     });
   };
@@ -218,7 +218,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['PriceOfPaid']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('PriceOfPaid', input, MaxPrice, 2, setValid);
+                    onlyNum('PriceOfPaid', input, MaxPrice, 4, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
@@ -240,7 +240,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('PriceOfPar', input, MaxPrice, 2, setValid);
+                    onlyNum('PriceOfPar', input, MaxPrice, 4, setValid);
                     setShare(v => ({
                       head: {
                         ...v.head,
@@ -324,7 +324,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['Paid']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Paid', input, MaxData, 2, setValid);
+                    onlyNum('Paid', input, MaxData, 4, setValid);
                     setShare(v => ({
                       head: v.head,
                       body: {
@@ -347,7 +347,7 @@ export function InitBos({nextStep}: InitCompProps) {
                   helperText={ valid['Par']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('Par', input, MaxData, 2, setValid);
+                    onlyNum('Par', input, MaxData, 4, setValid);
                     setShare(v => ({
                       head: v.head,
                       body: {

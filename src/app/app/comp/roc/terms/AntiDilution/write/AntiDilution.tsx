@@ -68,7 +68,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
     addMark({
       args: [
         BigInt(classOfShare), 
-        strNumToBigInt(price, 2),
+        strNumToBigInt(price, 4),
       ],      
     });
   };
@@ -265,7 +265,7 @@ export function AntiDilution({ sha, term, setTerms, isFinalized }: SetShaTermPro
                       }}
                       onChange={(e) => {
                         let input = e.target.value;
-                        onlyNum('Price', input, MaxPrice, 2, setValid);
+                        onlyNum('Price', input, MaxPrice, 4, setValid);
                         setPrice(input);
                       }}
                       value={ price }

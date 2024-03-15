@@ -9,7 +9,7 @@ import {
   TextField 
 } from "@mui/material";
 
-import { centToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
+import { baseToDollar, dateParser, longSnParser } from "../../../read/toolsKit";
 import { Pledge } from "../read/rop";
 import { statesOfPld } from "../read/PledgesList";
 import { ActionsOfPledge } from "./ActionsOfPledge";
@@ -186,7 +186,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     id="tfPledgedPaid" 
                     label="PledgedPaid" 
                     variant="outlined"
-                    value = { centToDollar(pld.body.paid.toString()) }
+                    value = { baseToDollar(pld.body.paid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -198,7 +198,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     id="tfPledgedPar" 
                     label="PledgedPar" 
                     variant="outlined"
-                    value = { centToDollar(pld.body.par.toString()) }
+                    value = { baseToDollar(pld.body.par.toString()) }
                     size='small'
                   />                
                 </td>
@@ -210,7 +210,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     id="tfGuaranteedAmount" 
                     label="GuaranteedAmount" 
                     variant="outlined"
-                    value = { centToDollar(pld.body.guaranteedAmt.toString()) }
+                    value = { baseToDollar(pld.body.guaranteedAmt.toString()) }
                     size='small'
                   />                
                 </td>

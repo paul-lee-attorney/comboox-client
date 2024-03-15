@@ -5,7 +5,7 @@ import { Paper, Toolbar, TextField, Stack } from "@mui/material";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
 import { booxMap, currencies } from "../../read";
-import { centToDollar, dateParser, getEthPart, getGEthPart, 
+import { baseToDollar, dateParser, getEthPart, getGEthPart, 
   getGWeiPart, getWeiPart, longSnParser 
 } from "../../read/toolsKit";
 import { CopyLongStrTF } from "../../read/CopyLongStr";
@@ -247,7 +247,7 @@ export function GeneralInfo() {
                     <td>
                       {votesOfController && (
                         <TextField 
-                          value={ centToDollar(votesOfController) } 
+                          value={ baseToDollar(votesOfController) } 
                           variant='outlined'
                           size='small' 
                           label="VotesOfController" 
@@ -262,7 +262,7 @@ export function GeneralInfo() {
                     <td>
                       {par && (
                         <TextField 
-                          value={ centToDollar(par)} 
+                          value={ baseToDollar(par)} 
                           variant='outlined'
                           size='small' 
                           label="RegisteredCapital" 
@@ -277,7 +277,7 @@ export function GeneralInfo() {
                     <td>
                       {paid && (
                         <TextField 
-                          value={ centToDollar(paid) } 
+                          value={ baseToDollar(paid) } 
                           variant='outlined'
                           size='small' 
                           label="PaidInCapital" 

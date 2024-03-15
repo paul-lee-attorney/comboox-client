@@ -170,17 +170,17 @@ export function getWeiPart(input: string): string {
   return res;
 }
 
-export function centToDollar(input: string): string {
+export function baseToDollar(input: string): string {
   let len = input.length;
 
-  let dec = len > 2
-          ? input.substring(len - 2)
-          : input.padStart(2, '0');
+  let dec = len > 4
+          ? input.substring(len - 4)
+          : input.padStart(4, '0');
 
   // if (dec == '00') dec = '-';
 
-  let int = len > 2
-          ? longDataParser(input.substring(0, len-2))
+  let int = len > 4
+          ? longDataParser(input.substring(0, len-4))
           : '0'
 
   return int + '.' + dec;

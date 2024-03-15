@@ -3,7 +3,7 @@ import { Dispatch, SetStateAction } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 
-import { centToDollar, dateParser, longDataParser, longSnParser, } from "../../../read/toolsKit";
+import { baseToDollar, dateParser, longDataParser, longSnParser, } from "../../../read/toolsKit";
 import { Share, codifyHeadOfShare } from "../read/ros";
 
 import { ActionsOfCap } from "./ActionsOfCap";
@@ -152,7 +152,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfPar" 
                     label="Par" 
                     variant="outlined"
-                    value = { centToDollar(share.body.par.toString()) }
+                    value = { baseToDollar(share.body.par.toString()) }
                     size='small'
                   />                
                 </td>
@@ -165,7 +165,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfPriceOfPar" 
                     label="PriceOfPar" 
                     variant="outlined"
-                    value = { centToDollar(share.head.priceOfPar.toString()) }
+                    value = { baseToDollar(share.head.priceOfPar.toString()) }
                     size='small'
                   />                
                 </td>
@@ -178,7 +178,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValueOfParBalance" 
                     label="ValueOfParBalance" 
                     variant="outlined"
-                    value = { centToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar) / 100n).toString()) }
+                    value = { baseToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar) / 100n).toString()) }
                     size='small'
                   />                
                 </td>
@@ -194,7 +194,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfPaid" 
                     label="Paid" 
                     variant="outlined"
-                    value = { centToDollar(share.body.paid.toString()) }
+                    value = { baseToDollar(share.body.paid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -207,7 +207,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfPriceOfPaid" 
                     label="PriceOfPaid" 
                     variant="outlined"
-                    value = { centToDollar(share.head.priceOfPaid.toString()) }
+                    value = { baseToDollar(share.head.priceOfPaid.toString()) }
                     size='small'
                   />                
                 </td>
@@ -220,7 +220,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValueOfPaid" 
                     label="ValueOfPaid" 
                     variant="outlined"
-                    value = { centToDollar((share.body.paid * BigInt(share.head.priceOfPaid) / 100n).toString()) }
+                    value = { baseToDollar((share.body.paid * BigInt(share.head.priceOfPaid) / 100n).toString()) }
                     size='small'
                   />                
                 </td>
@@ -249,7 +249,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfCleanPaid" 
                     label="CleanPaid" 
                     variant="outlined"
-                    value = { centToDollar(share.body.cleanPaid.toString()) }
+                    value = { baseToDollar(share.body.cleanPaid.toString()) }
                     size='small'
                   />                                
                 </td>
@@ -262,7 +262,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValue" 
                     label="Value" 
                     variant="outlined"
-                    value = { centToDollar(((share.body.paid * BigInt(share.head.priceOfPaid) / 100n) 
+                    value = { baseToDollar(((share.body.paid * BigInt(share.head.priceOfPaid) / 100n) 
                       + ((share.body.par - share.body.paid) * BigInt(share.head.priceOfPar) / 100n)).toString())
                     }
                     size='small'

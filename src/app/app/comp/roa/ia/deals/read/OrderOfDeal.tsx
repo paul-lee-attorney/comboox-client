@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Deal, StateOfDeal, Timeline, TypeOfDeal, defaultTimeline, getAllSwaps } from "../../read/ia";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
-import { centToDollar, dateParser, longDataParser, longSnParser, } from "../../../../../read/toolsKit";
+import { baseToDollar, dateParser, longDataParser, longSnParser, } from "../../../../../read/toolsKit";
 import { DeleteDeal } from "../write/DeleteDeal";
 import { Bytes32Zero, HexType, booxMap } from "../../../../../read";
 import { ActionsOfDeal } from "../write/ActionsOfDeal";
@@ -247,7 +247,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ centToDollar(deal.head.priceOfPar.toString()) }
+                  value={ baseToDollar(deal.head.priceOfPar.toString()) }
                 />
               </td>
               <td>
@@ -260,7 +260,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ centToDollar(deal.head.priceOfPaid.toString()) }
+                  value={ baseToDollar(deal.head.priceOfPaid.toString()) }
                 />
               </td>
               <td>
@@ -302,7 +302,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ centToDollar(deal.body.par.toString()) }
+                  value={ baseToDollar(deal.body.par.toString()) }
                 />
               </td>
               <td>
@@ -315,7 +315,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ centToDollar(deal.body.paid.toString()) }
+                  value={ baseToDollar(deal.body.paid.toString()) }
                 />
               </td>
               <td >
@@ -328,7 +328,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   sx={{
                     m:1,
                   }}
-                  value={ centToDollar(
+                  value={ baseToDollar(
                     (((BigInt(deal.body.par) - BigInt(deal.body.paid)) * BigInt(deal.head.priceOfPar) 
                     + (BigInt(deal.body.paid) * BigInt(deal.head.priceOfPaid))) / 100n).toString()  
                   )}

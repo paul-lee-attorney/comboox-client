@@ -6,7 +6,7 @@ import {
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
-import { centToDollar, dateParser, longDataParser, longSnParser } from '../../../read/toolsKit';
+import { baseToDollar, dateParser, longDataParser, longSnParser } from '../../../read/toolsKit';
 import { Share } from './ros';
 
 const columns: GridColDef[] = [
@@ -60,7 +60,7 @@ const columns: GridColDef[] = [
   { 
     field: 'par', 
     headerName: 'Par',
-    valueGetter: p => centToDollar(p.row.body.par.toString()),
+    valueGetter: p => baseToDollar(p.row.body.par.toString()),
     headerAlign: 'right',
     align:'right',
     width: 218,
@@ -68,7 +68,7 @@ const columns: GridColDef[] = [
   { 
     field: 'paid', 
     headerName: 'Paid',
-    valueGetter: p => centToDollar(p.row.body.paid.toString()),
+    valueGetter: p => baseToDollar(p.row.body.paid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 288,
@@ -76,7 +76,7 @@ const columns: GridColDef[] = [
   { 
     field: 'clean', 
     headerName: 'CleanPaid',
-    valueGetter: p => centToDollar(p.row.body.cleanPaid.toString()),
+    valueGetter: p => baseToDollar(p.row.body.cleanPaid.toString()),
     headerAlign: 'right',
     align:'right',
     width: 288,
