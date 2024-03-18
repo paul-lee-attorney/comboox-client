@@ -8585,6 +8585,528 @@ export const iListOfOrdersABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// IListOfProjects
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const iListOfProjectsABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'EnrollTeam',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'deltaAmt',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'IncreaseBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'exRate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'PayWages',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'PickupDeposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'leader',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'ReplaceLeader',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'budget',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'currency',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetCurrency',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'manager',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetManager',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'userNo',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyMemberWork',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyTeamWork',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'hrs', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'applyWorkingHour',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'budget', internalType: 'uint256', type: 'uint256' }],
+    name: 'createTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'enrollMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'enrollTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'fixBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'getBalanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrency',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getListOfTeams',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getMemberInfo',
+    outputs: [
+      {
+        name: 'm',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMembersOfTeam',
+    outputs: [
+      {
+        name: 'ls',
+        internalType: 'struct TeamsRepo.Member[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getPayroll',
+    outputs: [{ name: 'list', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getProjectInfo',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamInfo',
+    outputs: [
+      {
+        name: 'info',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamMembersList',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'inPayroll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'deltaAmt', internalType: 'uint256', type: 'uint256' }],
+    name: 'increaseBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'delta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseMemberBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseTeamBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isEnrolledMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'isManager',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isTeamLeader',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [],
+    name: 'payWages',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'pickupDeposit',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'qtyOfTeams',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'removeMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'leader', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'replaceLeader',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'restoreMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'budget', internalType: 'uint256', type: 'uint256' }],
+    name: 'setBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'currency', internalType: 'uint8', type: 'uint8' }],
+    name: 'setCurrency',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'setManager',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'teamIsEnrolled',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'budget', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyMemberWork',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyTeamWork',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // ILockUp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -9647,540 +10169,6 @@ export const iOwnableABI = [
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
     name: 'setNewOwner',
-    outputs: [],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// IPayrollOfProject
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const iPayrollOfProjectABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'EnrollTeam',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'deltaQty',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'IncreaseBudget',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-      {
-        name: 'exRate',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'PayWages',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'caller',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'PickupDeposit',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'leader',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'ReplaceLeader',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'rate', internalType: 'uint256', type: 'uint256', indexed: true },
-      {
-        name: 'estimated',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'SetBudget',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'currency',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'SetCurrency',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'manager',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'SetManager',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'userNo',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'ratio',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'VerifyMemberWork',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'ratio',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'VerifyTeamWork',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'hrs', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'applyWorkingHour',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'createTeam',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'enrollMember',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'enrollTeam',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'extendPeriod',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [],
-    name: 'fixBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'getBalanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getCurrency',
-    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getListOfTeams',
-    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'getMemberInfo',
-    outputs: [
-      {
-        name: 'm',
-        internalType: 'struct TeamsRepo.Member',
-        type: 'tuple',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'getMembersOfTeam',
-    outputs: [
-      {
-        name: 'ls',
-        internalType: 'struct TeamsRepo.Member[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getPayroll',
-    outputs: [{ name: 'list', internalType: 'uint256[]', type: 'uint256[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getProjectInfo',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct TeamsRepo.Member',
-        type: 'tuple',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'getTeamInfo',
-    outputs: [
-      {
-        name: 'info',
-        internalType: 'struct TeamsRepo.Member',
-        type: 'tuple',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'getTeamMembersList',
-    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'inPayroll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'deltaQty', internalType: 'uint256', type: 'uint256' }],
-    name: 'increaseBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'increaseTeamBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isEnrolledMember',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'isManager',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isMember',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isTeamLeader',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [],
-    name: 'payWages',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
-    name: 'pickupDeposit',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'qtyOfTeams',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'removeMember',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'leader', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'replaceLeader',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'restoreMember',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'currency', internalType: 'uint8', type: 'uint8' }],
-    name: 'setCurrency',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'setManager',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'teamIsEnrolled',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'updateTeam',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'verifyMemberWork',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'verifyTeamWork',
     outputs: [],
   },
 ] as const
@@ -18234,6 +18222,584 @@ export const listOfOrdersABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// ListOfProjects
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const listOfProjectsABI = [
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'EnrollTeam',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'deltaAmt',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'IncreaseBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'exRate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'PayWages',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'caller',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'PickupDeposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'leader',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'ReplaceLeader',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'budget',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetBudget',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'currency',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetCurrency',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'manager',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetManager',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'userNo',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyMemberWork',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'seqOfTeam',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'ratio',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'VerifyTeamWork',
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'increase', internalType: 'bool', type: 'bool' },
+      { name: 'delta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'adjustSalary',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'hrs', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'applyWorkingHour',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'budget', internalType: 'uint256', type: 'uint256' }],
+    name: 'createTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'rate', internalType: 'uint256', type: 'uint256' },
+      { name: 'budget', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'enrollMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'enrollTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'fixBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'getBalanceOf',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getCurrency',
+    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getListOfTeams',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getMemberInfo',
+    outputs: [
+      {
+        name: 'm',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getMembersOfTeam',
+    outputs: [
+      {
+        name: 'ls',
+        internalType: 'struct TeamsRepo.Member[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getPayroll',
+    outputs: [{ name: 'list', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getProjectInfo',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamInfo',
+    outputs: [
+      {
+        name: 'info',
+        internalType: 'struct TeamsRepo.Member',
+        type: 'tuple',
+        components: [
+          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
+          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'rate', internalType: 'uint32', type: 'uint32' },
+          { name: 'workHours', internalType: 'uint32', type: 'uint32' },
+          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'approvedAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
+          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'getTeamMembersList',
+    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'inPayroll',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'deltaAmt', internalType: 'uint256', type: 'uint256' }],
+    name: 'increaseBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'delta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseMemberBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'delta', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'increaseTeamBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isEnrolledMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'isManager',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isMember',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'isTeamLeader',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'payable',
+    type: 'function',
+    inputs: [],
+    name: 'payWages',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'pickupDeposit',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'qtyOfTeams',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'removeMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'leader', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'replaceLeader',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'restoreMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'budget', internalType: 'uint256', type: 'uint256' }],
+    name: 'setBudget',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'currency', internalType: 'uint8', type: 'uint8' }],
+    name: 'setCurrency',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'setManager',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
+    name: 'teamIsEnrolled',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'budget', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'updateTeam',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyMemberWork',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
+      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'verifyTeamWork',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // LockUp
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -20099,584 +20665,6 @@ export const ownableABI = [
     type: 'function',
     inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
     name: 'setNewOwner',
-    outputs: [],
-  },
-] as const
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// PayrollOfProject
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-export const payrollOfProjectABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'EnrollTeam',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'deltaQty',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'IncreaseBudget',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-      {
-        name: 'exRate',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'PayWages',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'caller',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'PickupDeposit',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'leader',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'ReplaceLeader',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'rate', internalType: 'uint256', type: 'uint256', indexed: true },
-      {
-        name: 'estimated',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'SetBudget',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'currency',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'SetCurrency',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'manager',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'SetManager',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'owner',
-        internalType: 'address',
-        type: 'address',
-        indexed: true,
-      },
-    ],
-    name: 'SetNewOwner',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'userNo',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'ratio',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'VerifyMemberWork',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'seqOfTeam',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'ratio',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'VerifyTeamWork',
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'hrs', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'applyWorkingHour',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'createTeam',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'enrollMember',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'enrollTeam',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'extendPeriod',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [],
-    name: 'fixBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'getBalanceOf',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getCurrency',
-    outputs: [{ name: '', internalType: 'uint8', type: 'uint8' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getListOfTeams',
-    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'getMemberInfo',
-    outputs: [
-      {
-        name: 'm',
-        internalType: 'struct TeamsRepo.Member',
-        type: 'tuple',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'getMembersOfTeam',
-    outputs: [
-      {
-        name: 'ls',
-        internalType: 'struct TeamsRepo.Member[]',
-        type: 'tuple[]',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getOwner',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getPayroll',
-    outputs: [{ name: 'list', internalType: 'uint256[]', type: 'uint256[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getProjectInfo',
-    outputs: [
-      {
-        name: '',
-        internalType: 'struct TeamsRepo.Member',
-        type: 'tuple',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'getRegCenter',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'getTeamInfo',
-    outputs: [
-      {
-        name: 'info',
-        internalType: 'struct TeamsRepo.Member',
-        type: 'tuple',
-        components: [
-          { name: 'seqOfTeam', internalType: 'uint16', type: 'uint16' },
-          { name: 'userNo', internalType: 'uint40', type: 'uint40' },
-          { name: 'state', internalType: 'uint8', type: 'uint8' },
-          { name: 'rate', internalType: 'uint32', type: 'uint32' },
-          { name: 'estimated', internalType: 'uint16', type: 'uint16' },
-          { name: 'applied', internalType: 'uint16', type: 'uint16' },
-          { name: 'budgetAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'pendingAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'receivableAmt', internalType: 'uint32', type: 'uint32' },
-          { name: 'paidAmt', internalType: 'uint32', type: 'uint32' },
-        ],
-      },
-    ],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'getTeamMembersList',
-    outputs: [{ name: '', internalType: 'uint256[]', type: 'uint256[]' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'inPayroll',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'deltaQty', internalType: 'uint256', type: 'uint256' }],
-    name: 'increaseBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'deltaQty', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'increaseTeamBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'owner', internalType: 'address', type: 'address' },
-      { name: 'regCenter', internalType: 'address', type: 'address' },
-    ],
-    name: 'init',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isEnrolledMember',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'isManager',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isMember',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [
-      { name: 'acct', internalType: 'uint256', type: 'uint256' },
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'isTeamLeader',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'payable',
-    type: 'function',
-    inputs: [],
-    name: 'payWages',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
-    name: 'pickupDeposit',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'qtyOfTeams',
-    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'removeMember',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'leader', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'replaceLeader',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'restoreMember',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'setBudget',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'currency', internalType: 'uint8', type: 'uint8' }],
-    name: 'setCurrency',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
-    name: 'setManager',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
-    name: 'setNewOwner',
-    outputs: [],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [{ name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' }],
-    name: 'teamIsEnrolled',
-    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'rate', internalType: 'uint256', type: 'uint256' },
-      { name: 'estimated', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'updateTeam',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'userNo', internalType: 'uint256', type: 'uint256' },
-      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'verifyMemberWork',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'seqOfTeam', internalType: 'uint256', type: 'uint256' },
-      { name: 'ratio', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'verifyTeamWork',
     outputs: [],
   },
 ] as const
@@ -57899,6 +57887,1600 @@ export function useIListOfOrdersWithdrawSellOrderEvent(
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__.
+ */
+export function useIListOfProjectsRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getBalanceOf"`.
+ */
+export function useIListOfProjectsGetBalanceOf<
+  TFunctionName extends 'getBalanceOf',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getBalanceOf',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getCurrency"`.
+ */
+export function useIListOfProjectsGetCurrency<
+  TFunctionName extends 'getCurrency',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getCurrency',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getListOfTeams"`.
+ */
+export function useIListOfProjectsGetListOfTeams<
+  TFunctionName extends 'getListOfTeams',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getListOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getMemberInfo"`.
+ */
+export function useIListOfProjectsGetMemberInfo<
+  TFunctionName extends 'getMemberInfo',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getMemberInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getMembersOfTeam"`.
+ */
+export function useIListOfProjectsGetMembersOfTeam<
+  TFunctionName extends 'getMembersOfTeam',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getMembersOfTeam',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getPayroll"`.
+ */
+export function useIListOfProjectsGetPayroll<
+  TFunctionName extends 'getPayroll',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getProjectInfo"`.
+ */
+export function useIListOfProjectsGetProjectInfo<
+  TFunctionName extends 'getProjectInfo',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getProjectInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getTeamInfo"`.
+ */
+export function useIListOfProjectsGetTeamInfo<
+  TFunctionName extends 'getTeamInfo',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getTeamInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"getTeamMembersList"`.
+ */
+export function useIListOfProjectsGetTeamMembersList<
+  TFunctionName extends 'getTeamMembersList',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'getTeamMembersList',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"inPayroll"`.
+ */
+export function useIListOfProjectsInPayroll<
+  TFunctionName extends 'inPayroll',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'inPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"isEnrolledMember"`.
+ */
+export function useIListOfProjectsIsEnrolledMember<
+  TFunctionName extends 'isEnrolledMember',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'isEnrolledMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"isManager"`.
+ */
+export function useIListOfProjectsIsManager<
+  TFunctionName extends 'isManager',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'isManager',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"isMember"`.
+ */
+export function useIListOfProjectsIsMember<
+  TFunctionName extends 'isMember',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'isMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"isTeamLeader"`.
+ */
+export function useIListOfProjectsIsTeamLeader<
+  TFunctionName extends 'isTeamLeader',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'isTeamLeader',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"qtyOfTeams"`.
+ */
+export function useIListOfProjectsQtyOfTeams<
+  TFunctionName extends 'qtyOfTeams',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'qtyOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"teamIsEnrolled"`.
+ */
+export function useIListOfProjectsTeamIsEnrolled<
+  TFunctionName extends 'teamIsEnrolled',
+  TSelectData = ReadContractResult<typeof iListOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iListOfProjectsABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iListOfProjectsABI,
+    functionName: 'teamIsEnrolled',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iListOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__.
+ */
+export function useIListOfProjectsWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        TFunctionName,
+        TMode
+      > & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, TFunctionName, TMode>({
+    abi: iListOfProjectsABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function useIListOfProjectsApplyWorkingHour<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'applyWorkingHour'
+        >['request']['abi'],
+        'applyWorkingHour',
+        TMode
+      > & { functionName?: 'applyWorkingHour' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'applyWorkingHour',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'applyWorkingHour'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'applyWorkingHour', TMode>(
+    {
+      abi: iListOfProjectsABI,
+      functionName: 'applyWorkingHour',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function useIListOfProjectsCreateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'createTeam'
+        >['request']['abi'],
+        'createTeam',
+        TMode
+      > & { functionName?: 'createTeam' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'createTeam', TMode> & {
+        abi?: never
+        functionName?: 'createTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'createTeam', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'createTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function useIListOfProjectsEnrollMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'enrollMember'
+        >['request']['abi'],
+        'enrollMember',
+        TMode
+      > & { functionName?: 'enrollMember' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'enrollMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'enrollMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'enrollMember', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function useIListOfProjectsEnrollTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'enrollTeam'
+        >['request']['abi'],
+        'enrollTeam',
+        TMode
+      > & { functionName?: 'enrollTeam' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'enrollTeam', TMode> & {
+        abi?: never
+        functionName?: 'enrollTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'enrollTeam', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function useIListOfProjectsFixBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'fixBudget'
+        >['request']['abi'],
+        'fixBudget',
+        TMode
+      > & { functionName?: 'fixBudget' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'fixBudget', TMode> & {
+        abi?: never
+        functionName?: 'fixBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'fixBudget', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function useIListOfProjectsIncreaseBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'increaseBudget'
+        >['request']['abi'],
+        'increaseBudget',
+        TMode
+      > & { functionName?: 'increaseBudget' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'increaseBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'increaseBudget', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"increaseMemberBudget"`.
+ */
+export function useIListOfProjectsIncreaseMemberBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'increaseMemberBudget'
+        >['request']['abi'],
+        'increaseMemberBudget',
+        TMode
+      > & { functionName?: 'increaseMemberBudget' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'increaseMemberBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseMemberBudget'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iListOfProjectsABI,
+    'increaseMemberBudget',
+    TMode
+  >({
+    abi: iListOfProjectsABI,
+    functionName: 'increaseMemberBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function useIListOfProjectsIncreaseTeamBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'increaseTeamBudget'
+        >['request']['abi'],
+        'increaseTeamBudget',
+        TMode
+      > & { functionName?: 'increaseTeamBudget' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'increaseTeamBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseTeamBudget'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iListOfProjectsABI,
+    'increaseTeamBudget',
+    TMode
+  >({
+    abi: iListOfProjectsABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"payWages"`.
+ */
+export function useIListOfProjectsPayWages<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'payWages'
+        >['request']['abi'],
+        'payWages',
+        TMode
+      > & { functionName?: 'payWages' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'payWages', TMode> & {
+        abi?: never
+        functionName?: 'payWages'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'payWages', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'payWages',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function useIListOfProjectsPickupDeposit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'pickupDeposit'
+        >['request']['abi'],
+        'pickupDeposit',
+        TMode
+      > & { functionName?: 'pickupDeposit' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'pickupDeposit',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'pickupDeposit'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'pickupDeposit', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function useIListOfProjectsRemoveMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'removeMember'
+        >['request']['abi'],
+        'removeMember',
+        TMode
+      > & { functionName?: 'removeMember' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'removeMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'removeMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'removeMember', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'removeMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function useIListOfProjectsReplaceLeader<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'replaceLeader'
+        >['request']['abi'],
+        'replaceLeader',
+        TMode
+      > & { functionName?: 'replaceLeader' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'replaceLeader',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'replaceLeader'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'replaceLeader', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function useIListOfProjectsRestoreMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'restoreMember'
+        >['request']['abi'],
+        'restoreMember',
+        TMode
+      > & { functionName?: 'restoreMember' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'restoreMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'restoreMember', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function useIListOfProjectsSetBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'setBudget'
+        >['request']['abi'],
+        'setBudget',
+        TMode
+      > & { functionName?: 'setBudget' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'setBudget', TMode> & {
+        abi?: never
+        functionName?: 'setBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'setBudget', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'setBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function useIListOfProjectsSetCurrency<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'setCurrency'
+        >['request']['abi'],
+        'setCurrency',
+        TMode
+      > & { functionName?: 'setCurrency' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'setCurrency',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'setCurrency'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'setCurrency', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"setManager"`.
+ */
+export function useIListOfProjectsSetManager<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'setManager'
+        >['request']['abi'],
+        'setManager',
+        TMode
+      > & { functionName?: 'setManager' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'setManager', TMode> & {
+        abi?: never
+        functionName?: 'setManager'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'setManager', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'setManager',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function useIListOfProjectsUpdateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'updateTeam'
+        >['request']['abi'],
+        'updateTeam',
+        TMode
+      > & { functionName?: 'updateTeam' }
+    : UseContractWriteConfig<typeof iListOfProjectsABI, 'updateTeam', TMode> & {
+        abi?: never
+        functionName?: 'updateTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'updateTeam', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function useIListOfProjectsVerifyMemberWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'verifyMemberWork'
+        >['request']['abi'],
+        'verifyMemberWork',
+        TMode
+      > & { functionName?: 'verifyMemberWork' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'verifyMemberWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyMemberWork'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'verifyMemberWork', TMode>(
+    {
+      abi: iListOfProjectsABI,
+      functionName: 'verifyMemberWork',
+      ...config,
+    } as any,
+  )
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function useIListOfProjectsVerifyTeamWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iListOfProjectsABI,
+          'verifyTeamWork'
+        >['request']['abi'],
+        'verifyTeamWork',
+        TMode
+      > & { functionName?: 'verifyTeamWork' }
+    : UseContractWriteConfig<
+        typeof iListOfProjectsABI,
+        'verifyTeamWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyTeamWork'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iListOfProjectsABI, 'verifyTeamWork', TMode>({
+    abi: iListOfProjectsABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__.
+ */
+export function usePrepareIListOfProjectsWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function usePrepareIListOfProjectsApplyWorkingHour(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iListOfProjectsABI,
+      'applyWorkingHour'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'applyWorkingHour'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function usePrepareIListOfProjectsCreateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'createTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'createTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'createTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function usePrepareIListOfProjectsEnrollMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'enrollMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'enrollMember'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function usePrepareIListOfProjectsEnrollTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'enrollTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'enrollTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function usePrepareIListOfProjectsFixBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'fixBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'fixBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function usePrepareIListOfProjectsIncreaseBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'increaseBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'increaseBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"increaseMemberBudget"`.
+ */
+export function usePrepareIListOfProjectsIncreaseMemberBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iListOfProjectsABI,
+      'increaseMemberBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'increaseMemberBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'increaseMemberBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function usePrepareIListOfProjectsIncreaseTeamBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iListOfProjectsABI,
+      'increaseTeamBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'increaseTeamBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"payWages"`.
+ */
+export function usePrepareIListOfProjectsPayWages(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'payWages'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'payWages',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'payWages'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function usePrepareIListOfProjectsPickupDeposit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'pickupDeposit'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'pickupDeposit'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function usePrepareIListOfProjectsRemoveMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'removeMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'removeMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'removeMember'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function usePrepareIListOfProjectsReplaceLeader(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'replaceLeader'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'replaceLeader'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function usePrepareIListOfProjectsRestoreMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'restoreMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'restoreMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function usePrepareIListOfProjectsSetBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'setBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'setBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'setBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function usePrepareIListOfProjectsSetCurrency(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'setCurrency'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'setCurrency'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"setManager"`.
+ */
+export function usePrepareIListOfProjectsSetManager(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'setManager'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'setManager',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'setManager'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function usePrepareIListOfProjectsUpdateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'updateTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'updateTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function usePrepareIListOfProjectsVerifyMemberWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iListOfProjectsABI,
+      'verifyMemberWork'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'verifyMemberWork'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iListOfProjectsABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function usePrepareIListOfProjectsVerifyTeamWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iListOfProjectsABI, 'verifyTeamWork'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iListOfProjectsABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iListOfProjectsABI,
+    'verifyTeamWork'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__.
+ */
+export function useIListOfProjectsEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"EnrollTeam"`.
+ */
+export function useIListOfProjectsEnrollTeamEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'EnrollTeam'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'EnrollTeam',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'EnrollTeam'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"IncreaseBudget"`.
+ */
+export function useIListOfProjectsIncreaseBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'IncreaseBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'IncreaseBudget',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'IncreaseBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"PayWages"`.
+ */
+export function useIListOfProjectsPayWagesEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'PayWages'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'PayWages',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'PayWages'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"PickupDeposit"`.
+ */
+export function useIListOfProjectsPickupDepositEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'PickupDeposit'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'PickupDeposit',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'PickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"ReplaceLeader"`.
+ */
+export function useIListOfProjectsReplaceLeaderEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'ReplaceLeader'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'ReplaceLeader',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'ReplaceLeader'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"SetBudget"`.
+ */
+export function useIListOfProjectsSetBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'SetBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'SetBudget',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'SetBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"SetCurrency"`.
+ */
+export function useIListOfProjectsSetCurrencyEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'SetCurrency'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'SetCurrency',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'SetCurrency'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"SetManager"`.
+ */
+export function useIListOfProjectsSetManagerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'SetManager'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'SetManager',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'SetManager'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"VerifyMemberWork"`.
+ */
+export function useIListOfProjectsVerifyMemberWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'VerifyMemberWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'VerifyMemberWork',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'VerifyMemberWork'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iListOfProjectsABI}__ and `eventName` set to `"VerifyTeamWork"`.
+ */
+export function useIListOfProjectsVerifyTeamWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iListOfProjectsABI, 'VerifyTeamWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iListOfProjectsABI,
+    eventName: 'VerifyTeamWork',
+    ...config,
+  } as UseContractEventConfig<typeof iListOfProjectsABI, 'VerifyTeamWork'>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iLockUpABI}__.
  */
 export function useILockUpRead<
@@ -60224,1643 +61806,6 @@ export function useIOwnableSetNewOwnerEvent(
     eventName: 'SetNewOwner',
     ...config,
   } as UseContractEventConfig<typeof iOwnableABI, 'SetNewOwner'>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
- */
-export function useIPayrollOfProjectRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getBalanceOf"`.
- */
-export function useIPayrollOfProjectGetBalanceOf<
-  TFunctionName extends 'getBalanceOf',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getBalanceOf',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getCurrency"`.
- */
-export function useIPayrollOfProjectGetCurrency<
-  TFunctionName extends 'getCurrency',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getCurrency',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getListOfTeams"`.
- */
-export function useIPayrollOfProjectGetListOfTeams<
-  TFunctionName extends 'getListOfTeams',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getListOfTeams',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getMemberInfo"`.
- */
-export function useIPayrollOfProjectGetMemberInfo<
-  TFunctionName extends 'getMemberInfo',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getMemberInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getMembersOfTeam"`.
- */
-export function useIPayrollOfProjectGetMembersOfTeam<
-  TFunctionName extends 'getMembersOfTeam',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getMembersOfTeam',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getPayroll"`.
- */
-export function useIPayrollOfProjectGetPayroll<
-  TFunctionName extends 'getPayroll',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getPayroll',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getProjectInfo"`.
- */
-export function useIPayrollOfProjectGetProjectInfo<
-  TFunctionName extends 'getProjectInfo',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getProjectInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getTeamInfo"`.
- */
-export function useIPayrollOfProjectGetTeamInfo<
-  TFunctionName extends 'getTeamInfo',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getTeamInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"getTeamMembersList"`.
- */
-export function useIPayrollOfProjectGetTeamMembersList<
-  TFunctionName extends 'getTeamMembersList',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'getTeamMembersList',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"inPayroll"`.
- */
-export function useIPayrollOfProjectInPayroll<
-  TFunctionName extends 'inPayroll',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'inPayroll',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isEnrolledMember"`.
- */
-export function useIPayrollOfProjectIsEnrolledMember<
-  TFunctionName extends 'isEnrolledMember',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'isEnrolledMember',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isManager"`.
- */
-export function useIPayrollOfProjectIsManager<
-  TFunctionName extends 'isManager',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'isManager',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isMember"`.
- */
-export function useIPayrollOfProjectIsMember<
-  TFunctionName extends 'isMember',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'isMember',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"isTeamLeader"`.
- */
-export function useIPayrollOfProjectIsTeamLeader<
-  TFunctionName extends 'isTeamLeader',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'isTeamLeader',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"qtyOfTeams"`.
- */
-export function useIPayrollOfProjectQtyOfTeams<
-  TFunctionName extends 'qtyOfTeams',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'qtyOfTeams',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"teamIsEnrolled"`.
- */
-export function useIPayrollOfProjectTeamIsEnrolled<
-  TFunctionName extends 'teamIsEnrolled',
-  TSelectData = ReadContractResult<typeof iPayrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof iPayrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iPayrollOfProjectABI,
-    functionName: 'teamIsEnrolled',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
- */
-export function useIPayrollOfProjectWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        TFunctionName,
-        TMode
-      > & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, TFunctionName, TMode>({
-    abi: iPayrollOfProjectABI,
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
- */
-export function useIPayrollOfProjectApplyWorkingHour<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'applyWorkingHour'
-        >['request']['abi'],
-        'applyWorkingHour',
-        TMode
-      > & { functionName?: 'applyWorkingHour' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'applyWorkingHour',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'applyWorkingHour'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof iPayrollOfProjectABI,
-    'applyWorkingHour',
-    TMode
-  >({
-    abi: iPayrollOfProjectABI,
-    functionName: 'applyWorkingHour',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
- */
-export function useIPayrollOfProjectCreateTeam<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'createTeam'
-        >['request']['abi'],
-        'createTeam',
-        TMode
-      > & { functionName?: 'createTeam' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'createTeam',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'createTeam'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'createTeam', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'createTeam',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
- */
-export function useIPayrollOfProjectEnrollMember<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'enrollMember'
-        >['request']['abi'],
-        'enrollMember',
-        TMode
-      > & { functionName?: 'enrollMember' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'enrollMember',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'enrollMember'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'enrollMember', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'enrollMember',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
- */
-export function useIPayrollOfProjectEnrollTeam<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'enrollTeam'
-        >['request']['abi'],
-        'enrollTeam',
-        TMode
-      > & { functionName?: 'enrollTeam' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'enrollTeam',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'enrollTeam'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'enrollTeam', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'enrollTeam',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
- */
-export function useIPayrollOfProjectExtendPeriod<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'extendPeriod'
-        >['request']['abi'],
-        'extendPeriod',
-        TMode
-      > & { functionName?: 'extendPeriod' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'extendPeriod',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'extendPeriod'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'extendPeriod', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'extendPeriod',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
- */
-export function useIPayrollOfProjectFixBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'fixBudget'
-        >['request']['abi'],
-        'fixBudget',
-        TMode
-      > & { functionName?: 'fixBudget' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'fixBudget',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'fixBudget'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'fixBudget', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'fixBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
- */
-export function useIPayrollOfProjectIncreaseBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'increaseBudget'
-        >['request']['abi'],
-        'increaseBudget',
-        TMode
-      > & { functionName?: 'increaseBudget' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'increaseBudget',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'increaseBudget'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'increaseBudget', TMode>(
-    {
-      abi: iPayrollOfProjectABI,
-      functionName: 'increaseBudget',
-      ...config,
-    } as any,
-  )
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
- */
-export function useIPayrollOfProjectIncreaseTeamBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'increaseTeamBudget'
-        >['request']['abi'],
-        'increaseTeamBudget',
-        TMode
-      > & { functionName?: 'increaseTeamBudget' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'increaseTeamBudget',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'increaseTeamBudget'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof iPayrollOfProjectABI,
-    'increaseTeamBudget',
-    TMode
-  >({
-    abi: iPayrollOfProjectABI,
-    functionName: 'increaseTeamBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"payWages"`.
- */
-export function useIPayrollOfProjectPayWages<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'payWages'
-        >['request']['abi'],
-        'payWages',
-        TMode
-      > & { functionName?: 'payWages' }
-    : UseContractWriteConfig<typeof iPayrollOfProjectABI, 'payWages', TMode> & {
-        abi?: never
-        functionName?: 'payWages'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'payWages', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'payWages',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
- */
-export function useIPayrollOfProjectPickupDeposit<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'pickupDeposit'
-        >['request']['abi'],
-        'pickupDeposit',
-        TMode
-      > & { functionName?: 'pickupDeposit' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'pickupDeposit',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'pickupDeposit'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'pickupDeposit', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'pickupDeposit',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
- */
-export function useIPayrollOfProjectRemoveMember<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'removeMember'
-        >['request']['abi'],
-        'removeMember',
-        TMode
-      > & { functionName?: 'removeMember' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'removeMember',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'removeMember'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'removeMember', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'removeMember',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
- */
-export function useIPayrollOfProjectReplaceLeader<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'replaceLeader'
-        >['request']['abi'],
-        'replaceLeader',
-        TMode
-      > & { functionName?: 'replaceLeader' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'replaceLeader',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'replaceLeader'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'replaceLeader', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'replaceLeader',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
- */
-export function useIPayrollOfProjectRestoreMember<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'restoreMember'
-        >['request']['abi'],
-        'restoreMember',
-        TMode
-      > & { functionName?: 'restoreMember' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'restoreMember',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'restoreMember'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'restoreMember', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'restoreMember',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
- */
-export function useIPayrollOfProjectSetBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'setBudget'
-        >['request']['abi'],
-        'setBudget',
-        TMode
-      > & { functionName?: 'setBudget' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'setBudget',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setBudget'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'setBudget', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'setBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
- */
-export function useIPayrollOfProjectSetCurrency<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'setCurrency'
-        >['request']['abi'],
-        'setCurrency',
-        TMode
-      > & { functionName?: 'setCurrency' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'setCurrency',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setCurrency'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'setCurrency', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'setCurrency',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setManager"`.
- */
-export function useIPayrollOfProjectSetManager<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'setManager'
-        >['request']['abi'],
-        'setManager',
-        TMode
-      > & { functionName?: 'setManager' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'setManager',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setManager'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'setManager', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'setManager',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
- */
-export function useIPayrollOfProjectUpdateTeam<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'updateTeam'
-        >['request']['abi'],
-        'updateTeam',
-        TMode
-      > & { functionName?: 'updateTeam' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'updateTeam',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'updateTeam'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'updateTeam', TMode>({
-    abi: iPayrollOfProjectABI,
-    functionName: 'updateTeam',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
- */
-export function useIPayrollOfProjectVerifyMemberWork<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'verifyMemberWork'
-        >['request']['abi'],
-        'verifyMemberWork',
-        TMode
-      > & { functionName?: 'verifyMemberWork' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'verifyMemberWork',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'verifyMemberWork'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof iPayrollOfProjectABI,
-    'verifyMemberWork',
-    TMode
-  >({
-    abi: iPayrollOfProjectABI,
-    functionName: 'verifyMemberWork',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
- */
-export function useIPayrollOfProjectVerifyTeamWork<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iPayrollOfProjectABI,
-          'verifyTeamWork'
-        >['request']['abi'],
-        'verifyTeamWork',
-        TMode
-      > & { functionName?: 'verifyTeamWork' }
-    : UseContractWriteConfig<
-        typeof iPayrollOfProjectABI,
-        'verifyTeamWork',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'verifyTeamWork'
-      } = {} as any,
-) {
-  return useContractWrite<typeof iPayrollOfProjectABI, 'verifyTeamWork', TMode>(
-    {
-      abi: iPayrollOfProjectABI,
-      functionName: 'verifyTeamWork',
-      ...config,
-    } as any,
-  )
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
- */
-export function usePrepareIPayrollOfProjectWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    TFunctionName
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
- */
-export function usePrepareIPayrollOfProjectApplyWorkingHour(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iPayrollOfProjectABI,
-      'applyWorkingHour'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'applyWorkingHour',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'applyWorkingHour'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
- */
-export function usePrepareIPayrollOfProjectCreateTeam(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'createTeam'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'createTeam',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'createTeam'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
- */
-export function usePrepareIPayrollOfProjectEnrollMember(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'enrollMember'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'enrollMember',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'enrollMember'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
- */
-export function usePrepareIPayrollOfProjectEnrollTeam(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'enrollTeam'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'enrollTeam',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'enrollTeam'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
- */
-export function usePrepareIPayrollOfProjectExtendPeriod(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'extendPeriod'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'extendPeriod',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'extendPeriod'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
- */
-export function usePrepareIPayrollOfProjectFixBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'fixBudget'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'fixBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'fixBudget'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
- */
-export function usePrepareIPayrollOfProjectIncreaseBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iPayrollOfProjectABI,
-      'increaseBudget'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'increaseBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'increaseBudget'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
- */
-export function usePrepareIPayrollOfProjectIncreaseTeamBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iPayrollOfProjectABI,
-      'increaseTeamBudget'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'increaseTeamBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'increaseTeamBudget'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"payWages"`.
- */
-export function usePrepareIPayrollOfProjectPayWages(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'payWages'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'payWages',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'payWages'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
- */
-export function usePrepareIPayrollOfProjectPickupDeposit(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'pickupDeposit'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'pickupDeposit',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'pickupDeposit'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
- */
-export function usePrepareIPayrollOfProjectRemoveMember(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'removeMember'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'removeMember',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'removeMember'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
- */
-export function usePrepareIPayrollOfProjectReplaceLeader(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'replaceLeader'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'replaceLeader',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'replaceLeader'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
- */
-export function usePrepareIPayrollOfProjectRestoreMember(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'restoreMember'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'restoreMember',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'restoreMember'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
- */
-export function usePrepareIPayrollOfProjectSetBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setBudget'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'setBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setBudget'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
- */
-export function usePrepareIPayrollOfProjectSetCurrency(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setCurrency'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'setCurrency',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'setCurrency'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"setManager"`.
- */
-export function usePrepareIPayrollOfProjectSetManager(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setManager'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'setManager',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'setManager'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
- */
-export function usePrepareIPayrollOfProjectUpdateTeam(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'updateTeam'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'updateTeam',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof iPayrollOfProjectABI, 'updateTeam'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
- */
-export function usePrepareIPayrollOfProjectVerifyMemberWork(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iPayrollOfProjectABI,
-      'verifyMemberWork'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'verifyMemberWork',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'verifyMemberWork'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
- */
-export function usePrepareIPayrollOfProjectVerifyTeamWork(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iPayrollOfProjectABI,
-      'verifyTeamWork'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iPayrollOfProjectABI,
-    functionName: 'verifyTeamWork',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iPayrollOfProjectABI,
-    'verifyTeamWork'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__.
- */
-export function useIPayrollOfProjectEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"EnrollTeam"`.
- */
-export function useIPayrollOfProjectEnrollTeamEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'EnrollTeam'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'EnrollTeam',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'EnrollTeam'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"IncreaseBudget"`.
- */
-export function useIPayrollOfProjectIncreaseBudgetEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'IncreaseBudget'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'IncreaseBudget',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'IncreaseBudget'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"PayWages"`.
- */
-export function useIPayrollOfProjectPayWagesEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'PayWages'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'PayWages',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'PayWages'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"PickupDeposit"`.
- */
-export function useIPayrollOfProjectPickupDepositEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'PickupDeposit'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'PickupDeposit',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'PickupDeposit'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"ReplaceLeader"`.
- */
-export function useIPayrollOfProjectReplaceLeaderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'ReplaceLeader'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'ReplaceLeader',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'ReplaceLeader'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"SetBudget"`.
- */
-export function useIPayrollOfProjectSetBudgetEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetBudget'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'SetBudget',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetBudget'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"SetCurrency"`.
- */
-export function useIPayrollOfProjectSetCurrencyEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetCurrency'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'SetCurrency',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetCurrency'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"SetManager"`.
- */
-export function useIPayrollOfProjectSetManagerEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetManager'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'SetManager',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'SetManager'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"VerifyMemberWork"`.
- */
-export function useIPayrollOfProjectVerifyMemberWorkEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyMemberWork'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'VerifyMemberWork',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyMemberWork'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iPayrollOfProjectABI}__ and `eventName` set to `"VerifyTeamWork"`.
- */
-export function useIPayrollOfProjectVerifyTeamWorkEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyTeamWork'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iPayrollOfProjectABI,
-    eventName: 'VerifyTeamWork',
-    ...config,
-  } as UseContractEventConfig<typeof iPayrollOfProjectABI, 'VerifyTeamWork'>)
 }
 
 /**
@@ -83224,6 +83169,1700 @@ export function useListOfOrdersWithdrawSellOrderEvent(
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__.
+ */
+export function useListOfProjectsRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getBalanceOf"`.
+ */
+export function useListOfProjectsGetBalanceOf<
+  TFunctionName extends 'getBalanceOf',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getBalanceOf',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getCurrency"`.
+ */
+export function useListOfProjectsGetCurrency<
+  TFunctionName extends 'getCurrency',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getCurrency',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getListOfTeams"`.
+ */
+export function useListOfProjectsGetListOfTeams<
+  TFunctionName extends 'getListOfTeams',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getListOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getMemberInfo"`.
+ */
+export function useListOfProjectsGetMemberInfo<
+  TFunctionName extends 'getMemberInfo',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getMemberInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getMembersOfTeam"`.
+ */
+export function useListOfProjectsGetMembersOfTeam<
+  TFunctionName extends 'getMembersOfTeam',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getMembersOfTeam',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getOwner"`.
+ */
+export function useListOfProjectsGetOwner<
+  TFunctionName extends 'getOwner',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getPayroll"`.
+ */
+export function useListOfProjectsGetPayroll<
+  TFunctionName extends 'getPayroll',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getProjectInfo"`.
+ */
+export function useListOfProjectsGetProjectInfo<
+  TFunctionName extends 'getProjectInfo',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getProjectInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useListOfProjectsGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getTeamInfo"`.
+ */
+export function useListOfProjectsGetTeamInfo<
+  TFunctionName extends 'getTeamInfo',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getTeamInfo',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"getTeamMembersList"`.
+ */
+export function useListOfProjectsGetTeamMembersList<
+  TFunctionName extends 'getTeamMembersList',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'getTeamMembersList',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"inPayroll"`.
+ */
+export function useListOfProjectsInPayroll<
+  TFunctionName extends 'inPayroll',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'inPayroll',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"isEnrolledMember"`.
+ */
+export function useListOfProjectsIsEnrolledMember<
+  TFunctionName extends 'isEnrolledMember',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'isEnrolledMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"isManager"`.
+ */
+export function useListOfProjectsIsManager<
+  TFunctionName extends 'isManager',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'isManager',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"isMember"`.
+ */
+export function useListOfProjectsIsMember<
+  TFunctionName extends 'isMember',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'isMember',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"isTeamLeader"`.
+ */
+export function useListOfProjectsIsTeamLeader<
+  TFunctionName extends 'isTeamLeader',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'isTeamLeader',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"qtyOfTeams"`.
+ */
+export function useListOfProjectsQtyOfTeams<
+  TFunctionName extends 'qtyOfTeams',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'qtyOfTeams',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"teamIsEnrolled"`.
+ */
+export function useListOfProjectsTeamIsEnrolled<
+  TFunctionName extends 'teamIsEnrolled',
+  TSelectData = ReadContractResult<typeof listOfProjectsABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof listOfProjectsABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: listOfProjectsABI,
+    functionName: 'teamIsEnrolled',
+    ...config,
+  } as UseContractReadConfig<
+    typeof listOfProjectsABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__.
+ */
+export function useListOfProjectsWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof listOfProjectsABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, TFunctionName, TMode>({
+    abi: listOfProjectsABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"adjustSalary"`.
+ */
+export function useListOfProjectsAdjustSalary<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'adjustSalary'
+        >['request']['abi'],
+        'adjustSalary',
+        TMode
+      > & { functionName?: 'adjustSalary' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'adjustSalary',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'adjustSalary'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'adjustSalary', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'adjustSalary',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function useListOfProjectsApplyWorkingHour<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'applyWorkingHour'
+        >['request']['abi'],
+        'applyWorkingHour',
+        TMode
+      > & { functionName?: 'applyWorkingHour' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'applyWorkingHour',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'applyWorkingHour'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'applyWorkingHour', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function useListOfProjectsCreateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'createTeam'
+        >['request']['abi'],
+        'createTeam',
+        TMode
+      > & { functionName?: 'createTeam' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'createTeam', TMode> & {
+        abi?: never
+        functionName?: 'createTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'createTeam', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'createTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function useListOfProjectsEnrollMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'enrollMember'
+        >['request']['abi'],
+        'enrollMember',
+        TMode
+      > & { functionName?: 'enrollMember' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'enrollMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'enrollMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'enrollMember', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function useListOfProjectsEnrollTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'enrollTeam'
+        >['request']['abi'],
+        'enrollTeam',
+        TMode
+      > & { functionName?: 'enrollTeam' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'enrollTeam', TMode> & {
+        abi?: never
+        functionName?: 'enrollTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'enrollTeam', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function useListOfProjectsFixBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'fixBudget'
+        >['request']['abi'],
+        'fixBudget',
+        TMode
+      > & { functionName?: 'fixBudget' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'fixBudget', TMode> & {
+        abi?: never
+        functionName?: 'fixBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'fixBudget', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function useListOfProjectsIncreaseBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'increaseBudget'
+        >['request']['abi'],
+        'increaseBudget',
+        TMode
+      > & { functionName?: 'increaseBudget' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'increaseBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'increaseBudget', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"increaseMemberBudget"`.
+ */
+export function useListOfProjectsIncreaseMemberBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'increaseMemberBudget'
+        >['request']['abi'],
+        'increaseMemberBudget',
+        TMode
+      > & { functionName?: 'increaseMemberBudget' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'increaseMemberBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseMemberBudget'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof listOfProjectsABI,
+    'increaseMemberBudget',
+    TMode
+  >({
+    abi: listOfProjectsABI,
+    functionName: 'increaseMemberBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function useListOfProjectsIncreaseTeamBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'increaseTeamBudget'
+        >['request']['abi'],
+        'increaseTeamBudget',
+        TMode
+      > & { functionName?: 'increaseTeamBudget' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'increaseTeamBudget',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'increaseTeamBudget'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof listOfProjectsABI,
+    'increaseTeamBudget',
+    TMode
+  >({
+    abi: listOfProjectsABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"init"`.
+ */
+export function useListOfProjectsInit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'init'
+        >['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'init', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"payWages"`.
+ */
+export function useListOfProjectsPayWages<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'payWages'
+        >['request']['abi'],
+        'payWages',
+        TMode
+      > & { functionName?: 'payWages' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'payWages', TMode> & {
+        abi?: never
+        functionName?: 'payWages'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'payWages', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'payWages',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function useListOfProjectsPickupDeposit<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'pickupDeposit'
+        >['request']['abi'],
+        'pickupDeposit',
+        TMode
+      > & { functionName?: 'pickupDeposit' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'pickupDeposit',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'pickupDeposit'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'pickupDeposit', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function useListOfProjectsRemoveMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'removeMember'
+        >['request']['abi'],
+        'removeMember',
+        TMode
+      > & { functionName?: 'removeMember' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'removeMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'removeMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'removeMember', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'removeMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function useListOfProjectsReplaceLeader<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'replaceLeader'
+        >['request']['abi'],
+        'replaceLeader',
+        TMode
+      > & { functionName?: 'replaceLeader' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'replaceLeader',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'replaceLeader'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'replaceLeader', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function useListOfProjectsRestoreMember<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'restoreMember'
+        >['request']['abi'],
+        'restoreMember',
+        TMode
+      > & { functionName?: 'restoreMember' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'restoreMember',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreMember'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'restoreMember', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function useListOfProjectsSetBudget<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'setBudget'
+        >['request']['abi'],
+        'setBudget',
+        TMode
+      > & { functionName?: 'setBudget' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'setBudget', TMode> & {
+        abi?: never
+        functionName?: 'setBudget'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'setBudget', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'setBudget',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function useListOfProjectsSetCurrency<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'setCurrency'
+        >['request']['abi'],
+        'setCurrency',
+        TMode
+      > & { functionName?: 'setCurrency' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'setCurrency', TMode> & {
+        abi?: never
+        functionName?: 'setCurrency'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'setCurrency', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setManager"`.
+ */
+export function useListOfProjectsSetManager<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'setManager'
+        >['request']['abi'],
+        'setManager',
+        TMode
+      > & { functionName?: 'setManager' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'setManager', TMode> & {
+        abi?: never
+        functionName?: 'setManager'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'setManager', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'setManager',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function useListOfProjectsSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'setNewOwner'
+        >['request']['abi'],
+        'setNewOwner',
+        TMode
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'setNewOwner', TMode> & {
+        abi?: never
+        functionName?: 'setNewOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'setNewOwner', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function useListOfProjectsUpdateTeam<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'updateTeam'
+        >['request']['abi'],
+        'updateTeam',
+        TMode
+      > & { functionName?: 'updateTeam' }
+    : UseContractWriteConfig<typeof listOfProjectsABI, 'updateTeam', TMode> & {
+        abi?: never
+        functionName?: 'updateTeam'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'updateTeam', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function useListOfProjectsVerifyMemberWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'verifyMemberWork'
+        >['request']['abi'],
+        'verifyMemberWork',
+        TMode
+      > & { functionName?: 'verifyMemberWork' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'verifyMemberWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyMemberWork'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'verifyMemberWork', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function useListOfProjectsVerifyTeamWork<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof listOfProjectsABI,
+          'verifyTeamWork'
+        >['request']['abi'],
+        'verifyTeamWork',
+        TMode
+      > & { functionName?: 'verifyTeamWork' }
+    : UseContractWriteConfig<
+        typeof listOfProjectsABI,
+        'verifyTeamWork',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'verifyTeamWork'
+      } = {} as any,
+) {
+  return useContractWrite<typeof listOfProjectsABI, 'verifyTeamWork', TMode>({
+    abi: listOfProjectsABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__.
+ */
+export function usePrepareListOfProjectsWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"adjustSalary"`.
+ */
+export function usePrepareListOfProjectsAdjustSalary(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'adjustSalary'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'adjustSalary',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'adjustSalary'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"applyWorkingHour"`.
+ */
+export function usePrepareListOfProjectsApplyWorkingHour(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'applyWorkingHour'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'applyWorkingHour',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof listOfProjectsABI,
+    'applyWorkingHour'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"createTeam"`.
+ */
+export function usePrepareListOfProjectsCreateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'createTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'createTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'createTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"enrollMember"`.
+ */
+export function usePrepareListOfProjectsEnrollMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'enrollMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'enrollMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'enrollMember'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"enrollTeam"`.
+ */
+export function usePrepareListOfProjectsEnrollTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'enrollTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'enrollTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'enrollTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"fixBudget"`.
+ */
+export function usePrepareListOfProjectsFixBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'fixBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'fixBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'fixBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"increaseBudget"`.
+ */
+export function usePrepareListOfProjectsIncreaseBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'increaseBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'increaseBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof listOfProjectsABI,
+    'increaseBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"increaseMemberBudget"`.
+ */
+export function usePrepareListOfProjectsIncreaseMemberBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof listOfProjectsABI,
+      'increaseMemberBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'increaseMemberBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof listOfProjectsABI,
+    'increaseMemberBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"increaseTeamBudget"`.
+ */
+export function usePrepareListOfProjectsIncreaseTeamBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof listOfProjectsABI,
+      'increaseTeamBudget'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'increaseTeamBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof listOfProjectsABI,
+    'increaseTeamBudget'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"init"`.
+ */
+export function usePrepareListOfProjectsInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'init'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"payWages"`.
+ */
+export function usePrepareListOfProjectsPayWages(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'payWages'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'payWages',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'payWages'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"pickupDeposit"`.
+ */
+export function usePrepareListOfProjectsPickupDeposit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'pickupDeposit'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'pickupDeposit',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'pickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"removeMember"`.
+ */
+export function usePrepareListOfProjectsRemoveMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'removeMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'removeMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'removeMember'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"replaceLeader"`.
+ */
+export function usePrepareListOfProjectsReplaceLeader(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'replaceLeader'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'replaceLeader',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'replaceLeader'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"restoreMember"`.
+ */
+export function usePrepareListOfProjectsRestoreMember(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'restoreMember'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'restoreMember',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'restoreMember'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setBudget"`.
+ */
+export function usePrepareListOfProjectsSetBudget(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setBudget'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'setBudget',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setBudget'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setCurrency"`.
+ */
+export function usePrepareListOfProjectsSetCurrency(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setCurrency'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'setCurrency',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setCurrency'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setManager"`.
+ */
+export function usePrepareListOfProjectsSetManager(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setManager'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'setManager',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setManager'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePrepareListOfProjectsSetNewOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setNewOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'setNewOwner'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"updateTeam"`.
+ */
+export function usePrepareListOfProjectsUpdateTeam(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'updateTeam'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'updateTeam',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'updateTeam'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"verifyMemberWork"`.
+ */
+export function usePrepareListOfProjectsVerifyMemberWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'verifyMemberWork'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'verifyMemberWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof listOfProjectsABI,
+    'verifyMemberWork'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link listOfProjectsABI}__ and `functionName` set to `"verifyTeamWork"`.
+ */
+export function usePrepareListOfProjectsVerifyTeamWork(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof listOfProjectsABI, 'verifyTeamWork'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: listOfProjectsABI,
+    functionName: 'verifyTeamWork',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof listOfProjectsABI,
+    'verifyTeamWork'
+  >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__.
+ */
+export function useListOfProjectsEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"EnrollTeam"`.
+ */
+export function useListOfProjectsEnrollTeamEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'EnrollTeam'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'EnrollTeam',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'EnrollTeam'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"IncreaseBudget"`.
+ */
+export function useListOfProjectsIncreaseBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'IncreaseBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'IncreaseBudget',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'IncreaseBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"PayWages"`.
+ */
+export function useListOfProjectsPayWagesEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'PayWages'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'PayWages',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'PayWages'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"PickupDeposit"`.
+ */
+export function useListOfProjectsPickupDepositEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'PickupDeposit'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'PickupDeposit',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'PickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"ReplaceLeader"`.
+ */
+export function useListOfProjectsReplaceLeaderEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'ReplaceLeader'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'ReplaceLeader',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'ReplaceLeader'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"SetBudget"`.
+ */
+export function useListOfProjectsSetBudgetEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'SetBudget'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'SetBudget',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'SetBudget'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"SetCurrency"`.
+ */
+export function useListOfProjectsSetCurrencyEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'SetCurrency'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'SetCurrency',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'SetCurrency'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"SetManager"`.
+ */
+export function useListOfProjectsSetManagerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'SetManager'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'SetManager',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'SetManager'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function useListOfProjectsSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"VerifyMemberWork"`.
+ */
+export function useListOfProjectsVerifyMemberWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'VerifyMemberWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'VerifyMemberWork',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'VerifyMemberWork'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link listOfProjectsABI}__ and `eventName` set to `"VerifyTeamWork"`.
+ */
+export function useListOfProjectsVerifyTeamWorkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof listOfProjectsABI, 'VerifyTeamWork'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: listOfProjectsABI,
+    eventName: 'VerifyTeamWork',
+    ...config,
+  } as UseContractEventConfig<typeof listOfProjectsABI, 'VerifyTeamWork'>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link lockUpABI}__.
  */
 export function useLockUpRead<
@@ -87863,1779 +89502,6 @@ export function useOwnableSetNewOwnerEvent(
     eventName: 'SetNewOwner',
     ...config,
   } as UseContractEventConfig<typeof ownableABI, 'SetNewOwner'>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__.
- */
-export function usePayrollOfProjectRead<
-  TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getBalanceOf"`.
- */
-export function usePayrollOfProjectGetBalanceOf<
-  TFunctionName extends 'getBalanceOf',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getBalanceOf',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getCurrency"`.
- */
-export function usePayrollOfProjectGetCurrency<
-  TFunctionName extends 'getCurrency',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getCurrency',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getListOfTeams"`.
- */
-export function usePayrollOfProjectGetListOfTeams<
-  TFunctionName extends 'getListOfTeams',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getListOfTeams',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getMemberInfo"`.
- */
-export function usePayrollOfProjectGetMemberInfo<
-  TFunctionName extends 'getMemberInfo',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getMemberInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getMembersOfTeam"`.
- */
-export function usePayrollOfProjectGetMembersOfTeam<
-  TFunctionName extends 'getMembersOfTeam',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getMembersOfTeam',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getOwner"`.
- */
-export function usePayrollOfProjectGetOwner<
-  TFunctionName extends 'getOwner',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getOwner',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getPayroll"`.
- */
-export function usePayrollOfProjectGetPayroll<
-  TFunctionName extends 'getPayroll',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getPayroll',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getProjectInfo"`.
- */
-export function usePayrollOfProjectGetProjectInfo<
-  TFunctionName extends 'getProjectInfo',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getProjectInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getRegCenter"`.
- */
-export function usePayrollOfProjectGetRegCenter<
-  TFunctionName extends 'getRegCenter',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getRegCenter',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getTeamInfo"`.
- */
-export function usePayrollOfProjectGetTeamInfo<
-  TFunctionName extends 'getTeamInfo',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getTeamInfo',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"getTeamMembersList"`.
- */
-export function usePayrollOfProjectGetTeamMembersList<
-  TFunctionName extends 'getTeamMembersList',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'getTeamMembersList',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"inPayroll"`.
- */
-export function usePayrollOfProjectInPayroll<
-  TFunctionName extends 'inPayroll',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'inPayroll',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isEnrolledMember"`.
- */
-export function usePayrollOfProjectIsEnrolledMember<
-  TFunctionName extends 'isEnrolledMember',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'isEnrolledMember',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isManager"`.
- */
-export function usePayrollOfProjectIsManager<
-  TFunctionName extends 'isManager',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'isManager',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isMember"`.
- */
-export function usePayrollOfProjectIsMember<
-  TFunctionName extends 'isMember',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'isMember',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"isTeamLeader"`.
- */
-export function usePayrollOfProjectIsTeamLeader<
-  TFunctionName extends 'isTeamLeader',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'isTeamLeader',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"qtyOfTeams"`.
- */
-export function usePayrollOfProjectQtyOfTeams<
-  TFunctionName extends 'qtyOfTeams',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'qtyOfTeams',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"teamIsEnrolled"`.
- */
-export function usePayrollOfProjectTeamIsEnrolled<
-  TFunctionName extends 'teamIsEnrolled',
-  TSelectData = ReadContractResult<typeof payrollOfProjectABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<
-      typeof payrollOfProjectABI,
-      TFunctionName,
-      TSelectData
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: payrollOfProjectABI,
-    functionName: 'teamIsEnrolled',
-    ...config,
-  } as UseContractReadConfig<
-    typeof payrollOfProjectABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__.
- */
-export function usePayrollOfProjectWrite<
-  TFunctionName extends string,
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          string
-        >['request']['abi'],
-        TFunctionName,
-        TMode
-      >
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        TFunctionName,
-        TMode
-      > & {
-        abi?: never
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, TFunctionName, TMode>({
-    abi: payrollOfProjectABI,
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
- */
-export function usePayrollOfProjectApplyWorkingHour<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'applyWorkingHour'
-        >['request']['abi'],
-        'applyWorkingHour',
-        TMode
-      > & { functionName?: 'applyWorkingHour' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'applyWorkingHour',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'applyWorkingHour'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof payrollOfProjectABI,
-    'applyWorkingHour',
-    TMode
-  >({
-    abi: payrollOfProjectABI,
-    functionName: 'applyWorkingHour',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
- */
-export function usePayrollOfProjectCreateTeam<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'createTeam'
-        >['request']['abi'],
-        'createTeam',
-        TMode
-      > & { functionName?: 'createTeam' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'createTeam',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'createTeam'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'createTeam', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'createTeam',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
- */
-export function usePayrollOfProjectEnrollMember<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'enrollMember'
-        >['request']['abi'],
-        'enrollMember',
-        TMode
-      > & { functionName?: 'enrollMember' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'enrollMember',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'enrollMember'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'enrollMember', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'enrollMember',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
- */
-export function usePayrollOfProjectEnrollTeam<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'enrollTeam'
-        >['request']['abi'],
-        'enrollTeam',
-        TMode
-      > & { functionName?: 'enrollTeam' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'enrollTeam',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'enrollTeam'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'enrollTeam', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'enrollTeam',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
- */
-export function usePayrollOfProjectExtendPeriod<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'extendPeriod'
-        >['request']['abi'],
-        'extendPeriod',
-        TMode
-      > & { functionName?: 'extendPeriod' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'extendPeriod',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'extendPeriod'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'extendPeriod', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'extendPeriod',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
- */
-export function usePayrollOfProjectFixBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'fixBudget'
-        >['request']['abi'],
-        'fixBudget',
-        TMode
-      > & { functionName?: 'fixBudget' }
-    : UseContractWriteConfig<typeof payrollOfProjectABI, 'fixBudget', TMode> & {
-        abi?: never
-        functionName?: 'fixBudget'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'fixBudget', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'fixBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
- */
-export function usePayrollOfProjectIncreaseBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'increaseBudget'
-        >['request']['abi'],
-        'increaseBudget',
-        TMode
-      > & { functionName?: 'increaseBudget' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'increaseBudget',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'increaseBudget'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'increaseBudget', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'increaseBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
- */
-export function usePayrollOfProjectIncreaseTeamBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'increaseTeamBudget'
-        >['request']['abi'],
-        'increaseTeamBudget',
-        TMode
-      > & { functionName?: 'increaseTeamBudget' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'increaseTeamBudget',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'increaseTeamBudget'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof payrollOfProjectABI,
-    'increaseTeamBudget',
-    TMode
-  >({
-    abi: payrollOfProjectABI,
-    functionName: 'increaseTeamBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"init"`.
- */
-export function usePayrollOfProjectInit<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'init'
-        >['request']['abi'],
-        'init',
-        TMode
-      > & { functionName?: 'init' }
-    : UseContractWriteConfig<typeof payrollOfProjectABI, 'init', TMode> & {
-        abi?: never
-        functionName?: 'init'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'init', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'init',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"payWages"`.
- */
-export function usePayrollOfProjectPayWages<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'payWages'
-        >['request']['abi'],
-        'payWages',
-        TMode
-      > & { functionName?: 'payWages' }
-    : UseContractWriteConfig<typeof payrollOfProjectABI, 'payWages', TMode> & {
-        abi?: never
-        functionName?: 'payWages'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'payWages', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'payWages',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
- */
-export function usePayrollOfProjectPickupDeposit<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'pickupDeposit'
-        >['request']['abi'],
-        'pickupDeposit',
-        TMode
-      > & { functionName?: 'pickupDeposit' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'pickupDeposit',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'pickupDeposit'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'pickupDeposit', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'pickupDeposit',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
- */
-export function usePayrollOfProjectRemoveMember<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'removeMember'
-        >['request']['abi'],
-        'removeMember',
-        TMode
-      > & { functionName?: 'removeMember' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'removeMember',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'removeMember'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'removeMember', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'removeMember',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
- */
-export function usePayrollOfProjectReplaceLeader<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'replaceLeader'
-        >['request']['abi'],
-        'replaceLeader',
-        TMode
-      > & { functionName?: 'replaceLeader' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'replaceLeader',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'replaceLeader'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'replaceLeader', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'replaceLeader',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
- */
-export function usePayrollOfProjectRestoreMember<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'restoreMember'
-        >['request']['abi'],
-        'restoreMember',
-        TMode
-      > & { functionName?: 'restoreMember' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'restoreMember',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'restoreMember'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'restoreMember', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'restoreMember',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
- */
-export function usePayrollOfProjectSetBudget<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'setBudget'
-        >['request']['abi'],
-        'setBudget',
-        TMode
-      > & { functionName?: 'setBudget' }
-    : UseContractWriteConfig<typeof payrollOfProjectABI, 'setBudget', TMode> & {
-        abi?: never
-        functionName?: 'setBudget'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'setBudget', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'setBudget',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
- */
-export function usePayrollOfProjectSetCurrency<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'setCurrency'
-        >['request']['abi'],
-        'setCurrency',
-        TMode
-      > & { functionName?: 'setCurrency' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'setCurrency',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setCurrency'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'setCurrency', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'setCurrency',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setManager"`.
- */
-export function usePayrollOfProjectSetManager<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'setManager'
-        >['request']['abi'],
-        'setManager',
-        TMode
-      > & { functionName?: 'setManager' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'setManager',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setManager'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'setManager', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'setManager',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setNewOwner"`.
- */
-export function usePayrollOfProjectSetNewOwner<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'setNewOwner'
-        >['request']['abi'],
-        'setNewOwner',
-        TMode
-      > & { functionName?: 'setNewOwner' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'setNewOwner',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'setNewOwner'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'setNewOwner', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'setNewOwner',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
- */
-export function usePayrollOfProjectUpdateTeam<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'updateTeam'
-        >['request']['abi'],
-        'updateTeam',
-        TMode
-      > & { functionName?: 'updateTeam' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'updateTeam',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'updateTeam'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'updateTeam', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'updateTeam',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
- */
-export function usePayrollOfProjectVerifyMemberWork<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'verifyMemberWork'
-        >['request']['abi'],
-        'verifyMemberWork',
-        TMode
-      > & { functionName?: 'verifyMemberWork' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'verifyMemberWork',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'verifyMemberWork'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof payrollOfProjectABI,
-    'verifyMemberWork',
-    TMode
-  >({
-    abi: payrollOfProjectABI,
-    functionName: 'verifyMemberWork',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
- */
-export function usePayrollOfProjectVerifyTeamWork<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof payrollOfProjectABI,
-          'verifyTeamWork'
-        >['request']['abi'],
-        'verifyTeamWork',
-        TMode
-      > & { functionName?: 'verifyTeamWork' }
-    : UseContractWriteConfig<
-        typeof payrollOfProjectABI,
-        'verifyTeamWork',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'verifyTeamWork'
-      } = {} as any,
-) {
-  return useContractWrite<typeof payrollOfProjectABI, 'verifyTeamWork', TMode>({
-    abi: payrollOfProjectABI,
-    functionName: 'verifyTeamWork',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__.
- */
-export function usePreparePayrollOfProjectWrite<TFunctionName extends string>(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, TFunctionName>,
-    'abi'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, TFunctionName>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"applyWorkingHour"`.
- */
-export function usePreparePayrollOfProjectApplyWorkingHour(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof payrollOfProjectABI,
-      'applyWorkingHour'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'applyWorkingHour',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'applyWorkingHour'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"createTeam"`.
- */
-export function usePreparePayrollOfProjectCreateTeam(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'createTeam'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'createTeam',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'createTeam'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollMember"`.
- */
-export function usePreparePayrollOfProjectEnrollMember(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'enrollMember'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'enrollMember',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'enrollMember'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"enrollTeam"`.
- */
-export function usePreparePayrollOfProjectEnrollTeam(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'enrollTeam'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'enrollTeam',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'enrollTeam'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"extendPeriod"`.
- */
-export function usePreparePayrollOfProjectExtendPeriod(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'extendPeriod'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'extendPeriod',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'extendPeriod'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"fixBudget"`.
- */
-export function usePreparePayrollOfProjectFixBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'fixBudget'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'fixBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'fixBudget'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseBudget"`.
- */
-export function usePreparePayrollOfProjectIncreaseBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'increaseBudget'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'increaseBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'increaseBudget'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"increaseTeamBudget"`.
- */
-export function usePreparePayrollOfProjectIncreaseTeamBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof payrollOfProjectABI,
-      'increaseTeamBudget'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'increaseTeamBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'increaseTeamBudget'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"init"`.
- */
-export function usePreparePayrollOfProjectInit(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'init'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'init',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'init'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"payWages"`.
- */
-export function usePreparePayrollOfProjectPayWages(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'payWages'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'payWages',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'payWages'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"pickupDeposit"`.
- */
-export function usePreparePayrollOfProjectPickupDeposit(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'pickupDeposit'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'pickupDeposit',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'pickupDeposit'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"removeMember"`.
- */
-export function usePreparePayrollOfProjectRemoveMember(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'removeMember'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'removeMember',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'removeMember'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"replaceLeader"`.
- */
-export function usePreparePayrollOfProjectReplaceLeader(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'replaceLeader'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'replaceLeader',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'replaceLeader'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"restoreMember"`.
- */
-export function usePreparePayrollOfProjectRestoreMember(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'restoreMember'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'restoreMember',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'restoreMember'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setBudget"`.
- */
-export function usePreparePayrollOfProjectSetBudget(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setBudget'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'setBudget',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setBudget'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setCurrency"`.
- */
-export function usePreparePayrollOfProjectSetCurrency(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setCurrency'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'setCurrency',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setCurrency'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setManager"`.
- */
-export function usePreparePayrollOfProjectSetManager(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setManager'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'setManager',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setManager'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"setNewOwner"`.
- */
-export function usePreparePayrollOfProjectSetNewOwner(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setNewOwner'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'setNewOwner',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'setNewOwner'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"updateTeam"`.
- */
-export function usePreparePayrollOfProjectUpdateTeam(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'updateTeam'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'updateTeam',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'updateTeam'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyMemberWork"`.
- */
-export function usePreparePayrollOfProjectVerifyMemberWork(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof payrollOfProjectABI,
-      'verifyMemberWork'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'verifyMemberWork',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'verifyMemberWork'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link payrollOfProjectABI}__ and `functionName` set to `"verifyTeamWork"`.
- */
-export function usePreparePayrollOfProjectVerifyTeamWork(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof payrollOfProjectABI, 'verifyTeamWork'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: payrollOfProjectABI,
-    functionName: 'verifyTeamWork',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof payrollOfProjectABI,
-    'verifyTeamWork'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__.
- */
-export function usePayrollOfProjectEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"EnrollTeam"`.
- */
-export function usePayrollOfProjectEnrollTeamEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'EnrollTeam'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'EnrollTeam',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'EnrollTeam'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"IncreaseBudget"`.
- */
-export function usePayrollOfProjectIncreaseBudgetEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'IncreaseBudget'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'IncreaseBudget',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'IncreaseBudget'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"PayWages"`.
- */
-export function usePayrollOfProjectPayWagesEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'PayWages'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'PayWages',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'PayWages'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"PickupDeposit"`.
- */
-export function usePayrollOfProjectPickupDepositEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'PickupDeposit'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'PickupDeposit',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'PickupDeposit'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"ReplaceLeader"`.
- */
-export function usePayrollOfProjectReplaceLeaderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'ReplaceLeader'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'ReplaceLeader',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'ReplaceLeader'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetBudget"`.
- */
-export function usePayrollOfProjectSetBudgetEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'SetBudget'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'SetBudget',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetBudget'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetCurrency"`.
- */
-export function usePayrollOfProjectSetCurrencyEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'SetCurrency'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'SetCurrency',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetCurrency'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetManager"`.
- */
-export function usePayrollOfProjectSetManagerEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'SetManager'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'SetManager',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetManager'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"SetNewOwner"`.
- */
-export function usePayrollOfProjectSetNewOwnerEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'SetNewOwner'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'SetNewOwner',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'SetNewOwner'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"VerifyMemberWork"`.
- */
-export function usePayrollOfProjectVerifyMemberWorkEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyMemberWork'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'VerifyMemberWork',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyMemberWork'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link payrollOfProjectABI}__ and `eventName` set to `"VerifyTeamWork"`.
- */
-export function usePayrollOfProjectVerifyTeamWorkEvent(
-  config: Omit<
-    UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyTeamWork'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: payrollOfProjectABI,
-    eventName: 'VerifyTeamWork',
-    ...config,
-  } as UseContractEventConfig<typeof payrollOfProjectABI, 'VerifyTeamWork'>)
 }
 
 /**

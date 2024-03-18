@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { usePayrollOfProjectIncreaseTeamBudget } from "../../../../../../../../generated";
+import { useListOfProjectsIncreaseTeamBudget } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
-import { Add } from "@mui/icons-material";
-import { HexType, MaxSeqNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
+import { Add, NorthEast } from "@mui/icons-material";
+import { HexType, MaxPrice } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfManagerProps } from "../ActionsOfManager";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -16,7 +16,7 @@ export function IncreaseTeamBudget({ addr, seqOfTeam, refresh }: ActionsOfManage
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
-  const [ deltaQty, setDeltaQty] = useState<string>('0');
+  const [ deltaAmt, setDeltaAmt] = useState<string>('0');
 
   const updateResults = ()=> {
     setLoading(false);
@@ -27,7 +27,7 @@ export function IncreaseTeamBudget({ addr, seqOfTeam, refresh }: ActionsOfManage
   const {
     isLoading: increaseTeamBudgetLoading,
     write: increaseTeamBudget,
-  } = usePayrollOfProjectIncreaseTeamBudget ({
+  } = useListOfProjectsIncreaseTeamBudget ({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -43,7 +43,7 @@ export function IncreaseTeamBudget({ addr, seqOfTeam, refresh }: ActionsOfManage
     increaseTeamBudget({
       args: seqOfTeam
       ? [ BigInt(seqOfTeam),
-          BigInt(deltaQty)]
+          strNumToBigInt(deltaAmt, 2)]
       : undefined,
     });
   }
@@ -61,35 +61,35 @@ export function IncreaseTeamBudget({ addr, seqOfTeam, refresh }: ActionsOfManage
             m:1,
             minWidth: 218,
           }}
-          value={ seqOfTeam.toString().padStart(6, '0') }
+          value={ longSnParser(seqOfTeam?.toString() ?? '0') }
           size='small'
         />
 
         <TextField 
           variant='outlined'
-          label='DeltaQty'
-          error={ valid['DeltaQty']?.error }
-          helperText={ valid['DeltaQty']?.helpTx ?? ' ' }  
+          label='DeltaAmt'
+          error={ valid['DeltaAmt']?.error }
+          helperText={ valid['DeltaAmt']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('DeltaQty', input, MaxSeqNo, setValid);
-            setDeltaQty(input);
+            onlyNum('DeltaAmt', input, MaxPrice, 2, setValid);
+            setDeltaAmt(input);
           }}
-          value={ deltaQty }
+          value={ deltaAmt }
           size='small'
         />
 
         <LoadingButton 
-          disabled = { seqOfTeam == 0 || deltaQty == '0' || increaseTeamBudgetLoading || hasError(valid) }
+          disabled = { seqOfTeam == 0 || deltaAmt == '0' || increaseTeamBudgetLoading || hasError(valid) }
           loading={loading}
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
-          endIcon={<Add />}
+          endIcon={<NorthEast />}
           onClick={ handleClick }
           size='small'
         >

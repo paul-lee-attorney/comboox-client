@@ -1,21 +1,18 @@
 
-import { 
-  Card,
-  CardContent,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper, Select, Stack, Typography,
-} from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
-import { Member, getMembersOfTeam, getTeamInfo, qtyOfTeams } from "../../../read/lop";
 import { ActionsOfLeader } from "./ActionsOfLeader";
-import { baseToDollar, longDataParser, longSnParser } from "../../../../../read/toolsKit";
 import { PayrollProps } from "../../Owner/write/OwnerPage";
 import { GetMembersList } from "../read/GetMembersList";
+import { TeamSelector } from "../read/TeamSelector";
+import { MemberInfo } from "../../Member/read/MemberInfo";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { Member, defaultMember, getProjectInfo, getTeamInfo } from "../../../read/lop";
 
 export function LeaderPage({ addr }:PayrollProps) {
+
+  const { userNo } = useComBooxContext();
 
   const [ time, setTime ] = useState(0);
 
@@ -23,118 +20,50 @@ export function LeaderPage({ addr }:PayrollProps) {
     setTime(Date.now());
   }
 
-  const [ seqOfTeam, setSeqOfTeam ] = useState<number>();
-  const [ teamNoList, setTeamNoList ] = useState<number[]>();
+  const [ seqOfTeam, setSeqOfTeam ] = useState<number>(0);
 
-  useEffect(() => { 
-    qtyOfTeams(addr).then(
-      res => {
-        if (res > 0) {
-          let ls:number[] = [];
-          for (let i = 1; i <= res; i++){
-            ls.push(i);
-          }
-          setTeamNoList(ls);
-        } 
-      }
-    );
-  }, [ addr, time ]);
+  const [ memberNo, setMemberNo ] = useState<number>(0);
 
-  const [ teamInfo, setTeamInfo ] = useState<Member>();
+  const [ pm, setPM ] = useState<number>(0);
 
-  useEffect(() => {
-    if (seqOfTeam != undefined) {
+  useEffect(()=>{
+    getProjectInfo(addr).then(
+      res => setPM(res.userNo)
+    )
+  }, [addr, time]);
+
+  const [ teamInfo, setTeamInfo ] = useState<Member>(defaultMember);
+
+  useEffect(()=>{
+    if (seqOfTeam > 0) {
       getTeamInfo(addr, seqOfTeam).then(
-        info => {
-          setTeamInfo(info);
-        }
-      );
+        res => setTeamInfo(res)
+      )
     }
-  }, [ addr, seqOfTeam, time ]);
-
-  const [ list, setList ] = useState<readonly Member[]>();
-
-  useEffect(() => {
-    if (seqOfTeam != undefined) {
-      getMembersOfTeam(addr, seqOfTeam).then(
-        res => setList(res)
-      );
-    }
-  }, [addr, seqOfTeam, time]);
-
-  const [ memberNo, setMemberNo ] = useState<number>();
+  }, [seqOfTeam, addr])
 
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-      <Stack direction='column' sx={{m:1, alignItems:'start', justifyItems:'start'}} >    
+      
 
-        <Stack direction='row' >
-          <Typography variant="h5" sx={{m:1, textDecoration:'underline' }} >
-            <b>Team Info</b> - { seqOfTeam }
+        <Stack direction='row' sx={{ justifyContent:'start' }} >
+
+          <Typography variant="h5" sx={{ m:2, textDecoration:'underline' }} >
+            <b>Team Info: { seqOfTeam }</b>
           </Typography>
 
-          {teamNoList && (
-            <FormControl variant="outlined" size="small" sx={{ m:1, ml: 50, minWidth: 168 }}>
-              <InputLabel id="seqOfTeam-label">SeqOfTeam</InputLabel>
-              <Select
-                labelId="seqOfTeam-label"
-                id="seqOfTeam-select"
-                label="SeqOfTeam"
-                value={ seqOfTeam?.toString() ?? '' }
-                onChange={(e) => setSeqOfTeam(Number(e.target.value))}
-              >
-                {teamNoList.map((v, i) => (
-                  <MenuItem key={i} value={v.toString()}>{v}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-
+          <TeamSelector addr={addr} time={time} seqOfTeam={seqOfTeam} setSeqOfTeam={setSeqOfTeam} acct={0} />
+        
         </Stack>
 
-        <Card variant='outlined' sx={{m:1, mr:3, width:'100%' }}>
-          <CardContent>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Team Leader: { longSnParser(teamInfo?.userNo.toString() ?? '0') }
-            </Typography>
-
-            <hr />
-
-            <Typography variant="body1" sx={{ m:1 }} >
-              Rate: { baseToDollar(teamInfo?.rate.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Estimated: { longDataParser(teamInfo?.estimated.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { longDataParser(teamInfo?.applied.toString() ?? '0') }
-            </Typography>
-
-            <hr />
-
-            <Typography variant="body1" sx={{ m:1 }} >
-              Budget: { baseToDollar(teamInfo?.budgetAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { baseToDollar(teamInfo?.pendingAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Verified: { baseToDollar(teamInfo?.receivableAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Paid: { baseToDollar(teamInfo?.paidAmt.toString() ?? '0') }
-            </Typography>
-
-          </CardContent>
-        </Card>
-
-      </Stack>
-
-      {list && (
-        <GetMembersList setSeq={setMemberNo} list={list} />
+      { userNo && (userNo == teamInfo.userNo ||
+        userNo == pm) && (
+          <>
+            <MemberInfo addr={addr} time={time} seqOfTeam={seqOfTeam}  acct={0} />
+            <GetMembersList addr={addr} time={time} seqOfTeam={seqOfTeam} setSeq={setMemberNo} acct={0} />
+            <ActionsOfLeader addr={ addr } seqOfTeam={ seqOfTeam } memberNo={ memberNo } refresh={ refresh } />
+          </>
       )}
-
-      <ActionsOfLeader addr={ addr } seqOfTeam={ seqOfTeam } memberNo={ memberNo } refresh={ refresh } />
 
     </Paper>
   );

@@ -82,7 +82,7 @@ export function GetFilesList({ list, title, pathName, setFile, setOpen }:GetFile
     {
       field: 'creator',
       headerName: 'Creator',
-      valueGetter: p => longSnParser(parseInt(`0x${p.row.sn.substring(44, 54)}`).toString()),
+      valueGetter: p => p.row.sn.substring(44, 54),
       width: 218,
       headerAlign:'center',
       align: 'center',

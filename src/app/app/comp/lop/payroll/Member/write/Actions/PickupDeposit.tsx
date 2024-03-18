@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { usePayrollOfProjectPickupDeposit } from "../../../../../../../../generated";
+import { useListOfProjectsPickupDeposit } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { BorderColor } from "@mui/icons-material";
-import { HexType, MaxData } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
+import { HexType, MaxData, MaxLockValue } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, onlyNum, 
+  refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../../../Owner/write/ActionsOfOwner";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -23,7 +24,7 @@ export function PickupDeposit({ addr, refresh }: ActionsOfOwnerProps ) {
   const {
     isLoading: pickupDepositLoading,
     write: pickupDeposit,
-  } = usePayrollOfProjectPickupDeposit({
+  } = useListOfProjectsPickupDeposit({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -39,7 +40,7 @@ export function PickupDeposit({ addr, refresh }: ActionsOfOwnerProps ) {
 
   const handleClick = () => {
     pickupDeposit({
-      args: [ strNumToBigInt(amt, 9) * (10n ** 9n) ]
+      args: [ strNumToBigInt(amt, 18) ]
     });
   }
 
@@ -59,7 +60,7 @@ export function PickupDeposit({ addr, refresh }: ActionsOfOwnerProps ) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Amount', input, MaxData, 9, setValid);
+            onlyNum('Amount', input, MaxLockValue ,18, setValid);
             setAmt(input);
           }}
           value={ amt }

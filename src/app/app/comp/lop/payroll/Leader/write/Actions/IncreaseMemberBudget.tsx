@@ -1,33 +1,32 @@
 import { useState } from "react";
-import { useListOfProjectsReplaceLeader } from "../../../../../../../../generated";
+import { useListOfProjectsIncreaseMemberBudget } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
-import { CurrencyExchange, Loop } from "@mui/icons-material";
-import { HexType, MaxUserNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, longSnParser, 
-  onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
+import { Moving, NorthEast } from "@mui/icons-material";
+import { HexType, MaxPrice } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
-import { ActionsOfManagerProps } from "../ActionsOfManager";
+import { ActionsOfLeaderProps } from "../ActionsOfLeader";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
 
 
-export function ReplaceLeader({ addr, seqOfTeam, refresh }: ActionsOfManagerProps ) {
+export function IncreaseMemberBudget({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLeaderProps ) {
 
   const { setErrMsg } = useComBooxContext();
   
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
-  const [ leader, setLeader] = useState<string>('0');
-
   const updateResults = ()=> {
     setLoading(false);
     refresh();
   }
 
+  const [ delta, setDelta ] = useState('0');
+
   const {
-    isLoading: replaceLeaderLoading,
-    write: replaceLeader,
-  } = useListOfProjectsReplaceLeader ({
+    isLoading: increaseMemberBudgetLoading,
+    write: increaseBudget,
+  } = useListOfProjectsIncreaseMemberBudget({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -40,11 +39,12 @@ export function ReplaceLeader({ addr, seqOfTeam, refresh }: ActionsOfManagerProp
   });
 
   const handleClick = () => {
-    replaceLeader({
-      args: seqOfTeam
-      ? [ BigInt(seqOfTeam),
-          BigInt(leader)]
-      : undefined,
+    increaseBudget({
+      args: seqOfTeam && memberNo && delta
+        ? [ BigInt(seqOfTeam),
+            BigInt(memberNo),
+            strNumToBigInt(delta, 2)]
+        : undefined,
     });
   }
 
@@ -61,39 +61,52 @@ export function ReplaceLeader({ addr, seqOfTeam, refresh }: ActionsOfManagerProp
             m:1,
             minWidth: 218,
           }}
-          value={ longSnParser(seqOfTeam?.toString() ?? '0') }
+          value={ longSnParser(seqOfTeam?.toString() ?? '0')}
           size='small'
         />
 
         <TextField 
           variant='outlined'
-          label='Leader'
-          error={ valid['Leader']?.error }
-          helperText={ valid['Leader']?.helpTx ?? ' ' }  
+          label='UserNo'
+          inputProps={{readOnly: true}}
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          value={ longSnParser(memberNo?.toString() ?? '0') }
+          size='small'
+        />
+
+        <TextField 
+          variant='outlined'
+          label='DeltaAmt'
+          error={ valid['DeltaAmt']?.error }
+          helperText={ valid['DeltaAmt']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Leader', input, MaxUserNo, setValid);
-            setLeader(input);
+            onlyNum('DeltaAmt', input, MaxPrice, 2, setValid);
+            setDelta(input);
           }}
-          value={ leader }
+          value={ delta }
           size='small'
         />
 
         <LoadingButton 
-          disabled = { seqOfTeam == 0 || leader == '0' || replaceLeaderLoading || hasError(valid) }
+          disabled = { !(seqOfTeam && memberNo) || delta == '0' || 
+            increaseMemberBudgetLoading || hasError(valid) }
           loading={loading}
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
-          endIcon={<Loop />}
+          endIcon={<NorthEast />}
           onClick={ handleClick }
           size='small'
         >
-          Replace
+          Increase
         </LoadingButton>
 
       </Stack>

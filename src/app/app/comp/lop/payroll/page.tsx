@@ -1,7 +1,5 @@
 "use client"
 
-import { useRouter } from "next/router";
-
 import { HexType } from "../../../read";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
@@ -13,14 +11,15 @@ import { dateParser } from "../../../read/toolsKit";
 import { OwnerPage } from "./Owner/write/OwnerPage";
 import { ManagerPage } from "./Manager/write/ManagerPage";
 import { LeaderPage } from "./Leader/write/LeaderPage";
+import { useSearchParams } from "next/navigation";
+import { MemberPage } from "./Member/write/MemberPage";
 
 function Payroll() {
 
   const [ index, setIndex ] = useState<number>(0);
 
-  const { query } = useRouter();
-
-  const body:HexType = `0x${query?.body?.toString().substring(2)}`;
+  const searchParams = useSearchParams();
+  const body: HexType = `0x${searchParams.get('body')?.substring(2) ?? '00'}`;
 
   const [ head, setHead ] = useState<HeadOfDoc>();
 
@@ -51,7 +50,7 @@ function Payroll() {
                     SN: {head?.seqOfDoc.toString().padStart(6, '0')}
                   </Typography>
                   <Typography sx={{ m: 1, textDecoration:'underline' }} variant="body2" >
-                    Creator: {head?.creator.toString().padStart(6, '0')}
+                    Creator: {BigInt(head?.creator ?? '0').toString(16)}
                   </Typography>
                 </Stack>
 
@@ -77,13 +76,13 @@ function Payroll() {
 
               <TabList tabFlex={1} sx={{ width: 880 }}  >
                 <Tab><b>Member</b></Tab>
-                <Tab><b>Leader</b></Tab>
-                <Tab><b>Manager</b></Tab>
+                <Tab><b>Team</b></Tab>
+                <Tab><b>Project</b></Tab>
                 <Tab><b>Owner</b></Tab>
               </TabList>
 
               <TabPanel value={0} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >
-                Members Panel
+                <MemberPage addr={body} />
               </TabPanel>
 
               <TabPanel value={1} sx={{ width:'100%', justifyContent:'center', alignItems:'center' }} >

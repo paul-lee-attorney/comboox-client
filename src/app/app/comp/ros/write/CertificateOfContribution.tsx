@@ -220,7 +220,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValueOfPaid" 
                     label="ValueOfPaid" 
                     variant="outlined"
-                    value = { baseToDollar((share.body.paid * BigInt(share.head.priceOfPaid) / 100n).toString()) }
+                    value = { baseToDollar((BigInt(share.body.paid) * BigInt(share.head.priceOfPaid) / 10n ** 4n).toString()) }
                     size='small'
                   />                
                 </td>
@@ -262,8 +262,8 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValue" 
                     label="Value" 
                     variant="outlined"
-                    value = { baseToDollar(((share.body.paid * BigInt(share.head.priceOfPaid) / 100n) 
-                      + ((share.body.par - share.body.paid) * BigInt(share.head.priceOfPar) / 100n)).toString())
+                    value = { baseToDollar((BigInt(share.body.paid) * BigInt(share.head.priceOfPaid) / 10n ** 4n 
+                      + BigInt(share.body.par - share.body.paid) * BigInt(share.head.priceOfPar) / 10n ** 4n).toString())
                     }
                     size='small'
                   />                                

@@ -2,11 +2,13 @@ import { useState } from "react";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, 
+  refreshAfterTx, removeKiloSymbol, strNumToBigInt 
+} from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../ActionsOfOwner";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
-import { usePayrollOfProjectPayWages } from "../../../../../../../../generated";
+import { useListOfProjectsPayWages } from "../../../../../../../../generated";
 import { HexType } from "../../../../../../read";
 
 export function PayWages({ addr, refresh }: ActionsOfOwnerProps ) {
@@ -26,7 +28,7 @@ export function PayWages({ addr, refresh }: ActionsOfOwnerProps ) {
   const {
     isLoading: payWagesLoading,
     write: payWages,
-  } = usePayrollOfProjectPayWages({
+  } = useListOfProjectsPayWages({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

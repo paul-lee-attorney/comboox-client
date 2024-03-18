@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePayrollOfProjectEnrollTeam } from "../../../../../../../../generated";
+import { useListOfProjectsEnrollTeam } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { BorderColor } from "@mui/icons-material";
 import { HexType } from "../../../../../../read";
@@ -24,7 +24,7 @@ export function EnrollTeam({ addr, seqOfTeam, refresh }: ActionsOfManagerProps )
   const {
     isLoading: enrollTeamLoading,
     write: enrollTeam,
-  } = usePayrollOfProjectEnrollTeam ({
+  } = useListOfProjectsEnrollTeam ({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -38,9 +38,9 @@ export function EnrollTeam({ addr, seqOfTeam, refresh }: ActionsOfManagerProps )
 
   const handleClick = () => {
     enrollTeam({
-      args: [ 
-        BigInt(seqOfTeam)
-      ],
+      args: seqOfTeam 
+      ? [BigInt(seqOfTeam)]
+      : undefined,
     });
   }
 

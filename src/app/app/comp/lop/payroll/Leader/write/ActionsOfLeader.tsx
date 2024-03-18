@@ -8,8 +8,9 @@ import { UpdateTeam } from "./Actions/UpdateTeam";
 import { EnrollMember } from "./Actions/EnrollMember";
 import { RemoveMember } from "./Actions/RemoveMember";
 import { RestoreMember } from "./Actions/RestoreMember";
-import { ExtendPeriod } from "./Actions/ExtendPeriod";
 import { VerifyMemberWork } from "./Actions/VerifyMemberWork";
+import { IncreaseMemberBudget } from "./Actions/IncreaseMemberBudget";
+import { AdjustSalary } from "./Actions/AdjustSalary";
 
 export interface ActionsOfLeaderProps extends ActionsOfManagerProps {
   memberNo: number | undefined;
@@ -21,7 +22,7 @@ export function ActionsOfLeader({addr, seqOfTeam, memberNo, refresh}: ActionsOfL
 
   const typesOfAction = [
     'Create Team', 'Update Team', 'Enroll Member', 'Remove Member', 
-    'Restore Member', 'Extend Period', "Verify Member's Work"
+    'Restore Member', 'Increase Member Budget', 'Adjust Salary', "Verify Member's Work"
   ]
   
   const compsOfAction = [
@@ -30,8 +31,9 @@ export function ActionsOfLeader({addr, seqOfTeam, memberNo, refresh}: ActionsOfL
     <EnrollMember key={2} addr={addr} seqOfTeam={seqOfTeam} refresh={refresh} />,
     <RemoveMember key={3} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
     <RestoreMember key={4} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
-    <ExtendPeriod key={5} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
-    <VerifyMemberWork key={6} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
+    <IncreaseMemberBudget key={5} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
+    <AdjustSalary key={6} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
+    <VerifyMemberWork key={7} addr={addr} seqOfTeam={seqOfTeam} memberNo={memberNo} refresh={refresh} />,
   ]
 
   return(

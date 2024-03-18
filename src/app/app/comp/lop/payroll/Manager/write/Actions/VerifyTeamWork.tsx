@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePayrollOfProjectVerifyTeamWork } from "../../../../../../../../generated";
+import { useListOfProjectsVerifyTeamWork } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Verified } from "@mui/icons-material";
 import { HexType, MaxRatio} from "../../../../../../read";
@@ -26,7 +26,7 @@ export function VerifyTeamWork({ addr, seqOfTeam, refresh }: ActionsOfManagerPro
   const {
     isLoading: verifyTeamWorkLoading,
     write: verifyTeamWork,
-  } = usePayrollOfProjectVerifyTeamWork ({
+  } = useListOfProjectsVerifyTeamWork ({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

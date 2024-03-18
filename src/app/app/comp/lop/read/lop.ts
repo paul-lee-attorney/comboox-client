@@ -1,6 +1,6 @@
 import { readContract, fetchBalance } from "@wagmi/core";
 import { HexType } from "../../../read";
-import { payrollOfProjectABI } from "../../../../../generated";
+import { listOfProjectsABI } from "../../../../../generated";
 
 // ==== Member ====
 
@@ -9,13 +9,24 @@ export interface Member {
   userNo: number;
   state: number;
   rate: number;
-  estimated: number;
-  applied: number;
+  workHours: number;
   budgetAmt: number;
-  pendingAmt: number;
+  approvedAmt: number;
   receivableAmt: number;
   paidAmt: number;
 }
+
+export const defaultMember:Member = {
+  seqOfTeam: 0,
+  userNo: 0,
+  state: 0,
+  rate: 0,
+  workHours: 0,
+  budgetAmt: 0,
+  approvedAmt: 0,
+  receivableAmt: 0,
+  paidAmt: 0,
+} 
 
 export interface BalanceOf {
   project: bigint;
@@ -23,11 +34,17 @@ export interface BalanceOf {
   me: bigint;
 }
 
+export const defaultBalanceOf:BalanceOf = {
+  project: 0n,
+  cash: 0n,
+  me: 0n,
+}
+
 export async function getOwner(addrOfPop:HexType): Promise<HexType>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getOwner'
   });
 
@@ -38,7 +55,7 @@ export async function getRegCenter(addrOfPop:HexType): Promise<HexType>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getRegCenter'
   });
 
@@ -49,7 +66,7 @@ export async function getCurrency(addrOfPop:HexType): Promise<number>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getCurrency'
   });
 
@@ -60,7 +77,7 @@ export async function isManager(addrOfPop:HexType, acct: bigint): Promise<boolea
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'isManager',
     args: [acct]
   });
@@ -72,7 +89,7 @@ export async function getProjectInfo(addrOfPop:HexType): Promise<Member>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getProjectInfo',
   });
 
@@ -85,7 +102,7 @@ export async function qtyOfTeams(addrOfPop:HexType): Promise<number>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'qtyOfTeams',
   });
 
@@ -96,7 +113,7 @@ export async function getListOfTeams(addrOfPop:HexType): Promise<number[]>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getListOfTeams',
   });
 
@@ -107,7 +124,7 @@ export async function teamIsEnrolled(addrOfPop:HexType, seqOfTeam: number): Prom
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'teamIsEnrolled',
     args: [ BigInt(seqOfTeam) ]
   });
@@ -125,7 +142,7 @@ export async function isTeamLeader(
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'isTeamLeader',
     args: [ BigInt(acct), BigInt(seqOfTeam) ]
   });
@@ -137,7 +154,7 @@ export async function getTeamInfo(addrOfPop:HexType, seqOfTeam: number): Promise
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getTeamInfo',
     args: [ BigInt(seqOfTeam) ]
   });
@@ -169,7 +186,7 @@ export async function isMember(
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'isMember',
     args: [ BigInt(acct), BigInt(seqOfTeam) ]
   });
@@ -185,7 +202,7 @@ export async function isEnrolledMember(
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'isEnrolledMember',
     args: [ BigInt(acct), BigInt(seqOfTeam) ]
   });
@@ -197,7 +214,7 @@ export async function getTeamMembersList(addrOfPop:HexType, seqOfTeam: number): 
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getTeamMembersList',
     args: [ BigInt(seqOfTeam) ]
   });
@@ -213,7 +230,7 @@ export async function getMemberInfo(
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getMemberInfo',
     args: [ BigInt(acct), BigInt(seqOfTeam) ]
   });
@@ -225,7 +242,7 @@ export async function getMembersOfTeam(addrOfPop:HexType, seqOfTeam: number): Pr
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getMembersOfTeam',
     args: [ BigInt(seqOfTeam) ]
   });
@@ -239,7 +256,7 @@ export async function getPayroll(addrOfPop:HexType): Promise<number[]>{
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getPayroll',
   });
 
@@ -250,7 +267,7 @@ export async function inPayroll(addrOfPop:HexType, acct: number): Promise<boolea
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'inPayroll',
     args: [BigInt(acct)],
   });
@@ -262,7 +279,7 @@ export async function getBalanceOf(addrOfPop:HexType, acct: number): Promise<big
 
   let res = await readContract({
     address: addrOfPop,
-    abi: payrollOfProjectABI,
+    abi: listOfProjectsABI,
     functionName: 'getBalanceOf',
     args: [BigInt(acct)],
   });

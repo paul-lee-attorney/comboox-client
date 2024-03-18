@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { usePayrollOfProjectSetBudget } from "../../../../../../../../generated";
+import { useListOfProjectsSetBudget } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxPrice, MaxSeqNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum,
+  refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../../../Owner/write/ActionsOfOwner";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -16,8 +17,7 @@ export function SetBudget({ addr, refresh }: ActionsOfOwnerProps ) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
-  const [ rate, setRate] = useState<string>('0');
-  const [ estimated, setEstimated] = useState<string>('0');
+  const [ budget, setBudget] = useState<string>('0');
 
   const updateResults = () => {
     setLoading(false);
@@ -26,8 +26,8 @@ export function SetBudget({ addr, refresh }: ActionsOfOwnerProps ) {
 
   const {
     isLoading: setBudgetLoading,
-    write: setBudget,
-  } = usePayrollOfProjectSetBudget({
+    write: setProBudget,
+  } = useListOfProjectsSetBudget({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -40,10 +40,9 @@ export function SetBudget({ addr, refresh }: ActionsOfOwnerProps ) {
   });
 
   const handleClick = () => {
-    setBudget({
+    setProBudget({
       args: [ 
-        strNumToBigInt(rate, 4),
-        BigInt(estimated)
+        strNumToBigInt(budget, 2)
       ],
     });
   }
@@ -55,37 +54,19 @@ export function SetBudget({ addr, refresh }: ActionsOfOwnerProps ) {
 
         <TextField 
           variant='outlined'
-          label='Rate'
-          error={ valid['Rate']?.error }
-          helperText={ valid['Rate']?.helpTx ?? ' ' }  
+          label='Budget'
+          error={ valid['Budget']?.error }
+          helperText={ valid['Budget']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Rate', input, MaxPrice, 4, setValid);
-            setRate(input);
+            onlyNum('Budget', input, MaxPrice, 2, setValid);
+            setBudget(input);
           }}
-          value={ rate }
-          size='small'
-        />
-
-        <TextField 
-          variant='outlined'
-          label='Estimated'
-          error={ valid['Estimated']?.error }
-          helperText={ valid['Estimated']?.helpTx ?? ' ' }  
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={(e) => {
-            let input = e.target.value;
-            onlyInt('Estimated', input, MaxSeqNo, setValid);
-            setEstimated(input);
-          }}
-          value={ estimated }
+          value={ budget }
           size='small'
         />
 

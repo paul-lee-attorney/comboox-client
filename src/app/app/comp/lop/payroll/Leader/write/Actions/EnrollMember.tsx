@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { usePayrollOfProjectEnrollMember } from "../../../../../../../../generated";
+import { useListOfProjectsEnrollMember } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
-import { BorderColor } from "@mui/icons-material";
-import { HexType, MaxPrice, MaxSeqNo, MaxUserNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
+import { PersonAdd } from "@mui/icons-material";
+import { HexType, MaxPrice, MaxUserNo } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, longSnParser, 
+  onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfManagerProps } from "../../../Manager/write/ActionsOfManager";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -24,7 +25,7 @@ export function EnrollMember({ addr, seqOfTeam, refresh }: ActionsOfManagerProps
   const {
     isLoading: enrollMemberLoading,
     write: enrollMember,
-  } = usePayrollOfProjectEnrollMember({
+  } = useListOfProjectsEnrollMember({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -38,15 +39,15 @@ export function EnrollMember({ addr, seqOfTeam, refresh }: ActionsOfManagerProps
 
   const [ userNo, setUserNo ] = useState<string>('0');
   const [ rate, setRate ] = useState<string>('0');
-  const [ estimated, setEstimated ] = useState<string>('0');
+  const [ budget, setBudget ] = useState<string>('0');
 
   const handleClick = () => {
     enrollMember({
       args: seqOfTeam
       ? [ BigInt(seqOfTeam),
           BigInt(userNo),
-          strNumToBigInt(rate, 4),
-          BigInt(estimated)]
+          strNumToBigInt(rate, 2),
+          strNumToBigInt(budget, 2)]
       : undefined,
     });
   }
@@ -55,6 +56,18 @@ export function EnrollMember({ addr, seqOfTeam, refresh }: ActionsOfManagerProps
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
       <Stack direction='row' sx={{ alignItems:'start' }} >
+
+        <TextField 
+          variant='outlined'
+          label='SeqOfTeam'
+          inputProps={{readOnly: true}}
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          value={ longSnParser(seqOfTeam?.toString() ?? '0') }
+          size='small'
+        />
 
         <TextField 
           variant='outlined'
@@ -85,7 +98,7 @@ export function EnrollMember({ addr, seqOfTeam, refresh }: ActionsOfManagerProps
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyNum('Rate', input, MaxPrice, 4, setValid);
+            onlyNum('Rate', input, MaxPrice, 2, setValid);
             setRate(input);
           }}
           value={ rate }
@@ -94,30 +107,30 @@ export function EnrollMember({ addr, seqOfTeam, refresh }: ActionsOfManagerProps
 
         <TextField 
           variant='outlined'
-          label='Estimated'
-          error={ valid['Estimated']?.error }
-          helperText={ valid['Estimated']?.helpTx ?? ' ' }  
+          label='Budget'
+          error={ valid['Budget']?.error }
+          helperText={ valid['Budget']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Estimated', input, MaxSeqNo, setValid);
-            setEstimated(input);
+            onlyNum('Budget', input, MaxPrice, 2, setValid);
+            setBudget(input);
           }}
-          value={ estimated }
+          value={ budget }
           size='small'
         />
 
         <LoadingButton 
-          disabled = { seqOfTeam == undefined || userNo == '0' || rate == '0' || 
-            estimated == '0' || enrollMemberLoading || hasError(valid) }
+          disabled = { !seqOfTeam || userNo == '0' || rate == '0' || 
+            budget == '0' || enrollMemberLoading || hasError(valid) }
           loading={loading}
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
-          endIcon={<BorderColor />}
+          endIcon={<PersonAdd />}
           onClick={ handleClick }
           size='small'
         >

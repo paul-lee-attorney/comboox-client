@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePayrollOfProjectRemoveMember } from "../../../../../../../../generated";
+import { useListOfProjectsRemoveMember } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { PersonRemove } from "@mui/icons-material";
 import { HexType } from "../../../../../../read";
@@ -13,7 +13,6 @@ export function RemoveMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
 
   const { setErrMsg } = useComBooxContext();
   
-  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=> {
@@ -24,7 +23,7 @@ export function RemoveMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
   const {
     isLoading: removeMemberLoading,
     write: removeMember,
-  } = usePayrollOfProjectRemoveMember({
+  } = useListOfProjectsRemoveMember({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -58,7 +57,7 @@ export function RemoveMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
             m:1,
             minWidth: 218,
           }}
-          value={ seqOfTeam?.toString().padStart(6, '0') }
+          value={ longSnParser(seqOfTeam?.toString() ?? '0') }
           size='small'
         />
 
@@ -75,8 +74,7 @@ export function RemoveMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
         />
 
         <LoadingButton 
-          disabled = { seqOfTeam == undefined || memberNo == undefined || 
-            removeMemberLoading || hasError(valid) }
+          disabled = { !(seqOfTeam && memberNo) || removeMemberLoading }
           loading={loading}
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 

@@ -36,7 +36,7 @@ export function longSnParser(sn: string): string {
 export function longDataParser(data: string): string {
   if (data === '0')
     return '-';
-  else 
+  else
     return data.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
 
@@ -106,21 +106,23 @@ export function toAscii(input: string): string {
 
 export function weiToEth(input: string): string {
 
-  let len = input.length;
+  if (input == '0') return '-';
 
-  let dec = len > 18
-          ? input.substring(len - 18, len - 9)
-          : len > 9
-            ? input.substring(0, len-9).padStart(9, '0')
-            : '-';
+  let len = input.length;
 
   let int = len > 18
           ? longDataParser(input.substring(0, len - 18))
           : '0';
 
+  let dec = len > 18
+          ? input.substring(len - 18)
+          : input.padStart(18, '0');
+
+  dec = dec.replace(/\B(?=(\d{3})+$)/g, ",");
+  dec = dec.substring(0, 11) + ' - ' + dec.substring(12);
+
   return int + '.' + dec;
 }
-
 
 export function getGEthPart(input: string): string {
   
@@ -140,8 +142,8 @@ export function getEthPart(input: string): string {
 
   let res = len > 18
           ? len > 27
-            ? longDataParser(Number(input.substring(len - 27, len - 18)).toString())
-            : longDataParser(Number(input.substring(0, len - 18)).toString())
+            ? longDataParser(input.substring(len - 27, len - 18))
+            : longDataParser(input.substring(0, len - 18))
           : '-';
 
   return res;
@@ -153,8 +155,8 @@ export function getGWeiPart(input: string): string {
 
   let res = len > 9
           ? len > 18
-            ? longDataParser(Number(input.substring(len - 18, len - 9)).toString())
-            : longDataParser(Number(input.substring(0, len - 9)).toString())
+            ? longDataParser(input.substring(len - 18, len - 9))
+            : longDataParser(input.substring(0, len - 9))
           : '-'
 
   return res;
@@ -164,26 +166,10 @@ export function getWeiPart(input: string): string {
   let len = input.length;
 
   let res = len > 9
-          ? longDataParser(Number(input.substring(len - 9)).toString())
+          ? longDataParser(input.substring(len - 9))
           : longDataParser(input)
 
   return res;
-}
-
-export function baseToDollar(input: string): string {
-  let len = input.length;
-
-  let dec = len > 4
-          ? input.substring(len - 4)
-          : input.padStart(4, '0');
-
-  // if (dec == '00') dec = '-';
-
-  let int = len > 4
-          ? longDataParser(input.substring(0, len-4))
-          : '0'
-
-  return int + '.' + dec;
 }
 
 export function removeKiloSymbol(input: string): string {
@@ -342,26 +328,28 @@ export function hasError(valid: FormResults): boolean {
   return false;
 }
 
-export function trimZeroInTail(input: string):string {
-  let out = input;
-  let len = input.length;
+export function centToDollar(input: string): string {
+  return strIntToNum(input, 2);
+}
 
-  while(len > 1) {
-    if (out.substring(len-1, len) != '0') break;
-    len--;
-  }
-
-  if (len > 1) return out.substring(0, len);
-  else return out[0];
+export function baseToDollar(input: string): string {
+  return strIntToNum(input, 4);
 }
 
 export function bigIntToStrNum(input: bigint, dec: number): string {
-  let strInput = input.toString();
-  let len = strInput.length;
-  let front = len > dec ? strInput.substring(0,  (len - dec)) : '0';
-  let end = len > dec ? strInput.substring(len - dec, len) : strInput.padStart(dec, '0');
+  return strIntToNum(input.toString(), dec);
+}
 
-  return front + '.' + trimZeroInTail(end);
+export function trimZeroInTail(input: string):string {
+  return input.replace(/(?:\.0*|(\.\d+?)0+)$/,'$1');
+}
+
+function strIntToNum(input: string, dec: number): string {
+  let len = input.length;
+  let front = len > dec ? longDataParser(input.substring(0,  (len - dec))) : '0';
+  let end = len > dec ? input.substring(len - dec, len) : input.padStart(dec, '0');
+
+  return front + trimZeroInTail('.' + end);
 }
 
 export async function getReceipt(hash: HexType): Promise< any > {

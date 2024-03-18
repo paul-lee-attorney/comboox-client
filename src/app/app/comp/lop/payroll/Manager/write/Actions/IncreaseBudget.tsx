@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { usePayrollOfProjectIncreaseBudget } from "../../../../../../../../generated";
+import { useListOfProjectsIncreaseBudget } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
-import { HexType, MaxSeqNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
+import { HexType, MaxPrice, MaxSeqNo } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../../../Owner/write/ActionsOfOwner";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -26,7 +26,7 @@ export function IncreaseBudget({ addr, refresh }: ActionsOfOwnerProps ) {
   const {
     isLoading: increaseBudgetLoading,
     write: increaseBudget,
-  } = usePayrollOfProjectIncreaseBudget ({
+  } = useListOfProjectsIncreaseBudget ({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -41,7 +41,7 @@ export function IncreaseBudget({ addr, refresh }: ActionsOfOwnerProps ) {
   const handleClick = () => {
     increaseBudget({
       args: [ 
-        BigInt(deltaQty)
+        strNumToBigInt(deltaQty, 2)
       ],
     });
   }
@@ -53,16 +53,16 @@ export function IncreaseBudget({ addr, refresh }: ActionsOfOwnerProps ) {
 
         <TextField 
           variant='outlined'
-          label='DeltaQty'
-          error={ valid['DeltaQty']?.error }
-          helperText={ valid['DeltaQty']?.helpTx ?? ' ' }  
+          label='DeltaAmt'
+          error={ valid['DeltaAmt']?.error }
+          helperText={ valid['DeltaAmt']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('DeltaQty', input, MaxSeqNo, setValid);
+            onlyNum('DeltaAmt', input, MaxPrice, 2, setValid);
             setDeltaQty(input);
           }}
           value={ deltaQty }

@@ -131,10 +131,11 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 id="typeOfDeal-select"
                 label="TypeOfDeal"
                 value={ head.typeOfDeal }
-                onChange={(e) => setHead((v) => ({
-                  ...v,
-                  typeOfDeal: e.target.value,
-                }))}
+                onChange={(e) => setHead((v) => {
+                  let out:StrHead = defaultStrHead;
+                  out.typeOfDeal = e.target.value;
+                  return out;
+                })}
               >
                 {TypeOfDeal.slice(0,3).map((v,i) => (
                   <MenuItem key={v} value={i+1}>{v}</MenuItem>

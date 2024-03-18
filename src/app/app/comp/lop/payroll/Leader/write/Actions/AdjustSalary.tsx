@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { usePayrollOfProjectExtendPeriod } from "../../../../../../../../generated";
-import { Paper, Stack, TextField } from "@mui/material";
-import { Update } from "@mui/icons-material";
-import { HexType, MaxSeqNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, longSnParser, onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
+import { useListOfProjectsAdjustSalary } from "../../../../../../../../generated";
+import { FormControl, InputLabel, MenuItem, Paper, 
+  Select, Stack, TextField } from "@mui/material";
+import { ImportExport } from "@mui/icons-material";
+import { HexType, MaxPrice } from "../../../../../../read";
+import { FormResults, defFormResults, hasError, longSnParser, 
+  onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfLeaderProps } from "../ActionsOfLeader";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
 
-
-export function ExtendPeriod({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLeaderProps ) {
+export function AdjustSalary({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLeaderProps ) {
 
   const { setErrMsg } = useComBooxContext();
   
@@ -21,12 +22,13 @@ export function ExtendPeriod({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
     refresh();
   }
 
-  const [ delta, setDelta ] = useState(0);
+  const [ direction, setDirection ] = useState(true);
+  const [ delta, setDelta ] = useState('0');
 
   const {
-    isLoading: extendPeriodLoading,
-    write: extendPeriod,
-  } = usePayrollOfProjectExtendPeriod({
+    isLoading: adjustSalaryLoading,
+    write: adjustSalary,
+  } = useListOfProjectsAdjustSalary({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -39,11 +41,12 @@ export function ExtendPeriod({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
   });
 
   const handleClick = () => {
-    extendPeriod({
-      args: seqOfTeam && memberNo && delta
+    adjustSalary({
+      args: seqOfTeam && memberNo
         ? [ BigInt(seqOfTeam),
             BigInt(memberNo),
-            BigInt(delta)]
+            direction,
+            strNumToBigInt(delta, 2)]
         : undefined,
     });
   }
@@ -53,6 +56,20 @@ export function ExtendPeriod({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
 
       <Stack direction='row' sx={{ alignItems:'start' }} >
 
+        <FormControl variant="outlined" size="small" sx={{ m:1, minWidth: 168 }}>
+          <InputLabel id="direction-label">Direction</InputLabel>
+          <Select
+            labelId="direction-label"
+            id="direction-select"
+            label="Direction"
+            value={ direction ? 'True' : 'False' }
+            onChange={(e) => setDirection( e.target.value == 'True')}
+          >
+            <MenuItem value='True'>Increase</MenuItem>
+            <MenuItem value='False'>Decrease</MenuItem>
+          </Select>
+        </FormControl>
+
         <TextField 
           variant='outlined'
           label='SeqOfTeam'
@@ -61,7 +78,7 @@ export function ExtendPeriod({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
             m:1,
             minWidth: 218,
           }}
-          value={ seqOfTeam?.toString().padStart(6, '0') }
+          value={ longSnParser(seqOfTeam?.toString() ?? '0')}
           size='small'
         />
 
@@ -79,34 +96,34 @@ export function ExtendPeriod({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLe
 
         <TextField 
           variant='outlined'
-          label='DeltaQty'
-          error={ valid['DeltaQty']?.error }
-          helperText={ valid['DeltaQty']?.helpTx ?? ' ' }  
+          label='DeltaAmt'
+          error={ valid['DeltaAmt']?.error }
+          helperText={ valid['DeltaAmt']?.helpTx ?? ' ' }  
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('DeltaQty', input, MaxSeqNo, setValid);
-            setDelta(Number(input));
+            onlyNum('DeltaAmt', input, MaxPrice, 2, setValid);
+            setDelta(input);
           }}
           value={ delta }
           size='small'
         />
 
         <LoadingButton 
-          disabled = { !(seqOfTeam && memberNo) || delta == 0 || 
-            extendPeriodLoading || hasError(valid) }
+          disabled = { !(seqOfTeam && memberNo) || delta == '0' || 
+            adjustSalaryLoading || hasError(valid) }
           loading={loading}
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
-          endIcon={<Update />}
+          endIcon={<ImportExport />}
           onClick={ handleClick }
           size='small'
         >
-          Extend Period
+          Adjust
         </LoadingButton>
 
       </Stack>

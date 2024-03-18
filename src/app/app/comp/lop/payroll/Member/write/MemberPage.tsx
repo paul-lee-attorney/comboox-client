@@ -1,19 +1,14 @@
 
-import { 
-  Card,
-  CardContent,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper, Select, Stack, Typography,
-} from "@mui/material";
+import { Card, CardContent, Paper, Stack, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
-import { BalanceOf, Member, balanceOfWei, getBalanceOf, getMemberInfo, qtyOfTeams } from "../../../read/lop";
-import { bigIntToStrNum, baseToDollar, longDataParser, longSnParser } from "../../../../../read/toolsKit";
+import { BalanceOf, balanceOfWei, defaultBalanceOf, getBalanceOf, } from "../../../read/lop";
 import { PayrollProps } from "../../Owner/write/OwnerPage";
 import { ActionsOfMember } from "./ActionsOfMember";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { MemberInfo } from "../read/MemberInfo";
+import { TeamSelector } from "../../Leader/read/TeamSelector";
+import { getEthPart, getGWeiPart, getWeiPart, longSnParser, weiToEth } from "../../../../../read/toolsKit";
 
 export function MemberPage({ addr }:PayrollProps) {
 
@@ -23,162 +18,75 @@ export function MemberPage({ addr }:PayrollProps) {
     setTime(Date.now());
   }
 
-  const [ seqOfTeam, setSeqOfTeam ] = useState<number>();
-  const [ teamNoList, setTeamNoList ] = useState<number[]>();
-
-  useEffect(() => { 
-    qtyOfTeams(addr).then(
-      res => {
-        if (res > 0) {
-          let ls:number[] = [];
-          for (let i = 1; i <= res; i++){
-            ls.push(i);
-          }
-          setTeamNoList(ls);
-        } 
-      }
-    );
-  }, [ addr, time ]);
+  const [ seqOfTeam, setSeqOfTeam ] = useState<number>(0);
 
   const { userNo } = useComBooxContext();
 
-  const [ member, setMember ] = useState<Member>();
-
-  useEffect(() => {
-    if (seqOfTeam && userNo) {
-      getMemberInfo(addr, userNo, seqOfTeam).then(
-        info => {
-          setMember(info);
-        }
-      );
-    }
-  }, [ addr, seqOfTeam, userNo ]);
-
-  const [ balanceOf, setBalanceOf ] = useState<BalanceOf>();
+  const [ balanceOf, setBalanceOf ] = useState<BalanceOf>(defaultBalanceOf);
 
   useEffect(() => {
 
     if (userNo) {      
       getBalanceOf(addr, userNo).then(
         res => {
-          setBalanceOf(v => {
-            let output!:BalanceOf;
-            if (v) output = {...v};
-            output.me = res;
-
-            return output;
-          })
+          setBalanceOf((v) => ({
+            ...v,
+            me: res,
+          }));
         }
       );
     }
     
     balanceOfWei(addr).then(
       res => {
-        setBalanceOf(v => {
-          let output!:BalanceOf;
-          if (v) output = {...v};
-          output.cash = res;
-
-          return output;
-        });
+        setBalanceOf(v => ({
+          ...v,
+          cash: res,
+        }));
       }
     );
 
     getBalanceOf(addr, 0).then(
       res => {
-        setBalanceOf(v => {
-          let output!:BalanceOf;
-          if (v) output = {...v};
-          output.project = res;
-
-          return output;
-        });
+        setBalanceOf(v => ({
+          ...v,
+          project: res,
+        }));
       }
     );
 
-  }, [ addr, userNo ]);
+  }, [ addr, userNo, time ]);
   
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-      <Stack direction='column' sx={{m:1, alignItems:'start', justifyItems:'start'}} >    
+      
+      <Stack direction='row' sx={{ justifyContent:'start' }} >
 
-        <Stack direction='row' >
-          <Typography variant="h5" sx={{m:1, textDecoration:'underline' }} >
-            <b>Member Info</b>
-          </Typography>
+        <Typography variant="h5" sx={{m:2, textDecoration:'underline' }} >
+          <b>Member Info: </b> { longSnParser(userNo?.toString() ?? '0') }
+        </Typography>
 
-          {teamNoList && (
-            <FormControl variant="outlined" size="small" sx={{ m:1, ml: 50, minWidth: 168 }}>
-              <InputLabel id="seqOfTeam-label">SeqOfTeam</InputLabel>
-              <Select
-                labelId="seqOfTeam-label"
-                id="seqOfTeam-select"
-                label="SeqOfTeam"
-                value={ seqOfTeam?.toString() ?? '' }
-                onChange={(e) => setSeqOfTeam(Number(e.target.value))}
-              >
-                {teamNoList.map((v, i) => (
-                  <MenuItem key={i} value={v.toString()}>{v}</MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          )}
-
-        </Stack>
-
-        <Card variant='outlined' sx={{m:1, mr:3, width:'100%' }}>
-          <CardContent>
-            <Typography variant="body1" sx={{ m:1 }} >
-              SeqOfTeam: { longSnParser(member?.seqOfTeam.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              UserNo: { longSnParser(member?.userNo.toString() ?? '0') }
-            </Typography>
-
-            <hr />
-
-            <Typography variant="body1" sx={{ m:1 }} >
-              Rate: { baseToDollar(member?.rate.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Estimated: { longDataParser(member?.estimated.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { longDataParser(member?.applied.toString() ?? '0') }
-            </Typography>
-
-            <hr />
-
-            <Typography variant="body1" sx={{ m:1 }} >
-              Budget: { baseToDollar(member?.budgetAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { baseToDollar(member?.pendingAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Verified: { baseToDollar(member?.receivableAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Paid: { baseToDollar(member?.paidAmt.toString() ?? '0') }
-            </Typography>
-
-            <hr />
-
-            <Typography variant="body1" sx={{ m:1 }} >
-              BalanceOfProject: { bigIntToStrNum((balanceOf?.project ?? BigInt(0)), 18) }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              CashInBox: { baseToDollar(balanceOf?.cash.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              BalanceOf: { baseToDollar(balanceOf?.me.toString() ?? '0') }
-            </Typography>
-          
-
-          </CardContent>
-        </Card>
+        <TeamSelector addr={addr} time={time} seqOfTeam={seqOfTeam} setSeqOfTeam={setSeqOfTeam} acct={0} />
 
       </Stack>
+
+      <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
+
+        <Typography variant="body1" sx={{ m:1 }} >
+          Balance Of Project: { weiToEth(balanceOf.project.toString()) }
+        </Typography>
+
+        <Typography variant="body1" sx={{ m:1 }} >
+          Cash Available: { weiToEth(balanceOf.cash.toString()) }
+        </Typography>
+
+        <Typography variant="body1" sx={{ m:1 }} >
+          Balance Of Me: { weiToEth(balanceOf.me.toString()) }
+        </Typography>
+
+      </Paper>
+
+      <MemberInfo addr={addr} time={time} seqOfTeam={seqOfTeam} acct={userNo ?? 0} />
 
       <ActionsOfMember addr={ addr } seqOfTeam={ seqOfTeam } refresh={ refresh } />
 

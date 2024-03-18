@@ -1,18 +1,17 @@
 import { useState } from "react";
-import { usePayrollOfProjectRestoreMember } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { PersonAdd } from "@mui/icons-material";
 import { HexType } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, longSnParser, refreshAfterTx } from "../../../../../../read/toolsKit";
+import { longSnParser, refreshAfterTx } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfLeaderProps } from "../ActionsOfLeader";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
+import { useListOfProjectsRestoreMember } from "../../../../../../../../generated";
 
 export function RestoreMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLeaderProps ) {
 
   const { setErrMsg } = useComBooxContext();
   
-  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=> {
@@ -23,7 +22,7 @@ export function RestoreMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfL
   const {
     isLoading: restoreMemberLoading,
     write: restoreMember,
-  } = usePayrollOfProjectRestoreMember({
+  } = useListOfProjectsRestoreMember({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -57,7 +56,7 @@ export function RestoreMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfL
             m:1,
             minWidth: 218,
           }}
-          value={ seqOfTeam?.toString().padStart(6, '0') }
+          value={ longSnParser(seqOfTeam?.toString() ?? '0') }
           size='small'
         />
 
@@ -74,8 +73,8 @@ export function RestoreMember({ addr, seqOfTeam, memberNo, refresh }: ActionsOfL
         />
 
         <LoadingButton 
-          disabled = { seqOfTeam == undefined || memberNo == undefined || 
-            restoreMemberLoading || hasError(valid) }
+          disabled = { !(seqOfTeam && memberNo) || 
+            restoreMemberLoading }
           loading={loading}
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 

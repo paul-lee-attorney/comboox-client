@@ -1,42 +1,26 @@
 
-import { Card, CardContent, Paper, Stack, Typography } from "@mui/material";
+import { Paper, Typography } from "@mui/material";
 
 import { useEffect, useState } from "react";
-import { Member, getCurrency, getProjectInfo, getTeamInfoList } from "../../../read/lop";
+import { Member, getOwner, getProjectInfo, getTeamInfoList } from "../../../read/lop";
 import { ActionsOfManager } from "./ActionsOfManager";
-import { baseToDollar, longDataParser, longSnParser, weiToEth } from "../../../../../read/toolsKit";
 import { PayrollProps } from "../../Owner/write/OwnerPage";
 import { GetTeamsList } from "../read/GetTeamsList";
-import { currencies } from "../../../../../read";
+import { MemberInfo } from "../../Member/read/MemberInfo";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { useWalletClient } from "wagmi";
+import { AddrZero, HexType } from "../../../../../read";
 
 export function ManagerPage({ addr }:PayrollProps) {
+
+  const { data: signer } = useWalletClient();
+  const { userNo } = useComBooxContext();
 
   const [ time, setTime ] = useState(0);
 
   const refresh = () => {
     setTime(Date.now());
   }
-
-  const [ currency, setCurrency ] = useState<number>(0);
-  const [ proInfo, setProInfo ] = useState<Member>();
-
-  useEffect(() => { 
-    getCurrency(addr).then(
-      res => {
-        console.log('currency: ', res);
-        setCurrency(res);
-      }
-    );
-  }, [ addr, time ]);
-
-  useEffect(() => { 
-    getProjectInfo(addr).then(
-      info => {
-        info.pendingAmt = info.receivableAmt - info.paidAmt;
-        setProInfo(info);
-      }
-    );
-  }, [ addr, time ]);
 
   const [ list, setList ] = useState<Member[]>();
 
@@ -52,62 +36,42 @@ export function ManagerPage({ addr }:PayrollProps) {
 
   const [ seqOfTeam, setSeqOfTeam ] = useState<number>(0);
 
+  const [ pm, setPM ] = useState<number>(0);
+
+  useEffect(()=>{
+    getProjectInfo(addr).then(
+      res => setPM(res.userNo)
+    )
+  }, [addr, time]);
+
+  const [ owner, setOwner ] = useState<HexType>(AddrZero);
+
+  useEffect(()=>{
+    getOwner(addr).then(
+      res => setOwner(res)
+    )
+  }, [addr, time])
+
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
-      <Stack direction='column' sx={{m:1, alignItems:'start', justifyItems:'start'}} >    
 
-        <Typography variant="h5" sx={{m:1, textDecoration:'underline' }} >
-          <b>Project Info</b>
-        </Typography>
-
-        <Card variant='outlined' sx={{m:1, mr:3, width:'100%' }}>
-          <CardContent>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Project Manager: { longSnParser(proInfo?.userNo.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Booking Currency: { currencies[currency] }
+      { ((signer && signer.account.address == owner) || 
+        (userNo && userNo == pm)) && (
+          <>
+            <Typography variant="h5" sx={{ m:2 }} >
+              <b>Project Info</b>
             </Typography>
 
-            <hr />
+            <MemberInfo addr={addr} time={time} seqOfTeam={0} acct={0} />
 
-            <Typography variant="body1" sx={{ m:1 }} >
-              Rate: { baseToDollar(proInfo?.rate.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Estimated: { longDataParser(proInfo?.estimated.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Applied: { longDataParser(proInfo?.applied.toString() ?? '0') }
-            </Typography>
+            {list && (
+              <GetTeamsList setSeq={setSeqOfTeam} list={list} />
+            )}
 
-            <hr />
-
-            <Typography variant="body1" sx={{ m:1 }} >
-              Budget: { baseToDollar(proInfo?.budgetAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Verified: { baseToDollar(proInfo?.receivableAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Paid: { baseToDollar(proInfo?.paidAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Payable: { baseToDollar(proInfo?.pendingAmt.toString() ?? '0') }
-            </Typography>
-            <Typography variant="body1" sx={{ m:1 }} >
-              Payable in ETH: { weiToEth(proInfo?.pendingAmt.toString() ?? '0') }
-            </Typography>
-          </CardContent>
-        </Card>
-
-      </Stack>
-
-      {list && (
-        <GetTeamsList setSeq={setSeqOfTeam} list={list} />
+            <ActionsOfManager addr={ addr } seqOfTeam={ seqOfTeam } refresh={ refresh } />
+          </>
       )}
 
-      <ActionsOfManager addr={ addr } seqOfTeam={ seqOfTeam } refresh={ refresh } />
     </Paper>
   );
 } 

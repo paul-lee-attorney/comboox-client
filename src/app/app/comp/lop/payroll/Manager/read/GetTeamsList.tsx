@@ -1,15 +1,10 @@
 
-import { 
-  TableContainer, 
-  Paper, 
-  Toolbar, 
-  Chip,
-} from '@mui/material';
+import { TableContainer, Paper, Toolbar, Chip } from '@mui/material';
 
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { Member } from '../../../read/lop';
 import { Dispatch, SetStateAction } from 'react';
-import { baseToDollar, longDataParser, longSnParser } from '../../../../../read/toolsKit';
+import { centToDollar, longSnParser } from '../../../../../read/toolsKit';
 
 export interface GetTeamsListProps {
   setSeq: Dispatch<SetStateAction<number>>;
@@ -23,7 +18,7 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
   const columns: GridColDef[] = [
     {
       field: 'seqOfTeam', 
-      headerName: 'SeqOfTeam',
+      headerName: 'Team',
       valueGetter: p => longSnParser(p.row.seqOfTeam.toString()),
       width: 80,
     },
@@ -42,33 +37,25 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
       ),
     },
     { 
-      field: 'rate', 
-      headerName: 'Rate',
-      valueGetter: p => baseToDollar(p.row.rate.toString()),
-      headerAlign: 'right',
-      align:'right',
-      width: 128,
-    },
-    { 
-      field: 'estimated', 
-      headerName: 'Estimated',
-      valueGetter: p => longDataParser(p.row.estimated.toString()),
-      headerAlign: 'right',
-      align:'right',
-      width: 128,
-    },
-    { 
       field: 'budgetAmt', 
       headerName: 'BudgetAmt',
-      valueGetter: p => longDataParser(p.row.budgetAmt.toString()),
+      valueGetter: p => centToDollar(p.row.budgetAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
     },
     { 
-      field: 'appliedAmt', 
-      headerName: 'AppliedAmt',
-      valueGetter: p => longDataParser(p.row.pendingAmt.toString()),
+      field: 'approvedAmt', 
+      headerName: 'ApprovedAmt',
+      valueGetter: p => centToDollar(p.row.approvedAmt.toString()),
+      headerAlign: 'right',
+      align:'right',
+      width: 128,
+    },
+    { 
+      field: 'workHours', 
+      headerName: 'PendingAmt',
+      valueGetter: p => centToDollar(p.row.workHours.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -76,7 +63,7 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'receivableAmt', 
       headerName: 'ReceivableAmt',
-      valueGetter: p => baseToDollar(p.row.receivableAmt.toString()),
+      valueGetter: p => centToDollar(p.row.receivableAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -84,7 +71,7 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
     { 
       field: 'paidAmt', 
       headerName: 'PaidAmt',
-      valueGetter: p => longDataParser(p.row.paidAmt.toString()),
+      valueGetter: p => centToDollar(p.row.paidAmt.toString()),
       headerAlign: 'right',
       align:'right',
       width: 128,
@@ -115,11 +102,11 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
   ];
   
   return (
-    <TableContainer component={Paper} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
+    <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
 
-        <Toolbar sx={{ mr:5, textDecoration:'underline', }}>
-          <b>Payroll Of Teams</b>
-        </Toolbar>
+      <Toolbar sx={{ mr:5, textDecoration:'underline', }}>
+        <b>Payroll Of Teams</b>
+      </Toolbar>
 
       {list && (
         <DataGrid
@@ -133,7 +120,7 @@ export function GetTeamsList({ setSeq, list }:GetTeamsListProps ) {
       )}
 
 
-    </TableContainer>
+    </Paper>
   )
 }
 

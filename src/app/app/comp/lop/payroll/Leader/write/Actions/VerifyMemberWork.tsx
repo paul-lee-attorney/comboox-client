@@ -1,12 +1,13 @@
 import { useState } from "react";
-import { usePayrollOfProjectVerifyMemberWork } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
-import { Update } from "@mui/icons-material";
+import { CheckCircleOutline, Grading, Update } from "@mui/icons-material";
 import { HexType, MaxRatio } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, longSnParser, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, longSnParser, 
+  onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfLeaderProps } from "../ActionsOfLeader";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
+import { useListOfProjectsVerifyMemberWork } from "../../../../../../../../generated";
 
 
 export function VerifyMemberWork({ addr, seqOfTeam, memberNo, refresh }: ActionsOfLeaderProps ) {
@@ -26,7 +27,7 @@ export function VerifyMemberWork({ addr, seqOfTeam, memberNo, refresh }: Actions
   const {
     isLoading: verifyMemberWorkLoading,
     write: verifyMemberWork,
-  } = usePayrollOfProjectVerifyMemberWork({
+  } = useListOfProjectsVerifyMemberWork({
     address: addr,
     onError(err) {
       setErrMsg(err.message);
@@ -61,7 +62,7 @@ export function VerifyMemberWork({ addr, seqOfTeam, memberNo, refresh }: Actions
             m:1,
             minWidth: 218,
           }}
-          value={ seqOfTeam?.toString().padStart(6, '0') }
+          value={ longSnParser(seqOfTeam?.toString() ?? '0') }
           size='small'
         />
 
@@ -79,7 +80,7 @@ export function VerifyMemberWork({ addr, seqOfTeam, memberNo, refresh }: Actions
 
         <TextField 
           variant='outlined'
-          label='Ratio'
+          label='Ratio (%)'
           error={ valid['Ratio']?.error }
           helperText={ valid['Ratio']?.helpTx ?? ' ' }  
           sx={{
@@ -101,11 +102,11 @@ export function VerifyMemberWork({ addr, seqOfTeam, memberNo, refresh }: Actions
           loadingPosition='end'
           sx={{ m: 1, minWidth: 120, height: 40 }} 
           variant="contained" 
-          endIcon={<Update />}
+          endIcon={<CheckCircleOutline />}
           onClick={ handleClick }
           size='small'
         >
-          Approve
+          Verify
         </LoadingButton>
 
       </Stack>

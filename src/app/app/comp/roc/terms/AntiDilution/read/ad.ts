@@ -114,7 +114,7 @@ export async function getBenchmarks(addr: HexType): Promise<BenchmarkType[]> {
 
     let item: BenchmarkType = {
       classOfShare: classOfShare.toString(),
-      floorPrice: longDataParser((floorPrice / 100).toString()),
+      floorPrice: longDataParser((floorPrice / 10000).toString()),
       obligors: strObligors,
     }
 

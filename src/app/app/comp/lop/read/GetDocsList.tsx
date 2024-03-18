@@ -40,7 +40,7 @@ export function GetDocsList({ list }:GetDocsListProps ) {
     {
       field: 'creator',
       headerName: 'Creator',
-      valueGetter: p => longSnParser(parseInt(p.row.head.creator).toString()),
+      valueGetter: p => BigInt(p.row.head.creator).toString(16),
       width: 218,
       headerAlign:'center',
       align: 'center',

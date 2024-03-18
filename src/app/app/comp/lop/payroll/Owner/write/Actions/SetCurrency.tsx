@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePayrollOfProjectSetCurrency } from "../../../../../../../../generated";
+import { useListOfProjectsSetCurrency } from "../../../../../../../../generated";
 import { FormControl, InputLabel, MenuItem, Paper, Select, Stack } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, currencies } from "../../../../../../read";
@@ -25,7 +25,7 @@ export function SetCurrency({ addr, refresh }: ActionsOfOwnerProps ) {
   const {
     isLoading: setCurrencyLoading,
     write: setCurr,
-  } = usePayrollOfProjectSetCurrency({
+  } = useListOfProjectsSetCurrency({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

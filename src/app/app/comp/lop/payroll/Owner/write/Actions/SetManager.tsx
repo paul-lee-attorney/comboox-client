@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { usePayrollOfProjectSetManager } from "../../../../../../../../generated";
+import { useListOfProjectsSetManager } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxUserNo } from "../../../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, 
+  onlyInt, refreshAfterTx } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../ActionsOfOwner";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -25,7 +26,7 @@ export function SetManager({ addr, refresh }: ActionsOfOwnerProps ) {
   const {
     isLoading: setManagerLoading,
     write: setPM,
-  } = usePayrollOfProjectSetManager({
+  } = useListOfProjectsSetManager({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

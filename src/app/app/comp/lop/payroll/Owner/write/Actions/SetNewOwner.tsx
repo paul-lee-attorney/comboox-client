@@ -9,7 +9,8 @@ import {
 import { ManageAccountsOutlined }  from '@mui/icons-material';
 
 import { AddrZero, HexType } from '../../../../../../read';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../../../read/toolsKit';
+import { FormResults, HexParser, defFormResults, 
+  hasError, onlyHex, refreshAfterTx } from '../../../../../../read/toolsKit';
 
 import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
@@ -27,6 +28,12 @@ export function SetNewOwner({ addr, refresh }: ActionsOfOwnerProps) {
 
   const [ owner, setOwner ] = useState<HexType>(AddrZero);
 
+  const updateResults = ()=>{
+    setLoading(false);
+    refresh();
+  }
+
+
   const {
     isLoading: transferOwnershipLoading,
     write: transferOwnership,
@@ -38,7 +45,7 @@ export function SetNewOwner({ addr, refresh }: ActionsOfOwnerProps) {
     onSuccess(data) {
       setLoading(true);
       let hash:HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   });
 
@@ -75,8 +82,9 @@ export function SetNewOwner({ addr, refresh }: ActionsOfOwnerProps) {
         loadingPosition='end'
         onClick={ handleClick }
         variant='contained'
-        sx={{ m:1, mx:2, minWidth:128 }} 
+        sx={{ m:1, mx:2, minWidth:128, height:40 }} 
         endIcon={<ManageAccountsOutlined />}       
+        size='small'
       >
         Transfer
       </LoadingButton>

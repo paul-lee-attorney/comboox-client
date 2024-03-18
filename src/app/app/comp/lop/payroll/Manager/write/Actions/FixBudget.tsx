@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePayrollOfProjectFixBudget } from "../../../../../../../../generated";
+import { useListOfProjectsFixBudget } from "../../../../../../../../generated";
 import { Paper, Stack } from "@mui/material";
 import { Approval } from "@mui/icons-material";
 import { HexType } from "../../../../../../read";
@@ -23,7 +23,7 @@ export function FixBudget({ addr, refresh }: ActionsOfOwnerProps ) {
   const {
     isLoading: fixBudgetLoading,
     write: fixBudget,
-  } = usePayrollOfProjectFixBudget({
+  } = useListOfProjectsFixBudget({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

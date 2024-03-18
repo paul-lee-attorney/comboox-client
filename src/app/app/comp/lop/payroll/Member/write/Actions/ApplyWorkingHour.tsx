@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { usePayrollOfProjectApplyWorkingHour } from "../../../../../../../../generated";
+import { useListOfProjectsApplyWorkingHour } from "../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { BorderColor } from "@mui/icons-material";
 import { HexType, MaxSeqNo } from "../../../../../../read";
@@ -24,7 +24,7 @@ export function ApplyWorkingHour({ addr, seqOfTeam, refresh }: ActionsOfManagerP
   const {
     isLoading: applyWorkingHourLoading,
     write: applyWorkingHour,
-  } = usePayrollOfProjectApplyWorkingHour({
+  } = useListOfProjectsApplyWorkingHour({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

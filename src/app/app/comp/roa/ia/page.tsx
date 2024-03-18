@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { useRouter } from "next/router";
+// import { useRouter } from "next/router";
 
 import { HexType, booxMap } from "../../../read";
 
@@ -20,19 +20,23 @@ import { IndexCard } from "../../roc/read/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
 import { isFinalized } from "../../read/accessControl";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { useSearchParams } from "next/navigation";
 
 function Ia() {
   const { boox } = useComBooxContext();
 
   const [ index, setIndex ] = useState<number>(0);
 
-  const { query } = useRouter();
-  const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
+  const searchParams = useSearchParams();
+  const ia:HexType = `0x${searchParams.get('addr')?.substring(2) ?? '00'}`;
+
+  // const { query } = useRouter();
+  // const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   const [ file, setFile ] = useState<InfoOfFile>();
 
   useEffect(()=>{
-    if (boox && ia) {
+    if (boox && ia != `0x00`) {
       getFile(boox[booxMap.ROA], ia).then(
         res => setFile({
           addr: ia,

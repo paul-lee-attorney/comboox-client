@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import {Paper, Toolbar, TextField, Stack, Typography } from "@mui/material";
+import {Paper, TextField, Stack, Typography } from "@mui/material";
 
 import { Create } from "@mui/icons-material";
 
@@ -17,7 +17,7 @@ import { GetDocsList } from "./read/GetDocsList";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
 function ListOfProjects() {
-  const { gk, boox, setErrMsg } = useComBooxContext();
+  const { setErrMsg } = useComBooxContext();
   const [ time, setTime ] = useState(0);
   const [ loading, setLoading ] = useState(false);
 
