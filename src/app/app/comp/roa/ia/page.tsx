@@ -2,8 +2,6 @@
 
 import { useEffect, useState } from "react";
 
-// import { useRouter } from "next/router";
-
 import { HexType, booxMap } from "../../../read";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
@@ -29,9 +27,6 @@ function Ia() {
 
   const searchParams = useSearchParams();
   const ia:HexType = `0x${searchParams.get('addr')?.substring(2) ?? '00'}`;
-
-  // const { query } = useRouter();
-  // const ia:HexType = `0x${query?.addr?.toString().substring(2)}`;
 
   const [ file, setFile ] = useState<InfoOfFile>();
 

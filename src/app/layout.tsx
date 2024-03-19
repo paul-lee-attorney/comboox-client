@@ -3,7 +3,7 @@ import Copyright from './app/write/app_bar/components/Copyright';
 
 export const metadata: Metadata = {
   title: 'ComBoox',
-  description: 'A Blockchain Based Statutory-Books-Entry Platform',
+  description: 'A Blockchain Based Company Book-Entry Platform',
 }
 
 export default function RootLayout({
