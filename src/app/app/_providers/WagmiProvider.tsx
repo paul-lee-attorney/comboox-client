@@ -9,20 +9,19 @@ import { WalletConnectLegacyConnector } from 'wagmi/connectors/walletConnectLega
 
 import { alchemyProvider } from '@wagmi/core/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
-import { ProviderType } from './Providers';
 
 
-// type WagmiProviderType = {
-//   children: React.ReactNode;
-// }
+type WagmiProviderType = {
+  children: React.ReactNode
+}
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ hardhat ],
+  [ sepolia, arbitrum, hardhat ],
   [
-    // alchemyProvider({
-    //   apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
-    //   // stallTimeout: 2_000,
-    // }),
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
+      // stallTimeout: 2_000,
+    }),
     publicProvider(),
   ],
 );
@@ -55,7 +54,7 @@ const config = createConfig({
   webSocketPublicClient,
 });
 
-const WagmiProvider = ({ children }: ProviderType) => {
+const WagmiProvider = ({ children }: WagmiProviderType) => {
   return (
     <>
       <WagmiConfig config={config}>{children}</WagmiConfig>

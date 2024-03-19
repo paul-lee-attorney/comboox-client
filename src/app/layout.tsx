@@ -6,13 +6,11 @@ export const metadata: Metadata = {
   description: 'A Blockchain Based Company Book-Entry Platform',
 }
 
-export default function RootLayout({
-  // Layouts must accept a children prop.
-  // This will be populated with nested layouts or pages
-  children,
-}: {
+type RootLayoutProps= {
   children: React.ReactNode
-}) {
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body>

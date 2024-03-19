@@ -5,11 +5,11 @@ import React, { useState, useEffect } from 'react';
 import Providers from './_providers/Providers';
 import { ComBooxAppBar } from './write/app_bar/ComBooxAppBar';
 
-export default function AppLayout({
-  children,
-}: {
+type AppLayoutProps = {
   children: React.ReactNode
-}) {
+}
+
+export default function AppLayout({children}: AppLayoutProps) {
 
   const [mounted, setMounted] = useState(false)
   useEffect(()=>{
