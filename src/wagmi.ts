@@ -11,19 +11,18 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy'
 import { publicProvider } from 'wagmi/providers/public'
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ hardhat ],
+  [ sepolia, hardhat ],
   [
-    // alchemyProvider({
-    //   apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
-    //   // stallTimeout: 2_000,
-    // }),
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
+      // stallTimeout: 2_000,
+    }),
     publicProvider(),
   ],
 )
 
 export const config = createConfig({
   autoConnect: false,
-  ssr: true,
   connectors: [
     new MetaMaskConnector({ chains }),
     new CoinbaseWalletConnector({
