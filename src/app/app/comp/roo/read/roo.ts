@@ -71,7 +71,7 @@ export function optHeadCodifier(head: StrHeadOfOpt): HexType {
     Number(head.seqOfOpt).toString(16).padStart(8, '0') +
     Number(head.typeOfOpt).toString(16).padStart(2, '0') +
     Number(head.classOfShare).toString(16).padStart(4, '0') +
-    strNumToBigInt(head.rate, 2).toString(16).padStart(8, '0') +
+    strNumToBigInt(head.rate, 4).toString(16).padStart(8, '0') +
     head.issueDate.toString(16).padStart(12, '0') +
     head.triggerDate.toString(16).padStart(12, '0') +
     Number(head.execDays).toString(16).padStart(4, '0') +
@@ -204,11 +204,11 @@ export function condCodifier(cond: StrCond): HexType {
     Number(cond.seqOfCond).toString(16).padStart(8, '0') +
     Number(cond.logicOpr).toString(16).padStart(2, '0') +
     Number(cond.compOpr1).toString(16).padStart(2, '0') +
-    BigInt(cond.para1).toString(16).padStart(16, '0') +
+    strNumToBigInt(cond.para1, 4).toString(16).padStart(16, '0') +
     Number(cond.compOpr2).toString(16).padStart(2, '0') +
-    BigInt(cond.para2).toString(16).padStart(16, '0') +
+    strNumToBigInt(cond.para2, 4).toString(16).padStart(16, '0') +
     Number(cond.compOpr3).toString(16).padStart(2, '0') +
-    BigInt(cond.para3).toString(16).padStart(16, '0')
+    strNumToBigInt(cond.para3, 4).toString(16).padStart(16, '0')
   }`;
   return out;
 }

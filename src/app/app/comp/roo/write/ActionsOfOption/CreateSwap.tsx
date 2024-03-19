@@ -45,7 +45,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
       args: [ 
           BigInt(seqOfOpt), 
           BigInt(seqOfTarget), 
-          strNumToBigInt(paidOfTarget, 2), 
+          strNumToBigInt(paidOfTarget, 4), 
           BigInt(seqOfPledge)
       ],
     });

@@ -35,7 +35,7 @@ export function TeamSelector({addr, time, seqOfTeam, setSeqOfTeam}:TeamSelectorP
             labelId="seqOfTeam-label"
             id="seqOfTeam-select"
             label="SeqOfTeam"
-            value={ seqOfTeam?.toString() ?? '' }
+            value={ seqOfTeam?.toString() ?? '0' }
             onChange={(e) => setSeqOfTeam(Number(e.target.value))}
           >
             {teamNoList.map((v, i) => (

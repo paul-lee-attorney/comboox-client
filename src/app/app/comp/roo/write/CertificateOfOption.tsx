@@ -9,7 +9,7 @@ import {
   Typography
 } from "@mui/material";
 
-import { baseToDollar, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../read/toolsKit";
+import { baseToDollar, bigIntToNum, bigIntToStrNum, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../read/toolsKit";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { statesOfOpt } from "../../roc/terms/Options/read/ContentOfOpt";
@@ -176,7 +176,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfPaid" 
                   label="Paid" 
                   variant="outlined"
-                  value = { longDataParser(optWrap.opt.body.paid.toString()) }
+                  value = { bigIntToStrNum(optWrap.opt.body.paid, 4) }
                   size='small'
                 />
               </td>
@@ -188,7 +188,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                   id="tfPar" 
                   label="Par" 
                   variant="outlined"
-                  value = { longDataParser(optWrap.opt.body.par.toString()) }
+                  value = { bigIntToStrNum(optWrap.opt.body.par, 4) }
                   size='small'
                 />
               </td>
@@ -265,7 +265,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                     id="tfPara1" 
                     label="Parameter_1" 
                     variant="outlined"
-                    value = { longDataParser(optWrap.opt.cond.para1.toString()) }
+                    value = { bigIntToStrNum(optWrap.opt.cond.para1, 4) }
                     size='small'
                   />
                 </td>
@@ -295,7 +295,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                       id="tfPara1" 
                       label="Parameter_2" 
                       variant="outlined"
-                      value = { longDataParser(optWrap.opt.cond.para2.toString()) }
+                      value = { bigIntToStrNum(optWrap.opt.cond.para2, 4) }
                       size='small'
                     />                
                   </td>
@@ -323,7 +323,7 @@ export function CertificateOfOption({open, optWrap, setOpen, refresh}: Certifica
                       id="tfPara1" 
                       label="Parameter_3" 
                       variant="outlined"
-                      value = { longDataParser(optWrap.opt.cond.para3.toString()) }
+                      value = { bigIntToStrNum(optWrap.opt.cond.para3, 4) }
                       size='small'
                     />                
                   </td>

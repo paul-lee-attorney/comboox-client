@@ -4,7 +4,7 @@ import { Paper, Stack, TextField } from "@mui/material";
 import { BorderColor } from "@mui/icons-material";
 import { HexType, MaxData, MaxLockValue } from "../../../../../../read";
 import { FormResults, defFormResults, hasError, onlyNum, 
-  refreshAfterTx, strNumToBigInt } from "../../../../../../read/toolsKit";
+  refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { ActionsOfOwnerProps } from "../../../Owner/write/ActionsOfOwner";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -59,8 +59,8 @@ export function PickupDeposit({ addr, refresh }: ActionsOfOwnerProps ) {
             minWidth: 218,
           }}
           onChange={(e) => {
-            let input = e.target.value;
-            onlyNum('Amount', input, MaxLockValue ,18, setValid);
+            let input = removeKiloSymbol(e.target.value);
+            onlyNum('Amount', input, 0n,18, setValid);
             setAmt(input);
           }}
           value={ amt }

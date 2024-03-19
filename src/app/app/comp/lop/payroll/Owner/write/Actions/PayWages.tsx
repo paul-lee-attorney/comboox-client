@@ -42,7 +42,7 @@ export function PayWages({ addr, refresh }: ActionsOfOwnerProps ) {
 
   const handleClick = () => {
     payWages({
-      value: strNumToBigInt(amt, 9) * (10n ** 9n)
+      value: strNumToBigInt(amt, 18)
     });
   }
 
@@ -62,7 +62,7 @@ export function PayWages({ addr, refresh }: ActionsOfOwnerProps ) {
           }}
           onChange={(e) => {
             let input = removeKiloSymbol(e.target.value);
-            onlyNum('Amount', input, 0n, 9, setValid);
+            onlyNum('Amount', input, 0n, 18, setValid);
             setAmt(input);
           }}
           value={ amt }

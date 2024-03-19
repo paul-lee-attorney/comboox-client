@@ -15,7 +15,7 @@ import {
   ListAlt,
 } from "@mui/icons-material"
 
-import { longDataParser, } from "../../../../../read/toolsKit";
+import { bigIntToStrNum, longDataParser, } from "../../../../../read/toolsKit";
 import { Cond, comOps, logOps } from "../../../../roo/read/roo";
 
 export const statesOfOpt = ['Pending', 'Issued', 'Executed', 'Closed'];
@@ -91,7 +91,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(cond.para1.toString() ?? '0') }              
+                  value={ bigIntToStrNum(cond.para1, 4) }              
                 />
 
               </>)}
@@ -119,7 +119,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(cond.para2.toString() ?? '0') }              
+                  value={ bigIntToStrNum(cond.para2, 4) }              
                 />
 
               </>)}
@@ -147,7 +147,7 @@ export function TriggerCondition({ cond }: TriggerConditionProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser(cond.para3.toString() ?? '0') }              
+                  value={ bigIntToStrNum(cond.para3, 4) }              
                 />
 
               </>)}

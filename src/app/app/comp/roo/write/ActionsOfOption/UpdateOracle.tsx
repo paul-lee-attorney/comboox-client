@@ -4,7 +4,7 @@ import { useGeneralKeeperUpdateOracle } from "../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxData } from "../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
@@ -53,9 +53,9 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
     updateOracle({
       args: [ 
           BigInt(seqOfOpt), 
-          BigInt(paras.p1), 
-          BigInt(paras.p2), 
-          BigInt(paras.p3)
+          strNumToBigInt(paras.p1, 4), 
+          strNumToBigInt(paras.p2, 4), 
+          strNumToBigInt(paras.p3, 4)
       ],
     });
   };
@@ -76,7 +76,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Para_1', input, MaxData, setValid);
+            onlyNum('Para_1', input, MaxData, 4, setValid);
             setParas(v =>({
               ...v,
               p1: input,
@@ -97,7 +97,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Para_2', input, MaxData, setValid);
+            onlyNum('Para_2', input, MaxData, 4, setValid);
             setParas(v =>({
               ...v,
               p2: input,
@@ -118,7 +118,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Para_3', input, MaxData, setValid);
+            onlyNum('Para_3', input, MaxData, 4, setValid);
             setParas(v =>({
               ...v,
               p3: input,

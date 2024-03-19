@@ -1,6 +1,6 @@
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Typography } from "@mui/material";
 
-import { dateParser, longDataParser, longSnParser } from "../../../read/toolsKit";
+import { dateParser, bigIntToStrNum, longSnP, bigIntToStrNumarser, longSnParser } from "../../../read/toolsKit";
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { CheckPoint } from "../read/roo";
@@ -15,7 +15,7 @@ const columns: GridColDef[] = [
   { 
     field: 'p1', 
     headerName: 'Para-1',
-    valueGetter: p => longDataParser(p.row.paid.toString()),
+    valueGetter: p => bigIntToStrNum(p.row.paid, 4),
     headerAlign: 'right',
     align:'right',
     width: 180,
@@ -23,7 +23,7 @@ const columns: GridColDef[] = [
   { 
     field: 'p2', 
     headerName: 'Para-2',
-    valueGetter: p => longDataParser(p.row.par.toString()),
+    valueGetter: p => bigIntToStrNum(p.row.par, 4),
     headerAlign: 'right',
     align:'right',
     width: 180,
@@ -31,7 +31,7 @@ const columns: GridColDef[] = [
   { 
     field: 'p3', 
     headerName: 'Para-3',
-    valueGetter: p => longDataParser(p.row.cleanPaid.toString()),
+    valueGetter: p => bigIntToStrNum(p.row.cleanPaid, 4),
     headerAlign: 'right',
     align:'right',
     width: 180,
@@ -84,7 +84,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
           fontWeight="xl"
           color="primary"
         >
-          p1: {longDataParser(oracle ? oracle.paid.toString(): '0')}
+          p1: {bigIntToStrNum((oracle?.paid ?? 0n), 4)}
         </Typography>
         
         <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
@@ -94,7 +94,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
           fontWeight="xl"
           color="primary"
         >
-          p2: {longDataParser(oracle ? oracle.par.toString(): '0')}
+          p2: {bigIntToStrNum((oracle?.par ?? 0n), 4)}
         </Typography>
 
         <Divider orientation="vertical" flexItem sx={{ mx:2 }} />
@@ -104,7 +104,7 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
           fontWeight="xl"
           color="primary"
         >        
-          p3: {longDataParser(oracle ? oracle.cleanPaid.toString(): '0')}
+          p3: {bigIntToStrNum((oracle?.cleanPaid ?? 0n), 4)}
         </Typography>            
 
       </Button>

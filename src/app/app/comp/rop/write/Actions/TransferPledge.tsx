@@ -4,7 +4,7 @@ import { Paper, Stack, TextField } from "@mui/material";
 import { CurrencyExchange } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxData, MaxUserNo } from "../../../../read";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
@@ -45,7 +45,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
         BigInt(pld.head.seqOfShare), 
         BigInt(pld.head.seqOfPld), 
         BigInt(buyer),
-        BigInt(amt)
+        strNumToBigInt(amt, 4)
       ],
     })
   }
@@ -84,7 +84,7 @@ export function TransferPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Amount', input, MaxData, setValid);
+            onlyNum('Amount', input, MaxData, 4, setValid);
             setAmt(input);
           }}
           value={ amt }

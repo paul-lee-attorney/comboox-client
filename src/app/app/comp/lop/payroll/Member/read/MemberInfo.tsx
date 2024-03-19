@@ -1,5 +1,5 @@
 import { Card, CardContent, Paper, Typography } from "@mui/material";
-import { centToDollar, longSnParser, weiToEth } from "../../../../../read/toolsKit";
+import { centToDollar, longDataParser, longSnParser, weiToEth } from "../../../../../read/toolsKit";
 import { currencies } from "../../../../../read";
 import { useEffect, useState } from "react";
 import { Member, defaultMember, getCurrency, getMemberInfo, getProjectInfo, getTeamInfo } from "../../../read/lop";
@@ -116,7 +116,7 @@ return (
 
       {(seqOfTeam > 0) && (
         <Typography variant="body1" sx={{ m:1 }} >
-          { tags.workHours }: { centToDollar(info.workHours.toString()) }
+          { tags.workHours }: { acct > 0 ? longDataParser(info.workHours.toString()) : centToDollar(info.workHours.toString())}
         </Typography>
       )}
 

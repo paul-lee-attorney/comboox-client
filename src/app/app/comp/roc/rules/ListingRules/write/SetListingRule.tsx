@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { AddRule } from '../../AddRule';
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from '../../../../../read';
-import { FormResults, bigIntToStrNum, defFormResults, longDataParser,
+import { FormResults, bigIntToNum, bigIntToStrNum, defFormResults, longDataParser,
   onlyInt, onlyNum, strNumToBigInt, } from '../../../../../read/toolsKit';
 
 import { ListAlt } from '@mui/icons-material';
@@ -59,13 +59,13 @@ export function lrParser(hexLr: HexType):ListingRule {
     seqOfRule: parseInt(hexLr.substring(2, 6), 16), 
     titleOfIssuer: parseInt(hexLr.substring(6, 10), 16).toString(),
     classOfShare: parseInt(hexLr.substring(10, 14), 16).toString(),
-    maxTotalPar: bigIntToStrNum(BigInt('0x' + hexLr.substring(14, 30)), 4),
+    maxTotalPar: bigIntToNum(BigInt('0x' + hexLr.substring(14, 30)), 4),
     titleOfVerifier: parseInt(hexLr.substring(30, 34), 16).toString(),
     maxQtyOfInvestors: parseInt(hexLr.substring(34, 38), 16).toString(),
-    ceilingPrice: bigIntToStrNum(BigInt('0x' + hexLr.substring(38, 46)), 4),
-    floorPrice: bigIntToStrNum(BigInt('0x' + hexLr.substring(46, 54)), 4),
+    ceilingPrice: bigIntToNum(BigInt('0x' + hexLr.substring(38, 46)), 4),
+    floorPrice: bigIntToNum(BigInt('0x' + hexLr.substring(46, 54)), 4),
     lockupDays: parseInt(hexLr.substring(54, 58), 16).toString(),
-    offPrice: bigIntToStrNum(BigInt('0x' + hexLr.substring(58, 62)), 4),
+    offPrice: bigIntToNum(BigInt('0x' + hexLr.substring(58, 62)), 4),
     votingWeight: parseInt(hexLr.substring(62, 66), 16).toString(),  
   }
   return rule;
@@ -374,7 +374,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyInt('VotingWeight', input, MaxSeqNo, setValid);
+                    onlyNum('VotingWeight', input, MaxSeqNo, 2, setValid);
                     setObjLR((v) => ({
                       ...v,
                       votingWeight: input,

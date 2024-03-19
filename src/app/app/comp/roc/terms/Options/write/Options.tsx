@@ -4,7 +4,6 @@ import {
   Stack,
   IconButton,
   Paper,
-  Toolbar,
   TextField,
   Button,
   Tooltip,
@@ -34,7 +33,7 @@ import {
 } from "../../../../../../../generated";
 
 import dayjs from "dayjs";
-import { Opt } from "../Opt";
+import { Opt } from "../read/Opt";
 
 import { SetShaTermProps } from "../../AntiDilution/write/AntiDilution";
 
@@ -90,8 +89,8 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
       optHeadCodifier(head), 
       condCodifier(cond), 
       BigInt(body.rightholder),
-      strNumToBigInt(body.paid, 2),
-      strNumToBigInt(body.par, 2)
+      strNumToBigInt(body.paid, 4),
+      strNumToBigInt(body.par, 4)
     ]});
   }
   
@@ -499,7 +498,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           }}
                           onChange={(e) => {
                             let input = e.target.value;
-                            onlyInt('Parameter_1', input, MaxData, setValid);
+                            onlyNum('Parameter_1', input, MaxData, 4, setValid);
                             setCond((v) => ({
                               ...v,
                               para1: input,
@@ -542,7 +541,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           }}
                           onChange={(e) => {
                             let input = e.target.value;
-                            onlyInt('Parameter_2', input, MaxData, setValid);
+                            onlyNum('Parameter_2', input, MaxData, 4, setValid);
                             setCond((v) => ({
                               ...v,
                               para2: input,
@@ -587,7 +586,7 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           }}
                           onChange={(e) => {
                             let input = e.target.value;
-                            onlyInt('Parameter_3', input, MaxData, setValid);
+                            onlyNum('Parameter_3', input, MaxData, 4, setValid);
                             setCond((v) => ({
                               ...v,
                               para3: input,

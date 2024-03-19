@@ -9,7 +9,7 @@ import dayjs from "dayjs";
 import { HexType, MaxData, MaxUserNo, booxMap } from "../../../../read";
 import { getShare } from "../../../../comp/ros/read/ros";
 import { StrBody, StrHead, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../../roa/ia/read/ia";
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../read/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from "../../../../read/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
@@ -138,7 +138,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('PriceOfPaid', input, MaxData, setValid);
+            onlyNum('PriceOfPaid', input, MaxData, 4, setValid);
             setHead(v=>({
               ...v,
               priceOfPaid: e.target.value,
@@ -159,7 +159,7 @@ export function ExecPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('PriceOfPar', input, MaxData, setValid);
+            onlyNum('PriceOfPar', input, MaxData, 4, setValid);
             setHead(v=>({
               ...v,
               priceOfPar: e.target.value,

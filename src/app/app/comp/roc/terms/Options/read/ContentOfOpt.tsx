@@ -113,7 +113,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser( bigIntToStrNum(opt.body.paid, 2)) }              
+                  value={ bigIntToStrNum(opt.body.paid, 4) }              
                 />
 
                 <TextField 
@@ -125,7 +125,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser( bigIntToStrNum(opt.body.par, 2)) }              
+                  value={ bigIntToStrNum(opt.body.par, 4) }              
                 />
 
                 <TextField 
@@ -153,7 +153,7 @@ export function ContentOfOpt({ opt }: ContentOfOptProps) {
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ longDataParser( bigIntToStrNum(BigInt(opt.head.rate), 2)) }              
+                  value={ bigIntToStrNum(BigInt(opt.head.rate), 4) }              
                 />
 
                 <TextField 
