@@ -1,6 +1,6 @@
 {
   "name": "comboox",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -32,8 +32,8 @@
   },
   "devDependencies": {
     "@types/node": "^17.0.31",
-    "@types/react": "^18.0.9",
-    "@types/react-dom": "^18.0.3",
+    "@types/react": "^18.2.67",
+    "@types/react-dom": "^18.2.22",
     "@wagmi/cli": "^1.5.2",
     "eslint": "^8.15.0",
     "eslint-config-next": "^14.1.3",

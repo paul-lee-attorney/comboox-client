@@ -1,4 +1,3 @@
-// import React from "react";
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import { HexType } from "../read";
 import { ProviderType } from "./Providers";
@@ -24,10 +23,6 @@ const ComBooxContext = createContext<ContextType>({
   errMsg: undefined,
   setErrMsg: ()=>{},
 });
-
-// type ComBooxContextProviderType = {
-//   children: React.ReactNode;
-// }
 
 const ComBooxContextProvider = ({ children }: ProviderType) => {
   const [userNo, setUserNo] = useState<number>();
