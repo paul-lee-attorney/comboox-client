@@ -1,3 +1,5 @@
+'use client'
+
 import { Box, Card, CardMedia, Paper, Stack, Typography, } from "@mui/material"
 
 import { TitleBar } from "./read/TitleBar";
@@ -49,7 +51,12 @@ function FrontPage() {
 
       <Box sx={{ mt:2, width:'45%'}}>
         <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
-          <iframe width="100%" height="500" src="https://www.youtube.com/embed/FCEKZAFHKxU?si=yUHugdLv60IGlnsv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          {/* <Card>
+            <CardMedia component='iframe' >
+              <iframe width="100%" height="500" src="https://www.youtube.com/embed/FCEKZAFHKxU?si=yUHugdLv60IGlnsv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+            </CardMedia>
+          </Card> */}
+          <iframe width="100%" height="500" src="https://www.youtube.com/embed/FCEKZAFHKxU?si=yUHugdLv60IGlnsv" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ></iframe>
         </Paper>
       </Box>
 
