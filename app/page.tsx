@@ -21,10 +21,10 @@ function FrontPage() {
         </Typography>
       </Stack>
 
-      <Box sx={{ mt:2, width:'45%'}}>
+      <Box sx={{ my:2, width:800}}>
         <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
 
-          <Typography variant="h5" component="div" sx={{ flexGrow: 1, m:1 }}>
+          <Typography variant="h5" component="div" sx={{ flexGrow: 1, m:2 }}>
             <b>System Overview</b>
           </Typography>
 
@@ -49,14 +49,9 @@ function FrontPage() {
         </Paper>
       </Box>
 
-      <Box sx={{ mt:2, width:'45%'}}>
+      <Box sx={{ my:2, width:836, alignItems:'center' }}>
         <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}}>
-          {/* <Card>
-            <CardMedia component='iframe' >
-              <iframe width="100%" height="500" src="https://www.youtube.com/embed/FCEKZAFHKxU?si=yUHugdLv60IGlnsv" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
-            </CardMedia>
-          </Card> */}
-          <iframe width="100%" height="500" src="https://www.youtube.com/embed/FCEKZAFHKxU?si=yUHugdLv60IGlnsv" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ></iframe>
+          <iframe width="800" height="450" src="https://www.youtube.com/embed/FCEKZAFHKxU?si=yUHugdLv60IGlnsv" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" ></iframe>
         </Paper>
       </Box>
 

@@ -1,4 +1,4 @@
-import { GitHub, MenuBook, TouchAppOutlined } from "@mui/icons-material";
+import { GitHub, MenuBook, TouchAppOutlined, VideoLibraryOutlined } from "@mui/icons-material";
 import { AppBar, Box, CssBaseline, IconButton, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import Image from "next/image";
 import Logo from '/public/assets/Symbol_white_xs.png';
@@ -28,6 +28,18 @@ export function TitleBar() {
                 </Link>
               </Tooltip>
 
+              <Tooltip title='Tutorials' >
+                <Link 
+                  href={{
+                    pathname:'https://youtube.com/playlist',
+                    query:'list=PLNXMEJwWvPA9916RZET2z2toF5E5zbzbw\&si=-aqTWoq29YfUH3d8'
+                  }}
+                >
+                  <IconButton sx={{mx:2, color:'#fff'}}>
+                    <VideoLibraryOutlined />
+                  </IconButton>
+                </Link>
+              </Tooltip>
               <Tooltip title='Smart Contracts' >
                 <Link href="https://github.com/paul-lee-attorney/comboox">
                   <IconButton sx={{mx:2, color:'#fff'}}>
