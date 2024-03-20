@@ -5,7 +5,7 @@ import Link from 'next/link';
 
 export default function Copyright() {
   return (
-    <Stack direction='row' sx={{ justifyContent:'center' }} >
+    <Stack direction='row' sx={{ justifyContent:'center', my:5 }} >
 
       <Typography variant="body2" color="primary" align="center" sx={{mt:20, mr: 10}}>
         <Link href={{pathname:'https://comboox.gitbook.io/whitepaper-en'}}>

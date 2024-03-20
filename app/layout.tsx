@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import Copyright from './app/write/app_bar/components/Copyright';
+import Copyright from './read/Copyright';
 
 export const metadata: Metadata = {
   title: 'ComBoox',
