@@ -15,8 +15,7 @@ import { Refule } from "./ActionsOfFule/Refule";
 import { FillTank } from "./ActionsOfFule/FillTank";
 import { WithdrawIncome } from "./ActionsOfFule/WithdrawIncome";
 import { SetRate } from "./ActionsOfFule/SetRate";
-import { SetOwner } from "./ActionsOfFule/SetOwner";
-import { SetRegCenter } from "./ActionsOfFule/SetRegCenter";
+import { SetNewOwner } from "./ActionsOfFule/SetNewOwner";
 
 export interface ActionsOfFuleProps{
   user: HexType;
@@ -42,8 +41,7 @@ export function ActionsOfFule({ user, isOwner, getFinInfo, getSetting }: Actions
     <FillTank key={1} refresh={ getFinInfo } />,
     <WithdrawIncome key={2} refresh={ getFinInfo } />,
     <SetRate key={3} refresh={ getSetting } />,
-    <SetOwner key={4} refresh={ getSetting } />,
-    <SetRegCenter key={5} refresh={ getSetting } />,
+    <SetNewOwner key={4} refresh={ getSetting } />,
    ]
 
   return( 
