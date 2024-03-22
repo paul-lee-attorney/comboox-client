@@ -18,12 +18,12 @@ export function GetValueOf({ amt }:GetValueOfProps ) {
     if (gk) {
       getCentPrice( gk ).then(
         centPrice => {
-          let output = strNumToBigInt(amt, 2) * centPrice;
+          let output = strNumToBigInt(amt, 4) * centPrice;
           setValue(output);
         }
       )
     }    
-  });
+  }, [gk, amt]);
 
   return (
     <ShowValueOf value={value} />
