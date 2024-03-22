@@ -5,12 +5,9 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../read";
 import { balanceOfWei } from "../read/rc";
 import { Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { bigIntToStrNum, getEthPart, getGWeiPart, getWeiPart, } from "../../read/toolsKit";
-<<<<<<< Updated upstream
-import { useFuleTankGetOwner, useFuleTankGetRegCenter, useFuleTankRate, useFuleTankSum, useRegCenterBalanceOf, } from "../../../generated";
-=======
-import { useFuleTankGetOwner, useFuleTankRate, useFuleTankGetRegCenter, 
-  useFuleTankSum, useRegCenterBalanceOf, } from "../../../generated";
->>>>>>> Stashed changes
+
+import { useFuleTankGetOwner, useFuleTankRate, useFuleTankGetRegCenter, useFuleTankSum, useRegCenterBalanceOf, } from "../../../generated";
+
 import { useWalletClient } from "wagmi";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../../read/CopyLongStr";
