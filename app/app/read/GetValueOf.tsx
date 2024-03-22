@@ -18,7 +18,7 @@ export function GetValueOf({ amt }:GetValueOfProps ) {
     if (gk) {
       getCentPrice( gk ).then(
         centPrice => {
-          let output = strNumToBigInt(amt, 4) * centPrice;
+          let output = strNumToBigInt(amt, 4) / 100n * centPrice;
           setValue(output);
         }
       )
