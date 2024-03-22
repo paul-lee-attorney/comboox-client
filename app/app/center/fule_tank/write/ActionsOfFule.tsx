@@ -33,7 +33,7 @@ export function ActionsOfFule({ user, isOwner, getFinInfo, getSetting }: Actions
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
   
   const actionsOfUser = [
-    'Refule', 'Fill Tank', 'Withdraw Income', 'Set Rate', 'Set Owner', 'Set RegCenter'
+    'Refule', 'Fill Tank', 'Withdraw Income', 'Set Rate', 'Set Owner',
   ]
 
   const compsOfAction = [
