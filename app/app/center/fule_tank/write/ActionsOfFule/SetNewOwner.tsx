@@ -1,21 +1,21 @@
 
 import { Paper, Stack, TextField } from '@mui/material';
 
-import { useFuleTankSetRegCenter } from '../../../../../generated';
+import { useFuleTankSetNewOwner } from '../../../../../generated';
 
 import { AddrOfTank, AddrZero, HexType } from '../../../../read';
-import { SettingsOutlined } from '@mui/icons-material';
+import { ManageAccountsOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../../read/toolsKit';
 import { LoadingButton } from '@mui/lab';
 import { ActionOfFuleProps } from '../ActionsOfFule';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
-export function SetRegCenter({ refresh }: ActionOfFuleProps) {
+export function SetNewOwner({ refresh }: ActionOfFuleProps) {
 
   const { setErrMsg } = useComBooxContext();
 
-  const [ addr, setAddr ] = useState(AddrZero);
+  const [ newOwner, setNewOwner ] = useState(AddrZero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -27,9 +27,9 @@ export function SetRegCenter({ refresh }: ActionOfFuleProps) {
   }
 
   const {
-    isLoading: setRegCenterLoading,
-    write: setRegCenter
-  } = useFuleTankSetRegCenter({
+    isLoading: setOwnerLoading,
+    write: setOwner
+  } = useFuleTankSetNewOwner({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -41,9 +41,9 @@ export function SetRegCenter({ refresh }: ActionOfFuleProps) {
     }
   })
 
-  const setRegCenterClick = ()=>{
-    setRegCenter({
-      args:[ addr ]
+  const setOwnerClick = ()=>{
+    setOwner({
+      args:[ newOwner ]
     });
   }
 
@@ -51,32 +51,32 @@ export function SetRegCenter({ refresh }: ActionOfFuleProps) {
     <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }}  >
       <Stack direction='row' sx={{alignItems:'start', justifyContent:'start'}} >
 
-        <TextField 
+      <TextField 
           size="small"
           variant='outlined'
-          label='RegCenter (Addr)'
-          error={ valid['RegCenter(Addr)']?.error }
-          helperText={ valid['RegCenter(Addr)']?.helpTx ?? ' ' }                                  
+          label='NewOwner (Addr)'
+          error={ valid['NewOwner(Addr)']?.error }
+          helperText={ valid['NewOwner(Addr)']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
             minWidth: 550,
           }}
-          value={ addr }
+          value={ newOwner }
           onChange={e => {
             let input = HexParser(e.target.value ?? '0');
-            onlyHex('RegCenter(Addr)', input, 40, setValid);
-            setAddr(input);
+            onlyHex('NewOwner(Addr)', input, 40, setValid);
+            setNewOwner(input);
           }}
         />
 
         <LoadingButton
-          disabled={ setRegCenterLoading || hasError(valid) } 
+          disabled={ setOwnerLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ setRegCenterClick }
+          onClick={ setOwnerClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
-          endIcon={<SettingsOutlined />}
+          endIcon={<ManageAccountsOutlined />}       
         >
           Set
         </LoadingButton>

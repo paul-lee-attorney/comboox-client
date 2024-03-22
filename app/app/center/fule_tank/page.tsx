@@ -5,8 +5,7 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../read";
 import { balanceOfWei } from "../read/rc";
 import { Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { bigIntToStrNum, getEthPart, getGWeiPart, getWeiPart, } from "../../read/toolsKit";
-import { useFuleTankOwner, useFuleTankRate, useFuleTankRegCenter, 
-  useFuleTankSum, useRegCenterBalanceOf, } from "../../../generated";
+import { useFuleTankGetOwner, useFuleTankGetRegCenter, useFuleTankRate, useFuleTankSum, useRegCenterBalanceOf, } from "../../../generated";
 import { useWalletClient } from "wagmi";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../../read/CopyLongStr";
@@ -22,7 +21,7 @@ function FuleTank() {
   const { data: signer } = useWalletClient();
   const {
     refetch: getOwner
-  } = useFuleTankOwner ({
+  } = useFuleTankGetOwner ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -38,7 +37,7 @@ function FuleTank() {
   const [ regCenter, setRegCenter ] = useState<HexType>(AddrZero);
   const {
     refetch: getRegCenter
-  } = useFuleTankRegCenter ({
+  } = useFuleTankGetRegCenter ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
