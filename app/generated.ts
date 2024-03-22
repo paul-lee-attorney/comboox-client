@@ -3073,16 +3073,46 @@ export const fuleTankABI = [
     stateMutability: 'nonpayable',
     type: 'constructor',
     inputs: [
-      { name: '_regCenter', internalType: 'address', type: 'address' },
+      { name: 'rc', internalType: 'address', type: 'address' },
       { name: '_rate', internalType: 'uint256', type: 'uint256' },
     ],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
   },
   {
     stateMutability: 'view',
     type: 'function',
     inputs: [],
-    name: 'owner',
+    name: 'getOwner',
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
   },
   {
     stateMutability: 'view',
@@ -3099,17 +3129,10 @@ export const fuleTankABI = [
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'regCenter',
-    outputs: [{ name: '', internalType: 'contract IERC20', type: 'address' }],
-  },
-  {
     stateMutability: 'nonpayable',
     type: 'function',
-    inputs: [{ name: '_owner', internalType: 'address', type: 'address' }],
-    name: 'setOwner',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
     outputs: [],
   },
   {
@@ -3117,13 +3140,6 @@ export const fuleTankABI = [
     type: 'function',
     inputs: [{ name: '_rate', internalType: 'uint256', type: 'uint256' }],
     name: 'setRate',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: '_regCenter', internalType: 'address', type: 'address' }],
-    name: 'setRegCenter',
     outputs: [],
   },
   {
@@ -38864,10 +38880,10 @@ export function useFuleTankRead<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"owner"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"getOwner"`.
  */
-export function useFuleTankOwner<
-  TFunctionName extends 'owner',
+export function useFuleTankGetOwner<
+  TFunctionName extends 'getOwner',
   TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
 >(
   config: Omit<
@@ -38877,7 +38893,26 @@ export function useFuleTankOwner<
 ) {
   return useContractRead({
     abi: fuleTankABI,
-    functionName: 'owner',
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useFuleTankGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: fuleTankABI,
+    functionName: 'getRegCenter',
     ...config,
   } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
 }
@@ -38897,25 +38932,6 @@ export function useFuleTankRate<
   return useContractRead({
     abi: fuleTankABI,
     functionName: 'rate',
-    ...config,
-  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"regCenter"`.
- */
-export function useFuleTankRegCenter<
-  TFunctionName extends 'regCenter',
-  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: fuleTankABI,
-    functionName: 'regCenter',
     ...config,
   } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
 }
@@ -38966,6 +38982,31 @@ export function useFuleTankWrite<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"init"`.
+ */
+export function useFuleTankInit<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof fuleTankABI,
+          'init'
+        >['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof fuleTankABI, 'init', TMode>({
+    abi: fuleTankABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"refule"`.
  */
 export function useFuleTankRefule<TMode extends WriteContractMode = undefined>(
@@ -38991,28 +39032,28 @@ export function useFuleTankRefule<TMode extends WriteContractMode = undefined>(
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useFuleTankSetOwner<
+export function useFuleTankSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
           typeof fuleTankABI,
-          'setOwner'
+          'setNewOwner'
         >['request']['abi'],
-        'setOwner',
+        'setNewOwner',
         TMode
-      > & { functionName?: 'setOwner' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'setOwner', TMode> & {
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof fuleTankABI, 'setNewOwner', TMode> & {
         abi?: never
-        functionName?: 'setOwner'
+        functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'setOwner', TMode>({
+  return useContractWrite<typeof fuleTankABI, 'setNewOwner', TMode>({
     abi: fuleTankABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
   } as any)
 }
@@ -39038,33 +39079,6 @@ export function useFuleTankSetRate<TMode extends WriteContractMode = undefined>(
   return useContractWrite<typeof fuleTankABI, 'setRate', TMode>({
     abi: fuleTankABI,
     functionName: 'setRate',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRegCenter"`.
- */
-export function useFuleTankSetRegCenter<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof fuleTankABI,
-          'setRegCenter'
-        >['request']['abi'],
-        'setRegCenter',
-        TMode
-      > & { functionName?: 'setRegCenter' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'setRegCenter', TMode> & {
-        abi?: never
-        functionName?: 'setRegCenter'
-      } = {} as any,
-) {
-  return useContractWrite<typeof fuleTankABI, 'setRegCenter', TMode>({
-    abi: fuleTankABI,
-    functionName: 'setRegCenter',
     ...config,
   } as any)
 }
@@ -39139,6 +39153,22 @@ export function usePrepareFuleTankWrite<TFunctionName extends string>(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"init"`.
+ */
+export function usePrepareFuleTankInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: fuleTankABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'init'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"refule"`.
  */
 export function usePrepareFuleTankRefule(
@@ -39155,19 +39185,19 @@ export function usePrepareFuleTankRefule(
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareFuleTankSetOwner(
+export function usePrepareFuleTankSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setOwner'>,
+    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
     abi: fuleTankABI,
-    functionName: 'setOwner',
+    functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setOwner'>)
+  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setNewOwner'>)
 }
 
 /**
@@ -39184,22 +39214,6 @@ export function usePrepareFuleTankSetRate(
     functionName: 'setRate',
     ...config,
   } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRate'>)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRegCenter"`.
- */
-export function usePrepareFuleTankSetRegCenter(
-  config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRegCenter'>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: fuleTankABI,
-    functionName: 'setRegCenter',
-    ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRegCenter'>)
 }
 
 /**
@@ -39232,6 +39246,37 @@ export function usePrepareFuleTankWithdrawIncome(
     functionName: 'withdrawIncome',
     ...config,
   } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawIncome'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuleTankABI}__.
+ */
+export function useFuleTankEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof fuleTankABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: fuleTankABI,
+    ...config,
+  } as UseContractEventConfig<typeof fuleTankABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuleTankABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function useFuleTankSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof fuleTankABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: fuleTankABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof fuleTankABI, 'SetNewOwner'>)
 }
 
 /**

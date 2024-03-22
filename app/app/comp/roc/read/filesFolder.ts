@@ -182,7 +182,7 @@ export async function getFilesListWithInfo(addr: HexType):Promise<InfoOfFile[]>{
     let file = await getFile(addr, ls[len - i - 1]);
 
     list.push({
-      addr: ls[i],
+      addr: ls[len - i - 1],
       sn: file.snOfDoc,
       head: file.head,
       ref: file.ref,
