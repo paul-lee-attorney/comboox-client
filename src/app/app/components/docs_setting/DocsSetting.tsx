@@ -1,0 +1,141 @@
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+
+import { Box, Button, Dialog, DialogActions, DialogContent, 
+  DialogTitle, IconButton, Stack, TextField, Tooltip 
+} from "@mui/material";
+
+import { SettingsOutlined } from "@mui/icons-material";
+
+import { AddrOfRegCenter, AddrZero, HexType } from "../../common";
+
+import Logo from '/public/assets/Symbol_white_xs.png';
+
+import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { Doc, getBookeeper, getDocsList, getOwner, getTempsList } from "../../rc";
+import { DocsList } from "./DocsList";
+import Image from "next/image";
+import { useRegCenterGetOwner } from "../../../../../generated";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { ActionsOfSetting } from "./ActionsOfSetting";
+
+export function DocsSetting() {
+
+  const [ time, setTime ] = useState(0);
+
+  const [ temps, setTemps ] = useState<readonly Doc[]>([]);
+  const [ docs, setDocs ] = useState<readonly Doc[]>([]);
+  
+  const [ typeOfDoc, setTypeOfDoc ] = useState(1);
+  const [ version, setVersion ] = useState(1);
+  const [ addr, setAddr ] = useState(AddrZero);
+  
+  useEffect(() => {
+    getTempsList().then(
+      res => setTemps(res)
+    )
+  }, [time]);
+
+  useEffect(()=>{
+    
+    let snOfDoc:HexType = `0x${
+      typeOfDoc.toString(16).padStart(8, '0') +
+      version.toString(16).padStart(8, '0') + 
+      '0'.padEnd(48, '0')
+    }`;
+
+    getDocsList(snOfDoc).then(
+      ls => setDocs(ls)
+    );
+
+  }, [typeOfDoc, version, time]);
+
+  const [ owner, setOwner ] = useState(AddrZero);
+  const [ keeper, setKeeper ] = useState(AddrZero);
+
+  useEffect(()=>{
+    getOwner().then(
+      res => setOwner(res)
+    );
+  }, [time])
+
+  useEffect(()=>{
+    getBookeeper().then(
+      res => setKeeper(res)
+    );
+  }, [time])
+
+  const [ open, setOpen ] = useState(false);
+
+  const handleClick = ()=> {
+    setTime(Date.now());
+    setOpen(true);
+  }
+
+  return (
+    <>
+      <Tooltip 
+        title='Documents Repository' 
+        placement='bottom' 
+        arrow 
+      >
+        <span>
+          <IconButton
+            sx={{ml:3, mr:1}}
+            size="small"
+            color="inherit"
+            onClick={handleClick}      
+          >
+            <Image src={ Logo } alt='Documents Repository' />
+
+          </IconButton>
+        </span>
+      </Tooltip>
+
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"
+      >
+        <DialogTitle id="dialog-title" sx={{ textDecoration:'underline' }} >
+          <b>Documents Setting </b>
+        </DialogTitle>
+
+        <DialogContent>
+
+          <Stack direction='column' >
+
+            <Stack direction='row' >
+
+              <CopyLongStrTF title="RegCenter" src={ AddrOfRegCenter } />
+
+              <CopyLongStrTF title="Owner" src={ owner } />
+
+              <CopyLongStrTF title="BooKeeper" src={ keeper } />
+
+            </Stack>
+
+            <DocsList title='Templates' list={temps} setAddr={setAddr} setTypeOfDoc={setTypeOfDoc} setVersion={setVersion} />
+
+            <DocsList title='Documents' list={docs} setAddr={setAddr} setTypeOfDoc={setTypeOfDoc} setVersion={setVersion} />
+
+            <ActionsOfSetting typeOfDoc={typeOfDoc} version={version} addr={addr} setTime={setTime} setOpen={setOpen} />
+
+          </Stack>
+
+        </DialogContent>
+
+        <DialogActions>
+          <Button 
+            sx={{m:1, ml:5, p:1, minWidth:128 }}
+            variant="outlined"
+            onClick={()=>setOpen(false)}
+          >
+            Close
+          </Button>
+        </DialogActions>
+      
+      </Dialog>
+    </>
+  );
+}
