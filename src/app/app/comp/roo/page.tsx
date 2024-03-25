@@ -11,10 +11,10 @@ import {
 
 
 import { booxMap } from "../../common";
-import { OptionsList } from "./read/OptionsList";
-import { CertificateOfOption } from "./write/CertificateOfOption";
+import { OptionsList } from "./components/OptionsList";
+import { CertificateOfOption } from "./components/CertificateOfOption";
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { OptWrap, defaultOptWrap, getAllOpts } from "./read/roo";
+import { OptWrap, defaultOptWrap, getAllOpts } from "./roo";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 function RegisterOfOptions() {

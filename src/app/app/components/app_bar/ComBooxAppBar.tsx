@@ -120,7 +120,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
   const items = [
     {href: '/app', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
-    {href: '/app/center/fule_tank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
+    {href: '/app/fule_tank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
     {href: '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
     {href: '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
     {href: '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},

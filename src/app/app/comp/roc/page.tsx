@@ -9,9 +9,9 @@ import { Create } from "@mui/icons-material";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { InfoOfFile, getFilesListWithInfo, } from "./read/filesFolder";
-import { GetFilesList } from "./read/GetFilesList";
-import { IndexCard } from "./read/IndexCard";
+import { InfoOfFile, getFilesListWithInfo, } from "./components/filesFolder";
+import { GetFilesList } from "./components/GetFilesList";
+import { IndexCard } from "./components/IndexCard";
 import { HexType, MaxPrice, booxMap } from "../../common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../common/toolsKit";
 

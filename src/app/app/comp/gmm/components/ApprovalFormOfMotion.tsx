@@ -19,9 +19,9 @@ import { Article } from "@mui/icons-material";
 import { HexType, booxMap } from "../../../common";
 import { dateParser, longSnParser } from "../../../common/toolsKit";
 import { voteEnded } from "../meetingMinutes";
-import { getFile } from "../../roc/read/filesFolder";
-import { GetVotingRule } from "../../roc/rules/VotingRules/read/GetVotingRule";
-import { GetPosition } from "../../rod/read/GetPosition";
+import { getFile } from "../../roc/components/filesFolder";
+import { GetVotingRule } from "../../roc/sha/components/rules/VotingRules/GetVotingRule";
+import { GetPosition } from "../../rod/components/GetPosition";
 
 import { statesOfMotion } from "./GetMotionsList";
 

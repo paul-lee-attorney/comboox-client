@@ -12,7 +12,7 @@ import { useRegisterOfMembersSetMaxQtyOfMembers } from '../../../../../generated
 
 import { HexType, MaxSeqNo, booxMap } from '../../common';
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from '../../common/toolsKit';
-import { maxQtyOfMembers } from '../rom/read/rom';
+import { maxQtyOfMembers } from '../rom/rom';
 
 import { InitCompProps } from './SetCompInfo';
 

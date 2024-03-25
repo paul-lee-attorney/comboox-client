@@ -12,7 +12,7 @@ import { useWalletClient } from "wagmi";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../common/CopyLongStr";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
-import { ActionsOfFule } from "./write/ActionsOfFule";
+import { ActionsOfFule } from "./ActionsOfFule";
 
 function FuleTank() {
 

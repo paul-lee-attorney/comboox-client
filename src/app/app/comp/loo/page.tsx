@@ -14,7 +14,7 @@ import { ActionsOfOrder } from "./components/ActionsOfOrder";
 import { OrderWrap, defaultOrderWrap, Investor, getChain, investorInfoList } from "./loo";
 import { OrdersList } from "./components/OrdersList";
 import { InvestorsList } from "./components/InvestorsList";
-import { counterOfClasses } from "../ros/read/ros";
+import { counterOfClasses } from "../ros/ros";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 function ListOfOrders() {

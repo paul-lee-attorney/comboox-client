@@ -13,7 +13,7 @@ import { AddrOfRegCenter, AddrZero, HexType } from "../../common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { Doc, getDocsList } from "../../rc";
-import { GetDocsList } from "./read/GetDocsList";
+import { GetDocsList } from "./components/GetDocsList";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 function ListOfProjects() {

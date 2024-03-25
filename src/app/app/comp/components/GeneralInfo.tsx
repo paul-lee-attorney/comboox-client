@@ -15,11 +15,11 @@ import { getDK } from "../common/accessControl";
 
 import { balanceOf, balanceOfWei } from "../../rc";
 
-import { Position, getDirectorsFullPosInfo } from "../rod/read/rod";
-import { GetOfficersList } from "../rod/read/GetOfficersList";
-import { MembersEquityList } from "../rom/read/MembersList";
-import { getControllor, getOwnersEquity, votesOfGroup } from "../rom/read/rom";
-import { InvHistoryOfMember } from "../rom/read/InvHistoryOfMember";
+import { Position, getDirectorsFullPosInfo } from "../rod/rod";
+import { GetOfficersList } from "../rod/components/GetOfficersList";
+import { MembersEquityList } from "../rom/components/MembersList";
+import { getControllor, getOwnersEquity, votesOfGroup } from "../rom/rom";
+import { InvHistoryOfMember } from "../rom/components/InvHistoryOfMember";
 
 import { ConfigSetting } from "./config_setting/ConfigSetting";
 import { PickupDeposit } from "./PickupDeposit";

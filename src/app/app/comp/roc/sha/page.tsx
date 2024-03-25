@@ -9,14 +9,14 @@ import { BookOutlined } from "@mui/icons-material";
 
 import { HexType, booxMap } from "../../../common";
 
-import { AgrmtAccessControl } from "./write/AgrmtAccessControl";
-import { ShaBodyTerms } from "./write/ShaBodyTerms";
-import { Signatures } from "./write/sigPage/Signatures";
-import { ShaLifecycle } from "./write/ShaLifecycle";
+import { AgrmtAccessControl } from "./components/AgrmtAccessControl";
+import { ShaBodyTerms } from "./components/ShaBodyTerms";
+import { Signatures } from "./components/sigPage/Signatures";
+import { ShaLifecycle } from "./components/ShaLifecycle";
 
-import { InfoOfFile, getFile } from "../read/filesFolder";
+import { InfoOfFile, getFile } from "../components/filesFolder";
 import { isFinalized } from "../../common/accessControl";
-import { IndexCard } from "../read/IndexCard";
+import { IndexCard } from "../components/IndexCard";
 
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 

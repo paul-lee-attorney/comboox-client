@@ -4,10 +4,10 @@ import { useState } from "react";
 
 import { Paper, Stack, Toolbar, Typography } from "@mui/material";
 
-import { MembersEquityList } from "./read/MembersList";
+import { MembersEquityList } from "./components/MembersList";
 
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { InvHistoryOfMember } from "./read/InvHistoryOfMember";
+import { InvHistoryOfMember } from "./components/InvHistoryOfMember";
 import { booxMap } from "../../common";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";

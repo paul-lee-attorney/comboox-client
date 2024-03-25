@@ -14,11 +14,11 @@ import { Create } from "@mui/icons-material";
 
 import { useGeneralKeeperCreateIa } from "../../../../../generated";
 
-import { InfoOfFile, getFilesListWithInfo } from "../roc/read/filesFolder";
+import { InfoOfFile, getFilesListWithInfo } from "../roc/components/filesFolder";
 
-import { GetFilesList } from "../roc/read/GetFilesList";
+import { GetFilesList } from "../roc/components/GetFilesList";
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { IndexCard } from "../roc/read/IndexCard";
+import { IndexCard } from "../roc/components/IndexCard";
 import { HexType, booxMap } from "../../common";
 import { refreshAfterTx } from "../../common/toolsKit";
 

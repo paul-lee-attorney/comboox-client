@@ -8,11 +8,11 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { HeadOfDoc, getHeadByBody } from "../../../rc";
 import { dateParser } from "../../../common/toolsKit";
-import { OwnerPage } from "./Owner/write/OwnerPage";
-import { ManagerPage } from "./Manager/write/ManagerPage";
-import { LeaderPage } from "./Leader/write/LeaderPage";
+import { OwnerPage } from "./components/Owner/OwnerPage";
+import { ManagerPage } from "./components/Manager/ManagerPage";
+import { LeaderPage } from "./components/Leader/LeaderPage";
 import { useSearchParams } from "next/navigation";
-import { MemberPage } from "./Member/write/MemberPage";
+import { MemberPage } from "./components/Member/MemberPage";
 
 function Payroll() {
 

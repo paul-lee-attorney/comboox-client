@@ -4,8 +4,8 @@ import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, 
   Grid, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 
-import { GetVotingRule } from "../../roc/rules/VotingRules/read/GetVotingRule";
-import { GetPosition } from "../../rod/read/GetPosition";
+import { GetVotingRule } from "../../roc/sha/components/rules/VotingRules/GetVotingRule";
+import { GetPosition } from "../../rod/components/GetPosition";
 import Link from "next/link";
 
 import { HexType, booxMap } from "../../../common";
@@ -13,7 +13,7 @@ import { HexType, booxMap } from "../../../common";
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../common/toolsKit";
 import { Motion, voteEnded } from "../../gmm/meetingMinutes";
-import { getSnOfFile } from "../../roc/read/filesFolder";
+import { getSnOfFile } from "../../roc/components/filesFolder";
 import { VoteResult } from "../../gmm/components/VoteResult";
 import { ActionsOnMotionOfBoard } from "./ActionsOnMotionOfBoard";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";

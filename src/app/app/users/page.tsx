@@ -8,10 +8,10 @@ import { longDataParser, longSnParser, toPercent } from "../common/toolsKit";
 import { regCenterABI, useRegCenterBalanceOf, useRegCenterGetLocksList, useRegCenterGetOwner } from "../../../../generated";
 import { useContractRead, useWalletClient } from "wagmi";
 
-import { LockersList } from "./write/lockers/LockersList";
-import { HashLockerOfPoints } from "./write/lockers/HashLockerOfPoints";
+import { LockersList } from "./components/lockers/LockersList";
+import { HashLockerOfPoints } from "./components/lockers/HashLockerOfPoints";
 import { CopyLongStrTF } from "../common/CopyLongStr";
-import { ActionsOfUser } from "./write/ActionsOfUser";
+import { ActionsOfUser } from "./components/ActionsOfUser";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
 function UserInfo() {

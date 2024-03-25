@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 
 import { Paper, Stack, Toolbar, Typography } from "@mui/material";
 
-import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo, } from "./read/rod";
+import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo, } from "./rod";
 
-import { GetOfficersList } from "./read/GetOfficersList";
+import { GetOfficersList } from "./components/GetOfficersList";
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
 import { booxMap } from "../../common";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";

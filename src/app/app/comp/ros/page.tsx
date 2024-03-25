@@ -18,9 +18,9 @@ import { CopyLongStrSpan } from "../../common/CopyLongStr";
 import { MaxPrice, booxMap } from "../../common";
 import { FormResults, defFormResults, hasError, onlyInt } from "../../common/toolsKit";
 
-import { Share, getShare, getSharesList } from "./read/ros";
-import { SharesList } from "./read/SharesList";
-import { CertificateOfContribution } from "./write/CertificateOfContribution";
+import { Share, getShare, getSharesList } from "./ros";
+import { SharesList } from "./components/SharesList";
+import { CertificateOfContribution } from "./components/CertificateOfContribution";
 
 function RegisterOfShares() {
   const { boox } = useComBooxContext();

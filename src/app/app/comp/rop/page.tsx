@@ -9,10 +9,10 @@ import {
   Typography,
 } from "@mui/material";
 
-import { Pledge, getAllPledges } from "./read/rop";
-import { PledgesList } from "./read/PledgesList";
-import { CertificateOfPledge } from "./write/CertificateOfPledge";
-import { CreatePledge } from "./write/CreatePledge";
+import { Pledge, getAllPledges } from "./rop";
+import { PledgesList } from "./components/PledgesList";
+import { CertificateOfPledge } from "./components/CertificateOfPledge";
+import { CreatePledge } from "./components/CreatePledge";
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
 import { booxMap } from "../../common";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";

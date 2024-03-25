@@ -7,14 +7,14 @@ import { HexType, booxMap } from "../../../common";
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 import { Box, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 
-import { AgrmtAccessControl } from "../../roc/sha/write/AgrmtAccessControl";
+import { AgrmtAccessControl } from "../../roc/sha/components/AgrmtAccessControl";
 
-import IaBodyTerms from "./write/IaBodyTerms";
+import IaBodyTerms from "./components/IaBodyTerms";
 
-import { IaLifecycle } from "./write/IaLifecycle";
-import { Signatures } from "../../roc/sha/write/sigPage/Signatures";
-import { InfoOfFile, getFile } from "../../roc/read/filesFolder";
-import { IndexCard } from "../../roc/read/IndexCard";
+import { IaLifecycle } from "./components/IaLifecycle";
+import { Signatures } from "../../roc/sha/components/sigPage/Signatures";
+import { InfoOfFile, getFile } from "../../roc/components/filesFolder";
+import { IndexCard } from "../../roc/components/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
 import { isFinalized } from "../../common/accessControl";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";

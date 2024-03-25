@@ -14,9 +14,9 @@ import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx
 import { DateTimeField } from '@mui/x-date-pickers';
 import dayjs from 'dayjs';
 
-import { SharesList } from '../ros/read/SharesList';
+import { SharesList } from '../ros/components/SharesList';
 
-import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../ros/read/ros';
+import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../ros/ros';
 
 import { InitCompProps } from './SetCompInfo';
 

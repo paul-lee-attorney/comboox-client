@@ -2,7 +2,7 @@ import { readContract } from "@wagmi/core";
 
 
 import { meetingMinutesABI } from "../../../../../generated";
-import { OrgVotingRule } from "../roc/rules/VotingRules/write/SetVotingRule";
+import { OrgVotingRule } from "../roc/sha/components/rules/VotingRules/SetVotingRule";
 import { AddrZero, HexType } from "../../common";
 
 export interface Action {
