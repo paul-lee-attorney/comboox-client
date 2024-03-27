@@ -231,9 +231,6 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                       snOfDoc: snOfDoc.substring(6, 26),
                     }
                   }}
-                  // as={motion.head.seqOfVR == 8
-                  //     ? '/comp/roc/Sha'
-                  //     : '/comp/roa/Ia'}
                 >            
                   <Button
                     variant="outlined"
@@ -241,24 +238,12 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                     startIcon={<Article />}
                     sx={{ m:1, height:40 }}
                   >
-                    <CopyLongStrSpan title="Doc: " src={ addrOfDoc ?? '' } />
+                    <CopyLongStrSpan title="Doc" src={ addrOfDoc ?? '' } />
                   </Button>
                 </Link>
               )}
               {motion.head.typeOfMotion == 4 && (
-
                 <CopyLongStrTF title="HashOfAction: " src={motion.contents.toString(16)} />
-
-                // <TextField 
-                //   fullWidth
-                //   inputProps={{readOnly: true}}
-                //   sx={{ m: 1 }} 
-                //   id="tfHashOfAction" 
-                //   label="HashOfAction" 
-                //   variant="outlined"
-                //   value = { motion.contents.toString(16) }
-                //   size='small'
-                // />                                            
               )}              
             </Grid>
           </Grid>
