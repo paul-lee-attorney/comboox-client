@@ -11,6 +11,7 @@ import { TakeSeat } from "./actions_on_motion/TakeSeat";
 import { RemoveDirector } from "./actions_on_motion/RemoveDirector";
 import { ExecActionOfGm } from "./actions_on_motion/ExecActionOfGm";
 import { TransferFund } from "./actions_on_motion/TransferFund";
+import { DistributeProfits } from "./actions_on_motion/DistributeProfits";
 
 export interface ActionsOnMotionProps {
   motion: Motion;
@@ -28,7 +29,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
   
   const actionsOnMotion = [
     'Propose Motion', 'Cast Vote', 'Count Results', 'Take Seat', 
-    'Remove Director', 'Exec Actions', 'Transfer Fund'
+    'Remove Director', 'Exec Actions', 'Transfer Fund', 'Distribute Profits'
   ]
 
   const compsOfAction = [
@@ -39,6 +40,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
     <RemoveDirector key={4} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <ExecActionOfGm key={5} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <TransferFund key={6} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
+    <DistributeProfits key={7} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
   ]
 
   return (
