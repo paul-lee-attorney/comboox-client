@@ -8,7 +8,7 @@ import {
 
 import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { Action, defaultAction } from "../../meetingMinutes";
 import { CreateMotionProps } from "../../../bmm/components/CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
@@ -28,6 +28,11 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
+  const updateResult = ()=>{
+    setLoading(false);
+    refresh();
+  }
+
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
@@ -39,7 +44,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResult);
     }
   });
 
@@ -49,7 +54,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
         args: [
           BigInt(seqOfVr), 
           actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (strNumToBigInt(v.value, 9) * 10n ** 9n)),
           actions.map(v => (v.params)),
           desHash, BigInt(executor)
         ],
@@ -224,7 +229,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('Value', input, 0n, setValid);
+                onlyNum('Value', input, 0n, 9, setValid);
                 setActions(a => {
                   let arr:Action[] = [];
                   arr = [...a];

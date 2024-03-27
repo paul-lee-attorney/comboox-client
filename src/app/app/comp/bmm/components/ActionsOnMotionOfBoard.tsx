@@ -10,15 +10,16 @@ import { VoteCountingOfBoard } from "./actions_on_motion/VoteCountingOfBoard";
 import { TakePosition } from "./actions_on_motion/TakePosition";
 import { RemoveOfficer } from "./actions_on_motion/RemoveOfficer";
 import { ExecAction } from "./actions_on_motion/ExecAction";
+import { TransferFund } from "./actions_on_motion/TransferFund";
 
 
 export function ActionsOnMotionOfBoard({motion, voteIsEnd, setOpen, refresh}:ActionsOnMotionSelectProps){
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOnMotion = [
     'Propose Motion', 'Cast Vote', 'Count Results', 'Take Position', 
-    'Remove Officer', 'Exec Actions' 
+    'Remove Officer', 'Exec Actions', 'Transfer Fund'
   ]
 
   const compsOfAction = [
@@ -28,6 +29,7 @@ export function ActionsOnMotionOfBoard({motion, voteIsEnd, setOpen, refresh}:Act
     <TakePosition key={3} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <RemoveOfficer key={4} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <ExecAction key={5} motion={motion} setOpen = {setOpen} refresh={refresh} />,
+    <TransferFund key={6} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
   ]
 
   return (

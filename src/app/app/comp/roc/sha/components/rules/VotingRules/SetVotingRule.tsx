@@ -228,7 +228,7 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     labelId="authority-label"
                     id="authority-select"
                     label="Authority"
-                    value={ objVR.authority == '0' ? '1' : objVR.authority }
+                    value={ objVR.authority == '0' ? '' : objVR.authority }
                     inputProps={{readOnly: isFinalized}}
                     onChange={(e) => setObjVR((v) => ({
                       ...v,

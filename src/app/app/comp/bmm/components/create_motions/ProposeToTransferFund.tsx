@@ -5,7 +5,7 @@ import { useGeneralKeeperProposeToTransferFund } from "../../../../../../../gene
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -51,7 +51,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         true, 
         paras.to, 
         paras.isCBP, 
-        BigInt(paras.amt), 
+        strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
         BigInt(paras.expireDate), 
         BigInt(seqOfVR), 
         BigInt(executor)
@@ -143,7 +143,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('Amount', input, 0n, setValid);
+                onlyNum('Amount', input, 0n, 9, setValid);
                 setParas(v => ({
                   ...v,
                   amt: input,

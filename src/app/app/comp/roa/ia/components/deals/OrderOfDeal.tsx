@@ -330,7 +330,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   }}
                   value={ baseToDollar(
                     (((BigInt(deal.body.par) - BigInt(deal.body.paid)) * BigInt(deal.head.priceOfPar) 
-                    + (BigInt(deal.body.paid) * BigInt(deal.head.priceOfPaid))) / 100n).toString()  
+                    + (BigInt(deal.body.paid) * BigInt(deal.head.priceOfPaid))) / 10n ** 4n).toString()  
                   )}
                 />
               </td>

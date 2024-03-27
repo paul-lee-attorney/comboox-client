@@ -31,6 +31,8 @@ export function SetPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCapProps
 
   const refreshLockers = ()=>{
     setLoading(false);
+    refresh();
+    setDialogOpen(false);
   }
 
   const [ locker, setLocker ] = useState<StrLocker>(defaultStrLocker);

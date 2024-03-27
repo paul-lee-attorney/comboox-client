@@ -17,7 +17,7 @@ function FrontPage() {
         <Image src={Logo} alt='ComBoox Logo' />
 
         <Typography variant="h6" component="div" sx={{ flexGrow: 1, m:1, color:'GrayText' }}>
-          ---- A Company Book-Entry System On Blockchain
+          ---- A Company Book-Entry Platform On Blockchain
         </Typography>
       </Stack>
 
@@ -30,7 +30,7 @@ function FrontPage() {
 
 
           <Typography variant="body1" component="div" sx={{ flexGrow: 1, m:2 }} color='text.secondary'>
-            <p><b>ComBoox</b> is a blockchain-based company book-entry platform designed for registering equity shares and corporate statutory books keeping, which is aimed to assist users to quickly establish a legal, secure, transparent and reliable smart contracts system, so as to enable investors, shareholders, executive officers, business partners to conduct legal acts around equity rights in a <b>self-service</b> mode, including share subscription, share transfer, share pledge, paying consideration, signing contracts, proposing, voting, nominating, inauguration and resignation etc.</p>
+            <p><b>ComBoox</b> is a blockchain-based company book-entry platform designed for registering equity shares and keeping corporate statutory books, which is aimed to assist users to quickly establish a legal, secure, transparent and reliable smart contracts system, so as to enable investors, shareholders, executive officers, business partners to conduct legal acts around equity rights in a <b>self-service</b> mode, including share subscription, share transfer, share pledge, paying consideration, signing contracts, proposing, voting, nominating, inauguration and resignation etc.</p>
 
             <p><b>Different</b> from simple tokenization of equity certificates, ComBoox does <b>NOT</b> rely on legal documents to restrict off-chain behaviors so as to ensure the realization of rights and interests, instead, it uses smart contracts to fully control <b>ALL</b> activities of equity transactions and corporate governance, completely eliminating the possibilities of defaults or violations.</p>
             

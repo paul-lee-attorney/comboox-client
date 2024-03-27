@@ -10,6 +10,7 @@ import { VoteCountingOfGm } from "./actions_on_motion/VoteCountingOfGm";
 import { TakeSeat } from "./actions_on_motion/TakeSeat";
 import { RemoveDirector } from "./actions_on_motion/RemoveDirector";
 import { ExecActionOfGm } from "./actions_on_motion/ExecActionOfGm";
+import { TransferFund } from "./actions_on_motion/TransferFund";
 
 export interface ActionsOnMotionProps {
   motion: Motion;
@@ -23,11 +24,11 @@ export interface ActionsOnMotionSelectProps extends ActionsOnMotionProps{
 
 export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnMotionSelectProps){
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOnMotion = [
     'Propose Motion', 'Cast Vote', 'Count Results', 'Take Seat', 
-    'Remove Director', 'Exec Actions' 
+    'Remove Director', 'Exec Actions', 'Transfer Fund'
   ]
 
   const compsOfAction = [
@@ -37,6 +38,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
     <TakeSeat key={3} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <RemoveDirector key={4} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <ExecActionOfGm key={5} motion={motion} setOpen = {setOpen} refresh={refresh} />,
+    <TransferFund key={6} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
   ]
 
   return (

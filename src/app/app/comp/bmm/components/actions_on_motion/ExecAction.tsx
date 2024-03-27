@@ -8,7 +8,7 @@ import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/m
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 
 import { FormResults, HexParser, defFormResults, hasError, 
-  onlyHex, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
+  onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 
 import { Action, defaultAction } from "../../../gmm/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
@@ -52,7 +52,7 @@ export function ExecAction({motion, setOpen, refresh}:ActionsOnMotionProps) {
         args: [
           BigInt(motion.votingRule.seqOfRule), 
           actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (strNumToBigInt(v.value, 9) * 10n ** 9n)),
           actions.map(v => (v.params)),
           desHash, motion.head.seqOfMotion
         ],
@@ -176,7 +176,7 @@ export function ExecAction({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
         <TextField 
           variant='filled'
-          label='Value'
+          label='Value (CBP/ETH)'
           error={ valid['Value']?.error }
           helperText={ valid['Value']?.helpTx ?? ' ' }          
           sx={{
@@ -185,7 +185,7 @@ export function ExecAction({motion, setOpen, refresh}:ActionsOnMotionProps) {
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Value', input, 0n, setValid);
+            onlyNum('Value', input, 0n, 9, setValid);
             setActions(a => {
               let arr:Action[] = [];
               arr = [...a];

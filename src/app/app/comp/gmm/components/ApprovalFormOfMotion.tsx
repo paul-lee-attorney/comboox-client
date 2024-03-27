@@ -31,6 +31,7 @@ import { ActionsOnMotion } from "./ActionsOnMotion";
 
 import { VoteResult } from "./VoteResult";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../../common/CopyLongStr";
 
 export const motionType = ['ElectOfficer', 'RemoveDirector', 'ApproveDocument', 'ApproveAction'];
 
@@ -240,21 +241,24 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                     startIcon={<Article />}
                     sx={{ m:1, height:40 }}
                   >
-                    Doc: {addrOfDoc}
+                    <CopyLongStrSpan title="Doc: " src={ addrOfDoc ?? '' } />
                   </Button>
                 </Link>
               )}
               {motion.head.typeOfMotion == 4 && (
-                <TextField 
-                  fullWidth
-                  inputProps={{readOnly: true}}
-                  sx={{ m: 1 }} 
-                  id="tfHashOfAction" 
-                  label="HashOfAction" 
-                  variant="outlined"
-                  value = { motion.contents.toString(16) }
-                  size='small'
-                />                                            
+
+                <CopyLongStrTF title="HashOfAction: " src={motion.contents.toString(16)} />
+
+                // <TextField 
+                //   fullWidth
+                //   inputProps={{readOnly: true}}
+                //   sx={{ m: 1 }} 
+                //   id="tfHashOfAction" 
+                //   label="HashOfAction" 
+                //   variant="outlined"
+                //   value = { motion.contents.toString(16) }
+                //   size='small'
+                // />                                            
               )}              
             </Grid>
           </Grid>

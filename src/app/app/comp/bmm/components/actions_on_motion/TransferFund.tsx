@@ -1,42 +1,26 @@
 import { useState } from "react";
 
+import { HexType } from "../../../../common";
 
-import { AddrZero, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
-
-import { useGeneralKeeperProposeToTransferFund } from "../../../../../../../generated";
+import { useGeneralKeeperTransferFund } from "../../../../../../../generated";
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
-import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+import { EmojiPeople, PaymentOutlined } from "@mui/icons-material";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
-import { CreateMotionProps } from "../../../bmm/components/CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
+
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { ActionsOnMotionProps } from "../../../gmm/components/ActionsOnMotion";
+import { ParasOfTransfer, defaultParasOfTransfer } from "../../../gmm/components/create_motions/ProposeToTransferFund";
 
-export interface ParasOfTransfer {
-  toBMM: boolean;
-  to: HexType;
-  isCBP: boolean;
-  amt: string;
-  expireDate: number;
-}
 
-export const defaultParasOfTransfer: ParasOfTransfer = {
-  toBMM: false,
-  to: AddrZero,
-  isCBP: false,
-  amt: '0',
-  expireDate: 0,
-}
-
-export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
+export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
-  const [ seqOfVR, setSeqOfVR ] = useState<string>('9');
-  const [ executor, setExecutor ] = useState<string>('0');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -44,12 +28,13 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
   const updateResults=()=>{
     refresh();
     setLoading(false);
+    setOpen(false);
   }
 
   const {
-    isLoading: proposeToTransferFundLoading,
-    write: proposeToTransferFund
-  } = useGeneralKeeperProposeToTransferFund({
+    isLoading: transferFundLoading,
+    write: transferFund
+  } = useGeneralKeeperTransferFund({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -62,15 +47,14 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
   });
 
   const handleClick = ()=> {
-    proposeToTransferFund({
+    transferFund({
       args: [
-        false, 
+        true, 
         paras.to, 
         paras.isCBP, 
         strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
         BigInt(paras.expireDate), 
-        BigInt(seqOfVR), 
-        BigInt(executor)
+        motion.head.seqOfMotion
       ],
     });
   };
@@ -84,25 +68,6 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         <Stack direction="column" >
 
           <Stack direction="row" sx={{ alignItems:'center' }} >
-
-            <TextField 
-              variant='outlined'
-              label='SeqOfVR'
-              size="small"
-              error={ valid['SeqOfVR']?.error }
-              helperText={ valid['SeqOfVR']?.helpTx ?? ' ' }
-                sx={{
-                m:1,
-                width: 101,
-              }}
-              onChange={(e) => {
-                let input = e.target.value;
-                onlyInt('SeqOfVR', input, MaxSeqNo, setValid);
-                setSeqOfVR(input);
-              }}
-              value={ seqOfVR }
-            />
-
 
             <FormControl variant="outlined" size="small" sx={{ m: 1, width: 101 }}>
               <InputLabel id="symbolOfToken-label">Token</InputLabel>
@@ -160,7 +125,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Amount', input, 0n, 4, setValid);
+                onlyNum('Amount', input, 0n, 9, setValid);
                 setParas(v => ({
                   ...v,
                   amt: input,
@@ -185,25 +150,6 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               format='YYYY-MM-DD HH:mm:ss'
             />
 
-
-            <TextField 
-              variant='outlined'
-              label='Executor'
-              size="small"
-              error={ valid['Executor']?.error }
-              helperText={ valid['Executor']?.helpTx ?? ' ' }
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              onChange={(e) => {
-                let input = e.target.value;
-                onlyInt('Executor', input, MaxUserNo, setValid);
-                setExecutor(input);
-              }}
-              value={ executor }
-            />
-
           </Stack>
 
         </Stack>
@@ -211,15 +157,15 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
         <LoadingButton
-          disabled={ proposeToTransferFundLoading || hasError(valid)}
+          disabled={ transferFundLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           variant="contained"
-          endIcon={<EmojiPeople />}
+          endIcon={<PaymentOutlined />}
           sx={{ m:1, minWidth:128 }}
           onClick={ handleClick }
         >
-          Propose
+          Transfer
         </LoadingButton>
 
       </Stack>

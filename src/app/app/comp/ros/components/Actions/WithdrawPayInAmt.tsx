@@ -47,6 +47,8 @@ export function WithdrawPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCap
   const refreshLockers = ()=>{
     getLocker();
     setLoading(false);
+    refresh();
+    setDialogOpen(false);
   }
 
   const {

@@ -17,6 +17,7 @@ import { getSnOfFile } from "../../roc/components/filesFolder";
 import { VoteResult } from "../../gmm/components/VoteResult";
 import { ActionsOnMotionOfBoard } from "./ActionsOnMotionOfBoard";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { statesOfMotion } from "../../gmm/components/GetMotionsList";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
@@ -132,6 +133,60 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
             </Grid>
           </Grid>
 
+          {motion.body.state > 1 && (
+            <Grid container direction='row' spacing={2} >
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfShareRegDate" 
+                  label="ShareRegDate" 
+                  variant="outlined"
+                  value = { dateParser(motion.body.shareRegDate.toString()) }
+                  size='small'
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfVoteStartDate" 
+                  label="VoteStartDate" 
+                  variant="outlined"
+                  value = { dateParser(motion.body.voteStartDate.toString()) }
+                  size='small'
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfVoteEndDate" 
+                  label="VoteEndDate" 
+                  variant="outlined"
+                  value = { dateParser(motion.body.voteEndDate.toString()) }
+                  size='small'
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField 
+                  fullWidth={true}
+                  inputProps={{readOnly: true}}
+                  sx={{ m: 1 }} 
+                  id="tfStateOfMotion" 
+                  label="StateOfMotion" 
+                  variant="outlined"
+                  value = { statesOfMotion[motion.body.state - 1] }
+                  size='small'
+                />
+              </Grid>
+
+            </Grid>
+          )}
+
           <Grid container direction='row' spacing={2} >
             <Grid item xs={3}>
               <TextField 
@@ -196,46 +251,6 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
             </Grid>
           </Grid>
 
-          {motion.body.state > 1 && (
-            <Grid container direction='row' spacing={2} >
-              <Grid item xs={3}>
-                <TextField 
-                  fullWidth={true}
-                  inputProps={{readOnly: true}}
-                  sx={{ m: 1 }} 
-                  id="tfShareRegDate" 
-                  label="ShareRegDate" 
-                  variant="outlined"
-                  value = { dateParser(motion.body.shareRegDate.toString()) }
-                  size='small'
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField 
-                  fullWidth={true}
-                  inputProps={{readOnly: true}}
-                  sx={{ m: 1 }} 
-                  id="tfVoteStartDate" 
-                  label="VoteStartDate" 
-                  variant="outlined"
-                  value = { dateParser(motion.body.voteStartDate.toString()) }
-                  size='small'
-                />
-              </Grid>
-              <Grid item xs={3}>
-                <TextField 
-                  fullWidth={true}
-                  inputProps={{readOnly: true}}
-                  sx={{ m: 1 }} 
-                  id="tfVoteEndDate" 
-                  label="VoteEndDate" 
-                  variant="outlined"
-                  value = { dateParser(motion.body.voteEndDate.toString()) }
-                  size='small'
-                />
-              </Grid>
-            </Grid>
-          )}
 
           {motion.body.state > 2 && (
             <VoteResult addr={minutes} seqOfMotion={motion.head.seqOfMotion} />
@@ -253,7 +268,7 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
       </DialogContent>
 
       <DialogActions>
-        <Button onClick={()=>setOpen(false)}>Close</Button>
+        <Button variant="outlined" onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
 
     </Dialog>

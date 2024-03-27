@@ -5,7 +5,7 @@ import { useGeneralKeeperExecActionOfGm } from "../../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 
 import { Action, defaultAction } from "../../meetingMinutes";
 
@@ -48,7 +48,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
       args: [
         BigInt(motion.votingRule.seqOfRule),
         actions.map(v => (v.target)), 
-        actions.map(v => (BigInt(v.value))),
+        actions.map(v => (strNumToBigInt(v.value, 9) * 10n ** 9n)),
         actions.map(v => (v.params)),
         desHash, motion.head.seqOfMotion
       ],
@@ -180,7 +180,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
           }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('Value', input, 0n, setValid);
+            onlyNum('Value', input, 0n, 9, setValid);
             setActions(a => {
               let arr:Action[] = [];
               arr = [...a];

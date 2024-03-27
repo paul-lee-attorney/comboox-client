@@ -53,7 +53,7 @@ export function prCodifier(rule: PosAllocateRule, seq:number): HexType {
     (Number(rule.seqOfPos).toString(16).padStart(4, '0')) +
     (Number(rule.titleOfPos).toString(16).padStart(4, '0')) +
     (Number(rule.nominator).toString(16).padStart(10, '0')) +
-    (Number(rule.titleOfNominator).toString(16).padStart(4, '0')) +                  
+    (Number(rule.titleOfNominator).toString(16).padStart(4, '0')) +
     (Number(rule.seqOfVR).toString(16).padStart(4, '0')) +
     (rule.endDate.toString(16).padStart(12, '0')) +
     '0'.padStart(16, '0')
@@ -248,7 +248,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                     id="titleOfPos-select"
                     label="TitleOfPos"
                     inputProps={{ readOnly:isFinalized }}
-                    value={ objPR.titleOfPos == '0' ? '1' : objPR.titleOfPos }
+                    value={ objPR.titleOfPos == '0' ? '' : objPR.titleOfPos }
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
                       titleOfPos: e.target.value,
@@ -295,7 +295,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                     id="titleOfNominator-select"
                     label="TitleOfNominator"
                     inputProps={{readOnly: isFinalized}}
-                    value={ objPR.titleOfNominator == '0' ? '1' : objPR.titleOfNominator }
+                    value={ objPR.titleOfNominator == '0' ? '' : objPR.titleOfNominator }
                     onChange={(e) => setObjPR((v) => ({
                       ...v,
                       titleOfNominator: e.target.value,

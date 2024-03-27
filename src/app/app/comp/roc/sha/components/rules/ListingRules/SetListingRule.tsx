@@ -189,7 +189,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                     id="titleOfIssuer-select"
                     label="TitleOfIssuer"
                     inputProps={{readOnly:isFinalized}}
-                    value={ objLR.titleOfIssuer == '0' ? '1' : objLR.titleOfIssuer }
+                    value={ objLR.titleOfIssuer == '0' ? '' : objLR.titleOfIssuer }
                     onChange={(e) => setObjLR((v) => ({
                       ...v,
                       titleOfIssuer: e.target.value.toString(),
@@ -232,7 +232,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                     id="titleOfVerifier-select"
                     label="TitleOfIssuer"
                     inputProps={{readOnly:isFinalized}}
-                    value={ objLR.titleOfVerifier == '0' ? '1' : objLR.titleOfVerifier }
+                    value={ objLR.titleOfVerifier == '0' ? '' : objLR.titleOfVerifier }
                     onChange={(e) => setObjLR((v) => ({
                       ...v,
                       titleOfVerifier: e.target.value.toString(),

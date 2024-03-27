@@ -5,7 +5,7 @@ import { useGeneralKeeperCreateAction } from "../../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
@@ -49,7 +49,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
         args:[
           BigInt(seqOfVr), 
           actions.map(v => (v.target)), 
-          actions.map(v => (BigInt(v.value))),
+          actions.map(v => (strNumToBigInt(v.value, 9) * 10n ** 9n)),
           actions.map(v => (v.params)),
           desHash, BigInt(executor)
         ],
@@ -217,7 +217,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
 
             <TextField 
               variant='outlined'
-              label='Value'
+              label='Value (CBP/ETH)'
               size="small"
               error={ valid['Value']?.error }
               helperText={ valid['Value']?.helpTx ?? ' ' }
@@ -227,7 +227,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyInt('Value', input, 0n, setValid);
+                onlyNum('Value', input, 0n, 9, setValid);
                 setActions(a => {
                   let arr:Action[] = [];
                   arr = [...a];

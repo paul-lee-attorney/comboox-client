@@ -6,10 +6,11 @@ import { defaultDeal } from "../../../ia";
 import { useGeneralKeeperPayOffApprovedDeal } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { Payment } from "@mui/icons-material";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../../common/toolsKit";
+import { FormResults, bigIntToNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../../../common/toolsKit";
 import { HexType } from "../../../../../../common";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../../../_providers/ComBooxContextProvider";
+import { GetValueOf } from "../../../../../../common/GetValueOf";
 
 
 export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
@@ -89,6 +90,11 @@ export function PayOffApprovedDeal({ addr, deal, setOpen, setDeal, refresh}: Act
         >
           Pay Off
         </LoadingButton>
+
+        <GetValueOf amt={
+            bigIntToNum((((BigInt(deal.body.par) - BigInt(deal.body.paid)) * BigInt(deal.head.priceOfPar) 
+            + (BigInt(deal.body.paid) * BigInt(deal.head.priceOfPaid))) / 10n ** 4n), 4)
+        }/>
 
         </Stack>
 

@@ -3,7 +3,7 @@ import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { dateParser, longSnParser } from "../../../common/toolsKit";
 import { Motion } from "../meetingMinutes";
 
-const type = ['ElectOfficer', 'RemoveOfficer', 'ApproveDoc', 'ApproveAction'];
+const type = ['ElectOfficer', 'RemoveOfficer', 'ApproveDoc', 'ApproveAction', 'TransferFund'];
 
 export const statesOfMotion = ['Created', 'Proposed', 'Passed', 'Rejected', 'Rejected_NotToBuy', 'Rejected_ToBuy', 'Executed'];
 
