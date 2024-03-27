@@ -53,7 +53,7 @@ export function convertOrgLinkRule(rule: OrgLinkRule): LinkRule {
     effectiveDays: rule.effectiveDays.toString(),
     triggerType: rule.triggerType.toString(),
     shareRatioThreshold: bigIntToStrNum(BigInt(rule.shareRatioThreshold), 2),
-    rate: bigIntToStrNum(BigInt(rule.rate), 2),
+    rate: bigIntToStrNum(BigInt(rule.rate), 4),
     proRata: rule.proRata,
     seq: rule.seq.toString(),
     para: rule.para.toString(),
@@ -71,7 +71,7 @@ export function linkRuleCodifier(rule: LinkRule): HexType {
     Number(rule.effectiveDays).toString(16).padStart(4, '0') +
     Number(rule.triggerType).toString(16).padStart(2, '0') +
     strNumToBigInt(rule.shareRatioThreshold, 2).toString(16).padStart(4, '0') +
-    strNumToBigInt(rule.rate, 2).toString(16).padStart(8, '0') +
+    strNumToBigInt(rule.rate, 4).toString(16).padStart(8, '0') +
     (rule.proRata ? '01' : '00') +
     '0'.padEnd(32, '0')
   }`;

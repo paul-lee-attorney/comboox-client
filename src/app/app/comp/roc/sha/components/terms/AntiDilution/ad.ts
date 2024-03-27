@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { antiDilutionABI } from "../../../../../../../../../generated";
 import { HexType } from "../../../../../../common";
-import { longDataParser, longSnParser } from "../../../../../../common/toolsKit";
+import { bigIntToNum, longDataParser, longSnParser, strNumToBigInt } from "../../../../../../common/toolsKit";
 import { Deal } from "../../../../../roa/ia/ia";
 
 export interface BenchmarkType {
@@ -114,7 +114,7 @@ export async function getBenchmarks(addr: HexType): Promise<BenchmarkType[]> {
 
     let item: BenchmarkType = {
       classOfShare: classOfShare.toString(),
-      floorPrice: longDataParser((floorPrice / 10000).toString()),
+      floorPrice: bigIntToNum(BigInt(floorPrice), 4),
       obligors: strObligors,
     }
 
