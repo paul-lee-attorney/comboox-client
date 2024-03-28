@@ -7,7 +7,7 @@ import { ActionsOfManagerProps } from "../Manager/ActionsOfManager";
 
 export function ActionsOfMember({addr, seqOfTeam, refresh}: ActionsOfManagerProps ) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Apply Working Hours', 'Pickup Deposit'

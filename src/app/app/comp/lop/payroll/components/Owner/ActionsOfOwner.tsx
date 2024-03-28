@@ -14,7 +14,7 @@ export interface ActionsOfOwnerProps{
 
 export function ActionsOfOwner({addr, refresh}: ActionsOfOwnerProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Set Currency', 'Set Manager', 'Pay Wages', 'Transfer Ownership'

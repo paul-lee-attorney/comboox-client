@@ -16,7 +16,7 @@ export interface ActionsOfManagerProps extends ActionsOfOwnerProps {
 
 export function ActionsOfManager({addr, seqOfTeam, refresh}: ActionsOfManagerProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Set Budget', 'Fix Budget', 'Increase Budget', 'Enroll Team', 'Increase Team Budget', 'Replace Leader', 'Verify Team Work'

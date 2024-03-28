@@ -18,7 +18,7 @@ export interface ActionsOfLeaderProps extends ActionsOfManagerProps {
 
 export function ActionsOfLeader({addr, seqOfTeam, memberNo, refresh}: ActionsOfLeaderProps ) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Create Team', 'Update Team', 'Enroll Member', 'Remove Member', 

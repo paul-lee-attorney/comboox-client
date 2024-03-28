@@ -55,21 +55,16 @@ export function ManagerPage({ addr }:PayrollProps) {
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
 
-      { ((signer && signer.account.address == owner) || 
-        (userNo && userNo == pm)) && (
-          <>
-            <Typography variant="h5" sx={{ m:2 }} >
-              <b>Project Info</b>
-            </Typography>
+      <Typography variant="h5" sx={{ m:2 }} >
+        <b>Project Info</b>
+      </Typography>
 
-            <MemberInfo addr={addr} time={time} seqOfTeam={0} acct={0} />
+      <MemberInfo addr={addr} time={time} seqOfTeam={0} acct={0} />
 
 
-            <GetTeamsList setSeq={setSeqOfTeam} list={list} />
+      <GetTeamsList setSeq={setSeqOfTeam} list={list} />
 
-            <ActionsOfManager addr={ addr } seqOfTeam={ seqOfTeam } refresh={ refresh } />
-          </>
-      )}
+      <ActionsOfManager addr={ addr } seqOfTeam={ seqOfTeam } refresh={ refresh } />
 
     </Paper>
   );

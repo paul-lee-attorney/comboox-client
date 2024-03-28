@@ -34,19 +34,15 @@ export function OwnerPage({ addr }:PayrollProps) {
   return (
     <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
 
-      {signer && signer.account.address == owner && (
-        <>
-            <Stack direction='row' >
-              <Typography variant="h5" sx={{ m:2, ml:4 }} >
-                <b>Project Owner:</b>
-              </Typography>
+      <Stack direction='row' >
+        <Typography variant="h5" sx={{ m:2, ml:4 }} >
+          <b>Project Owner:</b>
+        </Typography>
 
-              <CopyLongStrSpan title='addr' src={owner} />
-            </Stack>
-            <MemberInfo addr={addr} time={time} seqOfTeam={0} acct={0}  />
-            <ActionsOfOwner addr={ addr } refresh={ refresh } />        
-        </>
-      )}
+        <CopyLongStrSpan title='addr' src={owner} />
+      </Stack>
+      <MemberInfo addr={addr} time={time} seqOfTeam={0} acct={0}  />
+      <ActionsOfOwner addr={ addr } refresh={ refresh } />        
 
     </Paper>
   );
