@@ -14,7 +14,7 @@ export interface ActionsOfSwapProps{
 
 export function ActionsOfSwap({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Pay Off Swap', 'Pickup Pledged Share'

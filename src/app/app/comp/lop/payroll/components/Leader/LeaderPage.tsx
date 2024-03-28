@@ -61,9 +61,12 @@ export function LeaderPage({ addr }:PayrollProps) {
           <>
             <MemberInfo addr={addr} time={time} seqOfTeam={seqOfTeam}  acct={0} />
             <GetMembersList addr={addr} time={time} seqOfTeam={seqOfTeam} setSeq={setMemberNo} acct={0} />
-            <ActionsOfLeader addr={ addr } seqOfTeam={ seqOfTeam } memberNo={ memberNo } refresh={ refresh } />
           </>
       )}
+
+        { userNo && (
+          <ActionsOfLeader addr={ addr } seqOfTeam={ seqOfTeam } memberNo={ memberNo } refresh={ refresh } />
+        )}
 
     </Paper>
   );

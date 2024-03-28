@@ -18,7 +18,7 @@ export interface ActionsOfCapProps {
 
 export function ActionsOfCap({share, setDialogOpen, refresh}: ActionsOfCapProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfCap = [
     'PayIn Cash', 'Lock PayInAmt', 'Pickup PayInAmt', 'Withdraw PayInAmt' 

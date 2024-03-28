@@ -12,7 +12,7 @@ export interface ActionsOfOptionProps{
 
 export function ActionsOfOption({seqOfOpt, setOpen, refresh}: ActionsOfOptionProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Update Oracle', 'Exec Option', 'Create Swap',

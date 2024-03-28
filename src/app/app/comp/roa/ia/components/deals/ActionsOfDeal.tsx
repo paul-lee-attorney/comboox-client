@@ -31,7 +31,7 @@ export interface ActionsOfDealCenterProps extends ActionsOfDealProps{
 
 export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, timestamp}: ActionsOfDealCenterProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const actionsOfDeal = [
     'FirstRefusal', 'AntiDilution', 'DragAlong', 'TagAlong', 'PushToCoffer',

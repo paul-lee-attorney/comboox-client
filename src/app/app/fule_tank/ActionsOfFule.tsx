@@ -30,7 +30,7 @@ export interface ActionOfFuleProps{
 
 export function ActionsOfFule({ user, isOwner, getFinInfo, getSetting }: ActionsOfFuleProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfUser = [
     'Refule', 'Fill Tank', 'Withdraw Income', 'Set Rate', 'Set Owner',

@@ -12,7 +12,7 @@ export interface ActionsOfSwapProps{
 
 export function ActionsOfSwap({seqOfOpt, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
     'Pay Off Swap', 'Terminate Swap'

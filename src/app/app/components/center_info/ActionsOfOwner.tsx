@@ -16,7 +16,7 @@ export interface ActionsOfOwnerProps{
 
 export function ActionsOfOwner({ refresh }: ActionsOfOwnerProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfOwner = [
     'Set Platform Rule', 'Set Price Feed Registry', 'Transfer Ownership', 'Handover Center Key' 

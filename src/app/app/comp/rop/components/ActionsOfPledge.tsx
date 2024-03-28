@@ -17,7 +17,7 @@ export interface ActionsOfPledgeProps{
 
 export function ActionsOfPledge({pld, setOpen, refresh}: ActionsOfPledgeProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfPledge = [
     'Refund Debt', 'Extend Pledge', 'Lock Pledge', 'Release Pledge', 

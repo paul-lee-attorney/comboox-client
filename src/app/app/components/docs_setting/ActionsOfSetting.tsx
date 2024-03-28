@@ -11,7 +11,7 @@ import { SetTemplate } from "./actions_of_setting/SetTemplate";
 
 export function ActionsOfSetting({ addr, typeOfDoc, version, setTime, setOpen }: CreateDocProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const actionsOfSetting = [
     'CreateDoc', 'InitKeepers', 'SetTemplate'
