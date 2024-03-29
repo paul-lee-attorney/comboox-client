@@ -50,7 +50,7 @@ export function CopyLongStrTF({title, src}:CopyLongStrProps) {
           sx={{
             height: 40,
           }}
-          value={ src.substring(0, 6) + '...' + src.substring(src.length-4) }
+          value={ src.substring(0, 7) + '...' + src.substring(src.length-5) }
         
           inputProps={{ readOnly: true }}
         />
@@ -90,7 +90,7 @@ export function CopyLongStrSpan({title, src}:CopyLongStrProps) {
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center' }} >
 
       <Typography >
-        { '( ' + title + ': ' + src.substring(0, 6) + '...' + src.substring(src.length-4) + ' )' }
+        { '( ' + title + ': ' + src.substring(0, 7) + '...' + src.substring(src.length-5) + ' )' }
       </Typography>
 
       <Tooltip title={"Copy To Clipboard"} placement='right' arrow >
