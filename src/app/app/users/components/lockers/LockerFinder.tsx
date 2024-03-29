@@ -27,7 +27,7 @@ export function LockerFinder({setLocker, setOpen}: LockerFinderProps) {
   }
 
   return(
-    <Stack direction='row' sx={{ alignItems:'center' }} >
+    <Stack direction='row' sx={{ alignItems:'start' }} >
 
       <TextField 
         sx={{ m: 1, minWidth: 685 }} 

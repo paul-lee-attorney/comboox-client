@@ -164,9 +164,9 @@ export const defaultStrRule: StrRule = {
 
 export function codifyPlatformStrRule(rule: StrRule):HexType {
   let out: HexType = `0x${
-    (Number(rule.eoaRewards) * (10**9)).toString(16).padStart(10, '0') +
-    (Number(rule.coaRewards) * (10**9)).toString(16).padStart(10, '0') +
-    (Number(rule.floor) * (10**9)).toString(16).padStart(10, '0') +
+    strNumToBigInt(rule.eoaRewards, 9).toString(16).padStart(10,'0') +
+    strNumToBigInt(rule.coaRewards, 9).toString(16).padStart(10, '0') +
+    strNumToBigInt(rule.floor, 9).toString(16).padStart(10, '0') +
     (Number(rule.rate) * 100 ).toString(16).padStart(4, '0') +
     Number(rule.para).toString(16).padStart(4, '0') +
     '0'.padEnd(26, '0')
