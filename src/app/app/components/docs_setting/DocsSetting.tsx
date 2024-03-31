@@ -1,28 +1,24 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
-import { Box, Button, Dialog, DialogActions, DialogContent, 
-  DialogTitle, IconButton, Stack, TextField, Tooltip 
+import { Button, Dialog, DialogActions, DialogContent, 
+  DialogTitle, IconButton, Stack, Tooltip 
 } from "@mui/material";
-
-import { SettingsOutlined } from "@mui/icons-material";
 
 import { AddrOfRegCenter, AddrZero, HexType } from "../../common";
 
 import Logo from '/public/assets/Symbol_white_xs.png';
 
-import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { Doc, getBookeeper, getDocsList, getOwner, getTempsList } from "../../rc";
 import { DocsList } from "./DocsList";
 import Image from "next/image";
-import { useRegCenterGetOwner } from "../../../../../generated";
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { ActionsOfSetting } from "./ActionsOfSetting";
 
 export function DocsSetting() {
 
   const [ time, setTime ] = useState(0);
 
-  const [ temps, setTemps ] = useState<readonly Doc[]>([]);
+  const [ temps, setTemps ] = useState<Doc[]>([]);
   const [ docs, setDocs ] = useState<readonly Doc[]>([]);
   
   const [ typeOfDoc, setTypeOfDoc ] = useState(1);

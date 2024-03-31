@@ -477,23 +477,15 @@ export async function getVersionsList(typeOfDoc:bigint): Promise<readonly Doc[]>
   return res;
 }
 
-export async function getTempsList(): Promise<readonly Doc[]>{
+export async function getTempsList(): Promise<Doc[]>{
 
   let out: Doc[] = [];
   let i = 1;
 
   while (i < 28) {
-
     let ls: readonly Doc[] = await getVersionsList(BigInt(i));
-    let len = ls.length;
-
-    while (len > 0) {
-      out.push(ls[len - 1]);
-      len--;
-    }
-
+    out = out.concat(ls);
     i++;
-
   }
 
   return out;

@@ -1,4 +1,4 @@
-import { GitHub, MenuBook, TouchAppOutlined } from "@mui/icons-material";
+import { AutoStoriesOutlined, GitHub, MenuBook, TouchAppOutlined } from "@mui/icons-material";
 import { AppBar, Box, CssBaseline, IconButton, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import Image from "next/image";
 import Logo from '/public/assets/Symbol_white_xs.png';
@@ -24,6 +24,14 @@ export function TitleBar() {
                 <Link href={{pathname:'https://comboox.gitbook.io/whitepaper-en'}}>
                   <IconButton sx={{mx:2, color:'#fff'}}>
                     <MenuBook />
+                  </IconButton>
+                </Link>
+              </Tooltip>
+
+              <Tooltip title='白皮书' >
+                <Link href={{pathname:'https://comboox.gitbook.io/whitepaper'}}>
+                  <IconButton sx={{mx:2, color:'#fff'}}>
+                    <AutoStoriesOutlined />
                   </IconButton>
                 </Link>
               </Tooltip>

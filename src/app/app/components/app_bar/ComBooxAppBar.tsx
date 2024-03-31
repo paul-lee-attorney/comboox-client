@@ -42,7 +42,7 @@ import {
   HubOutlined
 }  from '@mui/icons-material';
 
-import Image from 'next/image';
+// import Image from 'next/image';
 // import Logo from '/public/assets/Symbol_white_xs.png';
 
 import MenuIcon from '@mui/icons-material/Menu';
