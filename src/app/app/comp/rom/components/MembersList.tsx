@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { Paper, Toolbar, Box, TextField, Button, Typography } from '@mui/material';
+import { Paper, Box, TextField, Button, Typography } from '@mui/material';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { History } from '@mui/icons-material';
 
 import { booxMap } from '../../../common';
-import { baseToDollar, dateParser, 
+import { baseToDollar, bigIntToStrNum, dateParser, 
   longDataParser, longSnParser, splitStrArr 
 } from '../../../common/toolsKit';
 
@@ -18,7 +18,7 @@ interface MembersEquityListProps{
 }
 
 export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
-  const { boox } = useComBooxContext();
+  const { boox, onPar } = useComBooxContext();
   const [equityList, setEquityList] = useState<MemberShareClip[]>();
 
   useEffect(()=>{
@@ -30,7 +30,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
             list => setEquityList(list)
           )
         }
-      )
+      );
     }
   }, [boox]);
 
@@ -72,9 +72,21 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
       align: 'center',
     },
     {
-      field: 'votingWeight',
-      headerName: 'VotingWeight (%)',
-      valueGetter: (p) => longDataParser(p.row.clip.votingWeight.toString()),
+      field: 'votingPoints',
+      headerName: 'VotingPoints',
+      valueGetter: (p) => longDataParser(
+        bigIntToStrNum((p.row.clip.points), 4)
+      ),
+      width: 218,
+      headerAlign: 'center',
+      align: 'center',
+    },    
+    {
+      field: 'distrPoints',
+      headerName: 'DistributionPoints',
+      valueGetter: (p) => longDataParser(
+        bigIntToStrNum((p.row.distr.points), 4)
+      ),
       width: 218,
       headerAlign: 'center',
       align: 'center',
@@ -84,7 +96,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
       headerName: 'Par',
       valueGetter: (p) => baseToDollar(p.row.clip.par.toString()),
       width: 218,
-      headerAlign: 'center',
+      headerAlign: 'right',
       align: 'right',
     },
     {
@@ -92,15 +104,7 @@ export function MembersEquityList( {setAcct, setOpen}:MembersEquityListProps ) {
       headerName: 'Paid',
       valueGetter: (p) => baseToDollar(p.row.clip.paid.toString()),
       width: 218,
-      headerAlign: 'center',
-      align: 'right',
-    },
-    {
-      field: 'clean',
-      headerName: 'CleanPaid',
-      valueGetter: (p) => baseToDollar(p.row.clip.cleanPaid.toString()),
-      width: 218,
-      headerAlign: 'center',
+      headerAlign: 'right',
       align: 'right',
     },
     {

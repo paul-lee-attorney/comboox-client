@@ -16,7 +16,7 @@ export interface ActionsOfOrderProps{
 
 export function ActionsOfOrder({classOfShare, seqOfOrder, refresh}: ActionsOfOrderProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfListing = [
     'Buy Order', 'Sell Order', 'Initial Offer', 'Withdraw Initial Offer', 'Withdraw Sell Order'

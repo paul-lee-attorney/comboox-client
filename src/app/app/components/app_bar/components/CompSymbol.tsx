@@ -4,25 +4,34 @@ import { CompInfo, getBoox, getCompInfo } from "../../../comp/gk";
 import { Stack, Typography } from "@mui/material";
 import { longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrSpan } from "../../../common/CopyLongStr";
+import { basedOnPar } from "../../../comp/rom/rom";
+import { booxMap } from "../../../common";
 
 export function CompSymbol() {
 
-  const { gk, setBoox } = useComBooxContext();
+  const { gk, setBoox, setOnPar } = useComBooxContext();
 
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
 
   useEffect(() => {
     if (gk) {
       getBoox(gk).then(
-        (res) => setBoox(res.map(v=>(v.addr)))
+        (res) => {
+          setBoox(res.map(v=>(v.addr)));
+          basedOnPar(res[booxMap.ROM].addr).then(
+            flag => setOnPar(flag)
+          );
+        }
       );
       getCompInfo(gk).then(
         res => setCompInfo(res)
       );
+
     } else {
       setBoox(undefined);
+      setOnPar(undefined);
     }
-  }, [gk, setBoox]);
+  }, [gk, setBoox, setOnPar]);
 
   return (
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >

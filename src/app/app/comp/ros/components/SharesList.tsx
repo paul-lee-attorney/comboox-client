@@ -1,13 +1,9 @@
-import { 
-  Chip,
-  Toolbar,
-  Paper,
-  Typography,
-} from '@mui/material';
+import { Chip,Paper,Typography } from '@mui/material';
 
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 
 import { baseToDollar, dateParser, longDataParser, longSnParser } from '../../../common/toolsKit';
+
 import { Share } from '../ros';
 
 const columns: GridColDef[] = [
@@ -15,7 +11,7 @@ const columns: GridColDef[] = [
     field: 'seq', 
     headerName: 'Seq',
     valueGetter: p => longSnParser(p.row.head.seqOfShare.toString()),
-    width: 120,
+    width: 88,
   },
   { 
     field: 'class', 
@@ -40,7 +36,7 @@ const columns: GridColDef[] = [
       />),
     headerAlign:'center',
     align: 'center',
-    width: 80,
+    width: 88,
   },
   { 
     field: 'issueDate', 
@@ -48,7 +44,7 @@ const columns: GridColDef[] = [
     valueGetter: p => dateParser(p.row.head.issueDate.toString()),
     headerAlign: 'center',
     align:'center',
-    width: 180,
+    width: 168,
   },
   { 
     field: 'shareholder', 
@@ -56,7 +52,7 @@ const columns: GridColDef[] = [
     valueGetter: p => longSnParser(p.row.head.shareholder.toString()),
     headerAlign: 'center',
     align: 'center',
-    width: 160,
+    width: 128,
   },
   { 
     field: 'par', 
@@ -72,7 +68,7 @@ const columns: GridColDef[] = [
     valueGetter: p => baseToDollar(p.row.body.paid.toString()),
     headerAlign: 'right',
     align:'right',
-    width: 288,
+    width: 218,
   },
   { 
     field: 'clean', 
@@ -80,7 +76,7 @@ const columns: GridColDef[] = [
     valueGetter: p => baseToDollar(p.row.body.cleanPaid.toString()),
     headerAlign: 'right',
     align:'right',
-    width: 288,
+    width: 218,
   },
   { 
     field: 'votingWeight', 
@@ -88,22 +84,15 @@ const columns: GridColDef[] = [
     valueGetter: p => longDataParser(p.row.head.votingWeight.toString()),
     headerAlign: 'center',
     align:'center',
-    width: 218,
+    width: 188,
   },
   { 
-    field: 'state', 
-    headerName: 'State',
-    valueGetter: p => (p.row.body.state == 0 ? 'Normal' : 'Freezed'),
-    renderCell: ({ value }) => (
-      <Chip 
-        label={ value } 
-        variant='filled' 
-        color={ value=='Normal' ? 'success' : 'warning' } 
-      />
-    ),
+    field: 'distrWeight', 
+    headerName: 'DistributionWeight (%)',
+    valueGetter: p => longDataParser(p.row.body.distrWeight.toString()),
     headerAlign: 'center',
-    align: 'center',
-    width: 128,  
+    align:'center',
+    width: 188,
   },
 ];
 

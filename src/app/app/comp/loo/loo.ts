@@ -43,6 +43,7 @@ export interface Order {
   price: number;
   expireDate: number;
   votingWeight: number;
+  distrWeight: number;
 }
 
 export interface OrderWrap {
@@ -54,10 +55,11 @@ export const defaultOrder: Order = {
   prev: 0,
   next: 0,
   seqOfShare: 0,
-  paid: BigInt(0),
+  paid: 0n,
   price: 0,
   expireDate: 0,
-  votingWeight: 0,
+  votingWeight: 100,
+  distrWeight: 100,
 }
 
 export const defaultOrderWrap: OrderWrap = {
@@ -83,6 +85,7 @@ export interface Deal {
   paid: bigint;
   price: number;
   votingWeight: number;
+  distrWeight: number;
 }
 
 export const defaultDeal: Deal = {
@@ -90,9 +93,10 @@ export const defaultDeal: Deal = {
   seqOfShare: 0,
   buyer: 0,
   groupRep: 0,
-  paid: BigInt(0),
+  paid: 0n,
   price: 0,
   votingWeight: 0,
+  distrWeight: 0,
 }
 
 export async function isInvestor(addr: HexType,  userNo: number):Promise<boolean>{

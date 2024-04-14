@@ -93,7 +93,7 @@ export interface StrBody {
   par: string,
   state: string,
   para: string,
-  argu: string,
+  distrWeight: string,
   flag: boolean,
 }
 
@@ -104,7 +104,7 @@ export interface Body {
   par: bigint,
   state: number,
   para: number,
-  argu: number,
+  distrWeight: number,
   flag: boolean,  
 }
 
@@ -143,7 +143,7 @@ export const defaultStrBody: StrBody = {
   par: '0',
   state: '0',
   para: '0',
-  argu: '0',
+  distrWeight: '100',
   flag: false,  
 }
 
@@ -154,7 +154,7 @@ export const defaultBody: Body = {
   par: 0n,
   state: 0,
   para: 0,
-  argu: 0,
+  distrWeight: 100,
   flag: false,  
 }
 

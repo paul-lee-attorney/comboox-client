@@ -61,6 +61,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
           BigInt(body.groupOfBuyer),
           strNumToBigInt(body.paid, 4),
           strNumToBigInt(body.par, 4),
+          BigInt(body.distrWeight)
       ],
     });
   };
@@ -133,44 +134,19 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
               <FormHelperText>{' '}</FormHelperText>
             </FormControl>
 
-            {head.typeOfDeal != '1' && (
-              <TextField 
-                variant='outlined'
-                size="small"
-                label='SeqOfShare'
-                error={ valid['SeqOfShare']?.error }
-                helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={ handleSeqChanged }
-                value={ head.seqOfShare } 
-              />
-            )}
-
-            {head.typeOfDeal == '1' && (
-              <TextField 
-                variant='outlined'
-                size="small"
-                label='VotingWeight (%)'
-                error={ valid['VotingWeight']?.error }
-                helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => {
-                  let input = e.target.value;
-                  onlyInt('VotingWeight', input, MaxSeqNo, setValid);
-                  setHead((v) => ({
-                    ...v,
-                    votingWeight: input,
-                  }));
-                }}
-                value={ head.votingWeight }
-              />
-            )}
+            <TextField  
+              variant='outlined'
+              size="small"
+              label='SeqOfShare'
+              error={ valid['SeqOfShare']?.error }
+              helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={ handleSeqChanged }
+              value={ head.seqOfShare } 
+            />
 
             <TextField 
               variant='outlined'
@@ -233,6 +209,27 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 }));
               }}
               value={ head.priceOfPaid }
+            />
+
+            <TextField 
+              variant='outlined'
+              size="small"
+              label='VotingWeight (%)'
+              error={ valid['VotingWeight']?.error }
+              helperText={ valid['VotingWeight']?.helpTx ?? ' ' }
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyInt('VotingWeight', input, MaxSeqNo, setValid);
+                setHead((v) => ({
+                  ...v,
+                  votingWeight: input,
+                }));
+              }}
+              value={ head.votingWeight }
             />
 
           </Stack>
@@ -337,6 +334,27 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 }));
               }}
               value={ body.paid }
+            />
+
+            <TextField 
+              variant='outlined'
+              size="small"
+              label='DistributionWeight (%)'
+              error={ valid['DistributionWeight']?.error }
+              helperText={ valid['DistributionWeight']?.helpTx ?? ' ' }
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              onChange={(e) => {
+                let input = e.target.value;
+                onlyInt('DistributionWeight', input, MaxSeqNo, setValid);
+                setBody((v) => ({
+                  ...v,
+                  distrWeight: input,
+                }));
+              }}
+              value={ body.distrWeight }
             />
 
           </Stack>

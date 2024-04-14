@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { Paper, Stack, Toolbar, Typography } from "@mui/material";
+import { Paper, Stack, Typography } from "@mui/material";
 
 import { MembersEquityList } from "./components/MembersList";
 
@@ -20,7 +20,7 @@ function RegisterOfMembers() {
   const [ open, setOpen ] = useState(false);
   
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
       <Stack direction='row' >
         <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >

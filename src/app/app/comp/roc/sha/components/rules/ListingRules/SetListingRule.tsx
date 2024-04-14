@@ -17,8 +17,8 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { HexType, MaxData, MaxPrice, MaxSeqNo } from '../../../../../../common';
-import { FormResults, bigIntToNum, bigIntToStrNum, defFormResults, longDataParser,
+import { HexType, MaxPrice, MaxSeqNo } from '../../../../../../common';
+import { FormResults, bigIntToNum, defFormResults, longDataParser,
   onlyInt, onlyNum, strNumToBigInt, } from '../../../../../../common/toolsKit';
 
 import { ListAlt } from '@mui/icons-material';
@@ -37,7 +37,8 @@ export interface ListingRule {
   floorPrice: string;
   lockupDays: string;
   offPrice: string;
-  votingWeight: string;  
+  votingWeight: string;
+  distrWeight: string;
 }
 
 export var defaultLR: ListingRule = {
@@ -52,6 +53,7 @@ export var defaultLR: ListingRule = {
   lockupDays: '0',
   offPrice: '0',
   votingWeight: '100',
+  distrWeight: '100',
 }
 
 export function lrParser(hexLr: HexType):ListingRule {
@@ -59,38 +61,41 @@ export function lrParser(hexLr: HexType):ListingRule {
     seqOfRule: parseInt(hexLr.substring(2, 6), 16), 
     titleOfIssuer: parseInt(hexLr.substring(6, 10), 16).toString(),
     classOfShare: parseInt(hexLr.substring(10, 14), 16).toString(),
-    maxTotalPar: bigIntToNum(BigInt('0x' + hexLr.substring(14, 30)), 4),
-    titleOfVerifier: parseInt(hexLr.substring(30, 34), 16).toString(),
-    maxQtyOfInvestors: parseInt(hexLr.substring(34, 38), 16).toString(),
-    ceilingPrice: bigIntToNum(BigInt('0x' + hexLr.substring(38, 46)), 4),
-    floorPrice: bigIntToNum(BigInt('0x' + hexLr.substring(46, 54)), 4),
-    lockupDays: parseInt(hexLr.substring(54, 58), 16).toString(),
-    offPrice: bigIntToNum(BigInt('0x' + hexLr.substring(58, 62)), 4),
-    votingWeight: parseInt(hexLr.substring(62, 66), 16).toString(),  
+    maxTotalPar: Number('0x' + hexLr.substring(14, 22)).toString(),
+    titleOfVerifier: parseInt(hexLr.substring(22, 26), 16).toString(),
+    maxQtyOfInvestors: parseInt(hexLr.substring(26, 30), 16).toString(),
+    ceilingPrice: bigIntToNum(BigInt('0x' + hexLr.substring(30, 38)), 4),
+    floorPrice: bigIntToNum(BigInt('0x' + hexLr.substring(38, 46)), 4),
+    lockupDays: parseInt(hexLr.substring(46, 50), 16).toString(),
+    offPrice: bigIntToNum(BigInt('0x' + hexLr.substring(50, 54)), 4),
+    votingWeight: parseInt(hexLr.substring(54, 58), 16).toString(),
+    distrWeight: parseInt(hexLr.substring(58, 62), 16).toString(),
   }
   return rule;
 }
 
-export function lrCodifier(objLr: ListingRule, seq: number ): HexType {
+export function lrCodifier( objLr: ListingRule, seq:number ): HexType {
   let hexLr: HexType = `0x${
-    (seq.toString(16).padStart(4, '0')) +
+    (Number(seq).toString(16).padStart(4, '0')) +
     (Number(objLr.titleOfIssuer).toString(16).padStart(4, '0')) +
     (Number(objLr.classOfShare).toString(16).padStart(4, '0')) +
-    (strNumToBigInt(objLr.maxTotalPar, 4).toString(16).padStart(16, '0')) +
+    (Number(objLr.maxTotalPar).toString(16).padStart(8, '0')) +
     (Number(objLr.titleOfVerifier).toString(16).padStart(4, '0')) +
     (Number(objLr.maxQtyOfInvestors).toString(16).padStart(4, '0')) +
     (strNumToBigInt(objLr.ceilingPrice, 4).toString(16).padStart(8, '0')) +
     (strNumToBigInt(objLr.floorPrice, 4).toString(16).padStart(8, '0')) +
     (Number(objLr.lockupDays).toString(16).padStart(4, '0')) +
     (strNumToBigInt(objLr.offPrice, 4).toString(16).padStart(4, '0')) +
-    Number(objLr.votingWeight).toString(16).padStart(4, '0')
+    Number(objLr.votingWeight).toString(16).padStart(4, '0') +
+    Number(objLr.distrWeight).toString(16).padStart(4, '0') +
+    '0000'
   }`;
   return hexLr;
 }
 
 export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps) {
 
-  defaultLR = {...defaultLR, seqOfRule: seq};
+  // defaultLR = {...defaultLR, seqOfRule: seq};
 
   const [ objLR, setObjLR ] = useState<ListingRule>(defaultLR);   
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -216,7 +221,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('MaxTotalPar', input, MaxData, 4, setValid);
+                    onlyInt('MaxTotalPar', input, MaxPrice, setValid);
                     setObjLR((v) => ({
                       ...v,
                       maxTotalPar: input,
@@ -374,7 +379,7 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('VotingWeight', input, MaxSeqNo, 2, setValid);
+                    onlyInt('VotingWeight', input, MaxSeqNo, setValid);
                     setObjLR((v) => ({
                       ...v,
                       votingWeight: input,
@@ -382,6 +387,29 @@ export function SetListingRule({ sha, seq, isFinalized, time, refresh }: RulesEd
                   }}
                   value={ objLR.votingWeight }   
                 />
+
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='DistributionWeight (%)'
+                  error={ valid['DistributionWeight']?.error }
+                  helperText={ valid['DistributionWeight']?.helpTx ?? ' ' }
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyInt('DistributionWeight', input, MaxSeqNo, setValid);
+                    setObjLR((v) => ({
+                      ...v,
+                      distrWeight: input,
+                    }));
+                  }}
+                  value={ objLR.distrWeight }
+                />
+
 
               </Stack>
 

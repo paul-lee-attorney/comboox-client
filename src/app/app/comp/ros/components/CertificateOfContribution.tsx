@@ -3,10 +3,11 @@ import { Dispatch, SetStateAction } from "react";
 
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 
-import { baseToDollar, dateParser, longDataParser, longSnParser, } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, longDataParser, longSnParser, } from "../../../common/toolsKit";
 import { Share, codifyHeadOfShare } from "../ros";
 
 import { ActionsOfCap } from "./ActionsOfCap";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export interface CertificateOfContributionProps{
   open: boolean;
@@ -17,6 +18,8 @@ export interface CertificateOfContributionProps{
 
 export function CertificateOfContribution({open, share, setOpen, refresh}: CertificateOfContributionProps) {
 
+  const { onPar } = useComBooxContext();
+
   return (
     <Dialog
       maxWidth={false}
@@ -25,52 +28,12 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
       aria-labelledby="dialog-title" 
     >
       <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
-        <b>Certificate Of Contribution</b>
+        <b>Certificate Of Contribution - { longSnParser(share.head.seqOfShare.toString()) }</b>
       </DialogTitle>
       <DialogContent>
           <table width={1280} >
             <thead />
             <tbody>
-              <tr>
-                <td colSpan={2}>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfSnOfShare" 
-                    label="Sn" 
-                    variant="outlined"
-                    value = { codifyHeadOfShare(share.head) }
-                    size='small'
-                  />
-                </td>
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfIssueDate" 
-                    label="IssueDate" 
-                    variant="outlined"
-                    value = { dateParser(share.head.issueDate.toString()) }
-                    size='small'
-                  />
-                </td>
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfState" 
-                    label="State" 
-                    variant="outlined"
-                    value = { share.body.state == 0 ? 'Normal' : 'Freezed'}
-                    size='small'
-                  />
-                </td>
-                          
-              </tr>
-
               <tr>
                 <td >
                   <TextField 
@@ -84,6 +47,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     size='small'
                   />
                 </td>
+
                 <td >
                   <TextField 
                     fullWidth={true}
@@ -96,16 +60,72 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     size='small'
                   />
                 </td>
+                <td colSpan={2} >
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1, backgroundColor:'lightskyblue' }} 
+                    id="tfClass" 
+                    label="Class" 
+                    variant="outlined"
+                    value = { longSnParser( share.head.class.toString() )}
+                    size='small'
+                  />
+                </td>
 
-                <td >
+              </tr>
+              <tr>
+                <td colSpan={2} >
                   <TextField 
                     fullWidth={true}
                     inputProps={{readOnly: true}}
                     sx={{ m: 1 }} 
-                    id="tfClass" 
-                    label="Class" 
+                    id="tfSn" 
+                    label="SN" 
                     variant="outlined"
-                    value = { share.head.class.toString() }
+                    value = { codifyHeadOfShare(share.head) }
+                    size='small'
+                  />                                                  
+                </td>
+
+                <td>
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1, backgroundColor:'lightskyblue' }} 
+                    id="tfVotingWeight" 
+                    label="VotingWeight (%)" 
+                    variant="outlined"
+                    value = { longDataParser(share.head.votingWeight.toString()) }
+                    size='small'
+                  />                                                  
+                </td>
+
+                <td>
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1, backgroundColor:'lightskyblue' }} 
+                    id="tfDistrWeight" 
+                    label="DistributionWeight (%)" 
+                    variant="outlined"
+                    value = { longDataParser(share.body.distrWeight.toString()) }
+                    size='small'
+                  />
+                </td>
+                          
+              </tr>
+
+              <tr>
+                <td>
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1 }} 
+                    id="tfIssueDate" 
+                    label="IssueDate" 
+                    variant="outlined"
+                    value = { dateParser(share.head.issueDate.toString()) }
                     size='small'
                   />
                 </td>
@@ -123,16 +143,48 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                   />                                
                 </td>
 
-              </tr>
-
-              <tr>
-                <td rowSpan={3}>
+                <td>
                   <TextField 
                     fullWidth={true}
                     inputProps={{readOnly: true}}
-                    sx={{ m: 1,  }} 
+                    sx={{ m: 1, backgroundColor:'lightskyblue' }} 
+                    id="tfVotingPoints" 
+                    label="VotingPoints" 
+                    variant="outlined"
+                    value = { longDataParser(
+                      bigIntToStrNum((BigInt(share.head.votingWeight) * 
+                        (onPar ? BigInt(share.body.par) : BigInt(share.body.paid)) / 100n), 4)
+                    )}
+                    size='small'
+                  />                                                  
+                </td>
+
+                <td>
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1, backgroundColor:'lightskyblue' }} 
+                    id="tfDistributionPoints" 
+                    label="DistributionPoints" 
+                    variant="outlined"
+                    value = { longDataParser(
+                      bigIntToStrNum((BigInt(share.body.distrWeight) * 
+                        (onPar ? BigInt(share.body.par) : BigInt(share.body.paid)) / 100n), 4)
+                    )}
+                    size='small'
+                  />                                                  
+                </td>
+
+              </tr>
+
+              <tr>
+                <td rowSpan={4}>
+                  <TextField 
+                    fullWidth={true}
+                    inputProps={{readOnly: true}}
+                    sx={{ m: 1, backgroundColor:'lightgoldenrodyellow' }} 
                     multiline
-                    rows={4}
+                    rows={6.5}
                     id="tfShareholder" 
                     label="Shareholder" 
                     variant="outlined"
@@ -178,7 +230,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     id="tfValueOfParBalance" 
                     label="ValueOfParBalance" 
                     variant="outlined"
-                    value = { baseToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar) / 100n).toString()) }
+                    value = { baseToDollar(((share.body.par - share.body.paid)*BigInt(share.head.priceOfPar) / 10n ** 4n).toString()) }
                     size='small'
                   />                
                 </td>
@@ -229,19 +281,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
               </tr>
 
               <tr>
-                <td>
-                  <TextField 
-                    fullWidth={true}
-                    inputProps={{readOnly: true}}
-                    sx={{ m: 1 }} 
-                    id="tfVotingWeight" 
-                    label="VotingWeight (%)" 
-                    variant="outlined"
-                    value = { longDataParser(share.head.votingWeight.toString()) }
-                    size='small'
-                  />                                                  
-                </td>
-                <td colSpan={2}>
+                <td colSpan={2} >
                   <TextField 
                     fullWidth={true}
                     inputProps={{readOnly: true}}

@@ -11,7 +11,7 @@ export interface ActionsOfInvestorProps{
 
 export function ActionsOfInvestor({ acct, refresh }: ActionsOfInvestorProps) {
 
-  const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
+  const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfListing = [
     'Register Investor', 'Approve Investor', 'Revoke Investor'

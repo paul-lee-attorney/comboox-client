@@ -16,7 +16,7 @@ import dayjs from 'dayjs';
 
 import { SharesList } from '../ros/components/SharesList';
 
-import { Share, StrShare, codifyHeadOfStrShare, defStrShare, getSharesList, } from '../ros/ros';
+import { StrShare, Share, defStrShare, getSharesList, codifyHeadOfStrShare, } from '../ros/ros';
 
 import { InitCompProps } from './SetCompInfo';
 
@@ -60,6 +60,7 @@ export function InitBos({nextStep}: InitCompProps) {
         BigInt((share.body.payInDeadline ?? 0)),
         strNumToBigInt(share.body.paid, 4),
         strNumToBigInt(share.body.par, 4),
+        BigInt(share.body.distrWeight)
       ],
     });
   };
@@ -157,7 +158,7 @@ export function InitBos({nextStep}: InitCompProps) {
               onClick={ issueShareClick }
               size="small"
             >
-              Add Share
+              Add
             </LoadingButton>
 
             <Divider orientation='vertical' sx={{m:2}} flexItem />
@@ -212,6 +213,28 @@ export function InitBos({nextStep}: InitCompProps) {
 
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
+                  id="tfPriceOfPar" 
+                  label="PriceOfPar" 
+                  variant="outlined"
+                  error={ valid['PriceOfPar']?.error }
+                  helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('PriceOfPar', input, MaxPrice, 4, setValid);
+                    setShare(v => ({
+                      head: {
+                        ...v.head,
+                        priceOfPar: input,
+                      },
+                      body: v.body,
+                    }));
+                  }}
+                  value = {share.head.priceOfPar }
+                  size='small'
+                />
+
+                <TextField 
+                  sx={{ m: 1, width: 188 }} 
                   id="tfPriceOfPaid" 
                   label="PriceOfPaid" 
                   variant="outlined"
@@ -234,48 +257,23 @@ export function InitBos({nextStep}: InitCompProps) {
 
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
-                  id="tfPriceOfPar" 
-                  label="PriceOfPar" 
+                  id="tfDistrWeight" 
+                  label="DistributionWeight(%)" 
                   variant="outlined"
-                  error={ valid['PriceOfPar']?.error }
-                  helperText={ valid['PriceOfPar']?.helpTx ?? ' ' }
+                  error={ valid['DistributionWeight']?.error }
+                  helperText={ valid['DistributionWeight']?.helpTx ?? ' ' }
                   onChange={(e) => {
                     let input = e.target.value;
-                    onlyNum('PriceOfPar', input, MaxPrice, 4, setValid);
+                    onlyInt('DistributionWeight', input, MaxSeqNo, setValid);
                     setShare(v => ({
-                      head: {
-                        ...v.head,
-                        priceOfPar: input,
+                      head: v.head,
+                      body: {
+                        ... v.body,
+                        distrWeight: input,
                       },
-                      body: v.body,
                     }));
                   }}
-                  value = {share.head.priceOfPar }
-                  size='small'
-                />
-
-                <TextField
-                  variant="outlined"
-                  label="SeqOfShare"
-                  color='warning'
-                  error={ valid['SeqOfShare']?.error }
-                  helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
-                  sx={{
-                    m:1,
-                    width: 188
-                  }}
-                  onChange={(e)=>{
-                    let input = e.target.value;
-                    onlyInt('SeqOfShare', input, MaxPrice, setValid);
-                    setShare(v => ({
-                      ...v,
-                      head: {
-                        ...v.head,
-                        seqOfShare: input,
-                      }
-                    }));
-                  }}
-                  value={ share.head.seqOfShare }
+                  value = {share.body.distrWeight }
                   size='small'
                 />
 
@@ -317,29 +315,6 @@ export function InitBos({nextStep}: InitCompProps) {
 
                 <TextField 
                   sx={{ m: 1, width: 188 }} 
-                  id="tfPaid" 
-                  label="Paid" 
-                  variant="outlined"
-                  color='warning'
-                  error={ valid['Paid']?.error }
-                  helperText={ valid['Paid']?.helpTx ?? ' ' }
-                  onChange={(e) => {
-                    let input = e.target.value;
-                    onlyNum('Paid', input, MaxData, 4, setValid);
-                    setShare(v => ({
-                      head: v.head,
-                      body: {
-                        ...v.body,
-                        paid: input,
-                      },
-                    }));
-                  }}
-                  value = {share.body.paid}
-                  size='small'
-                />
-
-                <TextField 
-                  sx={{ m: 1, width: 188 }} 
                   id="tfPar" 
                   label="Par" 
                   variant="outlined"
@@ -358,6 +333,29 @@ export function InitBos({nextStep}: InitCompProps) {
                     }));
                   }}
                   value = {share.body.par}
+                  size='small'
+                />
+
+                <TextField 
+                  sx={{ m: 1, width: 188 }} 
+                  id="tfPaid" 
+                  label="Paid" 
+                  variant="outlined"
+                  color='warning'
+                  error={ valid['Paid']?.error }
+                  helperText={ valid['Paid']?.helpTx ?? ' ' }
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyNum('Paid', input, MaxData, 4, setValid);
+                    setShare(v => ({
+                      head: v.head,
+                      body: {
+                        ...v.body,
+                        paid: input,
+                      },
+                    }));
+                  }}
+                  value = {share.body.paid}
                   size='small'
                 />
 
@@ -389,7 +387,32 @@ export function InitBos({nextStep}: InitCompProps) {
 
             <Divider orientation='vertical' sx={{m:2}} flexItem />
 
-            <Stack direction='row' sx={{m:1, p:1, alignItems:'center'}}>
+            <Stack direction='row' sx={{m:1, p:1, alignItems:'start'}}>
+
+              <TextField
+                variant="outlined"
+                label="SeqOfShare"
+                color='warning'
+                error={ valid['SeqOfShare']?.error }
+                helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
+                sx={{
+                  m:1,
+                  width: 188
+                }}
+                onChange={(e)=>{
+                  let input = e.target.value;
+                  onlyInt('SeqOfShare', input, MaxPrice, setValid);
+                  setShare(v => ({
+                    ...v,
+                    head: {
+                      ...v.head,
+                      seqOfShare: input,
+                    }
+                  }));
+                }}
+                value={ share.head.seqOfShare }
+                size='small'
+              />
 
               <LoadingButton
                 sx={{m:1, p:1}}
@@ -401,7 +424,7 @@ export function InitBos({nextStep}: InitCompProps) {
                 onClick={ delShareClick }
                 size="small"
               >
-                Remove Share
+                Remove
               </LoadingButton>
 
             </Stack>

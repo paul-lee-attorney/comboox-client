@@ -32,9 +32,9 @@ export const defStrHead: StrHead = {
   preSeq: '0',
   issueDate: 0,
   shareholder: '0',
-  priceOfPaid: '0',
-  priceOfPar: '0',
-  votingWeight: '0',  
+  priceOfPaid: '1.0',
+  priceOfPar: '1.0',
+  votingWeight: '100',  
 }
 
 // export function parseOrgHead(head: OrgHead): Head {
@@ -57,7 +57,7 @@ export interface StrBody {
   paid: string; // 实缴出资
   par: string; // 认缴出资（注册资本面值）
   cleanPaid: string; // 清洁实缴出资（扣除出质、远期、销售要约金额）
-  state: string;
+  distrWeight: string;
 }
 
 export interface Body {
@@ -65,7 +65,7 @@ export interface Body {
   paid: bigint; // 实缴出资
   par: bigint; // 认缴出资（注册资本面值）
   cleanPaid: bigint; // 清洁实缴出资（扣除出质、远期、销售要约金额）
-  state: number;
+  distrWeight: number;
 }
 
 export const defStrBody: StrBody = {
@@ -73,7 +73,7 @@ export const defStrBody: StrBody = {
   paid: '0',
   par: '0',
   cleanPaid: '0',
-  state: '0',  
+  distrWeight: '100',  
 }
 
 // export function parseOrgBody(body: OrgBody): Body {

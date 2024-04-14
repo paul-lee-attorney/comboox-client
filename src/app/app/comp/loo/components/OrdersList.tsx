@@ -1,6 +1,6 @@
 import { IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { baseToDollar, dateParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 import { OrderWrap } from "../loo";
 import { Dispatch, SetStateAction } from "react";
 import { Refresh } from "@mui/icons-material";
@@ -59,7 +59,15 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
     { 
       field: 'votingWeight', 
       headerName: 'VotingWeight (%)',
-      valueGetter: p => p.row.node.votingWeight,
+      valueGetter: p => longDataParser(p.row.node.votingWeight.toString()),
+      headerAlign: 'center',
+      align:'center',
+      width: 180,
+    },
+    { 
+      field: 'distrWeight', 
+      headerName: 'DistributionWeight (%)',
+      valueGetter: p => longDataParser(p.row.node.distrWeight.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,

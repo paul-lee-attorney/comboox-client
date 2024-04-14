@@ -86,6 +86,14 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
       align: 'center',
     },
     {
+      field: 'distrWeight',
+      headerName: 'DistrWeight (%)',
+      valueGetter: p => longDataParser(p.row.body.distrWeight.toString()),
+      width: 218,
+      headerAlign:'center',
+      align: 'center',
+    },
+    {
       field: 'state',
       headerName: 'State',
       valueGetter: p => p.row.body.state,

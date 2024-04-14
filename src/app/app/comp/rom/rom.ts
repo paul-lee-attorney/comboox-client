@@ -67,16 +67,17 @@ export async function topMembersList(addr: HexType): Promise<readonly bigint[]> 
 
 export interface ShareClip {
   timestamp: number;
-  votingWeight: number;
+  rate: number;
   paid: bigint;
   par: bigint;
-  cleanPaid: bigint;
+  points: bigint;
 }
 
 export interface MemberShareClip {
   acct: bigint;
   sharesInHand: readonly string[];
   clip: ShareClip;
+  distr: ShareClip;
 }
 
 export async function getOwnersEquity(addr: HexType): Promise<ShareClip> {
@@ -88,6 +89,17 @@ export async function getOwnersEquity(addr: HexType): Promise<ShareClip> {
 
   return res;
 }
+
+export async function getOwnersPoints(addr: HexType): Promise<ShareClip> {
+  let res = await readContract({
+    address: addr,
+    abi: registerOfMembersABI,
+    functionName: 'ownersPoints',
+  });
+
+  return res;
+}
+
 
 export async function capAtDate(addr: HexType, date: number): Promise<ShareClip> {
   let res = await readContract({
@@ -105,6 +117,17 @@ export async function equityOfMember(addr: HexType, acct: number): Promise<Share
     address: addr,
     abi: registerOfMembersABI,
     functionName: 'equityOfMember',
+    args: [ BigInt(acct) ],
+  });
+
+  return res;
+}
+
+export async function pointsOfMember(addr: HexType, acct: number): Promise<ShareClip> {
+  let res = await readContract({
+    address: addr,
+    abi: registerOfMembersABI,
+    functionName: 'pointsOfMember',
     args: [ BigInt(acct) ],
   });
 
@@ -417,12 +440,14 @@ export async function getEquityList(rom: HexType, members: number[]): Promise<Me
   while(i < len) {
 
     let item: ShareClip = await equityOfMember(rom, members[i]);
+    let distr: ShareClip = await pointsOfMember(rom, members[i]);
     let shares = await sharesInHand(rom, members[i]); 
 
     list[i] = {
       acct: BigInt(members[i]),
       sharesInHand: shares.map(v => v.toString()),
       clip: item,
+      distr: distr,
     };
 
     i++;

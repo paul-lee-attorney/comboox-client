@@ -10,6 +10,8 @@ type ContextType = {
   setBoox: Dispatch<SetStateAction<HexType[] | undefined>>;
   errMsg: string | undefined;
   setErrMsg: Dispatch<SetStateAction<string | undefined>>;
+  onPar: boolean | undefined;
+  setOnPar: Dispatch<SetStateAction<boolean | undefined>>;
 }
 
 const ComBooxContext = createContext<ContextType>({
@@ -21,6 +23,8 @@ const ComBooxContext = createContext<ContextType>({
   setBoox: ()=>{},
   errMsg: undefined,
   setErrMsg: ()=>{},
+  onPar: undefined,
+  setOnPar: ()=>{},
 });
 
 type ProviderType = {
@@ -32,8 +36,10 @@ const ComBooxContextProvider = ({ children }: ProviderType) => {
   const [gk, setGK] = useState<HexType>();
   const [boox, setBoox] = useState<HexType[]>();
   const [ errMsg, setErrMsg ] = useState<string>();
+  const [ onPar, setOnPar ] = useState<boolean>();
+
   return (
-    <ComBooxContext.Provider value={{userNo, setUserNo, gk, setGK, boox, setBoox, errMsg, setErrMsg}} >
+    <ComBooxContext.Provider value={{userNo, setUserNo, gk, setGK, boox, setBoox, errMsg, setErrMsg, onPar, setOnPar}} >
       { children }
     </ComBooxContext.Provider >
   );

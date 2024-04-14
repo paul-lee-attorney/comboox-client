@@ -725,7 +725,7 @@ export const alongsABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -784,7 +784,7 @@ export const alongsABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -1095,7 +1095,7 @@ export const antiDilutionABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -3511,6 +3511,26 @@ export const generalKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'expireDate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'seqOfMotion',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'DistributeProfits',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       {
         name: 'contents',
         internalType: 'uint256',
@@ -3522,6 +3542,24 @@ export const generalKeeperABI = [
     name: 'ExecAction',
   },
   { type: 'event', anonymous: false, inputs: [], name: 'LockContents' },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'PickupDeposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'ReceiveCash',
+  },
   {
     type: 'event',
     anonymous: false,
@@ -3556,6 +3594,28 @@ export const generalKeeperABI = [
       { name: 'acct', internalType: 'address', type: 'address', indexed: true },
     ],
     name: 'SetRoleAdmin',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'fromBMM', internalType: 'bool', type: 'bool', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'expireDate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'seqOfMotion',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'TransferFund',
   },
   {
     stateMutability: 'nonpayable',
@@ -3879,9 +3939,8 @@ export const generalKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'snOfDeal', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfPld', internalType: 'uint256', type: 'uint256' },
-      { name: 'version', internalType: 'uint256', type: 'uint256' },
       { name: 'buyer', internalType: 'uint256', type: 'uint256' },
       { name: 'groupOfBuyer', internalType: 'uint256', type: 'uint256' },
     ],
@@ -4788,6 +4847,7 @@ export const generalKeeperABI = [
     name: 'withdrawSellOrder',
     outputs: [],
   },
+  { stateMutability: 'payable', type: 'receive' },
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4804,13 +4864,14 @@ export const goldChainABI = [
         internalType: 'struct GoldChain.Node',
         type: 'tuple',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -4828,13 +4889,14 @@ export const goldChainABI = [
         internalType: 'struct GoldChain.Node',
         type: 'tuple',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -5105,7 +5167,7 @@ export const iAlongsABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -5157,7 +5219,7 @@ export const iAlongsABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -5302,7 +5364,7 @@ export const iAntiDilutionABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -6140,6 +6202,26 @@ export const iGeneralKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'expireDate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'seqOfMotion',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'DistributeProfits',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       {
         name: 'contents',
         internalType: 'uint256',
@@ -6149,6 +6231,46 @@ export const iGeneralKeeperABI = [
       { name: 'result', internalType: 'bool', type: 'bool', indexed: true },
     ],
     name: 'ExecAction',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'PickupDeposit',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'ReceiveCash',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'fromBMM', internalType: 'bool', type: 'bool', indexed: true },
+      { name: 'to', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'expireDate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+      {
+        name: 'seqOfMotion',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
+    ],
+    name: 'TransferFund',
   },
   {
     stateMutability: 'nonpayable',
@@ -6465,9 +6587,8 @@ export const iGeneralKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'snOfDeal', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfPld', internalType: 'uint256', type: 'uint256' },
-      { name: 'version', internalType: 'uint256', type: 'uint256' },
       { name: 'buyer', internalType: 'uint256', type: 'uint256' },
       { name: 'groupOfBuyer', internalType: 'uint256', type: 'uint256' },
     ],
@@ -7410,6 +7531,7 @@ export const iInvestmentAgreementABI = [
       { name: 'groupOfBuyer', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'addDeal',
     outputs: [],
@@ -7624,7 +7746,7 @@ export const iInvestmentAgreementABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -7927,7 +8049,7 @@ export const iInvestmentAgreementABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -8323,19 +8445,20 @@ export const iListOfOrdersABI = [
         internalType: 'struct GoldChain.NodeWrap[]',
         type: 'tuple[]',
         components: [
-          { name: 'seq', internalType: 'uint32', type: 'uint32' },
+          { name: 'seq', internalType: 'uint24', type: 'uint24' },
           {
             name: 'node',
             internalType: 'struct GoldChain.Node',
             type: 'tuple',
             components: [
-              { name: 'prev', internalType: 'uint32', type: 'uint32' },
-              { name: 'next', internalType: 'uint32', type: 'uint32' },
+              { name: 'prev', internalType: 'uint24', type: 'uint24' },
+              { name: 'next', internalType: 'uint24', type: 'uint24' },
               { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'price', internalType: 'uint32', type: 'uint32' },
               { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -8386,13 +8509,14 @@ export const iListOfOrdersABI = [
         internalType: 'struct GoldChain.Node',
         type: 'tuple',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -8510,6 +8634,7 @@ export const iListOfOrdersABI = [
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
       {
@@ -8517,13 +8642,14 @@ export const iListOfOrdersABI = [
         internalType: 'struct GoldChain.Node[]',
         type: 'tuple[]',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -8535,6 +8661,7 @@ export const iListOfOrdersABI = [
       { name: 'classOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'price', internalType: 'uint256', type: 'uint256' },
       { name: 'execHours', internalType: 'uint256', type: 'uint256' },
@@ -8587,13 +8714,14 @@ export const iListOfOrdersABI = [
         internalType: 'struct GoldChain.Node',
         type: 'tuple',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -9196,7 +9324,7 @@ export const iLockUpABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -9255,7 +9383,7 @@ export const iLockUpABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -10684,10 +10812,8 @@ export const iropKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'snOfDeal', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfPld', internalType: 'uint256', type: 'uint256' },
-      { name: 'version', internalType: 'uint256', type: 'uint256' },
-      { name: 'primeKeyOfCaller', internalType: 'address', type: 'address' },
       { name: 'buyer', internalType: 'uint256', type: 'uint256' },
       { name: 'groupOfBuyer', internalType: 'uint256', type: 'uint256' },
       { name: 'caller', internalType: 'uint256', type: 'uint256' },
@@ -12889,6 +13015,12 @@ export const iRegisterOfMembersABI = [
       },
       { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'par', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'distrWeight',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
     ],
     name: 'CapDecrease',
   },
@@ -12904,6 +13036,12 @@ export const iRegisterOfMembersABI = [
       },
       { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'par', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'distrWeight',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
     ],
     name: 'CapIncrease',
   },
@@ -12914,12 +13052,6 @@ export const iRegisterOfMembersABI = [
       { name: 'acct', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'par', internalType: 'uint256', type: 'uint256', indexed: true },
-      {
-        name: 'clean',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
       { name: 'increase', internalType: 'bool', type: 'bool', indexed: false },
     ],
     name: 'ChangeAmtOfMember',
@@ -13049,8 +13181,7 @@ export const iRegisterOfMembersABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -13088,10 +13219,10 @@ export const iRegisterOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -13101,6 +13232,7 @@ export const iRegisterOfMembersABI = [
     type: 'function',
     inputs: [
       { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
       { name: 'isIncrease', internalType: 'bool', type: 'bool' },
@@ -13144,10 +13276,10 @@ export const iRegisterOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -13164,10 +13296,10 @@ export const iRegisterOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -13240,9 +13372,9 @@ export const iRegisterOfMembersABI = [
     inputs: [
       { name: 'acct', internalType: 'uint256', type: 'uint256' },
       { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
       { name: 'deltaPaid', internalType: 'uint256', type: 'uint256' },
       { name: 'deltaPar', internalType: 'uint256', type: 'uint256' },
-      { name: 'deltaClean', internalType: 'uint256', type: 'uint256' },
       { name: 'isIncrease', internalType: 'bool', type: 'bool' },
     ],
     name: 'increaseAmtOfMember',
@@ -13305,10 +13437,50 @@ export const iRegisterOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'ownersPoints',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct Checkpoints.Checkpoint',
+        type: 'tuple',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'pointsOfMember',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct Checkpoints.Checkpoint',
+        type: 'tuple',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -13406,8 +13578,7 @@ export const iRegisterOfMembersABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -13511,10 +13682,10 @@ export const iRegisterOfMembersABI = [
         type: 'tuple[]',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -13903,10 +14074,10 @@ export const iRegisterOfOptionsABI = [
         type: 'tuple[]',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -13946,10 +14117,10 @@ export const iRegisterOfOptionsABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -14040,10 +14211,10 @@ export const iRegisterOfOptionsABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -15198,8 +15369,7 @@ export const iRegisterOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -15281,8 +15451,7 @@ export const iRegisterOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -15403,8 +15572,7 @@ export const iRegisterOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -15447,8 +15615,7 @@ export const iRegisterOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -15493,8 +15660,7 @@ export const iRegisterOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -15539,6 +15705,7 @@ export const iRegisterOfSharesABI = [
       { name: 'payInDeadline', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'issueShare',
     outputs: [],
@@ -16571,6 +16738,7 @@ export const investmentAgreementABI = [
       { name: 'groupOfBuyer', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'addDeal',
     outputs: [],
@@ -16792,7 +16960,7 @@ export const investmentAgreementABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -17170,7 +17338,7 @@ export const investmentAgreementABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -17830,19 +17998,20 @@ export const listOfOrdersABI = [
         internalType: 'struct GoldChain.NodeWrap[]',
         type: 'tuple[]',
         components: [
-          { name: 'seq', internalType: 'uint32', type: 'uint32' },
+          { name: 'seq', internalType: 'uint24', type: 'uint24' },
           {
             name: 'node',
             internalType: 'struct GoldChain.Node',
             type: 'tuple',
             components: [
-              { name: 'prev', internalType: 'uint32', type: 'uint32' },
-              { name: 'next', internalType: 'uint32', type: 'uint32' },
+              { name: 'prev', internalType: 'uint24', type: 'uint24' },
+              { name: 'next', internalType: 'uint24', type: 'uint24' },
               { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'price', internalType: 'uint32', type: 'uint32' },
               { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -17900,13 +18069,14 @@ export const listOfOrdersABI = [
         internalType: 'struct GoldChain.Node',
         type: 'tuple',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -18099,6 +18269,7 @@ export const listOfOrdersABI = [
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
       {
@@ -18106,13 +18277,14 @@ export const listOfOrdersABI = [
         internalType: 'struct GoldChain.Node[]',
         type: 'tuple[]',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -18124,6 +18296,7 @@ export const listOfOrdersABI = [
       { name: 'classOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'price', internalType: 'uint256', type: 'uint256' },
       { name: 'execHours', internalType: 'uint256', type: 'uint256' },
@@ -18224,13 +18397,14 @@ export const listOfOrdersABI = [
         internalType: 'struct GoldChain.Node',
         type: 'tuple',
         components: [
-          { name: 'prev', internalType: 'uint32', type: 'uint32' },
-          { name: 'next', internalType: 'uint32', type: 'uint32' },
+          { name: 'prev', internalType: 'uint24', type: 'uint24' },
+          { name: 'next', internalType: 'uint24', type: 'uint24' },
           { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'expireDate', internalType: 'uint48', type: 'uint48' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -19000,7 +19174,7 @@ export const lockUpABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -19066,7 +19240,7 @@ export const lockUpABI = [
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'state', internalType: 'uint8', type: 'uint8' },
               { name: 'para', internalType: 'uint16', type: 'uint16' },
-              { name: 'argu', internalType: 'uint16', type: 'uint16' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'flag', internalType: 'bool', type: 'bool' },
             ],
           },
@@ -20604,6 +20778,7 @@ export const ordersRepoABI = [
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -20628,6 +20803,7 @@ export const ordersRepoABI = [
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'price', internalType: 'uint32', type: 'uint32' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -22144,10 +22320,8 @@ export const ropKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
-      { name: 'snOfDeal', internalType: 'bytes32', type: 'bytes32' },
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfPld', internalType: 'uint256', type: 'uint256' },
-      { name: 'version', internalType: 'uint256', type: 'uint256' },
-      { name: 'primeKeyOfCaller', internalType: 'address', type: 'address' },
       { name: 'buyer', internalType: 'uint256', type: 'uint256' },
       { name: 'groupOfBuyer', internalType: 'uint256', type: 'uint256' },
       { name: 'caller', internalType: 'uint256', type: 'uint256' },
@@ -25051,6 +25225,12 @@ export const registerOfMembersABI = [
       },
       { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'par', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'distrWeight',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
     ],
     name: 'CapDecrease',
   },
@@ -25066,6 +25246,12 @@ export const registerOfMembersABI = [
       },
       { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'par', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'distrWeight',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: false,
+      },
     ],
     name: 'CapIncrease',
   },
@@ -25076,12 +25262,6 @@ export const registerOfMembersABI = [
       { name: 'acct', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
       { name: 'par', internalType: 'uint256', type: 'uint256', indexed: true },
-      {
-        name: 'clean',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: false,
-      },
       { name: 'increase', internalType: 'bool', type: 'bool', indexed: false },
     ],
     name: 'ChangeAmtOfMember',
@@ -25254,8 +25434,7 @@ export const registerOfMembersABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -25293,10 +25472,10 @@ export const registerOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -25306,6 +25485,7 @@ export const registerOfMembersABI = [
     type: 'function',
     inputs: [
       { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
       { name: 'isIncrease', internalType: 'bool', type: 'bool' },
@@ -25349,10 +25529,10 @@ export const registerOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -25369,10 +25549,10 @@ export const registerOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -25493,9 +25673,9 @@ export const registerOfMembersABI = [
     inputs: [
       { name: 'acct', internalType: 'uint256', type: 'uint256' },
       { name: 'votingWeight', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
       { name: 'deltaPaid', internalType: 'uint256', type: 'uint256' },
       { name: 'deltaPar', internalType: 'uint256', type: 'uint256' },
-      { name: 'deltaClean', internalType: 'uint256', type: 'uint256' },
       { name: 'isIncrease', internalType: 'bool', type: 'bool' },
     ],
     name: 'increaseAmtOfMember',
@@ -25592,10 +25772,50 @@ export const registerOfMembersABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'ownersPoints',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct Checkpoints.Checkpoint',
+        type: 'tuple',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'uint256', type: 'uint256' }],
+    name: 'pointsOfMember',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct Checkpoints.Checkpoint',
+        type: 'tuple',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -25693,8 +25913,7 @@ export const registerOfMembersABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -25846,10 +26065,10 @@ export const registerOfMembersABI = [
         type: 'tuple[]',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -26281,10 +26500,10 @@ export const registerOfOptionsABI = [
         type: 'tuple[]',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -26331,10 +26550,10 @@ export const registerOfOptionsABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -26425,10 +26644,10 @@ export const registerOfOptionsABI = [
         type: 'tuple',
         components: [
           { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
-          { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
           { name: 'paid', internalType: 'uint64', type: 'uint64' },
           { name: 'par', internalType: 'uint64', type: 'uint64' },
-          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
         ],
       },
     ],
@@ -27922,8 +28141,7 @@ export const registerOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -28012,8 +28230,7 @@ export const registerOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -28155,8 +28372,7 @@ export const registerOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -28199,8 +28415,7 @@ export const registerOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -28245,8 +28460,7 @@ export const registerOfSharesABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -28338,6 +28552,7 @@ export const registerOfSharesABI = [
       { name: 'payInDeadline', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'issueShare',
     outputs: [],
@@ -28633,7 +28848,7 @@ export const rulesParserABI = [
           { name: 'seqOfRule', internalType: 'uint16', type: 'uint16' },
           { name: 'titleOfIssuer', internalType: 'uint16', type: 'uint16' },
           { name: 'classOfShare', internalType: 'uint16', type: 'uint16' },
-          { name: 'maxTotalPar', internalType: 'uint64', type: 'uint64' },
+          { name: 'maxTotalPar', internalType: 'uint32', type: 'uint32' },
           { name: 'titleOfVerifier', internalType: 'uint16', type: 'uint16' },
           { name: 'maxQtyOfInvestors', internalType: 'uint16', type: 'uint16' },
           { name: 'ceilingPrice', internalType: 'uint32', type: 'uint32' },
@@ -28641,6 +28856,8 @@ export const rulesParserABI = [
           { name: 'lockupDays', internalType: 'uint16', type: 'uint16' },
           { name: 'offPrice', internalType: 'uint16', type: 'uint16' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+          { name: 'para', internalType: 'uint16', type: 'uint16' },
         ],
       },
     ],
@@ -29556,6 +29773,7 @@ export const sharesRepoABI = [
       { name: 'payInDeadline', internalType: 'uint256', type: 'uint256' },
       { name: 'paid', internalType: 'uint256', type: 'uint256' },
       { name: 'par', internalType: 'uint256', type: 'uint256' },
+      { name: 'distrWeight', internalType: 'uint256', type: 'uint256' },
     ],
     name: 'createShare',
     outputs: [
@@ -29589,8 +29807,7 @@ export const sharesRepoABI = [
               { name: 'paid', internalType: 'uint64', type: 'uint64' },
               { name: 'par', internalType: 'uint64', type: 'uint64' },
               { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
-              { name: 'state', internalType: 'uint8', type: 'uint8' },
-              { name: 'para', internalType: 'uint8', type: 'uint8' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
             ],
           },
         ],
@@ -45709,6 +45926,22 @@ export function useGeneralKeeperEvent<TEventName extends string>(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"DistributeProfits"`.
+ */
+export function useGeneralKeeperDistributeProfitsEvent(
+  config: Omit<
+    UseContractEventConfig<typeof generalKeeperABI, 'DistributeProfits'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: generalKeeperABI,
+    eventName: 'DistributeProfits',
+    ...config,
+  } as UseContractEventConfig<typeof generalKeeperABI, 'DistributeProfits'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"ExecAction"`.
  */
 export function useGeneralKeeperExecActionEvent(
@@ -45738,6 +45971,38 @@ export function useGeneralKeeperLockContentsEvent(
     eventName: 'LockContents',
     ...config,
   } as UseContractEventConfig<typeof generalKeeperABI, 'LockContents'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"PickupDeposit"`.
+ */
+export function useGeneralKeeperPickupDepositEvent(
+  config: Omit<
+    UseContractEventConfig<typeof generalKeeperABI, 'PickupDeposit'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: generalKeeperABI,
+    eventName: 'PickupDeposit',
+    ...config,
+  } as UseContractEventConfig<typeof generalKeeperABI, 'PickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"ReceiveCash"`.
+ */
+export function useGeneralKeeperReceiveCashEvent(
+  config: Omit<
+    UseContractEventConfig<typeof generalKeeperABI, 'ReceiveCash'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: generalKeeperABI,
+    eventName: 'ReceiveCash',
+    ...config,
+  } as UseContractEventConfig<typeof generalKeeperABI, 'ReceiveCash'>)
 }
 
 /**
@@ -45786,6 +46051,22 @@ export function useGeneralKeeperSetRoleAdminEvent(
     eventName: 'SetRoleAdmin',
     ...config,
   } as UseContractEventConfig<typeof generalKeeperABI, 'SetRoleAdmin'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"TransferFund"`.
+ */
+export function useGeneralKeeperTransferFundEvent(
+  config: Omit<
+    UseContractEventConfig<typeof generalKeeperABI, 'TransferFund'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: generalKeeperABI,
+    eventName: 'TransferFund',
+    ...config,
+  } as UseContractEventConfig<typeof generalKeeperABI, 'TransferFund'>)
 }
 
 /**
@@ -54488,6 +54769,22 @@ export function useIGeneralKeeperEvent<TEventName extends string>(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"DistributeProfits"`.
+ */
+export function useIGeneralKeeperDistributeProfitsEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'DistributeProfits'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iGeneralKeeperABI,
+    eventName: 'DistributeProfits',
+    ...config,
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'DistributeProfits'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"ExecAction"`.
  */
 export function useIGeneralKeeperExecActionEvent(
@@ -54501,6 +54798,54 @@ export function useIGeneralKeeperExecActionEvent(
     eventName: 'ExecAction',
     ...config,
   } as UseContractEventConfig<typeof iGeneralKeeperABI, 'ExecAction'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"PickupDeposit"`.
+ */
+export function useIGeneralKeeperPickupDepositEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'PickupDeposit'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iGeneralKeeperABI,
+    eventName: 'PickupDeposit',
+    ...config,
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'PickupDeposit'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"ReceiveCash"`.
+ */
+export function useIGeneralKeeperReceiveCashEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'ReceiveCash'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iGeneralKeeperABI,
+    eventName: 'ReceiveCash',
+    ...config,
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'ReceiveCash'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"TransferFund"`.
+ */
+export function useIGeneralKeeperTransferFundEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'TransferFund'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iGeneralKeeperABI,
+    eventName: 'TransferFund',
+    ...config,
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'TransferFund'>)
 }
 
 /**
@@ -70268,6 +70613,60 @@ export function useIRegisterOfMembersOwnersEquity<
   return useContractRead({
     abi: iRegisterOfMembersABI,
     functionName: 'ownersEquity',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iRegisterOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"ownersPoints"`.
+ */
+export function useIRegisterOfMembersOwnersPoints<
+  TFunctionName extends 'ownersPoints',
+  TSelectData = ReadContractResult<typeof iRegisterOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iRegisterOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegisterOfMembersABI,
+    functionName: 'ownersPoints',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iRegisterOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"pointsOfMember"`.
+ */
+export function useIRegisterOfMembersPointsOfMember<
+  TFunctionName extends 'pointsOfMember',
+  TSelectData = ReadContractResult<typeof iRegisterOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iRegisterOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegisterOfMembersABI,
+    functionName: 'pointsOfMember',
     ...config,
   } as UseContractReadConfig<
     typeof iRegisterOfMembersABI,
@@ -104806,6 +105205,60 @@ export function useRegisterOfMembersOwnersEquity<
   return useContractRead({
     abi: registerOfMembersABI,
     functionName: 'ownersEquity',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"ownersPoints"`.
+ */
+export function useRegisterOfMembersOwnersPoints<
+  TFunctionName extends 'ownersPoints',
+  TSelectData = ReadContractResult<typeof registerOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfMembersABI,
+    functionName: 'ownersPoints',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"pointsOfMember"`.
+ */
+export function useRegisterOfMembersPointsOfMember<
+  TFunctionName extends 'pointsOfMember',
+  TSelectData = ReadContractResult<typeof registerOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfMembersABI,
+    functionName: 'pointsOfMember',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfMembersABI,

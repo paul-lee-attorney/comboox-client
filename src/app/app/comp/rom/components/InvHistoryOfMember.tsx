@@ -4,7 +4,7 @@ import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 
 import { booxMap } from '../../../common';
-import { baseToDollar, dateParser, longDataParser, longSnParser } from '../../../common/toolsKit';
+import { baseToDollar, bigIntToNum, dateParser, longDataParser, longSnParser } from '../../../common/toolsKit';
 
 import { ShareClip, votesHistory } from '../rom';
 
@@ -18,9 +18,9 @@ const columns: GridColDef[] = [
     width: 218,
   },
   {
-    field: 'votingWeight',
+    field: 'rate',
     headerName: 'VotingWeight (%)',
-    valueGetter: (p) => longDataParser(p.row.votingWeight.toString()),
+    valueGetter: (p) => longDataParser(p.row.rate.toString()),
     width: 218,
     headerAlign: 'center',
     align: 'center',
@@ -42,9 +42,9 @@ const columns: GridColDef[] = [
     align: 'right',
   },
   {
-    field: 'clean',
-    headerName: 'CleanPaid',
-    valueGetter: (p) => baseToDollar(p.row.cleanPaid.toString()),
+    field: 'points',
+    headerName: 'VotingPoints',
+    valueGetter: (p) => longDataParser(bigIntToNum(p.row.points, 4)),
     width: 330,
     headerAlign: 'right',
     align: 'right',

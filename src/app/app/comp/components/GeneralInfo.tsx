@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Paper, Toolbar, TextField, Stack, Grid, Typography } from "@mui/material";
+import { Paper, TextField, Stack, Grid, Typography } from "@mui/material";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
@@ -207,7 +207,7 @@ export function GeneralInfo() {
 
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
-                value={ longSnParser(controllor ?? AddrZero) } 
+                value={ longSnParser(controllor ?? '0') } 
                 variant='outlined'
                 size='small' 
                 label="ActualControllor" 

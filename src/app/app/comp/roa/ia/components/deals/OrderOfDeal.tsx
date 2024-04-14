@@ -100,7 +100,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
     >
       <Stack direction='row' sx={{ justifyContent:'space-between', alignItems:'center' }} >
         <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
-          <h4>Order of Deal</h4>
+          <b>Order of Deal</b>
         </DialogTitle>
 
         {!isFinalized && (
@@ -318,7 +318,24 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                   value={ baseToDollar(deal.body.paid.toString()) }
                 />
               </td>
-              <td >
+              <td>
+                <TextField 
+                  variant='outlined'
+                  fullWidth
+                  label='DistributionWeight (%)'
+                  inputProps={{readOnly: true}}
+                  size="small"
+                  sx={{
+                    m:1,
+                  }}
+                  value={ longDataParser(deal.body.distrWeight.toString()) }
+                />
+              </td>
+
+            </tr>
+
+            <tr>
+              <td colSpan={2} >
                 <TextField 
                   variant='outlined'
                   fullWidth
@@ -335,10 +352,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                 />
               </td>
 
-            </tr>
-
-            <tr>
-              <td colSpan={4}>
+              <td colSpan={2}>
                 {deal.hashLock != Bytes32Zero && (
                   <TextField 
                     variant='outlined'
@@ -352,7 +366,9 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                     value={ deal.hashLock }
                   />
                 )}
-              </td>
+                </td>
+
+
             </tr>
 
             <tr>
