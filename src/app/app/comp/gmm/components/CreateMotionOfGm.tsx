@@ -14,12 +14,13 @@ import { ProposeToTransferFund } from "./create_motions/ProposeToTransferFund";
 import { ProposeToDistributeProfits } from "./create_motions/ProposeToDistributeProfits";
 
 import { CreateMotionProps } from "../../bmm/components/CreateMotionOfBoardMeeting";
+import { ProposeToDeprecateGK } from "./create_motions/ProposeToDeprecateGK";
 
 export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
 
   const nameOfTypes = [
     'Nominate/Remove Director', 'Approve Document', 'Transfer Fund', 
-    'Distribute Profits', 'Approve Action', 
+    'Distribute Profits', 'Approve Action', 'Deprecate GK'
   ];
 
   const compOfTypes = [
@@ -28,6 +29,7 @@ export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
     <ProposeToTransferFund key={2} refresh={refresh} />,
     <ProposeToDistributeProfits key={3} refresh={refresh} />,
     <CreateMotionForAction key={4} refresh={refresh} />,
+    <ProposeToDeprecateGK key={5} refresh={refresh} />,
   ]
   
   const [ typeOfMotion, setTypeOfMotion ] = useState<number>(0);

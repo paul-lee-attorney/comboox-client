@@ -3254,6 +3254,17 @@ export const gmmKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
+      { name: 'executor', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
@@ -3407,6 +3418,16 @@ export const gmmKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'proposer', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'proposeToDeprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfVR', internalType: 'uint256', type: 'uint256' },
@@ -3511,6 +3532,31 @@ export const generalKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      {
+        name: 'receiver',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'balanceOfCBP',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'balanceOfETH',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'DeprecateGK',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
       {
         name: 'expireDate',
@@ -3558,7 +3604,7 @@ export const generalKeeperABI = [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
     ],
-    name: 'ReceiveCash',
+    name: 'ReceivedCash',
   },
   {
     type: 'event',
@@ -3834,6 +3880,16 @@ export const generalKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address payable', type: 'address' },
+      { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
@@ -4009,7 +4065,8 @@ export const generalKeeperABI = [
           { name: 'regNum', internalType: 'uint40', type: 'uint40' },
           { name: 'regDate', internalType: 'uint48', type: 'uint48' },
           { name: 'currency', internalType: 'uint8', type: 'uint8' },
-          { name: 'symbol', internalType: 'bytes20', type: 'bytes20' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'symbol', internalType: 'bytes19', type: 'bytes19' },
           { name: 'name', internalType: 'string', type: 'string' },
         ],
       },
@@ -4433,6 +4490,15 @@ export const generalKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address payable', type: 'address' },
+    ],
+    name: 'proposeToDeprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfVR', internalType: 'uint256', type: 'uint256' },
@@ -4621,7 +4687,7 @@ export const generalKeeperABI = [
     type: 'function',
     inputs: [
       { name: '_currency', internalType: 'uint8', type: 'uint8' },
-      { name: '_symbol', internalType: 'bytes20', type: 'bytes20' },
+      { name: '_symbol', internalType: 'bytes19', type: 'bytes19' },
       { name: '_name', internalType: 'string', type: 'string' },
     ],
     name: 'setCompInfo',
@@ -6075,6 +6141,17 @@ export const igmmKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
+      { name: 'executor', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
@@ -6146,6 +6223,16 @@ export const igmmKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'proposer', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'proposeToDeprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfVR', internalType: 'uint256', type: 'uint256' },
@@ -6202,6 +6289,31 @@ export const iGeneralKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      {
+        name: 'receiver',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'balanceOfCBP',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'balanceOfETH',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'DeprecateGK',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
       {
         name: 'expireDate',
@@ -6248,7 +6360,7 @@ export const iGeneralKeeperABI = [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
     ],
-    name: 'ReceiveCash',
+    name: 'ReceivedCash',
   },
   {
     type: 'event',
@@ -6482,6 +6594,16 @@ export const iGeneralKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address payable', type: 'address' },
+      { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
@@ -6657,7 +6779,8 @@ export const iGeneralKeeperABI = [
           { name: 'regNum', internalType: 'uint40', type: 'uint40' },
           { name: 'regDate', internalType: 'uint48', type: 'uint48' },
           { name: 'currency', internalType: 'uint8', type: 'uint8' },
-          { name: 'symbol', internalType: 'bytes20', type: 'bytes20' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
+          { name: 'symbol', internalType: 'bytes19', type: 'bytes19' },
           { name: 'name', internalType: 'string', type: 'string' },
         ],
       },
@@ -6999,6 +7122,15 @@ export const iGeneralKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address payable', type: 'address' },
+    ],
+    name: 'proposeToDeprecateGK',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfVR', internalType: 'uint256', type: 'uint256' },
@@ -7170,7 +7302,7 @@ export const iGeneralKeeperABI = [
     type: 'function',
     inputs: [
       { name: '_currency', internalType: 'uint8', type: 'uint8' },
-      { name: '_symbol', internalType: 'bytes20', type: 'bytes20' },
+      { name: '_symbol', internalType: 'bytes19', type: 'bytes19' },
       { name: '_name', internalType: 'string', type: 'string' },
     ],
     name: 'setCompInfo',
@@ -9660,6 +9792,16 @@ export const iMeetingMinutesABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'proposer', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createMotionToDeprecateGK',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfVR', internalType: 'uint256', type: 'uint256' },
@@ -9694,6 +9836,17 @@ export const iMeetingMinutesABI = [
     ],
     name: 'createMotionToTransferFund',
     outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
+      { name: 'executor', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deprecateGK',
+    outputs: [],
   },
   {
     stateMutability: 'nonpayable',
@@ -19660,6 +19813,16 @@ export const meetingMinutesABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'proposer', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'createMotionToDeprecateGK',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
       { name: 'expireDate', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfVR', internalType: 'uint256', type: 'uint256' },
@@ -19694,6 +19857,17 @@ export const meetingMinutesABI = [
     ],
     name: 'createMotionToTransferFund',
     outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'receiver', internalType: 'address', type: 'address' },
+      { name: 'seqOfMotion', internalType: 'uint256', type: 'uint256' },
+      { name: 'executor', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'deprecateGK',
+    outputs: [],
   },
   {
     stateMutability: 'nonpayable',
@@ -39771,6 +39945,33 @@ export function useGmmKeeperCreateMotionToRemoveDirector<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function useGmmKeeperDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof gmmKeeperABI,
+          'deprecateGK'
+        >['request']['abi'],
+        'deprecateGK',
+        TMode
+      > & { functionName?: 'deprecateGK' }
+    : UseContractWriteConfig<typeof gmmKeeperABI, 'deprecateGK', TMode> & {
+        abi?: never
+        functionName?: 'deprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof gmmKeeperABI, 'deprecateGK', TMode>({
+    abi: gmmKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function useGmmKeeperDistributeProfits<
@@ -40054,6 +40255,37 @@ export function useGmmKeeperProposeMotionToGeneralMeeting<
   >({
     abi: gmmKeeperABI,
     functionName: 'proposeMotionToGeneralMeeting',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function useGmmKeeperProposeToDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof gmmKeeperABI,
+          'proposeToDeprecateGK'
+        >['request']['abi'],
+        'proposeToDeprecateGK',
+        TMode
+      > & { functionName?: 'proposeToDeprecateGK' }
+    : UseContractWriteConfig<
+        typeof gmmKeeperABI,
+        'proposeToDeprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'proposeToDeprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof gmmKeeperABI, 'proposeToDeprecateGK', TMode>({
+    abi: gmmKeeperABI,
+    functionName: 'proposeToDeprecateGK',
     ...config,
   } as any)
 }
@@ -40426,6 +40658,22 @@ export function usePrepareGmmKeeperCreateMotionToRemoveDirector(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function usePrepareGmmKeeperDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'deprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: gmmKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'deprecateGK'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function usePrepareGmmKeeperDistributeProfits(
@@ -40594,6 +40842,25 @@ export function usePrepareGmmKeeperProposeMotionToGeneralMeeting(
   } as UsePrepareContractWriteConfig<
     typeof gmmKeeperABI,
     'proposeMotionToGeneralMeeting'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link gmmKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function usePrepareGmmKeeperProposeToDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof gmmKeeperABI, 'proposeToDeprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: gmmKeeperABI,
+    functionName: 'proposeToDeprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof gmmKeeperABI,
+    'proposeToDeprecateGK'
   >)
 }
 
@@ -42084,6 +42351,33 @@ export function useGeneralKeeperCreateSwap<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function useGeneralKeeperDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof generalKeeperABI,
+          'deprecateGK'
+        >['request']['abi'],
+        'deprecateGK',
+        TMode
+      > & { functionName?: 'deprecateGK' }
+    : UseContractWriteConfig<typeof generalKeeperABI, 'deprecateGK', TMode> & {
+        abi?: never
+        functionName?: 'deprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof generalKeeperABI, 'deprecateGK', TMode>({
+    abi: generalKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function useGeneralKeeperDistributeProfits<
@@ -43045,6 +43339,41 @@ export function useGeneralKeeperProposeMotionToGeneralMeeting<
   >({
     abi: generalKeeperABI,
     functionName: 'proposeMotionToGeneralMeeting',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function useGeneralKeeperProposeToDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof generalKeeperABI,
+          'proposeToDeprecateGK'
+        >['request']['abi'],
+        'proposeToDeprecateGK',
+        TMode
+      > & { functionName?: 'proposeToDeprecateGK' }
+    : UseContractWriteConfig<
+        typeof generalKeeperABI,
+        'proposeToDeprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'proposeToDeprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof generalKeeperABI,
+    'proposeToDeprecateGK',
+    TMode
+  >({
+    abi: generalKeeperABI,
+    functionName: 'proposeToDeprecateGK',
     ...config,
   } as any)
 }
@@ -44635,6 +44964,22 @@ export function usePrepareGeneralKeeperCreateSwap(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function usePrepareGeneralKeeperDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof generalKeeperABI, 'deprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: generalKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof generalKeeperABI, 'deprecateGK'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function usePrepareGeneralKeeperDistributeProfits(
@@ -45203,6 +45548,28 @@ export function usePrepareGeneralKeeperProposeMotionToGeneralMeeting(
   } as UsePrepareContractWriteConfig<
     typeof generalKeeperABI,
     'proposeMotionToGeneralMeeting'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function usePrepareGeneralKeeperProposeToDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof generalKeeperABI,
+      'proposeToDeprecateGK'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: generalKeeperABI,
+    functionName: 'proposeToDeprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof generalKeeperABI,
+    'proposeToDeprecateGK'
   >)
 }
 
@@ -45926,6 +46293,22 @@ export function useGeneralKeeperEvent<TEventName extends string>(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"DeprecateGK"`.
+ */
+export function useGeneralKeeperDeprecateGkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof generalKeeperABI, 'DeprecateGK'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: generalKeeperABI,
+    eventName: 'DeprecateGK',
+    ...config,
+  } as UseContractEventConfig<typeof generalKeeperABI, 'DeprecateGK'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"DistributeProfits"`.
  */
 export function useGeneralKeeperDistributeProfitsEvent(
@@ -45990,19 +46373,19 @@ export function useGeneralKeeperPickupDepositEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"ReceiveCash"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"ReceivedCash"`.
  */
-export function useGeneralKeeperReceiveCashEvent(
+export function useGeneralKeeperReceivedCashEvent(
   config: Omit<
-    UseContractEventConfig<typeof generalKeeperABI, 'ReceiveCash'>,
+    UseContractEventConfig<typeof generalKeeperABI, 'ReceivedCash'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: generalKeeperABI,
-    eventName: 'ReceiveCash',
+    eventName: 'ReceivedCash',
     ...config,
-  } as UseContractEventConfig<typeof generalKeeperABI, 'ReceiveCash'>)
+  } as UseContractEventConfig<typeof generalKeeperABI, 'ReceivedCash'>)
 }
 
 /**
@@ -49631,6 +50014,33 @@ export function useIgmmKeeperCreateMotionToRemoveDirector<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link igmmKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function useIgmmKeeperDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof igmmKeeperABI,
+          'deprecateGK'
+        >['request']['abi'],
+        'deprecateGK',
+        TMode
+      > & { functionName?: 'deprecateGK' }
+    : UseContractWriteConfig<typeof igmmKeeperABI, 'deprecateGK', TMode> & {
+        abi?: never
+        functionName?: 'deprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof igmmKeeperABI, 'deprecateGK', TMode>({
+    abi: igmmKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link igmmKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function useIgmmKeeperDistributeProfits<
@@ -49812,6 +50222,37 @@ export function useIgmmKeeperProposeMotionToGeneralMeeting<
   >({
     abi: igmmKeeperABI,
     functionName: 'proposeMotionToGeneralMeeting',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link igmmKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function useIgmmKeeperProposeToDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof igmmKeeperABI,
+          'proposeToDeprecateGK'
+        >['request']['abi'],
+        'proposeToDeprecateGK',
+        TMode
+      > & { functionName?: 'proposeToDeprecateGK' }
+    : UseContractWriteConfig<
+        typeof igmmKeeperABI,
+        'proposeToDeprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'proposeToDeprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof igmmKeeperABI, 'proposeToDeprecateGK', TMode>({
+    abi: igmmKeeperABI,
+    functionName: 'proposeToDeprecateGK',
     ...config,
   } as any)
 }
@@ -50012,6 +50453,22 @@ export function usePrepareIgmmKeeperCreateMotionToRemoveDirector(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link igmmKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function usePrepareIgmmKeeperDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof igmmKeeperABI, 'deprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: igmmKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof igmmKeeperABI, 'deprecateGK'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link igmmKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function usePrepareIgmmKeeperDistributeProfits(
@@ -50116,6 +50573,25 @@ export function usePrepareIgmmKeeperProposeMotionToGeneralMeeting(
   } as UsePrepareContractWriteConfig<
     typeof igmmKeeperABI,
     'proposeMotionToGeneralMeeting'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link igmmKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function usePrepareIgmmKeeperProposeToDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof igmmKeeperABI, 'proposeToDeprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: igmmKeeperABI,
+    functionName: 'proposeToDeprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof igmmKeeperABI,
+    'proposeToDeprecateGK'
   >)
 }
 
@@ -51285,6 +51761,33 @@ export function useIGeneralKeeperCreateSwap<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function useIGeneralKeeperDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iGeneralKeeperABI,
+          'deprecateGK'
+        >['request']['abi'],
+        'deprecateGK',
+        TMode
+      > & { functionName?: 'deprecateGK' }
+    : UseContractWriteConfig<typeof iGeneralKeeperABI, 'deprecateGK', TMode> & {
+        abi?: never
+        functionName?: 'deprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iGeneralKeeperABI, 'deprecateGK', TMode>({
+    abi: iGeneralKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function useIGeneralKeeperDistributeProfits<
@@ -52160,6 +52663,41 @@ export function useIGeneralKeeperProposeMotionToGeneralMeeting<
   >({
     abi: iGeneralKeeperABI,
     functionName: 'proposeMotionToGeneralMeeting',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function useIGeneralKeeperProposeToDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iGeneralKeeperABI,
+          'proposeToDeprecateGK'
+        >['request']['abi'],
+        'proposeToDeprecateGK',
+        TMode
+      > & { functionName?: 'proposeToDeprecateGK' }
+    : UseContractWriteConfig<
+        typeof iGeneralKeeperABI,
+        'proposeToDeprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'proposeToDeprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iGeneralKeeperABI,
+    'proposeToDeprecateGK',
+    TMode
+  >({
+    abi: iGeneralKeeperABI,
+    functionName: 'proposeToDeprecateGK',
     ...config,
   } as any)
 }
@@ -53611,6 +54149,22 @@ export function usePrepareIGeneralKeeperCreateSwap(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function usePrepareIGeneralKeeperDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iGeneralKeeperABI, 'deprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iGeneralKeeperABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iGeneralKeeperABI, 'deprecateGK'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"distributeProfits"`.
  */
 export function usePrepareIGeneralKeeperDistributeProfits(
@@ -54130,6 +54684,28 @@ export function usePrepareIGeneralKeeperProposeMotionToGeneralMeeting(
   } as UsePrepareContractWriteConfig<
     typeof iGeneralKeeperABI,
     'proposeMotionToGeneralMeeting'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"proposeToDeprecateGK"`.
+ */
+export function usePrepareIGeneralKeeperProposeToDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iGeneralKeeperABI,
+      'proposeToDeprecateGK'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iGeneralKeeperABI,
+    functionName: 'proposeToDeprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iGeneralKeeperABI,
+    'proposeToDeprecateGK'
   >)
 }
 
@@ -54769,6 +55345,22 @@ export function useIGeneralKeeperEvent<TEventName extends string>(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"DeprecateGK"`.
+ */
+export function useIGeneralKeeperDeprecateGkEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'DeprecateGK'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iGeneralKeeperABI,
+    eventName: 'DeprecateGK',
+    ...config,
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'DeprecateGK'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"DistributeProfits"`.
  */
 export function useIGeneralKeeperDistributeProfitsEvent(
@@ -54817,19 +55409,19 @@ export function useIGeneralKeeperPickupDepositEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"ReceiveCash"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"ReceivedCash"`.
  */
-export function useIGeneralKeeperReceiveCashEvent(
+export function useIGeneralKeeperReceivedCashEvent(
   config: Omit<
-    UseContractEventConfig<typeof iGeneralKeeperABI, 'ReceiveCash'>,
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'ReceivedCash'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: iGeneralKeeperABI,
-    eventName: 'ReceiveCash',
+    eventName: 'ReceivedCash',
     ...config,
-  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'ReceiveCash'>)
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'ReceivedCash'>)
 }
 
 /**
@@ -60710,6 +61302,41 @@ export function useIMeetingMinutesCreateMotionToApproveDoc<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMeetingMinutesABI}__ and `functionName` set to `"createMotionToDeprecateGK"`.
+ */
+export function useIMeetingMinutesCreateMotionToDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iMeetingMinutesABI,
+          'createMotionToDeprecateGK'
+        >['request']['abi'],
+        'createMotionToDeprecateGK',
+        TMode
+      > & { functionName?: 'createMotionToDeprecateGK' }
+    : UseContractWriteConfig<
+        typeof iMeetingMinutesABI,
+        'createMotionToDeprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'createMotionToDeprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iMeetingMinutesABI,
+    'createMotionToDeprecateGK',
+    TMode
+  >({
+    abi: iMeetingMinutesABI,
+    functionName: 'createMotionToDeprecateGK',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMeetingMinutesABI}__ and `functionName` set to `"createMotionToDistributeProfits"`.
  */
 export function useIMeetingMinutesCreateMotionToDistributeProfits<
@@ -60810,6 +61437,37 @@ export function useIMeetingMinutesCreateMotionToTransferFund<
   >({
     abi: iMeetingMinutesABI,
     functionName: 'createMotionToTransferFund',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iMeetingMinutesABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function useIMeetingMinutesDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iMeetingMinutesABI,
+          'deprecateGK'
+        >['request']['abi'],
+        'deprecateGK',
+        TMode
+      > & { functionName?: 'deprecateGK' }
+    : UseContractWriteConfig<
+        typeof iMeetingMinutesABI,
+        'deprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'deprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iMeetingMinutesABI, 'deprecateGK', TMode>({
+    abi: iMeetingMinutesABI,
+    functionName: 'deprecateGK',
     ...config,
   } as any)
 }
@@ -61199,6 +61857,28 @@ export function usePrepareIMeetingMinutesCreateMotionToApproveDoc(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iMeetingMinutesABI}__ and `functionName` set to `"createMotionToDeprecateGK"`.
+ */
+export function usePrepareIMeetingMinutesCreateMotionToDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iMeetingMinutesABI,
+      'createMotionToDeprecateGK'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iMeetingMinutesABI,
+    functionName: 'createMotionToDeprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iMeetingMinutesABI,
+    'createMotionToDeprecateGK'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iMeetingMinutesABI}__ and `functionName` set to `"createMotionToDistributeProfits"`.
  */
 export function usePrepareIMeetingMinutesCreateMotionToDistributeProfits(
@@ -61262,6 +61942,22 @@ export function usePrepareIMeetingMinutesCreateMotionToTransferFund(
     typeof iMeetingMinutesABI,
     'createMotionToTransferFund'
   >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iMeetingMinutesABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function usePrepareIMeetingMinutesDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iMeetingMinutesABI, 'deprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iMeetingMinutesABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iMeetingMinutesABI, 'deprecateGK'>)
 }
 
 /**
@@ -86967,6 +87663,41 @@ export function useMeetingMinutesCreateMotionToApproveDoc<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"createMotionToDeprecateGK"`.
+ */
+export function useMeetingMinutesCreateMotionToDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof meetingMinutesABI,
+          'createMotionToDeprecateGK'
+        >['request']['abi'],
+        'createMotionToDeprecateGK',
+        TMode
+      > & { functionName?: 'createMotionToDeprecateGK' }
+    : UseContractWriteConfig<
+        typeof meetingMinutesABI,
+        'createMotionToDeprecateGK',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'createMotionToDeprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof meetingMinutesABI,
+    'createMotionToDeprecateGK',
+    TMode
+  >({
+    abi: meetingMinutesABI,
+    functionName: 'createMotionToDeprecateGK',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"createMotionToDistributeProfits"`.
  */
 export function useMeetingMinutesCreateMotionToDistributeProfits<
@@ -87067,6 +87798,33 @@ export function useMeetingMinutesCreateMotionToTransferFund<
   >({
     abi: meetingMinutesABI,
     functionName: 'createMotionToTransferFund',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function useMeetingMinutesDeprecateGk<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof meetingMinutesABI,
+          'deprecateGK'
+        >['request']['abi'],
+        'deprecateGK',
+        TMode
+      > & { functionName?: 'deprecateGK' }
+    : UseContractWriteConfig<typeof meetingMinutesABI, 'deprecateGK', TMode> & {
+        abi?: never
+        functionName?: 'deprecateGK'
+      } = {} as any,
+) {
+  return useContractWrite<typeof meetingMinutesABI, 'deprecateGK', TMode>({
+    abi: meetingMinutesABI,
+    functionName: 'deprecateGK',
     ...config,
   } as any)
 }
@@ -87760,6 +88518,28 @@ export function usePrepareMeetingMinutesCreateMotionToApproveDoc(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"createMotionToDeprecateGK"`.
+ */
+export function usePrepareMeetingMinutesCreateMotionToDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof meetingMinutesABI,
+      'createMotionToDeprecateGK'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: meetingMinutesABI,
+    functionName: 'createMotionToDeprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof meetingMinutesABI,
+    'createMotionToDeprecateGK'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"createMotionToDistributeProfits"`.
  */
 export function usePrepareMeetingMinutesCreateMotionToDistributeProfits(
@@ -87823,6 +88603,22 @@ export function usePrepareMeetingMinutesCreateMotionToTransferFund(
     typeof meetingMinutesABI,
     'createMotionToTransferFund'
   >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link meetingMinutesABI}__ and `functionName` set to `"deprecateGK"`.
+ */
+export function usePrepareMeetingMinutesDeprecateGk(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'deprecateGK'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: meetingMinutesABI,
+    functionName: 'deprecateGK',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof meetingMinutesABI, 'deprecateGK'>)
 }
 
 /**

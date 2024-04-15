@@ -6,7 +6,7 @@ import {
   useGeneralKeeperCreateActionOfGm, 
 } from "../../../../../../../generated";
 
-import { Divider, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { Action, defaultAction } from "../../meetingMinutes";

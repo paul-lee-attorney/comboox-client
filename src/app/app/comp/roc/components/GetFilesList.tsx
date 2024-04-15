@@ -80,9 +80,9 @@ export function GetFilesList({ list, title, pathName, setFile, setOpen }:GetFile
       )
     },
     {
-      field: 'creator',
-      headerName: 'Creator',
-      valueGetter: p => p.row.sn.substring(44, 54),
+      field: 'author',
+      headerName: 'Author',
+      valueGetter: p => longSnParser(Number(p.row.sn.substring(34, 44)).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',

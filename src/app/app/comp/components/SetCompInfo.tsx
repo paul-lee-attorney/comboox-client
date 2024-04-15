@@ -63,7 +63,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
     setInfo({
       args: [ 
         compInfo.currency, 
-        `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
+        `0x${toAscii(compInfo.symbol).padEnd(38,'0')}`, 
         compInfo.name 
       ],
     });
