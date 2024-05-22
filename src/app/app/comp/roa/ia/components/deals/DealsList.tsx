@@ -80,7 +80,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     {
       field: 'votingWeight',
       headerName: 'VotingWeight (%)',
-      valueGetter: p => p.row.head.typeOfDeal == '0' 
+      valueGetter: p => p.row.head.typeOfDeal == '1' 
           ? longDataParser(p.row.head.votingWeight.toString())
           : 'N/A',
       width: 218,
@@ -90,7 +90,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     {
       field: 'distrWeight',
       headerName: 'DistrWeight (%)',
-      valueGetter: p => p.row.head.typeOfDeal == '0'
+      valueGetter: p => p.row.head.typeOfDeal == '1'
           ? longDataParser(p.row.body.distrWeight.toString())
           : 'N/A',
       width: 218,

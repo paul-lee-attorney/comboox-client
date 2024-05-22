@@ -1,16 +1,16 @@
-// import * as scReg from "../../../../../comboox/server/src/contracts/contracts-address.json";
+import * as scReg from "../../../../../comboox/server/src/contracts/contracts-address.json";
 
-// export const AddrOfRegCenter:HexType = `0x${scReg.RegCenter.substring(2)}`;
-// export const AddrOfTank:HexType = `0x${scReg.FuleTank.substring(2)}`;
-// export const AddrOfCNC:HexType = `0x${scReg.CreateNewComp.substring(2)}`;
+export const AddrOfRegCenter:HexType = `0x${scReg.RegCenter.substring(2)}`;
+export const AddrOfTank:HexType = `0x${scReg.FuleTank.substring(2)}`;
+export const AddrOfCNC:HexType = `0x${scReg.CreateNewComp.substring(2)}`;
 
 // export const AddrOfRegCenter:HexType = `0x${'0xFD6F7A6a5c21A3f503EBaE7a473639974379c351'}`;
 // export const AddrOfTank:HexType = `0x${'0x0A94f91f8b4BBd6884cba311d6b516585FB326AA'}`;
 
 
-export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
-export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
-export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
+// export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
+// export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
+// export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
 
 export const Bytes32Zero:HexType = `0x${'0'.padEnd(64,'0')}`;
 export const AddrZero:HexType = `0x${'0'.padEnd(40,'0')}`;

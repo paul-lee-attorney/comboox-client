@@ -33,7 +33,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
     >
       <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between' }} >
         <DialogTitle id="dialog-title" sx={{ m:1, textDecoration:'underline' }} >
-          <b>Certificate Of Pledge</b> 
+          <b>Deed Of Pledge</b> 
         </DialogTitle>
         <Chip
           sx={{ m:1, mr:5, width: 120 }} 
