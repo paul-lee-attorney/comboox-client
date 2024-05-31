@@ -18,7 +18,7 @@ type WagmiProviderType = {
 }
 
 const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ hardhat, sepolia, arbitrum, mainnet ],
+  [ sepolia, arbitrum, mainnet, hardhat ],
   [
     alchemyProvider({
       apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
