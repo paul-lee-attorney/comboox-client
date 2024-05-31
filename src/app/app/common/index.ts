@@ -4,13 +4,13 @@
 // export const AddrOfTank:HexType = `0x${scReg.FuleTank.substring(2)}`;
 // export const AddrOfCNC:HexType = `0x${scReg.CreateNewComp.substring(2)}`;
 
-export const AddrOfRegCenter:HexType = `0x${'c5a5C42992dECbae36851359345FE25997F5C42d'}`;
-export const AddrOfTank:HexType = `0x${'FD471836031dc5108809D173A067e8486B9047A3'}`;
-export const AddrOfCNC:HexType = `0x${'67d269191c92Caf3cD7723F116c85e6E9bf55933'}`;
+// export const AddrOfRegCenter:HexType = `0x${'c5a5C42992dECbae36851359345FE25997F5C42d'}`;
+// export const AddrOfTank:HexType = `0x${'FD471836031dc5108809D173A067e8486B9047A3'}`;
+// export const AddrOfCNC:HexType = `0x${'67d269191c92Caf3cD7723F116c85e6E9bf55933'}`;
 
-// export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
-// export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
-// export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
+export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
+export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
+export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
 
 export const Bytes32Zero:HexType = `0x${'0'.padEnd(64,'0')}`;
 export const AddrZero:HexType = `0x${'0'.padEnd(40,'0')}`;
