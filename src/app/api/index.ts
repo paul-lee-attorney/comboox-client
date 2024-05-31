@@ -1,5 +1,5 @@
 import { AddrZero, HexType } from "../app/common";
-import { ethers } from "ethers";
+import { verifyMessage } from "ethers";
 import * as crypto from "crypto";
 
 export interface UserInfo {
@@ -55,7 +55,7 @@ export function verifySig(info: SigInfo): boolean {
 
   if (!info.sig || info.address == AddrZero) return false;
 
-  let recoveredAddr = ethers.utils.verifyMessage(info.message, info.sig);
+  let recoveredAddr = verifyMessage(info.message, info.sig);
 
   if (recoveredAddr == info.address) {    
     return true;
