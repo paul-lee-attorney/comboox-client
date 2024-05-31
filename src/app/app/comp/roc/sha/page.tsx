@@ -19,6 +19,8 @@ import { isFinalized } from "../../common/accessControl";
 import { IndexCard } from "../components/IndexCard";
 
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import Bookmark from "../components/Bookmark";
+
 
 function Sha() {
   const { boox } = useComBooxContext();
@@ -26,20 +28,9 @@ function Sha() {
   const [ index, setIndex ] = useState(0);
 
   const searchParams = useSearchParams();
-
-  // console.log('query:', query);
-
   const sha:HexType = `0x${searchParams.get("addr")?.substring(2) ?? ''}`;
 
-  // const sha:HexType = query.get('addr') ? `0x${query.get('addr')?.substring(2)}` : '0x';  
-
-  // console.log('sha: ', sha);
-
-  // const query = useParams();
-  // const sha:HexType = `0x${query?.addr?.toString().substring(2)}`;
-
   const [ open, setOpen ] = useState(false);
-
   const [ file, setFile ] = useState<InfoOfFile>();
 
   useEffect(()=>{
@@ -82,16 +73,22 @@ function Sha() {
                 <IndexCard file={file} open={open} setOpen={setOpen} />
               )}
 
-              <Tooltip title="IndexCard" placement="top" arrow >
-                <IconButton 
-                  size="large"
-                  color="primary"
-                  sx={{ mx:1 }}
-                  onClick={()=>setOpen(true)}
-                >
-                  <BookOutlined />
-                </IconButton>
-              </Tooltip>
+              <Stack direction="row" sx={{ alignContent:'baseLine'}} >
+
+                <Tooltip title="IndexCard" placement="top" arrow >
+                  <IconButton 
+                    size="large"
+                    color="primary"
+                    sx={{ m:1 }}
+                    onClick={()=>setOpen(true)}
+                  >
+                    <BookOutlined />
+                  </IconButton>
+                </Tooltip>
+
+                <Bookmark typeOfFile="SHA" addrOfFile={sha} />
+
+              </Stack>
 
             </Stack>
 

@@ -4,7 +4,7 @@ import {
   Box, Collapse, 
   FormControlLabel, 
   Paper, Radio, RadioGroup, 
-  Stack, Toolbar, Typography, 
+  Stack, Typography, 
 } from "@mui/material";
 
 import { CreateMotionForBoardSeats } from "./create_motions/CreateMotionForBoardSeats";

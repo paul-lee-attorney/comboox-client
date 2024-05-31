@@ -28,7 +28,7 @@ const { chains, publicClient, webSocketPublicClient } = configureChains(
   ],
 );
 
-const config = createConfig({
+export const config = createConfig({
   autoConnect: false,
   connectors: [
     new MetaMaskConnector({ chains }),

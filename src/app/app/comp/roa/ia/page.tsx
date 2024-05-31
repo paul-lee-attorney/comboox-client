@@ -19,6 +19,7 @@ import { BookOutlined } from "@mui/icons-material";
 import { isFinalized } from "../../common/accessControl";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { useSearchParams } from "next/navigation";
+import Bookmark from "../../roc/components/Bookmark";
 
 function Ia() {
   const { boox } = useComBooxContext();
@@ -70,16 +71,22 @@ function Ia() {
                 <IndexCard file={file} open={open} setOpen={setOpen} />
               )}
 
-              <Tooltip title="IndexCard" placement="top" arrow >
-                <IconButton 
-                  size="large"
-                  color="primary"
-                  sx={{ mx:1 }}
-                  onClick={()=>setOpen(true)}
-                >
-                  <BookOutlined />
-                </IconButton>
-              </Tooltip>
+              <Stack direction="row" sx={{ alignContent:'baseLine'}} >
+
+                <Tooltip title="IndexCard" placement="top" arrow >
+                  <IconButton 
+                    size="large"
+                    color="primary"
+                    sx={{ mx:1 }}
+                    onClick={()=>setOpen(true)}
+                  >
+                    <BookOutlined />
+                  </IconButton>
+                </Tooltip>
+
+                <Bookmark typeOfFile="IA" addrOfFile={ia} />
+
+              </Stack>
 
             </Stack>
 

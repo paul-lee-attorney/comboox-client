@@ -4,11 +4,14 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Divider, Stack, TextField } from "@mui/material";
 import { Recycling } from "@mui/icons-material";
 
-import { useGeneralKeeperCirculateSha } from "../../../../../../../../generated";
-import { Bytes32Zero, HexType } from "../../../../../common";
+import { regCenterABI, useGeneralKeeperCirculateSha } from "../../../../../../../../generated";
+import { AddrOfRegCenter, Bytes32Zero, HexType } from "../../../../../common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
+import FileUpload, { CheckFilerFunc } from "../../../../../../api/FileUpload";
+import { isParty } from "../sigPage/sigPage";
+import { readContract } from "@wagmi/core";
 
 export interface FileHistoryProps {
   addr: HexType,
@@ -20,7 +23,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
   const { gk, setErrMsg } = useComBooxContext();
 
   const [ docUrl, setDocUrl ] = useState<HexType>(Bytes32Zero);
-  const [ docHash, setDocHash ] = useState<HexType>(Bytes32Zero);
+  const [ docHash, setDocHash ] = useState<HexType | undefined>(Bytes32Zero);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ loading, setLoading ] = useState(false);
@@ -46,6 +49,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
   });
 
   const handleClick = ()=>{
+    if (!docHash) return;
     write({
       args:[
         addr, 
@@ -54,6 +58,27 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
       ],
     });
   };
+  
+  const checkFiler:CheckFilerFunc = async (filer) => {
+    if (!filer) return false;
+
+    let myNo = await readContract({
+      address: AddrOfRegCenter,
+      abi: regCenterABI,
+      functionName: 'getMyUserNo',
+      account: filer.account,
+    })
+
+    if (!myNo) return false;
+    console.log('myNo: ', myNo);
+
+    let flag = await isParty(addr, BigInt(myNo));
+    if (flag) return true;
+    else {
+      console.log('checkFiler: not a Party to SHA');
+      return false; 
+    }
+  }
 
   return (
     <Stack direction='row' sx={{m:1, alignItems:'center'}}>
@@ -61,7 +86,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
       <Stack direction='column' >
 
         <TextField 
-          sx={{ m: 1, minWidth: 650 }} 
+          sx={{ m: 1, mt:3, minWidth: 650 }} 
           id="tfUrlOfDoc" 
           label="UrlOfDoc / CID in IPFS" 
           variant="outlined"
@@ -96,18 +121,24 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
       
       <Divider orientation="vertical" sx={{ m:1 }} flexItem />
       
-      <LoadingButton
-        disabled={ isLoading || hasError(valid)}
-        loading = {loading}
-        loadingPosition="end"
-        variant="contained"
-        endIcon={<Recycling />}
-        sx={{ m:1, minWidth:218 }}
-        onClick={ handleClick }
-      >
-        Circulate Sha
-      </LoadingButton>
+      <Stack direction='column' sx={{ alignItems:'start' }} >
 
+        <FileUpload typeOfFile="SHA" addrOfFile={addr} setDocHash={setDocHash} checkFiler={checkFiler} />
+
+        <LoadingButton
+          disabled={ isLoading || hasError(valid) || !docHash}
+          loading = {loading}
+          loadingPosition="end"
+          variant="contained"
+          endIcon={<Recycling />}
+          sx={{ m:1, width:218 }}
+          onClick={ handleClick }
+        >
+          Circulate Sha
+        </LoadingButton>
+        
+
+      </Stack>
     </Stack>
   )
 

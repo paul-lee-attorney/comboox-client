@@ -225,7 +225,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
             onChange={(e) => {
               let input = e.target.value;
               onlyNum('Value', input, 0n, 9, setValid);
-              setActions(v => ({
+              setAction(v => ({
                 ...v,
                 value: input,
               }));

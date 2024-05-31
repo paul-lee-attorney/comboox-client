@@ -33,7 +33,7 @@ export function IndexCard({file, open, setOpen}: IndexCardProps) {
               <tr>
                 <td >
                   <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-                    <b>Index Card of File</b>
+                    <b>Index Card</b>
                   </Typography>
                 </td>
                 <td>

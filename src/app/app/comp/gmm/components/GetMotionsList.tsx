@@ -1,11 +1,7 @@
 import { Box, Chip, Paper, Toolbar, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { dateParser, longSnParser } from "../../../common/toolsKit";
-import { Motion } from "../meetingMinutes";
-
-const type = ['ElectOfficer', 'RemoveOfficer', 'ApproveDoc', 'ApproveAction', 'TransferFund', 'DistriProfits'];
-
-export const statesOfMotion = ['Created', 'Proposed', 'Passed', 'Rejected', 'Rejected_NotToBuy', 'Rejected_ToBuy', 'Executed'];
+import { Motion, motionType, statesOfMotion } from "../meetingMinutes";
 
 interface GetMotionsListProps {
   list: Motion[];
@@ -26,7 +22,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
     {
       field: 'typeOfMotion',
       headerName: 'TypeOfMotion',
-      valueGetter: p => type[p.row.head.typeOfMotion - 1],
+      valueGetter: p =>  motionType[p.row.head.typeOfMotion - 1],
       width: 120,
       headerAlign: 'center',
       align: 'center',

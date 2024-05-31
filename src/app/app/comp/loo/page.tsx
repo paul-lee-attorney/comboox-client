@@ -101,7 +101,7 @@ function ListOfOrders() {
               labelId="typeOfAction-label"
               id="typeOfAction-select"
               label="ClassOfShare"
-              value={ classOfShare }
+              value={ classOfShare == 0 ? '' : classOfShare }
               onChange={(e) => setClassOfShare( parseInt( e.target.value.toString() ))}
             >
               {classes.map((v) => (

@@ -18,12 +18,11 @@ import { Article } from "@mui/icons-material";
 
 import { HexType, booxMap } from "../../../common";
 import { dateParser, longSnParser } from "../../../common/toolsKit";
-import { voteEnded } from "../meetingMinutes";
+import { motionType, statesOfMotion, voteEnded } from "../meetingMinutes";
 import { getFile } from "../../roc/components/filesFolder";
 import { GetVotingRule } from "../../roc/sha/components/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../../rod/components/GetPosition";
 
-import { statesOfMotion } from "./GetMotionsList";
 
 import { ApprovalFormOfBoardMotionProps } from "../../bmm/components/ApprovalFormOfBoardMotion";
 
@@ -32,8 +31,7 @@ import { ActionsOnMotion } from "./ActionsOnMotion";
 import { VoteResult } from "./VoteResult";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { CopyLongStrSpan, CopyLongStrTF } from "../../../common/CopyLongStr";
-
-export const motionType = ['ElectOfficer', 'RemoveDirector', 'ApproveDocument', 'ApproveAction'];
+import FileIndex from "./FileIndex";
 
 export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: ApprovalFormOfBoardMotionProps) {
 
@@ -85,9 +83,15 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
           <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between' }} >
-            <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-              <b>General Meeting of Members - {motionType[motion.head.typeOfMotion-1]}</b>
-            </Toolbar>
+
+            <Stack direction='row' >
+              <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
+                <b>General Meeting of Members - {motionType[motion.head.typeOfMotion-1]}</b>
+              </Toolbar>
+
+              <FileIndex motion={motion} />
+            </Stack>
+            
             <Toolbar sx={{ color:'black', textDecoration:'underline' }} >
                 No. ({longSnParser(motion.head.seqOfMotion.toString())})
             </Toolbar>

@@ -319,6 +319,78 @@ export function onlyHex(id: string, input: string, len: number, setValid:Dispatc
   });
 }
 
+export function isChar(input: string): boolean {
+  let reg = /^([a-zA-Z\s]+)$/;
+  return reg.test(input);
+}
+
+export function onlyChars(id: string, input: string, len: number, setValid:Dispatch<SetStateAction<FormResults>>){
+  let error: boolean = !isChar(input);
+  let overflow: boolean = error
+                        ? false
+                        : len == 0
+                          ? false
+                          : input.length > len;
+
+  let result:Result = {
+    error: error || overflow,
+    helpTx: error 
+          ? 'Only Char'
+          : overflow
+            ? 'Incorrect Length'
+            : ' ', 
+  };
+
+  setValid( v => {
+    let out = {...v};
+    out[id] = result;
+    return out;
+  });
+}
+
+export function isEmail(input: string): boolean {
+  let reg = /^[\w.-]+@[a-zA-Z\d.-]+\.[a-zA-Z]{2,}$/;
+  return reg.test(input);
+}
+
+export function onlyEmail(id: string, input: string, setValid:Dispatch<SetStateAction<FormResults>>){
+  let error: boolean = !isEmail(input);
+
+  let result:Result = {
+    error: error,
+    helpTx: error 
+          ? 'Only Email'
+          : ' ', 
+  };
+
+  setValid( v => {
+    let out = {...v};
+    out[id] = result;
+    return out;
+  });
+}
+
+export function numOrChar(input: string): boolean {
+  let reg = /^[a-zA-Z0-9]+$/;
+  return reg.test(input);
+}
+
+export function onlyNumOrChar(id: string, input: string, setValid:Dispatch<SetStateAction<FormResults>>){
+  let error: boolean = !numOrChar(input);
+  let result:Result = {
+    error: error,
+    helpTx: error 
+          ? 'Only Number or Char'
+          : ' ', 
+  };
+
+  setValid( v => {
+    let out = {...v};
+    out[id] = result;
+    return out;
+  });
+}
+
 export function hasError(valid: FormResults): boolean {
 
   for (let key in valid) {

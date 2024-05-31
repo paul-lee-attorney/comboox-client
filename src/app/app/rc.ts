@@ -7,6 +7,8 @@ import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from ".
 import { regCenterABI } from "../../../generated";
 import { strNumToBigInt } from "./common/toolsKit";
 
+import { config } from "../_providers/WagmiProvider";
+
 // ==== StrLocker === 
 
 export interface StrHeadOfLocker {
@@ -312,17 +314,14 @@ export async function getUser(): Promise<User>{
   return res;
 }
 
-export async function getMyUserNo(): Promise<number>{
+export async function getMyUserNo(acct: HexType): Promise<number>{
 
-  const walletClient = await getWalletClient();
-
-  const rc = getContract({
+  const res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
-    walletClient: walletClient ? walletClient : undefined,
+    functionName: 'getMyUserNo',
+    account: acct
   })
-  
-  let res = await rc.read.getMyUserNo();    
 
   return res;
 }

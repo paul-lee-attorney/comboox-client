@@ -288,7 +288,46 @@ export async function isPassed(minutes: HexType, seqOfMotion: bigint): Promise<b
   return flag;
 }
 
+export function getTypeOfMotion(motion: Motion): string {
 
+  let typeOfMotion = motion.votingRule.authority == 1
+          ? 'GMM/'
+          : 'BMM/' ;
 
+  switch(motion.head.typeOfMotion) {
+    case 1 :
+      typeOfMotion += 'AddOfficer/';
+      break;
+    case 2 :
+      typeOfMotion += 'RemoveOfficer/';
+      break;
+    case 3 :
+      typeOfMotion += 'Doc/';
+      break;
+    case 4 :
+      typeOfMotion += 'Action/';
+      break;
+    case 5 :
+      typeOfMotion += 'TransferFund/';
+      break;
+    case 6 :
+      typeOfMotion += 'Distribute/';
+      break;
+    case 7 :
+      typeOfMotion += 'DeprecateGK/';
+      break;
+  }
 
+  return typeOfMotion;
+}
+
+export const motionType = [
+  'ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction',
+  'TransferFund', 'DistributeAssets', 'DeprecateGK'
+];
+
+export const statesOfMotion = [
+  'Created', 'Proposed', 'Passed', 'Rejected', 
+  'Rejected_NotToBuy', 'Rejected_ToBuy', 'Executed'
+];
 

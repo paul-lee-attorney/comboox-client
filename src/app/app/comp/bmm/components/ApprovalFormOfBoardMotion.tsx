@@ -12,12 +12,13 @@ import { HexType, booxMap } from "../../../common";
 
 import { Article } from "@mui/icons-material";
 import { dateParser, longSnParser } from "../../../common/toolsKit";
-import { Motion, voteEnded } from "../../gmm/meetingMinutes";
+import { Motion, motionType, statesOfMotion, voteEnded } from "../../gmm/meetingMinutes";
 import { getSnOfFile } from "../../roc/components/filesFolder";
 import { VoteResult } from "../../gmm/components/VoteResult";
 import { ActionsOnMotionOfBoard } from "./ActionsOnMotionOfBoard";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { statesOfMotion } from "../../gmm/components/GetMotionsList";
+
+import FileIndex from "../../gmm/components/FileIndex";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
@@ -26,8 +27,6 @@ export interface ApprovalFormOfBoardMotionProps{
   setOpen: Dispatch<SetStateAction<boolean>>;
   refresh: ()=>void;
 }
-
-export const motionType = ['ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction'];
 
 export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refresh }: ApprovalFormOfBoardMotionProps) {
 
@@ -74,9 +73,16 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
         <Paper elevation={3} sx={{m:1, p:1, color:'divider', border:1 }} >
 
           <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between' }} >
-            <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
-              <b>Motion of Board Meeting - {motionType[motion.head.typeOfMotion-1]}</b>
-            </Toolbar>
+
+            <Stack direction='row' >
+
+              <Toolbar sx={{ color:'black', textDecoration:'underline' }}>
+                <b>Motion of Board Meeting - {motionType[motion.head.typeOfMotion-1]}</b>
+              </Toolbar>
+
+              <FileIndex motion={motion} />
+            </Stack>
+
             <Toolbar sx={{ color:'black', textDecoration:'underline' }} >
                 No. ({longSnParser(motion.head.seqOfMotion.toString())})
             </Toolbar>

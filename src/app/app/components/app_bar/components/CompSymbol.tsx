@@ -9,9 +9,9 @@ import { booxMap } from "../../../common";
 
 export function CompSymbol() {
 
-  const { gk, setBoox, setOnPar } = useComBooxContext();
+  const { gk, compInfo, setBoox, setOnPar, setCompInfo } = useComBooxContext();
 
-  const [ compInfo, setCompInfo ] = useState<CompInfo>();
+  // const [ compInfo, setCompInfo ] = useState<CompInfo>();
 
   useEffect(() => {
     if (gk) {
@@ -30,8 +30,9 @@ export function CompSymbol() {
     } else {
       setBoox(undefined);
       setOnPar(undefined);
+      setCompInfo(undefined);
     }
-  }, [gk, setBoox, setOnPar]);
+  }, [gk, setBoox, setOnPar, setCompInfo]);
 
   return (
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >

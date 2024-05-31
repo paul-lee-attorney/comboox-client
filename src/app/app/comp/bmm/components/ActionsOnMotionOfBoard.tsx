@@ -11,6 +11,7 @@ import { TakePosition } from "./actions_on_motion/TakePosition";
 import { RemoveOfficer } from "./actions_on_motion/RemoveOfficer";
 import { ExecAction } from "./actions_on_motion/ExecAction";
 import { TransferFund } from "./actions_on_motion/TransferFund";
+import { UploadMotionFile } from "../../gmm/components/actions_on_motion/UploadMotionFile";
 
 
 export function ActionsOnMotionOfBoard({motion, voteIsEnd, setOpen, refresh}:ActionsOnMotionSelectProps){
@@ -18,18 +19,19 @@ export function ActionsOnMotionOfBoard({motion, voteIsEnd, setOpen, refresh}:Act
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOnMotion = [
-    'Propose Motion', 'Cast Vote', 'Count Results', 'Take Position', 
+    'Propose Motion', 'Upload File', 'Cast Vote', 'Count Results', 'Take Position', 
     'Remove Officer', 'Exec Actions', 'Transfer Fund'
   ]
 
   const compsOfAction = [
     <ProposeMotionToBoardMeeting key={0} seqOfMotion={motion.head.seqOfMotion} setOpen={setOpen} refresh={refresh} />,
-    <CastVoteOfBm key={1} seqOfMotion={motion.head.seqOfMotion} setOpen = {setOpen} refresh={refresh} />,
-    <VoteCountingOfBoard key={2} seqOfMotion={motion.head.seqOfMotion} setOpen = {setOpen} refresh={refresh} />,
-    <TakePosition key={3} motion={motion} setOpen = {setOpen} refresh={refresh} />,
-    <RemoveOfficer key={4} motion={motion} setOpen = {setOpen} refresh={refresh} />,
-    <ExecAction key={5} motion={motion} setOpen = {setOpen} refresh={refresh} />,
-    <TransferFund key={6} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
+    <UploadMotionFile key={1} motion={motion} setOpen={setOpen} refresh={refresh} />,
+    <CastVoteOfBm key={2} seqOfMotion={motion.head.seqOfMotion} setOpen = {setOpen} refresh={refresh} />,
+    <VoteCountingOfBoard key={3} seqOfMotion={motion.head.seqOfMotion} setOpen = {setOpen} refresh={refresh} />,
+    <TakePosition key={4} motion={motion} setOpen = {setOpen} refresh={refresh} />,
+    <RemoveOfficer key={5} motion={motion} setOpen = {setOpen} refresh={refresh} />,
+    <ExecAction key={6} motion={motion} setOpen = {setOpen} refresh={refresh} />,
+    <TransferFund key={7} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
   ]
 
   return (
@@ -50,12 +52,13 @@ export function ActionsOnMotionOfBoard({motion, voteIsEnd, setOpen, refresh}:Act
             onChange={(e) => setTypeOfAction(e.target.value)}
           >
             {actionsOnMotion.map((v, i) => {
-              if (motion.body.state == 1 && i != 0) return null;
-              else if (motion.body.state == 2 && !voteIsEnd && i != 1) return null;
-              else if (motion.body.state == 2 && voteIsEnd && i != 2) return null;
-              else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 3) return null;
-              else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 4) return null;
-              else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && i != 5) return null;
+              if (motion.body.state == 1 && i > 1) return null;
+              else if (motion.body.state == 2 && !voteIsEnd && (i<1 || i>2)) return null;
+              else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
+              else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
+              else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
+              else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && i != 6) return null;
+              else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
             })}
           </Select>
@@ -64,12 +67,13 @@ export function ActionsOnMotionOfBoard({motion, voteIsEnd, setOpen, refresh}:Act
       </Stack>
 
       { compsOfAction.map((v,i)=>{
-        if (motion.body.state == 1 && i != 0) return null;
-        else if (motion.body.state == 2 && !voteIsEnd && i != 1) return null;
-        else if (motion.body.state == 2 && voteIsEnd && i != 2) return null;
-        else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 3) return null;
-        else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 4) return null;
-        else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && i != 5) return null;
+        if (motion.body.state == 1 && i > 1) return null;
+        else if (motion.body.state == 2 && !voteIsEnd && (i<1 || i>2)) return null;
+        else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
+        else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
+        else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
+        else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && i != 6) return null;
+        else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
 
         return (
           <Collapse key={i} in={ typeOfAction == i.toString() } >

@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Card, CardMedia, Paper, Stack, Typography, } from "@mui/material"
+import { Box, Paper, Stack, Typography, } from "@mui/material"
 
 import { TitleBar } from "./components/TitleBar";
 

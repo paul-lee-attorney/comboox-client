@@ -1,5 +1,6 @@
 import { Dispatch, SetStateAction, createContext, useContext, useState } from "react";
 import { HexType } from "../app/common";
+import { CompInfo } from "../app/comp/gk";
 
 type ContextType = {
   userNo: number | undefined;
@@ -12,6 +13,8 @@ type ContextType = {
   setErrMsg: Dispatch<SetStateAction<string | undefined>>;
   onPar: boolean | undefined;
   setOnPar: Dispatch<SetStateAction<boolean | undefined>>;
+  compInfo: CompInfo | undefined;
+  setCompInfo: Dispatch<SetStateAction<CompInfo | undefined>>;
 }
 
 const ComBooxContext = createContext<ContextType>({
@@ -25,6 +28,8 @@ const ComBooxContext = createContext<ContextType>({
   setErrMsg: ()=>{},
   onPar: undefined,
   setOnPar: ()=>{},
+  compInfo: undefined,
+  setCompInfo: ()=>{},
 });
 
 type ProviderType = {
@@ -37,9 +42,19 @@ const ComBooxContextProvider = ({ children }: ProviderType) => {
   const [boox, setBoox] = useState<HexType[]>();
   const [ errMsg, setErrMsg ] = useState<string>();
   const [ onPar, setOnPar ] = useState<boolean>();
+  const [ compInfo, setCompInfo ] = useState<CompInfo>();
 
   return (
-    <ComBooxContext.Provider value={{userNo, setUserNo, gk, setGK, boox, setBoox, errMsg, setErrMsg, onPar, setOnPar}} >
+    <ComBooxContext.Provider 
+      value={{
+        userNo, setUserNo, 
+        gk, setGK, 
+        boox, setBoox, 
+        errMsg, setErrMsg, 
+        onPar, setOnPar, 
+        compInfo, setCompInfo
+      }} 
+    >
       { children }
     </ComBooxContext.Provider >
   );
