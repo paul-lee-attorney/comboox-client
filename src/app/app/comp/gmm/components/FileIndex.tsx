@@ -33,7 +33,8 @@ function FileIndex({motion}: FileIndexProps) {
           ? longSnParser(compInfo.regNum.toString()) + '/'
           : '0000/';  
       filePath += getTypeOfMotion(motion);
-      filePath += longSnParser(motion.body.proposer.toString()) + '/';  
+      filePath += longSnParser(motion.body.proposer.toString()) + '/';
+      filePath += longSnParser(motion.head.seqOfMotion.toString()) + '/';
       filePath += motion.contents.toString(16).padStart(64, '0').substring(54).toLowerCase() + '.pdf';
     
       console.log('filePath: ', filePath);
