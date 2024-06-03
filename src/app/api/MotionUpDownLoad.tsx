@@ -45,12 +45,13 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
 }
 
 export interface MotionUpDownLoadProps {
+  seqOfMotion: string,
   typeOfMotion: string,
   contents: string,
   checkProposer: CheckFilerFunc, 
 }
 
-function MotionUpDownLoad({typeOfMotion, contents, checkProposer}: MotionUpDownLoadProps) {
+function MotionUpDownLoad({seqOfMotion, typeOfMotion, contents, checkProposer}: MotionUpDownLoadProps) {
 
   const { compInfo } = useComBooxContext();
   const { data: signer } = useWalletClient();
@@ -63,7 +64,7 @@ function MotionUpDownLoad({typeOfMotion, contents, checkProposer}: MotionUpDownL
   useEffect(()=>{
 
     const updateFilePath = async ()=> {
-      if (!signer || !compInfo || !typeOfMotion || !contents) return;
+      if (!signer || !compInfo || !seqOfMotion || !typeOfMotion || !contents) return;
 
       let myNo = await getMyUserNo(signer.account.address);
 
@@ -77,6 +78,7 @@ function MotionUpDownLoad({typeOfMotion, contents, checkProposer}: MotionUpDownL
             
       str += typeOfMotion + '/';
       str += longSnParser(myNo.toString()) + '/';
+      str += longSnParser(seqOfMotion) + '/';
       str += contents.substring(54).toLowerCase() + '.pdf'; 
 
       let uri = await getFileDownloadURL(str);
@@ -88,8 +90,7 @@ function MotionUpDownLoad({typeOfMotion, contents, checkProposer}: MotionUpDownL
 
     updateFilePath();
 
-  }, [signer, compInfo, typeOfMotion, contents]);
-
+  }, [signer, compInfo, seqOfMotion, typeOfMotion, contents]);
 
   const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;

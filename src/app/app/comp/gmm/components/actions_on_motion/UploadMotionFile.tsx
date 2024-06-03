@@ -27,7 +27,7 @@ export function UploadMotionFile({ motion, setOpen, refresh }:ActionsOnMotionPro
   return (
 
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
-      <MotionUpDownLoad typeOfMotion={getTypeOfMotion(motion)} contents={motion.contents.toString(16).padStart(64, '0')} checkProposer={checkProposer} />
+      <MotionUpDownLoad seqOfMotion={motion.head.seqOfMotion.toString()} typeOfMotion={getTypeOfMotion(motion)} contents={motion.contents.toString(16).padStart(64, '0')} checkProposer={checkProposer} />
     </Paper>
 
   );
