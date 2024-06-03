@@ -4,7 +4,7 @@ import { ref, uploadBytesResumable, getDownloadURL, updateMetadata } from 'fireb
 import { storage } from '../../../firebase';
 
 import { styled } from '@mui/material/styles';
-import { Box, Button, Divider, LinearProgress, LinearProgressProps, Stack, Typography,  } from '@mui/material';
+import { Box, Button, LinearProgress, LinearProgressProps, Stack, Typography,  } from '@mui/material';
 import { CloudDownload, CloudUpload, } from '@mui/icons-material';
 import { HexType, booxMap } from '../app/common';
 import { useComBooxContext } from '../_providers/ComBooxContextProvider';
