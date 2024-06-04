@@ -3065,10 +3065,10 @@ export const filesFolderABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// FuleTank
+// FuelTank
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export const fuleTankABI = [
+export const fuelTankABI = [
   {
     stateMutability: 'nonpayable',
     type: 'constructor',
@@ -3125,7 +3125,7 @@ export const fuleTankABI = [
     stateMutability: 'payable',
     type: 'function',
     inputs: [],
-    name: 'refule',
+    name: 'refuel',
     outputs: [],
   },
   {
@@ -3153,7 +3153,7 @@ export const fuleTankABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
-    name: 'withdrawFule',
+    name: 'withdrawFuel',
     outputs: [],
   },
   {
@@ -12398,29 +12398,6 @@ export const iRegisterOfAgreementsABI = [
     outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'ia', internalType: 'address', type: 'address' },
-      { name: 'buyer', internalType: 'uint256', type: 'uint256' },
-      { name: 'groupRep', internalType: 'uint256', type: 'uint256' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'mockDealOfBuy',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'ia', internalType: 'address', type: 'address' },
-      { name: 'seller', internalType: 'uint256', type: 'uint256' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'mockDealOfSell',
-    outputs: [],
-  },
-  {
     stateMutability: 'view',
     type: 'function',
     inputs: [
@@ -15862,6 +15839,16 @@ export const iRegisterOfSharesABI = [
     ],
     name: 'issueShare',
     outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
+      { name: 'closingDate', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'notLocked',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -22711,7 +22698,11 @@ export const ropKeeperABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const regCenterABI = [
-  { stateMutability: 'nonpayable', type: 'constructor', inputs: [] },
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [{ name: 'keeper', internalType: 'address', type: 'address' }],
+  },
   {
     type: 'event',
     anonymous: false,
@@ -24232,29 +24223,6 @@ export const registerOfAgreementsABI = [
     type: 'function',
     inputs: [],
     name: 'lockContents',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'ia', internalType: 'address', type: 'address' },
-      { name: 'buyer', internalType: 'uint256', type: 'uint256' },
-      { name: 'groupRep', internalType: 'uint256', type: 'uint256' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'mockDealOfBuy',
-    outputs: [],
-  },
-  {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [
-      { name: 'ia', internalType: 'address', type: 'address' },
-      { name: 'seller', internalType: 'uint256', type: 'uint256' },
-      { name: 'amount', internalType: 'uint256', type: 'uint256' },
-    ],
-    name: 'mockDealOfSell',
     outputs: [],
   },
   {
@@ -28737,6 +28705,16 @@ export const registerOfSharesABI = [
     inputs: [],
     name: 'lockContents',
     outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [
+      { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
+      { name: 'closingDate', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'notLocked',
+    outputs: [{ name: '', internalType: 'bool', type: 'bool' }],
   },
   {
     stateMutability: 'nonpayable',
@@ -39253,421 +39231,421 @@ export function useFilesFolderUpdateStateOfFileEvent(
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuelTankABI}__.
  */
-export function useFuleTankRead<
+export function useFuelTankRead<
   TFunctionName extends string,
-  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof fuelTankABI, TFunctionName>,
 >(
   config: Omit<
-    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>,
     'abi'
   > = {} as any,
 ) {
   return useContractRead({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     ...config,
-  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>)
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"getOwner"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"getOwner"`.
  */
-export function useFuleTankGetOwner<
+export function useFuelTankGetOwner<
   TFunctionName extends 'getOwner',
-  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof fuelTankABI, TFunctionName>,
 >(
   config: Omit<
-    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return useContractRead({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'getOwner',
     ...config,
-  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>)
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"getRegCenter"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"getRegCenter"`.
  */
-export function useFuleTankGetRegCenter<
+export function useFuelTankGetRegCenter<
   TFunctionName extends 'getRegCenter',
-  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof fuelTankABI, TFunctionName>,
 >(
   config: Omit<
-    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return useContractRead({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'getRegCenter',
     ...config,
-  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>)
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"rate"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"rate"`.
  */
-export function useFuleTankRate<
+export function useFuelTankRate<
   TFunctionName extends 'rate',
-  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof fuelTankABI, TFunctionName>,
 >(
   config: Omit<
-    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return useContractRead({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'rate',
     ...config,
-  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>)
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"sum"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"sum"`.
  */
-export function useFuleTankSum<
+export function useFuelTankSum<
   TFunctionName extends 'sum',
-  TSelectData = ReadContractResult<typeof fuleTankABI, TFunctionName>,
+  TSelectData = ReadContractResult<typeof fuelTankABI, TFunctionName>,
 >(
   config: Omit<
-    UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>,
+    UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return useContractRead({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'sum',
     ...config,
-  } as UseContractReadConfig<typeof fuleTankABI, TFunctionName, TSelectData>)
+  } as UseContractReadConfig<typeof fuelTankABI, TFunctionName, TSelectData>)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__.
  */
-export function useFuleTankWrite<
+export function useFuelTankWrite<
   TFunctionName extends string,
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
+          typeof fuelTankABI,
           string
         >['request']['abi'],
         TFunctionName,
         TMode
       >
-    : UseContractWriteConfig<typeof fuleTankABI, TFunctionName, TMode> & {
+    : UseContractWriteConfig<typeof fuelTankABI, TFunctionName, TMode> & {
         abi?: never
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, TFunctionName, TMode>({
-    abi: fuleTankABI,
+  return useContractWrite<typeof fuelTankABI, TFunctionName, TMode>({
+    abi: fuelTankABI,
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"init"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"init"`.
  */
-export function useFuleTankInit<TMode extends WriteContractMode = undefined>(
+export function useFuelTankInit<TMode extends WriteContractMode = undefined>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
+          typeof fuelTankABI,
           'init'
         >['request']['abi'],
         'init',
         TMode
       > & { functionName?: 'init' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'init', TMode> & {
+    : UseContractWriteConfig<typeof fuelTankABI, 'init', TMode> & {
         abi?: never
         functionName?: 'init'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'init', TMode>({
-    abi: fuleTankABI,
+  return useContractWrite<typeof fuelTankABI, 'init', TMode>({
+    abi: fuelTankABI,
     functionName: 'init',
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"refule"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"refuel"`.
  */
-export function useFuleTankRefule<TMode extends WriteContractMode = undefined>(
+export function useFuelTankRefuel<TMode extends WriteContractMode = undefined>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
-          'refule'
+          typeof fuelTankABI,
+          'refuel'
         >['request']['abi'],
-        'refule',
+        'refuel',
         TMode
-      > & { functionName?: 'refule' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'refule', TMode> & {
+      > & { functionName?: 'refuel' }
+    : UseContractWriteConfig<typeof fuelTankABI, 'refuel', TMode> & {
         abi?: never
-        functionName?: 'refule'
+        functionName?: 'refuel'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'refule', TMode>({
-    abi: fuleTankABI,
-    functionName: 'refule',
+  return useContractWrite<typeof fuelTankABI, 'refuel', TMode>({
+    abi: fuelTankABI,
+    functionName: 'refuel',
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setNewOwner"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function useFuleTankSetNewOwner<
+export function useFuelTankSetNewOwner<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
+          typeof fuelTankABI,
           'setNewOwner'
         >['request']['abi'],
         'setNewOwner',
         TMode
       > & { functionName?: 'setNewOwner' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'setNewOwner', TMode> & {
+    : UseContractWriteConfig<typeof fuelTankABI, 'setNewOwner', TMode> & {
         abi?: never
         functionName?: 'setNewOwner'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'setNewOwner', TMode>({
-    abi: fuleTankABI,
+  return useContractWrite<typeof fuelTankABI, 'setNewOwner', TMode>({
+    abi: fuelTankABI,
     functionName: 'setNewOwner',
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRate"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"setRate"`.
  */
-export function useFuleTankSetRate<TMode extends WriteContractMode = undefined>(
+export function useFuelTankSetRate<TMode extends WriteContractMode = undefined>(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
+          typeof fuelTankABI,
           'setRate'
         >['request']['abi'],
         'setRate',
         TMode
       > & { functionName?: 'setRate' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'setRate', TMode> & {
+    : UseContractWriteConfig<typeof fuelTankABI, 'setRate', TMode> & {
         abi?: never
         functionName?: 'setRate'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'setRate', TMode>({
-    abi: fuleTankABI,
+  return useContractWrite<typeof fuelTankABI, 'setRate', TMode>({
+    abi: fuelTankABI,
     functionName: 'setRate',
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawFule"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"withdrawFuel"`.
  */
-export function useFuleTankWithdrawFule<
+export function useFuelTankWithdrawFuel<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
-          'withdrawFule'
+          typeof fuelTankABI,
+          'withdrawFuel'
         >['request']['abi'],
-        'withdrawFule',
+        'withdrawFuel',
         TMode
-      > & { functionName?: 'withdrawFule' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'withdrawFule', TMode> & {
+      > & { functionName?: 'withdrawFuel' }
+    : UseContractWriteConfig<typeof fuelTankABI, 'withdrawFuel', TMode> & {
         abi?: never
-        functionName?: 'withdrawFule'
+        functionName?: 'withdrawFuel'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'withdrawFule', TMode>({
-    abi: fuleTankABI,
-    functionName: 'withdrawFule',
+  return useContractWrite<typeof fuelTankABI, 'withdrawFuel', TMode>({
+    abi: fuelTankABI,
+    functionName: 'withdrawFuel',
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawIncome"`.
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"withdrawIncome"`.
  */
-export function useFuleTankWithdrawIncome<
+export function useFuelTankWithdrawIncome<
   TMode extends WriteContractMode = undefined,
 >(
   config: TMode extends 'prepared'
     ? UseContractWriteConfig<
         PrepareWriteContractResult<
-          typeof fuleTankABI,
+          typeof fuelTankABI,
           'withdrawIncome'
         >['request']['abi'],
         'withdrawIncome',
         TMode
       > & { functionName?: 'withdrawIncome' }
-    : UseContractWriteConfig<typeof fuleTankABI, 'withdrawIncome', TMode> & {
+    : UseContractWriteConfig<typeof fuelTankABI, 'withdrawIncome', TMode> & {
         abi?: never
         functionName?: 'withdrawIncome'
       } = {} as any,
 ) {
-  return useContractWrite<typeof fuleTankABI, 'withdrawIncome', TMode>({
-    abi: fuleTankABI,
+  return useContractWrite<typeof fuelTankABI, 'withdrawIncome', TMode>({
+    abi: fuelTankABI,
     functionName: 'withdrawIncome',
     ...config,
   } as any)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__.
  */
-export function usePrepareFuleTankWrite<TFunctionName extends string>(
+export function usePrepareFuelTankWrite<TFunctionName extends string>(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, TFunctionName>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, TFunctionName>,
     'abi'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, TFunctionName>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, TFunctionName>)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"init"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"init"`.
  */
-export function usePrepareFuleTankInit(
+export function usePrepareFuelTankInit(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'init'>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, 'init'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'init',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'init'>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, 'init'>)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"refule"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"refuel"`.
  */
-export function usePrepareFuleTankRefule(
+export function usePrepareFuelTankRefuel(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'refule'>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, 'refuel'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
-    functionName: 'refule',
+    abi: fuelTankABI,
+    functionName: 'refuel',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'refule'>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, 'refuel'>)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setNewOwner"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"setNewOwner"`.
  */
-export function usePrepareFuleTankSetNewOwner(
+export function usePrepareFuelTankSetNewOwner(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setNewOwner'>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, 'setNewOwner'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'setNewOwner',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setNewOwner'>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, 'setNewOwner'>)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"setRate"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"setRate"`.
  */
-export function usePrepareFuleTankSetRate(
+export function usePrepareFuelTankSetRate(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRate'>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, 'setRate'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'setRate',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'setRate'>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, 'setRate'>)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawFule"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"withdrawFuel"`.
  */
-export function usePrepareFuleTankWithdrawFule(
+export function usePrepareFuelTankWithdrawFuel(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawFule'>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, 'withdrawFuel'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
-    functionName: 'withdrawFule',
+    abi: fuelTankABI,
+    functionName: 'withdrawFuel',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawFule'>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, 'withdrawFuel'>)
 }
 
 /**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuleTankABI}__ and `functionName` set to `"withdrawIncome"`.
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link fuelTankABI}__ and `functionName` set to `"withdrawIncome"`.
  */
-export function usePrepareFuleTankWithdrawIncome(
+export function usePrepareFuelTankWithdrawIncome(
   config: Omit<
-    UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawIncome'>,
+    UsePrepareContractWriteConfig<typeof fuelTankABI, 'withdrawIncome'>,
     'abi' | 'functionName'
   > = {} as any,
 ) {
   return usePrepareContractWrite({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     functionName: 'withdrawIncome',
     ...config,
-  } as UsePrepareContractWriteConfig<typeof fuleTankABI, 'withdrawIncome'>)
+  } as UsePrepareContractWriteConfig<typeof fuelTankABI, 'withdrawIncome'>)
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuleTankABI}__.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuelTankABI}__.
  */
-export function useFuleTankEvent<TEventName extends string>(
+export function useFuelTankEvent<TEventName extends string>(
   config: Omit<
-    UseContractEventConfig<typeof fuleTankABI, TEventName>,
+    UseContractEventConfig<typeof fuelTankABI, TEventName>,
     'abi'
   > = {} as any,
 ) {
   return useContractEvent({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     ...config,
-  } as UseContractEventConfig<typeof fuleTankABI, TEventName>)
+  } as UseContractEventConfig<typeof fuelTankABI, TEventName>)
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuleTankABI}__ and `eventName` set to `"SetNewOwner"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuelTankABI}__ and `eventName` set to `"SetNewOwner"`.
  */
-export function useFuleTankSetNewOwnerEvent(
+export function useFuelTankSetNewOwnerEvent(
   config: Omit<
-    UseContractEventConfig<typeof fuleTankABI, 'SetNewOwner'>,
+    UseContractEventConfig<typeof fuelTankABI, 'SetNewOwner'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
-    abi: fuleTankABI,
+    abi: fuelTankABI,
     eventName: 'SetNewOwner',
     ...config,
-  } as UseContractEventConfig<typeof fuleTankABI, 'SetNewOwner'>)
+  } as UseContractEventConfig<typeof fuelTankABI, 'SetNewOwner'>)
 }
 
 /**
@@ -68075,76 +68053,6 @@ export function useIRegisterOfAgreementsIsFrClaimer<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfAgreementsABI}__ and `functionName` set to `"mockDealOfBuy"`.
- */
-export function useIRegisterOfAgreementsMockDealOfBuy<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iRegisterOfAgreementsABI,
-          'mockDealOfBuy'
-        >['request']['abi'],
-        'mockDealOfBuy',
-        TMode
-      > & { functionName?: 'mockDealOfBuy' }
-    : UseContractWriteConfig<
-        typeof iRegisterOfAgreementsABI,
-        'mockDealOfBuy',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'mockDealOfBuy'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof iRegisterOfAgreementsABI,
-    'mockDealOfBuy',
-    TMode
-  >({
-    abi: iRegisterOfAgreementsABI,
-    functionName: 'mockDealOfBuy',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfAgreementsABI}__ and `functionName` set to `"mockDealOfSell"`.
- */
-export function useIRegisterOfAgreementsMockDealOfSell<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof iRegisterOfAgreementsABI,
-          'mockDealOfSell'
-        >['request']['abi'],
-        'mockDealOfSell',
-        TMode
-      > & { functionName?: 'mockDealOfSell' }
-    : UseContractWriteConfig<
-        typeof iRegisterOfAgreementsABI,
-        'mockDealOfSell',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'mockDealOfSell'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof iRegisterOfAgreementsABI,
-    'mockDealOfSell',
-    TMode
-  >({
-    abi: iRegisterOfAgreementsABI,
-    functionName: 'mockDealOfSell',
-    ...config,
-  } as any)
-}
-
-/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfAgreementsABI}__ and `functionName` set to `"proposeFile"`.
  */
 export function useIRegisterOfAgreementsProposeFile<
@@ -68508,50 +68416,6 @@ export function usePrepareIRegisterOfAgreementsIsFrClaimer(
   } as UsePrepareContractWriteConfig<
     typeof iRegisterOfAgreementsABI,
     'isFRClaimer'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfAgreementsABI}__ and `functionName` set to `"mockDealOfBuy"`.
- */
-export function usePrepareIRegisterOfAgreementsMockDealOfBuy(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iRegisterOfAgreementsABI,
-      'mockDealOfBuy'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iRegisterOfAgreementsABI,
-    functionName: 'mockDealOfBuy',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iRegisterOfAgreementsABI,
-    'mockDealOfBuy'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfAgreementsABI}__ and `functionName` set to `"mockDealOfSell"`.
- */
-export function usePrepareIRegisterOfAgreementsMockDealOfSell(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof iRegisterOfAgreementsABI,
-      'mockDealOfSell'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: iRegisterOfAgreementsABI,
-    functionName: 'mockDealOfSell',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof iRegisterOfAgreementsABI,
-    'mockDealOfSell'
   >)
 }
 
@@ -75236,6 +75100,33 @@ export function useIRegisterOfSharesIsShare<
   return useContractRead({
     abi: iRegisterOfSharesABI,
     functionName: 'isShare',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iRegisterOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"notLocked"`.
+ */
+export function useIRegisterOfSharesNotLocked<
+  TFunctionName extends 'notLocked',
+  TSelectData = ReadContractResult<typeof iRegisterOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iRegisterOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegisterOfSharesABI,
+    functionName: 'notLocked',
     ...config,
   } as UseContractReadConfig<
     typeof iRegisterOfSharesABI,
@@ -100498,76 +100389,6 @@ export function useRegisterOfAgreementsLockContents<
 }
 
 /**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"mockDealOfBuy"`.
- */
-export function useRegisterOfAgreementsMockDealOfBuy<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof registerOfAgreementsABI,
-          'mockDealOfBuy'
-        >['request']['abi'],
-        'mockDealOfBuy',
-        TMode
-      > & { functionName?: 'mockDealOfBuy' }
-    : UseContractWriteConfig<
-        typeof registerOfAgreementsABI,
-        'mockDealOfBuy',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'mockDealOfBuy'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof registerOfAgreementsABI,
-    'mockDealOfBuy',
-    TMode
-  >({
-    abi: registerOfAgreementsABI,
-    functionName: 'mockDealOfBuy',
-    ...config,
-  } as any)
-}
-
-/**
- * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"mockDealOfSell"`.
- */
-export function useRegisterOfAgreementsMockDealOfSell<
-  TMode extends WriteContractMode = undefined,
->(
-  config: TMode extends 'prepared'
-    ? UseContractWriteConfig<
-        PrepareWriteContractResult<
-          typeof registerOfAgreementsABI,
-          'mockDealOfSell'
-        >['request']['abi'],
-        'mockDealOfSell',
-        TMode
-      > & { functionName?: 'mockDealOfSell' }
-    : UseContractWriteConfig<
-        typeof registerOfAgreementsABI,
-        'mockDealOfSell',
-        TMode
-      > & {
-        abi?: never
-        functionName?: 'mockDealOfSell'
-      } = {} as any,
-) {
-  return useContractWrite<
-    typeof registerOfAgreementsABI,
-    'mockDealOfSell',
-    TMode
-  >({
-    abi: registerOfAgreementsABI,
-    functionName: 'mockDealOfSell',
-    ...config,
-  } as any)
-}
-
-/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"proposeFile"`.
  */
 export function useRegisterOfAgreementsProposeFile<
@@ -101212,50 +101033,6 @@ export function usePrepareRegisterOfAgreementsLockContents(
   } as UsePrepareContractWriteConfig<
     typeof registerOfAgreementsABI,
     'lockContents'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"mockDealOfBuy"`.
- */
-export function usePrepareRegisterOfAgreementsMockDealOfBuy(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof registerOfAgreementsABI,
-      'mockDealOfBuy'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: registerOfAgreementsABI,
-    functionName: 'mockDealOfBuy',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof registerOfAgreementsABI,
-    'mockDealOfBuy'
-  >)
-}
-
-/**
- * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfAgreementsABI}__ and `functionName` set to `"mockDealOfSell"`.
- */
-export function usePrepareRegisterOfAgreementsMockDealOfSell(
-  config: Omit<
-    UsePrepareContractWriteConfig<
-      typeof registerOfAgreementsABI,
-      'mockDealOfSell'
-    >,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return usePrepareContractWrite({
-    abi: registerOfAgreementsABI,
-    functionName: 'mockDealOfSell',
-    ...config,
-  } as UsePrepareContractWriteConfig<
-    typeof registerOfAgreementsABI,
-    'mockDealOfSell'
   >)
 }
 
@@ -112197,6 +111974,33 @@ export function useRegisterOfSharesIsShare<
   return useContractRead({
     abi: registerOfSharesABI,
     functionName: 'isShare',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"notLocked"`.
+ */
+export function useRegisterOfSharesNotLocked<
+  TFunctionName extends 'notLocked',
+  TSelectData = ReadContractResult<typeof registerOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfSharesABI,
+    functionName: 'notLocked',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfSharesABI,

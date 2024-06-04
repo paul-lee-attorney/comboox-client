@@ -1,17 +1,17 @@
 
 import { Paper, Stack, TextField } from '@mui/material';
 
-import { useFuleTankWithdrawIncome } from '../../../../../generated';
+import { useFuelTankWithdrawIncome } from '../../../../../generated';
 
 import { AddrOfTank, HexType } from '../../common';
 import { SavingsOutlined } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from '../../common/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { ActionOfFuleProps } from '../ActionsOfFule';
+import { ActionOfFuelProps } from '../ActionsOfFuel';
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 
-export function WithdrawIncome({ refresh }: ActionOfFuleProps) {
+export function WithdrawIncome({ refresh }: ActionOfFuelProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -29,7 +29,7 @@ export function WithdrawIncome({ refresh }: ActionOfFuleProps) {
   const {
     isLoading: withdrawIncomeLoading,
     write: withdrawIncome
-  } = useFuleTankWithdrawIncome({
+  } = useFuelTankWithdrawIncome({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);

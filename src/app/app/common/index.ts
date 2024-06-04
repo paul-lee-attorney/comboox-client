@@ -1,7 +1,7 @@
 // import * as scReg from "../../../../../comboox/server/src/contracts/contracts-address.json";
 
 // export const AddrOfRegCenter:HexType = `0x${scReg.RegCenter.substring(2)}`;
-// export const AddrOfTank:HexType = `0x${scReg.FuleTank.substring(2)}`;
+// export const AddrOfTank:HexType = `0x${scReg.FuelTank.substring(2)}`;
 // export const AddrOfCNC:HexType = `0x${scReg.CreateNewComp.substring(2)}`;
 
 // export const AddrOfRegCenter:HexType = `0x${'c5a5C42992dECbae36851359345FE25997F5C42d'}`;

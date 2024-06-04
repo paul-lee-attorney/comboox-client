@@ -1,19 +1,34 @@
 
-import { Alert, Collapse, IconButton, Paper, Stack, TextField } from '@mui/material';
+import { 
+  Alert, 
+  Collapse, 
+  IconButton, 
+  Paper, 
+  Stack, 
+  TextField 
+} from '@mui/material';
 
-import { useRegCenterTransfer } from '../../../../../generated';
+import { 
+  FormResults, 
+  bigIntToStrNum, 
+  defFormResults, 
+  getReceipt, 
+  hasError, 
+  onlyNum, 
+  strNumToBigInt 
+} from '../../common/toolsKit';
 
-import { AddrOfRegCenter, AddrOfTank, HexType } from '../../common';
-import { Close, OilBarrelOutlined } from '@mui/icons-material';
+import { useFuelTankRefuel } from '../../../../../generated';
+import { AddrOfTank, HexType } from '../../common';
+import { Close, LocalGasStationOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { getReceipt } from '../../common/toolsKit';
-import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyNum, strNumToBigInt } from '../../common/toolsKit';
-import { ActionOfFuleProps } from '../ActionsOfFule';
-import { LoadingButton } from '@mui/lab';
-import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
-import { Receipt } from '../../users/components/ActionsOfUser/TransferPoints';
 
-export function FillTank({ refresh }: ActionOfFuleProps) {
+import { ActionOfFuelProps } from '../ActionsOfFuel';
+import { LoadingButton } from '@mui/lab';
+import { Receipt } from '../../users/components/ActionsOfUser/TransferPoints';
+import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
+
+export function Refule({ refresh }: ActionOfFuelProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -27,10 +42,10 @@ export function FillTank({ refresh }: ActionOfFuleProps) {
   const [loading, setLoading] = useState(false);
 
   const {
-    isLoading: fillTankLoading,
-    write: fillTank
-  } = useRegCenterTransfer ({
-    address: AddrOfRegCenter,
+    isLoading: refuleLoading,
+    write: refule
+  } = useFuelTankRefuel({
+    address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
     },
@@ -56,12 +71,9 @@ export function FillTank({ refresh }: ActionOfFuleProps) {
     }
   })
 
-  const fillTankClick = ()=>{
-    fillTank({
-      args:[
-        AddrOfTank,
-        strNumToBigInt(amt, 9) * (10n ** 9n)
-      ]
+  const refuleClick = ()=>{
+    refule({
+      value: strNumToBigInt(amt, 9) * (10n ** 9n),
     });
   }
 
@@ -72,31 +84,31 @@ export function FillTank({ refresh }: ActionOfFuleProps) {
         <TextField 
           size="small"
           variant='outlined'
-          label='Amount (CBP)' 
-          error={ valid['Amt(CBP)']?.error }
-          helperText={ valid['Amt(CBP)']?.helpTx ?? ' ' }                                  
+          label='PaymentAmount (ETH)' 
+          error={ valid['Amt(ETH)']?.error }
+          helperText={ valid['Amt(ETH)']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
             minWidth: 218,
           }}
           value={ amt }
           onChange={e => {
-            let input = e.target.value;
-            onlyNum('Amt(CBP)', input, 0n, 9, setValid);
+            let input = e.target.value ?? '0' ;
+            onlyNum('Amt(ETH)', input, 0n, 9, setValid);
             setAmt(input);
           }}
         />
 
         <LoadingButton 
-          disabled={ fillTankLoading || hasError(valid) } 
+          disabled={ refuleLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ fillTankClick }
+          onClick={ refuleClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
-          endIcon={<OilBarrelOutlined />}       
+          endIcon={<LocalGasStationOutlined />}       
         >
-          Fill
+          Refule CBP
         </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >
@@ -115,11 +127,11 @@ export function FillTank({ refresh }: ActionOfFuleProps) {
             }
 
             variant='outlined' 
-            severity='info' 
-            sx={{ height: 45, p:0.5 }} 
+            severity='info'
+            sx={{ height: 45, p:0.5 }}
           >
             Add { bigIntToStrNum(BigInt(receipt?.amt ?? '0') / (10n**9n), 9) + ' CBP' } to Account ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
-          </Alert>          
+          </Alert>
         </Collapse>
 
       </Stack>

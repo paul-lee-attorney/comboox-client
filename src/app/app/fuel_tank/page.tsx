@@ -6,15 +6,15 @@ import { balanceOfWei } from "../rc";
 import { Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
 import { bigIntToStrNum, getEthPart, getGWeiPart, getWeiPart, } from "../common/toolsKit";
 
-import { useFuleTankGetOwner, useFuleTankRate, useFuleTankGetRegCenter, useFuleTankSum, useRegCenterBalanceOf, } from "../../../../generated";
+import { useFuelTankGetOwner, useFuelTankRate, useFuelTankGetRegCenter, useFuelTankSum, useRegCenterBalanceOf, } from "../../../../generated";
 
 import { useWalletClient } from "wagmi";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../common/CopyLongStr";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
-import { ActionsOfFule } from "./ActionsOfFule";
+import { ActionsOfFuel } from "./ActionsOfFuel";
 
-function FuleTank() {
+function FuelTank() {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -23,7 +23,7 @@ function FuleTank() {
   const { data: signer } = useWalletClient();
   const {
     refetch: getOwner
-  } = useFuleTankGetOwner ({
+  } = useFuelTankGetOwner ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -39,7 +39,7 @@ function FuleTank() {
   const [ regCenter, setRegCenter ] = useState<HexType>(AddrZero);
   const {
     refetch: getRegCenter
-  } = useFuleTankGetRegCenter ({
+  } = useFuelTankGetRegCenter ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -52,7 +52,7 @@ function FuleTank() {
   const [ rate, setRate ] = useState<string>('0');
   const {
     refetch: getRate
-  } = useFuleTankRate ({
+  } = useFuelTankRate ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -93,7 +93,7 @@ function FuleTank() {
   const [ sum, setSum ] = useState<string>('0');
   const {
     refetch: getSum
-  } = useFuleTankSum ({
+  } = useFuelTankSum ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -143,7 +143,7 @@ function FuleTank() {
       <Stack direction='row' sx={{alignItems:'center'}}>
 
         <Toolbar sx={{ textDecoration:'underline' }} >
-          <b>Fule Tank</b>
+          <b>Fuel Tank</b>
         </Toolbar>
 
         <CopyLongStrSpan title="Addr" src={AddrOfTank} />
@@ -321,7 +321,7 @@ function FuleTank() {
 
             <tr>
               <td colSpan={ 3 }>
-                <ActionsOfFule user={signer.account.address} isOwner={isOwner} getFinInfo={getFinInfo} getSetting={getSetting} />
+                <ActionsOfFuel user={signer.account.address} isOwner={isOwner} getFinInfo={getFinInfo} getSetting={getSetting} />
               </td>
             </tr>
 
@@ -333,4 +333,4 @@ function FuleTank() {
   );
 }
 
-export default FuleTank;
+export default FuelTank;

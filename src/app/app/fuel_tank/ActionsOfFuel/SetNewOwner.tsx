@@ -1,21 +1,21 @@
 
 import { Paper, Stack, TextField } from '@mui/material';
 
-import { useFuleTankSetRate } from '../../../../../generated';
+import { useFuelTankSetNewOwner } from '../../../../../generated';
 
-import { AddrOfTank, HexType } from '../../common';
-import { Settings } from '@mui/icons-material';
+import { AddrOfTank, AddrZero, HexType } from '../../common';
+import { ManageAccountsOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from '../../common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../common/toolsKit';
 import { LoadingButton } from '@mui/lab';
-import { ActionOfFuleProps } from '../ActionsOfFule';
+import { ActionOfFuelProps } from '../ActionsOfFuel';
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 
-export function SetRate({ refresh }: ActionOfFuleProps) {
+export function SetNewOwner({ refresh }: ActionOfFuelProps) {
 
   const { setErrMsg } = useComBooxContext();
 
-  const [ rate, setRate ] = useState('0');
+  const [ newOwner, setNewOwner ] = useState(AddrZero);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
@@ -27,9 +27,9 @@ export function SetRate({ refresh }: ActionOfFuleProps) {
   }
 
   const {
-    isLoading: setNewRateLoading,
-    write: setNewRate
-  } = useFuleTankSetRate({
+    isLoading: setOwnerLoading,
+    write: setOwner
+  } = useFuelTankSetNewOwner({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -41,9 +41,9 @@ export function SetRate({ refresh }: ActionOfFuleProps) {
     }
   })
 
-  const setRateClick = ()=>{
-    setNewRate({
-      args: [ strNumToBigInt(rate, 4) ]
+  const setOwnerClick = ()=>{
+    setOwner({
+      args:[ newOwner ]
     });
   }
 
@@ -54,29 +54,29 @@ export function SetRate({ refresh }: ActionOfFuleProps) {
       <TextField 
           size="small"
           variant='outlined'
-          label='Rate (CBP/ETH)'
-          error={ valid['Rate(CBP/ETH)']?.error }
-          helperText={ valid['Rate(CBP/ETH)']?.helpTx ?? ' ' }                                  
+          label='NewOwner (Addr)'
+          error={ valid['NewOwner(Addr)']?.error }
+          helperText={ valid['NewOwner(Addr)']?.helpTx ?? ' ' }                                  
           sx={{
             m:1,
-            minWidth: 218,
+            minWidth: 550,
           }}
-          value={ rate }
+          value={ newOwner }
           onChange={e => {
-            let input = (e.target.value ?? '0');
-            onlyNum('Rate(CBP/ETH)', input, 0n, 4, setValid);
-            setRate(input);
+            let input = HexParser(e.target.value ?? '0');
+            onlyHex('NewOwner(Addr)', input, 40, setValid);
+            setNewOwner(input);
           }}
         />
 
         <LoadingButton
-          disabled={ setNewRateLoading || hasError(valid) } 
+          disabled={ setOwnerLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ setRateClick }
+          onClick={ setOwnerClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
-          endIcon={<Settings />}       
+          endIcon={<ManageAccountsOutlined />}       
         >
           Set
         </LoadingButton>

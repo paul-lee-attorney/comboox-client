@@ -11,24 +11,24 @@ import {
 
 import { useState } from "react";
 import { AddrZero, HexType } from "../common";
-import { Refule } from "./ActionsOfFule/Refule";
-import { FillTank } from "./ActionsOfFule/FillTank";
-import { WithdrawIncome } from "./ActionsOfFule/WithdrawIncome";
-import { SetRate } from "./ActionsOfFule/SetRate";
-import { SetNewOwner } from "./ActionsOfFule/SetNewOwner";
+import { Refule } from "./ActionsOfFuel/Refuel";
+import { FillTank } from "./ActionsOfFuel/FillTank";
+import { WithdrawIncome } from "./ActionsOfFuel/WithdrawIncome";
+import { SetRate } from "./ActionsOfFuel/SetRate";
+import { SetNewOwner } from "./ActionsOfFuel/SetNewOwner";
 
-export interface ActionsOfFuleProps{
+export interface ActionsOfFuelProps{
   user: HexType;
   isOwner: boolean;
   getFinInfo: ()=>void;
   getSetting: ()=>void;
 }
 
-export interface ActionOfFuleProps{
+export interface ActionOfFuelProps{
   refresh: ()=>void;
 }
 
-export function ActionsOfFule({ user, isOwner, getFinInfo, getSetting }: ActionsOfFuleProps) {
+export function ActionsOfFuel({ user, isOwner, getFinInfo, getSetting }: ActionsOfFuelProps) {
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
