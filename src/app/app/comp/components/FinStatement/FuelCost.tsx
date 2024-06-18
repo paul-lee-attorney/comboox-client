@@ -86,6 +86,43 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
         arr.push(item);
       }
 
+      let wdLogs = await client.getLogs({
+        address: AddrOfRegCenter,
+        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+        args: {
+          from: AddrOfTank,
+          to: gk,
+        },
+        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+      });
+
+      cnt = wdLogs.length;
+
+      while (cnt > 0) {
+
+        if (!wdLogs[cnt-1].args.value) {
+          cnt--;
+          continue;
+        }
+
+        let item:FuelCostProps = {
+          blockNumber: wdLogs[cnt-1].blockNumber,
+          transactionHash: wdLogs[cnt-1].transactionHash,
+          amt: -(wdLogs[cnt-1].args.value ?? 0n),
+          rate: 0n,
+          value: 0n,
+        };
+
+        item = await calValue(item);
+
+        console.log('get fuel cost item: ', item);
+        cnt--;
+
+        sum += item.value;
+        arr.push(item);
+      }
+
+
       setSum(sum);
       setCost(sum);
       setRecords(arr);
