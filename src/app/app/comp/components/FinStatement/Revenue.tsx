@@ -44,7 +44,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
       let cbpLogs = await client.getLogs({
         address: AddrOfRegCenter,
         event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
         args: {
           to: gk,
         }
@@ -122,7 +122,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
           from: ethLogs[cnt-1].args.from ?? AddrZero,
         }
 
-        console.log('get cbpIncome: ', item);
+        console.log('get ethIncome: ', item);
         cnt--;
 
         if (item.amt > 0n) {
