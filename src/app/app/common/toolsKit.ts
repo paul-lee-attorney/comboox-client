@@ -416,7 +416,6 @@ export function bigIntToNum(input: bigint, dec: number): string {
   return removeKiloSymbol(bigIntToStrNum(input, dec));
 }
 
-
 export function trimZeroInTail(input: string):string {
   return input.replace(/(?:\.0*|(\.\d+?)0+)$/,'$1');
 }

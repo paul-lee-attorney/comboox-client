@@ -23,12 +23,19 @@ export interface RegBookProps{
 
 
 export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) {
-  const { gk, setErrMsg } = useComBooxContext();
+  const { gk, setErrMsg, setBoox } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
+    setBoox(v => {
+      if (!v) return;
+      let arr = [...v];
+      if (arr.length < title) return;
+      arr[title] = book;
+      return arr;
+    });
     setOpen(false);
     setLoading(false);
   }
@@ -65,7 +72,7 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ justifyContent:'start'}} >
 
           <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 168 }}>
             <InputLabel id="typeOfAction-label">Title</InputLabel>
@@ -105,7 +112,7 @@ export function RegBook({title, book, setTitle, setBook, setOpen}:RegBookProps) 
             disabled = {regBookLoading || hasError(valid)}
             loading={loading}
             loadingPosition="end"
-            sx={{ m: 1, minWidth: 218, height: 40 }} 
+            sx={{ m: 1, minWidth: 218, height: 40  }} 
             variant="contained" 
             endIcon={<Create />}
             onClick={ handleClick }

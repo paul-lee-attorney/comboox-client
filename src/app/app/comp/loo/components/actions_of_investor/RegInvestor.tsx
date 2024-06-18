@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Box, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
+import { Box, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
 import { BorderColor, UploadOutlined } from "@mui/icons-material";
 
 import { FormResults, HexParser, defFormResults, hasError, onlyChars, onlyEmail, onlyHex, onlyInt, onlyNumOrChar, refreshAfterTx } from "../../../../common/toolsKit";
@@ -288,7 +288,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
 
       </Stack>
 
-      <hr/>
+      <Divider orientation="horizontal" flexItem />
 
       <Stack direction="row" sx={{ alignItems:'start' }} >
 

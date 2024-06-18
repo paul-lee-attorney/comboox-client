@@ -146,11 +146,12 @@ export async function getCentPrice(gk: HexType):Promise<bigint>{
   return res;
 }
 
-export async function totalDeposits(gk: HexType): Promise<bigint>{
+export async function totalDeposits(gk: HexType, blk: bigint | undefined): Promise<bigint>{
   let res = await readContract({
     address: gk,
     abi: generalKeeperABI,
     functionName: 'totalDeposits',
+    blockNumber: blk,
   })
 
   return res;

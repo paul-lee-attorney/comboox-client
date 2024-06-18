@@ -7,7 +7,6 @@ import Image from "next/image"
 import Logo from '/public/assets/ComBoox_FullSlogan.png';
 import { CreateComp } from "./components/CreateComp";
 import { GetComp } from "./components/GetComp";
-import { DocsSetting } from "./components/docs_setting/DocsSetting";
 
 function FrontPage() {
 

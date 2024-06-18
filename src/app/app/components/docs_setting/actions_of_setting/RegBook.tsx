@@ -7,7 +7,7 @@ import { LoadingButton } from "@mui/lab";
 
 
 import { HexType } from "../../../common";
-import { nameOfBooks } from "../../read/gk";
+import { nameOfBooks } from "../../../comp/gk";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../common/toolsKit";
 
 import { useGeneralKeeperRegBook } from "../../../../../../generated";

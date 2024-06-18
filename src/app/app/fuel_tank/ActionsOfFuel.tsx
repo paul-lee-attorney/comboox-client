@@ -11,7 +11,7 @@ import {
 
 import { useState } from "react";
 import { AddrZero, HexType } from "../common";
-import { Refule } from "./ActionsOfFuel/Refuel";
+import { Refuel } from "./ActionsOfFuel/Refuel";
 import { FillTank } from "./ActionsOfFuel/FillTank";
 import { WithdrawIncome } from "./ActionsOfFuel/WithdrawIncome";
 import { SetRate } from "./ActionsOfFuel/SetRate";
@@ -33,11 +33,11 @@ export function ActionsOfFuel({ user, isOwner, getFinInfo, getSetting }: Actions
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfUser = [
-    'Refule', 'Fill Tank', 'Withdraw Income', 'Set Rate', 'Set Owner',
+    'Refuel', 'Fill Tank', 'Withdraw Income', 'Set Rate', 'Set Owner',
   ]
 
   const compsOfAction = [
-    <Refule key={0} refresh={ getFinInfo } />,
+    <Refuel key={0} refresh={ getFinInfo } />,
     <FillTank key={1} refresh={ getFinInfo } />,
     <WithdrawIncome key={2} refresh={ getFinInfo } />,
     <SetRate key={3} refresh={ getSetting } />,

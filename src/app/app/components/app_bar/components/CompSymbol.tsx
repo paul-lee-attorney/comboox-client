@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { CompInfo, getBoox, getCompInfo } from "../../../comp/gk";
+import { getBoox, getCompInfo, getKeepers } from "../../../comp/gk";
 import { Stack, Typography } from "@mui/material";
 import { longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrSpan } from "../../../common/CopyLongStr";
@@ -9,9 +9,7 @@ import { booxMap } from "../../../common";
 
 export function CompSymbol() {
 
-  const { gk, compInfo, setBoox, setOnPar, setCompInfo } = useComBooxContext();
-
-  // const [ compInfo, setCompInfo ] = useState<CompInfo>();
+  const { gk, compInfo, setBoox, setKeepers, setOnPar, setCompInfo } = useComBooxContext();
 
   useEffect(() => {
     if (gk) {
@@ -23,6 +21,11 @@ export function CompSymbol() {
           );
         }
       );
+      getKeepers(gk).then(
+        (res) => {
+          setKeepers(res.map(v=>(v.addr)));
+        }
+      );
       getCompInfo(gk).then(
         res => setCompInfo(res)
       );
@@ -32,7 +35,7 @@ export function CompSymbol() {
       setOnPar(undefined);
       setCompInfo(undefined);
     }
-  }, [gk, setBoox, setOnPar, setCompInfo]);
+  }, [gk, setBoox, setKeepers, setOnPar, setCompInfo]);
 
   return (
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >

@@ -182,7 +182,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                   <TextField 
                     fullWidth={true}
                     inputProps={{readOnly: true}}
-                    sx={{ m: 1, backgroundColor:'lightgoldenrodyellow' }} 
+                    sx={{ m: 1, backgroundColor:'lightgoldenrodyellow'}} 
                     multiline
                     rows={6.5}
                     id="tfShareholder" 

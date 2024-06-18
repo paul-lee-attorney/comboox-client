@@ -9,7 +9,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 
 import { RegBookProps } from "./RegBook";
 
-import { titleOfKeepers } from "../../read/gk";
+import { titleOfKeepers } from "../../../comp/gk";
 
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../common/toolsKit";
 import { HexType } from "../../../common";

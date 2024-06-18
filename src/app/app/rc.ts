@@ -1,13 +1,17 @@
 import { 
   readContract, getWalletClient, getContract, 
-  waitForTransaction, fetchBalance 
+  waitForTransaction, fetchBalance, 
+  watchContractEvent,
+  getConfig,
+  getPublicClient
 } from "@wagmi/core";
 
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "./common";
-import { regCenterABI } from "../../../generated";
+import { meetingMinutesABI, regCenterABI } from "../../../generated";
 import { strNumToBigInt } from "./common/toolsKit";
 
-import { config } from "../_providers/WagmiProvider";
+import { publicClient } from "../_providers/WagmiProvider";
+import { BlockList } from "net";
 
 // ==== StrLocker === 
 
@@ -589,11 +593,12 @@ export async function getTotalSupply(): Promise<bigint>{
   return res;
 }
 
-export async function balanceOf(acct:HexType): Promise<bigint>{
+export async function balanceOf(acct:HexType, blk:bigint|undefined): Promise<bigint>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'balanceOf',
+    blockNumber: blk,
     args: [ acct ]
   });
 

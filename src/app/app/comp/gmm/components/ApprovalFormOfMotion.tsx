@@ -246,9 +246,10 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                   </Button>
                 </Link>
               )}
-              {motion.head.typeOfMotion == 4 && (
-                <CopyLongStrTF title="HashOfAction: " src={motion.contents.toString(16)} />
+              {((motion.head.typeOfMotion == 3 && !snOfDoc) || motion.head.typeOfMotion > 3) && (
+                <CopyLongStrTF title="contents: " src={motion.contents.toString(16)} />
               )}              
+
             </Grid>
           </Grid>
 

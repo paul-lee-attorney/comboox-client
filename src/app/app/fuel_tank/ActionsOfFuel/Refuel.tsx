@@ -28,7 +28,7 @@ import { LoadingButton } from '@mui/lab';
 import { Receipt } from '../../users/components/ActionsOfUser/TransferPoints';
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 
-export function Refule({ refresh }: ActionOfFuelProps) {
+export function Refuel({ refresh }: ActionOfFuelProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -42,8 +42,8 @@ export function Refule({ refresh }: ActionOfFuelProps) {
   const [loading, setLoading] = useState(false);
 
   const {
-    isLoading: refuleLoading,
-    write: refule
+    isLoading: refuelLoading,
+    write: refuel
   } = useFuelTankRefuel({
     address: AddrOfTank,
     onError(err) {
@@ -71,8 +71,8 @@ export function Refule({ refresh }: ActionOfFuelProps) {
     }
   })
 
-  const refuleClick = ()=>{
-    refule({
+  const refuelClick = ()=>{
+    refuel({
       value: strNumToBigInt(amt, 9) * (10n ** 9n),
     });
   }
@@ -100,15 +100,15 @@ export function Refule({ refresh }: ActionOfFuelProps) {
         />
 
         <LoadingButton 
-          disabled={ refuleLoading || hasError(valid) } 
+          disabled={ refuelLoading || hasError(valid) } 
           loading={loading}
           loadingPosition='end'
-          onClick={ refuleClick }
+          onClick={ refuelClick }
           variant='contained'
           sx={{ m:1, mx:2, minWidth:128 }} 
           endIcon={<LocalGasStationOutlined />}       
         >
-          Refule CBP
+          Refuel CBP
         </LoadingButton>
 
         <Collapse in={ open } sx={{ m:1 }} >

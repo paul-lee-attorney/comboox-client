@@ -5,7 +5,7 @@ import { HexType } from "../../../../common";
 import { useGeneralKeeperDistributeProfits } from "../../../../../../../generated";
 
 import { Divider, Paper, Stack, TextField } from "@mui/material";
-import { PaymentOutlined } from "@mui/icons-material";
+import { SoupKitchenOutlined } from "@mui/icons-material";
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
@@ -100,11 +100,11 @@ export function DistributeProfits({ motion, setOpen, refresh }:ActionsOnMotionPr
           loading={loading}
           loadingPosition="end"
           variant="contained"
-          endIcon={<PaymentOutlined />}
+          endIcon={<SoupKitchenOutlined />}
           sx={{ m:1, minWidth:128 }}
           onClick={ handleClick }
         >
-          Transfer
+          Distribute
         </LoadingButton>
 
       </Stack>

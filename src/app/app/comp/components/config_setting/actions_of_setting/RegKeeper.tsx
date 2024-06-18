@@ -60,7 +60,7 @@ export function RegKeeper({title, book, setTitle, setBook, setOpen}:RegBookProps
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'center'}} >
+        <Stack direction={'row'} sx={{ justifyContent:'start'}} >
 
         <FormControl variant="outlined" size="small" sx={{ m: 1, minWidth: 168 }}>
           <InputLabel id="typeOfAction-label">Title</InputLabel>

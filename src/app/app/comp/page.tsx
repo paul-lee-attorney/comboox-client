@@ -15,11 +15,14 @@ import { InitBos } from "./components/InitBos";
 import { TurnKey } from "./components/TurnKey";
 import { GeneralInfo } from "./components/GeneralInfo";
 import { SetCompInfo } from "./components/SetCompInfo";
-import { useSearchParams } from "next/navigation";
+
+
+import { Deposits } from "./components/Deposits";
+import { getHeadByBody } from "../rc";
 
 function HomePage() {
 
-  const { gk, boox } = useComBooxContext();
+  const { gk, boox, keepers } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(4);
 
   useEffect(()=>{
@@ -37,6 +40,19 @@ function HomePage() {
       )
     }
   }, [boox, gk]);
+
+  const [ isV2, setIsV2 ] = useState(false);
+
+  useEffect(()=>{
+    if (gk) {
+      getHeadByBody(gk).then(
+        head => {
+          if (head.version > 1) setIsV2(true);
+        }
+      )
+    }
+  }, [gk, setIsV2]);
+
 
   return (
     <Stack direction='column' width='100%' height='100%' >
@@ -107,6 +123,10 @@ function HomePage() {
 
           {activeStep != undefined && activeStep > 3 && (
             <GeneralInfo />
+          )}
+
+          {isV2 && (
+            <Deposits />
           )}
 
         </Paper>

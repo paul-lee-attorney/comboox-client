@@ -24,6 +24,7 @@ import { InvHistoryOfMember } from "../rom/components/InvHistoryOfMember";
 import { ConfigSetting } from "./config_setting/ConfigSetting";
 import { PickupDeposit } from "./PickupDeposit";
 import { DepositOfMine } from "./DepositOfMine";
+import { FinStatement } from "./FinStatement";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
@@ -82,25 +83,27 @@ export function GeneralInfo() {
   }, [boox]); 
 
   const [ balanceOfCBP, setBalanceOfCBP ] = useState<string>('0');
-  const [ balanceOfETH, setBalanceOfETH ] = useState<string>('0');
-  const [ depositsOfETH, setDepositsOfETH ] = useState<string>('0');
+  const [ balanceOfETH, setBalanceOfETH ] = useState(0n);
+  const [ depositsOfETH, setDepositsOfETH ] = useState(0n);
 
   useEffect(()=>{
     if (gk) {
 
       balanceOfWei(gk).then(
-        res => setBalanceOfETH(res.toString())
+        res => setBalanceOfETH(res)
       )
 
-      balanceOf(gk).then(
+      balanceOf(gk, undefined).then(
         res => setBalanceOfCBP(res.toString())        
       )
     
-      totalDeposits(gk).then(
-        res => setDepositsOfETH(res.toString())
+      totalDeposits(gk, undefined).then(
+        res => setDepositsOfETH(res)
       )
     }
   }, [ gk, time ]);
+
+  let cap = (balanceOfETH - depositsOfETH).toString();
 
   const [ acct, setAcct ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
@@ -262,6 +265,23 @@ export function GeneralInfo() {
 
         </Paper>
 
+        <Grid container direction='row' spacing={2} >
+
+          <Grid item xs={12} md={12} lg={12} >
+            <MembersEquityList setAcct={setAcct} setOpen={setOpen} />
+            {acct > 0 && open && (
+              <InvHistoryOfMember acct={ acct } open={ open } setOpen={ setOpen } />
+            )}
+          </Grid>
+
+          <Grid item xs={12} md={12} lg={12} >
+            {directorsList && directorsList.length > 0 && (
+              <GetOfficersList list={directorsList} title="Directors List" />
+            )}
+          </Grid>
+
+        </Grid>
+
         <Paper elevation={3} sx={{m:1, p:1, }} >
 
           <Stack direction='row' sx={{ alignItems:'center' }} >
@@ -341,7 +361,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getGEthPart(balanceOfETH) }
+                value={ getGEthPart(cap) }
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
@@ -354,7 +374,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getEthPart(balanceOfETH) }
+                value={ getEthPart(cap) }
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
@@ -367,7 +387,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getGWeiPart(balanceOfETH) }
+                value={ getGWeiPart(cap) }
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
@@ -380,7 +400,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getWeiPart(balanceOfETH) }
+                value={ getWeiPart(cap) }
               />
             </Grid>
 
@@ -394,7 +414,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getGEthPart(depositsOfETH) }
+                value={ getGEthPart(depositsOfETH.toString()) }
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
@@ -407,7 +427,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getEthPart(depositsOfETH) }
+                value={ getEthPart(depositsOfETH.toString()) }
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
@@ -420,7 +440,7 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getGWeiPart(depositsOfETH) }
+                value={ getGWeiPart(depositsOfETH.toString()) }
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
@@ -433,29 +453,16 @@ export function GeneralInfo() {
                 sx={{
                   m:1,
                 }}
-                value={ getWeiPart(depositsOfETH) }
+                value={ getWeiPart(depositsOfETH.toString()) }
               />              
             </Grid>
 
           </Grid>
         </Paper>
 
-        <Grid container direction='row' spacing={2} >
 
-          <Grid item xs={12} md={12} lg={12} >
-            <MembersEquityList setAcct={setAcct} setOpen={setOpen} />
-            {acct > 0 && open && (
-              <InvHistoryOfMember acct={ acct } open={ open } setOpen={ setOpen } />
-            )}
-          </Grid>
+        <FinStatement />
 
-          <Grid item xs={12} md={12} lg={12} >
-            {directorsList && directorsList.length > 0 && (
-              <GetOfficersList list={directorsList} title="Directors List" />
-            )}
-          </Grid>
-
-        </Grid>
 
       </Paper>
     </>
