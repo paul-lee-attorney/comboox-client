@@ -421,11 +421,19 @@ export function trimZeroInTail(input: string):string {
 }
 
 function strIntToNum(input: string, dec: number): string {
+  let neg = false;
+  
+  if (input[0] == '-') {
+    neg = true;
+    input = input.substring(1); 
+  }
+
   let len = input.length;
   let front = len > dec ? longDataParser(input.substring(0,  (len - dec))) : '0';
   let end = len > dec ? input.substring(len - dec, len) : input.padStart(dec, '0');
+  let res = front + trimZeroInTail('.' + end);
 
-  return front + trimZeroInTail('.' + end);
+  return  neg ? '-' + res : res;
 }
 
 export async function getReceipt(hash: HexType): Promise< any > {
