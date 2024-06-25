@@ -11,6 +11,7 @@ import { alchemyProvider } from '@wagmi/core/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 import { waitForTransaction } from '@wagmi/core';
 import { HexType } from '../app/common';
+import { arbitrumSepolia } from 'viem/chains';
 
 
 type WagmiProviderType = {
@@ -18,12 +19,12 @@ type WagmiProviderType = {
 }
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ hardhat, sepolia, arbitrum, mainnet ],
+  [ hardhat, arbitrumSepolia, arbitrum,  mainnet ],
   [
-    // alchemyProvider({
-    //   apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
-    //   // stallTimeout: 2_000,
-    // }),
+    alchemyProvider({
+      apiKey: process.env.NEXT_PUBLIC_ALCHEMY_API_KEY ?? '',
+      // stallTimeout: 2_000,
+    }),
     publicProvider(),
   ],
 );
