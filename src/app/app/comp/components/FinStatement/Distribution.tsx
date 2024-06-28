@@ -5,12 +5,13 @@ import { HexType, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, longSnParser } from "../../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { ProfitsProps } from "./Revenue";
 
 export type DistributionProps = {
   blockNumber: bigint,
+  timestamp: bigint,
   transactionHash: HexType,
   seqOfMotion: bigint,
   amt: bigint,
@@ -32,7 +33,6 @@ export function Distribution({sum, setSum}:ProfitsProps) {
   
     const getEvents = async () => {
 
-      let blk = await client.getBlockNumber();
       let sum = 0n;
 
       if (!keepers) return;
@@ -40,7 +40,7 @@ export function Distribution({sum, setSum}:ProfitsProps) {
       let dpLogs = await client.getLogs({
         address: keepers[keepersMap.GMMKeeper],
         event: parseAbiItem('event DistributeProfits(uint256 indexed sum, uint indexed seqOfMotion, uint indexed caller)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       let cnt = dpLogs.length;
@@ -53,8 +53,12 @@ export function Distribution({sum, setSum}:ProfitsProps) {
           continue;
         }
 
+        let blkNo = dpLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:DistributionProps = {
-          blockNumber: dpLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: dpLogs[cnt-1].transactionHash,
           seqOfMotion: dpLogs[cnt-1].args.seqOfMotion ?? 0n,
           amt: dpLogs[cnt-1].args.sum ?? 0n,
@@ -82,6 +86,12 @@ export function Distribution({sum, setSum}:ProfitsProps) {
       field: 'blockNumber',
       headerName: 'BlockNumber',
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
+      width: 218,
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      valueGetter: p => dateParser(p.row.timestamp.toString()),
       width: 218,
     },
     {

@@ -5,13 +5,14 @@ import { HexType, booxMap, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, longSnParser } from "../../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { getShare } from "../../ros/ros";
 import { ProfitsProps } from "./Revenue";
 
 export type PaidInCapProps = {
   blockNumber: bigint,
+  timestamp: bigint,
   transactionHash: HexType,
   typeOfIncome: string,
   amt: bigint,
@@ -31,7 +32,6 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
 
     const getEvents = async () => {
 
-      let blk = await client.getBlockNumber();
       let sum = 0n;
 
 
@@ -40,7 +40,7 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
       let payInLogs = await client.getLogs({
         address: keepers[keepersMap.ROMKeeper],
         event: parseAbiItem('event PayInCapital(uint indexed seqOfShare, uint indexed amt, uint indexed valueOfDeal)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });  
       
       let cnt = payInLogs.length;
@@ -59,8 +59,12 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
 
         let share = await getShare(boox[booxMap.ROS], seqOfShare);
 
+        let blkNo = payInLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:PaidInCapProps = {
-          blockNumber: payInLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: payInLogs[cnt-1].transactionHash,
           typeOfIncome: 'via Areements',
           amt: payInLogs[cnt-1].args.valueOfDeal ?? 0n,
@@ -91,7 +95,7 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
       let buyListLogs = await client.getLogs({
         address: keepers[keepersMap.LOOKeeper],
         event: parseAbiItem('event AcquireListedOffer(uint indexed paid, uint indexed valueOfDeal, uint indexed caller)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });  
       
       cnt = buyListLogs.length;
@@ -103,8 +107,12 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
           continue;
         }
 
+        let blkNo = buyListLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:PaidInCapProps = {
-          blockNumber: buyListLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: buyListLogs[cnt-1].transactionHash,
           typeOfIncome: 'via Listing',
           amt: buyListLogs[cnt-1].args.valueOfDeal ?? 0n,
@@ -145,6 +153,12 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
       field: 'blockNumber',
       headerName: 'BlockNumber',
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
+      width: 218,
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      valueGetter: p => dateParser(p.row.timestamp.toString()),
       width: 218,
     },
     {

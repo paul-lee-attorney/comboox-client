@@ -5,7 +5,7 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../../common"
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, longSnParser } from "../../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { rate } from "../../../fuel_tank/ft";
 
@@ -16,6 +16,7 @@ export interface ProfitsProps {
 
 export type IncomeProps = {
   blockNumber: bigint,
+  timestamp: bigint,
   transactionHash: HexType,
   typeOfIncome: string,
   isCBP: boolean,
@@ -38,7 +39,6 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
 
     const getEvents = async () => {
 
-      let blk = await client.getBlockNumber();
       let sum = 0n;
 
       let cbpLogs = await client.getLogs({
@@ -60,8 +60,12 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
           continue;
         }
 
+        let blkNo = cbpLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:IncomeProps = {
-          blockNumber: cbpLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: cbpLogs[cnt-1].transactionHash,
           typeOfIncome: 'Royalty Income',
           isCBP: true,
@@ -101,7 +105,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
       let ethLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event ReceivedCash(address indexed from, uint indexed amt)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       cnt = ethLogs.length;
@@ -113,8 +117,12 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
           continue;
         }
 
+        let blkNo = ethLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:IncomeProps = {
-          blockNumber: ethLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: ethLogs[cnt-1].transactionHash,
           typeOfIncome: 'Eth Income',
           isCBP: false,
@@ -160,6 +168,12 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
       field: 'blockNumber',
       headerName: 'BlockNumber',
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
+      width: 218,
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      valueGetter: p => dateParser(p.row.timestamp.toString()),
       width: 218,
     },
     {

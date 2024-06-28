@@ -5,11 +5,12 @@ import { HexType } from "../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, longSnParser } from "../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longSnParser } from "../../common/toolsKit";
 import { CopyLongStrTF } from "../../common/CopyLongStr";
 
 export type DepositProps = {
   blockNumber: bigint,
+  timestamp: bigint,
   transactionHash: HexType,
   isDeposit: boolean,
   amt: bigint,
@@ -28,21 +29,25 @@ export function Deposits() {
 
     const getEvents = async () => {
 
-      let blk = await client.getBlockNumber();
       let sum = 0n;
 
       let logs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       let cnt = logs.length;
       let arr: DepositProps[]=[];
 
       while (cnt > 0) {
+
+        let blkNo = logs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:DepositProps = {
-          blockNumber: logs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: logs[cnt-1].transactionHash,
           isDeposit: true,
           amt: logs[cnt-1].args.value ?? 0n,
@@ -76,15 +81,19 @@ export function Deposits() {
       let pickupLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });  
       
       cnt = pickupLogs.length;
 
       while (cnt > 0) {
 
+        let blkNo = pickupLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:DepositProps = {
-          blockNumber: pickupLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: pickupLogs[cnt-1].transactionHash,
           isDeposit: false,
           amt: pickupLogs[cnt-1].args.amt ?? 0n,
@@ -114,6 +123,12 @@ export function Deposits() {
       field: 'blockNumber',
       headerName: 'BlockNumber',
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
+      width: 218,
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      valueGetter: p => dateParser(p.row.timestamp.toString()),
       width: 218,
     },
     {

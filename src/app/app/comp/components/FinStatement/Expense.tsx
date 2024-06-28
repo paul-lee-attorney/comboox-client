@@ -5,13 +5,14 @@ import { AddrOfTank, AddrZero, HexType } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, longSnParser } from "../../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { ProfitsProps } from "./Revenue";
 import { rate } from "../../../fuel_tank/ft";
 
 export type ExpenseProps = {
   blockNumber: bigint,
+  timestamp: bigint,
   transactionHash: HexType,
   typeOfMotion: string,
   isCBP: boolean,
@@ -57,13 +58,12 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
   
     const getEvents = async (addr:HexType) => {
 
-      let blk = await client.getBlockNumber();
       let sum = 0n;
 
       let tfLogs = await client.getLogs({
         address: addr,
         event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       let cnt = tfLogs.length;
@@ -77,8 +77,12 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
           continue;
         }
 
+        let blkNo = tfLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber:blkNo});
+
         let item:ExpenseProps = {
-          blockNumber: tfLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: tfLogs[cnt-1].transactionHash,
           typeOfMotion: 'TransferFund',
           isCBP: tfLogs[cnt-1].args.isCBP ?? false,
@@ -100,7 +104,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
       let eaLogs = await client.getLogs({
         address: addr,
         event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       cnt = eaLogs.length;
@@ -113,8 +117,12 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
           continue;
         }
 
+        let blkNo = eaLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber:blkNo});
+
         let item:ExpenseProps = {
-          blockNumber: eaLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: eaLogs[cnt-1].transactionHash,
           typeOfMotion: 'ExecAction',
           isCBP: false,
@@ -147,6 +155,12 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
       field: 'blockNumber',
       headerName: 'BlockNumber',
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
+      width: 218,
+    },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      valueGetter: p => dateParser(p.row.timestamp.toString()),
       width: 218,
     },
     {

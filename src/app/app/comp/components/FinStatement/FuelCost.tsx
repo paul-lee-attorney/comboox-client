@@ -5,19 +5,19 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../../common"
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, longDataParser, longSnParser } from "../../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { ProfitsProps } from "./Revenue";
 import { rate } from "../../../fuel_tank/ft";
 
 export type FuelCostProps = {
   blockNumber: bigint,
+  timestamp: bigint,
   transactionHash: HexType,
   amt: bigint,
   rate: bigint,
   value: bigint,
 }
-
 
 export function FuelCost({sum, setSum}:ProfitsProps) {
   const { gk } = useComBooxContext();
@@ -46,7 +46,6 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
 
     const getEvents = async () => {
 
-      let blk = await client.getBlockNumber();
       let sum = 0n;
 
       let tfLogs = await client.getLogs({
@@ -56,7 +55,7 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
           from: gk,
           to: AddrOfTank,
         },
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       let cnt = tfLogs.length;
@@ -69,8 +68,12 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
           continue;
         }
 
+        let blkNo = tfLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:FuelCostProps = {
-          blockNumber: tfLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: tfLogs[cnt-1].transactionHash,
           amt: tfLogs[cnt-1].args.value ?? 0n,
           rate: 0n,
@@ -93,7 +96,7 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
           from: AddrOfTank,
           to: gk,
         },
-        fromBlock: blk > (8640n * 1095n) ? blk - (8640n * 1095n) : 1n,
+        fromBlock: 1n,
       });
 
       cnt = wdLogs.length;
@@ -105,8 +108,12 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
           continue;
         }
 
+        let blkNo = wdLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
         let item:FuelCostProps = {
-          blockNumber: wdLogs[cnt-1].blockNumber,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
           transactionHash: wdLogs[cnt-1].transactionHash,
           amt: -(wdLogs[cnt-1].args.value ?? 0n),
           rate: 0n,
@@ -139,6 +146,12 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
       width: 218,
     },
+    {
+      field: 'timestamp',
+      headerName: 'Date',
+      valueGetter: p => dateParser(p.row.timestamp.toString()),
+      width: 218,
+    },    
     {
       field: 'amount',
       headerName: 'Amount (CBP)',
