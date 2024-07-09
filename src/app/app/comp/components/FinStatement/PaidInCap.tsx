@@ -66,7 +66,7 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: payInLogs[cnt-1].transactionHash,
-          typeOfIncome: 'via Areements',
+          typeOfIncome: 'via Agreements',
           amt: payInLogs[cnt-1].args.valueOfDeal ?? 0n,
           from: share.head.shareholder,
         }

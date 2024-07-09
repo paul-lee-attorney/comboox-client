@@ -125,9 +125,7 @@ function HomePage() {
             <GeneralInfo />
           )}
 
-          {isV2 && (
-            <Deposits />
-          )}
+          <Deposits />
 
         </Paper>
       </Box>
