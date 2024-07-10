@@ -55,7 +55,7 @@ export function FuelIncome({sum, setSum}:ProfitsProps ) {
           amt: logs[cnt-1].args.amt ?? 0n,
         }
 
-        console.log('get fuelIncome: ', item);
+        // console.log('get fuelIncome: ', item);
         cnt--;
 
         if (item.amt > 0n) {

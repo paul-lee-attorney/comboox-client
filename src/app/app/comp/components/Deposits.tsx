@@ -54,7 +54,7 @@ export function Deposits() {
           acct: Number(logs[cnt-1].args.acct) ?? 0,
         }
 
-        console.log('get saveToDeposit: ', item);
+        // console.log('get saveToDeposit: ', item);
         cnt--;
 
         if (item.amt > 0n) {
@@ -100,7 +100,7 @@ export function Deposits() {
           acct: Number(pickupLogs[cnt-1].args.caller) ?? 0,
         }
 
-        console.log('get pickup: ', item);
+        // console.log('get pickup: ', item);
         cnt--;
 
         if (item.amt > 0n) {

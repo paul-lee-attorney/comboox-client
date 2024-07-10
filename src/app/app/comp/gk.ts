@@ -113,6 +113,7 @@ export interface CompInfo {
   regNum: number;
   regDate: number;
   currency: number;
+  state: number;
   symbol: string;
   name: string;
 }
@@ -130,7 +131,8 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
     regDate: res.regDate,
     currency: res.currency,
     symbol: toStr(res.symbol),
-    name: res.name
+    name: res.name,
+    state: res.state,
   }
 
   return info;

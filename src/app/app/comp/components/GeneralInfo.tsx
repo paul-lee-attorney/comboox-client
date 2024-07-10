@@ -25,6 +25,8 @@ import { ConfigSetting } from "./config_setting/ConfigSetting";
 import { PickupDeposit } from "./PickupDeposit";
 import { DepositOfMine } from "./DepositOfMine";
 import { FinStatement } from "./FinStatement";
+import { usePublicClient } from "wagmi";
+import { parseAbiItem } from "viem";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
@@ -38,17 +40,33 @@ export function GeneralInfo() {
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
   const [ dk, setDK ] = useState<string>('');
 
+  const client = usePublicClient();
+
   useEffect(()=>{
     if (gk) {
       getCompInfo(gk).then(
-        res => setCompInfo(res)
+        res => {
+          console.log('compInfo: ', res);
+          if (res.state > 0) {
+            client.getLogs({
+              address: gk,
+              event: parseAbiItem('event DeprecateGK(address indexed receiver, uint indexed balanceOfCBP, uint indexed balanceOfETH)'),
+              fromBlock: 1n
+            }).then(
+              logs => {
+                res.name = 'moved to new Address: ' + (logs[0].args.receiver?.toString() ?? '');
+                setCompInfo(res);
+              }
+            )
+          } else setCompInfo(res);
+        }
       )      
       getDK(gk).then(
         res => setDK(res)
       )
       
     }
-  }, [gk, time])
+  }, [gk, time, client]);
 
   const [ controllor, setControllor ] = useState<string>();
   const [ votesOfController, setVotesOfController ] = useState<string>();

@@ -65,7 +65,7 @@ export function Distribution({sum, setSum}:ProfitsProps) {
           executor: Number(dpLogs[cnt-1].args.caller ?? 0n),
         }
 
-        console.log('get dpItem: ', item);
+        // console.log('get dpItem: ', item);
         cnt--;
 
         sum += item.amt;

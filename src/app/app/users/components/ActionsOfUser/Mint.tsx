@@ -5,11 +5,11 @@ import {
   useRegCenterMint, 
 } from '../../../../../../generated';
 
-import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../common';
+import { AddrOfRegCenter, AddrZero, HexType, MaxUserNo } from '../../../common';
 import { Close, Flare } from '@mui/icons-material';
 import { useState } from 'react';
 
-import { FormResults, defFormResults, hasError, longDataParser, onlyInt, onlyNum, strNumToBigInt } from '../../../common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, longDataParser, onlyHex, onlyInt, onlyNum, strNumToBigInt } from '../../../common/toolsKit';
 import { waitForTransaction } from '@wagmi/core';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
@@ -24,7 +24,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
 
   const { setErrMsg } = useComBooxContext();
 
-  const [ to, setTo ] = useState<string>('0');
+  const [ to, setTo ] = useState<HexType>(AddrZero);
   const [ amt, setAmt ] = useState<string>('0');
   const [ receipt, setReceipt ] = useState<Receipt>();
   const [ open, setOpen ] = useState(false);
@@ -65,7 +65,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
   const mintPointsClick = ()=>{
     mintPoints({
       args: [ 
-        BigInt(to), 
+        to, 
         strNumToBigInt(amt, 9) * (10n ** 9n)
       ]
     });
@@ -86,8 +86,8 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           }}
           value={ to }
           onChange={e => {
-            let input = e.target.value ?? '0';
-            onlyInt('To', input, MaxUserNo, setValid); 
+            let input = HexParser(e.target.value ?? '0');
+            onlyHex('To(Addr)', input, 40, setValid);
             setTo(input);
           }}
         />

@@ -73,7 +73,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
           from: cbpLogs[cnt-1].args.from ?? AddrZero,
         }
 
-        console.log('get cbpIncome: ', item);
+        // console.log('get cbpIncome: ', item);
         cnt--;
 
         if (item.amt > 0n) {
@@ -130,7 +130,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
           from: ethLogs[cnt-1].args.from ?? AddrZero,
         }
 
-        console.log('get ethIncome: ', item);
+        // console.log('get ethIncome: ', item);
         cnt--;
 
         if (item.amt > 0n) {

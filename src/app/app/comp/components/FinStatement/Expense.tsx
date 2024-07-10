@@ -94,7 +94,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
 
         item = await calValue(item);
 
-        console.log('get tfItem: ', item);
+        // console.log('get tfItem: ', item);
         cnt--;
 
         sum += item.value;
@@ -134,7 +134,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
 
         item = await calValue(item);
 
-        console.log('get eaItem: ', item);
+        // console.log('get eaItem: ', item);
         cnt--;
 
         sum += item.value;

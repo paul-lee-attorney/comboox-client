@@ -34,7 +34,7 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
     const calValue = async (item: FuelCostProps): Promise<FuelCostProps> => {
       let rateOfEx = await rate(item.blockNumber);
 
-      console.log('rateOfEx: ', rateOfEx);
+      // console.log('rateOfEx: ', rateOfEx);
 
       if (rateOfEx > 0) {
         item.rate = rateOfEx;
@@ -82,7 +82,7 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
 
         item = await calValue(item);
 
-        console.log('get fuel cost item: ', item);
+        // console.log('get fuel cost item: ', item);
         cnt--;
 
         sum += item.value;
@@ -122,7 +122,7 @@ export function FuelCost({sum, setSum}:ProfitsProps) {
 
         item = await calValue(item);
 
-        console.log('get fuel cost item: ', item);
+        // console.log('get fuel cost item: ', item);
         cnt--;
 
         sum += item.value;
