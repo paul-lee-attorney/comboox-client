@@ -82,7 +82,7 @@ export function MintPoints({getUser, getBalanceOf}:ActionsOfUserProps) {
           helperText={ valid['To']?.helpTx ?? ' ' }          
           sx={{
             m:1,
-            minWidth: 128,
+            minWidth: 550,
           }}
           value={ to }
           onChange={e => {
