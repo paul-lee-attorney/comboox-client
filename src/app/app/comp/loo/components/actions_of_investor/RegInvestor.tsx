@@ -10,7 +10,7 @@ import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType, MaxUserNo } from "../../../../common";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { UserInfo, countries, defaultUserInfo, idDocTypes } from "../../../../../api";
+import { UserInfo, countries, defaultUserInfo, idDocTypes, statesOfUS } from "../../../../../api";
 
 import { useWalletClient } from "wagmi";
 import { DateTimeField } from "@mui/x-date-pickers";
@@ -132,22 +132,43 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
         <TextField 
           variant='outlined'
           size="small"
-          label='Full Name'
-          error={ valid['Full Name']?.error }
-          helperText={ valid['Full Name']?.helpTx ?? ' ' }
+          label='First Name'
+          error={ valid['First Name']?.error }
+          helperText={ valid['First Name']?.helpTx ?? ' ' }
           sx={{
             m:1,
             minWidth: 218,
           }}
           onChange={ e => {
             let input = e.target.value;
-            onlyChars('Full Name', input, 64, setValid);
+            onlyChars('First Name', input, 64, setValid);
             setUserInfo(v => ({
               ...v,
-              name: input,
+              firstName: input,
             })); 
           }}
-          value={ userInfo.name } 
+          value={ userInfo.firstName } 
+        />
+
+        <TextField 
+          variant='outlined'
+          size="small"
+          label='Last Name'
+          error={ valid['Last Name']?.error }
+          helperText={ valid['Last Name']?.helpTx ?? ' ' }
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyChars('Last Name', input, 64, setValid);
+            setUserInfo(v => ({
+              ...v,
+              lastName: input,
+            })); 
+          }}
+          value={ userInfo.lastName } 
         />
 
         <DateTimeField
@@ -248,6 +269,29 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           </Select>
           <FormHelperText>{' '}</FormHelperText>
         </FormControl>
+
+        {userInfo.issueCountry == 'United States' && (
+          <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+            <InputLabel id="issueState-label">IssueState</InputLabel>
+            <Select
+              labelId="issueState-label"
+              id="issueState-select"
+              label="IssueState"
+              value={
+                statesOfUS.indexOf(userInfo.issueState) > 0
+                  ? userInfo.issueState
+                  : ''
+              }
+              onChange={(e) => setUserInfo((v) => ({
+                ...v,
+                issueState: e.target.value,
+              }))}
+            >
+              {statesOfUS.map(v=>(<MenuItem key={v} value={v}>{v}</MenuItem>))}
+            </Select>
+            <FormHelperText>{' '}</FormHelperText>
+          </FormControl>
+        )}
 
         <DateTimeField
           label='dateOfExpiry'

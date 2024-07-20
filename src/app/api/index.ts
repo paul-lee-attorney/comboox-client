@@ -1,14 +1,17 @@
 import { AddrZero, HexType } from "../app/common";
 import { verifyMessage } from "ethers";
 import * as crypto from "crypto";
+import { keccak256 } from "viem";
 
 export interface UserInfo {
   address: HexType,
   gk: HexType,
-  name: string,
+  firstName: string,
+  lastName: string,
   email: string,
   documentType: string,
   issueCountry: string,
+  issueState: string,
   dateOfBirth: string,
   dateOfExpiry: string,
   documentNumber: string,
@@ -18,10 +21,12 @@ export interface UserInfo {
 export const defaultUserInfo: UserInfo = {
   address: AddrZero,
   gk: AddrZero,
-  name: '',
+  firstName: '',
+  lastName: '',
   email: '',
   documentType: '',
   issueCountry: '',
+  issueState: '',
   dateOfBirth: '',
   dateOfExpiry: '',
   documentNumber: '',
@@ -45,6 +50,19 @@ export const countries = [
   'Others'
 ]
 
+export const statesOfUS = [
+  'AL - Alabama', 'AK - Alaska', 'AZ - Arizona', 'AR - Arkansas', 'CA - California', 
+  'CO - Colorado', 'CT - Connecticut', 'DE - Delaware', 'FL - Florida', 'GA - Georgia', 
+  'HI - Hawaii', 'ID - Idaho', 'IL - Illinois', 'IN - Indiana', 'IA - Iowa', 
+  'KS - Kansas', 'KY - Kentucky', 'LA - Louisiana', 'ME - Maine', 'MD - Maryland', 
+  'MA - Massachusetts', 'MI - Michigan', 'MN - Minnesota', 'MS - Mississippi', 'MO - Missouri', 
+  'MT - Montana', 'NE - Nebraska', 'NV - Nevada', 'NH - New Hampshire', 'NJ - New Jersey', 
+  'NM - New Mexico', 'NY - New York', 'NC - North Carolina', 'ND - North Dakota', 'OH - Ohio', 
+  'OK - Oklahoma', 'OR - Oregon','PA - Pennsylvania', 'RI - Rhode Island', 'SC - South Carolina',
+  'SD - South Dakota', 'TN - Tennessee', 'TX - Texas','UT - Utah', 'VT - Vermont',
+  'VA - Virginia', 'WA - Washington', 'WV - West Virginia', 'WI - Wisconsin', 'WY - Wyoming',
+]
+
 export interface SigInfo {
   address: HexType;
   message: string;
@@ -63,6 +81,21 @@ export function verifySig(info: SigInfo): boolean {
     return false;
   }
 
+}
+
+export type KeyIV = {
+  key: string;
+  iv: string;
+}
+
+export function prepareKeyIV(addr: HexType, gk: HexType): KeyIV {
+  
+  let res:KeyIV = {
+      key : keccak256(Buffer.from(addr + process.env.NEXT_PUBLIC_SALT)).substring(2,18),
+      iv: keccak256(Buffer.from(gk + process.env.NEXT_PUBLIC_SALT)).substring(2,18),
+  }
+
+  return res;
 }
 
 export function encrypt(message:string, key:string, iv:string):string {
@@ -89,34 +122,44 @@ export function decrypt(encrypted:string, key:string, iv:string):string {
 
 export function encryptUserInfo(info: UserInfo): UserInfo {
 
-  const key = info.address.substring(2,18);
-  const iv = info.gk.substring(2, 18);
+  const kv:KeyIV = prepareKeyIV(info.address, info.gk);
+
+  // const key = info.address.substring(2,18);
+  // const iv = info.gk.substring(2, 18);
   
-  info.address = `0x${encrypt(info.address, key, iv)}`;
+  // info.address = `0x${encrypt(info.address, kv.key, kv.iv)}`;
   
-  info.name = encrypt(info.name, key, iv);
-  info.email = encrypt(info.email, key, iv);  
-  info.documentType = encrypt(info.documentType, key, iv);
-  info.issueCountry = encrypt(info.issueCountry, key, iv);
-  info.dateOfBirth = encrypt(info.dateOfBirth, key, iv);
-  info.dateOfExpiry = encrypt(info.dateOfExpiry, key, iv);
-  info.documentNumber = encrypt(info.documentNumber, key, iv);
+  info.firstName = encrypt(info.firstName, kv.key, kv.iv);
+  info.lastName = encrypt(info.lastName, kv.key, kv.iv);
+
+  info.email = encrypt(info.email, kv.key, kv.iv);  
+  info.documentType = encrypt(info.documentType, kv.key, kv.iv);
+  info.issueCountry = encrypt(info.issueCountry, kv.key, kv.iv);
+  info.issueState = encrypt(info.issueState, kv.key, kv.iv);
+  info.dateOfBirth = encrypt(info.dateOfBirth, kv.key, kv.iv);
+  info.dateOfExpiry = encrypt(info.dateOfExpiry, kv.key, kv.iv);
+  info.documentNumber = encrypt(info.documentNumber, kv.key, kv.iv);
 
   return info;
 }
 
 export function decryptUserInfo(info: UserInfo): UserInfo {
 
-  const key = info.address.substring(2,18);
-  const iv = info.gk.substring(2, 18);
+  const kv:KeyIV = prepareKeyIV(info.address, info.gk);
   
-  info.name = decrypt(info.name, key, iv);
-  info.email = decrypt(info.email, key, iv);  
-  info.documentType = decrypt(info.documentType, key, iv);
-  info.issueCountry = decrypt(info.issueCountry, key, iv);
-  info.dateOfBirth = decrypt(info.dateOfBirth, key, iv);
-  info.dateOfExpiry = decrypt(info.dateOfExpiry, key, iv);
-  info.documentNumber = decrypt(info.documentNumber, key, iv);
+  // const key = info.address.substring(2,18);
+  // const iv = info.gk.substring(2, 18);
+  
+  info.firstName = decrypt(info.firstName, kv.key, kv.iv);
+  info.lastName = decrypt(info.lastName, kv.key, kv.iv);
+
+  info.email = decrypt(info.email, kv.key, kv.iv);  
+  info.documentType = decrypt(info.documentType, kv.key, kv.iv);
+  info.issueCountry = decrypt(info.issueCountry, kv.key, kv.iv);
+  info.issueState = decrypt(info.issueState, kv.key, kv.iv);
+  info.dateOfBirth = decrypt(info.dateOfBirth, kv.key, kv.iv);
+  info.dateOfExpiry = decrypt(info.dateOfExpiry, kv.key, kv.iv);
+  info.documentNumber = decrypt(info.documentNumber, kv.key, kv.iv);
 
   return info;
 }

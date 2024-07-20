@@ -20,7 +20,7 @@ export default async function setUserData(info:UserInfo): Promise<boolean> {
   let encryptedInfo = encryptUserInfo(info);
   
   // 创建一个文档引用
-  const docRef = doc(db, info.gk, encryptedInfo.address);
+  const docRef = doc(db, info.gk.toLowerCase(), info.address.toLowerCase());
 
   // 使用 set 方法添加或覆盖文档
   await setDoc(docRef, encryptedInfo);
