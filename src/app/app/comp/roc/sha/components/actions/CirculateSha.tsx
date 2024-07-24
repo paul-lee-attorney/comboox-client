@@ -4,14 +4,14 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { Divider, Stack, TextField } from "@mui/material";
 import { Recycling } from "@mui/icons-material";
 
-import { regCenterABI, useGeneralKeeperCirculateSha } from "../../../../../../../../generated";
-import { AddrOfRegCenter, Bytes32Zero, HexType } from "../../../../../common";
+import { useGeneralKeeperCirculateSha } from "../../../../../../../../generated";
+import { Bytes32Zero, HexType } from "../../../../../common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
-import FileUpload, { CheckFilerFunc } from "../../../../../../api/FileUpload";
+import FileUpload, { CheckFilerFunc } from "../../../../../components/file_storage/FileUpload";
 import { isParty } from "../sigPage/sigPage";
-import { readContract } from "@wagmi/core";
+import { getMyUserNo } from "../../../../../rc";
 
 export interface FileHistoryProps {
   addr: HexType,
@@ -62,14 +62,12 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
   const checkFiler:CheckFilerFunc = async (filer) => {
     if (!filer) return false;
 
-    let myNo = await readContract({
-      address: AddrOfRegCenter,
-      abi: regCenterABI,
-      functionName: 'getMyUserNo',
-      account: filer.account,
-    })
+    let myNo = await getMyUserNo(filer.account.address);
 
-    if (!myNo) return false;
+    if (!myNo) {
+      setErrMsg('UserNo Not Retrieved!');
+      return false;
+    }
     console.log('myNo: ', myNo);
 
     let flag = await isParty(addr, BigInt(myNo));

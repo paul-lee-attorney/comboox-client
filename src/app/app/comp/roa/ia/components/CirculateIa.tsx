@@ -9,9 +9,10 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfter
 import { LoadingButton } from "@mui/lab";
 import { FileHistoryProps } from "../../../roc/sha/components/actions/CirculateSha";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import FileUpload, { CheckFilerFunc } from "../../../../../api/FileUpload";
+import FileUpload, { CheckFilerFunc } from "../../../../components/file_storage/FileUpload";
 import { readContract } from "@wagmi/core";
 import { isParty } from "../../../roc/sha/components/sigPage/sigPage";
+import { getMyUserNo } from "../../../../rc";
 
 export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
 
@@ -58,14 +59,12 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
   const checkFiler:CheckFilerFunc = async (filer) => {
     if (!filer) return false;
 
-    let myNo = await readContract({
-      address: AddrOfRegCenter,
-      abi: regCenterABI,
-      functionName: 'getMyUserNo',
-      account: filer.account,
-    })
+    let myNo = await getMyUserNo(filer.account.address);
 
-    if (!myNo) return false;
+    if (!myNo) {
+      
+      return false;
+    }
     console.log('myNo: ', myNo);
 
     let flag = await isParty(addr, BigInt(myNo));

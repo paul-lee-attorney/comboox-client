@@ -1,12 +1,12 @@
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { useEffect, useState } from "react";
 import { longSnParser } from "../../../common/toolsKit";
-import { getFileDownloadURL } from "../../../../api/getFileDownloadURL";
-import { IconButton, Tooltip } from "@mui/material";
+import { downloadAndDecryptFile, getFileDownloadURL } from "../../../../api/firebase/fileDownloadTools";
+import { Button, Dialog, DialogActions, DialogContent, IconButton, Tooltip } from "@mui/material";
 import { CloudDownloadOutlined } from "@mui/icons-material";
 import { Motion, getTypeOfMotion } from "../meetingMinutes";
 import { useWalletClient } from "wagmi";
-import { verifySig } from "../../../../api";
+import { verifySig } from "../../../../api/firebase";
 import { getMyUserNo } from "../../../rc";
 import { isMember } from "../../rom/rom";
 import { booxMap } from "../../../common";
@@ -17,10 +17,14 @@ export interface FileIndexProps {
 
 function FileIndex({motion}: FileIndexProps) {
 
-  const { compInfo } = useComBooxContext();
+  const { compInfo, boox, gk, setErrMsg } = useComBooxContext();
 
   const [url, setUrl] = useState<string>('');
-    
+  const [filePath, setFilePath] = useState<string>('');
+
+  const [ open, setOpen ] = useState(false);
+  const [ downloadURL, setDownloadURL ] = useState('');
+
   useEffect(()=>{
     
     const checkFile = async () => {
@@ -37,6 +41,7 @@ function FileIndex({motion}: FileIndexProps) {
       filePath += longSnParser(motion.head.seqOfMotion.toString()) + '/';
       filePath += motion.contents.toString(16).padStart(64, '0').substring(54).toLowerCase() + '.pdf';
     
+      setFilePath(filePath);
       console.log('filePath: ', filePath);
 
       let uri = await getFileDownloadURL(filePath);
@@ -49,11 +54,10 @@ function FileIndex({motion}: FileIndexProps) {
   }, [compInfo, motion]);
 
   const { data: signer } = useWalletClient();
-  const { boox } = useComBooxContext();
 
   const handleDownload = async () => {
     // request filer sign the docHash
-    if (!signer || !url || !boox) return;
+    if (!signer || !url || !boox || !gk) return;
     let sig = await signer.signMessage({message: url});
     let filerInfo = {
         address: signer.account.address,
@@ -61,17 +65,32 @@ function FileIndex({motion}: FileIndexProps) {
         sig: sig,
     };
     
-    if (!verifySig(filerInfo)) return;
+    if (!verifySig(filerInfo)) {
+      setErrMsg('Sig Not Verified.');
+      return;
+    }
 
     let myNo = await getMyUserNo(signer.account.address);
 
-    if (!myNo) return false;
+    if (!myNo) {
+      setErrMsg('UserNo Not Obtained!');
+      return;      
+    };
     console.log('myNo: ', myNo);    
 
     let flag = await isMember(boox[booxMap.ROM], myNo);
     
-    if (flag) window.open(url, '_blank');
-    else console.log('not Member');
+    if (!flag) {
+      setErrMsg('Not Member.');
+      return;
+    }
+
+    const decryptedURL = await downloadAndDecryptFile(filePath, gk);
+    if (decryptedURL.length > 0) {
+      setDownloadURL(decryptedURL);
+      setOpen(true);
+    }
+
   }
 
   return (
@@ -83,6 +102,24 @@ function FileIndex({motion}: FileIndexProps) {
             </IconButton>
         </Tooltip>
       )}
+
+      <Dialog
+        maxWidth={false}
+        open={open}
+        onClose={()=>setOpen(false)}
+        aria-labelledby="dialog-title"        
+      >
+
+        <DialogContent>
+          <iframe src={downloadURL} width='100%' />
+        </DialogContent>
+
+        <DialogActions>
+          <Button variant='outlined' sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
+        </DialogActions>
+
+      </Dialog>
+
     </>
   );
 

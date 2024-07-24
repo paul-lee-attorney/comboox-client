@@ -10,15 +10,14 @@ import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType, MaxUserNo } from "../../../../common";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { UserInfo, countries, defaultUserInfo, idDocTypes, statesOfUS } from "../../../../../api";
+import { UserInfo, countries, defaultUserInfo, idDocTypes, statesOfUS } from "../../../../../api/firebase";
 
 import { useWalletClient } from "wagmi";
 import { DateTimeField } from "@mui/x-date-pickers";
 import dayjs from "dayjs";
 import { CopyLongStrTF } from "../../../../common/CopyLongStr";
 import { keccak256 } from "viem";
-import getUserData from "../../../../../api/getData";
-import setUserData from "../../../../../api/setData";
+import { getUserData, setUserData} from "../../../../../api/firebase/userInfoTools";
 
 export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const { gk, setErrMsg } = useComBooxContext();
