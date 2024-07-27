@@ -17,8 +17,7 @@ import { getSnOfFile } from "../../roc/components/filesFolder";
 import { VoteResult } from "../../gmm/components/VoteResult";
 import { ActionsOnMotionOfBoard } from "./ActionsOnMotionOfBoard";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-
-import FileIndex from "../../gmm/components/FileIndex";
+import MotionDownloader from "../../../components/file_storage/MotionDownloader";
 
 export interface ApprovalFormOfBoardMotionProps{
   minutes: HexType;
@@ -80,7 +79,8 @@ export function ApprovalFormOfBoardMotion({minutes, open, motion, setOpen, refre
                 <b>Motion of Board Meeting - {motionType[motion.head.typeOfMotion-1]}</b>
               </Toolbar>
 
-              <FileIndex motion={motion} />
+              <MotionDownloader motion={motion} />
+
             </Stack>
 
             <Toolbar sx={{ color:'black', textDecoration:'underline' }} >
