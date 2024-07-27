@@ -19,7 +19,8 @@ import { isFinalized } from "../../common/accessControl";
 import { IndexCard } from "../components/IndexCard";
 
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import Bookmark from "../components/Bookmark";
+import AgreementDownloader from "../../../components/file_storage/AgreementDownloader";
+// import Bookmark from "../components/Bookmark";
 
 
 function Sha() {
@@ -86,7 +87,7 @@ function Sha() {
                   </IconButton>
                 </Tooltip>
 
-                <Bookmark typeOfFile="SHA" addrOfFile={sha} />
+                <AgreementDownloader typeOfFile="SHA" addrOfFile={sha} />
 
               </Stack>
 

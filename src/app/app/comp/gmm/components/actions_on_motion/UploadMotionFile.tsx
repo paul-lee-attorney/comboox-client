@@ -3,25 +3,20 @@ import { Paper } from "@mui/material";
 
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
 import { getMyUserNo } from "../../../../rc";
-import MotionUpDownLoad from "../../../../components/file_storage/MotionUpDownLoad";
-import { CheckFilerFunc } from "../../../../components/file_storage/FileUpload";
-import { getTypeOfMotion } from "../../meetingMinutes";
-import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { CheckFilerFunc } from "../../../../components/file_storage/FileUploader";
+import MotionUploader from "../../../../components/file_storage/MotionUploader";
 
 export function UploadMotionFile({ motion, setOpen, refresh }:ActionsOnMotionProps) {
   
-  const { setErrMsg } = useComBooxContext();
-
   const checkProposer:CheckFilerFunc = async (proposer) => {
     if (!proposer) {
-      setErrMsg('No Proposer!');
+      console.log('No Proposer!');
       return false;
     }
 
     let myNo = await getMyUserNo(proposer.account.address);
-
     if (!myNo) {
-      setErrMsg('UserNo Not Retrieved!');
+      console.log('UserNo Not Retrieved!');
       return false;
     }
     console.log('myNo: ', myNo);
@@ -34,11 +29,9 @@ export function UploadMotionFile({ motion, setOpen, refresh }:ActionsOnMotionPro
   }
 
   return (
-
     <Paper elevation={3} sx={{ m:1, p:1, color:'divider', border:1 }} >
-      <MotionUpDownLoad seqOfMotion={motion.head.seqOfMotion.toString()} typeOfMotion={getTypeOfMotion(motion)} contents={motion.contents.toString(16).padStart(64, '0')} checkProposer={checkProposer} />
+      <MotionUploader motion={motion} checkProposer={checkProposer} />
     </Paper>
-
   );
 }
 

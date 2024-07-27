@@ -9,9 +9,10 @@ import { Bytes32Zero, HexType } from "../../../../../common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
-import FileUpload, { CheckFilerFunc } from "../../../../../components/file_storage/FileUpload";
+import AgreementUploader from "../../../../../components/file_storage/AgreementUploader";
 import { isParty } from "../sigPage/sigPage";
 import { getMyUserNo } from "../../../../../rc";
+import { CheckFilerFunc } from "../../../../../components/file_storage/FileUploader";
 
 export interface FileHistoryProps {
   addr: HexType,
@@ -121,7 +122,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
       
       <Stack direction='column' sx={{ alignItems:'start' }} >
 
-        <FileUpload typeOfFile="SHA" addrOfFile={addr} setDocHash={setDocHash} checkFiler={checkFiler} />
+        <AgreementUploader typeOfFile="SHA" addrOfFile={addr} setDocHash={setDocHash} checkFiler={checkFiler} />
 
         <LoadingButton
           disabled={ isLoading || hasError(valid) || !docHash}
@@ -129,7 +130,7 @@ export function CirculateSha({ addr, setNextStep }: FileHistoryProps) {
           loadingPosition="end"
           variant="contained"
           endIcon={<Recycling />}
-          sx={{ m:1, width:218 }}
+          sx={{ m:1, mt:0, width:218, height:40 }}
           onClick={ handleClick }
         >
           Circulate Sha

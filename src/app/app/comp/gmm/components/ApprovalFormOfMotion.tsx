@@ -23,15 +23,12 @@ import { getFile } from "../../roc/components/filesFolder";
 import { GetVotingRule } from "../../roc/sha/components/rules/VotingRules/GetVotingRule";
 import { GetPosition } from "../../rod/components/GetPosition";
 
-
 import { ApprovalFormOfBoardMotionProps } from "../../bmm/components/ApprovalFormOfBoardMotion";
-
 import { ActionsOnMotion } from "./ActionsOnMotion";
-
 import { VoteResult } from "./VoteResult";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { CopyLongStrSpan, CopyLongStrTF } from "../../../common/CopyLongStr";
-import FileIndex from "./FileIndex";
+import MotionDownloader from "../../../components/file_storage/MotionDownloader";
 
 export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: ApprovalFormOfBoardMotionProps) {
 
@@ -56,7 +53,7 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
   useEffect(()=>{
     if ( boox ) {
       let minutes: HexType = motion.votingRule.authority == 1
-                            ? boox[booxMap.GMM] 
+                            ? boox[booxMap.GMM]
                             : boox[booxMap.BMM];
       voteEnded(minutes, motion.head.seqOfMotion).then(
         flag => {
@@ -89,7 +86,8 @@ export function ApprovalFormOfMotion({minutes, open, motion, setOpen, refresh}: 
                 <b>General Meeting of Members - {motionType[motion.head.typeOfMotion-1]}</b>
               </Toolbar>
 
-              <FileIndex motion={motion} />
+              <MotionDownloader motion={motion} />
+
             </Stack>
             
             <Toolbar sx={{ color:'black', textDecoration:'underline' }} >

@@ -1,7 +1,7 @@
 
 import { ref, getBlob, getBytes, getMetadata, getDownloadURL, FullMetadata } from "firebase/storage";
 import { storage } from './firebase';
-import { decryptFile, EncryptedFile } from ".";
+import { decryptFile, decryptPicture, EncryptedFile, EncryptedImage } from ".";
 import { HexType } from "../../app/common";
 
 export async function downloadFileAsBlob(filePath:string): Promise<Blob> {
@@ -58,10 +58,13 @@ export async function getFileDownloadURL(filePath: string): Promise<string | und
 
 export async function downloadAndDecryptFile(filePath:string, gk:HexType): Promise<string> {
 
+  const path = filePath.toLowerCase();
+
   const encryptedFile: EncryptedFile = {
-    docData: new Uint8Array(await downloadFileAsBytes(filePath)),
-    docHash: (await downloadFileMetadata(filePath)).customMetadata!.docHash!,
+    docData: new Uint8Array(await downloadFileAsBytes(path)),
+    docHash: (await downloadFileMetadata(path)).customMetadata!.docHash!,
   }
+
   const fileBuffer = decryptFile(encryptedFile, gk, gk);
 
   if (fileBuffer) {
@@ -73,3 +76,23 @@ export async function downloadAndDecryptFile(filePath:string, gk:HexType): Promi
   return '';
 }
 
+export async function downloadAndDecryptImg(filePath:string, addr:HexType, gk:HexType): Promise<string> {
+
+  const path = filePath.toLowerCase();
+
+  const encryptedPic:EncryptedImage  = {
+    imgData: (Buffer.from(await downloadFileAsBytes(path))).toString('base64'),
+    imgHash: (await downloadFileMetadata(path)).customMetadata!.imgHash!,
+  }
+
+  // console.log('before:', encryptedPic.imgData);
+
+  const img = decryptPicture(encryptedPic, addr, gk);
+
+  // console.log('after: ', img);
+
+  if (img) {
+    let decodeImg = img.replace('dataimage/jpegbase64', 'data:image/jpeg;base64,');
+    return decodeImg;
+  } else return '';
+}

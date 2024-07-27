@@ -20,15 +20,16 @@ export interface ConfigSettingProps{
 }
 
 export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
-  const { gk, setErrMsg } = useComBooxContext();
+  const { gk, setErrMsg, setCompInfo } = useComBooxContext();
 
-  const [compInfo, setCompInfo] = useState<CompInfo>(defaultInfo);  
+  const [ comInfo, setComInfo] = useState<CompInfo>(defaultInfo);  
   const [ loading, setLoading ] = useState(false);
   
   const updateResults = ()=>{
     setTime(Date.now());
     setLoading(false);
     setOpen(false);
+    setCompInfo(comInfo);
   }
 
   const {
@@ -49,9 +50,9 @@ export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
   const handleClick = ()=>{
     setInfo({
       args: [
-        compInfo.currency, 
-        `0x${toAscii(compInfo.symbol).padEnd(40,'0')}`, 
-        compInfo.name 
+        comInfo.currency, 
+        `0x${toAscii(comInfo.symbol).padEnd(40,'0')}`, 
+        comInfo.name 
       ],
     });
   };
@@ -72,12 +73,12 @@ export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
           label="CompanyName" 
           variant="outlined"
           onChange={(e) => {
-            setCompInfo((v) => ({
+            setComInfo((v) => ({
               ...v,
               name: (e.target.value ?? ''),
             }))
           }}
-          value = { compInfo.name }
+          value = { comInfo.name }
           size='small'
         />
 
@@ -87,13 +88,13 @@ export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
           label="SymbolOfCompany" 
           variant="outlined"
           onChange={(e) => {
-            setCompInfo((v) => ({
+            setComInfo((v) => ({
               ...v,
               symbol: (e.target.value ?? ''),
             }))
           }}
 
-          value = { compInfo.symbol }
+          value = { comInfo.symbol }
           size='small'
         />
 
@@ -103,8 +104,8 @@ export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
             labelId="bookingCurrency-label"
             id="bookingCurrency-select"
             label="BookingCurrency"
-            value={ compInfo.currency.toString() }
-            onChange={(e) => setCompInfo((v) => ({
+            value={ comInfo.currency.toString() }
+            onChange={(e) => setComInfo((v) => ({
               ...v,
               currency: Number(e.target.value) ,
             }))}

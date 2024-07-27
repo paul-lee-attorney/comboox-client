@@ -1,10 +1,10 @@
 
 import { useEffect, useState } from "react";
 
-import { Box, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
-import { BorderColor, UploadOutlined } from "@mui/icons-material";
+import { Box, Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
+import { BorderColor, Camera, UploadOutlined } from "@mui/icons-material";
 
-import { FormResults, HexParser, defFormResults, hasError, onlyChars, onlyEmail, onlyHex, onlyInt, onlyNumOrChar, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyChars, onlyEmail, onlyHex, onlyInt, onlyNumOrChar, refreshAfterTx } from "../../../../common/toolsKit";
 import { useGeneralKeeperRegInvestor } from "../../../../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType, MaxUserNo } from "../../../../common";
@@ -18,6 +18,8 @@ import dayjs from "dayjs";
 import { CopyLongStrTF } from "../../../../common/CopyLongStr";
 import { keccak256 } from "viem";
 import { getUserData, setUserData} from "../../../../../api/firebase/userInfoTools";
+import Link from "next/link";
+import { getMyUserNo } from "../../../../rc";
 
 export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const { gk, setErrMsg } = useComBooxContext();
@@ -33,23 +35,32 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const [ loading, setLoading ] = useState(false);
 
   useEffect(()=>{
-    if (signer && gk) {
 
-      getUserData(gk, signer.account.address).then(
-        info => {
-          if (info && info.sig != '') {
-            setUserInfo(info);
-            setIdHash(keccak256(Buffer.from(info.sig)));
-          } else {
-            setUserInfo(v => ({
-              ...v,
-              address: signer.account.address,
-              gk: gk,
-            }));
-          }
+    const getMyUserInfo = async ()=>{
+      if (signer && gk) {
+
+        const myNo = await getMyUserNo(signer.account.address);
+        if (!myNo) {
+          console.log("UserNo Not Retrieved!");
+          return;
         }
-      );
+
+        let info = await getUserData(gk, longSnParser(myNo.toString()));
+
+        if (info && info.sig != '') {
+          setUserInfo(info);
+          setIdHash(keccak256(Buffer.from(info.sig)));
+        } else {
+          setUserInfo(v => ({
+            ...v,
+            address: signer.account.address,
+            gk: gk,
+          }));
+        }
+      }
     }
+    
+    getMyUserInfo();
   }, [signer, gk]);
 
   useEffect(()=>{
@@ -69,15 +80,10 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const signMessage = async () => {
     
     if (signer && gk) {
-
       console.log('userInfo: ', userInfo);
-
       let objInfo = {...userInfo, sig: ''};
-
       let message = JSON.stringify(objInfo, Object.keys(objInfo).sort());
-      
       let sigM = await signer.signMessage({message: message});
-      
       setSignedInfo(v => ({
         ... userInfo,
         sig: sigM
@@ -107,8 +113,8 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
       
   const handleClick = ()=>{
     regInvestor({
-      args: [ 
-        BigInt(groupRep), 
+      args: [
+        BigInt(groupRep),
         idHash
       ],
     })
@@ -269,28 +275,27 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
           <FormHelperText>{' '}</FormHelperText>
         </FormControl>
 
-        {userInfo.issueCountry == 'United States' && (
-          <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
-            <InputLabel id="issueState-label">IssueState</InputLabel>
-            <Select
-              labelId="issueState-label"
-              id="issueState-select"
-              label="IssueState"
-              value={
-                statesOfUS.indexOf(userInfo.issueState) > 0
-                  ? userInfo.issueState
-                  : ''
-              }
-              onChange={(e) => setUserInfo((v) => ({
-                ...v,
-                issueState: e.target.value,
-              }))}
-            >
-              {statesOfUS.map(v=>(<MenuItem key={v} value={v}>{v}</MenuItem>))}
-            </Select>
-            <FormHelperText>{' '}</FormHelperText>
-          </FormControl>
-        )}
+        <FormControl variant="outlined" size='small' sx={{ m: 1, minWidth: 218 }}>
+          <InputLabel id="issueState-label">IssueState</InputLabel>
+          <Select
+            labelId="issueState-label"
+            id="issueState-select"
+            label="IssueState"
+            disabled={userInfo.issueCountry != 'United States'}
+            value={
+              statesOfUS.indexOf(userInfo.issueState) > 0
+                ? userInfo.issueState
+                : ''
+            }
+            onChange={(e) => setUserInfo((v) => ({
+              ...v,
+              issueState: e.target.value,
+            }))}
+          >
+            {statesOfUS.map(v=>(<MenuItem key={v} value={v}>{v}</MenuItem>))}
+          </Select>
+          <FormHelperText>{' '}</FormHelperText>
+        </FormControl>
 
         <DateTimeField
           label='dateOfExpiry'
@@ -331,7 +336,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
 
       </Stack>
 
-      <Divider orientation="horizontal" flexItem />
+      <Divider orientation="horizontal" flexItem sx={{m:1}} />
 
       <Stack direction="row" sx={{ alignItems:'start' }} >
 
@@ -383,6 +388,19 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
         >
           Register
         </LoadingButton>
+
+        <Button 
+          variant='contained'
+          color='success'
+          endIcon={<Camera />} 
+          sx={{ m: 1, minWidth: 218, height: 40 }} 
+          LinkComponent={ Link }
+          href='/app/comp/loo/face_recognition'
+        >
+          Photo ID Verify
+        </Button>
+
+
 
       </Stack>
 

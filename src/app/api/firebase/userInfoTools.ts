@@ -2,11 +2,13 @@ import { db } from './firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { SigInfo, UserInfo, decryptUserInfo, encryptUserInfo, verifySig } from '.';
 import { HexType } from '../../app/common';
+import { getMyUserNo } from '../../app/rc';
+import { longSnParser } from '../../app/common/toolsKit';
 
-export async function getUserData(gk: HexType, addr: HexType): Promise<UserInfo | undefined> {
+export async function getUserData(gk: HexType, userNo: string): Promise<UserInfo | undefined> {
 
   // 获取特定文档
-  const docRef = doc(db, gk.toLowerCase(), addr.toLowerCase());
+  const docRef = doc(db, gk.toLowerCase(), userNo);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
@@ -17,7 +19,7 @@ export async function getUserData(gk: HexType, addr: HexType): Promise<UserInfo 
     const objInfo = {...info, sig: ''};
 
     const testInfo:SigInfo = {
-        address: addr,
+        address: info.address,
         message: JSON.stringify(objInfo, Object.keys(objInfo).sort()),
         sig: info.sig
     };
@@ -52,9 +54,15 @@ export async function setUserData(info:UserInfo): Promise<boolean> {
   }
 
   const encryptedInfo = encryptUserInfo(info);
-  
+
+  const userNo = await getMyUserNo(info.address);
+  if (!userNo) {
+    console.log('UserNo Not Detected.')
+    return false;
+  }
+
   // 创建一个文档引用
-  const docRef = doc(db, info.gk.toLowerCase(), info.address.toLowerCase());
+  const docRef = doc(db, info.gk.toLowerCase(), longSnParser(userNo.toString()));
 
   // 使用 set 方法添加或覆盖文档
   await setDoc(docRef, encryptedInfo);

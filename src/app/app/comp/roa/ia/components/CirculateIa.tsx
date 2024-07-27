@@ -1,6 +1,6 @@
 import { Divider, Stack, TextField } from "@mui/material";
-import { regCenterABI, useGeneralKeeperCirculateIa } from "../../../../../../../generated";
-import { AddrOfRegCenter, Bytes32Zero, HexType, } from "../../../../common";
+import { useGeneralKeeperCirculateIa } from "../../../../../../../generated";
+import { Bytes32Zero, HexType, } from "../../../../common";
 import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../common/toolsKit";
@@ -9,10 +9,11 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfter
 import { LoadingButton } from "@mui/lab";
 import { FileHistoryProps } from "../../../roc/sha/components/actions/CirculateSha";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import FileUpload, { CheckFilerFunc } from "../../../../components/file_storage/FileUpload";
-import { readContract } from "@wagmi/core";
+
 import { isParty } from "../../../roc/sha/components/sigPage/sigPage";
 import { getMyUserNo } from "../../../../rc";
+import AgreementUploader from "../../../../components/file_storage/AgreementUploader";
+import { CheckFilerFunc } from "../../../../components/file_storage/FileUploader";
 
 export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
 
@@ -23,7 +24,6 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const [ loading, setLoading ] = useState(false);
-
 
   const refresh = ()=>{
     setLoading(false);
@@ -62,7 +62,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
     let myNo = await getMyUserNo(filer.account.address);
 
     if (!myNo) {
-      
+      console.log('UserNo Not Detected!');      
       return false;
     }
     console.log('myNo: ', myNo);
@@ -116,9 +116,9 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
 
       <Divider orientation="vertical" sx={{ m:1 }} flexItem />
 
-      <Stack direction='column' sx={{ alignItems:'start' }} >
+      <Stack direction='column' sx={{ alignItems:'start', justifyItems:'center' }} >
 
-        <FileUpload typeOfFile="IA" addrOfFile={addr} setDocHash={setDocHash} checkFiler={checkFiler} />
+        <AgreementUploader typeOfFile="IA" addrOfFile={addr} setDocHash={setDocHash} checkFiler={checkFiler} />
 
         <LoadingButton
           disabled={ isLoading || hasError(valid)}
@@ -126,7 +126,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
           loadingPosition="end"
           variant="contained"
           endIcon={<Recycling />}
-          sx={{ m:1, minWidth:218 }}
+          sx={{ m:1, minWidth:218, height:40 }}
           onClick={ handleClick }
         >
           Circulate Ia

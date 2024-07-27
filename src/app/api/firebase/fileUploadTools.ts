@@ -1,6 +1,8 @@
 
 import { FullMetadata, ref, SettableMetadata, StringFormat, updateMetadata, uploadBytes, uploadBytesResumable, UploadResult, uploadString, UploadTask } from "firebase/storage";
 import { storage } from './firebase';
+import { encryptPicture } from ".";
+import { HexType } from "../../app/common";
 
 export async function uploadFileAsBytes(filePath:string, data:Blob | Uint8Array | ArrayBuffer): Promise<UploadResult> {
   const fileRef = ref(storage, filePath);
@@ -38,7 +40,7 @@ export function uploadFileAsBytesResumable(filePath:string, data:Blob | Uint8Arr
   }
 };
 
-export async function updateFileMetadata(filePath:string, metadata: SettableMetadata): Promise<FullMetadata> {
+export async function updateFileMetadata(filePath:string, metadata:SettableMetadata): Promise<FullMetadata> {
   const fileRef = ref(storage, filePath);
 
   try {
@@ -49,4 +51,32 @@ export async function updateFileMetadata(filePath:string, metadata: SettableMeta
     throw error;
   }
 };
+
+export async function uploadAndEncryptImg(filePath:string, img:string, addr:HexType, gk:HexType): Promise<FullMetadata | undefined>{
+
+  const encryptedImg = encryptPicture(img, addr, gk);
+  const imgInfo = {
+    customMetadata: {
+      filer: addr,
+      imgHash: encryptedImg.imgHash,
+    }
+  };
+  
+  const path = filePath.toLowerCase(); 
+
+  try {
+    await uploadFileAsString(path, encryptedImg.imgData, 'base64');
+  } catch(error:any) {
+    console.log('upload error:', error.message);
+  }
+
+  try {
+    const metadata = await updateFileMetadata(path, imgInfo);
+    return metadata;
+  } catch(error:any) {
+    console.log('updateMetadata error:', error.message);
+  }
+
+}
+
 

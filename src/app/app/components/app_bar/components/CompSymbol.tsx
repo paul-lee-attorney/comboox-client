@@ -35,7 +35,7 @@ export function CompSymbol() {
       setOnPar(undefined);
       setCompInfo(undefined);
     }
-  }, [gk, setBoox, setKeepers, setOnPar, setCompInfo]);
+  }, [gk,setBoox, setKeepers, setOnPar, setCompInfo]);
 
   return (
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >

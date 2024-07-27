@@ -13,13 +13,22 @@ export const startVideo = async (video: HTMLVideoElement) => {
     video.srcObject = stream;
     video.play();
   }
+  return stream;
+};
+
+export const stopVideo = (stream:MediaStream) => {
+  stream.getTracks().forEach(track => track.stop());
+  const videoElement = document.querySelector('video');
+  if (videoElement) {
+    videoElement.srcObject = null;
+  }
 };
 
 export const captureImage = (video: HTMLVideoElement, canvas:HTMLCanvasElement) => {
   if (canvas && video) {
     const context = canvas.getContext('2d');
     context?.drawImage(video, 0, 0, canvas.width, canvas.height);
-    return canvas.toDataURL('image/png');
+    return canvas.toDataURL('image/jpeg');
   }
   return null; 
 }
@@ -41,7 +50,7 @@ export const cropFaceFromImage = async (imageUrl: string) => {
       const ctx = canvas.getContext('2d');
       if (ctx) {
           ctx.drawImage(img, x, y, width, height, 0, 0, width, height);
-          return canvas.toDataURL('image/png');
+          return canvas.toDataURL('image/jpeg');
       }
   }
   return null;

@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-import { Paper, Stack, TextField, } from "@mui/material";
+import { Divider, Paper, Stack, TextField, } from "@mui/material";
 import { PersonAddAlt } from "@mui/icons-material";
 
 import { useGeneralKeeperApproveInvestor } from "../../../../../../../generated";
@@ -12,7 +12,7 @@ import { HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-
+import { CheckPI } from "./CheckPI";
 
 export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
   const { gk, setErrMsg } = useComBooxContext();
@@ -60,58 +60,61 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
       borderColor:'divider' 
       }} 
     >
-        <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
-          <TextField 
-            variant='outlined'
-            size="small"
-            label='UserNo'
-            error={ valid['UserNo']?.error }
-            helperText={ valid['UserNo']?.helpTx ?? ' ' }
-            sx={{
-              m:1,
-              minWidth: 218,
-            }}
-            onChange={ e => {
-              let input = e.target.value;
-              onlyInt('UserNo', input, MaxUserNo, setValid);
-              setUserNo(input); 
-            }}
-            value={ userNo } 
-          />
+      <Stack direction={'row'} sx={{ alignItems:'start'}} >
 
-          <TextField 
-            variant='outlined'
-            size="small"
-            label='SeqOfListingRule'
-            error={ valid['SeqOfLR']?.error }
-            helperText={ valid['SeqOfLR']?.helpTx ?? ' ' }
-            sx={{
-              m:1,
-              minWidth: 218,
-            }}
-            onChange={ e => {
-              let input = e.target.value;
-              onlyInt('SeqOfLR', input, MaxSeqNo, setValid);
-              setSeqOfLR(input);
-            }}
-            value={ seqOfLR } 
-          />
+        <TextField 
+          variant='outlined'
+          size="small"
+          label='UserNo'
+          error={ valid['UserNo']?.error }
+          helperText={ valid['UserNo']?.helpTx ?? ' ' }
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyInt('UserNo', input, MaxUserNo, setValid);
+            setUserNo(input);
+          }}
+          value={ userNo } 
+        />
 
-          <LoadingButton 
-            disabled = { approveInvestorLoading || hasError(valid)}
-            loading={loading}
-            loadingPosition="end"
-            sx={{ m: 1, minWidth: 218, height: 40 }} 
-            variant="contained" 
-            endIcon={<PersonAddAlt />}
-            onClick={ handleClick }
-            size='small'
-          >
-            Approve
-          </LoadingButton>
+        <TextField 
+          variant='outlined'
+          size="small"
+          label='SeqOfListingRule'
+          error={ valid['SeqOfLR']?.error }
+          helperText={ valid['SeqOfLR']?.helpTx ?? ' ' }
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyInt('SeqOfLR', input, MaxSeqNo, setValid);
+            setSeqOfLR(input);
+          }}
+          value={ seqOfLR } 
+        />
 
-        </Stack>
+        <LoadingButton
+          disabled = { approveInvestorLoading || hasError(valid)}
+          loading={loading}
+          loadingPosition="end"
+          sx={{ m: 1, minWidth: 218, height: 40 }} 
+          variant="contained" 
+          endIcon={<PersonAddAlt />}
+          onClick={ handleClick }
+          size='small'
+        >
+          Approve
+        </LoadingButton>
+
+        <CheckPI userNo={userNo} seqOfLR={seqOfLR} />
+
+      </Stack>
 
     </Paper>
 

@@ -2,6 +2,7 @@ import { AddrZero, HexType } from "../../app/common";
 import { verifyMessage } from "ethers";
 import * as crypto from "crypto";
 import { keccak256 } from "viem";
+import Error from "next/error";
 
 export interface UserInfo {
   address: HexType,
@@ -91,6 +92,13 @@ export function hashData(data: Uint8Array): string {
   return hash.digest('hex');
 }
 
+export function hashImage(data: string):string {
+  const hash = crypto.createHash('sha256');
+  const input = Buffer.from(data, 'base64');
+  hash.update(input);
+  return hash.digest('hex');
+}
+
   // ==== Crypto ====
 
 export type KeyIV = {
@@ -99,9 +107,11 @@ export type KeyIV = {
 }
 
 export function prepareKeyIV(addr: HexType, gk: HexType): KeyIV {
+  let addrStr = addr.toLowerCase();
+  let gkStr = gk.toLowerCase();
   const res:KeyIV = {
-    key : keccak256(Buffer.from(addr + process.env.NEXT_PUBLIC_SALT)).substring(2,18),
-    iv: keccak256(Buffer.from(gk + process.env.NEXT_PUBLIC_SALT)).substring(2,18),
+    key : keccak256(Buffer.from(addrStr + process.env.NEXT_PUBLIC_SALT)).substring(2,18),
+    iv: keccak256(Buffer.from(gkStr + process.env.NEXT_PUBLIC_SALT)).substring(2,18),
   }
   return res;
 }
@@ -114,14 +124,18 @@ export function prepareCipher(addr: HexType, gk: HexType): crypto.Cipher {
 
 export function encryptString(data:string, addr:HexType, gk:HexType):string {
   const cipher = prepareCipher(addr, gk);
-  const encrypted = cipher.update(data, 'utf-8', 'hex') + cipher.final('hex');
+  const encrypted = cipher.update(data, 'utf8', 'hex') + cipher.final('hex');
   return encrypted;
 }
 
 export function encryptImg(data:string, addr:HexType, gk:HexType):string {
   const cipher = prepareCipher(addr, gk);
-  const encrypted = cipher.update(data, 'base64', 'base64') + cipher.final('base64');
-  return encrypted;
+  try {
+    const encrypted = cipher.update(data, 'base64', 'base64') + cipher.final('base64');
+    return encrypted;
+  } catch (error:any) {
+    return error.message;
+  }
 }
 
 export function encryptData(data:Uint8Array, addr:HexType, gk:HexType):Uint8Array {
@@ -144,14 +158,43 @@ export function decryptString(data:string, addr:HexType, gk:HexType):string {
 
 export function decryptImg(data:string, addr:HexType, gk:HexType):string {
   const decipher = prepareDecipher(addr, gk);
-  const decrypted = decipher.update(data, 'base64', 'base64') + decipher.final('base64');
-  return decrypted;
+  try {
+    const decrypted = decipher.update(data, 'base64', 'base64') + decipher.final('base64');
+    return decrypted;
+  }catch(error:any) {
+    return error.message;
+  }
 }
 
 export function decryptData(data:Uint8Array, addr:HexType, gk:HexType):Uint8Array {
   const decipher = prepareDecipher(addr, gk);
   const decrypted = Buffer.concat([decipher.update(data), decipher.final()]);
   return new Uint8Array(decrypted);
+}
+
+// ==== Image ====
+
+export type EncryptedImage = {
+  imgData: string;
+  imgHash: string;
+}
+
+export function encryptPicture(data:string, addr:HexType, gk:HexType):EncryptedImage {
+  return {
+    imgData: encryptImg(data, addr, gk),
+    imgHash: hashImage(data),
+  }
+}
+
+export function decryptPicture(pic:EncryptedImage, addr:HexType, gk:HexType):string | null {
+  const decrypted = decryptImg(pic.imgData, addr, gk);
+  const digest = hashImage(decrypted);
+  if (pic.imgHash == digest) {
+    return decrypted;
+  } else {
+    console.log('ImgHash not verified!');
+    return null;
+  }
 }
 
 // ==== File ====
