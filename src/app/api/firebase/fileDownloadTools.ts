@@ -5,6 +5,7 @@ import { decryptFile, decryptPicture, EncryptedFile, EncryptedImage } from ".";
 import { HexType } from "../../app/common";
 
 export async function downloadFileAsBlob(filePath:string): Promise<Blob> {
+  filePath = filePath.toLowerCase();
   const fileRef = ref(storage, filePath);
 
   try {
@@ -17,6 +18,7 @@ export async function downloadFileAsBlob(filePath:string): Promise<Blob> {
 };
 
 export async function downloadFileAsBytes(filePath:string): Promise<ArrayBuffer> {
+  filePath = filePath.toLowerCase();
   const fileRef = ref(storage, filePath);
 
   try {
@@ -29,6 +31,7 @@ export async function downloadFileAsBytes(filePath:string): Promise<ArrayBuffer>
 };
 
 export async function downloadFileMetadata(filePath:string): Promise<FullMetadata> {
+  filePath = filePath.toLowerCase();
   const fileRef = ref(storage, filePath);
 
   try {
@@ -41,6 +44,7 @@ export async function downloadFileMetadata(filePath:string): Promise<FullMetadat
 };
 
 export async function getFileDownloadURL(filePath: string): Promise<string | undefined>{
+  filePath = filePath.toLowerCase();
 
   try {
     const storageRef = ref(storage, filePath);
@@ -58,11 +62,9 @@ export async function getFileDownloadURL(filePath: string): Promise<string | und
 
 export async function downloadAndDecryptFile(filePath:string, gk:HexType): Promise<string> {
 
-  const path = filePath.toLowerCase();
-
   const encryptedFile: EncryptedFile = {
-    docData: new Uint8Array(await downloadFileAsBytes(path)),
-    docHash: (await downloadFileMetadata(path)).customMetadata!.docHash!,
+    docData: new Uint8Array(await downloadFileAsBytes(filePath)),
+    docHash: (await downloadFileMetadata(filePath)).customMetadata!.docHash!,
   }
 
   const fileBuffer = decryptFile(encryptedFile, gk, gk);
@@ -78,11 +80,9 @@ export async function downloadAndDecryptFile(filePath:string, gk:HexType): Promi
 
 export async function downloadAndDecryptImg(filePath:string, addr:HexType, gk:HexType): Promise<string> {
 
-  const path = filePath.toLowerCase();
-
   const encryptedPic:EncryptedImage  = {
-    imgData: (Buffer.from(await downloadFileAsBytes(path))).toString('base64'),
-    imgHash: (await downloadFileMetadata(path)).customMetadata!.imgHash!,
+    imgData: (Buffer.from(await downloadFileAsBytes(filePath))).toString('base64'),
+    imgHash: (await downloadFileMetadata(filePath)).customMetadata!.imgHash!,
   }
 
   // console.log('before:', encryptedPic.imgData);

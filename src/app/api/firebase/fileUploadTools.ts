@@ -5,6 +5,7 @@ import { encryptPicture } from ".";
 import { HexType } from "../../app/common";
 
 export async function uploadFileAsBytes(filePath:string, data:Blob | Uint8Array | ArrayBuffer): Promise<UploadResult> {
+  filePath = filePath.toLowerCase();
   const fileRef = ref(storage, filePath);
 
   try {
@@ -17,6 +18,7 @@ export async function uploadFileAsBytes(filePath:string, data:Blob | Uint8Array 
 };
 
 export async function uploadFileAsString(filePath:string, data:string, format?:StringFormat): Promise<UploadResult> {
+  filePath = filePath.toLowerCase()
   const fileRef = ref(storage, filePath);
 
   try {
@@ -29,6 +31,8 @@ export async function uploadFileAsString(filePath:string, data:string, format?:S
 };
 
 export function uploadFileAsBytesResumable(filePath:string, data:Blob | Uint8Array | ArrayBuffer): UploadTask {
+
+  filePath = filePath.toLowerCase();
   const fileRef = ref(storage, filePath);
 
   try {
@@ -41,6 +45,8 @@ export function uploadFileAsBytesResumable(filePath:string, data:Blob | Uint8Arr
 };
 
 export async function updateFileMetadata(filePath:string, metadata:SettableMetadata): Promise<FullMetadata> {
+
+  filePath = filePath.toLowerCase();
   const fileRef = ref(storage, filePath);
 
   try {
@@ -61,8 +67,6 @@ export async function uploadAndEncryptImg(filePath:string, img:string, addr:HexT
       imgHash: encryptedImg.imgHash,
     }
   };
-  
-  const path = filePath.toLowerCase(); 
 
   try {
     await uploadFileAsString(path, encryptedImg.imgData, 'base64');

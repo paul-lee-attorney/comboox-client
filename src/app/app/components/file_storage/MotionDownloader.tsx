@@ -34,7 +34,7 @@ function MotionDownloader({motion}: MotionDownloaderProps) {
     
       str += gk + '/';
       str += getTypeOfMotion(motion) + '/';
-      str += longSnParser(myNo.toString()) + '/';
+      str += longSnParser(motion.body.proposer.toString()) + '/';
       str += longSnParser(motion.head.seqOfMotion.toString()) + '/';
       str += motion.contents.toString(16).padStart(64, '0').substring(54).toLowerCase() + '.pdf'; 
 

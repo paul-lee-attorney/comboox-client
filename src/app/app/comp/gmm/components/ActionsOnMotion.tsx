@@ -67,7 +67,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
           >
             {actionsOnMotion.map((v, i) => {
               if (motion.body.state == 1 && i > 1) return null;
-              else if (motion.body.state == 2 && !voteIsEnd && (i < 1 || i > 2)) return null;
+              else if (motion.body.state == 2 && !voteIsEnd && (i < 1 || i > 3)) return null;
               else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
@@ -75,6 +75,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
+              else if (motion.body.state > 3) return null;
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
             })}
           </Select>
@@ -84,7 +85,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
 
       { compsOfAction.map((v,i)=>{
         if (motion.body.state == 1 && i > 1) return null;
-        else if (motion.body.state == 2 && !voteIsEnd && (i < 1 || i > 2)) return null;
+        else if (motion.body.state == 2 && !voteIsEnd && (i < 1 || i > 3)) return null;
         else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
@@ -92,7 +93,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
-
+        else if (motion.body.state > 3) return null;
         return (
           <Collapse key={i} in={ typeOfAction == i.toString() } >
             {v}
