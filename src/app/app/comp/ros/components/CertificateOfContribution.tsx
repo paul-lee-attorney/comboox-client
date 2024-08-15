@@ -41,7 +41,7 @@ export function CertificateOfContribution({open, share, setOpen, refresh}: Certi
                     inputProps={{readOnly: true}}
                     sx={{ m: 1 }} 
                     id="tfSeqOfShare" 
-                    label="SeqOfShare" 
+                    label="SeqOfCert" 
                     variant="outlined"
                     value = { longSnParser(share.head.seqOfShare.toString()) }
                     size='small'

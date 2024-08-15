@@ -38,7 +38,7 @@ export function GetDTClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
 
     { 
       field: 'seqOfShare', 
-      headerName: 'SeqOfShare',
+      headerName: 'SeqOfCert',
       valueGetter: p => longSnParser(p.row.seqOfShare.toString()) ,
       headerAlign:'right',
       align: 'right',

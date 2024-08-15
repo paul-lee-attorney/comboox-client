@@ -32,7 +32,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
       <TextField 
         sx={{ m: 1, minWidth: 120 }} 
         id="tfSeqOfShare" 
-        label="seqOfShare" 
+        label="SeqOfCert" 
         variant="outlined"
         error={ valid['SeqOfShare']?.error }
         helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
@@ -48,7 +48,7 @@ export function SearchPledge({setPld, setOpen}:SearchPledgeProps) {
       <TextField 
         sx={{ m: 1, minWidth: 218 }} 
         id="tfSeqOfPld" 
-        label="seqOfPld" 
+        label="SeqOfPld" 
         variant="outlined"
         error={ valid['SeqOfPld']?.error }
         helperText={ valid['SeqOfPld']?.helpTx ?? ' ' }

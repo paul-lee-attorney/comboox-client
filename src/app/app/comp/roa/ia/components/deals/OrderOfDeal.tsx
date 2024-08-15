@@ -283,7 +283,7 @@ export function OrderOfDeal({ addr, isFinalized, open, deal, setOpen, setDeal, r
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='SeqOfShare'
+                  label='SeqOfCert'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{

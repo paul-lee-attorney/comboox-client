@@ -137,7 +137,7 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
             <TextField  
               variant='outlined'
               size="small"
-              label='SeqOfShare'
+              label='SeqOfCert'
               error={ valid['SeqOfShare']?.error }
               helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
               sx={{

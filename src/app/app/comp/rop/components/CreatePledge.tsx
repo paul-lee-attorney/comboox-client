@@ -74,7 +74,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
 
             <TextField 
               variant='outlined'
-              label='SeqOfShare'
+              label='SeqOfCert'
               error={ valid['SeqOfShare']?.error }
               helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }
               sx={{

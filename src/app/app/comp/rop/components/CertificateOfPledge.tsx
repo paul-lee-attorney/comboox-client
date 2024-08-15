@@ -67,7 +67,7 @@ export function CertificateOfPledge({open, pld, setOpen, refresh}: CertificateOf
                     inputProps={{readOnly: true}}
                     sx={{ m: 1 }} 
                     id="tfSeqOfShare" 
-                    label="SeqOfShare" 
+                    label="SeqOfCert" 
                     variant="outlined"
                     value = { longSnParser(pld.head.seqOfShare.toString()) }
                     size='small'

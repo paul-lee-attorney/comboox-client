@@ -78,7 +78,7 @@ function RegisterOfShares() {
                   <TextField 
                     sx={{ m: 1, minWidth: 218 }} 
                     id="tfSeqOfShare" 
-                    label="seqOfShare" 
+                    label="SeqOfCert" 
                     variant="outlined"
                     error={ valid['SeqOfShare']?.error }
                     helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }          

@@ -26,6 +26,7 @@ import { getSHA } from "../../../gk";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { voteEnded } from "../../../gmm/meetingMinutes";
 import { established } from "./sigPage/sigPage";
+import { membersAllSigned } from "../sha";
 
 interface ShaLifecycleProps {
   sha: HexType;
@@ -45,7 +46,10 @@ export function ShaLifecycle({sha, finalized}: ShaLifecycleProps) {
 
       if (gk && boox) {
 
-        let shaInForce = await getSHA(gk);
+        // let shaInForce = await getSHA(gk);
+
+        let allSigned = await membersAllSigned( boox[booxMap.ROM], sha);
+
         let head = await getHeadOfFile(boox[booxMap.ROC], sha);
         let fileState = head.state;
         let seq = head.seqOfMotion;
@@ -59,7 +63,7 @@ export function ShaLifecycle({sha, finalized}: ShaLifecycleProps) {
           case 2:
             flag = await established(sha);
             nextStep = flag 
-              ? shaInForce == AddrZero
+              ? allSigned
                 ? 6 : 3
               : 2;
             break;

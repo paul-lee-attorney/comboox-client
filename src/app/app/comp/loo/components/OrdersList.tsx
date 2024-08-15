@@ -26,7 +26,7 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
     },
     {
       field: 'seqOfShare',
-      headerName: 'SeqOfShare',
+      headerName: 'SeqOfCert',
       valueGetter: p => longSnParser(p.row.node.seqOfShare.toString()),
       headerAlign: 'center',
       align:'center',      

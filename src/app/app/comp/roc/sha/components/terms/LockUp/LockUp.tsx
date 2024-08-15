@@ -244,7 +244,7 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
 
                       <TextField 
                         variant='outlined'
-                        label='SeqOfShare'
+                        label='SeqOfCert'
                         size="small"
                         error={ valid['SeqOfShare']?.error }
                         helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }

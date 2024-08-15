@@ -19,7 +19,7 @@ export function PledgesList({list, setPledge, setOpen}:PledgesListProps) {
   const columns: GridColDef[] = [
     {
       field: 'seqOfShare',
-      headerName: 'SeqOfShare',
+      headerName: 'SeqOfCert',
       valueGetter: p => longSnParser(p.row.head.seqOfShare.toString()),
       headerAlign: 'left',
       align:'left',      

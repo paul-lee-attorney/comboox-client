@@ -391,7 +391,7 @@ export function InitBos({nextStep}: InitCompProps) {
 
               <TextField
                 variant="outlined"
-                label="SeqOfShare"
+                label="SeqOfCert"
                 color='warning'
                 error={ valid['SeqOfShare']?.error }
                 helperText={ valid['SeqOfShare']?.helpTx ?? ' ' }

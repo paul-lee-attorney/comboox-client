@@ -31,7 +31,7 @@ export function DealsList({ list, setDeal, setOpen }:DealsListProps ) {
     },
     {
       field: 'seqOfShare',
-      headerName: 'SeqOfShare',
+      headerName: 'SeqOfCert',
       valueGetter: p => longSnParser(p.row.head.seqOfShare.toString()),
       width: 128,
       headerAlign:'right',

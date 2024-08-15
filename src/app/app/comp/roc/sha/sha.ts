@@ -2,6 +2,8 @@ import { readContract } from "@wagmi/core";
 import { AddrZero, Bytes32Zero, HexType } from "../../../common";
 import { shareholdersAgreementABI } from "../../../../../../generated";
 import { FirstRefusalRule, frParser } from "./components/rules/FirstRefusalRules/SetFirstRefusalRule";
+import { membersList } from "../../rom/rom";
+import { getParties, isSigner } from "./components/sigPage/sigPage";
 
 export const defaultTerms:HexType[] = [
   AddrZero, AddrZero, AddrZero,
@@ -114,6 +116,26 @@ export async function getFirstRefusalRules(sha: HexType): Promise<FirstRefusalRu
   }
 
   return out;
+}
+
+export async function membersAllSigned(rom:HexType, sha: HexType): Promise<boolean> {
+  let members = (await membersList(rom)).map(v=>(v.toString()));
+  let lenOfMembers = members.length;
+  let parties = (await getParties(sha)).map(v=>(v.toString()));
+  let lenOfParties = parties.length;
+
+  if (lenOfParties == 0 || lenOfMembers != lenOfParties) {
+    return false;
+  }
+
+  while (lenOfMembers > 0) {
+    if (parties.indexOf(members[lenOfMembers-1]) < 0) {
+      return false;
+    }
+    lenOfMembers--;
+  }
+
+  return true;
 }
 
   // ==== Rules ====
