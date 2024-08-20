@@ -91,7 +91,7 @@ export function AcctPage({ flag }:AcctPageProps) {
         sx={{ minWidth:218 }} 
         endIcon={<BorderColor />}       
       >
-        Register
+        Sign Up
       </LoadingButton>
 
     )}
