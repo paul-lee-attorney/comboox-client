@@ -85,7 +85,9 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
 
             if (last.blockNumber == item.blockNumber &&
                 last.transactionHash == item.transactionHash &&
-                last.from == item.from ) 
+                last.from == item.from &&
+                last.isCBP == item.isCBP &&
+                last.typeOfIncome == item.typeOfIncome) 
             {
               arr[arr.length-1].amt += item.amt;
               continue;
@@ -142,14 +144,16 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
 
             if (last.blockNumber == item.blockNumber &&
                 last.transactionHash == item.transactionHash &&
-                last.from == item.from ) 
+                last.from == item.from &&
+                last.isCBP == item.isCBP && 
+                last.typeOfIncome == item.typeOfIncome) 
             {
               arr[arr.length-1].amt += item.amt;
               continue;
             }
           }
 
-          arr.push(item);          
+          arr.push(item);
         }  
         
       }
