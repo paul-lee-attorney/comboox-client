@@ -12,7 +12,6 @@ import { RegKeeper } from "./actions_of_setting/RegKeeper";
 import { RegBook } from "./actions_of_setting/RegBook";
 import { TakeBackKeys } from "./actions_of_setting/TakeBackKeys";
 import { InitKeepers } from "./actions_of_setting/InitKeepers";
-import { CreateCorpSeal } from "./actions_of_setting/CreateCorpSeal";
 
 export interface ActionsOfSettingProps{
   title: number;
@@ -28,7 +27,7 @@ export function ActionsOfSetting({ title, addr, setTitle, setAddr, setOpen, setT
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
   const actionsOfSetting = [
-    'SetCompInfo', 'SetOwner', 'SetDK', 'TakeBackKeys', 'RegKeeper', 'RegBook',  'InitKeepers', 'CreateSeal' 
+    'SetCompInfo', 'SetOwner', 'SetDK', 'TakeBackKeys', 'RegKeeper', 'RegBook',  'InitKeepers' 
   ]
 
   const compsOfSetting = [
@@ -39,7 +38,6 @@ export function ActionsOfSetting({ title, addr, setTitle, setAddr, setOpen, setT
     <RegKeeper key={4} title={title} book={addr} setTitle={setTitle} setBook={setAddr} setOpen={setOpen} />,
     <RegBook key={5} title={title} book={addr} setTitle={setTitle} setBook={setAddr} setOpen={setOpen} />,
     <InitKeepers key={6} docAddr={addr} setDocAddr={setAddr} setOpen={setOpen} />,
-    <CreateCorpSeal key={7} setOpen={setOpen} setTime={setTime} />,
   ]
 
   return(
