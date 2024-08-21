@@ -51,7 +51,7 @@ export function SetCompInfo({setOpen, setTime}:ConfigSettingProps) {
     setInfo({
       args: [
         comInfo.currency, 
-        `0x${toAscii(comInfo.symbol).padEnd(40,'0')}`, 
+        `0x${toAscii(comInfo.symbol).padEnd(38,'0')}`, 
         comInfo.name 
       ],
     });
