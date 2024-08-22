@@ -16,7 +16,7 @@ import { CenterInfo } from './center_info/CenterInfo';
 
 export function GetComp() {
 
-  const { setGK } = useComBooxContext();
+  const { setGK, setBoox, setOnPar, setCompInfo } = useComBooxContext();
 
   const [ regNum, setRegNum ] = useState<string>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -26,6 +26,12 @@ export function GetComp() {
   const [ open, setOpen ] = useState(false);
 
   const handleClick = async () => {
+
+    setGK(undefined);
+    setBoox(undefined);
+    setOnPar(undefined);
+    setCompInfo(undefined);
+
     if ( regNum ) {
       getDocByUserNo(BigInt(regNum)).then(
         (doc:Doc) => {
@@ -34,7 +40,6 @@ export function GetComp() {
             setGK(doc.body);
             setDoc(doc);
           } else {
-            setGK(undefined);
             setDoc(undefined);
             setOpen(true);
           }
