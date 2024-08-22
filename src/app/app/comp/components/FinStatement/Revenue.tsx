@@ -56,8 +56,8 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
       while (cnt > 0) {
 
         if (cbpLogs[cnt-1].args.from == AddrOfTank) {
-          cnt--;
-          continue;
+            cnt--;
+            continue;
         }
 
         let blkNo = cbpLogs[cnt-1].blockNumber;
@@ -67,7 +67,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: cbpLogs[cnt-1].transactionHash,
-          typeOfIncome: 'Royalty Income',
+          typeOfIncome: cbpLogs[cnt-1].args.from == AddrZero ? 'Mint CBP' : 'Royalty Income',
           isCBP: true,
           amt: cbpLogs[cnt-1].args.value ?? 0n,
           from: cbpLogs[cnt-1].args.from ?? AddrZero,
