@@ -16,6 +16,7 @@ import { OrdersList } from "./components/OrdersList";
 import { InvestorsList } from "./components/InvestorsList";
 import { counterOfClasses } from "../ros/ros";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { BuyOrders } from "./components/BuyOrders";
 
 function ListOfOrders() {
 
@@ -119,9 +120,10 @@ function ListOfOrders() {
 
         <TabPanel value={0} sx={{ justifyContent:'start', alignItems:'center' }} >
           <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.seq} refresh={refresh} />
-          {list && (
-            <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
-          )}
+          
+          <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
+          <BuyOrders classOfShare={classOfShare} />
+          
         </TabPanel>
 
         <TabPanel value={1} sx={{ justifyContent:'start', alignItems:'center' }} >

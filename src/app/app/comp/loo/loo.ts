@@ -77,27 +77,71 @@ export interface Investor {
   idHash: HexType;
 }
 
+// ==== Deal ====
 export interface Deal {
-  classOfShare: number;
-  seqOfShare: number;
-  buyer: number;
-  groupRep: number;
-  paid: bigint;
-  price: number;
-  votingWeight: number;
-  distrWeight: number;
+  classOfShare: string;
+  seqOfShare: string;
+  buyer: string;
+  groupRep: string;
+  paid: string;
+  price: string;
+  votingWeight: string;
+  distrWeight: string;
 }
 
 export const defaultDeal: Deal = {
-  classOfShare: 0,
-  seqOfShare: 0,
-  buyer: 0,
-  groupRep: 0,
-  paid: 0n,
-  price: 0,
-  votingWeight: 0,
-  distrWeight: 0,
+  classOfShare: '0',
+  seqOfShare: '0',
+  buyer: '0',
+  groupRep: '0',
+  paid: '0',
+  price: '0',
+  votingWeight: '0',
+  distrWeight: '0',
 }
+
+export function dealParser(hexDeal: HexType):Deal {
+  let deal: Deal = {
+    classOfShare: parseInt(hexDeal.substring(2, 6), 16).toString(),
+    seqOfShare: parseInt(hexDeal.substring(6, 14), 16).toString(),
+    buyer: parseInt(hexDeal.substring(14, 24), 16).toString(),
+    groupRep: parseInt(hexDeal.substring(24, 34), 16).toString(),
+    paid: parseInt(hexDeal.substring(34, 50), 16).toString(),
+    price: parseInt(hexDeal.substring(50, 58), 16).toString(),
+    votingWeight: parseInt(hexDeal.substring(58, 62), 16).toString(),
+    distrWeight: parseInt(hexDeal.substring(62, 66), 16).toString()
+  }
+  return deal;
+}
+
+// ==== GoldChain Node ====
+
+export interface Node {
+  prev: string;
+  next: string;
+  seqOfShare: string;
+  paid: string;
+  price: string;
+  expireDate: string;
+  votingWeight: string;
+  distrWeight: string;
+}
+
+export function nodeParser(hexNode: HexType):Node {
+  let node: Node = {
+    prev: parseInt(hexNode.substring(2, 8), 16).toString(),
+    next: parseInt(hexNode.substring(8, 14), 16).toString(),
+    seqOfShare: parseInt(hexNode.substring(14, 22), 16).toString(),
+    paid: parseInt(hexNode.substring(22, 38), 16).toString(),
+    price: parseInt(hexNode.substring(38, 46), 16).toString(),
+    expireDate: parseInt(hexNode.substring(46, 58), 16).toString(),
+    votingWeight: parseInt(hexNode.substring(58, 62), 16).toString(),
+    distrWeight: parseInt(hexNode.substring(62, 66), 16).toString()
+  }
+  return node;
+}
+
+// ==== Funcs   ====
 
 export async function isInvestor(addr: HexType,  userNo: number):Promise<boolean>{
   let res = await readContract({
