@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrZero, booxMap, HexType } from "../../../common";
+import { AddrZero, booxMap, HexType, MaxPrice } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, defFormResults, FormResults, longSnParser, onlyInt } from "../../../common/toolsKit";
 import { Deal, dealParser, Node, nodeParser } from "../loo";
 import { Refresh } from "@mui/icons-material";
 
@@ -40,6 +40,11 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
   
   const [ time, setTime ] = useState(0);
 
+  const [ left, setLeft ] = useState(0);
+  const [ right, setRight ] = useState(0);
+
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const refresh = ()=>{
     setTime(Date.now());
   }
@@ -57,7 +62,8 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
       const buyOrderLogs = await client.getLogs({
         address: addrLOO,
         event: parseAbiItem('event PlaceBuyOrder(uint caller, uint indexed classOfShare, uint indexed paid, uint indexed price)'),
-        fromBlock: lastBlock - 60000n,
+        fromBlock: lastBlock - 60000n - BigInt(left),
+        toBlock: lastBlock - BigInt(right)
       });
 
       let cnt = buyOrderLogs.length;
@@ -99,7 +105,8 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
       let dealLogs = await client.getLogs({
         address: addrLOO,
         event: parseAbiItem('event Deal(bytes32 indexed deal)'),
-        fromBlock: lastBlock - 60000n,
+        fromBlock: lastBlock - 60000n - BigInt(left),
+        toBlock: lastBlock - BigInt(right)
       });
 
       cnt = dealLogs.length;
@@ -148,7 +155,8 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
       let expOfferLogs = await client.getLogs({
         address: addrLOO,
         event: parseAbiItem('event OfferExpired(bytes32 indexed offer)'),
-        fromBlock: lastBlock - 60000n,
+        fromBlock: lastBlock - 60000n - BigInt(left),
+        toBlock: lastBlock - BigInt(right)
       });
 
       cnt = expOfferLogs.length;
@@ -184,7 +192,8 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
       let balanceLogs = await client.getLogs({
         address: addrLOO,
         event: parseAbiItem('event GetBalance(bytes32 indexed balance)'),
-        fromBlock: lastBlock - 60000n,
+        fromBlock: lastBlock - 60000n - BigInt(left),
+        toBlock: lastBlock - BigInt(right)
       });
 
       cnt = balanceLogs.length;
@@ -231,7 +240,7 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
 
     getEvents();
 
-  },[client, boox, classOfShare, setQty, setAmt, time]);
+  },[client, boox, classOfShare, setQty, setAmt, time, left, right]);
 
   const columns: GridColDef[] = [
     {
@@ -288,7 +297,7 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
         </Typography>
 
         <Typography variant='h5' sx={{ m:2 }}  >
-          (Par: { baseToDollar(qty.toString())} / Value: { bigIntToStrNum(amt, 8) })
+          (Paid: { baseToDollar(qty.toString())} / Value: { bigIntToStrNum(amt, 8) })
         </Typography>
 
         <Tooltip 
@@ -305,6 +314,45 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
             <Refresh />
           </IconButton>
         </Tooltip>
+
+        <TextField 
+          variant='outlined'
+          size="small"
+          label='StartBlock'
+          error={ valid['StartBlock']?.error }
+          helperText={ valid['StartBlock']?.helpTx ?? ' ' }
+          sx={{
+            m:1, ml:20,
+            minWidth: 218,
+          }}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyInt('StartBlock', input, MaxPrice, setValid);
+            setLeft(Number(input));
+          }}
+
+          value={ left.toString() } 
+        />
+
+        <TextField 
+          variant='outlined'
+          size="small"
+          label='EndBlock'
+          error={ valid['EndBlock']?.error }
+          helperText={ valid['EndBlock']?.helpTx ?? ' ' }
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyInt('EndBlock', input, MaxPrice, setValid);
+            setRight(Number(input));
+          }}
+
+          value={ right.toString() } 
+        />
+
   
       </Stack>
 
@@ -316,7 +364,7 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
         columns={ columns }
         disableRowSelectionOnClick
       />
-
+x
     </Paper>
   );
 } 
