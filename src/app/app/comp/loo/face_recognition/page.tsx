@@ -7,13 +7,11 @@ import Image from 'next/image';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 import { useWalletClient } from 'wagmi';
 import { getMyUserNo } from '../../../rc';
-import { encryptPicture } from '../../../../api/firebase';
 import { HexType } from '../../../common';
-import { updateFileMetadata, uploadAndEncryptImg, uploadFileAsBytesResumable } from '../../../../api/firebase/fileUploadTools';
+import { updateFileMetadata, uploadAndEncryptImg } from '../../../../api/firebase/fileUploadTools';
 import { ArrowBack } from '@mui/icons-material';
 import { useRouter } from 'next/navigation';
 import { longSnParser } from '../../../common/toolsKit';
-import { SettableMetadata } from 'firebase/storage';
 
 export default function FaceRecognition() {
 

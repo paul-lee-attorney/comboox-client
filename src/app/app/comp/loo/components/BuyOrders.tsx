@@ -5,7 +5,7 @@ import { AddrZero, booxMap, HexType } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { baseToDollar, dateParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { Deal, dealParser, Node, nodeParser } from "../loo";
 import { Refresh } from "@mui/icons-material";
 
@@ -106,7 +106,6 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
 
       let qty:bigint = 0n;
       let amt:bigint = 0n;
-
 
       while (cnt > 0) {
 
@@ -226,13 +225,13 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
       }
 
       setQty(qty);
-      setAmt(amt / 10000n);
+      setAmt(amt);
       setRecords(arr);
     }
 
     getEvents();
 
-  },[client, boox, classOfShare, setQty, setAmt]);
+  },[client, boox, classOfShare, setQty, setAmt, time]);
 
   const columns: GridColDef[] = [
     {
@@ -288,8 +287,8 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
           <b>Deals List</b>  
         </Typography>
 
-        <Typography variant='h4' sx={{ m:2 }}  >
-          (Par: { baseToDollar(qty.toString())} / Value: {amt.toString()})
+        <Typography variant='h5' sx={{ m:2 }}  >
+          (Par: { baseToDollar(qty.toString())} / Value: { bigIntToStrNum(amt, 8) })
         </Typography>
 
         <Tooltip 
@@ -313,7 +312,7 @@ export function BuyOrders({classOfShare}: BuyOrdersProps) {
         initialState={{pagination:{paginationModel:{pageSize: 10}}}} 
         pageSizeOptions={[5, 10, 15, 20]} 
         rows={ records } 
-        getRowId={(row:OrderProps) => (row.blockNumber.toString() + row.transactionHash + row.buyer) } 
+        getRowId={(row:OrderProps) => (row.blockNumber.toString() + row.transactionHash + row.typeOfOrder + row.seqOfShare + row.paid + row.price) } 
         columns={ columns }
         disableRowSelectionOnClick
       />
