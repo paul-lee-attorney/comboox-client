@@ -46,22 +46,17 @@ export default function FaceRecognition() {
 
 	useEffect(()=>{
 		const updateFilePath = async () => {				
-			if (!signer) {
-				console.log('No Signer Detected!');
-				return;
-			}
+			if (signer) {
+				const myNo = await getMyUserNo(signer.account.address);
 
-			const myNo = await getMyUserNo(signer.account.address);
-			if (!myNo) {
-				console.log('UserNo Not Detected!');
-				return;
-			}
-	
-			let str = gk + '/investors/';					
-			str += longSnParser(myNo.toString()) + '/';
-			str = str.toLowerCase();
+				let str = gk + '/investors/';					
+				str += longSnParser(myNo.toString()) + '/';
+				str = str.toLowerCase();
 
-			setFilePath(str);
+				console.log('filePath: ', str);
+
+				setFilePath(str);
+			}
 		}
 	
 		updateFilePath();
@@ -100,6 +95,7 @@ export default function FaceRecognition() {
 
 	const uploadPic = async(pic:string, addr:HexType, gk:HexType, sn:number):Promise<string | undefined> => {
 		const path = filePath.toLowerCase() + '000' + sn + '.jpg';
+		console.log('path of uploadPic: ', path);
 		const metadata = await uploadAndEncryptImg(path, pic, addr, gk);
 		if (metadata) {
 			return metadata.customMetadata!.imgHash;
@@ -107,74 +103,77 @@ export default function FaceRecognition() {
 	}
 
 	const handleVerifyFace = async () => {
-		if (!gk) {
-			console.log('General Keeper Not Retrieved');
-			return;
-		}
-		if (!signer) {
-			console.log('Signer Not Detected!');
-			return;
-		}
-		const addr = signer.account.address;
-		const myNo = await getMyUserNo(addr);
-		if (!myNo) {
-			console.log('UserNo Not Detected!');
-			return;
-		}
 
-		let digest = await uploadPic(photoIdImage!, addr, gk, 1);
+		if (gk && signer) {
+			const addr = signer.account.address;
+			// const myNo = await getMyUserNo(addr);
+			// console.log('addrOfSigner: ', addr);
 
-		const sig = await signer.signMessage({message: digest!});
-		const imgInfo = {
-			customMetadata: {
-				filer: addr,
-				imgHash: digest!,
-				sig: sig,
-			}
-		};
-
-		const photoIdPath = filePath + '0001.jpg';
-		await updateFileMetadata(photoIdPath, imgInfo);
-
-		if (modelsLoaded && videoRef.current && canvasRef.current && photoIdImage) {
-
-			setCapturedImage([]);
-			
-			let flag = await verifyFace(addr, gk, 2);
-			if (!flag) return;
-
-			setText('Pls turn your head left and right!');
-			flag = await checkFaceAct(videoRef.current, checkHeadTurn);
-			if (!flag) {
-					setText('No head turn detected!');
-					return;
+			if (photoIdImage) {			
+				var digest = await uploadPic(photoIdImage, addr, gk, 1);
+				// console.log('digest: ', digest);
 			}
 
-			flag = await verifyFace(addr, gk, 3);
-			if (!flag) return;
+			if (digest) {
+				// console.log('signer: ', signer);
+				const sig = await signer.signMessage({message: digest});
+				// console.log('sig: ', sig);
+	
+				const imgInfo = {
+					customMetadata: {
+						filer: addr,
+						imgHash: digest!,
+						sig: sig,
+					}
+				};	
 
-			setText('Please nod your head!');
-			flag = await checkFaceAct(videoRef.current, checkHeadNode);
-			if (!flag) {
-					setText('No head nod detected!');
-					return;
+				if (filePath.length > 0) {
+					const photoIdPath = filePath + '0001.jpg';
+					// console.log('photoIdPath: ', photoIdPath);
+					await updateFileMetadata(photoIdPath, imgInfo);	
+				}	
 			}
+	
+	
+			if (modelsLoaded && videoRef.current && canvasRef.current && photoIdImage) {
 
-			flag = await verifyFace(addr, gk, 4);
-			if (!flag) return;
-
-			setText('Please open your mouth!');
-			flag = await checkFaceAct(videoRef.current, checkMouthOpen);
-			if (!flag) {
-					setText('No mouth open detected!');
-					return;
+				setCapturedImage([]);
+				
+				let flag = await verifyFace(addr, gk, 2);
+				if (!flag) return;
+	
+				setText('Pls turn your head left and right!');
+				flag = await checkFaceAct(videoRef.current, checkHeadTurn);
+				if (!flag) {
+						setText('No head turn detected!');
+						return;
+				}
+	
+				flag = await verifyFace(addr, gk, 3);
+				if (!flag) return;
+	
+				setText('Please nod your head!');
+				flag = await checkFaceAct(videoRef.current, checkHeadNode);
+				if (!flag) {
+						setText('No head nod detected!');
+						return;
+				}
+	
+				flag = await verifyFace(addr, gk, 4);
+				if (!flag) return;
+	
+				setText('Please open your mouth!');
+				flag = await checkFaceAct(videoRef.current, checkMouthOpen);
+				if (!flag) {
+						setText('No mouth open detected!');
+						return;
+				}
+	
+				flag = await verifyFace(addr, gk, 5);
+				if (!flag) return;
+	
+				setText('Identity Verified!');
 			}
-
-			flag = await verifyFace(addr, gk, 5);
-			if (!flag) return;
-
-			setText('Identity Verified!');
-  
 		}
 	};
 

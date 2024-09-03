@@ -99,7 +99,7 @@ export async function checkFaceAct (
     
     if (flag) {
       frameCount++;
-      console.log('frameCount: ', frameCount);
+      // console.log('frameCount: ', frameCount);
     } else {
       if (frameCount >= FRAMES_THRESHOLD) {
         actCount++;
@@ -170,14 +170,14 @@ export async function checkHeadTurn (video: HTMLVideoElement, prePosition: HeadP
     const nose = landmarks.getNose()[0];
     const currentPosition: HeadPosition = { x: nose.x, y:nose.y, timestamp: Date.now() };
 
-    console.log('prePosition: ', prePosition);
-    console.log('curPosition: ', currentPosition);
+    // console.log('prePosition: ', prePosition);
+    // console.log('curPosition: ', currentPosition);
 
     if (prePosition) {
       const deltaX = currentPosition.x - prePosition.x;
       const deltaTime = currentPosition.timestamp - prePosition.timestamp;
       const velocity = deltaX / deltaTime;
-      console.log('velocity: ', velocity);
+      // console.log('velocity: ', velocity);
       return Math.abs(velocity) > threshold;
     } else {
       return checkHeadTurn(video, currentPosition);
@@ -199,8 +199,8 @@ export async function checkHeadNode (video: HTMLVideoElement, prePosition: HeadP
     const nose = landmarks.getNose()[0];
     const currentPosition: HeadPosition = { x: nose.x, y:nose.y, timestamp: Date.now() };
 
-    console.log('preNodPosition: ', prePosition);
-    console.log('curNodPosition: ', currentPosition);
+    // console.log('preNodPosition: ', prePosition);
+    // console.log('curNodPosition: ', currentPosition);
 
 
     if (prePosition) {
@@ -208,7 +208,7 @@ export async function checkHeadNode (video: HTMLVideoElement, prePosition: HeadP
       const deltaTime = currentPosition.timestamp - prePosition.timestamp;
       const velocity = deltaX / deltaTime;
 
-      console.log('velocityOfNod: ', velocity);
+      // console.log('velocityOfNod: ', velocity);
 
       return Math.abs(velocity) > threshold;
     } else {
@@ -236,11 +236,11 @@ export async function checkMouthOpen(video: HTMLVideoElement, prePosition: HeadP
     const rightLipPoint = mouth[6];  // Right corner of the mouth
     
     const verticalDistance = euclideanDistance(topLipPoint, bottomLipPoint);
-    console.log('verDis: ', verticalDistance);
+    // console.log('verDis: ', verticalDistance);
     const horizontalDistance = euclideanDistance(leftLipPoint, rightLipPoint);
-    console.log('horDis: ', horizontalDistance);
+    // console.log('horDis: ', horizontalDistance);
     
-    console.log('h/v ratio:', horizontalDistance / verticalDistance);
+    // console.log('h/v ratio:', horizontalDistance / verticalDistance);
 
     return horizontalDistance / verticalDistance < threshold;
   }

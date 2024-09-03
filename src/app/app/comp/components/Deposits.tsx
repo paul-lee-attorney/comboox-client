@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { Paper, Stack, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { HexType } from "../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, dateParser, longSnParser } from "../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../common/toolsKit";
 import { CopyLongStrTF } from "../../common/CopyLongStr";
+import { Refresh } from "@mui/icons-material";
 
 export type DepositProps = {
   blockNumber: bigint,
@@ -24,6 +25,12 @@ export function Deposits() {
 
   const [ records, setRecords ] = useState<DepositProps[]>([]);
   const [ total, setTotal ] = useState(0n);
+
+  const [ time, setTime ] = useState<number>(0);
+
+  const refresh = ()=>{
+    setTime(Date.now());
+  }
 
   useEffect(()=>{
 
@@ -116,7 +123,7 @@ export function Deposits() {
 
     getEvents();
 
-  },[client, gk, boox, keepers]);
+  },[client, gk, boox, keepers, time]);
 
   const columns: GridColDef[] = [
     {
@@ -180,8 +187,23 @@ export function Deposits() {
           <Stack direction='row' sx={{ alignItems:'center' }} >
 
             <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-              <b>Deposits - { bigIntToStrNum(total, 18) } ETH</b>
+              <b>Deposits - { baseToDollar((total / 10n**14n).toString()) } ETH</b>
             </Typography>
+
+            <Tooltip
+              title='Refresh List' 
+              placement='right' 
+              arrow 
+            >
+              <IconButton 
+                size='small'
+                sx={{ mx:5 }}
+                onClick={()=>refresh()}
+                color="primary"
+              >
+                <Refresh />
+              </IconButton>
+            </Tooltip>
 
           </Stack>
 

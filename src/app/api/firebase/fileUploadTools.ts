@@ -69,13 +69,13 @@ export async function uploadAndEncryptImg(filePath:string, img:string, addr:HexT
   };
 
   try {
-    await uploadFileAsString(path, encryptedImg.imgData, 'base64');
+    await uploadFileAsString(filePath, encryptedImg.imgData, 'base64');
   } catch(error:any) {
     console.log('upload error:', error.message);
   }
 
   try {
-    const metadata = await updateFileMetadata(path, imgInfo);
+    const metadata = await updateFileMetadata(filePath, imgInfo);
     return metadata;
   } catch(error:any) {
     console.log('updateMetadata error:', error.message);

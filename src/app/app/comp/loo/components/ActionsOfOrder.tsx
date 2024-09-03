@@ -6,6 +6,7 @@ import { PlaceSellOrder } from "./actions_of_order/PlaceSellOrder";
 import { PlaceBuyOrder } from "./actions_of_order/PlaceBuyOrder";
 import { WithdrawInitialOffer } from "./actions_of_order/WithdrawInitialOffer";
 import { WithdrawSellOrder } from "./actions_of_order/WithdrawSellOrder";
+import { WithdrawBuyOrder } from "./actions_of_order/WithdrawBuyOrder";
 
 
 export interface ActionsOfOrderProps{
@@ -19,7 +20,7 @@ export function ActionsOfOrder({classOfShare, seqOfOrder, refresh}: ActionsOfOrd
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfListing = [
-    'Buy Order', 'Sell Order', 'Initial Offer', 'Withdraw Initial Offer', 'Withdraw Sell Order'
+    'Buy Order', 'Sell Order', 'Initial Offer', 'Withdraw Initial Offer', 'Withdraw Sell Order', 'Withdraw Buy Order'
   ]
 
   const compsOfAction = [
@@ -28,6 +29,7 @@ export function ActionsOfOrder({classOfShare, seqOfOrder, refresh}: ActionsOfOrd
     <PlaceInitialOffer key={2} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
     <WithdrawInitialOffer key={3} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
     <WithdrawSellOrder key={4} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
+    <WithdrawBuyOrder key={5} classOfShare={classOfShare} seqOfOrder={seqOfOrder} refresh={refresh} />,
   ]
 
   return(

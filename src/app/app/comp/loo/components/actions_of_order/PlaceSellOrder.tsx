@@ -2,7 +2,7 @@ import { Checkbox, FormControlLabel, Paper, Stack, TextField } from "@mui/materi
 
 import { Loyalty } from "@mui/icons-material";
 import { useState } from "react";
-import { useGeneralKeeperPlaceSellOrder } from "../../../../../../../generated";
+import { useGeneralKeeper_5PlaceSellOrder } from "../../../../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../loo";
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../common";
@@ -15,7 +15,6 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
 
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
 
-  const [ fromHead, setFromHead ] = useState(false);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
@@ -27,7 +26,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {
     isLoading: placeSellOrderLoading,
     write:placeSellOrder,
-  } = useGeneralKeeperPlaceSellOrder({
+  } = useGeneralKeeper_5PlaceSellOrder({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -46,10 +45,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         BigInt(order.execHours), 
         strNumToBigInt(order.paid, 4),
         strNumToBigInt(order.price, 4),
-        // BigInt(order.paid), 
-        // BigInt(order.price), 
         BigInt(order.seqOfLR),
-        fromHead, 
       ],
     });
   };
@@ -151,24 +147,6 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           }}
 
           value={ order.price.toString() } 
-        />
-
-        <FormControlLabel
-          label='SortFromHead'
-          sx={{
-            m:1,
-            width: 188,
-          }}
-          control={
-            <Checkbox 
-              sx={{
-                mx:1,
-                height: 30,
-              }}
-              onChange={e => setFromHead(e.target.checked)}
-              checked={ fromHead }
-            />
-          }
         />
 
         <LoadingButton 

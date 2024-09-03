@@ -4,12 +4,12 @@ import { useState } from "react";
 import { Alert, Collapse, IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 
 import {  Close, HelpOutline, ShoppingCartOutlined } from "@mui/icons-material";
-import { useGeneralKeeperPlaceBuyOrder } from "../../../../../../../generated";
+import { useGeneralKeeper_5PlaceBuyOrder } from "../../../../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../loo";
-import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../common/toolsKit";
+import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../common/toolsKit";
 import { getCentPrice } from "../../../gk";
-import { HexType, MaxData, MaxPrice } from "../../../../common";
+import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../common";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 
@@ -30,7 +30,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {
     isLoading: placeBuyOrderLoading,
     write:placeBuyOrder,
-  } = useGeneralKeeperPlaceBuyOrder({
+  } = useGeneralKeeper_5PlaceBuyOrder({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -48,6 +48,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
         BigInt(classOfShare),
         strNumToBigInt(order.paid, 4),
         strNumToBigInt(order.price, 4),
+        strNumToBigInt(order.execHours, 0)
       ],
       value: strNumToBigInt(value, 9) * (10n ** 9n),
     });
@@ -75,6 +76,28 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     >
 
       <Stack direction={'row'} sx={{ alignItems:'start'}} >
+
+        <TextField 
+          variant='outlined'
+          size="small"
+          label='ExecHours'
+          error={ valid['ExecHours']?.error }
+          helperText={ valid['ExecHours']?.helpTx ?? ' ' }
+          sx={{
+            m:1,
+            minWidth: 218,
+          }}
+          onChange={ e => {
+            let input = e.target.value;
+            onlyInt('ExecHours', input, MaxSeqNo, setValid);
+            setOrder( v => ({
+              ...v,
+              execHours: input,
+            }));
+          }}
+          value={ order.execHours.toString() } 
+        />
+
 
         <TextField 
           variant='outlined'
@@ -128,7 +151,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
           helperText={ valid['Consideration']?.helpTx ?? ' ' }
           sx={{
             m:1,
-            minWidth: 456,
+            minWidth: 288,
           }}
           value={ value }
           onChange={(e)=>{

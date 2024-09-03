@@ -7,16 +7,22 @@ import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, Typography } f
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 
 import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { booxMap } from "../../common";
+import { AddrZero, booxMap } from "../../common";
 
 import { ActionsOfInvestor } from "./components/ActionsOfInvestor";
 import { ActionsOfOrder } from "./components/ActionsOfOrder";
-import { OrderWrap, defaultOrderWrap, Investor, getChain, investorInfoList } from "./loo";
+import { Order, defaultOrder, Investor, getOrders, investorInfoList, DealProps, Deal, dealParser } from "./loo";
 import { OrdersList } from "./components/OrdersList";
 import { InvestorsList } from "./components/InvestorsList";
 import { counterOfClasses } from "../ros/ros";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
-import { BuyOrders } from "./components/BuyOrders";
+import { DealsList } from "./components/DealsList";
+import { usePublicClient } from "wagmi";
+import { parseAbiItem } from "viem";
+import { baseToDollar, longSnParser } from "../../common/toolsKit";
+import { BillOfOrder } from "./components/BillOfOrder";
+import { BillOfDeal } from "./components/BillOfDeal";
+import { DealsChart } from "./components/DealsChart";
 
 function ListOfOrders() {
 
@@ -44,7 +50,9 @@ function ListOfOrders() {
     }
   }, [boox])
 
-  const [ list, setList ] = useState<readonly OrderWrap[]>([]);
+  const [ offers, setOffers ] = useState<readonly Order[]>([]);
+  const [ bids, setBids ] = useState<readonly Order[]>([]);
+
   const [ invList, setInvList ] = useState<readonly Investor[]>([]);
   const [ time, setTime ] = useState<number>(0);
 
@@ -55,23 +63,109 @@ function ListOfOrders() {
   useEffect(()=>{
     if (boox) {
 
-      getChain(boox[booxMap.LOO], classOfShare).then(
-        res => setList(res)
+      getOrders(boox[booxMap.LOO], classOfShare, true).then(
+        res => setOffers(res)
       );
 
+      getOrders(boox[booxMap.LOO], classOfShare, false).then(
+        res => setBids(res)
+      );
+ 
       investorInfoList(boox[booxMap.LOO]).then(
         res => setInvList(res)
-      )
+      );
 
     }
   }, [boox, classOfShare, time]);
 
-
   const [ acct, setAcct ] = useState<string>('0');
 
-  const [ order, setOrder ] = useState<OrderWrap>(defaultOrderWrap);
+  const [ order, setOrder ] = useState<Order>(defaultOrder);
   const [ open, setOpen ] = useState(false);
-  
+
+  const client = usePublicClient();
+
+  const [ deals, setDeals ] = useState<DealProps[]>([]);
+  const [ qty, setQty ] = useState(0n);
+  const [ amt, setAmt ] = useState(0n);
+
+  const [ left, setLeft ] = useState(0);
+  const [ right, setRight ] = useState(0);
+
+  useEffect(()=>{
+
+    const getEvents = async () => {
+
+      if (!boox || boox[booxMap.LOO] == AddrZero) return;
+
+      const addrLOO = boox[booxMap.LOO];
+
+      const lastBlock = await client.getBlockNumber();
+
+      let dealLogs = await client.getLogs({
+        address: addrLOO,
+        event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
+        fromBlock: lastBlock > 60000n + BigInt(left) ? lastBlock - 60000n - BigInt(left) : 0n,
+        toBlock: lastBlock > BigInt(right) ? lastBlock - BigInt(right) : 0n
+      });
+
+      let cnt = dealLogs.length;
+
+      let qty:bigint = 0n;
+      let amt:bigint = 0n;
+      let arr:DealProps[] = [];
+
+      while (cnt > 0) {
+
+        let deal:Deal = dealParser(dealLogs[cnt-1].args.deal ?? '0x00');
+        let consideration: bigint = dealLogs[cnt-1].args.consideration ?? 0n;
+
+        let blkNo = dealLogs[cnt-1].blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
+        let classOfOrder = Number(deal.classOfShare);
+
+        if (classOfShare != classOfOrder) {
+          cnt--;
+          continue;
+        }
+
+        let item:DealProps = {
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
+          transactionHash: dealLogs[cnt-1].transactionHash,
+          classOfShare: longSnParser(classOfShare.toString()),
+          seqOfShare: longSnParser(deal.seqOfShare),
+          buyer: longSnParser(deal.buyer),
+          groupRep: longSnParser(deal.groupRep),
+          paid: deal.paid,
+          price: deal.price,
+          votingWeight: deal.votingWeight,
+          distrWeight: deal.distrWeight,
+          consideration: consideration,
+        }
+
+        cnt--;
+
+        qty += deal.paid;
+        amt += deal.paid * deal.price;
+
+        arr.push(item); 
+
+      }
+
+      setQty(qty);
+      setAmt(amt);
+      setDeals(arr);
+    }
+
+    getEvents();
+
+  },[client, boox, classOfShare, setQty, setAmt, time, left, right, time]);  
+
+  const [ deal, setDeal ] = useState<DealProps | undefined>();
+  const [ show, setShow ] = useState<boolean>(false);
+
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, minWidth:1680, border:1, borderColor:'divider' }} >
 
@@ -118,12 +212,21 @@ function ListOfOrders() {
 
         </Stack>
 
-        <TabPanel value={0} sx={{ justifyContent:'start', alignItems:'center' }} >
-          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.seq} refresh={refresh} />
+        <TabPanel value={0} sx={{ justifyContent:'start', alignItems:'center', minWidth:1680 }} >
           
-          <OrdersList list={list} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
-          <BuyOrders classOfShare={classOfShare} />
+          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.data.seq} refresh={refresh} />
+          <DealsChart classOfShare={classOfShare} time={time} refresh={refresh} />
           
+          <OrdersList name={'Offers'} list={offers} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
+          <OrdersList name={'Bids'} list={bids} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
+
+          <DealsList list={deals} qty={baseToDollar(qty.toString())} amt={baseToDollar((amt/10000n).toString())} left={left} setLeft={setLeft} right={right} setRight={setRight} refresh={refresh} setDeal={setDeal} setShow={setShow} />
+          
+          <BillOfOrder order={order} open={open} setOpen={setOpen} />
+          {deal && (
+            <BillOfDeal deal={deal} open={show} setOpen={setShow} />
+          )}
+
         </TabPanel>
 
         <TabPanel value={1} sx={{ justifyContent:'start', alignItems:'center' }} >

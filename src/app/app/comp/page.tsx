@@ -22,7 +22,7 @@ import { getHeadByBody } from "../rc";
 
 function HomePage() {
 
-  const { gk, boox, keepers } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
   const [ activeStep, setActiveStep ] = useState<number>(4);
 
   useEffect(()=>{

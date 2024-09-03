@@ -1,33 +1,42 @@
 import { IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
-import { OrderWrap } from "../loo";
+import { Order } from "../loo";
 import { Dispatch, SetStateAction } from "react";
 import { Refresh } from "@mui/icons-material";
 
 interface OrdersListProps {
-  list: readonly OrderWrap[];
-  setOrder: Dispatch<SetStateAction<OrderWrap>>;
+  name: string;
+  list: readonly Order[];
+  setOrder: Dispatch<SetStateAction<Order>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
   refresh: ()=>void;
 }
 
-export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
+export function OrdersList({name, list, setOrder, setOpen, refresh}:OrdersListProps) {
 
-  const columns: GridColDef[] = [
+  const colums: GridColDef[] = [
 
     {
       field: 'seq',
       headerName: 'SeqOfOrder',
-      valueGetter: p => longSnParser(p.row.seq.toString()),
+      valueGetter: p => longSnParser(p.row.data.seq.toString()),
       headerAlign: 'center',
       align:'center',      
       width: 218,
     },
+    { 
+      field: 'expireDate', 
+      headerName: 'ExpireDate',
+      valueGetter: p => dateParser(p.row.node.expireDate.toString()),
+      headerAlign: 'center',
+      align:'center',
+      width: 180,
+    },
     {
-      field: 'seqOfShare',
-      headerName: 'SeqOfCert',
-      valueGetter: p => longSnParser(p.row.node.seqOfShare.toString()),
+      field: 'issuer',
+      headerName: name == "Offers" ? 'Seller' : 'Buyer',
+      valueGetter: p => longSnParser(p.row.node.issuer.toString()),
       headerAlign: 'center',
       align:'center',      
       width: 218,
@@ -38,41 +47,32 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
       valueGetter: p => baseToDollar(p.row.node.paid.toString()),
       headerAlign: 'right',
       align:'right',
-      width: 330,
+      width: 256,
     },
     { 
       field: 'price', 
-      headerName: 'Price',
+      headerName: 'PriceOfPaid',
       valueGetter: p => baseToDollar(p.row.node.price.toString()),
       headerAlign: 'right',
       align:'right',
-      width: 330,
+      width: 256,
     },
     { 
-      field: 'expireDate', 
-      headerName: 'ExpireDate',
-      valueGetter: p => dateParser(p.row.node.expireDate.toString()),
-      headerAlign: 'center',
-      align:'center',
-      width: 180,
-    },
+      field: 'value', 
+      headerName: 'Value',
+      valueGetter: p => baseToDollar((BigInt(p.row.node.price) * p.row.node.paid / 10000n).toString()),
+      headerAlign: 'right',
+      align:'right',
+      width: 256,
+    },    
     { 
-      field: 'votingWeight', 
-      headerName: 'VotingWeight (%)',
-      valueGetter: p => longDataParser(p.row.node.votingWeight.toString()),
-      headerAlign: 'center',
-      align:'center',
-      width: 180,
-    },
-    { 
-      field: 'distrWeight', 
-      headerName: 'DistributionWeight (%)',
-      valueGetter: p => longDataParser(p.row.node.distrWeight.toString()),
-      headerAlign: 'center',
-      align:'center',
-      width: 180,
-    }
-
+      field: 'centPrice', 
+      headerName: 'CentPrice (GWei)',
+      valueGetter: p => baseToDollar((p.row.data.centPriceInWei / 10n ** 9n).toString()),
+      headerAlign: 'right',
+      align:'right',
+      width: 256,
+    },    
   ];
 
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
@@ -86,7 +86,7 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
       <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
         <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-          <b>Orders List</b>
+          <b>{name} List</b>
         </Typography>
         
         <Tooltip 
@@ -109,12 +109,12 @@ export function OrdersList({list, setOrder, setOpen, refresh}:OrdersListProps) {
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
         pageSizeOptions={[5, 10, 20, 50, 100]} 
-        getRowId={ row => row.seq } 
-        rows={ list } 
-        columns={ columns }
+        getRowId={ row => row.data.seq } 
+        rows={ list }
+        columns={ colums }
         disableRowSelectionOnClick
         onRowClick={ handleRowClick }
-      />    
+      />
 
     </Paper>
   );
