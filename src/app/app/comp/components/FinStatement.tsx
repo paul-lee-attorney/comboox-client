@@ -33,7 +33,9 @@ export function FinStatement() {
     ? (cbpIncome.royalty * 10000n / rateOfCbp - (gmmExp.totalAmt - gmmExp.mint + bmmExp.totalAmt - gmmExp.mint)) 
     : 0n;
 
-  let deferredIncome = ethIncome.gas - cbpIncome.royalty * 10000n / rateOfCbp;
+  let deferredIncome = rateOfCbp > 0 
+    ? ethIncome.gas - cbpIncome.royalty * 10000n / rateOfCbp 
+    : 0n;
   
   const [ paidInCap, setPaidInCap ] = useState(0n);
   const [ distribution, setDistribution ] = useState(0n);
