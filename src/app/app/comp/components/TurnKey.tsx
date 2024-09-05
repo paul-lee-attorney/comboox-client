@@ -10,7 +10,7 @@ import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 
 import { HexType, booxMap } from '../../common';
 import { getKeeper } from '../gk';
-import { getDK } from '../common/accessControl';
+import { getDK } from '../common/draftControl';
 import { refreshAfterTx } from '../../common/toolsKit';
 
 import { InitCompProps } from './SetCompInfo';

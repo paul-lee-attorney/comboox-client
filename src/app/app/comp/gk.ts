@@ -1,7 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { generalKeeperABI } from "../../../../generated";
-import { getDK } from "./common/accessControl";
+import { getDK } from "./common/draftControl";
 import { toStr } from "../common/toolsKit";
 import { getOwner } from "../common/ownable";
 

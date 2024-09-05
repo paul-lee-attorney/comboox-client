@@ -11,7 +11,7 @@ import { baseToDollar, dateParser, getEthPart, getGEthPart,
 import { CopyLongStrTF } from "../../common/CopyLongStr";
 
 import { CompInfo, getCompInfo, totalDeposits } from "../gk";
-import { getDK } from "../common/accessControl";
+import { getDK } from "../common/draftControl";
 
 import { balanceOf, balanceOfWei } from "../../rc";
 

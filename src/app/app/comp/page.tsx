@@ -7,7 +7,7 @@ import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/m
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 
 import { booxMap } from "../common";
-import { getDK } from "./common/accessControl";
+import { getDK } from "./common/draftControl";
 import { getKeeper } from "./gk";
 
 import { SetMaxQtyOfMembers } from "./components/SetMaxQtyOfMembers";

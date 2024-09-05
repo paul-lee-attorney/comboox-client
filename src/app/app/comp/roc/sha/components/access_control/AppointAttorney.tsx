@@ -16,11 +16,11 @@ import {
 import { Close, PersonAdd }  from '@mui/icons-material';
 
 import {
-  useAccessControlGrantRole,
+  useDraftControlGrantRole,
 } from '../../../../../../../../generated';
 
 import { AddrZero, HexType } from '../../../../../common';
-import { ATTORNEYS, hasRole } from '../../../../common/accessControl';
+import { ATTORNEYS, hasRole } from '../../../../common/draftControl';
 import { FormResults, HexParser, defFormResults, 
   hasError, onlyHex, refreshAfterTx 
 } from '../../../../../common/toolsKit';
@@ -50,7 +50,7 @@ export function AppointAttorney({ addr }: AccessControlProps) {
   const {
     isLoading: grantRoleLoading,
     write: grantRole,
-  } = useAccessControlGrantRole({
+  } = useDraftControlGrantRole({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

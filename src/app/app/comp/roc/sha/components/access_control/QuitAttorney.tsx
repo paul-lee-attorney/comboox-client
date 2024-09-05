@@ -11,11 +11,11 @@ import {
 import { Skateboarding, Close, }  from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 
-import { useAccessControlRenounceRole } from '../../../../../../../../generated';
+import { useDraftControlRenounceRole } from '../../../../../../../../generated';
 
 import { AccessControlProps } from './SetOwner';
 
-import { ATTORNEYS } from '../../../../common/accessControl';
+import { ATTORNEYS } from '../../../../common/draftControl';
 import { HexType } from '../../../../../common';
 import { refreshAfterTx } from '../../../../../common/toolsKit';
 import { useComBooxContext } from '../../../../../../_providers/ComBooxContextProvider';
@@ -38,7 +38,7 @@ export function QuitAttorney({ addr }: AccessControlProps) {
   const {
     isLoading: quitAttorneyLoading,
     write: quitAttorney,
-  } = useAccessControlRenounceRole({
+  } = useDraftControlRenounceRole({
     address: addr,
     args: [ ATTORNEYS ],
     onError(err) {

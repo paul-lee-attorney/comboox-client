@@ -16,11 +16,11 @@ import {
 import { Close, PersonRemove }  from '@mui/icons-material';
 
 import { 
-  useAccessControlRevokeRole,
+  useDraftControlRevokeRole,
 } from '../../../../../../../../generated';
 
 import { AddrZero, HexType } from '../../../../../common';
-import { ATTORNEYS, hasRole } from '../../../../common/accessControl';
+import { ATTORNEYS, hasRole } from '../../../../common/draftControl';
 import { FormResults, HexParser, defFormResults, 
   hasError, onlyHex, refreshAfterTx 
 } from '../../../../../common/toolsKit';
@@ -52,7 +52,7 @@ export function RemoveAttorney({ addr }: AccessControlProps) {
   const {
     isLoading: removeAttorneyLoading,
     write: removeAttorney,
-  } = useAccessControlRevokeRole({
+  } = useDraftControlRevokeRole({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

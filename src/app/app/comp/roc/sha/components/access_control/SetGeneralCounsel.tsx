@@ -16,11 +16,11 @@ import {
 import { Approval, Close }  from '@mui/icons-material';
 
 import {
-  useAccessControlSetRoleAdmin,
+  useDraftControlSetRoleAdmin,
 } from '../../../../../../../../generated';
 
 import { AddrZero, HexType } from '../../../../../common';
-import { ATTORNEYS, getGeneralCounsel } from '../../../../common/accessControl';
+import { ATTORNEYS, getGeneralCounsel } from '../../../../common/draftControl';
 
 import { FormResults, HexParser, defFormResults, 
   hasError, onlyHex, refreshAfterTx 
@@ -60,7 +60,7 @@ export function SetGeneralCounsel({ addr }: AccessControlProps) {
   const {
     isLoading: setGeneralCounselLoading,
     write: setGeneralCounsel,
-  } = useAccessControlSetRoleAdmin({
+  } = useDraftControlSetRoleAdmin({
     address: addr,
     onError(err) {
       setErrMsg(err.message);

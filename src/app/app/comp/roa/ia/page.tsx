@@ -16,7 +16,7 @@ import { Signatures } from "../../roc/sha/components/sigPage/Signatures";
 import { InfoOfFile, getFile } from "../../roc/components/filesFolder";
 import { IndexCard } from "../../roc/components/IndexCard";
 import { BookOutlined } from "@mui/icons-material";
-import { isFinalized } from "../../common/accessControl";
+import { isFinalized } from "../../common/draftControl";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { useSearchParams } from "next/navigation";
 import AgreementDownloader from "../../../components/file_storage/AgreementDownloader";

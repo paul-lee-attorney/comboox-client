@@ -15,7 +15,7 @@ import { Signatures } from "./components/sigPage/Signatures";
 import { ShaLifecycle } from "./components/ShaLifecycle";
 
 import { InfoOfFile, getFile } from "../components/filesFolder";
-import { isFinalized } from "../../common/accessControl";
+import { isFinalized } from "../../common/draftControl";
 import { IndexCard } from "../components/IndexCard";
 
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
