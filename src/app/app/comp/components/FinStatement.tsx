@@ -1,7 +1,6 @@
 
 import { Paper, Stack, Grid, Typography, Divider, Button } from "@mui/material";
 
-import { Revenue } from "./FinStatement/Revenue";
 import { Expense } from "./FinStatement/Expense";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { keepersMap } from "../../common";
@@ -10,17 +9,16 @@ import { getOwner, rate } from "../../fuel_tank/ft";
 import { bigIntToStrNum } from "../../common/toolsKit";
 import { PaidInCap } from "./FinStatement/PaidInCap";
 import { Distribution } from "./FinStatement/Distribution";
-import { FuelIncome } from "./FinStatement/FuelIncome";
-import { FuelCost } from "./FinStatement/FuelCost";
-import { balanceOf } from "../../rc";
+import { CbpIncome, defaultSum, IncomeSumProps } from "./FinStatement/CbpIncome";
 
 export function FinStatement() {
 
   const { gk, keepers } = useComBooxContext();
 
-  const [ revenue, setRevenue ] = useState(0n);
-  const [ gmmExp, setGmmExp ] = useState(0n);
-  const [ bmmExp, setBmmExp ] = useState(0n);
+  const [ cbpIncome, setCbpIncome ] = useState<IncomeSumProps>(defaultSum);
+  const [ ethIncome, setEthIncome ] = useState<IncomeSumProps>(defaultSum);
+  const [ gmmExp, setGmmExp ] = useState<IncomeSumProps>(defaultSum);
+  const [ bmmExp, setBmmExp ] = useState<IncomeSumProps>(defaultSum);
   const [ rateOfCbp, setRateOfCbp ] = useState(0n);
 
   useEffect(()=>{
@@ -32,24 +30,10 @@ export function FinStatement() {
   });
 
   let profit = rateOfCbp > 0 
-    ? (revenue * 10000n / rateOfCbp - (gmmExp + bmmExp)) 
+    ? (cbpIncome.royalty * 10000n / rateOfCbp - (gmmExp.totalAmt - gmmExp.mint + bmmExp.totalAmt - gmmExp.mint)) 
     : 0n;
 
-  const [ fuelIncome, setFuelIncome ] = useState(0n);
-  const [ fuelCost, setFuelCost ] = useState(0n);
-  const [ cbpBalance, setCbpBalance ] = useState(0n);
-
-  useEffect(()=>{
-    const getBalance = async ()=>{
-      if (gk && rateOfCbp > 0) {
-        let balance = await balanceOf(gk, undefined);
-        setCbpBalance( balance * 10000n / rateOfCbp);
-      }
-    }
-    getBalance();
-  },[gk, setCbpBalance, rateOfCbp]);
-
-  let deferredIncome = fuelIncome - fuelCost - cbpBalance;
+  let deferredIncome = ethIncome.gas - cbpIncome.royalty * 10000n / rateOfCbp;
   
   const [ paidInCap, setPaidInCap ] = useState(0n);
   const [ distribution, setDistribution ] = useState(0n);
@@ -88,14 +72,14 @@ export function FinStatement() {
 
           <Stack direction='column' sx={{ alignItems:'end' }} >
 
-            <Revenue sum={revenue} setSum={setRevenue} />
+            <CbpIncome exRate={rateOfCbp} sum={cbpIncome} setSum={setCbpIncome} />
 
             <Stack direction='row' width='100%' >
               <Typography variant="h6" textAlign='center' width='20%'>
                 -
               </Typography>
               {keepers && (
-                <Expense title="GMM" addr={keepers[keepersMap.GMMKeeper]} sum={gmmExp} setSum={setGmmExp} />
+                <Expense title="GMM" addr={keepers[keepersMap.GMMKeeper]} exRate={rateOfCbp} sum={gmmExp} setSum={setGmmExp} />
               )}
             </Stack>
 
@@ -104,7 +88,7 @@ export function FinStatement() {
                 -
               </Typography>
               {keepers && (
-                <Expense title="BMM" addr={keepers[keepersMap.BMMKeeper]} sum={bmmExp} setSum={setBmmExp} />
+                <Expense title="BMM" addr={keepers[keepersMap.BMMKeeper]} exRate={rateOfCbp} sum={bmmExp} setSum={setBmmExp} />
               )}
             </Stack>
 
@@ -137,14 +121,9 @@ export function FinStatement() {
 
             <Stack direction='column' sx={{ alignItems:'end' }} >
 
-              <FuelIncome sum={fuelIncome} setSum={setFuelIncome} />
-
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='20%'>
-                  -
-                </Typography>
-                  <FuelCost sum={fuelCost} setSum={setFuelCost} />
-              </Stack>
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+                <b>CBP Sales Income: ({bigIntToStrNum(ethIncome.gas, 18) + ' ETH'}) </b>
+              </Button>
 
               <Stack direction='row' width='100%' >
                 <Typography variant="h6" textAlign='center' width='20%'>
@@ -152,11 +131,10 @@ export function FinStatement() {
                 </Typography>
 
                 <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>CBP Value: ({bigIntToStrNum(cbpBalance, 18) + ' ETH'}) </b>
-              </Button>
+                  <b>Revenue: ({bigIntToStrNum(cbpIncome.royalty, 18) + ' ETH'}) </b>
+                </Button>
                   
               </Stack>
-
 
               <Divider orientation="horizontal"  sx={{ my:2 }} flexItem  />
 

@@ -1,7 +1,6 @@
 import { readContract } from "@wagmi/core";
 import { listOfOrdersABI } from "../../../../../generated";
 import { HexType } from "../../common";
-import { GetLogsReturnType } from "viem";
 
 
 export const statesOfInvestor = [

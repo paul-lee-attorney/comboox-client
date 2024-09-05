@@ -1,171 +1,99 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../../common";
+import { AddrOfTank, AddrZero } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { rate } from "../../../fuel_tank/ft";
+import { defaultSum, IncomeProps, IncomeSumProps } from "./CbpIncome";
 
 export interface ProfitsProps {
-  sum: bigint;
-  setSum: Dispatch<SetStateAction<bigint>>;
+  sum: IncomeSumProps;
+  setSum: Dispatch<SetStateAction<IncomeSumProps>>;
 }
 
-export type IncomeProps = {
-  blockNumber: bigint,
-  timestamp: bigint,
-  transactionHash: HexType,
-  typeOfIncome: string,
-  isCBP: boolean,
-  amt: bigint,
-  from: HexType,
-}
-
-
-export function Revenue({sum, setSum}:ProfitsProps ) {
+export function EthIncome({sum, setSum}:ProfitsProps ) {
   const { gk } = useComBooxContext();
   
   const [ open, setOpen ] = useState(false);
 
   const client = usePublicClient();
 
-  const [ records, setRecords ] = useState<IncomeProps[]>([]);
-  const [ value, setValue ] = useState(0n);
+  const [ ethRecords, setEthRecords ] = useState<IncomeProps[]>([]);
 
   useEffect(()=>{
 
-    const getEvents = async () => {
-
-      let sum = 0n;
-
-      let cbpLogs = await client.getLogs({
-        address: AddrOfRegCenter,
-        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        fromBlock: 1n,
-        args: {
-          to: gk,
-        }
-      });
-
-      let cnt = cbpLogs.length;
-      let arr: IncomeProps[] = [];
-
-      while (cnt > 0) {
-
-        if (cbpLogs[cnt-1].args.from == AddrOfTank || cbpLogs[cnt-1].args.from == AddrZero) {
-            cnt--;
-            continue;
-        }
-
-        let blkNo = cbpLogs[cnt-1].blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
-        let item:IncomeProps = {
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: cbpLogs[cnt-1].transactionHash,
-          typeOfIncome: 'Royalty Income',
-          isCBP: true,
-          amt: cbpLogs[cnt-1].args.value ?? 0n,
-          from: cbpLogs[cnt-1].args.from ?? AddrZero,
-        }
-
-        // console.log('get cbpIncome: ', item);
-        cnt--;
-
-        if (item.amt > 0n) {
-
-          sum += item.amt;
-
-          if (arr.length > 0 ) {
-            let last:IncomeProps = arr[arr.length-1];
-
-            if (last.blockNumber == item.blockNumber &&
-                last.transactionHash == item.transactionHash &&
-                last.from == item.from &&
-                last.isCBP == item.isCBP &&
-                last.typeOfIncome == item.typeOfIncome) 
-            {
-              arr[arr.length-1].amt += item.amt;
-              continue;
-            }
-          }
-
-          arr.push(item);          
-        }  
-        
-      }
-
-      let exRate = await rate(undefined);
-      if (exRate > 0) {
-        sum = sum * 10000n / exRate;
-      }
+    const getEthIncome = async ()=>{
 
       let ethLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event ReceivedCash(address indexed from, uint indexed amt)'),
         fromBlock: 1n,
       });
-
-      cnt = ethLogs.length;
-
+    
+      let cnt = ethLogs.length;
+      let arr: IncomeProps[] = [];
+      let sum: IncomeSumProps = defaultSum;
+    
       while (cnt > 0) {
-
-        if (ethLogs[cnt-1].args.from == AddrOfTank) {
-          cnt--;
-          continue;
-        }
-
+        
         let blkNo = ethLogs[cnt-1].blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
-
+    
         let item:IncomeProps = {
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: ethLogs[cnt-1].transactionHash,
-          typeOfIncome: 'Eth Income',
-          isCBP: false,
+          typeOfIncome: 'Transfer',
           amt: ethLogs[cnt-1].args.amt ?? 0n,
           from: ethLogs[cnt-1].args.from ?? AddrZero,
         }
-
-        // console.log('get ethIncome: ', item);
+    
         cnt--;
+    
+        if (item.from == AddrOfTank) {
+          item.typeOfIncome = 'Gas';
+        }
 
         if (item.amt > 0n) {
-
-          sum += item.amt;
-
+    
+          sum.totalAmt += item.amt;
+  
+          switch (item.typeOfIncome) {
+            case 'Transfer':
+              sum.transfer += item.amt;
+              break;
+            default:
+              sum.gas += item.amt;
+          }
+          
           if (arr.length > 0 ) {
-            let last:IncomeProps = arr[arr.length-1];
 
+            let last:IncomeProps = arr[arr.length-1];
+    
             if (last.blockNumber == item.blockNumber &&
                 last.transactionHash == item.transactionHash &&
                 last.from == item.from &&
-                last.isCBP == item.isCBP && 
                 last.typeOfIncome == item.typeOfIncome) 
             {
               arr[arr.length-1].amt += item.amt;
               continue;
             }
           }
-
+    
           arr.push(item);
-        }  
-        
+        }
       }
 
-      setRecords(arr);
+      setEthRecords(arr);
       setSum(sum);
-      setValue(sum);
     }
 
-    getEvents();
+    getEthIncome();
+  });
 
-  },[client, gk, setSum, setValue]);
 
   const columns: GridColDef[] = [
     {
@@ -190,12 +118,6 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
       field: 'amount',
       headerName: 'Amount',
       valueGetter: p => bigIntToStrNum(p.row.amt, 18),
-      width: 218,
-    },
-    {
-      field: 'currency',
-      headerName: 'Currency',
-      valueGetter: p => p.row.isCBP ? 'CBP' : 'ETH',
       width: 218,
     },
     {
@@ -228,7 +150,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
         sx={{m:0.5, minWidth:218, justifyContent:'start'}}
         onClick={()=>setOpen(true)}
       >
-        <b>Revenue: ({ bigIntToStrNum(value, 18) } ETH)</b>
+        <b>Eth Income: ({ bigIntToStrNum(sum.totalAmt, 18) } ETH)</b>
       </Button>
 
       <Dialog
@@ -239,7 +161,7 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
       >
 
         <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
-          <b>Revenue - { bigIntToStrNum(value, 18) } ETH </b>
+          <b>Eth Income - { bigIntToStrNum(sum.totalAmt, 18) } ETH </b>
         </DialogTitle>
 
         <DialogContent>
@@ -248,8 +170,8 @@ export function Revenue({sum, setSum}:ProfitsProps ) {
             <DataGrid 
               initialState={{pagination:{paginationModel:{pageSize: 10}}}} 
               pageSizeOptions={[5, 10, 15, 20]} 
-              rows={ records } 
-              getRowId={(row:IncomeProps) => (row.blockNumber.toString() + row.transactionHash + row.from) } 
+              rows={ ethRecords } 
+              getRowId={(row:IncomeProps) => (row.blockNumber.toString() + row.transactionHash + row.typeOfIncome + row.from) } 
               columns={ columns }
               disableRowSelectionOnClick
             />

@@ -7,7 +7,7 @@ import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { ProfitsProps } from "./Revenue";
+import { CapProps } from "./PaidInCap";
 
 export type DistributionProps = {
   blockNumber: bigint,
@@ -18,7 +18,7 @@ export type DistributionProps = {
   executor: number,
 }
 
-export function Distribution({sum, setSum}:ProfitsProps) {
+export function Distribution({sum, setSum}:CapProps) {
 
   const { keepers } = useComBooxContext();
   

@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { AddrOfTank, AddrZero, HexType } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { ProfitsProps } from "./Revenue";
-import { rate } from "../../../fuel_tank/ft";
+import { CbpIncomeProps, defaultSum, IncomeSumProps } from "./CbpIncome";
 
 export type ExpenseProps = {
   blockNumber: bigint,
@@ -22,31 +20,28 @@ export type ExpenseProps = {
   to: HexType,
 }
 
-export interface ExpenseInterfaceProps extends ProfitsProps{
+export interface ExpenseInterfaceProps extends CbpIncomeProps{
   addr: HexType;
   title: string;
 }
 
-export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
-  const { gk } = useComBooxContext();
+export function Expense({addr, title, exRate, sum, setSum}: ExpenseInterfaceProps) {
   
   const client = usePublicClient();
 
   const [ open, setOpen ] = useState(false);
   const [ records, setRecords ] = useState<ExpenseProps[]>([]);
-  const [ exp, setExp ] = useState(0n);
 
   useEffect(()=>{
 
-    const calValue = async (item: ExpenseProps): Promise<ExpenseProps> => {
-      let rateOfEx = await rate(item.blockNumber);
+    const calValue = (item: ExpenseProps): ExpenseProps => {
 
-      if (rateOfEx > 0) {
+      if (exRate > 0n) {
         
-        item.rate = rateOfEx;
+        item.rate = exRate;
 
         if (item.isCBP) {
-          item.value = item.amt * 10000n / rateOfEx;
+          item.value = item.amt * 10000n / exRate;
         } else {
           item.value = item.amt;
         }
@@ -58,7 +53,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
   
     const getEvents = async (addr:HexType) => {
 
-      let sum = 0n;
+      let sum:IncomeSumProps = defaultSum;
 
       let tfLogs = await client.getLogs({
         address: addr,
@@ -70,12 +65,6 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
       let arr: ExpenseProps[]=[];
 
       while (cnt > 0) {
-
-        if (tfLogs[cnt-1].args.to == AddrOfTank ||
-            !tfLogs[cnt-1].args.amt) {
-          cnt--;
-          continue;
-        }
 
         let blkNo = tfLogs[cnt-1].blockNumber;
         let blk = await client.getBlock({blockNumber:blkNo});
@@ -92,12 +81,34 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
           to: tfLogs[cnt-1].args.to ?? AddrZero,
         }
 
-        item = await calValue(item);
+        item = calValue(item);
+
+        if (item.to == AddrOfTank) {
+          if (item.isCBP) {
+            item.typeOfMotion = 'FillTank';
+          } else {
+            item.typeOfMotion = 'RefuelGas';
+          }
+        } 
 
         // console.log('get tfItem: ', item);
         cnt--;
 
-        sum += item.value;
+        if (item.amt > 0n) {
+          sum.totalAmt += item.value;
+
+          switch (item.typeOfMotion) {
+            case 'TransferFund':
+              sum.transfer += item.value;
+              break;
+            case 'FillTank':
+              sum.mint += item.value;
+              break;
+            case 'RefuelGas':
+              sum.gas += item.value;
+          }
+        } 
+
         arr.push(item);
       }
 
@@ -110,9 +121,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
       cnt = eaLogs.length;
       while (cnt > 0) {
 
-        if (!eaLogs[cnt-1].args.values ||
-          eaLogs[cnt-1].args.targets == AddrOfTank
-        ) {
+        if (!eaLogs[cnt-1].args.values) {
           cnt--;
           continue;
         }
@@ -128,27 +137,39 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
           isCBP: false,
           amt: eaLogs[cnt-1].args.values ?? 0n,
           rate: 0n,
-          value: 0n,
-          to: AddrZero,
+          value: eaLogs[cnt-1].args.values ?? 0n,
+          to: eaLogs[cnt-1].args.targets ?? AddrZero,
         }
 
-        item = await calValue(item);
+        if (item.to == AddrOfTank) {
+          item.typeOfMotion = 'RefuelGas';
+        }
 
         // console.log('get eaItem: ', item);
         cnt--;
 
-        sum += item.value;
+        if (item.value > 0n) {
+          sum.totalAmt += item.value;
+
+          switch (item.typeOfMotion) {
+            case 'RefuelGas':
+              sum.gas += item.value;
+              break;
+            case 'ExecAction':
+              sum.transfer += item.value;
+          }
+        }
+
         arr.push(item);
       }
 
       setSum(sum);
-      setExp(sum);
       setRecords(arr);
     }
 
     getEvents(addr);
 
-  },[client, gk, addr, setSum]);
+  },[client, exRate, addr, setSum]);
 
   const columns: GridColDef[] = [
     {
@@ -171,8 +192,8 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
     },
     {
       field: 'amount',
-      headerName: 'Amount',
-      valueGetter: p => bigIntToStrNum(p.row.amt, 18),
+      headerName: 'Amount (ETH)',
+      valueGetter: p => bigIntToStrNum(p.row.value, 18),
       width: 218,
     },
     {
@@ -212,7 +233,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
         sx={{m:0.5, minWidth:218, justifyContent:'start'}}
         onClick={()=>setOpen(true)}
       >
-          <b>Expense - {title} {' - (' + bigIntToStrNum(exp, 18) + ' ETH)'} </b>
+          <b>Expense - {title} {' - (' + bigIntToStrNum((sum.totalAmt - sum.mint), 18) + ' ETH)'} </b>
       </Button>
 
       <Dialog
@@ -223,7 +244,7 @@ export function Expense({addr, title, sum, setSum}: ExpenseInterfaceProps) {
       >
 
         <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
-          <b>Expense - {title} { exp > 0 && ' - (' + bigIntToStrNum(exp, 18) + ' ETH)'} </b>
+          <b>Expense - {title} { sum.totalAmt > sum.mint && ' - (' + bigIntToStrNum(sum.totalAmt - sum.mint, 18) + ' ETH)'} </b>
         </DialogTitle>
 
         <DialogContent>

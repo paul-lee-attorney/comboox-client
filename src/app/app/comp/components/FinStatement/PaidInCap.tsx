@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Typography } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { HexType, booxMap, keepersMap } from "../../../common";
@@ -8,7 +8,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { getShare } from "../../ros/ros";
-import { ProfitsProps } from "./Revenue";
+import { ProfitsProps } from "./EthIncome";
 
 export type PaidInCapProps = {
   blockNumber: bigint,
@@ -19,8 +19,13 @@ export type PaidInCapProps = {
   from: number,
 }
 
-export function PaidInCap({sum, setSum}:ProfitsProps ) {
-  const { gk, keepers, boox } = useComBooxContext();
+export interface CapProps {
+  sum: bigint;
+  setSum: Dispatch<SetStateAction<bigint>>;
+}
+
+export function PaidInCap({sum, setSum}:CapProps ) {
+  const { keepers, boox } = useComBooxContext();
   
   const [ open, setOpen ] = useState(false);
 
@@ -146,7 +151,7 @@ export function PaidInCap({sum, setSum}:ProfitsProps ) {
 
     getEvents();
 
-  },[client, gk, boox, keepers, setSum]);
+  },[client, boox, keepers, setSum]);
 
   const columns: GridColDef[] = [
     {

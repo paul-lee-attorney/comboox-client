@@ -7,7 +7,7 @@ import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { bigIntToStrNum, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { ProfitsProps } from "./Revenue";
+import { ProfitsProps } from "./EthIncome";
 import { rate } from "../../../fuel_tank/ft";
 
 export type FuelCostProps = {
