@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 
-import { Divider, Paper, Stack, TextField, } from "@mui/material";
+import { Paper, Stack, TextField, } from "@mui/material";
 import { PersonAddAlt } from "@mui/icons-material";
 
 import { useGeneralKeeperApproveInvestor } from "../../../../../../../generated";

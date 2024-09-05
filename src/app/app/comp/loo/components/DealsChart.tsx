@@ -91,7 +91,7 @@ useEffect(()=>{
 
   getEvents();
 
-},[classOfShare, time, setLine]);
+},[boox, client, classOfShare, time, setLine]);
 
   const series = [
     {

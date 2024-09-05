@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Alert, Collapse, IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 
 import {  Close, HelpOutline, ShoppingCartOutlined } from "@mui/icons-material";
-import { useGeneralKeeper_5PlaceBuyOrder } from "../../../../../../../generated";
+import { useGeneralKeeperPlaceBuyOrder } from "../../../../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../loo";
 import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, removeKiloSymbol, strNumToBigInt } from "../../../../common/toolsKit";
@@ -30,7 +30,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {
     isLoading: placeBuyOrderLoading,
     write:placeBuyOrder,
-  } = useGeneralKeeper_5PlaceBuyOrder({
+  } = useGeneralKeeperPlaceBuyOrder({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

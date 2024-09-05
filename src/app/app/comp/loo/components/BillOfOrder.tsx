@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 
 import { Order } from "../loo";
-import { baseToDollar, bigIntToNum, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 
 interface BillOfOrderProps {
   order: Order;

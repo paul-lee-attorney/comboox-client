@@ -1,5 +1,5 @@
 import { readContract } from "@wagmi/core";
-import { listOfOrders_2ABI } from "../../../../../generated";
+import { listOfOrdersABI } from "../../../../../generated";
 import { HexType } from "../../common";
 import { GetLogsReturnType } from "viem";
 
@@ -156,7 +156,7 @@ export interface DealProps extends Deal {
 export async function isInvestor(addr: HexType,  userNo: number):Promise<boolean>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'isInvestor',
     args: [ BigInt(userNo) ]
   });
@@ -167,7 +167,7 @@ export async function isInvestor(addr: HexType,  userNo: number):Promise<boolean
 export async function getInvestor(addr: HexType,  userNo: number):Promise<Investor>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'getInvestor',
     args: [ BigInt(userNo) ]
   });
@@ -178,7 +178,7 @@ export async function getInvestor(addr: HexType,  userNo: number):Promise<Invest
 export async function getQtyOfInvestors(addr: HexType):Promise<bigint>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'getQtyOfInvestors',
   });
 
@@ -188,7 +188,7 @@ export async function getQtyOfInvestors(addr: HexType):Promise<bigint>{
 export async function investorList(addr: HexType):Promise<readonly bigint[]>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'investorList',
   });
 
@@ -198,7 +198,7 @@ export async function investorList(addr: HexType):Promise<readonly bigint[]>{
 export async function investorInfoList(addr: HexType):Promise<readonly Investor[]>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'investorInfoList',
   });
 
@@ -210,7 +210,7 @@ export async function investorInfoList(addr: HexType):Promise<readonly Investor[
 export async function counterOfOrders(addr: HexType, classOfShare:number, isOffer:boolean):Promise<number>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'counterOfOrders',
     args: [ BigInt(classOfShare), isOffer ]
   });
@@ -221,7 +221,7 @@ export async function counterOfOrders(addr: HexType, classOfShare:number, isOffe
 export async function headOfList(addr: HexType, classOfShare:number, isOffer:boolean):Promise<number>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'headOfList',
     args: [ BigInt(classOfShare), isOffer ]
   });
@@ -232,7 +232,7 @@ export async function headOfList(addr: HexType, classOfShare:number, isOffer:boo
 export async function tailOfList(addr: HexType, classOfShare:number, isOffer:boolean):Promise<number>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'tailOfList',
     args: [ BigInt(classOfShare), isOffer ]
   });
@@ -243,7 +243,7 @@ export async function tailOfList(addr: HexType, classOfShare:number, isOffer:boo
 export async function lengthOfList(addr: HexType, classOfShare:number, isOffer:boolean):Promise<bigint>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'lengthOfList',
     args: [ BigInt(classOfShare), isOffer ]
   });
@@ -254,7 +254,7 @@ export async function lengthOfList(addr: HexType, classOfShare:number, isOffer:b
 export async function getSeqList(addr: HexType, classOfShare:number, isOffer:boolean):Promise<readonly bigint[]>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'getSeqList',
     args: [ BigInt(classOfShare), isOffer ]
   });
@@ -268,7 +268,7 @@ export async function getSeqList(addr: HexType, classOfShare:number, isOffer:boo
 export async function isOrder(addr: HexType, classOfShare:number, seqOfOrder: number, isOffer:boolean):Promise<boolean>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'isOrder',
     args: [ BigInt(classOfShare), BigInt(seqOfOrder), isOffer ]
   });
@@ -279,7 +279,7 @@ export async function isOrder(addr: HexType, classOfShare:number, seqOfOrder: nu
 export async function getOrder(addr: HexType, classOfShare:number, seqOfOrder: number, isOffer:boolean):Promise<Order>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'getOrder',
     args: [ BigInt(classOfShare), BigInt(seqOfOrder), isOffer ]
   });
@@ -290,7 +290,7 @@ export async function getOrder(addr: HexType, classOfShare:number, seqOfOrder: n
 export async function getOrders(addr: HexType, classOfShare:number, isOffer:boolean):Promise<readonly Order[]>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'getOrders',
     args: [ BigInt(classOfShare), isOffer ],
   });
@@ -301,7 +301,7 @@ export async function getOrders(addr: HexType, classOfShare:number, isOffer:bool
 export async function isClass(addr: HexType, classOfShare:number):Promise<boolean>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'isClass',
     args: [ BigInt(classOfShare) ]
   });
@@ -312,7 +312,7 @@ export async function isClass(addr: HexType, classOfShare:number):Promise<boolea
 export async function getClassesList(addr: HexType):Promise<readonly bigint[]>{
   let res = await readContract({
     address: addr,
-    abi: listOfOrders_2ABI,
+    abi: listOfOrdersABI,
     functionName: 'getClassesList',
   });
 

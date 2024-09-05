@@ -2,7 +2,7 @@ import { Paper, Stack, TextField } from "@mui/material";
 
 import { RedoOutlined } from "@mui/icons-material";
 import { useState } from "react";
-import { useGeneralKeeper_5WithdrawBuyOrder } from "../../../../../../../generated";
+import { useGeneralKeeperWithdrawBuyOrder } from "../../../../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer } from "../../loo";
 import { HexType, MaxPrice } from "../../../../common";
@@ -26,7 +26,7 @@ export function WithdrawBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps)
   const {
     isLoading: withdrawBuyOrderLoading,
     write:withdrawBuyOrder,
-  } = useGeneralKeeper_5WithdrawBuyOrder({
+  } = useGeneralKeeperWithdrawBuyOrder({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

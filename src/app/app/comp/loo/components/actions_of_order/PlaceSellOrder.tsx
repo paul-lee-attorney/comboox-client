@@ -2,7 +2,7 @@ import { Checkbox, FormControlLabel, Paper, Stack, TextField } from "@mui/materi
 
 import { Loyalty } from "@mui/icons-material";
 import { useState } from "react";
-import { useGeneralKeeper_5PlaceSellOrder } from "../../../../../../../generated";
+import { useGeneralKeeperPlaceSellOrder } from "../../../../../../../generated";
 import { ActionsOfOrderProps } from "../ActionsOfOrder";
 import { InitOffer, defaultOffer, } from "../../loo";
 import { HexType, MaxData, MaxPrice, MaxSeqNo } from "../../../../common";
@@ -26,7 +26,7 @@ export function PlaceSellOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const {
     isLoading: placeSellOrderLoading,
     write:placeSellOrder,
-  } = useGeneralKeeper_5PlaceSellOrder({
+  } = useGeneralKeeperPlaceSellOrder({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

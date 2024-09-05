@@ -1,8 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField, Typography } from "@mui/material";
 
-import { Deal, DealProps, Order } from "../loo";
-import { baseToDollar, bigIntToNum, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
+import { DealProps } from "../loo";
+import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 
 interface BillOfDealProps {
