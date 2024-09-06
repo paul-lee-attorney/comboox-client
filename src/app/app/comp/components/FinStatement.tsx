@@ -3,7 +3,6 @@ import { Paper, Stack, Grid, Typography, Divider, Button } from "@mui/material";
 
 import { Expense } from "./FinStatement/Expense";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
-import { keepersMap } from "../../common";
 import { useEffect, useState } from "react";
 import { getOwner, rate } from "../../fuel_tank/ft";
 import { bigIntToStrNum } from "../../common/toolsKit";
@@ -13,7 +12,7 @@ import { CbpIncome, defaultSum, IncomeSumProps } from "./FinStatement/CbpIncome"
 
 export function FinStatement() {
 
-  const { gk, keepers } = useComBooxContext();
+  const { gk } = useComBooxContext();
 
   const [ cbpIncome, setCbpIncome ] = useState<IncomeSumProps>(defaultSum);
   const [ ethIncome, setEthIncome ] = useState<IncomeSumProps>(defaultSum);
@@ -80,7 +79,7 @@ export function FinStatement() {
               <Typography variant="h6" textAlign='center' width='20%'>
                 -
               </Typography>
-              {keepers && keepers.length>0 && rateOfCbp>0 && (
+              {rateOfCbp>0 && (
                 <Expense title="GMM" exRate={rateOfCbp} sum={gmmExp} setSum={setGmmExp} />
               )}
             </Stack>
@@ -89,7 +88,7 @@ export function FinStatement() {
               <Typography variant="h6" textAlign='center' width='20%'>
                 -
               </Typography>
-              {keepers && keepers.length>0 && rateOfCbp>0 && (
+              {rateOfCbp>0 && (
                 <Expense title="BMM" exRate={rateOfCbp} sum={bmmExp} setSum={setBmmExp} />
               )}
             </Stack>
@@ -133,7 +132,7 @@ export function FinStatement() {
                 </Typography>
 
                 <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                  <b>Revenue: ({bigIntToStrNum(cbpIncome.royalty, 18) + ' ETH'}) </b>
+                  <b>Revenue: ( { rateOfCbp > 0n ? bigIntToStrNum(cbpIncome.royalty * 10000n/rateOfCbp , 18) : '0' + ' ETH'}) </b>
                 </Button>
                   
               </Stack>
