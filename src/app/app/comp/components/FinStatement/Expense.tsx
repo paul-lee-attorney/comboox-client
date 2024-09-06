@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from "@mui/material";
-import { AddrOfTank, AddrZero, HexType } from "../../../common";
+import { AddrOfTank, AddrZero, HexType, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { CbpIncomeProps, defaultSum, IncomeSumProps } from "./CbpIncome";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 
 export type ExpenseProps = {
   blockNumber: bigint,
@@ -21,12 +22,13 @@ export type ExpenseProps = {
 }
 
 export interface ExpenseInterfaceProps extends CbpIncomeProps{
-  addr: HexType;
   title: string;
 }
 
-export function Expense({addr, title, exRate, sum, setSum}: ExpenseInterfaceProps) {
+export function Expense({title, exRate, sum, setSum}: ExpenseInterfaceProps) {
   
+  const { keepers } = useComBooxContext();
+
   const client = usePublicClient();
 
   const [ open, setOpen ] = useState(false);
@@ -51,7 +53,11 @@ export function Expense({addr, title, exRate, sum, setSum}: ExpenseInterfaceProp
       return item;
     }
   
-    const getEvents = async (addr:HexType) => {
+    const getEvents = async (title:string) => {
+
+      if (!keepers || keepers.length == 0) return;
+      
+      let addr = title == 'GMM' ? keepers[keepersMap.GMMKeeper] : keepers[keepersMap.BMMKeeper];
 
       let sum:IncomeSumProps = defaultSum;
 
@@ -167,9 +173,9 @@ export function Expense({addr, title, exRate, sum, setSum}: ExpenseInterfaceProp
       setRecords(arr);
     }
 
-    getEvents(addr);
+    getEvents(title);
 
-  },[client, exRate, addr, setSum]);
+  },[client, exRate, title, keepers, setSum]);
 
   const columns: GridColDef[] = [
     {

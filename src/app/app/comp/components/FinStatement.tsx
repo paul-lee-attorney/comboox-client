@@ -80,8 +80,8 @@ export function FinStatement() {
               <Typography variant="h6" textAlign='center' width='20%'>
                 -
               </Typography>
-              {keepers && (
-                <Expense title="GMM" addr={keepers[keepersMap.GMMKeeper]} exRate={rateOfCbp} sum={gmmExp} setSum={setGmmExp} />
+              {keepers && keepers.length>0 && rateOfCbp>0 && (
+                <Expense title="GMM" exRate={rateOfCbp} sum={gmmExp} setSum={setGmmExp} />
               )}
             </Stack>
 
@@ -89,8 +89,8 @@ export function FinStatement() {
               <Typography variant="h6" textAlign='center' width='20%'>
                 -
               </Typography>
-              {keepers && (
-                <Expense title="BMM" addr={keepers[keepersMap.BMMKeeper]} exRate={rateOfCbp} sum={bmmExp} setSum={setBmmExp} />
+              {keepers && keepers.length>0 && rateOfCbp>0 && (
+                <Expense title="BMM" exRate={rateOfCbp} sum={bmmExp} setSum={setBmmExp} />
               )}
             </Stack>
 
