@@ -194,7 +194,7 @@ export function CbpIncome({exRate, sum, setSum}:CbpIncomeProps ) {
         sx={{m:0.5, minWidth:218, justifyContent:'start'}}
         onClick={()=>setOpen(true)}
       >
-        <b>Revenue: ({ bigIntToStrNum(sum.royalty * 10000n / exRate, 18) } ETH)</b>
+        <b>Revenue: ({ exRate > 0 ? bigIntToStrNum(sum.royalty * 10000n / exRate, 18) : '0' } ETH)</b>
       </Button>
 
       <Dialog
