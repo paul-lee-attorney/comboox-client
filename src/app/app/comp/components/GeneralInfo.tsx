@@ -46,7 +46,7 @@ export function GeneralInfo() {
     if (gk) {
       getCompInfo(gk).then(
         res => {
-          console.log('compInfo: ', res);
+          // console.log('compInfo: ', res);
           if (res.state > 0) {
             client.getLogs({
               address: gk,

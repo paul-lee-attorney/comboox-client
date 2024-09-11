@@ -124,8 +124,6 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
 
       sum.flag = true;
       
-      console.log('sum: ', sum);
-
       setRecords(arr);
       setSum(sum);
     }

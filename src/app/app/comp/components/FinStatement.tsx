@@ -4,7 +4,7 @@ import { Paper, Stack, Typography, Divider, Button, Switch } from "@mui/material
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { useEffect, useState } from "react";
 import { rate } from "../../fuel_tank/ft";
-import { baseToDollar, bigIntToNum, bigIntToStrNum, centToDollar, longDataParser, } from "../../common/toolsKit";
+import { baseToDollar, bigIntToNum, bigIntToStrNum } from "../../common/toolsKit";
 import { CbpIncome, CbpIncomeSumProps, defaultSum,  } from "./FinStatement/CbpIncome";
 import { defaultEthIncomeSum, EthIncome, EthIncomeSumProps } from "./FinStatement/EthIncome";
 import { CbpOutflow, CbpOutflowSumProps, defaultCbpOutSum } from "./FinStatement/CbpOutflow";
@@ -29,7 +29,7 @@ export type CashflowProps = {
 
 export function FinStatement() {
 
-  const { gk } = useComBooxContext();
+  const { gk, userNo } = useComBooxContext();
 
   const [ cbpIncome, setCbpIncome ] = useState<CbpIncomeSumProps>(defaultSum);
   const [ cbpIncomeRecords, setCbpIncomeRecords ] = useState<CashflowProps[]>([]);
@@ -101,6 +101,13 @@ export function FinStatement() {
     }
   });
 
+  const [ isComBoox, setIsComBoox ] = useState(false);
+
+  useEffect(()=>{
+    if (!userNo) return;
+    setIsComBoox(userNo == 8);
+  }, [userNo, setIsComBoox]);
+
   // ==== Calculation ====
 
   const ethToBP = (eth: bigint) => {
@@ -123,9 +130,9 @@ export function FinStatement() {
     return bigIntToNum(eth / 10n**9n, 9) + ' ETH';
   }
 
-  let initContribution = bpToETH(300000n * 10000n);
+  let initContribution = isComBoox ? bpToETH(300000n * 10000n) : 0n;
 
-  let armotization = bpToETH(300000n * 10000n / (15n * 365n) * days);
+  let armotization = isComBoox ? bpToETH(300000n * 10000n / (15n * 365n) * days) : 0n;
 
   let gmmExp = cbpToETH(cbpOutflow.gmmTransfer) + ethOutflow.gmmTransfer + ethOutflow.gmmExpense;
 
@@ -237,16 +244,6 @@ export function FinStatement() {
     }
   }
 
-  const [isOwnerOfRC, setIsOwnerOfRC ] = useState(false);
-
-  useEffect(()=>{
-    const checkOwnership = async (input: HexType) => {
-      let res = await isOwnerOfRegCenter(input);
-      setIsOwnerOfRC(res);
-    }
-
-    if (gk) checkOwnership(gk);
-  });
 
   return (
     <Paper elevation={3} 
@@ -281,21 +278,21 @@ export function FinStatement() {
 
         <CashFlowList arrSum={sumInfo} records={list} open={open} setOpen={setOpen}/>
     
-        {isOwnerOfRC && (
-          <Paper elevation={3} 
-            sx={{
-              m:1, p:1, border:1, 
-              borderColor:'divider',
-              width: '50%' 
-            }} 
-          >
+        <Paper elevation={3} 
+          sx={{
+            m:1, p:1, border:1, 
+            borderColor:'divider',
+            width: '50%' 
+          }} 
+        >
 
-            <Stack direction='row' sx={{ alignItems:'center' }} >
-              <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-                <b>Balance Sheet</b>
-              </Typography>
-            </Stack>
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+            <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+              <b>Balance Sheet</b>
+            </Typography>
+          </Stack>
 
+          {isComBoox && (
             <Stack direction='row' width='100%' >
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
                 <b>Royalty Interests: ({inETH 
@@ -303,7 +300,9 @@ export function FinStatement() {
                   : ethToUSD(initContribution)}) </b>
               </Button>
             </Stack>
+          )}
 
+          {isComBoox && (
             <Stack direction='row' width='100%' >
               <Typography variant="h6" textAlign='center' width='10%'>
                 -
@@ -314,39 +313,41 @@ export function FinStatement() {
                   : ethToUSD(armotization)}) </b>
               </Button>
             </Stack>
+          )}
 
-            <Stack direction='row' width='100%' >
-              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>Balance of ETH: ({ inETH 
-                  ? ethToGwei(balanceOfEth)
-                  : ethToUSD(balanceOfEth)}) </b>
-              </Button>
-            </Stack>
+          <Stack direction='row' width='100%' >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+              <b>Balance of ETH: ({ inETH 
+                ? ethToGwei(balanceOfEth)
+                : ethToUSD(balanceOfEth)}) </b>
+            </Button>
+          </Stack>
 
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='10%'>
-                -
-              </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-                <b>Deposits: ({ inETH 
-                  ? ethToGwei(depositsOfETH)
-                  : ethToUSD(depositsOfETH)}) </b>
-              </Button>
-            </Stack>
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              -
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+              <b>Deposits: ({ inETH 
+                ? ethToGwei(depositsOfETH)
+                : ethToUSD(depositsOfETH)}) </b>
+            </Button>
+          </Stack>
 
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='20%'>
-                &nbsp;
-              </Typography>
-              <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-                <b>Total Assets: ({ inETH
-                  ? ethToGwei(totalAssets)
-                  : ethToUSD(totalAssets)}) </b>
-              </Button>
-            </Stack>
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='20%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>Total Assets: ({ inETH
+                ? ethToGwei(totalAssets)
+                : ethToUSD(totalAssets)}) </b>
+            </Button>
+          </Stack>
 
-            <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
+          <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
+          {isComBoox && (
             <Stack direction='row' width='100%' >
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
                 <b>Init Contribution: ({ inETH
@@ -354,147 +355,144 @@ export function FinStatement() {
                   : ethToUSD(initContribution) + 'USD'}) </b>
               </Button>
             </Stack>
+          )}
 
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='10%'>
-                +
-              </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-                <b>Equity Changes: ({ inETH
-                  ? ethToGwei(equityChange)
-                  : ethToUSD(equityChange)}) </b>
-              </Button>
-            </Stack>
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              +
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+              <b>Equity Changes: ({ inETH
+                ? ethToGwei(equityChange)
+                : ethToUSD(equityChange)}) </b>
+            </Button>
+          </Stack>
 
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='20%'>
-                &nbsp;
-              </Typography>
-              <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-                <b>Total Equity: ({ inETH
-                  ? ethToGwei(totalEquity)
-                  : ethToUSD(totalEquity)}) </b>
-              </Button>
-            </Stack>
-          </Paper>
-        )}
-
-        {isOwnerOfRC && (
-          <Paper elevation={3} 
-            sx={{
-              m:1, p:1, border:1, 
-              borderColor:'divider',
-              width: '50%' 
-            }} 
-          >
-
-            <Stack direction='row' sx={{ alignItems:'center' }} >
-              <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-                <b>Income Statement</b>
-              </Typography>
-            </Stack>
-
-            <Stack direction='row' width='100%' >
-              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>showRoyaltyRecords()} >
-                <b>Royalty Inc: ({ inETH
-                  ? ethToGwei(cbpToETH(cbpIncome.royalty))
-                  : ethToUSD(cbpToETH(cbpIncome.royalty))}) </b>
-              </Button>
-            </Stack>
-
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='10%'>
-                +
-              </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showOtherIncomeRecords()} >
-                <b>Other Inc: ({ inETH
-                  ? ethToGwei(ethIncome.transfer)
-                  : ethToUSD(ethIncome.transfer)}) </b>
-              </Button>
-            </Stack>
-
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='10%'>
-                -
-              </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showGmmExpRecords()} >
-                <b>Gmm Exp: ({ inETH
-                  ? ethToGwei(gmmExp)
-                  : ethToUSD(gmmExp) }) </b>
-              </Button>
-            </Stack>
-
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='10%'>
-                -
-              </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showBmmExpRecords()}>
-                <b>Bmm Exp: ({ inETH
-                  ? ethToGwei(bmmExp)
-                  : ethToUSD(bmmExp) }) </b>
-              </Button>
-            </Stack>
-
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='20%'>
-                &nbsp;
-              </Typography>
-              <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-                <b>EBITDA: ({ inETH
-                  ? ethToGwei(ebitda)
-                  : ethToUSD(ebitda)}) </b>
-              </Button>
-            </Stack>
-
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='20%'>
-                &nbsp;
-              </Typography>
-              <Typography variant="h6" textAlign='center' width='10%'>
-                -
-              </Typography>
-              <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
-                <b>Amortization: ({ inETH
-                ? ethToGwei(armotization)
-                : ethToUSD(armotization)}) </b>
-              </Button>
-            </Stack>
-
-            <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
-
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='40%'>
-                &nbsp;
-              </Typography>
-              <Button variant="outlined" sx={{width: '60%', m:0.5, justifyContent:'start'}} >
-                <b>Profits: ({ inETH
-                  ? ethToGwei(profits)
-                  : ethToUSD(profits) }) </b>
-              </Button>
-            </Stack>
-
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='20%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>Total Equity: ({ inETH
+                ? ethToGwei(totalEquity)
+                : ethToUSD(totalEquity)}) </b>
+            </Button>
+          </Stack>
         </Paper>
 
-        )}
+        <Paper elevation={3} 
+          sx={{
+            m:1, p:1, border:1, 
+            borderColor:'divider',
+            width: '50%' 
+          }} 
+        >
+
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+            <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+              <b>Income Statement</b>
+            </Typography>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>showRoyaltyRecords()} >
+              <b>Royalty Inc: ({ inETH
+                ? ethToGwei(cbpToETH(cbpIncome.royalty))
+                : ethToUSD(cbpToETH(cbpIncome.royalty))}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              +
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showOtherIncomeRecords()} >
+              <b>Other Inc: ({ inETH
+                ? ethToGwei(ethIncome.transfer)
+                : ethToUSD(ethIncome.transfer)}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              -
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showGmmExpRecords()} >
+              <b>Gmm Exp: ({ inETH
+                ? ethToGwei(gmmExp)
+                : ethToUSD(gmmExp) }) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              -
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showBmmExpRecords()}>
+              <b>Bmm Exp: ({ inETH
+                ? ethToGwei(bmmExp)
+                : ethToUSD(bmmExp) }) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='20%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>EBITDA: ({ inETH
+                ? ethToGwei(ebitda)
+                : ethToUSD(ebitda)}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='20%'>
+              &nbsp;
+            </Typography>
+            <Typography variant="h6" textAlign='center' width='10%'>
+              -
+            </Typography>
+            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
+              <b>Amortization: ({ inETH
+              ? ethToGwei(armotization)
+              : ethToUSD(armotization)}) </b>
+            </Button>
+          </Stack>
+
+          <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='40%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '60%', m:0.5, justifyContent:'start'}} >
+              <b>Profits: ({ inETH
+                ? ethToGwei(profits)
+                : ethToUSD(profits) }) </b>
+            </Button>
+          </Stack>
+
+        </Paper>
 
       </Stack>
       <Stack direction='row' >
 
-        {isOwnerOfRC && (
-          <Paper elevation={3} 
-            sx={{
-              m:1, p:1, border:1, 
-              borderColor:'divider',
-              width: '50%' 
-            }} 
-          >
+        <Paper elevation={3} 
+          sx={{
+            m:1, p:1, border:1, 
+            borderColor:'divider',
+            width: '50%' 
+          }} 
+        >
 
-              <Stack direction='row' sx={{ alignItems:'center' }} >
-                <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-                  <b>Statement of Changes in Equity</b>
-                </Typography>
-              </Stack>
+            <Stack direction='row' sx={{ alignItems:'center' }} >
+              <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+                <b>Statement of Changes in Equity</b>
+              </Typography>
+            </Stack>
 
+            {isComBoox && (
               <Stack direction='row' width='100%' >
                 <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
                   <b>Init Contribution: ({ inETH 
@@ -502,18 +500,20 @@ export function FinStatement() {
                     : ethToUSD(initContribution)})</b>
                 </Button>
               </Stack>
+            )}
 
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='10%'>
-                  +
-                </Typography>
-                <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showPaidInCapRecords()} >
-                  <b>Paid-In Cap: ({ inETH
-                    ? ethToGwei(ethIncome.capital)
-                    : ethToUSD(ethIncome.capital)}) </b>
-                </Button>
-              </Stack>
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                +
+              </Typography>
+              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showPaidInCapRecords()} >
+                <b>Paid-In Cap: ({ inETH
+                  ? ethToGwei(ethIncome.capital)
+                  : ethToUSD(ethIncome.capital)}) </b>
+              </Button>
+            </Stack>
 
+            {isComBoox && (
               <Stack direction='row' width='100%' >
                 <Typography variant="h6" textAlign='center' width='10%'>
                   +
@@ -524,58 +524,58 @@ export function FinStatement() {
                     : ethToUSD(deferredIncome)}) </b>
                 </Button>
               </Stack>
+            )}
 
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='10%'>
-                  +
-                </Typography>
-                <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-                  <b>Profits: ({ inETH 
-                    ? ethToGwei(profits)
-                    : ethToUSD(profits)}) </b>
-                </Button>
-              </Stack>
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                +
+              </Typography>
+              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+                <b>Profits: ({ inETH 
+                  ? ethToGwei(profits)
+                  : ethToUSD(profits)}) </b>
+              </Button>
+            </Stack>
 
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='10%'>
-                  -
-                </Typography>
-                <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-                  <b>Distribution: ({ inETH
-                    ? ethToGwei(ethOutflow.ownersEquity)
-                    : ethToUSD(ethOutflow.ownersEquity)}) </b>
-                </Button>
-              </Stack>
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                -
+              </Typography>
+              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+                <b>Distribution: ({ inETH
+                  ? ethToGwei(ethOutflow.ownersEquity)
+                  : ethToUSD(ethOutflow.ownersEquity)}) </b>
+              </Button>
+            </Stack>
 
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='10%'>
-                  &nbsp;
-                </Typography>
-                <Typography variant="h6" textAlign='center' width='10%'>
-                  -
-                </Typography>
-                <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-                  <b>Equity Change: ({ inETH
-                    ? ethToGwei(equityChange)
-                    : ethToUSD(equityChange)}) </b>
-                </Button>
-              </Stack>
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                &nbsp;
+              </Typography>
+              <Typography variant="h6" textAlign='center' width='10%'>
+                -
+              </Typography>
+              <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+                <b>Equity Change: ({ inETH
+                  ? ethToGwei(equityChange)
+                  : ethToUSD(equityChange)}) </b>
+              </Button>
+            </Stack>
 
-              <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
+            <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='30%'>
-                  &nbsp;
-                </Typography>
-                <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
-                  <b>Owners Equity: ({ inETH
-                    ? ethToGwei(ownersEquity)
-                    : ethToUSD(ownersEquity)}) </b>
-                </Button>
-              </Stack>
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='30%'>
+                &nbsp;
+              </Typography>
+              <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
+                <b>Owners Equity: ({ inETH
+                  ? ethToGwei(ownersEquity)
+                  : ethToUSD(ownersEquity)}) </b>
+              </Button>
+            </Stack>
 
-          </Paper>
-        )}
+        </Paper>
 
         <Paper elevation={3} 
           sx={{
@@ -646,8 +646,6 @@ export function FinStatement() {
               </Stack>
 
         </Paper>
-
-
 
       </Stack>
     

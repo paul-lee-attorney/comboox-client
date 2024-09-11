@@ -37,13 +37,13 @@ export function CheckPI({userNo, seqOfLR}:CheckPIProps) {
 
     const sha = await getSHA(gk);
     const rule = await getRule(sha, Number(seqOfLR));   
-    console.log('lisingRule: ', rule);
+    // console.log('lisingRule: ', rule);
     
     const title = Number(`0x${rule.substring(22, 26)}`);
-    console.log('titleOfVerifier :', title);    
+    // console.log('titleOfVerifier :', title);    
 
     const myNo = await getMyUserNo(signer.account.address);
-    console.log('myNo :', myNo);    
+    // console.log('myNo :', myNo);    
 
     const flag = hasTitle(boox[booxMap.ROD], myNo, title); 
     return flag;

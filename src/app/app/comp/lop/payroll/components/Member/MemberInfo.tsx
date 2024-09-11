@@ -45,7 +45,7 @@ export function MemberInfo({ addr, time, seqOfTeam, acct  }:MemberInfoProps) {
   useEffect(() => { 
     getCurrency(addr).then(
       res => {
-        console.log('currency: ', res);
+        // console.log('currency: ', res);
         setCurrency(res);
       }
     );

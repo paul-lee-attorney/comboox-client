@@ -65,7 +65,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
       console.log('UserNo Not Detected!');      
       return false;
     }
-    console.log('myNo: ', myNo);
+    // console.log('myNo: ', myNo);
 
     let flag = await isParty(addr, BigInt(myNo));
     if (flag) return true;

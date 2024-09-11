@@ -116,7 +116,7 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
     getRule(sha, seq).then(
       res => {
         setObjPR(prParser(res));
-        console.log('pr:', prParser(res));
+        // console.log('pr:', prParser(res));
       }
     );
   }, [sha, seq, time]);  

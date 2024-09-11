@@ -80,7 +80,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const signMessage = async () => {
     
     if (signer && gk) {
-      console.log('userInfo: ', userInfo);
+      // console.log('userInfo: ', userInfo);
       let objInfo = {...userInfo, sig: ''};
       let message = JSON.stringify(objInfo, Object.keys(objInfo).sort());
       let sigM = await signer.signMessage({message: message});

@@ -90,7 +90,7 @@ export function SetGroupUpdateOrder({ sha, seq, isFinalized, time, refresh }: Ru
     getRule(sha, seq).then(
       res => {
         setObjGuo(guoParser(res));
-        console.log('guo: ', guoParser(res));
+        // console.log('guo: ', guoParser(res));
       }
     );
   }, [sha, seq, time]);
