@@ -29,7 +29,7 @@ export type CashflowProps = {
 
 export function FinStatement() {
 
-  const { gk, userNo } = useComBooxContext();
+  const { gk, compInfo } = useComBooxContext();
 
   const [ cbpIncome, setCbpIncome ] = useState<CbpIncomeSumProps>(defaultSum);
   const [ cbpIncomeRecords, setCbpIncomeRecords ] = useState<CashflowProps[]>([]);
@@ -105,9 +105,9 @@ export function FinStatement() {
   const [ armotization, setArmotization ] = useState(0n);
 
   useEffect(()=>{
-    if (!userNo) return;
-    let flag = (userNo == 8);
-    console.log('userNo: ', userNo);
+    if (!compInfo?.regNum) return;
+    let flag = (compInfo.regNum == 8);
+    console.log('compNo: ', compInfo.regNum);
 
     if (flag && days > 0n && centPrice > 0n) {
 
@@ -121,7 +121,7 @@ export function FinStatement() {
       console.log('armo: ', armo);
     }
     
-  }, [userNo, days, centPrice, setInitContribution, setArmotization]);
+  }, [compInfo, days, centPrice, setInitContribution, setArmotization]);
 
   // ==== Calculation ====
 
@@ -309,7 +309,7 @@ export function FinStatement() {
 
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-              <b>Royalty Interests: ({inETH 
+              <b>Intellectual Property Rights: ({inETH 
                 ? ethToGwei(initContribution) 
                 : ethToUSD(initContribution)}) </b>
             </Button>
@@ -327,8 +327,19 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='20%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>Current Value Of IPR: ({ inETH 
+                ? ethToGwei(initContribution - armotization) 
+                : ethToUSD(initContribution - armotization)}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-              <b>Balance of ETH: ({ inETH 
+              <b>ETH Of the Address: ({ inETH 
                 ? ethToGwei(balanceOfEth)
                 : ethToUSD(balanceOfEth)}) </b>
             </Button>
@@ -350,6 +361,17 @@ export function FinStatement() {
               &nbsp;
             </Typography>
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>ETH of Comp: ({ inETH 
+                ? ethToGwei(balanceOfEth - depositsOfETH)
+                : ethToUSD(balanceOfEth - depositsOfETH)}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='30%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>Total Assets: ({ inETH
                 ? ethToGwei(totalAssets)
                 : ethToUSD(totalAssets)}) </b>
@@ -378,10 +400,10 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Typography variant="h6" textAlign='center' width='20%'>
+            <Typography variant="h6" textAlign='center' width='30%'>
               &nbsp;
             </Typography>
-            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>Total Equity: ({ inETH
                 ? ethToGwei(totalEquity)
                 : ethToUSD(totalEquity)}) </b>
