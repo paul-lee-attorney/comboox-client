@@ -106,7 +106,8 @@ export function FinStatement() {
 
   useEffect(()=>{
     if (!userNo) return;
-    let flag = userNo == 8;
+    let flag = (userNo == 8);
+    console.log('userNo: ', userNo);
 
     if (flag && days > 0n && centPrice > 0n) {
 
@@ -114,7 +115,10 @@ export function FinStatement() {
       let armo = init / (15n * 365n) * days * centPrice / 100n;
 
       setInitContribution(init);
+      console.log('Init Contribution:', init);
+
       setArmotization(armo);
+      console.log('armo: ', armo);
     }
     
   }, [userNo, days, centPrice, setInitContribution, setArmotization]);
