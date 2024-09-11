@@ -65,7 +65,7 @@ export function DepositOfMine() {
           severity='info' 
           sx={{ height: 45, p:0.5 }} 
         >
-          Deposit of User ({longSnParser((userNo ?? 0).toString())}) : { bigIntToStrNum((deposit / (10n**9n)), 9) + ' (ETH)' }
+          Deposit of User ({longSnParser((userNo ?? 0).toString())}) : { bigIntToStrNum(deposit, 18) + ' (ETH)' }
         </Alert>          
       </Collapse>
 

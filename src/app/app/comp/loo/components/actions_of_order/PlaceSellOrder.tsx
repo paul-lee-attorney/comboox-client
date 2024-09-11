@@ -1,4 +1,4 @@
-import { Checkbox, FormControlLabel, Paper, Stack, TextField } from "@mui/material";
+import { Paper, Stack, TextField } from "@mui/material";
 
 import { Loyalty } from "@mui/icons-material";
 import { useState } from "react";

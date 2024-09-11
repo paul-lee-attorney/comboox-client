@@ -1,17 +1,11 @@
 import { 
   readContract, getWalletClient, getContract, 
   waitForTransaction, fetchBalance, 
-  watchContractEvent,
-  getConfig,
-  getPublicClient
 } from "@wagmi/core";
 
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "./common";
-import { meetingMinutesABI, regCenterABI } from "../../../generated";
+import { ownableABI, regCenterABI } from "../../../generated";
 import { strNumToBigInt } from "./common/toolsKit";
-
-import { publicClient } from "../_providers/WagmiProvider";
-import { BlockList } from "net";
 
 // ==== StrLocker === 
 
@@ -626,3 +620,14 @@ export async function getCentPriceInWei(curr:number): Promise<bigint>{
   return res;
 }
 
+
+export async function isOwnerOfRegCenter(gk:HexType): Promise<boolean>{
+
+  let res = await readContract({
+    address: AddrOfRegCenter,
+    abi: ownableABI,
+    functionName:'getOwner',
+  });
+
+  return res.toLowerCase() == gk.toLowerCase();
+}

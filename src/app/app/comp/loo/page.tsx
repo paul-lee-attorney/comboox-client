@@ -96,7 +96,7 @@ function ListOfOrders() {
 
     const getEvents = async () => {
 
-      if (!boox || boox[booxMap.LOO] == AddrZero) return;
+      if (!boox || (boox[booxMap.LOO]).toLowerCase() == AddrZero.toLowerCase()) return;
 
       const addrLOO = boox[booxMap.LOO];
 
@@ -114,13 +114,15 @@ function ListOfOrders() {
       let qty:bigint = 0n;
       let amt:bigint = 0n;
       let arr:DealProps[] = [];
+      let counter = 0;
 
       while (cnt > 0) {
 
-        let deal:Deal = dealParser(dealLogs[cnt-1].args.deal ?? '0x00');
-        let consideration: bigint = dealLogs[cnt-1].args.consideration ?? 0n;
+        let log = dealLogs[cnt-1];
+        let deal:Deal = dealParser(log.args.deal ?? '0x00');
+        let consideration: bigint = log.args.consideration ?? 0n;
 
-        let blkNo = dealLogs[cnt-1].blockNumber;
+        let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
 
         let classOfOrder = Number(deal.classOfShare);
@@ -133,7 +135,8 @@ function ListOfOrders() {
         let item:DealProps = {
           blockNumber: blkNo,
           timestamp: blk.timestamp,
-          transactionHash: dealLogs[cnt-1].transactionHash,
+          transactionHash: log.transactionHash,
+          seqOfDeal: counter,
           classOfShare: longSnParser(classOfShare.toString()),
           seqOfShare: longSnParser(deal.seqOfShare),
           buyer: longSnParser(deal.buyer),
@@ -151,6 +154,7 @@ function ListOfOrders() {
         amt += deal.paid * deal.price;
 
         arr.push(item); 
+        counter++;
 
       }
 
@@ -214,7 +218,7 @@ function ListOfOrders() {
 
         <TabPanel value={0} sx={{ justifyContent:'start', alignItems:'center', minWidth:1680 }} >
           
-          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.data.seq} refresh={refresh} />
+          <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.node.seq} refresh={refresh} />
           <DealsChart classOfShare={classOfShare} time={time} refresh={refresh} />
           
           <OrdersList name={'Offers'} list={offers} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
@@ -237,7 +241,6 @@ function ListOfOrders() {
         </TabPanel>
 
       </Tabs>
-
 
     </Paper>
   );

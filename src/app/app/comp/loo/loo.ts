@@ -38,6 +38,7 @@ export const defaultOffer: InitOffer = {
 // ==== Order ====
 
 export interface Node {
+  seq: number;
   prev: number;
   next: number;
   issuer: number;
@@ -48,6 +49,7 @@ export interface Node {
 }
 
 export const defaultNode: Node = {
+  seq: 0,
   prev: 0,
   next: 0,
   issuer: 0,
@@ -63,9 +65,7 @@ export interface Data {
   groupRep: number;
   votingWeight: number;
   distrWeight: number;
-  centPriceInWei: bigint;
-  buyer: number;
-  seq: number;
+  margin: bigint;
 }
 
 export const defaultData: Data = {
@@ -74,9 +74,7 @@ export const defaultData: Data = {
   groupRep: 0,
   votingWeight: 0,
   distrWeight: 0,
-  centPriceInWei: 0n,
-  buyer: 0,
-  seq: 0,
+  margin: 0n,
 }
 
 export interface Order {
@@ -103,6 +101,7 @@ export interface Investor {
 
 // ==== Deal ====
 export interface Deal {
+  seqOfDeal: number;
   classOfShare: string;
   seqOfShare: string;
   buyer: string;
@@ -115,6 +114,7 @@ export interface Deal {
 }
 
 export const defaultDeal: Deal = {
+  seqOfDeal: 0,
   classOfShare: '0',
   seqOfShare: '0',
   buyer: '0',
@@ -128,6 +128,7 @@ export const defaultDeal: Deal = {
 
 export function dealParser(hexDeal: HexType):Deal {
   let deal: Deal = {
+    seqOfDeal: 0,
     classOfShare: parseInt(hexDeal.substring(2, 6), 16).toString(),
     seqOfShare: parseInt(hexDeal.substring(6, 14), 16).toString(),
     buyer: parseInt(hexDeal.substring(14, 24), 16).toString(),
@@ -282,19 +283,37 @@ export async function getOrder(addr: HexType, classOfShare:number, seqOfOrder: n
     functionName: 'getOrder',
     args: [ BigInt(classOfShare), BigInt(seqOfOrder), isOffer ]
   });
+  
+  let output: Order = {
+    node: {
+      seq: seqOfOrder,
+      ...res.node,
+    },
+    data: {...res.data},
+  };
 
-  return res;
+  return output;
 }
 
 export async function getOrders(addr: HexType, classOfShare:number, isOffer:boolean):Promise<readonly Order[]>{
   let res = await readContract({
     address: addr,
     abi: listOfOrdersABI,
-    functionName: 'getOrders',
+    functionName: 'getSeqList',
     args: [ BigInt(classOfShare), isOffer ],
   });
 
-  return res;
+  let len = res.length;
+  let output: Order[] = [];
+
+  let i=0;
+  while (i < len) {
+    let order = await getOrder(addr, classOfShare, Number(res[i]), isOffer);
+    output.push(order);
+    i++;
+  }
+  
+  return output;
 }
 
 export async function isClass(addr: HexType, classOfShare:number):Promise<boolean>{

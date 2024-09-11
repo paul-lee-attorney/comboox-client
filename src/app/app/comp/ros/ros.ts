@@ -141,20 +141,20 @@ export function codifyHeadOfStrShare(head: StrHead): HexType {
   return sn;
 }
 
-// export function parseSnOfShare(sn: HexType): Head {
-//   let head: Head = {
-//     class: parseInt(sn.substring(2, 6), 16),
-//     seqOfShare: parseInt(sn.substring(6, 14), 16),
-//     preSeq: parseInt(sn.substring(14, 22), 16),
-//     issueDate: parseInt(sn.substring(22, 34), 16),
-//     shareholder: parseInt(sn.substring(34, 44), 16),
-//     priceOfPaid: parseInt(sn.substring(44, 52), 16),
-//     priceOfPar: parseInt(sn.substring(52, 60), 16),
-//     votingWeight: parseInt(sn.substring(60, 64), 16)
-//   };
+export function parseSnOfShare(sn: HexType): Head {
+  let head: Head = {
+    class: parseInt(sn.substring(2, 6), 16),
+    seqOfShare: parseInt(sn.substring(6, 14), 16),
+    preSeq: parseInt(sn.substring(14, 22), 16),
+    issueDate: parseInt(sn.substring(22, 34), 16),
+    shareholder: parseInt(sn.substring(34, 44), 16),
+    priceOfPaid: parseInt(sn.substring(44, 52), 16),
+    priceOfPar: parseInt(sn.substring(52, 60), 16),
+    votingWeight: parseInt(sn.substring(60, 64), 16)
+  };
 
-//   return head
-// }
+  return head
+}
 
 // ==== Read Funcs ====
 

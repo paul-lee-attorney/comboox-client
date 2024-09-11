@@ -37,23 +37,22 @@ useEffect(()=>{
 
     const addrLOO = boox[booxMap.LOO];
 
-    const lastBlock = await client.getBlockNumber();
-
     let dealLogs = await client.getLogs({
       address: addrLOO,
       event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
-      fromBlock: lastBlock > 60000n ? lastBlock - 60000n : 0n
+      fromBlock: 1n,
     });
 
     let cnt = dealLogs.length;
     let arr:ChartItem[] = [];
     let i = 0;
+    let len = 0;
  
-    while (i < cnt) {
+    while (i<cnt && len<1800) {
 
-      let deal:Deal = dealParser(dealLogs[i].args.deal ?? '0x00');
-
-      let blk = await client.getBlock({blockNumber: dealLogs[i].blockNumber});
+      let log = dealLogs[i];
+      let deal:Deal = dealParser(log.args.deal ?? '0x00');
+      let blk = await client.getBlock({blockNumber: log.blockNumber});
 
       if (classOfShare != Number(deal.classOfShare)) {
         i++;
@@ -67,10 +66,9 @@ useEffect(()=>{
         low: deal.price,
       }
 
-      let len = arr.length;
       if (len > 0) {
 
-        let lastItem = arr[len - 1];
+        let lastItem = arr[len-1];
 
         if (lastItem.timestamp == item.timestamp) {
           if (item.high > lastItem.high) arr[len-1].high = item.high;
@@ -78,13 +76,16 @@ useEffect(()=>{
           arr[len-1].volumn += item.volumn;
         } else {
           arr.push(item);
+          len++;
         }
 
       } else {
         arr.push(item);
+        len++;
       }
 
       i++;
+
     }
     setLine(arr);
   }
@@ -178,7 +179,7 @@ useEffect(()=>{
             position="bottom"
             axisId="date"
             tickInterval={(value, index) => {
-              return index % (line.length / 5) === 0;
+              return index % 5 == 0;
             }}
             tickLabelStyle={{
               fontSize: 10,

@@ -153,14 +153,13 @@ export function DealsList({list, qty, amt, left, setLeft, right, setRight, refre
           value={ right.toString() } 
         />
 
-
       </Stack>
 
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 10}}}} 
         pageSizeOptions={[5, 10, 15, 20]} 
         rows={ list } 
-        getRowId={(row:DealProps) => ( row.blockNumber.toString() + row.transactionHash + row.classOfShare + row.seqOfShare + row.paid.toString() + row.price.toString() + row.buyer) } 
+        getRowId={(row:DealProps) => (row.seqOfDeal)} 
         columns={ columns }
         disableRowSelectionOnClick
         onRowClick={handleRowClick}

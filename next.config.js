@@ -10,6 +10,7 @@ const nextConfig = {
     // !! WARN !!
     ignoreBuildErrors: true,
   },
+  reactStrictMode: false,
   webpack: (config, { isServer }) => {
     // Resolve `fs` and other Node.js modules to empty in the browser environment
     if (!isServer) {

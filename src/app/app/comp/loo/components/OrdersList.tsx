@@ -1,6 +1,6 @@
 import { IconButton, Paper, Stack, Toolbar, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
-import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 import { Order } from "../loo";
 import { Dispatch, SetStateAction } from "react";
 import { Refresh } from "@mui/icons-material";
@@ -16,14 +16,13 @@ interface OrdersListProps {
 export function OrdersList({name, list, setOrder, setOpen, refresh}:OrdersListProps) {
 
   const colums: GridColDef[] = [
-
-    {
-      field: 'seq',
+    { 
+      field: 'seqOfOrder', 
       headerName: 'SeqOfOrder',
-      valueGetter: p => longSnParser(p.row.data.seq.toString()),
+      valueGetter: p => longSnParser(p.row.node.seq.toString()),
       headerAlign: 'center',
-      align:'center',      
-      width: 218,
+      align:'center',
+      width: 128,
     },
     { 
       field: 'expireDate', 
@@ -66,9 +65,9 @@ export function OrdersList({name, list, setOrder, setOpen, refresh}:OrdersListPr
       width: 256,
     },    
     { 
-      field: 'centPrice', 
-      headerName: 'CentPrice (GWei)',
-      valueGetter: p => baseToDollar((p.row.data.centPriceInWei / 10n ** 9n).toString()),
+      field: 'margin', 
+      headerName: 'Margin (ETH)',
+      valueGetter: p => bigIntToStrNum(p.row.data.margin, 18),
       headerAlign: 'right',
       align:'right',
       width: 256,
@@ -109,7 +108,7 @@ export function OrdersList({name, list, setOrder, setOpen, refresh}:OrdersListPr
       <DataGrid 
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
         pageSizeOptions={[5, 10, 20, 50, 100]} 
-        getRowId={ row => row.data.seq } 
+        getRowId={ row => row.node.seq.toString() } 
         rows={ list }
         columns={ colums }
         disableRowSelectionOnClick

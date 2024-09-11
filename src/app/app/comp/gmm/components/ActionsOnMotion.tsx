@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 
@@ -14,6 +14,10 @@ import { TransferFund } from "./actions_on_motion/TransferFund";
 import { DistributeProfits } from "./actions_on_motion/DistributeProfits";
 import { DeprecateGK } from "./actions_on_motion/DeprecateGK";
 import { UploadMotionFile } from "./actions_on_motion/UploadMotionFile";
+import { MintCBP } from "./actions_on_motion/MintCBP";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { isOwnerOfRegCenter } from "../../../rc";
+import { PickupFuelIncome } from "./actions_on_motion/PickupFuelIncome";
 
 export interface ActionsOnMotionProps {
   motion: Motion;
@@ -27,12 +31,25 @@ export interface ActionsOnMotionSelectProps extends ActionsOnMotionProps{
 
 export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnMotionSelectProps){
 
+  const { gk } = useComBooxContext();
+
+  const [ isComBoox, setIsComBoox ] = useState(false);
+
+  useEffect(()=>{
+    const checkOwnerOfRC = async () => {
+      if (!gk) return;
+      let res = await isOwnerOfRegCenter(gk); 
+      setIsComBoox(res);      
+    }
+    checkOwnerOfRC();
+  }, [gk]);
+
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOnMotion = [
     'Propose Motion', 'Upload File', 'Cast Vote', 'Count Results', 'Take Seat', 
     'Remove Director', 'Exec Actions', 'Transfer Fund', 'Distribute Profits',
-    'Deprecate GK'
+    'Deprecate GK', 'Mint CBP', 'Pickup FuelIncome'
   ]
 
   const compsOfAction = [
@@ -45,7 +62,9 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
     <ExecActionOfGm key={6} motion={motion} setOpen = {setOpen} refresh={refresh} />,
     <TransferFund key={7} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
     <DistributeProfits key={8} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
-    <DeprecateGK key={9} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
+    <DeprecateGK key={9} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
+    <MintCBP key={10} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
+    <PickupFuelIncome key={11} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
   ]
 
   return (
@@ -71,11 +90,12 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
               else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
-              else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && i != 6) return null;
+              else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && (i != 6 && i != 10 && i != 11 )) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
               else if (motion.body.state > 3) return null;
+              else if (!isComBoox && (i == 10 || i == 11)) return null;
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
             })}
           </Select>
@@ -89,11 +109,12 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
         else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
-        else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && i != 6) return null;
+        else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && (i != 6 && i != 10 && i != 11 )) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
         else if (motion.body.state > 3) return null;
+        else if (!isComBoox && (i == 10 || i == 11)) return null;
         return (
           <Collapse key={i} in={ typeOfAction == i.toString() } >
             {v}

@@ -4752,11 +4752,33 @@ export const generalKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'from', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'to', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'reason',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+    ],
+    name: 'ReleaseCustody',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       { name: 'acct', internalType: 'uint256', type: 'uint256', indexed: true },
       {
         name: 'value',
         internalType: 'uint256',
         type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'reason',
+        internalType: 'bytes32',
+        type: 'bytes32',
         indexed: true,
       },
     ],
@@ -5671,6 +5693,18 @@ export const generalKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'from', internalType: 'uint256', type: 'uint256' },
+      { name: 'to', internalType: 'uint256', type: 'uint256' },
+      { name: 'amt', internalType: 'uint256', type: 'uint256' },
+      { name: 'reason', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'releaseCustody',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfPld', internalType: 'uint256', type: 'uint256' },
       { name: 'hashKey', internalType: 'string', type: 'string' },
@@ -5746,6 +5780,7 @@ export const generalKeeperABI = [
     inputs: [
       { name: 'acct', internalType: 'uint256', type: 'uint256' },
       { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'reason', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'saveToCoffer',
     outputs: [],
@@ -6010,9 +6045,8 @@ export const goldChainABI = [
           { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
           { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-          { name: 'centPriceInWei', internalType: 'uint64', type: 'uint64' },
-          { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-          { name: 'seq', internalType: 'uint32', type: 'uint32' },
+          { name: 'margin', internalType: 'uint128', type: 'uint128' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
         ],
       },
     ],
@@ -6057,9 +6091,8 @@ export const goldChainABI = [
           { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
           { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
           { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-          { name: 'centPriceInWei', internalType: 'uint64', type: 'uint64' },
-          { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-          { name: 'seq', internalType: 'uint32', type: 'uint32' },
+          { name: 'margin', internalType: 'uint128', type: 'uint128' },
+          { name: 'state', internalType: 'uint8', type: 'uint8' },
         ],
       },
     ],
@@ -8432,11 +8465,33 @@ export const iGeneralKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
+      { name: 'from', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'to', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'reason',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
+    ],
+    name: 'ReleaseCustody',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
       { name: 'acct', internalType: 'uint256', type: 'uint256', indexed: true },
       {
         name: 'value',
         internalType: 'uint256',
         type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'reason',
+        internalType: 'bytes32',
+        type: 'bytes32',
         indexed: true,
       },
     ],
@@ -9276,6 +9331,18 @@ export const iGeneralKeeperABI = [
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
+      { name: 'from', internalType: 'uint256', type: 'uint256' },
+      { name: 'to', internalType: 'uint256', type: 'uint256' },
+      { name: 'amt', internalType: 'uint256', type: 'uint256' },
+      { name: 'reason', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'releaseCustody',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
       { name: 'seqOfShare', internalType: 'uint256', type: 'uint256' },
       { name: 'seqOfPld', internalType: 'uint256', type: 'uint256' },
       { name: 'hashKey', internalType: 'string', type: 'string' },
@@ -9351,6 +9418,7 @@ export const iGeneralKeeperABI = [
     inputs: [
       { name: 'acct', internalType: 'uint256', type: 'uint256' },
       { name: 'value', internalType: 'uint256', type: 'uint256' },
+      { name: 'reason', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'saveToCoffer',
     outputs: [],
@@ -10381,35 +10449,7 @@ export const ilooKeeperABI = [
       },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
     ],
-    name: 'RefundBidBalance',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'buyer',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'RefundBidDeposit',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'payee',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'ReleaseSTConsideration',
+    name: 'CloseBidAgainstInitOffer',
   },
   {
     stateMutability: 'nonpayable',
@@ -10727,13 +10767,8 @@ export const iListOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -10778,13 +10813,8 @@ export const iListOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -10945,13 +10975,8 @@ export const iListOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -11035,13 +11060,8 @@ export const iListOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -11134,13 +11154,8 @@ export const iListOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -12813,12 +12828,11 @@ export const iroaKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'ia', internalType: 'address', type: 'address', indexed: true },
       {
-        name: 'seqOfDeal',
+        name: 'caller',
         internalType: 'uint256',
         type: 'uint256',
-        indexed: false,
+        indexed: true,
       },
       {
         name: 'valueOfDeal',
@@ -12826,14 +12840,8 @@ export const iroaKeeperABI = [
         type: 'uint256',
         indexed: true,
       },
-      {
-        name: 'caller',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
     ],
-    name: 'PayOffApprovedDeal',
+    name: 'PayOffCIDeal',
   },
   {
     stateMutability: 'nonpayable',
@@ -19985,35 +19993,7 @@ export const looKeeperABI = [
       },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
     ],
-    name: 'RefundBidBalance',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'buyer',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'RefundBidDeposit',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'payee',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'ReleaseSTConsideration',
+    name: 'CloseBidAgainstInitOffer',
   },
   {
     type: 'event',
@@ -20475,13 +20455,8 @@ export const listOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -20526,13 +20501,8 @@ export const listOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -20727,13 +20697,8 @@ export const listOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -20817,13 +20782,8 @@ export const listOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -20944,13 +20904,8 @@ export const listOfOrdersABI = [
               { name: 'groupRep', internalType: 'uint40', type: 'uint40' },
               { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
               { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
-              {
-                name: 'centPriceInWei',
-                internalType: 'uint64',
-                type: 'uint64',
-              },
-              { name: 'buyer', internalType: 'uint40', type: 'uint40' },
-              { name: 'seq', internalType: 'uint32', type: 'uint32' },
+              { name: 'margin', internalType: 'uint128', type: 'uint128' },
+              { name: 'state', internalType: 'uint8', type: 'uint8' },
             ],
           },
         ],
@@ -23318,6 +23273,17 @@ export const ordersRepoABI = [
   {
     stateMutability: 'pure',
     type: 'function',
+    inputs: [
+      { name: 'paid', internalType: 'uint256', type: 'uint256' },
+      { name: 'price', internalType: 'uint256', type: 'uint256' },
+      { name: 'centPrice', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'getDealValue',
+    outputs: [{ name: '', internalType: 'uint64', type: 'uint64' }],
+  },
+  {
+    stateMutability: 'pure',
+    type: 'function',
     inputs: [{ name: 'sn', internalType: 'bytes32', type: 'bytes32' }],
     name: 'parseDeal',
     outputs: [
@@ -23506,12 +23472,11 @@ export const roaKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'ia', internalType: 'address', type: 'address', indexed: true },
       {
-        name: 'seqOfDeal',
+        name: 'caller',
         internalType: 'uint256',
         type: 'uint256',
-        indexed: false,
+        indexed: true,
       },
       {
         name: 'valueOfDeal',
@@ -23519,14 +23484,8 @@ export const roaKeeperABI = [
         type: 'uint256',
         indexed: true,
       },
-      {
-        name: 'caller',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
     ],
-    name: 'PayOffApprovedDeal',
+    name: 'PayOffCIDeal',
   },
   {
     type: 'event',
@@ -47643,6 +47602,37 @@ export function useGeneralKeeperRegKeeper<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"releaseCustody"`.
+ */
+export function useGeneralKeeperReleaseCustody<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof generalKeeperABI,
+          'releaseCustody'
+        >['request']['abi'],
+        'releaseCustody',
+        TMode
+      > & { functionName?: 'releaseCustody' }
+    : UseContractWriteConfig<
+        typeof generalKeeperABI,
+        'releaseCustody',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'releaseCustody'
+      } = {} as any,
+) {
+  return useContractWrite<typeof generalKeeperABI, 'releaseCustody', TMode>({
+    abi: generalKeeperABI,
+    functionName: 'releaseCustody',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"releasePledge"`.
  */
 export function useGeneralKeeperReleasePledge<
@@ -49675,6 +49665,22 @@ export function usePrepareGeneralKeeperRegKeeper(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"releaseCustody"`.
+ */
+export function usePrepareGeneralKeeperReleaseCustody(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof generalKeeperABI, 'releaseCustody'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: generalKeeperABI,
+    functionName: 'releaseCustody',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof generalKeeperABI, 'releaseCustody'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link generalKeeperABI}__ and `functionName` set to `"releasePledge"`.
  */
 export function usePrepareGeneralKeeperReleasePledge(
@@ -50350,6 +50356,22 @@ export function useGeneralKeeperRegKeeperEvent(
     eventName: 'RegKeeper',
     ...config,
   } as UseContractEventConfig<typeof generalKeeperABI, 'RegKeeper'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link generalKeeperABI}__ and `eventName` set to `"ReleaseCustody"`.
+ */
+export function useGeneralKeeperReleaseCustodyEvent(
+  config: Omit<
+    UseContractEventConfig<typeof generalKeeperABI, 'ReleaseCustody'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: generalKeeperABI,
+    eventName: 'ReleaseCustody',
+    ...config,
+  } as UseContractEventConfig<typeof generalKeeperABI, 'ReleaseCustody'>)
 }
 
 /**
@@ -58907,6 +58929,37 @@ export function useIGeneralKeeperRegKeeper<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"releaseCustody"`.
+ */
+export function useIGeneralKeeperReleaseCustody<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iGeneralKeeperABI,
+          'releaseCustody'
+        >['request']['abi'],
+        'releaseCustody',
+        TMode
+      > & { functionName?: 'releaseCustody' }
+    : UseContractWriteConfig<
+        typeof iGeneralKeeperABI,
+        'releaseCustody',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'releaseCustody'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iGeneralKeeperABI, 'releaseCustody', TMode>({
+    abi: iGeneralKeeperABI,
+    functionName: 'releaseCustody',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"releasePledge"`.
  */
 export function useIGeneralKeeperReleasePledge<
@@ -60845,6 +60898,25 @@ export function usePrepareIGeneralKeeperRegKeeper(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"releaseCustody"`.
+ */
+export function usePrepareIGeneralKeeperReleaseCustody(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iGeneralKeeperABI, 'releaseCustody'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iGeneralKeeperABI,
+    functionName: 'releaseCustody',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iGeneralKeeperABI,
+    'releaseCustody'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `functionName` set to `"releasePledge"`.
  */
 export function usePrepareIGeneralKeeperReleasePledge(
@@ -61468,6 +61540,22 @@ export function useIGeneralKeeperRegKeeperEvent(
     eventName: 'RegKeeper',
     ...config,
   } as UseContractEventConfig<typeof iGeneralKeeperABI, 'RegKeeper'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iGeneralKeeperABI}__ and `eventName` set to `"ReleaseCustody"`.
+ */
+export function useIGeneralKeeperReleaseCustodyEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iGeneralKeeperABI, 'ReleaseCustody'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iGeneralKeeperABI,
+    eventName: 'ReleaseCustody',
+    ...config,
+  } as UseContractEventConfig<typeof iGeneralKeeperABI, 'ReleaseCustody'>)
 }
 
 /**
@@ -64126,51 +64214,19 @@ export function useIlooKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ilooKeeperABI}__ and `eventName` set to `"RefundBidBalance"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ilooKeeperABI}__ and `eventName` set to `"CloseBidAgainstInitOffer"`.
  */
-export function useIlooKeeperRefundBidBalanceEvent(
+export function useIlooKeeperCloseBidAgainstInitOfferEvent(
   config: Omit<
-    UseContractEventConfig<typeof ilooKeeperABI, 'RefundBidBalance'>,
+    UseContractEventConfig<typeof ilooKeeperABI, 'CloseBidAgainstInitOffer'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: ilooKeeperABI,
-    eventName: 'RefundBidBalance',
+    eventName: 'CloseBidAgainstInitOffer',
     ...config,
-  } as UseContractEventConfig<typeof ilooKeeperABI, 'RefundBidBalance'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ilooKeeperABI}__ and `eventName` set to `"RefundBidDeposit"`.
- */
-export function useIlooKeeperRefundBidDepositEvent(
-  config: Omit<
-    UseContractEventConfig<typeof ilooKeeperABI, 'RefundBidDeposit'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: ilooKeeperABI,
-    eventName: 'RefundBidDeposit',
-    ...config,
-  } as UseContractEventConfig<typeof ilooKeeperABI, 'RefundBidDeposit'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link ilooKeeperABI}__ and `eventName` set to `"ReleaseSTConsideration"`.
- */
-export function useIlooKeeperReleaseStConsiderationEvent(
-  config: Omit<
-    UseContractEventConfig<typeof ilooKeeperABI, 'ReleaseSTConsideration'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: ilooKeeperABI,
-    eventName: 'ReleaseSTConsideration',
-    ...config,
-  } as UseContractEventConfig<typeof ilooKeeperABI, 'ReleaseSTConsideration'>)
+  } as UseContractEventConfig<typeof ilooKeeperABI, 'CloseBidAgainstInitOffer'>)
 }
 
 /**
@@ -69695,19 +69751,19 @@ export function useIroaKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iroaKeeperABI}__ and `eventName` set to `"PayOffApprovedDeal"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iroaKeeperABI}__ and `eventName` set to `"PayOffCIDeal"`.
  */
-export function useIroaKeeperPayOffApprovedDealEvent(
+export function useIroaKeeperPayOffCiDealEvent(
   config: Omit<
-    UseContractEventConfig<typeof iroaKeeperABI, 'PayOffApprovedDeal'>,
+    UseContractEventConfig<typeof iroaKeeperABI, 'PayOffCIDeal'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: iroaKeeperABI,
-    eventName: 'PayOffApprovedDeal',
+    eventName: 'PayOffCIDeal',
     ...config,
-  } as UseContractEventConfig<typeof iroaKeeperABI, 'PayOffApprovedDeal'>)
+  } as UseContractEventConfig<typeof iroaKeeperABI, 'PayOffCIDeal'>)
 }
 
 /**
@@ -88654,51 +88710,19 @@ export function useLooKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"RefundBidBalance"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"CloseBidAgainstInitOffer"`.
  */
-export function useLooKeeperRefundBidBalanceEvent(
+export function useLooKeeperCloseBidAgainstInitOfferEvent(
   config: Omit<
-    UseContractEventConfig<typeof looKeeperABI, 'RefundBidBalance'>,
+    UseContractEventConfig<typeof looKeeperABI, 'CloseBidAgainstInitOffer'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: looKeeperABI,
-    eventName: 'RefundBidBalance',
+    eventName: 'CloseBidAgainstInitOffer',
     ...config,
-  } as UseContractEventConfig<typeof looKeeperABI, 'RefundBidBalance'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"RefundBidDeposit"`.
- */
-export function useLooKeeperRefundBidDepositEvent(
-  config: Omit<
-    UseContractEventConfig<typeof looKeeperABI, 'RefundBidDeposit'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: looKeeperABI,
-    eventName: 'RefundBidDeposit',
-    ...config,
-  } as UseContractEventConfig<typeof looKeeperABI, 'RefundBidDeposit'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link looKeeperABI}__ and `eventName` set to `"ReleaseSTConsideration"`.
- */
-export function useLooKeeperReleaseStConsiderationEvent(
-  config: Omit<
-    UseContractEventConfig<typeof looKeeperABI, 'ReleaseSTConsideration'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: looKeeperABI,
-    eventName: 'ReleaseSTConsideration',
-    ...config,
-  } as UseContractEventConfig<typeof looKeeperABI, 'ReleaseSTConsideration'>)
+  } as UseContractEventConfig<typeof looKeeperABI, 'CloseBidAgainstInitOffer'>)
 }
 
 /**
@@ -95947,6 +95971,25 @@ export function useOrdersRepoCodifyDeal<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link ordersRepoABI}__ and `functionName` set to `"getDealValue"`.
+ */
+export function useOrdersRepoGetDealValue<
+  TFunctionName extends 'getDealValue',
+  TSelectData = ReadContractResult<typeof ordersRepoABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof ordersRepoABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: ordersRepoABI,
+    functionName: 'getDealValue',
+    ...config,
+  } as UseContractReadConfig<typeof ordersRepoABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link ordersRepoABI}__ and `functionName` set to `"parseDeal"`.
  */
 export function useOrdersRepoParseDeal<
@@ -97209,19 +97252,19 @@ export function useRoaKeeperEvent<TEventName extends string>(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link roaKeeperABI}__ and `eventName` set to `"PayOffApprovedDeal"`.
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link roaKeeperABI}__ and `eventName` set to `"PayOffCIDeal"`.
  */
-export function useRoaKeeperPayOffApprovedDealEvent(
+export function useRoaKeeperPayOffCiDealEvent(
   config: Omit<
-    UseContractEventConfig<typeof roaKeeperABI, 'PayOffApprovedDeal'>,
+    UseContractEventConfig<typeof roaKeeperABI, 'PayOffCIDeal'>,
     'abi' | 'eventName'
   > = {} as any,
 ) {
   return useContractEvent({
     abi: roaKeeperABI,
-    eventName: 'PayOffApprovedDeal',
+    eventName: 'PayOffCIDeal',
     ...config,
-  } as UseContractEventConfig<typeof roaKeeperABI, 'PayOffApprovedDeal'>)
+  } as UseContractEventConfig<typeof roaKeeperABI, 'PayOffCIDeal'>)
 }
 
 /**

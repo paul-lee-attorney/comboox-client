@@ -19,8 +19,8 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
 
   const { gk, setErrMsg } = useComBooxContext();
 
-  const [ seqOfVr, setSeqOfVr ] = useState<string>();
-  const [ executor, setExecutor ] = useState<string>();
+  const [ seqOfVr, setSeqOfVr ] = useState<string>('9');
+  const [ executor, setExecutor ] = useState<string>('0');
 
   const [ actions, setActions ] = useState<Action[]>([]);
   const [ action, setAction ] = useState<Action>(defaultAction);

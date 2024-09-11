@@ -17,7 +17,7 @@ import { GeneralInfo } from "./components/GeneralInfo";
 import { SetCompInfo } from "./components/SetCompInfo";
 
 
-import { Deposits } from "./components/Deposits";
+import { Deposits } from "./components/FinStatement/Deposits";
 import { getHeadByBody } from "../rc";
 
 function HomePage() {
@@ -125,7 +125,7 @@ function HomePage() {
             <GeneralInfo />
           )}
 
-          <Deposits />
+          {/* <Deposits /> */}
 
         </Paper>
       </Box>

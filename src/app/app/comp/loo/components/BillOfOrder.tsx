@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, TextField } from "@mui/material";
 
 import { Order } from "../loo";
-import { baseToDollar, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, longDataParser, longSnParser } from "../../../common/toolsKit";
 
 interface BillOfOrderProps {
   order: Order;
@@ -21,7 +21,7 @@ export function BillOfOrder({ order, open, setOpen}: BillOfOrderProps) {
     >
       <Stack direction='row' sx={{ justifyContent:'space-between', alignItems:'center' }} >
         <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
-          <b>Bill Of {order.node.isOffer ? 'Sale' : 'Buy'}</b> - {longSnParser(order.data.seq.toString())}
+          <b>Bill Of {order.node.isOffer ? 'Sale' : 'Buy'}</b> - ({ longSnParser(order.node.seq.toString())})
         </DialogTitle>
 
       </Stack>
@@ -142,7 +142,6 @@ export function BillOfOrder({ order, open, setOpen}: BillOfOrderProps) {
             </tr>
 
             <tr>
-
               <td>
                 <TextField 
                   variant='outlined'
@@ -154,20 +153,6 @@ export function BillOfOrder({ order, open, setOpen}: BillOfOrderProps) {
                     m:1,
                   }}
                   value={ longSnParser(order.data.groupRep.toString()) }
-                />
-              </td>
-
-              <td>
-                <TextField 
-                  variant='outlined'
-                  fullWidth
-                  label='Buyer'
-                  inputProps={{readOnly: true}}
-                  size="small"
-                  sx={{
-                    m:1,
-                  }}
-                  value={ longSnParser(order.data.buyer.toString()) }
                 />
               </td>
 
@@ -187,17 +172,17 @@ export function BillOfOrder({ order, open, setOpen}: BillOfOrderProps) {
                 />
               </td>
 
-              <td >
+              <td colSpan={2} >
                 <TextField 
                   variant='outlined'
                   fullWidth
-                  label='CentPrice(GWei)'
+                  label='Margin (ETH)'
                   inputProps={{readOnly: true}}
                   size="small"
                   sx={{
                     m:1,
                   }}
-                  value={ baseToDollar((order.data.centPriceInWei / 10n ** 5n).toString())}
+                  value={ bigIntToStrNum(order.data.margin, 18)}
                 />
               </td>
 
