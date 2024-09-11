@@ -292,28 +292,24 @@ export function FinStatement() {
             </Typography>
           </Stack>
 
-          {isComBoox && (
-            <Stack direction='row' width='100%' >
-              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>Royalty Interests: ({inETH 
-                  ? ethToGwei(initContribution) 
-                  : ethToUSD(initContribution)}) </b>
-              </Button>
-            </Stack>
-          )}
+          <Stack direction='row' width='100%' >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+              <b>Royalty Interests: ({inETH 
+                ? ethToGwei(initContribution) 
+                : ethToUSD(initContribution)}) </b>
+            </Button>
+          </Stack>
 
-          {isComBoox && (
-            <Stack direction='row' width='100%' >
-              <Typography variant="h6" textAlign='center' width='10%'>
-                -
-              </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-                <b>Amortization: ({ inETH 
-                  ? ethToGwei(armotization) 
-                  : ethToUSD(armotization)}) </b>
-              </Button>
-            </Stack>
-          )}
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              -
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+              <b>Amortization: ({ inETH 
+                ? ethToGwei(armotization) 
+                : ethToUSD(armotization)}) </b>
+            </Button>
+          </Stack>
 
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
@@ -347,15 +343,13 @@ export function FinStatement() {
 
           <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
-          {isComBoox && (
-            <Stack direction='row' width='100%' >
-              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>Init Contribution: ({ inETH
-                  ? ethToGwei(initContribution)
-                  : ethToUSD(initContribution) + 'USD'}) </b>
-              </Button>
-            </Stack>
-          )}
+          <Stack direction='row' width='100%' >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+              <b>Init Contribution: ({ inETH
+                ? ethToGwei(initContribution)
+                : ethToUSD(initContribution) + 'USD'}) </b>
+            </Button>
+          </Stack>
 
           <Stack direction='row' width='100%' >
             <Typography variant="h6" textAlign='center' width='10%'>
@@ -492,15 +486,13 @@ export function FinStatement() {
               </Typography>
             </Stack>
 
-            {isComBoox && (
-              <Stack direction='row' width='100%' >
-                <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                  <b>Init Contribution: ({ inETH 
-                    ? ethToGwei(initContribution)
-                    : ethToUSD(initContribution)})</b>
-                </Button>
-              </Stack>
-            )}
+            <Stack direction='row' width='100%' >
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+                <b>Init Contribution: ({ inETH 
+                  ? ethToGwei(initContribution)
+                  : ethToUSD(initContribution)})</b>
+              </Button>
+            </Stack>
 
             <Stack direction='row' width='100%' >
               <Typography variant="h6" textAlign='center' width='10%'>
@@ -513,18 +505,16 @@ export function FinStatement() {
               </Button>
             </Stack>
 
-            {isComBoox && (
-              <Stack direction='row' width='100%' >
-                <Typography variant="h6" textAlign='center' width='10%'>
-                  +
-                </Typography>
-                <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showGasIncomeRecords()} >
-                  <b>Deferred Inc: ({ inETH
-                    ? ethToGwei(deferredIncome)
-                    : ethToUSD(deferredIncome)}) </b>
-                </Button>
-              </Stack>
-            )}
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                +
+              </Typography>
+              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showGasIncomeRecords()} >
+                <b>Deferred Inc: ({ inETH
+                  ? ethToGwei(deferredIncome)
+                  : ethToUSD(deferredIncome)}) </b>
+              </Button>
+            </Stack>
 
             <Stack direction='row' width='100%' >
               <Typography variant="h6" textAlign='center' width='10%'>
