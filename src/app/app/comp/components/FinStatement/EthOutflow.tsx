@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrZero, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { baseToDollar, bigIntToStrNum,  HexParser, } from "../../../common/toolsKit";
+import { bigIntToStrNum,  HexParser, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
@@ -282,7 +282,7 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
 
     getEthOutflow();
 
-  }, [gk, client, keepers, setSum]);
+  }, [gk, client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [

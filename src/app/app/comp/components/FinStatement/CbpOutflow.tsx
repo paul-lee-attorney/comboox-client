@@ -145,7 +145,7 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
 
     getEthOutflow();
 
-  }, [ client, keepers, setSum]);
+  }, [ client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [

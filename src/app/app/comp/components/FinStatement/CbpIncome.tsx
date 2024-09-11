@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
+import { bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { SumInfo } from "./CashflowList";
 
@@ -132,7 +132,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
 
     if (client && gk) getCbpIncome();
 
-  },[client, gk, setSum]);
+  },[client, gk, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [

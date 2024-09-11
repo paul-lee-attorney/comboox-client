@@ -200,7 +200,7 @@ export function Deposits({sum, setSum, records, setRecords, setSumInfo, setList,
 
     getDeposits();
 
-  }, [gk, client, setSum]);
+  }, [gk, client, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [

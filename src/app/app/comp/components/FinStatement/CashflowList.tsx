@@ -102,7 +102,7 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
             {arrSum.map((v, i)=>{
               if (i == 0 ) return null;
               return (
-                <Typography variant="h6" sx={{mx:2}}>
+                <Typography key={i} variant="h6" sx={{mx:2}}>
                   <b> {v.title}: { bigIntToStrNum(v.data / 10n**9n, 9) } </b>
                 </Typography>
               )

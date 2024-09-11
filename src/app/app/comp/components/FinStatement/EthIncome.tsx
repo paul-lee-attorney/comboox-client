@@ -285,7 +285,7 @@ export function EthIncome({sum, setSum, records, setRecords, setSumInfo, setList
 
     getEthIncome();
 
-  }, [gk, client, keepers, setSum]);
+  }, [gk, client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [
