@@ -12,7 +12,7 @@ import { defaultEthOutSum, EthOutflow, EthOutflowSumProps } from "./FinStatement
 import { HexType } from "../../common";
 import { CashFlowList, SumInfo } from "./FinStatement/CashflowList";
 import { defaultDepositsSum, Deposits, DepositsSumProps } from "./FinStatement/Deposits";
-import { balanceOfWei, getCentPriceInWei, isOwnerOfRegCenter } from "../../rc";
+import { balanceOfWei, getCentPriceInWei } from "../../rc";
 import { usePublicClient } from "wagmi";
 import { totalDeposits } from "../gk";
 
@@ -101,12 +101,23 @@ export function FinStatement() {
     }
   });
 
-  const [ isComBoox, setIsComBoox ] = useState(false);
+  const [ initContribution, setInitContribution ] = useState(0n);
+  const [ armotization, setArmotization ] = useState(0n);
 
   useEffect(()=>{
     if (!userNo) return;
-    setIsComBoox(userNo == 8);
-  }, [userNo, setIsComBoox]);
+    let flag = userNo == 8;
+
+    if (flag && days > 0n && centPrice > 0n) {
+
+      let init = 3n * 10n ** 9n;
+      let armo = init / (15n * 365n) * days * centPrice / 100n;
+
+      setInitContribution(init);
+      setArmotization(armo);
+    }
+    
+  }, [userNo, days, centPrice, setInitContribution, setArmotization]);
 
   // ==== Calculation ====
 
@@ -118,9 +129,9 @@ export function FinStatement() {
     return cbp * 10000n / exRate;
   }
 
-  const bpToETH = (bp: bigint) => {
-    return bp * centPrice / 100n;
-  }
+  // const bpToETH = (bp: bigint) => {
+  //   return bp * centPrice / 100n;
+  // }
 
   const ethToUSD = (eth: bigint) => {
     return baseToDollar(ethToBP(eth).toString()) + ' USD';
@@ -130,9 +141,9 @@ export function FinStatement() {
     return bigIntToNum(eth / 10n**9n, 9) + ' ETH';
   }
 
-  let initContribution = isComBoox ? bpToETH(300000n * 10000n) : 0n;
+  // let initContribution = isComBoox ? bpToETH(300000n * 10000n) : 0n;
 
-  let armotization = isComBoox ? bpToETH(300000n * 10000n / (15n * 365n) * days) : 0n;
+  // let armotization = isComBoox ? bpToETH(300000n * 10000n / (15n * 365n) * days) : 0n;
 
   let gmmExp = cbpToETH(cbpOutflow.gmmTransfer) + ethOutflow.gmmTransfer + ethOutflow.gmmExpense;
 
