@@ -104,27 +104,27 @@ export function FinStatement() {
   const [ initContribution, setInitContribution ] = useState(0n);
 
   useEffect(()=>{
-    if (!compInfo?.regNum) return;
+    if (!compInfo?.regNum || !centPrice) return;
 
-    if (compInfo.regNum == 8) {
-      setInitContribution(3n * 10n ** 9n);
+    if (compInfo.regNum == 8 && centPrice > 0) {
+      setInitContribution(3n * 10n ** 7n * centPrice);
     }
     
-  }, [compInfo, setInitContribution]);
+  }, [compInfo, setInitContribution, centPrice]);
 
 
   const [ armotization, setArmotization ] = useState(0n);
 
   useEffect(()=>{
 
-    if (initContribution > 0n && days > 0n && centPrice > 0n) {
+    if (initContribution > 0n && days > 0n) {
 
-      let armo = initContribution / (15n * 365n) * days * centPrice / 100n;
+      let armo = initContribution / (15n * 365n) * days;
 
       setArmotization(armo);
     }
     
-  }, [compInfo, initContribution, days, centPrice, setInitContribution, setArmotization]);
+  }, [compInfo, initContribution, days, setArmotization]);
 
 
   // ==== Calculation ====
