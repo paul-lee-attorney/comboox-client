@@ -102,26 +102,30 @@ export function FinStatement() {
   });
 
   const [ initContribution, setInitContribution ] = useState(0n);
-  const [ armotization, setArmotization ] = useState(0n);
 
   useEffect(()=>{
     if (!compInfo?.regNum) return;
-    let flag = (compInfo.regNum == 8);
-    console.log('compNo: ', compInfo.regNum);
 
-    if (flag && days > 0n && centPrice > 0n) {
-
-      let init = 3n * 10n ** 9n;
-      let armo = init / (15n * 365n) * days * centPrice / 100n;
-
-      setInitContribution(init);
-      console.log('Init Contribution:', init);
-
-      setArmotization(armo);
-      console.log('armo: ', armo);
+    if (compInfo.regNum == 8) {
+      setInitContribution(3n * 10n ** 9n);
     }
     
-  }, [compInfo, days, centPrice, setInitContribution, setArmotization]);
+  }, [compInfo, setInitContribution]);
+
+
+  const [ armotization, setArmotization ] = useState(0n);
+
+  useEffect(()=>{
+
+    if (initContribution > 0n && days > 0n && centPrice > 0n) {
+
+      let armo = initContribution / (15n * 365n) * days * centPrice / 100n;
+
+      setArmotization(armo);
+    }
+    
+  }, [compInfo, initContribution, days, centPrice, setInitContribution, setArmotization]);
+
 
   // ==== Calculation ====
 
