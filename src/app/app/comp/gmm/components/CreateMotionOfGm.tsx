@@ -20,24 +20,11 @@ import { ProposeToDistributeProfits } from "./create_motions/ProposeToDistribute
 import { CreateMotionProps } from "../../bmm/components/CreateMotionOfBoardMeeting";
 import { ProposeToDeprecateGK } from "./create_motions/ProposeToDeprecateGK";
 import { ProposeToMintCBP } from "./create_motions/ProposeToMintCBP";
-import { isOwnerOfRegCenter } from "../../../rc";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { ProposeToPickupFuelIncome } from "./create_motions/ProposeToPickupFuelIncome";
 
 export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
 
-  const { gk } = useComBooxContext();
-
-  const [ isComBoox, setIsComBoox ] = useState(false);
-
-  useEffect(()=>{
-    const checkOwnerOfRC = async () => {
-      if (!gk) return;
-      let res = await isOwnerOfRegCenter(gk); 
-      setIsComBoox(res);      
-    }
-    checkOwnerOfRC();
-  }, [gk]);
 
   const nameOfTypes = [
     'Nominate/Remove Officer', 'Approve Document', 'Transfer Fund', 
@@ -78,7 +65,6 @@ export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
             onChange={(e) => setTypeOfMotion(e.target.value)}
           >
             {nameOfTypes.map((v, i) => {
-              if (!isComBoox && i > 5) return null;
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
             })}
           </Select>

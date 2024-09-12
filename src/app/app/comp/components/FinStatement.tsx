@@ -335,7 +335,7 @@ export function FinStatement() {
               &nbsp;
             </Typography>
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-              <b>Current Value Of IPR: ({ inETH 
+              <b>Net Value Of IPR: ({ inETH 
                 ? ethToGwei(initContribution - armotization) 
                 : ethToUSD(initContribution - armotization)}) </b>
             </Button>

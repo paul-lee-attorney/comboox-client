@@ -15,8 +15,6 @@ import { DistributeProfits } from "./actions_on_motion/DistributeProfits";
 import { DeprecateGK } from "./actions_on_motion/DeprecateGK";
 import { UploadMotionFile } from "./actions_on_motion/UploadMotionFile";
 import { MintCBP } from "./actions_on_motion/MintCBP";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { isOwnerOfRegCenter } from "../../../rc";
 import { PickupFuelIncome } from "./actions_on_motion/PickupFuelIncome";
 
 export interface ActionsOnMotionProps {
@@ -30,19 +28,6 @@ export interface ActionsOnMotionSelectProps extends ActionsOnMotionProps{
 }
 
 export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnMotionSelectProps){
-
-  const { gk } = useComBooxContext();
-
-  const [ isComBoox, setIsComBoox ] = useState(false);
-
-  useEffect(()=>{
-    const checkOwnerOfRC = async () => {
-      if (!gk) return;
-      let res = await isOwnerOfRegCenter(gk); 
-      setIsComBoox(res);      
-    }
-    checkOwnerOfRC();
-  }, [gk]);
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
@@ -95,7 +80,6 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
               else if (motion.body.state > 3) return null;
-              else if (!isComBoox && (i == 10 || i == 11)) return null;
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
             })}
           </Select>
@@ -114,7 +98,6 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
         else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
         else if (motion.body.state > 3) return null;
-        else if (!isComBoox && (i == 10 || i == 11)) return null;
         return (
           <Collapse key={i} in={ typeOfAction == i.toString() } >
             {v}
