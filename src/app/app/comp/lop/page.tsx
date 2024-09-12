@@ -12,7 +12,7 @@ import { CopyLongStrSpan } from "../../common/CopyLongStr";
 import { AddrOfRegCenter, AddrZero, HexType } from "../../common";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
-import { Doc, getDocsList } from "../../rc";
+import { DocItem, getDocsList } from "../../rc";
 import { GetDocsList } from "./components/GetDocsList";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
@@ -26,7 +26,7 @@ function ListOfProjects() {
     setLoading(false);
   }
 
-  const [ docList, setDocList ] = useState<readonly Doc[]>([]);
+  const [ docList, setDocList ] = useState<DocItem[]>([]);
 
   const snOfDoc:HexType = `0x${'0000001B00000001'.padEnd(64,'0')}`;
   const [ owner, setOwner ] = useState<HexType>(AddrZero);

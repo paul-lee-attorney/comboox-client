@@ -224,6 +224,11 @@ export interface Doc {
   body: HexType;
 }
 
+export interface DocItem {
+  seqOfList: number;
+  doc: Doc;
+}
+
 export const typesOfDoc:string[] = [
   'ROCKeeper', 'RODKeeper', 'BMMKeeper', 'ROMKeeper', 'GMMKeeper', 'ROAKeeper',
   'ROOKeeper', 'ROPKeeper', 'SHAKeeper', 'LOOKeeper', 'ROC', 'ROD', 
@@ -474,25 +479,28 @@ export async function getVersionsList(typeOfDoc:bigint): Promise<readonly Doc[]>
   return res;
 }
 
-export async function getTempsList(): Promise<Doc[]>{
+export async function getTempsList(): Promise<DocItem[]>{
 
-  let out: Doc[] = [];
+  let out: DocItem[] = [];
   let i = 1;
 
   while (i < 28) {
     let v = await counterOfVersions(BigInt(i));
     let snOfDoc = HexParser(i.toString(16).padStart(8, '0') +  v.toString(16).padStart(8, '0') + '0'.padEnd(48, '0'));
 
-    let item = await getDoc(snOfDoc);
+    let doc = await getDoc(snOfDoc);
+    let item:DocItem = {
+      seqOfList: i,
+      doc: doc,
+    }
     out.push(item);
     i++;
   }
 
   return out;
-
 }
 
-export async function getDocsList(snOfDoc: HexType): Promise<readonly Doc[]>{
+export async function getDocsList(snOfDoc: HexType): Promise<DocItem[]>{
   let res = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
@@ -500,7 +508,14 @@ export async function getDocsList(snOfDoc: HexType): Promise<readonly Doc[]>{
     args: [ snOfDoc ]
   });
 
-  return res;
+  let out:DocItem[] = res.map((v,i) => {
+    return {
+      seqOfList: i,
+      doc: v,
+    }
+  });
+
+  return out;
 }
 
 export function parasParser(input: string):string[] {

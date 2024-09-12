@@ -8,7 +8,7 @@ import { AddrOfRegCenter, AddrZero, HexType } from "../../common";
 
 import Logo from '/public/assets/Symbol_white_xs.png';
 
-import { Doc, getBookeeper, getDocsList, getOwner, getTempsList } from "../../rc";
+import { DocItem, getBookeeper, getDocsList, getOwner, getTempsList } from "../../rc";
 import { DocsList } from "./DocsList";
 import Image from "next/image";
 import { CopyLongStrTF } from "../../common/CopyLongStr";
@@ -18,8 +18,8 @@ export function DocsSetting() {
 
   const [ time, setTime ] = useState(0);
 
-  const [ temps, setTemps ] = useState<Doc[]>([]);
-  const [ docs, setDocs ] = useState<readonly Doc[]>([]);
+  const [ temps, setTemps ] = useState<DocItem[]>([]);
+  const [ docs, setDocs ] = useState<DocItem[]>([]);
   
   const [ typeOfDoc, setTypeOfDoc ] = useState(1);
   const [ version, setVersion ] = useState(1);

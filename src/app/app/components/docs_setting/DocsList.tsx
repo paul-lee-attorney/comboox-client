@@ -7,13 +7,13 @@ import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 
 import { CopyLongStrSpan } from '../../common/CopyLongStr';
 
-import { Doc, typesOfDoc } from '../../rc';
+import { DocItem, typesOfDoc } from '../../rc';
 import { dateParser, longSnParser } from '../../common/toolsKit';
 import { HexType } from '../../common';
 
 interface DocsListProps {
   title: string;
-  list: readonly Doc[];
+  list: DocItem[];
   setTypeOfDoc: Dispatch<SetStateAction<number>>;
   setVersion: Dispatch<SetStateAction<number>>;
   setAddr: Dispatch<SetStateAction<HexType>>;
@@ -25,7 +25,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     {
       field: 'type',
       headerName: 'Type',
-      valueGetter: p =>  p.row.head.typeOfDoc.toString().padStart(2, '0'),
+      valueGetter: p =>  p.row.doc.head.typeOfDoc.toString().padStart(2, '0'),
       width: 88,
       headerAlign:'center',
       align: 'center',
@@ -39,7 +39,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     {
       field: 'title',
       headerName: 'Title',
-      valueGetter: p =>  typesOfDoc[p.row.head.typeOfDoc - 1],
+      valueGetter: p =>  typesOfDoc[p.row.doc.head.typeOfDoc - 1],
       width: 168,
       headerAlign:'center',
       align: 'center',
@@ -47,7 +47,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     {
       field: 'version',
       headerName: 'Version',
-      valueGetter: p =>  longSnParser( p.row.head.version.toString() ),
+      valueGetter: p =>  longSnParser( p.row.doc.head.version.toString() ),
       width: 128,
       headerAlign:'center',
       align: 'center',
@@ -61,7 +61,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     {
       field: 'seqOfDoc',
       headerName: 'Sn',
-      valueGetter: p =>  longSnParser(p.row.head.seqOfDoc.toString()),
+      valueGetter: p =>  longSnParser(p.row.doc.head.seqOfDoc.toString()),
       width: 188,
       headerAlign:'center',
       align: 'center',
@@ -75,7 +75,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     {
       field: 'author',
       headerName: 'Author',
-      valueGetter: p =>  longSnParser(p.row.head.author.toString()),
+      valueGetter: p =>  longSnParser(p.row.doc.head.author.toString()),
       width: 188,
       headerAlign:'center',
       align: 'center',
@@ -90,8 +90,8 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
       field: 'creator',
       headerName: 'Creator',
       valueGetter: p => title == 'Templates' 
-          ? longSnParser(p.row.head.creator.toString())
-          : p.row.head.creator.toString(16),
+          ? longSnParser(p.row.doc.head.creator.toString())
+          : p.row.doc.head.creator.toString(16),
       width: 188,
       headerAlign:'center',
       align: 'center',
@@ -105,7 +105,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     { 
       field: 'createDate', 
       headerName: 'CreateDate',
-      valueGetter: p => dateParser(p.row.head.createDate.toString()),
+      valueGetter: p => dateParser(p.row.doc.head.createDate.toString()),
       headerAlign: 'center',
       align:'center',
       width: 180,
@@ -113,7 +113,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
     {
       field: 'body',
       headerName: 'Body',
-      valueGetter: p => p.row.body,
+      valueGetter: p => p.row.doc.body,
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -124,9 +124,9 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
   ];
   
   const handleRowClick = (p:GridRowParams)=>{
-    setTypeOfDoc(p.row.head.typeOfDoc);
-    setVersion(p.row.head.version);
-    setAddr(p.row.body);
+    setTypeOfDoc(p.row.doc.head.typeOfDoc);
+    setVersion(p.row.doc.head.version);
+    setAddr(p.row.doc.body);
   }
 
   return (
@@ -141,11 +141,7 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
         pageSizeOptions={[5, 10, 15, 20]} 
         rows={ list } 
         columns={ columns }
-        getRowId={ (row:Doc) => (
-          row.head.typeOfDoc.toString(16).padStart(8, '0') + 
-          row.head.version.toString(16).padStart(8, '0') +
-          row.head.seqOfDoc.toString(16).padStart(16, '0')
-        ) } 
+        getRowId={ (row:DocItem) => (row.seqOfList) } 
         disableRowSelectionOnClick
         onRowClick={ handleRowClick }
       />

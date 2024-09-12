@@ -3,13 +3,13 @@ import { TableContainer, Paper, Chip, Typography } from '@mui/material';
 
 import Link from 'next/link';
 
-import { dateParser, longSnParser } from '../../../common/toolsKit';
+import { dateParser, } from '../../../common/toolsKit';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { CopyLongStrSpan } from '../../../common/CopyLongStr';
-import { Doc } from '../../../rc';
+import { DocItem } from '../../../rc';
 
 interface GetDocsListProps {
-  list: readonly Doc[],
+  list: DocItem[],
 }
 
 export function GetDocsList({ list }:GetDocsListProps ) {
@@ -18,29 +18,29 @@ export function GetDocsList({ list }:GetDocsListProps ) {
     {
       field: 'seqOfDoc', 
       headerName: 'Seq',
-      valueGetter: p => p.row.head.seqOfDoc,
+      valueGetter: p => p.row.doc.head.seqOfDoc,
       width: 80,
       renderCell: ( p ) => (
         <Link
           href={{
             pathname: '/app/comp/lop/payroll',
             query: {
-              body: p.row.body,
-              seq: p.row.head.seqOfDoc,
-              creator: p.row.head.creator,
-              createDate: p.row.head.createDate
+              body: p.row.doc.body,
+              seq: p.row.doc.head.seqOfDoc,
+              creator: p.row.doc.head.creator,
+              createDate: p.row.doc.head.createDate
             }
           }}
           // as={ '/comp/pop/Payroll' }
         >
-          { parseInt(p.row.head.seqOfDoc).toString().padStart(6, '0') }
+          { parseInt(p.row.doc.head.seqOfDoc).toString().padStart(6, '0') }
         </Link>
       )
     },
     {
       field: 'creator',
       headerName: 'Creator',
-      valueGetter: p => BigInt(p.row.head.creator).toString(16),
+      valueGetter: p => BigInt(p.row.doc.head.creator).toString(16),
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -54,7 +54,7 @@ export function GetDocsList({ list }:GetDocsListProps ) {
     {
       field: 'createDate',
       headerName: 'CreateDate',
-      valueGetter: p => dateParser(parseInt(p.row.head.createDate).toString()),
+      valueGetter: p => dateParser(parseInt(p.row.doc.head.createDate).toString()),
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -62,7 +62,7 @@ export function GetDocsList({ list }:GetDocsListProps ) {
     {
       field: 'addr',
       headerName: 'Address',
-      valueGetter: p => p.row.body,
+      valueGetter: p => p.row.doc.body,
       width: 218,
       headerAlign:'center',
       align: 'center',
@@ -84,7 +84,7 @@ export function GetDocsList({ list }:GetDocsListProps ) {
         pageSizeOptions={[5, 10, 15, 20]} 
         rows={ list } 
         columns={ columns }
-        getRowId={(row:Doc) => (row.head.seqOfDoc.toString()) } 
+        getRowId={(row:DocItem) => (row.doc.head.seqOfDoc.toString()) } 
         disableRowSelectionOnClick
       />
 
