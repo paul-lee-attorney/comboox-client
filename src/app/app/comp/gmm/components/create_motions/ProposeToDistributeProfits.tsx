@@ -82,7 +82,7 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
 
             <TextField 
               variant='outlined'
-              label='Amount'
+              label='Amount (ETH)'
               size="small"
               error={ valid['Amount']?.error }
               helperText={ valid['Amount']?.helpTx ?? ' ' }

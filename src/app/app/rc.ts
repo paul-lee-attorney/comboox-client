@@ -5,7 +5,7 @@ import {
 
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "./common";
 import { ownableABI, regCenterABI } from "../../../generated";
-import { strNumToBigInt } from "./common/toolsKit";
+import { HexParser, strNumToBigInt } from "./common/toolsKit";
 
 // ==== StrLocker === 
 
@@ -348,9 +348,9 @@ export async function counterOfTypes(): Promise<number>{
   return res;
 }
 
-export async function counterOfVersions(addr: HexType, typeOfDoc: bigint): Promise<number>{
+export async function counterOfVersions(typeOfDoc: bigint): Promise<number>{
   let res = await readContract({
-    address: addr,
+    address: AddrOfRegCenter,
     abi: regCenterABI,
     functionName: 'counterOfVersions',
     args: [ typeOfDoc ]
@@ -480,8 +480,11 @@ export async function getTempsList(): Promise<Doc[]>{
   let i = 1;
 
   while (i < 28) {
-    let ls: readonly Doc[] = await getVersionsList(BigInt(i));
-    out = out.concat(ls);
+    let v = await counterOfVersions(BigInt(i));
+    let snOfDoc = HexParser(i.toString(16).padStart(8, '0') +  v.toString(16).padStart(8, '0') + '0'.padEnd(48, '0'));
+
+    let item = await getDoc(snOfDoc);
+    out.push(item);
     i++;
   }
 
