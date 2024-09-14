@@ -82,6 +82,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
         <TextField 
           variant='outlined'
           label='DesHash / CID in IPFS'
+          size="small"
           error={ valid['DesHash']?.error }
           helperText={ valid['DesHash']?.helpTx ?? ' ' }
           sx={{
@@ -101,6 +102,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
           loading={loading}
           loadingPosition="end"
           variant="contained"
+          size="small"
           endIcon={<Surfing />}
           sx={{ m:1, minWidth:218 }}
           onClick={ handleClick }
@@ -150,6 +152,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
         <TextField 
           variant='outlined'
           label='Address'
+          size="small"
           error={ valid['Address']?.error }
           helperText={ valid['Address']?.helpTx ?? ' ' }
           sx={{
@@ -170,6 +173,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
         <TextField 
           variant='outlined'
           label='Value'
+          size="small"
           error={ valid['Value']?.error }
           helperText={ valid['Value']?.helpTx ?? ' ' }
           sx={{
@@ -190,6 +194,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
         <TextField 
           variant='outlined'
           label='Params'
+          size="small"
           error={ valid['Params']?.error }
           helperText={ valid['Params']?.helpTx ?? ' ' }
           sx={{
