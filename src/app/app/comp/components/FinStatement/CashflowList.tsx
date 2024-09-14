@@ -37,8 +37,8 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
       width: 218,
     },
     {
-      field: 'typeOfIncome',
-      headerName: 'TypeOfIncome',
+      field: 'typeOfFlow',
+      headerName: 'TypeOfFlow',
       valueGetter: p => p.row.typeOfIncome,
       headerAlign: 'center',
       align: 'center',
