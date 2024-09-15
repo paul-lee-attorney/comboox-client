@@ -1,26 +1,30 @@
 
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
 
-import { TableContainer, Paper, Chip, Typography} from '@mui/material';
+import { TableContainer, Paper, Chip, Typography, Stack, TextField} from '@mui/material';
 
 import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 
 import { CopyLongStrSpan } from '../../common/CopyLongStr';
 
 import { DocItem, typesOfDoc } from '../../rc';
-import { dateParser, longSnParser } from '../../common/toolsKit';
-import { HexType } from '../../common';
+import { dateParser, defFormResults, FormResults, HexParser, longSnParser, onlyInt } from '../../common/toolsKit';
+import { HexType, MaxData, MaxPrice } from '../../common';
 
 interface DocsListProps {
   title: string;
   list: DocItem[];
+  typeOfDoc: number;
+  version: number;
   setTypeOfDoc: Dispatch<SetStateAction<number>>;
   setVersion: Dispatch<SetStateAction<number>>;
   setAddr: Dispatch<SetStateAction<HexType>>;
 }
 
-export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:DocsListProps ) {
+export function DocsList({ title, list, typeOfDoc, version, setTypeOfDoc, setVersion, setAddr }:DocsListProps ) {
   
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+
   const columns: GridColDef[] = [
     {
       field: 'type',
@@ -135,6 +139,49 @@ export function DocsList({ title, list, setTypeOfDoc, setVersion, setAddr }:Docs
       <Typography variant='h5' sx={{ mx:1, my:2, textDecoration:'underline' }} >
         <b>List Of {title}</b>
       </Typography>
+
+      {title == 'Documents' && (
+        <Stack direction = 'row' sx={{ alignItems:'start'}} >
+          <TextField 
+            variant='outlined'
+            label='TypeOfDoc'
+            size="small"
+            error={ valid['TypeOfDoc']?.error }
+            helperText={ valid['TypeOfDoc']?.helpTx ?? ' ' }                        
+            sx={{
+              m:1,
+              minWidth: 218,
+            }}
+            value={ typeOfDoc }
+            onChange={(e)=>{
+              let input = e.target.value;
+              onlyInt('TypeOfDoc', input, MaxPrice, setValid);
+              setTypeOfDoc(Number(input));
+            }}
+          />
+
+          <TextField 
+            variant='outlined'
+            label='Version'
+            size="small"
+            error={ valid['Version']?.error }
+            helperText={ valid['Version']?.helpTx ?? ' ' }                        
+            sx={{
+              m:1,
+              minWidth: 218,
+            }}
+            value={ version }
+            onChange={(e)=>{
+              let input = e.target.value;
+              onlyInt('Version', input, MaxPrice, setValid);
+              setVersion(Number(input));
+            }}
+          />
+
+        </Stack>
+      )}
+
+
 
       <DataGrid
         initialState={{pagination:{paginationModel:{pageSize: 5}}}} 

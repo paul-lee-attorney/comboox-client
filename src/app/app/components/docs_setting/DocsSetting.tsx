@@ -111,9 +111,9 @@ export function DocsSetting() {
 
             </Stack>
 
-            <DocsList title='Templates' list={temps} setAddr={setAddr} setTypeOfDoc={setTypeOfDoc} setVersion={setVersion} />
+            <DocsList title='Templates' list={temps} typeOfDoc={typeOfDoc} version={version} setAddr={setAddr} setTypeOfDoc={setTypeOfDoc} setVersion={setVersion} />
 
-            <DocsList title='Documents' list={docs} setAddr={setAddr} setTypeOfDoc={setTypeOfDoc} setVersion={setVersion} />
+            <DocsList title='Documents' list={docs} typeOfDoc={typeOfDoc} version={version} setAddr={setAddr} setTypeOfDoc={setTypeOfDoc} setVersion={setVersion} />
 
             <ActionsOfSetting typeOfDoc={typeOfDoc} version={version} addr={addr} setTime={setTime} setOpen={setOpen} />
 
