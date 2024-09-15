@@ -2,21 +2,24 @@
 
 import { useEffect, useState } from "react";
 
-import { Button, Paper, TextField, Stack, Typography } from "@mui/material";
+import { Button, Paper, TextField, Stack, Typography, Box } from "@mui/material";
 import { Search } from "@mui/icons-material";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { MaxPrice, booxMap } from "../../common";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { AddrZero, MaxPrice, booxMap } from "../../common";
 import { FormResults, defFormResults, hasError, onlyInt } from "../../common/toolsKit";
 
 import { Share, getShare, getSharesList } from "./ros";
 import { SharesList } from "./components/SharesList";
 import { CertificateOfContribution } from "./components/CertificateOfContribution";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function RegisterOfShares() {
   const { boox } = useComBooxContext();
+
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROS] : AddrZero );
 
   const [ sharesList, setSharesList ] = useState<readonly Share[]>();
   const [ time, setTime ] = useState<number>(0);  
@@ -26,12 +29,10 @@ function RegisterOfShares() {
   }
 
   useEffect(()=>{
-    if (boox) {
-      getSharesList(boox[booxMap.ROS]).then(
-        res => setSharesList(res)
-      );
-    }
-  }, [boox, time]);
+    getSharesList(addr).then(
+      res => setSharesList(res)
+    );
+  }, [addr, time]);
 
   const [ seqOfShare, setSeqOfShare ] = useState<string>();
   const [ open, setOpen ] = useState<boolean>(false);
@@ -40,8 +41,8 @@ function RegisterOfShares() {
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   
   const searchShare = () => {
-    if (boox && seqOfShare && !hasError(valid)) {
-      getShare(boox[booxMap.ROS], seqOfShare).then(
+    if (seqOfShare && !hasError(valid)) {
+      getShare(addr, seqOfShare).then(
         res => {
           setShare(res);
           setOpen(true);
@@ -60,9 +61,11 @@ function RegisterOfShares() {
             <b>ROS - Register Of Shares</b>
           </Typography>
 
-          {boox && (
-            <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROS].toLowerCase() } />
-          )}
+          <Box width='168'>
+            <CopyLongStrTF title="Addr"  src={ addr.toLowerCase() } />
+          </Box>
+
+          <SetBookAddr setAddr={setAddr} />
 
         </Stack>
 

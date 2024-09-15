@@ -7,18 +7,22 @@ import {
   Toolbar,
   Stack,
   Typography,
+  Box,
 } from "@mui/material";
 
 
-import { booxMap } from "../../common";
+import { AddrZero, booxMap } from "../../common";
 import { OptionsList } from "./components/OptionsList";
 import { CertificateOfOption } from "./components/CertificateOfOption";
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
 import { OptWrap, defaultOptWrap, getAllOpts } from "./roo";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function RegisterOfOptions() {
   const { boox } = useComBooxContext();
+
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROO] : AddrZero );
 
   const [ optsList, setOptsList ] = useState<readonly OptWrap[]>([defaultOptWrap]);
   const [ time, setTime ] = useState(0);
@@ -28,12 +32,10 @@ function RegisterOfOptions() {
   }
 
   useEffect(()=>{
-    if (boox) {
-      getAllOpts(boox[booxMap.ROO]).then(
-        res => setOptsList(res)
-      );
-    }
-  }, [boox, time]);
+    getAllOpts(addr).then(
+      res => setOptsList(res)
+    );
+  }, [addr, time]);
 
   const [ open, setOpen ] = useState<boolean>(false);
   const [ opt, setOpt ] = useState<OptWrap>( defaultOptWrap );
@@ -47,9 +49,11 @@ function RegisterOfOptions() {
           <b>ROO - Register Of Options</b>
         </Typography>
 
-        {boox && (
-          <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROO].toLowerCase() } />
-        )}
+        <Box width='168'>
+          <CopyLongStrTF title="Addr"  src={ addr.toLowerCase() } />
+        </Box>
+
+        <SetBookAddr setAddr={setAddr} />
 
       </Stack>
 

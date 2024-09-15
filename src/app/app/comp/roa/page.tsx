@@ -7,6 +7,7 @@ import {
   TextField,
   Stack,
   Typography,
+  Box,
 } from "@mui/material";
 
 
@@ -17,16 +18,20 @@ import { useGeneralKeeperCreateIa } from "../../../../../generated";
 import { InfoOfFile, getFilesListWithInfo } from "../roc/components/filesFolder";
 
 import { GetFilesList } from "../roc/components/GetFilesList";
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { IndexCard } from "../roc/components/IndexCard";
-import { HexType, booxMap } from "../../common";
+import { AddrZero, HexType, booxMap } from "../../common";
 import { refreshAfterTx } from "../../common/toolsKit";
 
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function RegisterOfAgreements() {
   const { gk, boox, setErrMsg } = useComBooxContext();
+
+  const [ addr, setAddr ] = useState<HexType>(boox ? boox[booxMap.ROA] : AddrZero);
+
   const [ time, setTime ] = useState(0);
   const [ loading, setLoading ] = useState(false);
 
@@ -61,12 +66,10 @@ function RegisterOfAgreements() {
   };
 
   useEffect(()=>{
-    if (boox) {
-      getFilesListWithInfo(boox[booxMap.ROA]).then(
-        list => setFilesInfoList(list)
-      )
-    }
-  }, [boox, time]);
+    getFilesListWithInfo(addr).then(
+      list => setFilesInfoList(list)
+    )
+  }, [addr, time]);
 
   const [ file, setFile ] = useState<InfoOfFile>();
   const [ open, setOpen ] = useState<boolean>(false);
@@ -80,10 +83,11 @@ function RegisterOfAgreements() {
             <b>ROA - Register Of Agreements</b>
           </Typography>
 
-          {boox && (
-            <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROA].toLowerCase()} />
-          )}
+          <Box width='168'>
+            <CopyLongStrTF title="Addr"  src={addr.toLowerCase()} />
+          </Box>
 
+          <SetBookAddr setAddr={setAddr} />
 
         </Stack>
 

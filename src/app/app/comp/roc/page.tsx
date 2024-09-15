@@ -2,23 +2,27 @@
 
 import { useEffect, useState } from "react";
 
-import { Paper, Toolbar, TextField, Stack, Typography } from "@mui/material";
+import { Paper, TextField, Stack, Typography, Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 import { Create } from "@mui/icons-material";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
 import { InfoOfFile, getFilesListWithInfo, } from "./components/filesFolder";
 import { GetFilesList } from "./components/GetFilesList";
 import { IndexCard } from "./components/IndexCard";
-import { HexType, MaxPrice, booxMap } from "../../common";
+import { AddrZero, HexType, MaxPrice, booxMap } from "../../common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../common/toolsKit";
 
 import { useGeneralKeeperCreateSha } from "../../../../../generated";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function RegisterOfConstitution() {
   const { gk, boox, setErrMsg } = useComBooxContext();
+
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROC] : AddrZero );
+
   const [ time, setTime ] = useState(0);
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -27,8 +31,6 @@ function RegisterOfConstitution() {
     setTime(Date.now());
     setLoading(false);
   }
-
-  const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
   const [ version, setVersion ] = useState<string>('1');
 
@@ -53,32 +55,34 @@ function RegisterOfConstitution() {
     });
   };
 
+  const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
+
   useEffect(()=>{
-    if (boox) {
-      getFilesListWithInfo(boox[booxMap.ROC]).then(
-        list => setFilesInfoList(list)
-      )
-    }
-  }, [boox, time]);
+    getFilesListWithInfo(addr).then(
+      list => setFilesInfoList(list)
+    )
+  }, [addr, time]);
 
   const [ file, setFile ] = useState<InfoOfFile>();
   const [ open, setOpen ] = useState<boolean>(false);
   
   return (
-    <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignItems:'start', alignContent:'start', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
 
-        <Stack direction='row' sx={{ alignItems:'center' }}>
+      <Stack direction='row' sx={{ alignItems:'center' }} >
 
-          <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-            <b>ROC - Register Of Constitution </b> 
-          </Typography>
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+          <b>ROC - Register Of Constitution </b> 
+        </Typography>
 
-          {boox && (
-              <CopyLongStrSpan  title="Addr" src={boox[booxMap.ROC].toLowerCase()} />
-          )}
+        <Box width='168'>
+          <CopyLongStrTF  title="Addr" src={addr.toLowerCase()} />
+        </Box>
 
-        </Stack>
+        <SetBookAddr setAddr={setAddr} />
 
+      </Stack>
+        
       <table width={1680} >
         <thead />
         

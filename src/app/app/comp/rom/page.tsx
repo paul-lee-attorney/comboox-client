@@ -2,19 +2,21 @@
 
 import { useState } from "react";
 
-import { Paper, Stack, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import { MembersEquityList } from "./components/MembersList";
 
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
 import { InvHistoryOfMember } from "./components/InvHistoryOfMember";
-import { booxMap } from "../../common";
+import { AddrZero, booxMap } from "../../common";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function RegisterOfMembers() {
-
   const {boox} = useComBooxContext();
+
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROM] : AddrZero );
 
   const [ acct, setAcct ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
@@ -27,9 +29,12 @@ function RegisterOfMembers() {
           <b>ROM - Register Of Members</b>
         </Typography>
 
-        {boox && (
-          <CopyLongStrSpan title="Addr"  src={boox[booxMap.ROM].toLowerCase()} />
-        )}
+        <Box width='168'>
+          <CopyLongStrTF title="Addr"  src={addr.toLowerCase()} />
+        </Box>
+
+        <SetBookAddr setAddr={setAddr} />
+
       </Stack>
 
       <MembersEquityList setAcct={setAcct} setOpen={setOpen} />

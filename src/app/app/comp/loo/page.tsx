@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-import { FormControl, InputLabel, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
+import { Box, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Typography } from "@mui/material";
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, booxMap } from "../../common";
 
 import { ActionsOfInvestor } from "./components/ActionsOfInvestor";
@@ -23,10 +23,13 @@ import { baseToDollar, longSnParser } from "../../common/toolsKit";
 import { BillOfOrder } from "./components/BillOfOrder";
 import { BillOfDeal } from "./components/BillOfDeal";
 import { DealsChart } from "./components/DealsChart";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function ListOfOrders() {
 
   const { boox } = useComBooxContext();
+
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROC] : AddrZero );
 
   const [ index, setIndex ] = useState (0);
 
@@ -61,22 +64,18 @@ function ListOfOrders() {
   }
 
   useEffect(()=>{
-    if (boox) {
-
-      getOrders(boox[booxMap.LOO], classOfShare, true).then(
+      getOrders(addr, classOfShare, true).then(
         res => setOffers(res)
       );
 
-      getOrders(boox[booxMap.LOO], classOfShare, false).then(
+      getOrders(addr, classOfShare, false).then(
         res => setBids(res)
       );
  
-      investorInfoList(boox[booxMap.LOO]).then(
+      investorInfoList(addr).then(
         res => setInvList(res)
       );
-
-    }
-  }, [boox, classOfShare, time]);
+  }, [addr, classOfShare, time]);
 
   const [ acct, setAcct ] = useState<string>('0');
 
@@ -96,14 +95,12 @@ function ListOfOrders() {
 
     const getEvents = async () => {
 
-      if (!boox || (boox[booxMap.LOO]).toLowerCase() == AddrZero.toLowerCase()) return;
-
-      const addrLOO = boox[booxMap.LOO];
+      if (addr.toLowerCase() == AddrZero.toLowerCase()) return;
 
       const lastBlock = await client.getBlockNumber();
 
       let dealLogs = await client.getLogs({
-        address: addrLOO,
+        address: addr,
         event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
         fromBlock: lastBlock > 60000n + BigInt(left) ? lastBlock - 60000n - BigInt(left) : 0n,
         toBlock: lastBlock > BigInt(right) ? lastBlock - BigInt(right) : 0n
@@ -165,7 +162,7 @@ function ListOfOrders() {
 
     getEvents();
 
-  },[client, boox, classOfShare, setQty, setAmt, time, left, right, time]);  
+  },[addr, client, classOfShare, setQty, setAmt, time, left, right, time]);  
 
   const [ deal, setDeal ] = useState<DealProps | undefined>();
   const [ show, setShow ] = useState<boolean>(false);
@@ -179,9 +176,11 @@ function ListOfOrders() {
             <b>LOO - List Of Orders</b>
           </Typography>
 
-          {boox && (
-            <CopyLongStrSpan title="Addr"  src={ boox[booxMap.LOO].toLowerCase() }  />
-          )}
+          <Box width='168'>
+            <CopyLongStrTF title="Addr"  src={ addr.toLowerCase() }  />
+          </Box>
+
+          <SetBookAddr setAddr={setAddr} />
 
       </Stack>
 

@@ -4,7 +4,7 @@ import { Alert, FormControl, IconButton, InputAdornment, InputLabel, OutlinedInp
 import copy from 'copy-to-clipboard';
 
 import { useState } from "react";
-import { HexType } from '.';
+import { HexParser } from './toolsKit';
 
 
 
@@ -18,7 +18,7 @@ export function CopyLongStrTF({title, src}:CopyLongStrProps) {
   const [ flag, setFlag ] = useState<boolean>(false);
 
   const handleClick = ()=>{
-    if (copy( parseHexType(src) )) 
+    if (copy( HexParser(src) )) 
       setFlag(true);
   }
 
@@ -66,19 +66,13 @@ export function CopyLongStrTF({title, src}:CopyLongStrProps) {
   );
 }
 
-function parseHexType(input: string): HexType {
-  let out: HexType;
-  out = input.substring(0, 2) == '0x' ? `0x${input.substring(2)}` : `0x${input}`;
-  return out;
-}
-
 
 export function CopyLongStrSpan({title, src}:CopyLongStrProps) {
 
   const [ flag, setFlag ] = useState<boolean>(false);
 
   const handleClick = ()=>{
-    if (copy( parseHexType(src) )) 
+    if (copy( HexParser(src) )) 
       setFlag(true);
   }
 
@@ -101,11 +95,11 @@ export function CopyLongStrSpan({title, src}:CopyLongStrProps) {
         >
           <NoteAltOutlined />
         </IconButton>
-      </Tooltip>      
+      </Tooltip>
         
       <Snackbar open={flag} autoHideDuration={3000} onClose={handleClose} >
         <Alert severity='info' variant='filled' onClose={handleClose}>
-          Contents Copied !
+          Contents Copied!
         </Alert>
       </Snackbar>
 

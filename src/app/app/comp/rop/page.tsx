@@ -7,18 +7,22 @@ import {
   Toolbar,
   Stack,
   Typography,
+  Box,
 } from "@mui/material";
 
 import { Pledge, getAllPledges } from "./rop";
 import { PledgesList } from "./components/PledgesList";
 import { CertificateOfPledge } from "./components/CertificateOfPledge";
 import { CreatePledge } from "./components/CreatePledge";
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
-import { booxMap } from "../../common";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { AddrZero, booxMap } from "../../common";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function RegisterOfPledges() {
   const { boox } = useComBooxContext();
+
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROP] : AddrZero );
 
   const [ pldList, setPldList ] = useState<readonly Pledge[]>([]);
   const [ time, setTime ] = useState<number>(0);
@@ -28,12 +32,10 @@ function RegisterOfPledges() {
   }
 
   useEffect(()=>{
-    if (boox) {
-      getAllPledges(boox[booxMap.ROP]).then(
-        res => setPldList(res)
-      );
-    }
-  }, [boox, time]);
+    getAllPledges(addr).then(
+      res => setPldList(res)
+    );
+  }, [addr, time]);
 
   const [ open, setOpen ] = useState<boolean>(false);
   const [ pld, setPld ] = useState<Pledge>();
@@ -47,9 +49,11 @@ function RegisterOfPledges() {
           <b>ROP - Register Of Pledges</b>
         </Typography>
 
-        {boox && (
-          <CopyLongStrSpan title="Addr"  src={ boox[booxMap.ROP].toLowerCase() } />
-        )}
+        <Box width='168'>
+          <CopyLongStrTF title="Addr"  src={ addr.toLowerCase() } />
+        </Box>
+
+        <SetBookAddr setAddr={setAddr} />
 
       </Stack>
 

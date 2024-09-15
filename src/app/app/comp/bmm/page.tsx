@@ -2,21 +2,22 @@
 
 import { useEffect, useState } from "react";
 
-import { Paper, Stack, Toolbar, Typography } from "@mui/material";
+import { Box, Paper, Stack, Toolbar, Typography } from "@mui/material";
 import { GetMotionsList } from "../gmm/components/GetMotionsList";
 import { Motion, getMotionsList } from "../gmm/meetingMinutes";
 import { CreateMotionOfBoardMeeting } from "./components/CreateMotionOfBoardMeeting";
 import { ApprovalFormOfBoardMotion } from "./components/ApprovalFormOfBoardMotion";
 
-import { CopyLongStrSpan } from "../../common/CopyLongStr";
+import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
 
-import { booxMap } from "../../common";
+import { AddrZero, booxMap } from "../../common";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { SetBookAddr } from "../../components/SetBookAddr";
 
 function BoardMeetingMinutes() {
-
   const { boox } = useComBooxContext();
+  const [addr, setAddr] = useState(boox ? boox[booxMap.BMM] : AddrZero );
 
   const [ motionsList, setMotionsList ] = useState<Motion[]>();
 
@@ -29,12 +30,10 @@ function BoardMeetingMinutes() {
   }
 
   useEffect(()=>{
-    if (boox) {
-      getMotionsList(boox[booxMap.BMM]).then(
-        ls => setMotionsList(ls)
-      );
-    }
-  }, [boox, time]);
+    getMotionsList(addr).then(
+      ls => setMotionsList(ls)
+    );
+  }, [addr, time]);
 
   return (
     <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -44,9 +43,12 @@ function BoardMeetingMinutes() {
           <b>BMM - Board Meeting Minutes </b>
         </Typography>
         
-        {boox && (
-          <CopyLongStrSpan  title="Addr" src={ boox[booxMap.BMM].toLowerCase() } />
-        )}
+        <Box width='168'>
+          <CopyLongStrTF  title="Addr" src={ addr.toLowerCase() } />      
+        </Box>
+
+        <SetBookAddr setAddr={setAddr}/>
+
       </Stack>
       <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
 

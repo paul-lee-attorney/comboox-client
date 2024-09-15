@@ -584,7 +584,7 @@ export function FinStatement() {
                 &nbsp;
               </Typography>
               <Typography variant="h6" textAlign='center' width='10%'>
-                -
+                &nbsp;
               </Typography>
               <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
                 <b>Equity Change: ({ inETH

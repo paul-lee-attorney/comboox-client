@@ -6,9 +6,9 @@ import { Alert, Button, IconButton, Stack, TextField } from '@mui/material';
 import { Close, DriveFileMove, Search } from '@mui/icons-material';
 
 import { AddrZero, MaxUserNo } from '../common';
-import { FormResults, defFormResults, hasError, onlyInt } from '../common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt } from '../common/toolsKit';
 import Link from 'next/link';
-import { Doc, getDocByUserNo } from '../rc';
+import { Doc, getDocByUserNo, getHeadByBody, HeadOfDoc } from '../rc';
 
 import { useComBooxContext } from '../../_providers/ComBooxContextProvider';
 
@@ -32,7 +32,25 @@ export function GetComp() {
     setOnPar(undefined);
     setCompInfo(undefined);
 
-    if ( regNum ) {
+    if (!regNum) return;
+
+    if (regNum.substring(0,2) == '0x' ) {
+      let body = HexParser(regNum);
+      getHeadByBody(body).then(
+        (head: HeadOfDoc) => {
+          console.log("head: ", head);
+          console.log("body: ", body);
+          if (head.typeOfDoc != 20) {
+            setDoc(undefined);
+            setOpen(true);
+          } else {
+            setOpen(false);
+            setGK(body);
+            setDoc({head: head, body: body});            
+          }
+        }
+      )
+    } else {
       getDocByUserNo(BigInt(regNum)).then(
         (doc:Doc) => {
           if (doc.body != AddrZero) {
@@ -54,15 +72,19 @@ export function GetComp() {
       <Stack direction={'row'} sx={{justifyContent:'center'}}>
         <TextField 
           id="txRegNumOfComp" 
-          label="RegNumOfComp" 
+          label="RegNum / Address" 
           variant="outlined"
           size='small'
           error={ valid['RegNum']?.error }
           helperText={ valid['RegNum']?.helpTx ?? ' ' }                                  
-          sx={{ m:1, mr:3, width: 218 }}           
+          sx={{ m:1, mr:3, width: 218 }}
           onChange={(e) => {
             let input = e.target.value;
-            onlyInt('RegNum', input, MaxUserNo, setValid);
+            if (input.substring(0,2) == '0x') {
+              onlyHex('RegNum', input, 40, setValid);
+            } else {
+              onlyInt('RegNum', input, MaxUserNo, setValid);
+            }
             setRegNum( input );
           }}
           value = { regNum }
@@ -83,24 +105,9 @@ export function GetComp() {
       {!open && doc && (
         
         <Link
-          
           href={{
             pathname: `/app/comp`,
-            // query: {
-            //   typeOfDoc: doc?.head.typeOfDoc.toString(),
-            //   version: doc?.head.version.toString(),
-            //   seqOfDoc: doc?.head.seqOfDoc.toString(16),
-            //   body: doc?.body.substring(2),
-            //   creator: doc?.head.creator.toString(16),
-            //   createDate: doc?.head.createDate.toString(),
-            // }
           }}
-          
-          // as={`/app/comp`}
-
-          // variant='body1'
-
-          // underline='hover'
         >
           <Button variant='outlined' sx={{m:1, width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +
