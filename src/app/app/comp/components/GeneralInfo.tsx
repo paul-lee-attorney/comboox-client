@@ -27,6 +27,7 @@ import { DepositOfMine } from "./DepositOfMine";
 import { FinStatement } from "./FinStatement";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
+import { HistoryOfBoox } from "./HistoryOfBoox";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
@@ -147,6 +148,8 @@ export function GeneralInfo() {
             {compInfo && (
               <ConfigSetting companyName={ compInfo.name } symbol={  compInfo.symbol } time={ time } setTime={ setTime } />
             )}
+
+            <HistoryOfBoox />
 
           </Stack>
 
