@@ -159,9 +159,7 @@ export function FinStatement() {
 
   let totalAssets = initContribution - armotization + (balanceOfEth - depositsOfETH);
 
-  let deferredIncome = cbpToETH(ftCashflow.refuelCbp - cbpIncome.royalty);
-
-  let totalLiabilities = cbpToETH(cbpOutflow.newUserAward) + deferredIncome;
+  let deferredRevenue = cbpToETH(ftCashflow.refuelCbp + cbpOutflow.newUserAward - cbpIncome.royalty);
 
   let undistributedProfits = profits - ethOutflow.distribution;
 
@@ -339,7 +337,10 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              +
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
               <b>ETH In FT: ({ inETH 
                 ? ethToGwei(ftCashflow.totalEth)
                 : ethToUSD(ftCashflow.totalEth)}) </b>
@@ -388,6 +389,17 @@ export function FinStatement() {
 
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+              <b>New User Award: ({ inETH
+                ? ethToGwei(cbpToETH(cbpOutflow.newUserAward))
+                : ethToUSD(cbpToETH(cbpOutflow.newUserAward))}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              +
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
               <b>Gas Income: ({ inETH
                 ? ethToGwei(ftCashflow.refuelEth)
                 : ethToUSD(ftCashflow.refuelEth)}) </b>
@@ -410,31 +422,11 @@ export function FinStatement() {
               &nbsp;
             </Typography>
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-              <b>Deferred Income: ({ inETH
-                ? ethToGwei(deferredIncome)
-                : ethToUSD(deferredIncome)}) </b>
+              <b>Total Liabilities (Deferred Revenue): ({ inETH
+                ? ethToGwei(deferredRevenue)
+                : ethToUSD(deferredRevenue)}) </b>
             </Button>
           </Stack>
-
-          <Stack direction='row' width='100%' >
-            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-              <b>Accounts Payable(New User Award) : ({ inETH
-                ? ethToGwei(cbpToETH(cbpOutflow.newUserAward))
-                : ethToUSD(cbpToETH(cbpOutflow.newUserAward))}) </b>
-            </Button>
-          </Stack>
-
-          <Stack direction='row' width='100%' >
-            <Typography variant="h6" textAlign='center' width='30%'>
-              &nbsp;
-            </Typography>
-            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
-              <b>Total Liabilities: ({ inETH
-                ? ethToGwei(totalLiabilities)
-                : ethToUSD(totalLiabilities)}) </b>
-            </Button>
-          </Stack>
-
 
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
@@ -467,10 +459,10 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Typography variant="h6" textAlign='center' width='30%'>
+            <Typography variant="h6" textAlign='center' width='20%'>
               &nbsp;
             </Typography>
-            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
               <b>Owners Equity: ({ inETH
                 ? ethToGwei(ownersEquity)
                 : ethToUSD(ownersEquity)}) </b>
@@ -480,13 +472,13 @@ export function FinStatement() {
           <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
           <Stack direction='row' width='100%' >
-            <Typography variant="h6" textAlign='center' width='30%'>
+            <Typography variant="h6" textAlign='center' width='20%'>
               &nbsp;
             </Typography>
-            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
               <b>Total Liabilities & Owners Equity: ({ inETH
-                ? ethToGwei(totalLiabilities + ownersEquity)
-                : ethToUSD(totalLiabilities + ownersEquity)}) </b>
+                ? ethToGwei(deferredRevenue + ownersEquity)
+                : ethToUSD(deferredRevenue + ownersEquity)}) </b>
             </Button>
           </Stack>
 
@@ -743,7 +735,7 @@ export function FinStatement() {
               <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
               <Stack direction='column' sx={{ alignItems:'end' }} >
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='90%' >
                   <FtCashflow  sum={ftCashflow} setSum={setFtCashflow} records={ftCashflowRecords} setRecords={setFtCashflowRecords} setSumInfo={setSumInfo} setList={setList} setOpen={setOpen} />
                 </Stack>
               </Stack>

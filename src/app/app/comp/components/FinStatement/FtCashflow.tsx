@@ -252,7 +252,7 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
         sx={{m:0.5, minWidth:288, justifyContent:'start'}}
         onClick={()=>showList()}
       >
-        <b>Gas Income: ({ bigIntToStrNum(sum.refuelEth/10n**9n, 9) } ETH)</b>
+        <b>ETH in FT: ({ bigIntToStrNum(sum.totalEth/10n**9n, 9) } ETH)</b>
       </Button>
     )}
   </>
