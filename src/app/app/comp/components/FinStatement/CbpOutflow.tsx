@@ -191,6 +191,7 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
   const showList = () => {
     let arrSumInfo = [
       {title: 'CBP Outflow - (CBP ', data: sum.totalAmt},
+      {title: 'New User Award', data: sum.newUserAward},
       {title: 'Fuel Cost', data: sum.fuelCost},
       {title: 'GMM Transfer', data: sum.gmmTransfer},
       {title: 'BMM Transfer', data: sum.bmmTransfer},

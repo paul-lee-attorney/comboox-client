@@ -159,7 +159,9 @@ export function FinStatement() {
 
   let totalAssets = initContribution - armotization + (balanceOfEth - depositsOfETH);
 
-  let deferredRevenue = cbpToETH(ftCashflow.refuelCbp + cbpOutflow.newUserAward - cbpIncome.royalty);
+  let cbpPaidOut = cbpToETH(cbpOutflow.gmmTransfer + cbpOutflow.bmmTransfer);
+
+  let deferredRevenue = cbpPaidOut + cbpToETH(ftCashflow.refuelCbp + cbpOutflow.newUserAward - cbpIncome.royalty);
 
   let undistributedProfits = profits - ethOutflow.distribution;
 
@@ -388,7 +390,10 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              +
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
               <b>New User Award: ({ inETH
                 ? ethToGwei(cbpToETH(cbpOutflow.newUserAward))
                 : ethToUSD(cbpToETH(cbpOutflow.newUserAward))}) </b>
@@ -400,9 +405,20 @@ export function FinStatement() {
               +
             </Typography>
             <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-              <b>Gas Income: ({ inETH
+              <b>Gas Sold: ({ inETH
                 ? ethToGwei(ftCashflow.refuelEth)
                 : ethToUSD(ftCashflow.refuelEth)}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='10%'>
+              +
+            </Typography>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+              <b>CBP Paid-Out: ({ inETH
+                ? ethToGwei(cbpPaidOut)
+                : ethToUSD(cbpPaidOut)}) </b>
             </Button>
           </Stack>
 
