@@ -60,7 +60,7 @@ export function EthIncome({sum, setSum, records, setRecords, setSumInfo, setList
               sum.transfer += newItem.amt;
               flag = true;
               break;
-            case 'Gas':
+            case 'Gas Income':
               sum.gas += newItem.amt;
               flag = true;
               break;
@@ -124,7 +124,7 @@ export function EthIncome({sum, setSum, records, setRecords, setSumInfo, setList
         }
         
         if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
-          item.typeOfIncome = 'Gas';
+          item.typeOfIncome = 'Gas Income';
         }
 
         appendItem(item);

@@ -15,6 +15,7 @@ import { defaultDepositsSum, Deposits, DepositsSumProps } from "./FinStatement/D
 import { balanceOfWei, getCentPriceInWei } from "../../rc";
 import { usePublicClient } from "wagmi";
 import { totalDeposits } from "../gk";
+import { defaultFtSum, FtCashflow, FtCashflowProps, FtCashflowSumProps } from "./FinStatement/FtCashflow";
 
 export type CashflowProps = {
   seq: number,
@@ -45,6 +46,9 @@ export function FinStatement() {
 
   const [ deposits, setDeposits ] = useState<DepositsSumProps>(defaultDepositsSum);
   const [ depositsRecords, setDepositsRecords ] = useState<CashflowProps[]>([]);
+
+  const [ ftCashflow, setFtCashflow ] = useState<FtCashflowSumProps>(defaultFtSum);
+  const [ ftCashflowRecords, setFtCashflowRecords] = useState<CashflowProps[]>([]);
 
   const [ exRate, setExRate ] = useState(10000n);
   const [ inETH, setInETH ] = useState(false);
@@ -155,7 +159,9 @@ export function FinStatement() {
 
   let totalAssets = initContribution - armotization + (balanceOfEth - depositsOfETH);
 
-  let deferredIncome = ethIncome.gas - cbpToETH(cbpIncome.royalty);
+  let deferredIncome = cbpToETH(ftCashflow.refuelCbp - cbpIncome.royalty);
+
+  let totalLiabilities = cbpToETH(cbpOutflow.newUserAward) + deferredIncome;
 
   let undistributedProfits = profits - ethOutflow.distribution;
 
@@ -235,22 +241,6 @@ export function FinStatement() {
       setOpen(true);
     }
   }
-
-  const showGasIncomeRecords = () => {
-    let records = ethIncomeRecords.filter((v) => v.typeOfIncome == 'Gas');
-    let arrSumInfo = [
-      {title: 'Deffered Income - (ETH ', data: (ethIncome.gas - cbpIncome.royalty * 10000n / exRate)},
-      {title: 'Gas Income', data: ethIncome.gas},
-      {title: 'Royalty Income', data: cbpIncome.royalty * 10000n / exRate},
-    ];
-
-    if (records.length > 0) {
-      setList(records);
-      setSumInfo(arrSumInfo);
-      setOpen(true);
-    }
-  }
-
 
   return (
     <Paper elevation={3} 
@@ -349,13 +339,21 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+              <b>ETH In FT: ({ inETH 
+                ? ethToGwei(ftCashflow.totalEth)
+                : ethToUSD(ftCashflow.totalEth)}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
             <Typography variant="h6" textAlign='center' width='20%'>
               &nbsp;
             </Typography>
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
               <b>ETH of Comp: ({ inETH 
-                ? ethToGwei(balanceOfEth - depositsOfETH)
-                : ethToUSD(balanceOfEth - depositsOfETH)}) </b>
+                ? ethToGwei(balanceOfEth - depositsOfETH + ftCashflow.totalEth)
+                : ethToUSD(balanceOfEth - depositsOfETH + ftCashflow.totalEth)}) </b>
             </Button>
           </Stack>
 
@@ -371,8 +369,6 @@ export function FinStatement() {
                 : ethToUSD(totalAssets)}) </b>
             </Button>
           </Stack>
-
-
 
         </Paper>
 
@@ -393,11 +389,10 @@ export function FinStatement() {
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
               <b>Gas Income: ({ inETH
-                ? ethToGwei(ethIncome.gas)
-                : ethToUSD(ethIncome.gas) + 'USD'}) </b>
+                ? ethToGwei(ftCashflow.refuelEth)
+                : ethToUSD(ftCashflow.refuelEth)}) </b>
             </Button>
           </Stack>
-
 
           <Stack direction='row' width='100%' >
             <Typography variant="h6" textAlign='center' width='10%'>
@@ -420,6 +415,26 @@ export function FinStatement() {
                 : ethToUSD(deferredIncome)}) </b>
             </Button>
           </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+              <b>Accounts Payable(New User Award) : ({ inETH
+                ? ethToGwei(cbpToETH(cbpOutflow.newUserAward))
+                : ethToUSD(cbpToETH(cbpOutflow.newUserAward))}) </b>
+            </Button>
+          </Stack>
+
+          <Stack direction='row' width='100%' >
+            <Typography variant="h6" textAlign='center' width='30%'>
+              &nbsp;
+            </Typography>
+            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
+              <b>Total Liabilities: ({ inETH
+                ? ethToGwei(totalLiabilities)
+                : ethToUSD(totalLiabilities)}) </b>
+            </Button>
+          </Stack>
+
 
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
@@ -452,10 +467,10 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Typography variant="h6" textAlign='center' width='20%'>
+            <Typography variant="h6" textAlign='center' width='30%'>
               &nbsp;
             </Typography>
-            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>Owners Equity: ({ inETH
                 ? ethToGwei(ownersEquity)
                 : ethToUSD(ownersEquity)}) </b>
@@ -465,13 +480,13 @@ export function FinStatement() {
           <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
           <Stack direction='row' width='100%' >
-            <Typography variant="h6" textAlign='center' width='20%'>
+            <Typography variant="h6" textAlign='center' width='30%'>
               &nbsp;
             </Typography>
-            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>Total Liabilities & Owners Equity: ({ inETH
-                ? ethToGwei(deferredIncome + ownersEquity)
-                : ethToUSD(deferredIncome + ownersEquity)}) </b>
+                ? ethToGwei(totalLiabilities + ownersEquity)
+                : ethToUSD(totalLiabilities + ownersEquity)}) </b>
             </Button>
           </Stack>
 
@@ -723,6 +738,14 @@ export function FinStatement() {
                   <b>ETH Balance: ({bigIntToStrNum((ethIncome.totalAmt - ethOutflow.totalAmt - deposits.totalAmt)/10n**9n, 9) + ' ETH'}) </b>
                 </Button>
 
+              </Stack>
+
+              <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
+
+              <Stack direction='column' sx={{ alignItems:'end' }} >
+                <Stack direction='row' width='100%' >
+                  <FtCashflow  sum={ftCashflow} setSum={setFtCashflow} records={ftCashflowRecords} setRecords={setFtCashflowRecords} setSumInfo={setSumInfo} setList={setList} setOpen={setOpen} />
+                </Stack>
               </Stack>
 
         </Paper>
