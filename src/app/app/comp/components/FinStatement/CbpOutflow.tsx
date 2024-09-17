@@ -1,7 +1,7 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Button,  } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfTank, AddrZero, booxMap, keepersMap } from "../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { bigIntToStrNum, } from "../../../common/toolsKit";
@@ -10,6 +10,7 @@ import { CashflowRecordsProps } from "./CbpIncome";
 
 export type CbpOutflowSumProps = {
   totalAmt: bigint;
+  newUserAward: bigint;
   fuelCost: bigint;
   gmmTransfer: bigint;
   bmmTransfer: bigint;
@@ -18,6 +19,7 @@ export type CbpOutflowSumProps = {
 
 export const defaultCbpOutSum:CbpOutflowSumProps = {
   totalAmt: 0n,
+  newUserAward: 0n,
   fuelCost: 0n,
   gmmTransfer: 0n,
   bmmTransfer: 0n,
@@ -30,7 +32,7 @@ export interface CbpOutflowProps extends CashflowRecordsProps {
 }
 
 export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:CbpOutflowProps ) {
-  const { keepers } = useComBooxContext();
+  const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
   
@@ -52,6 +54,9 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           newItem.seq = counter;
   
           switch (newItem.typeOfIncome) {
+            case 'NewUserAward': 
+              sum.newUserAward += newItem.amt;
+              break;
             case 'FuelCost':
               sum.fuelCost += newItem.amt;
               break;
@@ -67,6 +72,42 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
         }
       } 
 
+      let newUserAwardLogs = await client.getLogs({
+        address: AddrOfRegCenter,
+        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+        fromBlock: 1n,
+        args: {
+          from: AddrZero,
+        }
+      });
+    
+      let cnt = newUserAwardLogs.length;
+    
+      while (cnt > 0) {
+        let log = newUserAwardLogs[cnt-1];
+        let blkNo = log.blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+    
+        let item:CashflowProps = {
+          seq: 0,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
+          transactionHash: log.transactionHash,
+          typeOfIncome: 'NewUserAward',
+          amt: log.args.value ?? 0n,
+          addr: log.args.to ?? AddrZero,
+          acct: 0n,
+        }
+        
+        if (item.addr.toLowerCase() == gk?.toLowerCase()) {
+          cnt--;
+          continue;
+        } else {
+          appendItem(item);
+          cnt--;
+        }
+      }
+
       let gmmTransferLogs = await client.getLogs({
         address: keepers[keepersMap.GMMKeeper],
         event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
@@ -76,7 +117,7 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
         }
       });
     
-      let cnt = gmmTransferLogs.length;
+      cnt = gmmTransferLogs.length;
     
       while (cnt > 0) {
         let log = gmmTransferLogs[cnt-1];
@@ -145,7 +186,7 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
 
     getEthOutflow();
 
-  }, [ client, keepers, setSum, setRecords]);
+  }, [ gk, client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [

@@ -11,7 +11,7 @@ import { CashflowProps } from "../FinStatement";
 
 export type EthOutflowSumProps = {
   totalAmt: bigint;
-  ownersEquity: bigint;
+  distribution: bigint;
   deposit: bigint;
   gmmTransfer: bigint;
   gmmExpense: bigint;
@@ -22,7 +22,7 @@ export type EthOutflowSumProps = {
 
 export const defaultEthOutSum:EthOutflowSumProps = {
   totalAmt: 0n,
-  ownersEquity: 0n,
+  distribution: 0n,
   deposit: 0n,
   gmmTransfer: 0n,
   gmmExpense: 0n,
@@ -76,7 +76,7 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
             case 'Distribution':
               sum.totalAmt -= newItem.amt;
               // sum.deposit -= newItem.amt;
-              sum.ownersEquity += newItem.amt;
+              sum.distribution += newItem.amt;
           }
           
           arr.push(newItem);
@@ -287,7 +287,7 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
   const showList = () => {
     let arrSumInfo = [
       {title: 'ETH Outflow - (ETH ', data: sum.totalAmt},
-      {title: 'Distribution', data: sum.ownersEquity},
+      {title: 'Distribution', data: sum.distribution},
       {title: 'Deposit', data: sum.deposit},
       {title: 'GMM Transfer', data: sum.gmmTransfer},
       {title: 'GMM Expense', data: sum.gmmExpense},

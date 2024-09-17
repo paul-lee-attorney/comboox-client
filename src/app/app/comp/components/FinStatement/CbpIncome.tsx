@@ -12,8 +12,9 @@ export type CbpIncomeSumProps = {
   totalAmt: bigint;
   royalty: bigint;
   mint: bigint;
+  newUserAward: bigint;
+  withdrawFuel: bigint;
   transfer: bigint;
-  gas: bigint;
   flag: boolean;
 }
 
@@ -21,8 +22,9 @@ export const defaultSum: CbpIncomeSumProps = {
   totalAmt: 0n,
   royalty: 0n,
   mint: 0n,
+  newUserAward: 0n,
+  withdrawFuel: 0n,
   transfer: 0n,
-  gas: 0n,
   flag: false,
 }
 
@@ -33,7 +35,6 @@ export interface CashflowRecordsProps {
   setList: Dispatch<SetStateAction<CashflowProps[]>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
-
 
 export interface CbpIncomeProps extends CashflowRecordsProps {
   sum: CbpIncomeSumProps;
@@ -54,7 +55,69 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
       let arr: CashflowProps[] = [];
       let counter = 0;
 
-      let cbpLogs = await client.getLogs({
+      const appendItem = (newItem: CashflowProps) => {
+        if (newItem.amt > 0n) {
+    
+          sum.totalAmt += newItem.amt;
+          newItem.seq = counter;
+  
+          switch (newItem.typeOfIncome) {
+            case 'Royalty':
+              sum.royalty += newItem.amt;
+              break;
+            case 'NewUserAward': 
+              sum.newUserAward += newItem.amt;
+              break;
+            case 'Mint':
+              sum.mint += newItem.amt;
+              break;
+            case 'Transfer': 
+              sum.transfer += newItem.amt;
+              break;
+          }
+          
+          arr.push(newItem);
+          counter++;
+        }
+      } 
+
+
+      let mintLogs = await client.getLogs({
+        address: AddrOfRegCenter,
+        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+        fromBlock: 1n,
+        args: {
+          from: AddrZero,
+        }
+      });
+
+      let cnt = mintLogs.length;
+    
+      while (cnt > 0) {
+        let log = mintLogs[cnt-1];
+        let blkNo = log.blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+    
+        let item:CashflowProps = {
+          seq: 0,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
+          transactionHash: log.transactionHash,
+          typeOfIncome: 'NewUserAward',
+          amt: log.args.value ?? 0n,
+          addr: log.args.to ?? AddrZero,
+          acct: 0n,
+        }
+        
+        if (item.addr.toLowerCase() == gk?.toLowerCase()) {
+          item.typeOfIncome = 'Mint';
+        }
+
+        appendItem(item);
+        cnt--;
+      }
+
+      let transferLogs = await client.getLogs({
         address: AddrOfRegCenter,
         event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
         fromBlock: 1n,
@@ -63,10 +126,10 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
         }
       });
 
-      let cnt = cbpLogs.length;
+      cnt = transferLogs.length;
 
       while (cnt > 0) {
-        let log = cbpLogs[cnt-1];
+        let log = transferLogs[cnt-1];
 
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
@@ -83,9 +146,10 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
         }
 
         if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
-          item.typeOfIncome = 'Gas'
+          item.typeOfIncome = 'WithdrawFuel'
         } else if (item.addr.toLowerCase() == AddrZero.toLowerCase()) {
-          item.typeOfIncome = 'Mint';
+          cnt--;
+          continue;
         } else {
           let tran = await client.getTransaction({hash: item.transactionHash});
 
@@ -96,29 +160,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
           }
         }
         
-        if (item.amt > 0n) {
-
-          sum.totalAmt += item.amt;
-          item.seq = counter;
-
-          switch (item.typeOfIncome) {
-            case 'Royalty':
-              sum.royalty += item.amt;
-              break;
-            case 'Transfer':
-              sum.transfer += item.amt;
-              break;
-            case 'Gas':
-              sum.gas += item.amt;
-              break;
-            default:
-              sum.mint += item.amt;
-          }
-
-          arr.push(item);
-          counter++;
-        }
-        
+        appendItem(item);
         cnt--;
       }
 
@@ -137,10 +179,11 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
       {title: 'CBP Income - (CBP ', data: sum.totalAmt},
       {title: 'Royalty', data: sum.royalty},
       {title: 'Mint', data: sum.mint},
+      {title: 'NewUserAward', data: sum.newUserAward},
+      {title: 'WithdrawFuel', data: sum.withdrawFuel},
       {title: 'Transfer', data: sum.transfer},
-      {title: 'Gas', data: sum.gas},
     ]
-    setSumInfo(arrSumInfo);    
+    setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
   }

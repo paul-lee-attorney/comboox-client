@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { baseToDollar, bigIntToStrNum, HexParser, } from "../../../common/toolsKit";
+import {  bigIntToStrNum, HexParser, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
@@ -290,8 +290,8 @@ export function EthIncome({sum, setSum, records, setRecords, setSumInfo, setList
   const showList = () => {
     let arrSumInfo = [
       {title: 'ETH Income - (ETH ', data: sum.totalAmt},
-      {title: 'Fuel Income', data: sum.gas},
-      {title: 'Capital', data: sum.capital},
+      {title: 'Gas Income', data: sum.gas},
+      {title: 'Pay In Cap', data: sum.capital},
       {title: 'Custody', data: sum.custody},
       {title: 'Deposits', data: sum.deposit},
       {title: 'Transfer', data: sum.transfer},
