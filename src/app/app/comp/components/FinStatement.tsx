@@ -243,7 +243,7 @@ export function FinStatement() {
   }
 
   const showNewUserAwardRecords = () => {
-    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'New User Award');
+    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'NewUserAward');
 
     let arrSumInfo = [
       {title: 'New User Award (CBP ', data: (cbpOutflow.newUserAward)},
