@@ -242,6 +242,50 @@ export function FinStatement() {
     }
   }
 
+  const showNewUserAwardRecords = () => {
+    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'New User Award');
+
+    let arrSumInfo = [
+      {title: 'New User Award (CBP ', data: (cbpOutflow.newUserAward)},
+    ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showGasSoldRecords = () => {
+    let records = ftCashflowRecords.filter((v) => v.typeOfIncome == 'RefuelCbp');
+
+    let arrSumInfo = [
+      {title: 'Gas Sold (CBP ', data: (ftCashflow.refuelCbp)},
+    ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showCbpPaidOutRecords = () => {
+    let records = cbpOutflowRecords.filter((v) => (v.typeOfIncome == 'GmmTransfer - CBP' || v.typeOfIncome == 'BmmTransfer - CBP'));
+
+    let arrSumInfo = [
+      {title: 'CBP Paid Out (CBP ', data: (cbpOutflow.gmmTransfer + cbpOutflow.bmmTransfer)},
+      {title: 'GMM Transfer', data: (cbpOutflow.gmmTransfer)},
+      {title: 'BMM Transfer', data: (cbpOutflow.bmmTransfer)},
+    ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
   return (
     <Paper elevation={3} 
       sx={{
@@ -393,7 +437,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showNewUserAwardRecords()} >
               <b>New User Award: ({ inETH
                 ? ethToGwei(cbpToETH(cbpOutflow.newUserAward))
                 : ethToUSD(cbpToETH(cbpOutflow.newUserAward))}) </b>
@@ -404,7 +448,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showGasSoldRecords()} >
               <b>Gas Sold: ({ inETH
                 ? ethToGwei(ftCashflow.refuelEth)
                 : ethToUSD(ftCashflow.refuelEth)}) </b>
@@ -415,7 +459,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showCbpPaidOutRecords()}>
               <b>CBP Paid-Out: ({ inETH
                 ? ethToGwei(cbpPaidOut)
                 : ethToUSD(cbpPaidOut)}) </b>
@@ -426,7 +470,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               -
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showRoyaltyRecords()} >
               <b>Royalty Income: ({ inETH
                 ? ethToGwei(cbpToETH(cbpIncome.royalty))
                 : ethToUSD(cbpToETH(cbpIncome.royalty))}) </b>
@@ -552,7 +596,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               -
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showBmmExpRecords()}>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={showBmmExpRecords}>
               <b>Bmm Exp: ({ inETH
                 ? ethToGwei(bmmExp)
                 : ethToUSD(bmmExp) }) </b>
@@ -563,8 +607,8 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               -
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showBmmExpRecords()}>
-              <b>Markting Exp (New User Reward): ({ inETH
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={showNewUserAwardRecords}>
+              <b>Marketing Exp (New User Reward): ({ inETH
                 ? ethToGwei( cbpToETH(cbpOutflow.newUserAward))
                 : ethToUSD( cbpToETH(cbpOutflow.newUserAward)) }) </b>
             </Button>

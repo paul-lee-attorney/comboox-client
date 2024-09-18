@@ -145,7 +145,8 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
           acct: 0n,
         }
 
-        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
+        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase() || 
+          item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()) {
           item.typeOfIncome = 'WithdrawFuel'
         } else if (item.addr.toLowerCase() == AddrZero.toLowerCase()) {
           cnt--;

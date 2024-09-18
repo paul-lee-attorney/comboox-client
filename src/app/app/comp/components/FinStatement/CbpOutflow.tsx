@@ -135,7 +135,8 @@ export function CbpOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           acct: 0n,
         }
         
-        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
+        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase() ||
+            item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()) {
           item.typeOfIncome = 'FuelCost';
         }
 

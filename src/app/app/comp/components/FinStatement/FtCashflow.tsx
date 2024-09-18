@@ -232,12 +232,12 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
   const showList = () => {
     let arrSumInfo = [
       {title: 'Gas Income - (ETH ', data: sum.refuelEth},
-      {title: 'Eth Balance: ', data: sum.totalEth},
-      {title: 'Cbp Balance: ', data: sum.totalCbp},
-      {title: 'Income Pickup (Wei): ', data: sum.withdrawEth},
+      {title: 'Eth Balance', data: sum.totalEth},
+      {title: 'Cbp Balance', data: sum.totalCbp},
+      {title: 'Income Pickup (Wei)', data: sum.withdrawEth},
       {title: 'Fuel Cost (Lee)', data: sum.refuelCbp},
       {title: 'Fuel Withdrawn (Lee)', data: sum.withdrawCbp},
-    ]
+    ] 
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
