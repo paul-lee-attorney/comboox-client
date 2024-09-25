@@ -490,7 +490,7 @@ export function FinStatement() {
 
           <Stack direction='row' width='100%' >
             <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-              <b>Init Capital: ({ inETH
+              <b>Initial Capital: ({ inETH
                 ? ethToGwei(initContribution)
                 : ethToUSD(initContribution) + 'USD'}) </b>
             </Button>
@@ -501,7 +501,7 @@ export function FinStatement() {
               +
             </Typography>
             <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-              <b>Pay In Contribution: ({ inETH
+              <b>Additional Paid In Capital: ({ inETH
                 ? ethToGwei(ethIncome.capital)
                 : ethToUSD(ethIncome.capital)}) </b>
             </Button>
@@ -512,7 +512,7 @@ export function FinStatement() {
               +
             </Typography>
             <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-              <b>Undistributed Profites: ({ inETH
+              <b>Retained Earnings: ({ inETH
                 ? ethToGwei(undistributedProfits)
                 : ethToUSD(undistributedProfits)}) </b>
             </Button>
@@ -523,7 +523,7 @@ export function FinStatement() {
               &nbsp;
             </Typography>
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-              <b>Owners Equity: ({ inETH
+              <b>Total Equity: ({ inETH
                 ? ethToGwei(ownersEquity)
                 : ethToUSD(ownersEquity)}) </b>
             </Button>
@@ -536,7 +536,7 @@ export function FinStatement() {
               &nbsp;
             </Typography>
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-              <b>Total Liabilities & Owners Equity: ({ inETH
+              <b>Total Liabilities & Equity: ({ inETH
                 ? ethToGwei(deferredRevenue + ownersEquity)
                 : ethToUSD(deferredRevenue + ownersEquity)}) </b>
             </Button>
@@ -608,7 +608,7 @@ export function FinStatement() {
               -
             </Typography>
             <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={showNewUserAwardRecords}>
-              <b>Marketing Exp (New User Reward): ({ inETH
+              <b>Sales Exp (New User Reward): ({ inETH
                 ? ethToGwei( cbpToETH(cbpOutflow.newUserAward))
                 : ethToUSD( cbpToETH(cbpOutflow.newUserAward)) }) </b>
             </Button>
@@ -670,7 +670,7 @@ export function FinStatement() {
 
             <Stack direction='row' width='100%' >
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>Init Capital: ({ inETH 
+                <b>Initial Capital: ({ inETH 
                   ? ethToGwei(initContribution)
                   : ethToUSD(initContribution)})</b>
               </Button>
@@ -681,7 +681,7 @@ export function FinStatement() {
                 +
               </Typography>
               <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showPaidInCapRecords()} >
-                <b>Pay-In Contribution: ({ inETH
+                <b>Additional Paid-In Capital: ({ inETH
                   ? ethToGwei(ethIncome.capital)
                   : ethToUSD(ethIncome.capital)}) </b>
               </Button>
@@ -716,7 +716,7 @@ export function FinStatement() {
                 &nbsp;
               </Typography>
               <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-                <b>Owners Equity: ({ inETH
+                <b>Total Equity: ({ inETH
                   ? ethToGwei(ownersEquity)
                   : ethToUSD(ownersEquity)}) </b>
               </Button>

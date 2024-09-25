@@ -1,7 +1,5 @@
 import { Divider, Paper, Stack, Typography } from "@mui/material";
 
-
-
 function AboutUs() {
   return(
     <Paper elevation={3} sx={{alignItems:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
@@ -21,35 +19,35 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"Contributor"</b> shall mean copyright owner, and the other contribution owner and any individual or Legal Entity who have submitted the Work to the Copyright Owner and subsequently incorporated within the Work. 
+          <b>&quot;Contributor&quot;</b> shall mean copyright owner, and the other contribution owner and any individual or Legal Entity who have submitted the Work to the Copyright Owner and subsequently incorporated within the Work. 
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"Contribution"</b> shall mean the original version of the Work and any additions to that Work, that is intentionally submitted to Contributor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner.
+          <b>&quot;Contribution&quot;</b> shall mean the original version of the Work and any additions to that Work, that is intentionally submitted to Contributor for inclusion in the Work by the copyright owner or by an individual or Legal Entity authorized to submit on behalf of the copyright owner.
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"Legal Entity"</b> shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, "control" means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
+          <b>&quot;Legal Entity&quot;</b> shall mean the union of the acting entity and all other entities that control, are controlled by, or are under common control with that entity. For the purposes of this definition, &quot;control&quot; means (i) the power, direct or indirect, to cause the direction or management of such entity, whether by contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii) beneficial ownership of such entity.
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"License"</b> shall mean the terms and conditions for the permitted use as defined by this document.
+          <b>&quot;License&quot;</b> shall mean the terms and conditions for the permitted use as defined by this document.
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"Licensor"</b> shall mean the copyright owner and/or Legal Entity authorized by the copyright owner that is granting the License.
+          <b>&quot;Licensor&quot;</b> shall mean the copyright owner and/or Legal Entity authorized by the copyright owner that is granting the License.
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"Permitted Use"</b> shall mean the acts of calling the smart contracts of ComBoox via their specific API to read or write data on the blockchain network where they were originally deployed by Contributor, and the acts of reproduction, distribution or presentation of the Work for purposes of research, verification or testing, on a computer not linking with any blockchain network, or on a local testing blockchain that consists of one or more nodes entirely and exclusively controlled by You.
+          <b>&quot;Permitted Use&quot;</b> shall mean the acts of calling the smart contracts of ComBoox via their specific API to read or write data on the blockchain network where they were originally deployed by Contributor, and the acts of reproduction, distribution or presentation of the Work for purposes of research, verification or testing, on a computer not linking with any blockchain network, or on a local testing blockchain that consists of one or more nodes entirely and exclusively controlled by You.
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"Work"</b> or <b>"ComBoox"</b> shall mean the ComBoox system, a blockchain based statutory books keeping system, consisting of a series of smart contracts, including all Contribution(s).
+          <b>&quot;Work&quot;</b> or <b>&quot;ComBoox&quot;</b> shall mean the ComBoox system, a blockchain based statutory books keeping system, consisting of a series of smart contracts, including all Contribution(s).
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"You"</b> shall mean an individual or Legal Entity exercising permissions granted by this License.
+          <b>&quot;You&quot;</b> shall mean an individual or Legal Entity exercising permissions granted by this License.
         </Typography>
 
         <Typography variant='h5' sx={{ m:2 }}  >
@@ -113,7 +111,7 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ marginLeft:'2em', marginRight:'2em' }}  >
-        (1)Contributor provides the Work (and each Contributor provides its Contributions) on an <b>"AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE TO YOU FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO ANY DIRECT, OR INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OR INABILITY TO USE THE WORK OR THE CONTRIBUTION, NO MATTER HOW IT'S CAUSED OR BASED ON WHICH LEGAL THEORY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</b>
+        (1)Contributor provides the Work (and each Contributor provides its Contributions) on an <b>&quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE TO YOU FOR ANY DAMAGES, INCLUDING, BUT NOT LIMITED TO ANY DIRECT, OR INDIRECT, SPECIAL OR CONSEQUENTIAL DAMAGES ARISING FROM YOUR USE OR INABILITY TO USE THE WORK OR THE CONTRIBUTION, NO MATTER HOW IT&apos;S CAUSED OR BASED ON WHICH LEGAL THEORY, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.</b>
         </Typography>
 
         <Typography variant='h6' sx={{ marginLeft:'2em', marginRight:'2em' }}  >
@@ -141,11 +139,11 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ marginLeft:'4em', marginRight:'4em' }}  >
-        ii.A third party malicious attack, hack, tamper, intercept, or controls over the data against its owner's intention; or
+        ii.A third party malicious attack, hack, tamper, intercept, or controls over the data against its owner&apos;s intention; or
         </Typography>
 
         <Typography variant='h6' sx={{ marginLeft:'4em', marginRight:'4em' }}  >
-        iii.The unavailability of the blockchain due to the failure of any external environment supplier, such as the unavailability of electrical power, internet connection, and/or any other similar public utilities or infrastructures failure caused by third parties' behavior or negligence.
+        iii.The unavailability of the blockchain due to the failure of any external environment supplier, such as the unavailability of electrical power, internet connection, and/or any other similar public utilities or infrastructures failure caused by third parties&apos; behavior or negligence.
         </Typography>
 
         <Typography variant='h5' sx={{ m:2 }}  >
@@ -165,7 +163,7 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ marginLeft:'2em', marginRight:'2em' }}  >
-        (1)Create a file named <b>"LICENSE"</b> which contains the whole context of this License in the first directory of your package;
+        (1)Create a file named <b>&quot;LICENSE&quot;</b> which contains the whole context of this License in the first directory of your package;
         </Typography>
 
         <Typography variant='h6' sx={{ marginLeft:'2em', marginRight:'2em' }}  >
@@ -181,7 +179,7 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-        <b>THIS WORK IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE TO YOU FOR ANY DAMAGES.</b>
+        <b>THIS WORK IS PROVIDED ON AN &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE TO YOU FOR ANY DAMAGES.</b>
         <br/>
         <b>YOU ARE PROHIBITED FROM DEPLOYING THE SMART CONTRACTS OF THIS WORK, IN WHOLE OR IN PART, FOR WHATEVER PURPOSE, ON ANY BLOCKCHAIN NETWORK THAT HAS ONE OR MORE NODES THAT ARE OUT OF YOUR CONTROL.</b>
         </Typography>
@@ -203,35 +201,35 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"贡献者"</b> 指版权所有者, 以及向版权所有者提交作品, 且该作品被版权所有者接受和纳入的贡献所有者及其合法授权的自然人或法人实体。 
+          <b>&quot;贡献者&quot;</b> 指版权所有者, 以及向版权所有者提交作品, 且该作品被版权所有者接受和纳入的贡献所有者及其合法授权的自然人或法人实体。 
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"贡献"</b> 指作品的原始版本, 以及由版权所有者,或合法授权主体代表版权所有者提交给贡献者, 并包含在作品中的任何补充内容。
+          <b>&quot;贡献&quot;</b> 指作品的原始版本, 以及由版权所有者,或合法授权主体代表版权所有者提交给贡献者, 并包含在作品中的任何补充内容。
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"法人实体"</b> 指行为实体以及控制该实体、受该实体控制或与该实体共同控制的所有其他实体的关联方。就本定义而言,  “控制” 是指 (i) 无论是通过合同还是其他方式直接或间接领导或管理该实体的权力, 或 (ii) 拥有百分之五十 (50%) 或更多已发行股权份额, 或 (iii) 该实体的实控人。
+          <b>&quot;法人实体&quot;</b> 指行为实体以及控制该实体、受该实体控制或与该实体共同控制的所有其他实体的关联方。就本定义而言,  “控制” 是指 (i) 无论是通过合同还是其他方式直接或间接领导或管理该实体的权力, 或 (ii) 拥有百分之五十 (50%) 或更多已发行股权份额, 或 (iii) 该实体的实控人。
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"许可证"</b> 指本文档为被允许的使用所定义的条款和条件。
+          <b>&quot;许可证&quot;</b> 指本文档为被允许的使用所定义的条款和条件。
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"许可方"</b> 指版权所有者, 和/或版权所有者授权的授予许可的实体。
+          <b>&quot;许可方&quot;</b> 指版权所有者, 和/或版权所有者授权的授予许可的实体。
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"被允许的使用"</b> 指通过特定API调用ComBoox的智能合约,在贡献者最初部署的区块链网络上读取或写入数据的行为, 以及在不与任何区块链网络连接的计算机上, 或在由您完全排他控制的一个或多个节点构成的本地测试区块链上, 出于研究、验证和测试等目的复制、分发或演示作品的行为。
+          <b>&quot;被允许的使用&quot;</b> 指通过特定API调用ComBoox的智能合约,在贡献者最初部署的区块链网络上读取或写入数据的行为, 以及在不与任何区块链网络连接的计算机上, 或在由您完全排他控制的一个或多个节点构成的本地测试区块链上, 出于研究、验证和测试等目的复制、分发或演示作品的行为。
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"作品"</b> 或 <b>"ComBoox"</b> 指 ComBoox 系统, 一个基于区块链技术的公司治理文件簿记系统, 由一系列智能合约组成, 包括相关的所有贡献。
+          <b>&quot;作品&quot;</b> 或 <b>&quot;ComBoox&quot;</b> 指 ComBoox 系统, 一个基于区块链技术的公司治理文件簿记系统, 由一系列智能合约组成, 包括相关的所有贡献。
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-          <b>"您"</b> 指行使本许可证授予的权限的个人或法人实体。
+          <b>&quot;您&quot;</b> 指行使本许可证授予的权限的个人或法人实体。
         </Typography>
 
         <Typography variant='h5' sx={{ m:2 }}  >
@@ -363,7 +361,7 @@ function AboutUs() {
         </Typography>
 
         <Typography variant='h6' sx={{ m:2 }}  >
-        <b>THIS WORK IS PROVIDED ON AN "AS IS" BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE TO YOU FOR ANY DAMAGES.</b>
+        <b>THIS WORK IS PROVIDED ON AN &quot;AS IS&quot; BASIS, WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO NON-INFRINGEMENT, MERCHANTABILITY OR FIT FOR A PARTICULAR PURPOSE. IN NO EVENT SHALL ANY CONTRIBUTOR BE LIABLE TO YOU FOR ANY DAMAGES.</b>
         <br/>
         <b>YOU ARE PROHIBITED FROM DEPLOYING THE SMART CONTRACTS OF THIS WORK, IN WHOLE OR IN PART, FOR WHATEVER PURPOSE, ON ANY BLOCKCHAIN NETWORK THAT HAS ONE OR MORE NODES THAT ARE OUT OF YOUR CONTROL.</b> 
         </Typography>
@@ -373,5 +371,4 @@ function AboutUs() {
 }
 
 export default AboutUs;
-
 
