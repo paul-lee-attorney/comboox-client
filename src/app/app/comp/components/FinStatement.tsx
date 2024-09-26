@@ -25,6 +25,7 @@ export type CashflowProps = {
   typeOfIncome: string,
   amt: bigint,
   usd: bigint,
+  ethPrice: bigint,
   addr: HexType,
   acct: bigint,
 }

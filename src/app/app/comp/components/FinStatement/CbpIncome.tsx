@@ -7,7 +7,7 @@ import { parseAbiItem } from "viem";
 import { bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { SumInfo } from "./CashflowList";
-import { getPriceAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { getEthPriceAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 import { rate } from "../../../fuel_tank/ft";
 import { getCentPriceInWei } from "../../../rc";
 
@@ -88,22 +88,24 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
     
-          let ethPrice = getPriceAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.usd = ethPrice
-              ? cbpToETH(newItem.amt) * BigInt(ethPrice * 10 ** 4)
-              : cbpToETH(newItem.amt) * 100n / centPrice;
+          let ethPrice = getEthPriceAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = ethPrice ? BigInt(ethPrice * 10000) : 100n / centPrice;
+          newItem.usd = cbpToETH(newItem.amt) * newItem.acct;
 
           sum.totalAmt += newItem.amt;
-          sum.sumInUsd += newItem.usd * 10n ** 14n;
           newItem.seq = counter;
   
           switch (newItem.typeOfIncome) {
             case 'Royalty':
               sum.royalty += newItem.amt;
+              sum.sumInUsd += newItem.usd * 10n ** 14n;
               break;
             case 'NewUserAward': 
               sum.newUserAward += newItem.amt;
               break;
+            case 'WithdrawFuel':
+              sum.withdrawFuel += newItem.amt;
+                break;
             case 'Mint':
               sum.mint += newItem.amt;
               break;
@@ -143,6 +145,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
           typeOfIncome: 'NewUserAward',
           amt: log.args.value ?? 0n,
           addr: log.args.to ?? AddrZero,
+          ethPrice: 0n,
           usd: 0n,
           acct: 0n,
         }
@@ -180,6 +183,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
           transactionHash: log.transactionHash,
           typeOfIncome: 'Royalty',
           amt: log.args.value ?? 0n,
+          ethPrice: 0n,
           usd: 0n,
           addr: log.args.from ?? AddrZero,
           acct: 0n,
@@ -188,7 +192,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
         if (item.addr.toLowerCase() == AddrOfTank.toLowerCase() || 
           item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()) {
           item.typeOfIncome = 'WithdrawFuel'
-        } else if (item.addr.toLowerCase() == AddrZero.toLowerCase()) {
+        } else if (item.addr.toLowerCase() == AddrZero) {
           cnt--;
           continue;
         } else {
