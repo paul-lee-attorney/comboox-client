@@ -9,6 +9,7 @@ import { CashflowProps } from "../FinStatement";
 import { SumInfo } from "./CashflowList";
 import { getPriceAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 import { rate } from "../../../fuel_tank/ft";
+import { getCentPriceInWei } from "../../../rc";
 
 export type CbpIncomeSumProps = {
   totalAmt: bigint;
@@ -60,6 +61,17 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
     getRate();
   });
 
+  const [ centPrice, setCentPrice ] = useState(1n);
+
+  useEffect(()=>{
+    const getCentPrice = async ()=>{
+      let price = await getCentPriceInWei(0);
+      setCentPrice(price);
+    }
+
+    getCentPrice();
+  });
+
   useEffect(()=>{
 
     let sum:CbpIncomeSumProps = {...defaultSum};
@@ -77,9 +89,9 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
         if (newItem.amt > 0n) {
     
           let ethPrice = getPriceAtTimestamp(Number(newItem.timestamp));
-          newItem.usd = exRate > 0n && ethPrice
-              ? cbpToETH(newItem.amt) * BigInt(ethPrice)
-              : 0n;
+          newItem.usd = ethPrice
+              ? cbpToETH(newItem.amt) * BigInt(ethPrice * 10 ** 4) / 10n ** 4n
+              : cbpToETH(newItem.amt) * 10n ** 16n / centPrice;
 
           sum.totalAmt += newItem.amt;
           sum.sumInUsd += newItem.usd;
@@ -201,7 +213,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
 
     if (client && gk) getCbpIncome();
 
-  },[client, gk, exRate, setSum, setRecords]);
+  },[client, gk, exRate, centPrice, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [

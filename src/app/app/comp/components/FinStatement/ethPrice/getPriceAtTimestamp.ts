@@ -1,6 +1,3 @@
-import Error from "next/error";
-import { ErrorInfo } from "react";
-
 const fs = require("fs");
 const path = require("path");
 
