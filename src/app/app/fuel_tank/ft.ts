@@ -4,13 +4,12 @@ import { fuelTankABI } from "../../../../generated";
 
 
 
-export async function rate(blk: bigint | undefined ):Promise<bigint> {
+export async function rate():Promise<bigint> {
 
   let res = await readContract({
     address: AddrOfTank,
     abi: fuelTankABI,
     functionName: 'rate',
-    blockNumber: blk,
   })
 
   return res;

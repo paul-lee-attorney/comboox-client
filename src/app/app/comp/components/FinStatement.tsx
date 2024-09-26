@@ -24,6 +24,7 @@ export type CashflowProps = {
   transactionHash: HexType,
   typeOfIncome: string,
   amt: bigint,
+  usd: bigint,
   addr: HexType,
   acct: bigint,
 }
@@ -55,7 +56,7 @@ export function FinStatement() {
 
   useEffect(()=>{
     const getRate = async ()=> {
-      let rateOfEx = await rate(undefined);
+      let rateOfEx = await rate();
       setExRate(rateOfEx);
     }
     getRate();

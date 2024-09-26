@@ -1,15 +1,18 @@
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { SumInfo } from "./CashflowList";
+import { getPriceAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { rate } from "../../../fuel_tank/ft";
 
 export type CbpIncomeSumProps = {
   totalAmt: bigint;
+  sumInUsd: bigint;
   royalty: bigint;
   mint: bigint;
   newUserAward: bigint;
@@ -20,6 +23,7 @@ export type CbpIncomeSumProps = {
 
 export const defaultSum: CbpIncomeSumProps = {
   totalAmt: 0n,
+  sumInUsd: 0n,
   royalty: 0n,
   mint: 0n,
   newUserAward: 0n,
@@ -46,9 +50,23 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
   
   const client = usePublicClient();
 
+  const [exRate, setExRate] = useState(1n);
+
+  useEffect(()=>{
+    const getRate = async ()=> {
+      let rateOfEx = await rate();
+      setExRate(rateOfEx);
+    }
+    getRate();
+  });
+
   useEffect(()=>{
 
     let sum:CbpIncomeSumProps = {...defaultSum};
+
+    const cbpToETH = (cbp:bigint) => {
+      return cbp * 10000n / exRate;
+    }
 
     const getCbpIncome = async () => {
 
@@ -58,7 +76,13 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
     
+          let ethPrice = getPriceAtTimestamp(Number(newItem.timestamp));
+          newItem.usd = exRate > 0n && ethPrice
+              ? cbpToETH(newItem.amt) * BigInt(ethPrice)
+              : 0n;
+
           sum.totalAmt += newItem.amt;
+          sum.sumInUsd += newItem.usd;
           newItem.seq = counter;
   
           switch (newItem.typeOfIncome) {
@@ -97,6 +121,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
         let log = mintLogs[cnt-1];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
+
     
         let item:CashflowProps = {
           seq: 0,
@@ -106,9 +131,11 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
           typeOfIncome: 'NewUserAward',
           amt: log.args.value ?? 0n,
           addr: log.args.to ?? AddrZero,
+          usd: 0n,
           acct: 0n,
         }
-        
+
+
         if (item.addr.toLowerCase() == gk?.toLowerCase()) {
           item.typeOfIncome = 'Mint';
         }
@@ -141,6 +168,7 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
           transactionHash: log.transactionHash,
           typeOfIncome: 'Royalty',
           amt: log.args.value ?? 0n,
+          usd: 0n,
           addr: log.args.from ?? AddrZero,
           acct: 0n,
         }
@@ -173,11 +201,12 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
 
     if (client && gk) getCbpIncome();
 
-  },[client, gk, setSum, setRecords]);
+  },[client, gk, exRate, setSum, setRecords]);
 
   const showList = () => {
     let arrSumInfo = [
       {title: 'CBP Income - (CBP ', data: sum.totalAmt},
+      {title: 'SumInUSD', data: sum.sumInUsd},
       {title: 'Royalty', data: sum.royalty},
       {title: 'Mint', data: sum.mint},
       {title: 'NewUserAward', data: sum.newUserAward},
