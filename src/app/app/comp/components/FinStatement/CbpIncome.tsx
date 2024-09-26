@@ -88,13 +88,13 @@ export function CbpIncome({sum, setSum, records, setRecords, setSumInfo, setList
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
     
-          let ethPrice = getPriceAtTimestamp(Number(newItem.timestamp));
+          let ethPrice = getPriceAtTimestamp(Number(newItem.timestamp * 1000n));
           newItem.usd = ethPrice
-              ? cbpToETH(newItem.amt) * BigInt(ethPrice * 10 ** 4) / 10n ** 4n
-              : cbpToETH(newItem.amt) * 10n ** 16n / centPrice;
+              ? cbpToETH(newItem.amt) * BigInt(ethPrice * 10 ** 4)
+              : cbpToETH(newItem.amt) * 100n / centPrice;
 
           sum.totalAmt += newItem.amt;
-          sum.sumInUsd += newItem.usd;
+          sum.sumInUsd += newItem.usd * 10n ** 14n;
           newItem.seq = counter;
   
           switch (newItem.typeOfIncome) {

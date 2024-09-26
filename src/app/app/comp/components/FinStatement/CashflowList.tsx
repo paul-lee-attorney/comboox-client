@@ -55,7 +55,7 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
     {
       field: 'usd',
       headerName: 'USD',
-      valueGetter: p => bigIntToStrNum(p.row.usd, 18),
+      valueGetter: p => bigIntToStrNum(p.row.usd, 4),
       headerAlign: 'center',
       align: 'center',
       width: 218,
