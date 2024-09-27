@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  bigIntToStrNum, HexParser, } from "../../../common/toolsKit";
+import {  bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
@@ -105,7 +105,6 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         fromBlock: 1n,
         args: {
           from: gk,
-          to: AddrOfTank,
         }
       });
     
@@ -125,11 +124,15 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
           usd: 0n,
-          addr: log.args.from ?? AddrZero,
+          addr: log.args.to ?? AddrZero,
           acct: 0n,
         }
         
-        appendItem(item);
+        if (item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() ||
+          item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
+            appendItem(item);
+        }
+
         cnt--;
       }
 
@@ -161,6 +164,40 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
     
+        appendItem(item);
+        cnt--;
+      }
+
+      let deprecateLogs = await client.getLogs({
+        address: AddrOfRegCenter,
+        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+        fromBlock: 1n,
+        args: {
+          from: `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`,
+          to: AddrOfTank,
+        }
+      });
+    
+      cnt = deprecateLogs.length;
+    
+      while (cnt > 0) {
+        let log = deprecateLogs[cnt-1];
+        let blkNo = log.blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+    
+        let item:CashflowProps = {
+          seq:0,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
+          transactionHash: log.transactionHash,
+          typeOfIncome: 'Deprecate',
+          amt: log.args.value ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
+          addr: log.args.from ?? AddrZero,
+          acct: 0n,
+        }
+        
         appendItem(item);
         cnt--;
       }

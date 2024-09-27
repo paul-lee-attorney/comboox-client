@@ -7,8 +7,6 @@ import { parseAbiItem } from "viem";
 import { bigIntToStrNum, } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { CashflowRecordsProps } from "./CbpIncome";
-import { rate } from "../../../fuel_tank/ft";
-import { getCentPriceInWei } from "../../../rc";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 
 export type CbpOutflowSumProps = {

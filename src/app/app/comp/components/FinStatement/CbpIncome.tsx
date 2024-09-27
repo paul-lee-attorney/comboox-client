@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Button } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../common";
@@ -130,7 +130,8 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
 
-        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
+        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase() ||
+          item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()) {
           item.typeOfIncome = 'WithdrawFuel';
           cnt--;
           continue;
@@ -138,7 +139,7 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           item.typeOfIncome = 'Mint';
         } else {
           let tran = await client.getTransaction({hash: item.transactionHash});
-
+          
           if ( tran.to?.toLowerCase() == AddrOfRegCenter.toLowerCase() && 
                 tran.input.substring(0,10).toLowerCase() == '0xa9059cbb') 
           {  
@@ -173,7 +174,7 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
       {title: 'Transfer', data: sum.transfer},
       {title: 'Transfer (USD)', data: sum.transferInUsd},
       {title: 'Mint', data: sum.mint},
-      {title: 'Mint (Usd)', data: sum.mintInUsd},
+      {title: 'Mint (USD)', data: sum.mintInUsd},
     ]
     setSumInfo(arrSumInfo);
     setList(records);
