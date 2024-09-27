@@ -53,9 +53,17 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
       width: 218,
     },
     {
+      field: 'ethPrice',
+      headerName: 'EthPrice',
+      valueGetter: p => bigIntToStrNum(p.row.ethPrice, 9),
+      headerAlign: 'center',
+      align: 'center',
+      width: 218,
+    },
+    {
       field: 'usd',
       headerName: 'USD',
-      valueGetter: p => bigIntToStrNum(p.row.usd, 4),
+      valueGetter: p => bigIntToStrNum(p.row.usd / 10n ** 9n, 9),
       headerAlign: 'center',
       align: 'center',
       width: 218,

@@ -11,6 +11,9 @@
 export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
 export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
 export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
+export const FirstUser:HexType = `0x${process.env.NEXT_PUBLIC_FIRST_USER?.substring(2) ?? '0'}`;
+export const SecondUser:HexType = `0x${process.env.NEXT_PUBLIC_SECOND_USER?.substring(2) ?? '0'}`;
+
 
 export const Bytes32Zero:HexType = `0x${'0'.padEnd(64,'0')}`;
 export const AddrZero:HexType = `0x${'0'.padEnd(40,'0')}`;

@@ -8,27 +8,38 @@ import { bigIntToStrNum,  HexParser, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
+import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 
 export type EthOutflowSumProps = {
   totalAmt: bigint;
+  sumInUsd: bigint;
   distribution: bigint;
-  deposit: bigint;
+  distributionInUsd: bigint;
   gmmTransfer: bigint;
+  gmmTransferInUsd: bigint;
   gmmExpense: bigint;
+  gmmExpenseInUsd: bigint;
   bmmTransfer: bigint;
+  bmmTransferInUsd: bigint;
   bmmExpense: bigint;
+  bmmExpenseInUsd: bigint;
   flag: boolean;
 }
 
 export const defaultEthOutSum:EthOutflowSumProps = {
   totalAmt: 0n,
+  sumInUsd: 0n,
   distribution: 0n,
-  deposit: 0n,
+  distributionInUsd: 0n,
   gmmTransfer: 0n,
+  gmmTransferInUsd: 0n,
   gmmExpense: 0n,
+  gmmExpenseInUsd: 0n,
   bmmTransfer: 0n,
-  bmmExpense: 0n,  
-  flag: false,
+  bmmTransferInUsd: 0n,
+  bmmExpense: 0n,
+  bmmExpenseInUsd: 0n,
+  flag: false
 }
 
 export interface EthOutflowProps extends CashflowRecordsProps {
@@ -36,11 +47,11 @@ export interface EthOutflowProps extends CashflowRecordsProps {
   setSum: Dispatch<SetStateAction<EthOutflowSumProps>>;
 }
 
-export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:EthOutflowProps ) {
+export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:EthOutflowProps ) {
   const { gk, keepers } = useComBooxContext();
   
-  const client = usePublicClient();
-  
+  const client = usePublicClient();  
+
   useEffect(()=>{
 
     let sum: EthOutflowSumProps = { ...defaultEthOutSum };
@@ -53,30 +64,36 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
 
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
+
+          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;          
     
           sum.totalAmt += newItem.amt;
+          sum.sumInUsd += newItem.usd;
+  
           newItem.seq = counter;
   
           switch (newItem.typeOfIncome) {
-            case 'PickupDeposit':
-              sum.deposit += newItem.amt;
-              break;
             case 'GmmTransfer - ETH':
               sum.gmmTransfer += newItem.amt;
+              sum.gmmTransferInUsd += newItem.usd;
               break;
             case 'GmmExpense - ETH':
               sum.gmmExpense += newItem.amt;
+              sum.gmmExpenseInUsd += newItem.usd;
               break;
             case 'BmmTransfer - ETH':
               sum.bmmTransfer += newItem.amt;
+              sum.bmmTransferInUsd += newItem.usd;
               break;
             case 'BmmExpense - ETH':
               sum.bmmExpense += newItem.amt;
+              sum.bmmExpenseInUsd += newItem.usd;
               break;
             case 'Distribution':
-              sum.totalAmt -= newItem.amt;
-              // sum.deposit -= newItem.amt;
               sum.distribution += newItem.amt;
+              sum.distributionInUsd += newItem.usd;
           }
           
           arr.push(newItem);
@@ -104,6 +121,8 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'PickupDeposit',
           amt: log.args.amt ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.to ?? AddrZero,
           acct: log.args.caller ?? 0n,
         }
@@ -138,6 +157,8 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'GmmTransfer - ETH',
           amt: log.args.amt ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.to ?? AddrZero,
           acct: 0n,
         }
@@ -169,6 +190,8 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'GmmExpense - ETH',
           amt: log.args.values ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.targets ?? AddrZero,
           acct: 0n,
         }
@@ -202,6 +225,8 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'BmmTransfer - ETH',
           amt: log.args.amt ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.to ?? AddrZero,
           acct: 0n,
         }
@@ -232,6 +257,8 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'BmmExpense - ETH',
           amt: log.args.values ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.targets ?? AddrZero,
           acct: 0n,
         }
@@ -265,6 +292,8 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: "Distribution",
           amt: log.args.value ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: AddrZero,
           acct: log.args.acct ?? 0n,
         }
@@ -282,17 +311,25 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
 
     getEthOutflow();
 
-  }, [gk, client, keepers, setSum, setRecords]);
+  }, [gk, client, keepers, centPrice, setSum, setRecords]);
 
   const showList = () => {
+    let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;
+
     let arrSumInfo = [
       {title: 'ETH Outflow - (ETH ', data: sum.totalAmt},
+      {title: 'Sum (USD)', data: sum.sumInUsd},
+      {title: 'Exchange Gain/Loss', data: sum.sumInUsd - curSumInUsd},
       {title: 'Distribution', data: sum.distribution},
-      {title: 'Deposit', data: sum.deposit},
+      {title: 'Distribution (USD)', data: sum.distributionInUsd},
       {title: 'GMM Transfer', data: sum.gmmTransfer},
+      {title: 'GMM Transfer (USD)', data: sum.gmmTransferInUsd},
       {title: 'GMM Expense', data: sum.gmmExpense},
+      {title: 'GMM Expense (USD)', data: sum.gmmExpenseInUsd},
       {title: 'BMM Transfer', data: sum.bmmTransfer},
+      {title: 'BMM Transfer (USD)', data: sum.bmmTransferInUsd},
       {title: 'BMM Expense', data: sum.bmmExpense},
+      {title: 'BMM Expense (USD)', data: sum.bmmExpenseInUsd},
     ]
     setSumInfo(arrSumInfo);
     setList(records);
@@ -308,7 +345,9 @@ export function EthOutflow({sum, setSum, records, setRecords, setSumInfo, setLis
         sx={{m:0.5, minWidth:288, justifyContent:'start'}}
         onClick={()=>showList()}
       >
-        <b>Eth Outflow: ({ bigIntToStrNum(sum.totalAmt/10n**9n, 9) + ' ETH'})</b>
+        <b>Eth Outflow: ({ inETH 
+            ? bigIntToStrNum(sum.totalAmt / 10n**9n, 9) + ' ETH'
+            : bigIntToStrNum(sum.sumInUsd / 10n**9n, 9) + ' USD'})</b>
       </Button>
     )}
   </>

@@ -24,7 +24,6 @@ const ethPriceData = {
     '2024-09': ethPriceSep2024.prices,
 }
 
-// Helper function to convert a timestamp to "YYYY-MM" format
 function getYearMonthFromTimestamp(timestamp:number) {
     const date = new Date(timestamp);
     console.log('date: ', date);
@@ -35,8 +34,6 @@ function getYearMonthFromTimestamp(timestamp:number) {
     return `${year}-${month}`;
 }
 
-// Function to find the closest price for a given timestamp using binary search
-// The closest timestamp must be less than or equal to the target timestamp
 function findClosestPrice(data:number[][], targetTimestamp:number) {
     let left = 0;
     let right = data.length - 1;
@@ -58,34 +55,30 @@ function findClosestPrice(data:number[][], targetTimestamp:number) {
         }
     }
 
-    // If we exit the loop, closestPrice contains the most recent earlier or equal timestamp's price
     return closestPrice;
 }
 
-// Main function to get the applicable price at a specific timestamp
-// Takes an object that contains multiple month JSON data as input
-function getPriceAtTimestamp(targetTimestamp: number, dataObj: { [key: string]: number[][] }): number | null {
+function getPriceAtTimestamp(targetTimestamp: number, dataObj: { [key: string]: number[][] }): bigint | null {
     const yearMonth = getYearMonthFromTimestamp(targetTimestamp);
 
-    // Check if the data for the required month exists
     const data = dataObj[yearMonth];
     if (!data) {
         console.error(`No data available for the month: ${yearMonth}`);
         return null;
     }
 
-    // Find the closest price in the given month's data
     const ethPrice = findClosestPrice(data, targetTimestamp);
 
     if (ethPrice === null) {
         console.log(`No applicable price found for timestamp ${targetTimestamp}`);
+        return null;
     } else {
-        console.log(`The closest Ethereum price at timestamp ${targetTimestamp} is $${ethPrice}`);
+        console.log(`The Ethereum price at timestamp ${targetTimestamp} is $${ethPrice}`);
     }
 
-    return ethPrice;
+    return 10n ** 28n / BigInt(ethPrice * 10 ** 12);
 }
 
-export function getEthPriceAtTimestamp(targetTimestamp: number): number | null {
+export function getCentPriceInWeiAtTimestamp(targetTimestamp: number): bigint | null {
     return getPriceAtTimestamp(targetTimestamp, ethPriceData);
 }

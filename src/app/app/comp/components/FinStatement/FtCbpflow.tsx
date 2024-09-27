@@ -1,48 +1,51 @@
 import { Dispatch, SetStateAction, useEffect, } from "react";
 import { Button,} from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import {  bigIntToStrNum, HexParser, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
+import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 
-export type FtCashflowSumProps = {
+export type FtCbpflowSumProps = {
   totalCbp: bigint;
-  totalEth: bigint;
+  totalCbpInUsd: bigint;
   addCbp: bigint;
+  addCbpInUsd: bigint;
   withdrawCbp: bigint;
+  withdrawCbpInUsd: bigint;
   refuelCbp: bigint;
-  refuelEth: bigint;
-  withdrawEth: bigint;
+  refuelCbpInUsd: bigint;
   flag: boolean;
 }
 
-export const defaultFtSum:FtCashflowSumProps = {
+export const defaultFtCbpSum:FtCbpflowSumProps = {
   totalCbp: 0n,
-  totalEth: 0n,
+  totalCbpInUsd: 0n,
   addCbp: 0n,
+  addCbpInUsd: 0n,
   withdrawCbp: 0n,
+  withdrawCbpInUsd: 0n,
   refuelCbp: 0n,
-  refuelEth: 0n,
-  withdrawEth: 0n,
+  refuelCbpInUsd: 0n,
   flag: false,
 }
 
-export interface FtCashflowProps extends CashflowRecordsProps {
-  sum: FtCashflowSumProps;
-  setSum: Dispatch<SetStateAction<FtCashflowSumProps>>;
+export interface FtCbpflowProps extends CashflowRecordsProps {
+  sum: FtCbpflowSumProps;
+  setSum: Dispatch<SetStateAction<FtCbpflowSumProps>>;
 }
 
-export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:FtCashflowProps ) {
+export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:FtCbpflowProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
-  
+
   useEffect(()=>{
 
-    let sum: FtCashflowSumProps = { ...defaultFtSum };
+    let sum: FtCbpflowSumProps = { ...defaultFtCbpSum };
     const getFtCashflow = async ()=>{
 
       if (!gk || !keepers) return;
@@ -50,31 +53,43 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
       let arr: CashflowProps[] = [];
       let counter = 0;
 
+      const cbpToETH = (cbp:bigint) => {
+        return cbp * 10000n / exRate;
+      }    
+  
       const appendItem = (newItem: CashflowProps) => {
 
         if (newItem.amt > 0n) {
-      
+
+          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
+
           switch (newItem.typeOfIncome) {
             case 'AddCbp':
               sum.totalCbp += newItem.amt;
               sum.addCbp += newItem.amt;
+              
+              sum.totalCbpInUsd += newItem.usd;
+              sum.addCbpInUsd += newItem.usd;
+
               break;
             case 'WithdrawCbp':
               sum.totalCbp -= newItem.amt;
               sum.withdrawCbp += newItem.amt;
-              break;
-            case 'WithdrawEth':
-              sum.totalEth -= newItem.amt;
-              sum.withdrawEth += newItem.amt;
+
+              sum.totalCbpInUsd -= newItem.usd;
+              sum.withdrawCbpInUsd += newItem.usd;
+
               break;
             case 'RefuelCbp':
               sum.totalCbp -= newItem.amt;
               sum.refuelCbp += newItem.amt;
+
+              sum.totalCbpInUsd -= newItem.usd;
+              sum.refuelCbpInUsd += newItem.usd;
+
               break; 
-            case 'RefuelEth':
-              sum.totalEth += newItem.amt;
-              sum.refuelEth += newItem.amt;
-            break;
           } 
 
           newItem.seq = counter;
@@ -108,6 +123,8 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'AddCbp',
           amt: log.args.value ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.from ?? AddrZero,
           acct: 0n,
         }
@@ -138,6 +155,8 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
           transactionHash: log.transactionHash,
           typeOfIncome: 'WithdrawCbp',
           amt: log.args.amt ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,          
           addr: log.args.owner ?? AddrZero,
           acct: 0n,
         }
@@ -160,62 +179,21 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
-          seq:0,
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: log.transactionHash,
-          typeOfIncome: 'RefuelEth',
-          amt: log.args.amtOfEth ?? 0n,
-          addr: log.args.buyer ?? AddrZero,
-          acct: 0n,
-        }
-
-        appendItem(item);
-
-        item = {
+        let item = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
           typeOfIncome: 'RefuelCbp',
           amt: log.args.amtOfCbp ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
           addr: log.args.buyer ?? AddrZero,
           acct: 0n,
         }
 
         appendItem(item);
             
-        cnt--;
-      }
-
-      let withdrawEthLogs = await client.getLogs({
-        address: AddrOfTank,
-        event: parseAbiItem('event WithdrawIncome(address indexed owner, uint indexed amt)'),
-        fromBlock: 1n,
-      });
-
-      cnt = withdrawEthLogs.length;
-      
-      while(cnt > 0) {
-
-        let log = withdrawEthLogs[cnt-1];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-     
-        let item:CashflowProps = {
-          seq:0,
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: log.transactionHash,
-          typeOfIncome: 'WithdrawEth',
-          amt: log.args.amt ?? 0n,
-          addr: log.args.owner ?? AddrZero,
-          acct: 0n,
-        }
-
-        appendItem(item);
-    
         cnt--;
       }
 
@@ -227,17 +205,20 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
 
     getFtCashflow();
 
-  }, [gk, client, keepers, setSum, setRecords]);
+  }, [gk, client, exRate, centPrice, keepers, setSum, setRecords]);
 
   const showList = () => {
+    let curSumCbpInUsd =  sum.totalCbp * 10000n / exRate * 10n ** 16n / centPrice;
+
     let arrSumInfo = [
-      {title: 'Gas Income - (ETH ', data: sum.refuelEth},
-      {title: 'Eth Balance', data: sum.totalEth},
-      {title: 'Cbp Balance', data: sum.totalCbp},
-      {title: 'Income Pickup (Wei)', data: sum.withdrawEth},
-      {title: 'Fuel Cost (Lee)', data: sum.refuelCbp},
-      {title: 'Fuel Withdrawn (Lee)', data: sum.withdrawCbp},
-    ] 
+      {title: 'Cbp Balance - (CBP', data: sum.totalCbp},
+      {title: 'Cbp Balance (USD)', data: sum.totalCbpInUsd},
+      {title: 'Exchange Gain/Loss', data: sum.totalCbpInUsd - curSumCbpInUsd},
+      {title: 'Fuel Sold', data: sum.refuelCbp},
+      {title: 'Fuel Sold (USD)', data: sum.refuelCbpInUsd},
+      {title: 'Fuel Withdrawn', data: sum.withdrawCbp},
+      {title: 'Fuel Withdrawn (USD)', data: sum.withdrawCbpInUsd},
+    ]
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -252,7 +233,9 @@ export function FtCashflow({sum, setSum, records, setRecords, setSumInfo, setLis
         sx={{m:0.5, minWidth:288, justifyContent:'start'}}
         onClick={()=>showList()}
       >
-        <b>ETH in FT: ({ bigIntToStrNum(sum.totalEth/10n**9n, 9) } ETH)</b>
+        <b>CBP in FT: ({ inETH
+            ? bigIntToStrNum(sum.totalCbp * 10000n / exRate / 10n**9n, 9) + ' ETH'
+            : bigIntToStrNum(sum.totalCbpInUsd / 10n**9n, 9) + ' USD' })</b>
       </Button>
     )}
   </>
