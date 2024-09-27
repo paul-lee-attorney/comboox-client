@@ -76,7 +76,7 @@ function getPriceAtTimestamp(targetTimestamp: number, dataObj: { [key: string]: 
         console.log(`The Ethereum price at timestamp ${targetTimestamp} is $${ethPrice}`);
     }
 
-    return 10n ** 28n / BigInt(ethPrice * 10 ** 12);
+    return 10n ** 34n / BigInt(ethPrice * 10 ** 18);
 }
 
 export function getCentPriceInWeiAtTimestamp(targetTimestamp: number): bigint | null {
