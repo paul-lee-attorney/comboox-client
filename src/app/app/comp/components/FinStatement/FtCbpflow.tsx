@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  bigIntToStrNum } from "../../../common/toolsKit";
+import {  baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
@@ -61,8 +61,8 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
 
         if (newItem.amt > 0n) {
 
-          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
           newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
 
           switch (newItem.typeOfIncome) {
@@ -174,7 +174,7 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         fromBlock: 1n,
         args: {
           from: `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`,
-          to: AddrOfTank,
+          to: gk,
         }
       });
     
@@ -190,7 +190,7 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
-          typeOfIncome: 'Deprecate',
+          typeOfIncome: 'WithdrawCbp',
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
           usd: 0n,
@@ -247,15 +247,17 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
   const showList = () => {
     let curSumCbpInUsd =  sum.totalCbp * 10000n / exRate * 10n ** 16n / centPrice;
 
-    let arrSumInfo = [
-      {title: 'Cbp Balance - (CBP', data: sum.totalCbp},
-      {title: 'Cbp Balance (USD)', data: sum.totalCbpInUsd},
-      {title: 'Exchange Gain/Loss', data: sum.totalCbpInUsd - curSumCbpInUsd},
-      {title: 'Fuel Sold', data: sum.refuelCbp},
-      {title: 'Fuel Sold (USD)', data: sum.refuelCbpInUsd},
-      {title: 'Fuel Withdrawn', data: sum.withdrawCbp},
-      {title: 'Fuel Withdrawn (USD)', data: sum.withdrawCbpInUsd},
-    ]
+    let arrSumInfo = inETH
+      ? [ {title: 'CBP Balance in FT - (CBP ', data: sum.totalCbp},
+          {title: 'Fuel Sold', data: sum.refuelCbp},
+          {title: 'Fuel Withdrawn', data: sum.withdrawCbp}
+        ]
+      : [ {title: 'CBP Balance in FT - (USD ', data: sum.totalCbpInUsd},
+          {title: 'Exchange Gain/Loss', data: curSumCbpInUsd - sum.totalCbpInUsd},
+          {title: 'Fuel Sold', data: sum.refuelCbpInUsd},
+          {title: 'Fuel Withdrawn', data: sum.withdrawCbpInUsd}
+        ];
+
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -270,9 +272,9 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         sx={{m:0.5, minWidth:288, justifyContent:'start'}}
         onClick={()=>showList()}
       >
-        <b>CBP in FT: ({ inETH
+        <b>CBP in Fuel Tank: ({ inETH
             ? bigIntToStrNum(sum.totalCbp * 10000n / exRate / 10n**9n, 9) + ' ETH'
-            : bigIntToStrNum(sum.totalCbpInUsd / 10n**9n, 9) + ' USD' })</b>
+            : baseToDollar((sum.totalCbpInUsd / 10n**14n).toString()) + ' USD' })</b>
       </Button>
     )}
   </>

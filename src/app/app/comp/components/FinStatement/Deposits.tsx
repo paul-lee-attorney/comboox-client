@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { Button } from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { AddrZero, Bytes32Zero } from "../../../common";
@@ -8,7 +8,6 @@ import { baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
 import { CashflowRecordsProps } from "./CbpIncome";
-import { getCentPriceInWei } from "../../../rc";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 
 export type DepositsSumProps = {
@@ -67,8 +66,8 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
 
-          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
           newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
           
           newItem.seq = counter;
@@ -107,11 +106,16 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
               newItem.acct = BigInt(newItem.acct / 2n**40n);
               break;
             case 'CloseOfferAgainstBid': 
-            case 'RefundValueOfBidOrder':
               sum.custody -= newItem.amt;
               sum.custodyInUsd -= newItem.usd;
               sum.consideration += newItem.amt;
               sum.considerationInUsd += newItem.usd;
+              break;
+            case 'RefundValueOfBidOrder':
+              sum.custody -= newItem.amt;
+              sum.custodyInUsd -= newItem.usd;
+              sum.balance += newItem.amt;
+              sum.balanceInUsd += newItem.usd;
               break;
             case 'CloseInitOfferAgainstBid':
               sum.totalAmt -= newItem.amt;
@@ -243,21 +247,23 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
 
     let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;
 
-    let arrSumInfo = [
-      {title: 'Deposits - (ETH ', data: sum.totalAmt},
-      {title: 'Sum (USD)', data: sum.sumInUsd},
-      {title: 'Exchange Gain / Loss', data: sum.sumInUsd - curSumInUsd},
-      {title: 'Pickup', data: sum.pickup},
-      {title: 'Pickup (USD)', data: sum.pickupInUsd},
-      {title: 'Consideration', data: sum.consideration},
-      {title: 'Consideration (USD)', data: sum.considerationInUsd},
-      {title: 'Distribution', data: sum.distribution},
-      {title: 'Distribution (USD)', data: sum.distributionInUsd},
-      {title: 'Custody', data: sum.custody},
-      {title: 'Custody (USD)', data: sum.custodyInUsd},
-      {title: 'Balance', data: sum.balance},
-      {title: 'Balance (USD)', data: sum.balanceInUsd},
-    ]
+    let arrSumInfo = inETH
+      ? [ {title: 'Deposits - (ETH ', data: sum.totalAmt},
+          {title: 'Pickup', data: sum.pickup},     
+          {title: 'Consideration', data: sum.consideration},
+          {title: 'Distribution', data: sum.distribution},
+          {title: 'Custody', data: sum.custody},
+          {title: 'Balance', data: sum.balance} 
+        ]
+      : [ {title: 'Deposits - (USD ', data: sum.sumInUsd},
+          {title: 'Exchange Gain / Loss', data: sum.sumInUsd - curSumInUsd},
+          {title: 'Pickup', data: sum.pickupInUsd},
+          {title: 'Consideration', data: sum.considerationInUsd},
+          {title: 'Distribution', data: sum.distributionInUsd},
+          {title: 'Custody', data: sum.custodyInUsd},
+          {title: 'Balance', data: sum.balanceInUsd}
+        ];
+
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -272,9 +278,9 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
           sx={{m:0.5, minWidth:288, justifyContent:'start'}}
           onClick={()=>showList()}
         >
-          <b>Deposits: ({ inETH
-              ? bigIntToStrNum(sum.totalAmt / 10n**9n,9) + ' ETH'
-              : bigIntToStrNum(sum.sumInUsd / 10n**9n, 9) + ' USD'})</b>
+          <b>ETH In Deposits: ({ inETH
+              ? bigIntToStrNum(sum.totalAmt / 10n**9n, 9) + ' ETH'
+              : baseToDollar((sum.sumInUsd / 10n**14n).toString()) + ' USD'})</b>
         </Button>
       )}
     </>

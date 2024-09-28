@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfTank, AddrZero, } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  bigIntToStrNum } from "../../../common/toolsKit";
+import {  baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
@@ -53,8 +53,8 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
 
         if (newItem.amt > 0n) {
 
-          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
           newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
 
           switch (newItem.typeOfIncome) {
@@ -160,15 +160,16 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
   const showList = () => {
     let curSumInUsd = sum.totalEth * 10n ** 16n / centPrice;
 
-    let arrSumInfo = [
-      {title: 'Eth Balance - (ETH', data: sum.totalEth},
-      {title: 'Eth Balance (USD)', data: sum.totalEthInUsd},
-      {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.totalEthInUsd},
-      {title: 'Fuel Income', data: sum.refuelEth},
-      {title: 'Fuel Income (USD)', data: sum.refuelEthInUsd},
-      {title: 'Income Pickup', data: sum.withdrawEth},
-      {title: 'Income Pickup (USD)', data: sum.withdrawEthInUsd},
-    ] 
+    let arrSumInfo = inETH
+      ? [ {title: 'Eth Balance in FT - (ETH ', data: sum.totalEth},
+          {title: 'Fuel Income', data: sum.refuelEth},
+          {title: 'Income Pickup', data: sum.withdrawEth},
+        ]
+      : [ {title: 'Eth Balance in FT - (USD ', data: sum.totalEthInUsd},
+          {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.totalEthInUsd},
+          {title: 'Fuel Income', data: sum.refuelEthInUsd},
+          {title: 'Income Pickup', data: sum.withdrawEthInUsd},
+        ];
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -183,9 +184,9 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
         sx={{m:0.5, minWidth:288, justifyContent:'start'}}
         onClick={()=>showList()}
       >
-        <b>ETH in FT: ({ inETH
+        <b>ETH in Fuel Tank: ({ inETH
             ? bigIntToStrNum(sum.totalEth / 10n**9n, 9) + ' ETH'
-            : bigIntToStrNum(sum.totalEthInUsd / 10n **9n, 9) + ' USD' })</b>
+            : baseToDollar((sum.totalEthInUsd / 10n**14n).toString()) + ' USD' })</b>
       </Button>
     )}
   </>

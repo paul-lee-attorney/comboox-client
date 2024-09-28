@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfTank, AddrZero, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  bigIntToStrNum, } from "../../../common/toolsKit";
+import {  baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
@@ -58,16 +58,21 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
 
         if (newItem.amt > 0n) {
 
-          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
           newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;          
 
+          sum.totalAmt += newItem.amt;
+          sum.sumInUsd += newItem.usd;
+
+          newItem.seq = counter;
+
           switch (newItem.typeOfIncome) {
-            case 'Transfer':
+            case 'TransferIncome':
               sum.transfer += newItem.amt;
               sum.transferInUsd += newItem.usd;
               break;
-            case 'Gas Income':
+            case 'GasIncome':
               sum.gas += newItem.amt;
               sum.gasInUsd += newItem.usd;
               break;
@@ -78,10 +83,6 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
               sum.capitalInUsd += newItem.usd;
               break;
           } 
-
-          sum.totalAmt += newItem.amt;
-          sum.sumInUsd += newItem.usd;
-          newItem.seq = counter;
 
           arr.push(newItem);
           counter++;
@@ -106,7 +107,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
-          typeOfIncome: 'Transfer',
+          typeOfIncome: 'TransferIncome',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
           usd: 0n,
@@ -115,7 +116,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         }
         
         if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
-          item.typeOfIncome = 'Gas Income';
+          item.typeOfIncome = 'GasIncome';
           cnt--;
           continue;
         }
@@ -142,7 +143,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
-          typeOfIncome: 'Gas Income',
+          typeOfIncome: 'GasIncome',
           amt: log.args.amtOfEth ?? 0n,
           ethPrice: 0n,
           usd: 0n,
@@ -282,17 +283,19 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
   const showList = () => {
     let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;
 
-    let arrSumInfo = [
-      {title: 'ETH Income - (ETH ', data: sum.totalAmt},
-      {title: 'Sum (USD)', data: sum.sumInUsd},
-      {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.sumInUsd},
-      {title: 'Gas Income', data: sum.gas},
-      {title: 'Gas Income (USD)', data: sum.gasInUsd},
-      {title: 'Pay In Cap', data: sum.capital},
-      {title: 'Pay In Cap (USD)', data: sum.capitalInUsd},
-      {title: 'Transfer', data: sum.transfer},
-      {title: 'Transfer (USD)', data: sum.transferInUsd},
-    ]
+    let arrSumInfo = inETH
+      ? [ {title: 'ETH Income - (ETH ', data: sum.totalAmt},
+          {title: 'GasIncome', data: sum.gas},
+          {title: 'PayInCap', data: sum.capital},
+          {title: 'TransferIncome', data: sum.transfer} 
+        ]
+      : [ {title: 'ETH Income - (USD ', data: sum.sumInUsd},
+          {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.sumInUsd},
+          {title: 'GasIncome', data: sum.gasInUsd},
+          {title: 'Pay In Cap', data: sum.capitalInUsd},
+          {title: 'TransferIncome', data: sum.transferInUsd}
+        ];
+
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -309,7 +312,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
       >
         <b>ETH Income: ({ inETH
             ? bigIntToStrNum(sum.totalAmt/10n**9n, 9) + ' ETH'
-            : bigIntToStrNum(sum.sumInUsd/10n**9n, 9) + ' USD' })</b>
+            : baseToDollar((sum.sumInUsd/10n**14n).toString()) + ' USD' })</b>
       </Button>
     )}
   </>

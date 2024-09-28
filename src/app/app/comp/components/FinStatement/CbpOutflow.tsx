@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfRegCenter, AddrOfTank, AddrZero, FirstUser, keepersMap, SecondUser } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { bigIntToStrNum, } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
@@ -59,7 +59,6 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
       return cbp * 10000n / exRate;
     }
 
-
     const getEthOutflow = async ()=>{
 
       if ( !keepers ) return;
@@ -70,8 +69,8 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
 
-          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
           newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
 
           sum.totalAmt += newItem.amt;
@@ -92,11 +91,11 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
               sum.fuelSold += newItem.amt;
               sum.fuelSoldInUsd += newItem.usd;
               break;
-            case 'GmmTransfer - CBP':
+            case 'GmmTransfer':
               sum.gmmTransfer += newItem.amt;
               sum.gmmTransferInUsd += newItem.usd;
               break;
-            case 'BmmTransfer - CBP':
+            case 'BmmTransfer':
               sum.bmmTransfer += newItem.amt;
               sum.bmmTransferInUsd += newItem.usd;
           }
@@ -139,12 +138,12 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           cnt--;
           continue;
         } else if (item.addr.toLowerCase() == FirstUser.toLowerCase() ||
-          item.addr.toLocaleLowerCase() == SecondUser.toLowerCase()) {
+          item.addr.toLowerCase() == SecondUser.toLowerCase()) {
           item.typeOfIncome = 'StartupCost';
-        } else {
-          appendItem(item);
-          cnt--;
-        }
+        } 
+
+        appendItem(item);
+        cnt--;        
       }
 
       let fuelSoldLogs = await client.getLogs({
@@ -198,7 +197,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
-          typeOfIncome: 'GmmTransfer - CBP',
+          typeOfIncome: 'GmmTransfer',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
           usd: 0n,
@@ -206,7 +205,8 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
         
-        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
+        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase() ||
+            item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()) {
           item.typeOfIncome = 'FuelCost';
           cnt--;
           continue;
@@ -238,7 +238,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
-          typeOfIncome: 'BmmTransfer - CBP',
+          typeOfIncome: 'BmmTransfer',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
           usd: 0n,
@@ -265,22 +265,22 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
 
     let curSumInUsd = sum.totalAmt * 10000n / exRate * 10n ** 16n / centPrice;
 
-    let arrSumInfo = [
-      {title: 'CBP Outflow - (CBP ', data: sum.totalAmt},
-      {title: 'Sum (USD)', data: sum.sumInUsd},
-      {title: 'Exchange Gain / Loss', data: sum.sumInUsd - curSumInUsd},
-      {title: 'New User Award', data: sum.newUserAward},
-      {title: 'New User Award (USD)', data: sum.newUserAward},
-      {title: 'Startup Cost', data: sum.startupCost},
-      {title: 'Startup Cost (USD)', data: sum.startupCostInUsd},
-      {title: 'Fuel Sold', data: sum.fuelSold},
-      {title: 'Fuel Sold (USD)', data: sum.fuelSoldInUsd},
-      {title: 'GMM Transfer', data: sum.gmmTransfer},
-      {title: 'GMM Transfer (USD)', data: sum.gmmTransferInUsd},
-      {title: 'BMM Transfer', data: sum.bmmTransfer},
-      {title: 'BMM Transfer (USD)', data: sum.bmmTransferInUsd},
-    ]
-
+    let arrSumInfo = inETH
+        ? [ {title: 'CBP Outflow - (CBP ', data: sum.totalAmt},
+            {title: 'New User Award', data: sum.newUserAward},
+            {title: 'Startup Cost', data: sum.startupCost},
+            {title: 'Fuel Sold', data: sum.fuelSold},
+            {title: 'GMM Transfer', data: sum.gmmTransfer},
+            {title: 'BMM Transfer', data: sum.bmmTransfer} 
+          ]
+        : [ {title: 'CBP Outflow - (USD ', data: sum.sumInUsd},
+            {title: 'Exchange Gain/Loss', data: sum.sumInUsd - curSumInUsd},
+            {title: 'New User Award', data: sum.newUserAward},
+            {title: 'Startup Cost', data: sum.startupCostInUsd},
+            {title: 'Fuel Sold', data: sum.fuelSoldInUsd},
+            {title: 'GMM Transfer', data: sum.gmmTransferInUsd},
+            {title: 'BMM Transfer', data: sum.bmmTransferInUsd} 
+          ];
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -297,7 +297,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         >
           <b>CBP Outflow: ({ inETH 
               ? bigIntToStrNum(sum.totalAmt * 10000n / exRate /10n**9n, 9) + ' ETH'
-              : bigIntToStrNum(sum.sumInUsd / 10n**9n, 9) + ' USD' })</b>
+              : baseToDollar((sum.sumInUsd / 10n**14n).toString()) + ' USD' })</b>
         </Button>
       )}
     </>

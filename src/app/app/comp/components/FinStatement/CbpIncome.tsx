@@ -4,7 +4,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { bigIntToStrNum } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { SumInfo } from "./CashflowList";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
@@ -70,9 +70,9 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
       const appendItem = (newItem: CashflowProps) => {
         if (newItem.amt > 0n) {
     
-          let centPriceHis = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
+          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
 
-          newItem.ethPrice = centPriceHis ?  10n ** 25n / centPriceHis : 10n ** 25n / centPrice;
+          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
           newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
 
           sum.totalAmt += newItem.amt;
@@ -165,17 +165,16 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
 
     let curSumInUsd = sum.totalAmt * 10000n / exRate * 10n ** 16n / centPrice;
 
-    let arrSumInfo = [
-      {title: 'CBP Income - (CBP ', data: sum.totalAmt},
-      {title: 'Sum (USD)', data: sum.sumInUsd},
-      {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.sumInUsd},
-      {title: 'Royalty', data: sum.royalty},
-      {title: 'Royalty (USD)', data: sum.royaltyInUsd},
-      {title: 'Transfer', data: sum.transfer},
-      {title: 'Transfer (USD)', data: sum.transferInUsd},
-      {title: 'Mint', data: sum.mint},
-      {title: 'Mint (USD)', data: sum.mintInUsd},
-    ]
+    let arrSumInfo = inETH
+        ? [ {title: 'CBP Income - (CBP ', data: sum.totalAmt},
+            {title: 'Royalty', data: sum.royalty},
+            {title: 'Transfer', data: sum.transfer}, 
+            {title: 'Mint', data: sum.mint}]
+        : [ {title: 'CBP Income - (USD ', data: sum.sumInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.sumInUsd},
+            {title: 'Royalty', data: sum.royaltyInUsd},
+            {title: 'Transfer', data: sum.transferInUsd},
+            {title: 'Mint', data: sum.mintInUsd}]; 
     setSumInfo(arrSumInfo);
     setList(records);
     setOpen(true);
@@ -191,8 +190,8 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         onClick={()=>showList()}
       >
         <b>CBP Income: ({ inETH
-            ? bigIntToStrNum(sum.totalAmt * 10000n / exRate /10n**9n, 9) + ' ETH' 
-            : bigIntToStrNum(sum.sumInUsd / 10n ** 9n, 9) + ' USD' })</b>
+            ? bigIntToStrNum(sum.totalAmt * 10000n / exRate / 10n ** 9n, 9) + ' ETH' 
+            : baseToDollar((sum.sumInUsd / 10n ** 14n).toString()) + ' USD' })</b>
       </Button>
     )}
   </>

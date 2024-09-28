@@ -26,7 +26,7 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
       valueGetter: p => longSnParser(p.row.blockNumber.toString()),
       headerAlign: 'center',
       align: 'center',
-      width: 218,
+      width: 188,
     },
     {
       field: 'timestamp',
@@ -74,7 +74,7 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
       valueGetter: p => longSnParser(p.row.acct.toString()),
       headerAlign: 'center',
       align: 'center',
-      width: 218,
+      width: 128,
     },
     {
       field: 'addr',
