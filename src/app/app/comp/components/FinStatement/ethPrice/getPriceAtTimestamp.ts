@@ -103,7 +103,7 @@ function getPriceAtTimestamp(targetTimestamp: number, dataObj: { [key: string]: 
         console.log(`No applicable price found for timestamp ${targetTimestamp}`);
         return output;
     } else {
-        console.log(`The Ethereum price at timestamp ${targetTimestamp} is $${mark.price}`);
+        // console.log(`The Ethereum price at timestamp ${targetTimestamp} is $${mark.price}`);
     }
 
     output.timestamp = mark.timestamp;

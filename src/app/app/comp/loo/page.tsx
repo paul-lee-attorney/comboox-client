@@ -6,7 +6,7 @@ import { Box, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Typograph
 
 import { Tabs, TabList, TabPanel, Tab } from "@mui/joy";
 
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, booxMap } from "../../common";
 
 import { ActionsOfInvestor } from "./components/ActionsOfInvestor";
@@ -29,7 +29,7 @@ function ListOfOrders() {
 
   const { boox } = useComBooxContext();
 
-  const [addr, setAddr] = useState(boox ? boox[booxMap.ROC] : AddrZero );
+  const [addr, setAddr] = useState(boox ? boox[booxMap.LOO] : AddrZero );
 
   const [ index, setIndex ] = useState (0);
 
