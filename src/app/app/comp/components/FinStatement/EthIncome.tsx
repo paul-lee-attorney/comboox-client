@@ -1,13 +1,14 @@
 import { Dispatch, SetStateAction, useEffect, } from "react";
 import { Button,} from "@mui/material";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfTank, AddrZero, keepersMap } from "../../../common";
+import { AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import {  baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { ethers } from "ethers";
 
 
 export type EthIncomeSumProps = {
@@ -82,7 +83,12 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
               sum.capital += newItem.amt;
               sum.capitalInUsd += newItem.usd;
               break;
-          } 
+            case 'CloseInitOfferAgainstBid':
+              sum.capital += newItem.amt;
+              sum.capitalInUsd += newItem.usd;
+              newItem.acct = BigInt(newItem.acct / 2n**40n);
+              break;
+          }
 
           arr.push(newItem);
           counter++;
@@ -269,6 +275,46 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
     
         cnt--;
       }
+
+      let closeInitOfferAgainstBidLogs = await client.getLogs({
+        address: gk,
+        event: parseAbiItem('event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)'),
+        fromBlock: 1n,
+      });
+
+      cnt = closeInitOfferAgainstBidLogs.length;
+      
+      while(cnt > 0) {
+
+        let log = closeInitOfferAgainstBidLogs[cnt-1];
+        let blkNo = log.blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+     
+        let item:CashflowProps = {
+          seq:0,
+          blockNumber: blkNo,
+          timestamp: blk.timestamp,
+          transactionHash: log.transactionHash,
+          typeOfIncome: ethers.decodeBytes32String(log.args.reason ?? Bytes32Zero),
+          amt: log.args.amt ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
+          addr: AddrZero,
+          acct: log.args.from ?? 0n,
+        }
+
+        let tran = await client.getTransaction({
+          hash: item.transactionHash
+        })
+
+        item.addr = tran.from;
+
+        if (item.typeOfIncome == 'CloseInitOfferAgainstBid') {
+          appendItem(item);
+        }
+        
+        cnt--;
+      }      
 
       sum.flag = true;
 

@@ -220,8 +220,8 @@ function ListOfOrders() {
           <ActionsOfOrder classOfShare={classOfShare} seqOfOrder={order.node.seq} refresh={refresh} />
           <DealsChart classOfShare={classOfShare} time={time} refresh={refresh} />
           
-          <OrdersList name={'Offers'} list={offers} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
-          <OrdersList name={'Bids'} list={bids} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
+          <OrdersList name={'Sell'} list={offers} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
+          <OrdersList name={'Buy'} list={bids} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
 
           <DealsList list={deals} qty={baseToDollar(qty.toString())} amt={baseToDollar((amt/10000n).toString())} left={left} setLeft={setLeft} right={right} setRight={setRight} refresh={refresh} setDeal={setDeal} setShow={setShow} />
           

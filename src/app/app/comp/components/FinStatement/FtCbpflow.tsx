@@ -249,13 +249,15 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
 
     let arrSumInfo = inETH
       ? [ {title: 'CBP Balance in FT - (CBP ', data: sum.totalCbp},
-          {title: 'Fuel Sold', data: sum.refuelCbp},
-          {title: 'Fuel Withdrawn', data: sum.withdrawCbp}
+          {title: '+ Add Fuel', data: sum.addCbp},
+          {title: '- Fuel Sold', data: sum.refuelCbp},
+          {title: '- Fuel Withdrawn', data: sum.withdrawCbp}
         ]
       : [ {title: 'CBP Balance in FT - (USD ', data: sum.totalCbpInUsd},
           {title: 'Exchange Gain/Loss', data: curSumCbpInUsd - sum.totalCbpInUsd},
-          {title: 'Fuel Sold', data: sum.refuelCbpInUsd},
-          {title: 'Fuel Withdrawn', data: sum.withdrawCbpInUsd}
+          {title: '+ Add Fuel', data: sum.addCbpInUsd},
+          {title: '- Fuel Sold', data: sum.refuelCbpInUsd},
+          {title: '- Fuel Withdrawn', data: sum.withdrawCbpInUsd}
         ];
 
     setSumInfo(arrSumInfo);

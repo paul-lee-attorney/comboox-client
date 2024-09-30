@@ -192,11 +192,14 @@ export function FinStatement() {
 
   // ==== Liabilities ====
 
+  let cbpMintOut = cbpToETH(cbpOutflow.newUserAward + cbpOutflow.startupCost);
+  let cbpMintOutInUsd = cbpOutflow.newUserAwardInUsd + cbpOutflow.startupCostInUsd;
+
   let cbpPaidOut = cbpToETH(cbpOutflow.gmmTransfer + cbpOutflow.bmmTransfer);
   let cbpPaidOutInUsd = cbpOutflow.gmmTransferInUsd + cbpOutflow.bmmTransferInUsd;
 
-  let deferredRevenue = cbpPaidOut + cbpToETH(cbpOutflow.fuelSold + cbpOutflow.newUserAward + cbpOutflow.startupCost - cbpIncome.royalty);
-  let deferredRevenueInUsd = cbpPaidOutInUsd + (cbpOutflow.fuelSoldInUsd + cbpOutflow.newUserAwardInUsd + cbpOutflow.startupCostInUsd - cbpIncome.royaltyInUsd);
+  let deferredRevenue = cbpPaidOut + cbpMintOut + cbpToETH(cbpOutflow.fuelSold - cbpIncome.royalty);
+  let deferredRevenueInUsd = cbpPaidOutInUsd + cbpMintOutInUsd + cbpOutflow.fuelSoldInUsd - cbpIncome.royaltyInUsd;
 
   let totalLiabilitiesInUsd = deferredRevenueInUsd + cbpGainLoss;
 
@@ -230,8 +233,8 @@ export function FinStatement() {
   let balaOfEth = ethIncome.totalAmt - ethOutflow.totalAmt - ftEthflow.totalEth;
   let balaOfEthInUSD = ethIncome.sumInUsd - ethOutflow.sumInUsd - ftEthflow.totalEthInUsd;
 
-  let balaOfCbp = cbpIncome.totalAmt - cbpOutflow.totalAmt - ftCbpflow.addCbp;
-  let balaOfCbpInUsd = cbpIncome.sumInUsd - cbpOutflow.sumInUsd - ftCbpflow.totalCbpInUsd;
+  let balaOfCbp = cbpIncome.totalAmt + cbpMintOut - cbpOutflow.totalAmt - ftCbpflow.totalCbp;
+  let balaOfCbpInUsd = cbpIncome.sumInUsd + cbpMintOutInUsd - cbpOutflow.sumInUsd - ftCbpflow.totalCbpInUsd;
 
   // ==== Breakdown Display ====
 
@@ -602,6 +605,19 @@ export function FinStatement() {
     }
   }
 
+  const displayCbpMintToOthers = () => {
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'CBP Mint To Others', amt: cbpMintOut, amtInUsd: cbpMintOutInUsd, show: ()=>{}},
+      {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow.newUserAward) , amtInUsd: cbpOutflow.newUserAwardInUsd, show: showNewUserAwardRecords},
+      {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow.startupCost) , amtInUsd: cbpOutflow.startupCostInUsd, show: showStartupCostRecords},
+    ];
+
+    if (items.length > 0) {
+      setItems(items);
+      setShowSGNA(true);
+    }
+  }
+
   return (
     <Paper elevation={3} 
       sx={{
@@ -670,7 +686,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               -
             </Typography>
@@ -700,7 +716,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
@@ -759,7 +775,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
@@ -789,7 +805,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
@@ -800,7 +816,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
@@ -863,7 +879,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
@@ -874,7 +890,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               -
             </Typography>
@@ -885,7 +901,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
@@ -907,7 +923,7 @@ export function FinStatement() {
             </Button>
           </Stack>
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='20%'>
               &nbsp;
             </Typography>
@@ -923,7 +939,7 @@ export function FinStatement() {
 
           <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
-          <Stack direction='row' width='100%' >
+          <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
             <Typography variant="h6" textAlign='center' width='40%'>
               &nbsp;
             </Typography>
@@ -958,7 +974,7 @@ export function FinStatement() {
               </Button>
             </Stack>
 
-            <Stack direction='row' width='100%' >
+            <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
               <Typography variant="h6" textAlign='center' width='10%'>
                 +
               </Typography>
@@ -969,7 +985,7 @@ export function FinStatement() {
               </Button>
             </Stack>
 
-            <Stack direction='row' width='100%' >
+            <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
               <Typography variant="h6" textAlign='center' width='10%'>
                 +
               </Typography>
@@ -980,7 +996,7 @@ export function FinStatement() {
               </Button>
             </Stack>
 
-            <Stack direction='row' width='100%' >
+            <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
               <Typography variant="h6" textAlign='center' width='10%'>
                 -
               </Typography>
@@ -1022,21 +1038,31 @@ export function FinStatement() {
 
               <Stack direction='column' sx={{ alignItems:'end' }} >
 
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}} >
                   <Typography variant="h6" textAlign='center' width='10%'>
                     +
                   </Typography>
                   <CbpIncome inETH={inETH} exRate={exRate} centPrice={centPrice} sum={cbpIncome} setSum={setCbpIncome} records={cbpIncomeRecords} setRecords={setCbpIncomeRecords} setSumInfo={setSumInfo} setList={setList} setOpen={setOpen} />
                 </Stack>
 
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}} >
+                  <Typography variant="h6" textAlign='center' width='10%'>
+                    +
+                  </Typography>
+
+                  <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>displayCbpMintToOthers()} >
+                    <b>CBP Mint To Others: ({inETH ? weiToEth9Dec(cbpMintOut) : showUSD(cbpMintOutInUsd)}) </b>
+                  </Button>
+                </Stack>
+
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
                   <Typography variant="h6" textAlign='center' width='10%'>
                     -
                   </Typography>
                   <CbpOutflow inETH={inETH} exRate={exRate} centPrice={centPrice} sum={cbpOutflow} setSum={setCbpOutflow} records={cbpOutflowRecords} setRecords={setCbpOutflowRecords} setSumInfo={setSumInfo} setList={setList} setOpen={setOpen} />
                 </Stack>
 
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
                   <Typography variant="h6" textAlign='center' width='10%'>
                     -
                   </Typography>
@@ -1053,21 +1079,21 @@ export function FinStatement() {
 
               <Stack direction='column' sx={{ alignItems:'end' }} >
 
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
                   <Typography variant="h6" textAlign='center' width='10%'>
                     +
                   </Typography>
                   <EthIncome inETH={inETH} exRate={exRate} centPrice={centPrice} sum={ethIncome} setSum={setEthIncome} records={ethIncomeRecords} setRecords={setEthIncomeRecords} setSumInfo={setSumInfo} setList={setList} setOpen={setOpen} />
                 </Stack>
 
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
                   <Typography variant="h6" textAlign='center' width='10%'>
                     -
                   </Typography>
                   <EthOutflow inETH={inETH} exRate={exRate} centPrice={centPrice} sum={ethOutflow} setSum={setEthOutflow} records={ethOutflowRecords} setRecords={setEthOutflowRecords} setSumInfo={setSumInfo} setList={setList} setOpen={setOpen} />
                 </Stack>
 
-                <Stack direction='row' width='100%' >
+                <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
                   <Typography variant="h6" textAlign='center' width='10%'>
                     -
                   </Typography>

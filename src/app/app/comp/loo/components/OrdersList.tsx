@@ -34,7 +34,7 @@ export function OrdersList({name, list, setOrder, setOpen, refresh}:OrdersListPr
     },
     {
       field: 'issuer',
-      headerName: name == "Offers" ? 'Seller' : 'Buyer',
+      headerName: name == "Sell" ? 'Seller' : 'Buyer',
       valueGetter: p => longSnParser(p.row.node.issuer.toString()),
       headerAlign: 'center',
       align:'center',      
@@ -85,7 +85,7 @@ export function OrdersList({name, list, setOrder, setOpen, refresh}:OrdersListPr
       <Stack direction={'row'} sx={{ alignItems:'center' }} >
 
         <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-          <b>{name} List</b>
+          <b>{name} Orders List</b>
         </Typography>
         
         <Tooltip 
