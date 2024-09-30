@@ -87,14 +87,14 @@ export function FinStatement() {
     setCentPrice(mark.centPrice);
     setEthRateDate((mark.timestamp / 1000).toString());
     console.log('mark: ', mark.timestamp, mark.centPrice.toString());
-  });
+  }, [setCentPrice, setEthRateDate]);
 
   const [ days, setDays ] = useState(0n);
   const client = usePublicClient();
 
   useEffect(()=>{
     const getDays = async ()=>{
-      let setUpDate = new Date('2024-09-18T08:00:00Z');
+      let setUpDate = new Date('2024-05-18T08:00:00Z');
       let blk = await client.getBlock();
       let days = (blk.timestamp - BigInt(setUpDate.getTime()/1000)) / 86400n; 
 
