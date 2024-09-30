@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { CashflowProps } from "../FinStatement";
 
@@ -11,13 +11,14 @@ export interface SumInfo {
 }
 
 export interface CashflowListProps {
+  inETH: boolean
   arrSum: SumInfo[];
   records: CashflowProps[];
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps ) {
+export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowListProps ) {
 
   const columns: GridColDef[] = [
     {
@@ -107,7 +108,9 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
     >
 
       <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
-        <b> { arrSum.length > 0 ? arrSum[0].title + bigIntToStrNum(arrSum[0].data/10n**9n, 9) + ')' : '' } </b>
+        <b> { arrSum.length > 0 
+              ? (arrSum[0].title + (inETH ? bigIntToStrNum(arrSum[0].data/10n**9n, 9) : baseToDollar((arrSum[0].data/10n**14n).toString())) + ')') 
+              : '' } </b>
       </DialogTitle>
 
       <DialogContent>
@@ -119,7 +122,9 @@ export function CashFlowList({arrSum, records, open, setOpen}:CashflowListProps 
               if (i == 0 ) return null;
               return (
                 <Typography key={i} variant="h6" sx={{mx:2}}>
-                  <b> {v.title}: { bigIntToStrNum(v.data / 10n**9n, 9) } </b>
+                  <b> {v.title}: { inETH 
+                      ? bigIntToStrNum(v.data / 10n**9n, 9)
+                      : baseToDollar((v.data / 10n ** 14n).toString()) } </b>
                 </Typography>
               )
             })}

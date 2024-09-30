@@ -162,12 +162,12 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
 
     let arrSumInfo = inETH
       ? [ {title: 'Eth Balance in FT - (ETH ', data: sum.totalEth},
-          {title: 'Fuel Income', data: sum.refuelEth},
+          {title: 'Gas Income', data: sum.refuelEth},
           {title: 'Income Pickup', data: sum.withdrawEth},
         ]
       : [ {title: 'Eth Balance in FT - (USD ', data: sum.totalEthInUsd},
           {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.totalEthInUsd},
-          {title: 'Fuel Income', data: sum.refuelEthInUsd},
+          {title: 'Gas Income', data: sum.refuelEthInUsd},
           {title: 'Income Pickup', data: sum.withdrawEthInUsd},
         ];
     setSumInfo(arrSumInfo);

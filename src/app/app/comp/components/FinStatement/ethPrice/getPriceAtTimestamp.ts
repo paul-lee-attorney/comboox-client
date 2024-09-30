@@ -1,4 +1,4 @@
-import { numberToBytes } from 'viem';
+
 import ethPriceNov2023 from './eth_price_2023-11.json';
 import ethPriceDec2023 from './eth_price_2023-12.json';
 import ethPriceJan2024 from './eth_price_2024-01.json';

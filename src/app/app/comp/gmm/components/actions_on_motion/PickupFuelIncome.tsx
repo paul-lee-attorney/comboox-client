@@ -110,7 +110,7 @@ export function PickupFuelIncome({motion, setOpen, refresh}:ActionsOnMotionProps
           sx={{ m:1, minWidth:128 }}
           onClick={ handleClick }
         >
-          Mint
+          Pick Up
         </LoadingButton>
 
       </Stack>

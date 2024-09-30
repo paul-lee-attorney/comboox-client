@@ -292,7 +292,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
       : [ {title: 'ETH Income - (USD ', data: sum.sumInUsd},
           {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.sumInUsd},
           {title: 'GasIncome', data: sum.gasInUsd},
-          {title: 'Pay In Cap', data: sum.capitalInUsd},
+          {title: 'PayInCap', data: sum.capitalInUsd},
           {title: 'TransferIncome', data: sum.transferInUsd}
         ];
 

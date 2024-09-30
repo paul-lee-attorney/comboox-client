@@ -4,7 +4,7 @@ import { Paper, Stack, Typography, Divider, Button, Switch } from "@mui/material
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { useEffect, useState } from "react";
 import { rate } from "../../fuel_tank/ft";
-import { baseToDollar, bigIntToNum, bigIntToStrNum, dateParser } from "../../common/toolsKit";
+import { baseToDollar, bigIntToNum, dateParser } from "../../common/toolsKit";
 import { CbpIncome, CbpIncomeSumProps, defaultSum,  } from "./FinStatement/CbpIncome";
 import { defaultEthIncomeSum, EthIncome, EthIncomeSumProps } from "./FinStatement/EthIncome";
 import { CbpOutflow, CbpOutflowSumProps, defaultCbpOutSum } from "./FinStatement/CbpOutflow";
@@ -12,13 +12,14 @@ import { defaultEthOutSum, EthOutflow, EthOutflowSumProps } from "./FinStatement
 import { AddrOfTank, HexType } from "../../common";
 import { CashFlowList, SumInfo } from "./FinStatement/CashflowList";
 import { defaultDepositsSum, Deposits, DepositsSumProps } from "./FinStatement/Deposits";
-import { balanceOfWei, getCentPriceInWei } from "../../rc";
+import { balanceOfWei } from "../../rc";
 import { usePublicClient } from "wagmi";
 import { totalDeposits } from "../gk";
 import { defaultFtEthSum, FtEthflow, FtEthflowSumProps } from "./FinStatement/FtEthflow";
 import { defaultFtCbpSum, FtCbpflow, FtCbpflowSumProps } from "./FinStatement/FtCbpflow";
 import { getCentPriceInWeiAtTimestamp } from "./FinStatement/ethPrice/getPriceAtTimestamp";
 import dayjs from "dayjs";
+import { BtnProps, SGNA } from "./FinStatement/SGNA";
 
 export type CashflowProps = {
   seq: number,
@@ -31,6 +32,14 @@ export type CashflowProps = {
   ethPrice: bigint,
   addr: HexType,
   acct: bigint,
+}
+
+export const showUSD = (usd:bigint) => {
+  return baseToDollar((usd / 10n ** 14n).toString()) + ' USD';
+}
+
+export const weiToEth9Dec = (eth:bigint) => {
+  return bigIntToNum(eth / 10n**9n, 9) + ' ETH';
 }
 
 export function FinStatement() {
@@ -143,6 +152,8 @@ export function FinStatement() {
     
   }, [compInfo, initContribution, days, setArmotization]);
 
+  const [ items, setItems ] = useState<BtnProps[]>([]);
+  const [ showSGNA, setShowSGNA ] = useState(false);
 
   // ==== Calculation ====
 
@@ -161,15 +172,7 @@ export function FinStatement() {
   const weiToUSD = (eth:bigint) => {
     return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
-
-  const weiToEth9Dec = (eth:bigint) => {
-    return bigIntToNum(eth / 10n**9n, 9) + ' ETH';
-  }
-
-  const showUSD = (usd:bigint) => {
-    return baseToDollar((usd / 10n ** 14n).toString()) + 'USD';
-  }
-
+  
   // ==== Assets ====
 
   let netValueOfIPR = initContribution - armotization;
@@ -178,7 +181,7 @@ export function FinStatement() {
   let ethOfComp = ethIncome.totalAmt - ethOutflow.totalAmt;
   let ethOfCompInUsd = ethIncome.sumInUsd - ethOutflow.sumInUsd;
 
-  let ethGainLoss = weiToDust(ethIncome.totalAmt - ethOutflow.totalAmt) - (ethIncome.sumInUsd - ethOutflow.sumInUsd);
+  let ethGainLoss = weiToDust(ethOfComp) - ethOfCompInUsd;
   let cbpGainLoss = weiToDust(cbpToETH(cbpOutflow.totalAmt - cbpIncome.totalAmt)) - (cbpOutflow.sumInUsd - cbpIncome.sumInUsd);
   let exchangeGainLoss = ethGainLoss - cbpGainLoss;
 
@@ -230,25 +233,20 @@ export function FinStatement() {
   let balaOfCbp = cbpIncome.totalAmt - cbpOutflow.totalAmt - ftCbpflow.addCbp;
   let balaOfCbpInUsd = cbpIncome.sumInUsd - cbpOutflow.sumInUsd - ftCbpflow.totalCbpInUsd;
 
-  // ==== Details Display ====
+  // ==== Breakdown Display ====
 
-  const showRoyaltyRecords = () => {
-    let records = cbpIncomeRecords.filter((v)=>v.typeOfIncome == 'Royalty');
+  // ==== Assets ====
+
+  const showGasIncomeRecords = () => {
+    let records = ethIncomeRecords.filter((v)=>v.typeOfIncome == 'GasIncome');
+    let curSumInUsd = weiToDust(ethIncome.gas);
+
     let arrSumInfo = inETH 
-        ? [{title: 'Royalty Income (ETH', data: cbpIncome.royalty * 10000n / exRate}]
-        : [{title: 'Royalty Income - (USD', data: cbpIncome.royaltyInUsd}];
-    if (records.length > 0) {
-      setList(records);
-      setSumInfo(arrSumInfo);
-      setOpen(true);
-    }
-  }
+        ? [ {title: 'Gas Income - (ETH ', data: ethIncome.gas}]
+        : [ {title: 'Gas Income - (USD ', data: ethIncome.gasInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethIncome.gasInUsd},
+          ];
 
-  const showOtherIncomeRecords = () => {
-    let records = ethIncomeRecords.filter((v)=>v.typeOfIncome == 'Transfer');
-    let arrSumInfo = inETH
-        ? [{title: 'Other Income (ETH', data: ethIncome.transfer}]
-        : [{title: 'Other Income - (USD', data: ethIncome.transferInUsd}];
     if (records.length > 0) {
       setList(records);
       setSumInfo(arrSumInfo);
@@ -259,9 +257,13 @@ export function FinStatement() {
   const showPaidInCapRecords = () => {
     let records = ethIncomeRecords.filter((v)=>v.typeOfIncome == 'PayInCap' ||
         v.typeOfIncome == 'PayOffCIDeal' || v.typeOfIncome =='CloseBidAgainstInitOffer' );
+    let curSumInUsd = weiToDust(ethIncome.capital);
+    
     let arrSumInfo = inETH 
-        ? [ {title: 'Paid In Cap (ETH)', data: ethIncome.totalAmt} ]
-        : [ {title: 'Paid In Cap - (USD', data: ethIncome.sumInUsd} ];
+        ? [ {title: 'Paid In Cap - (ETH ', data: ethIncome.capital} ]
+        : [ {title: 'Paid In Cap - (USD ', data: ethIncome.capitalInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethIncome.capitalInUsd},
+          ];
 
     if (records.length > 0) {
       setList(records);
@@ -270,19 +272,252 @@ export function FinStatement() {
     }
   }
 
-  const showGmmExpRecords = () => {
-    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'GmmTransfer - CBP');
-    records = records.concat(ethOutflowRecords.filter((v) => v.typeOfIncome == 'GmmTransfer - ETH'));
-    records = records.concat(ethOutflowRecords.filter((v)=>v.typeOfIncome == 'GmmExpense - ETH'));
+  const showEthTransferIncomeRecords = () => {
+    let records = ethIncomeRecords.filter((v)=>v.typeOfIncome == 'TransferIncome');
+    let curSumInUsd = weiToDust(ethIncome.transfer);
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'ETH Transfer - (ETH ', data: ethIncome.transfer} ]
+        : [ {title: 'ETH Transfer - (USD ', data: ethIncome.transferInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethIncome.transferInUsd},
+          ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showEthGmmPaymentRecords = () => {
+    let records = ethOutflowRecords.filter((v)=>v.typeOfIncome == 'GmmTransfer' ||
+        v.typeOfIncome == 'GmmExpense');
+
+    let curSumInUsd = weiToDust(ethOutflow.gmmTransfer + ethOutflow.gmmExpense);
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Gmm Payment - (ETH ', data: ethOutflow.gmmTransfer + ethOutflow.gmmExpense},
+            {title: 'Gmm Transfer', data: ethOutflow.gmmTransfer},
+            {title: 'Gmm Expense', data: ethOutflow.gmmExpense},
+          ]
+        : [ {title: 'Gmm Payment - (USD ', data: ethOutflow.gmmTransferInUsd + ethOutflow.gmmExpenseInUsd},
+            {title: 'Exchange Gain/Loss', data: (ethOutflow.gmmTransferInUsd + ethOutflow.gmmExpenseInUsd) - curSumInUsd},
+            {title: 'Gmm Transfer', data: ethOutflow.gmmTransferInUsd},
+            {title: 'Gmm Expense', data: ethOutflow.gmmExpenseInUsd},
+          ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showEthBmmPaymentRecords = () => {
+    let records = ethOutflowRecords.filter((v)=>v.typeOfIncome == 'BmmTransfer' ||
+        v.typeOfIncome == 'BmmExpense');
+
+    let curSumInUsd = weiToDust(ethOutflow.bmmTransfer + ethOutflow.bmmExpense);
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Bmm Payment - (ETH ', data: ethOutflow.bmmTransfer + ethOutflow.bmmExpense},
+            {title: 'Bmm Transfer', data: ethOutflow.bmmTransfer},
+            {title: 'Bmm Expense', data: ethOutflow.bmmExpense},
+          ]
+        : [ {title: 'Bmm Payment - (USD ', data: ethOutflow.bmmTransferInUsd + ethOutflow.bmmExpenseInUsd},
+            {title: 'Exchange Gain/Loss', data: (ethOutflow.bmmTransferInUsd + ethOutflow.bmmExpenseInUsd) - curSumInUsd},
+            {title: 'Bmm Transfer', data: ethOutflow.bmmTransferInUsd},
+            {title: 'Bmm Expense', data: ethOutflow.bmmExpenseInUsd},
+          ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showDistributionRecords = () => {
+    let records = ethOutflowRecords.filter((v)=>v.typeOfIncome == 'DistributeProfits');
+
+    let curSumInUsd = weiToDust(ethOutflow.distribution);
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Distribution - (ETH ', data: ethOutflow.distribution} ]
+        : [ {title: 'Distribution - (USD ', data: ethOutflow.distributionInUsd},
+            {title: 'Exchange Gain/Loss', data: ethOutflow.distributionInUsd - curSumInUsd},
+          ];
+
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showFtEthRecords = () => {
+    let records = ftEthflowRecords;
+
+    let curSumInUsd = weiToDust(ftEthflow.totalEth);
+
     let arrSumInfo = inETH
-        ? [ {title: 'GMM Expense (ETH)', data: (ethOutflow.gmmTransfer + ethOutflow.gmmExpense + cbpOutflow.gmmTransfer * 10000n /exRate)},
-          {title: 'CBP Transfer (ETH)', data: cbpOutflow.gmmTransfer * 10000n / exRate},
-          {title: 'ETH Transfer (ETH)', data: ethOutflow.gmmTransfer},
-          {title: 'ETH Action Expense (ETH)', data: ethOutflow.gmmExpense}]
-        : [ {title: 'GMM Expense - (USD', data: (ethOutflow.gmmTransferInUsd + ethOutflow.gmmExpenseInUsd + cbpOutflow.gmmTransferInUsd)},
-          {title: 'CBP Transfer (USD)', data: cbpOutflow.gmmTransferInUsd},
-          {title: 'ETH Transfer (USD)', data: ethOutflow.gmmTransferInUsd},
-          {title: 'ETH Action Expense (USD)', data: ethOutflow.gmmExpenseInUsd}];
+      ? [ {title: 'Eth Balance in FT - (ETH ', data: ftEthflow.totalEth},
+          {title: 'Gas Income', data: ftEthflow.refuelEth},
+          {title: 'Income Pickup', data: ftEthflow.withdrawEth},
+        ]
+      : [ {title: 'Eth Balance in FT - (USD ', data: ftEthflow.totalEthInUsd},
+          {title: 'Exchange Gain/Loss', data: curSumInUsd - ftEthflow.totalEthInUsd},
+          {title: 'Gas Income', data: ftEthflow.refuelEthInUsd},
+          {title: 'Income Pickup', data: ftEthflow.withdrawEthInUsd},
+        ];
+
+    if (records.length > 0) {
+      setSumInfo(arrSumInfo);
+      setList(records);
+      setOpen(true);
+    }
+  }
+
+  const displayEthOfComp = () => {
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'ETH of Comp', amt: ethOfComp, amtInUsd: ethOfCompInUsd, show: ()=>{}},
+      {simbol: '+', title: 'Gas Income', amt: ethIncome.gas, amtInUsd: ethIncome.gasInUsd, show: showGasIncomeRecords},
+      {simbol: '+', title: 'Paid In Cap', amt: ethIncome.capital, amtInUsd: ethIncome.capitalInUsd, show: showPaidInCapRecords},
+      {simbol: '+', title: 'Transfer Income', amt: ethIncome.transfer, amtInUsd: ethIncome.transferInUsd, show: showEthTransferIncomeRecords},
+      {simbol: '-', title: 'Gmm Payment', amt: ethOutflow.gmmTransfer + ethOutflow.gmmExpense, amtInUsd: ethOutflow.gmmExpenseInUsd + ethOutflow.gmmTransferInUsd, show: showEthGmmPaymentRecords},
+      {simbol: '-', title: 'Bmm Payment', amt: ethOutflow.bmmTransfer + ethOutflow.bmmExpense, amtInUsd: ethOutflow.bmmExpenseInUsd + ethOutflow.bmmTransferInUsd, show: showEthBmmPaymentRecords},
+      {simbol: '-', title: 'Distribution', amt: ethOutflow.distribution, amtInUsd: ethOutflow.distributionInUsd, show: showDistributionRecords},
+    ];
+
+    if (items.length > 0) {
+      setItems(items);
+      setShowSGNA(true);
+    }
+  }
+
+  // ==== Liabilities ====
+
+  const showFuelSoldRecords = () => {
+    let records = cbpOutflowRecords.filter((v)=>v.typeOfIncome == 'FuelSold');
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.fuelSold));
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Fuel Sold - (ETH ', data: cbpToETH(cbpOutflow.fuelSold)} ]
+        : [ {title: 'Fuel Sold - (USD ', data: cbpOutflow.fuelSoldInUsd},
+            {title: 'Exchange Gain/Loss', data: cbpOutflow.fuelSoldInUsd - curSumInUsd},
+          ];
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showGmmCbpPaymentRecords = () => {
+    let records = cbpOutflowRecords.filter((v)=>v.typeOfIncome == 'GmmTransfer');
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.gmmTransfer));
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Gmm CBP Payment - (ETH ', data: cbpToETH(cbpOutflow.gmmTransfer)} ]
+        : [ {title: 'Gmm CBP Payment - (USD ', data: cbpOutflow.gmmTransferInUsd},
+            {title: 'Exchange Gain/Loss', data: cbpOutflow.gmmTransferInUsd - curSumInUsd},
+          ];
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showBmmCbpPaymentRecords = () => {
+    let records = cbpOutflowRecords.filter((v)=>v.typeOfIncome == 'BmmTransfer');
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.bmmTransfer));
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Bmm CBP Payment - (ETH ', data: cbpToETH(cbpOutflow.bmmTransfer)} ]
+        : [ {title: 'Bmm CBP Payment - (USD ', data: cbpOutflow.bmmTransferInUsd},
+            {title: 'Exchange Gain/Loss', data: cbpOutflow.bmmTransferInUsd - curSumInUsd},
+          ];
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const displayDeferredRevenue = () => {
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Deferred Revenue', amt: deferredRevenue, amtInUsd: deferredRevenueInUsd, show: ()=>{}},
+      {simbol: '+', title: 'Fuel Sold', amt: cbpToETH(cbpOutflow.fuelSold), amtInUsd: cbpOutflow.fuelSoldInUsd, show: showFuelSoldRecords},
+      {simbol: '+', title: 'Gmm CBP Payment', amt: cbpToETH(cbpOutflow.gmmTransfer), amtInUsd: cbpOutflow.gmmTransferInUsd, show: showGmmCbpPaymentRecords},
+      {simbol: '+', title: 'Bmm CBP Payment', amt: cbpToETH(cbpOutflow.bmmTransfer), amtInUsd: cbpOutflow.bmmTransferInUsd, show: showBmmCbpPaymentRecords},
+      {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow.newUserAward), amtInUsd: cbpOutflow.newUserAwardInUsd, show: showNewUserAwardRecords},
+      {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow.startupCost), amtInUsd: cbpOutflow.startupCostInUsd, show: showStartupCostRecords},
+      {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpIncome.royalty), amtInUsd: cbpIncome.royaltyInUsd, show: showRoyaltyRecords},
+    ];
+
+    if (items.length > 0) {
+      setItems(items);
+      setShowSGNA(true);
+    }
+  }
+
+  // ==== Income ====
+
+  const showRoyaltyRecords = () => {
+    let records = cbpIncomeRecords.filter((v)=>v.typeOfIncome == 'Royalty');
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpIncome.royalty));
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Royalty Income - (ETH ', data: cbpIncome.royalty * 10000n / exRate} ]
+        : [ {title: 'Royalty Income - (USD ', data: cbpIncome.royaltyInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpIncome.royaltyInUsd},
+          ];
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showOtherIncomeRecords = () => {
+    let records = ethIncomeRecords.filter((v)=>v.typeOfIncome == 'TransferIncome');
+
+    let curSumInUsd = weiToDust(ethIncome.transfer);
+
+    let arrSumInfo = inETH
+        ? [ {title: 'Other Income (ETH ', data: ethIncome.transfer} ]
+        : [ {title: 'Other Income - (USD ', data: ethIncome.transferInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethIncome.transferInUsd},
+          ];
+    if (records.length > 0) {
+      setList(records);
+      setSumInfo(arrSumInfo);
+      setOpen(true);
+    }
+  }
+
+  const showGmmExpRecords = () => {
+    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'GmmTransfer');
+    records = records.concat(ethOutflowRecords.filter((v) => v.typeOfIncome == 'GmmTransfer'));
+    records = records.concat(ethOutflowRecords.filter((v)=>v.typeOfIncome == 'GmmExpense'));
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.gmmTransfer) + ethOutflow.gmmTransfer + ethOutflow.gmmExpense);
+
+    let arrSumInfo = inETH
+        ? [ {title: 'GMM Expense - (ETH ', data: (ethOutflow.gmmTransfer + ethOutflow.gmmExpense + cbpOutflow.gmmTransfer * 10000n /exRate)},
+          {title: 'CBP Transfer', data: cbpOutflow.gmmTransfer * 10000n / exRate},
+          {title: 'ETH Transfer', data: ethOutflow.gmmTransfer},
+          {title: 'ETH Action Expense', data: ethOutflow.gmmExpense}]
+        : [ {title: 'GMM Expense - (USD ', data: (ethOutflow.gmmTransferInUsd + ethOutflow.gmmExpenseInUsd + cbpOutflow.gmmTransferInUsd)},
+          {title: 'Exchange Gain/Loss', data: cbpOutflow.gmmTransferInUsd + ethOutflow.gmmTransferInUsd + ethOutflow.gmmExpenseInUsd - curSumInUsd },          
+          {title: 'CBP Transfer', data: cbpOutflow.gmmTransferInUsd},
+          {title: 'ETH Transfer', data: ethOutflow.gmmTransferInUsd},
+          {title: 'ETH Action Expense', data: ethOutflow.gmmExpenseInUsd}];
 
     if (records.length > 0) {
       setList(records);
@@ -292,18 +527,22 @@ export function FinStatement() {
   } 
 
   const showBmmExpRecords = () => {
-    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'BmmTransfer - CBP');
-    records = records.concat(ethOutflowRecords.filter((v) => v.typeOfIncome == 'BmmTransfer - ETH'));
-    records = records.concat(ethOutflowRecords.filter((v)=>v.typeOfIncome == 'BmmExpense - ETH'));
+    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'BmmTransfer');
+    records = records.concat(ethOutflowRecords.filter((v) => v.typeOfIncome == 'BmmTransfer'));
+    records = records.concat(ethOutflowRecords.filter((v)=>v.typeOfIncome == 'BmmExpense'));
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.bmmTransfer) + ethOutflow.bmmTransfer + ethOutflow.bmmExpense);
+
     let arrSumInfo = inETH
-        ? [ {title: 'BMM Expense (ETH', data: (ethOutflow.bmmTransfer + ethOutflow.bmmExpense + cbpOutflow.bmmTransfer * 10000n /exRate)},
-          {title: 'CBP Transfer (ETH)', data: cbpOutflow.bmmTransfer * 10000n / exRate},
-          {title: 'ETH Transfer (ETH)', data: ethOutflow.bmmTransfer},
-          {title: 'ETH Action Expense (ETH)', data: ethOutflow.bmmExpense} ]
-        : [ {title: 'BMM Expense - (USD', data: (ethOutflow.bmmTransferInUsd + ethOutflow.bmmExpenseInUsd + cbpOutflow.bmmTransferInUsd)},
-          {title: 'CBP Transfer (USD)', data: cbpOutflow.bmmTransferInUsd},
-          {title: 'ETH Transfer (USD)', data: ethOutflow.bmmTransferInUsd},
-          {title: 'ETH Action Expense (USD)', data: ethOutflow.bmmExpenseInUsd} ];
+        ? [ {title: 'BMM Expense (ETH ', data: (ethOutflow.bmmTransfer + ethOutflow.bmmExpense + cbpOutflow.bmmTransfer * 10000n /exRate)},
+          {title: 'CBP Transfer', data: cbpOutflow.bmmTransfer * 10000n / exRate},
+          {title: 'ETH Transfer', data: ethOutflow.bmmTransfer},
+          {title: 'ETH Action Expense', data: ethOutflow.bmmExpense} ]
+        : [ {title: 'BMM Expense - (USD ', data: (ethOutflow.bmmTransferInUsd + ethOutflow.bmmExpenseInUsd + cbpOutflow.bmmTransferInUsd)},
+          {title: 'Exchange Gain/Loss', data: cbpOutflow.bmmTransferInUsd + ethOutflow.bmmTransferInUsd + ethOutflow.bmmExpenseInUsd - curSumInUsd },          
+          {title: 'CBP Transfer', data: cbpOutflow.bmmTransferInUsd},
+          {title: 'ETH Transfer', data: ethOutflow.bmmTransferInUsd},
+          {title: 'ETH Action Expense', data: ethOutflow.bmmExpenseInUsd} ];
 
     if (records.length > 0) {
       setList(records);
@@ -315,9 +554,13 @@ export function FinStatement() {
   const showNewUserAwardRecords = () => {
     let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'NewUserAward');
 
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.newUserAward));
+
     let arrSumInfo = inETH 
-        ? [{title: 'New User Award (ETH ', data: cbpOutflow.newUserAward * 10000n / exRate }]
-        : [{title: 'New User Award (USD ', data: cbpOutflow.newUserAwardInUsd }];
+        ? [ {title: 'New User Award (ETH ', data: cbpOutflow.newUserAward * 10000n / exRate }]
+        : [ {title: 'New User Award (USD ', data: cbpOutflow.newUserAwardInUsd}, 
+            {title: 'Exchange Gain/Loss', data: cbpOutflow.newUserAwardInUsd - curSumInUsd},
+          ];
 
     if (records.length > 0) {
       setList(records);
@@ -326,12 +569,16 @@ export function FinStatement() {
     }
   }
 
-  const showGasSoldRecords = () => {
-    let records = ftCbpflowRecords.filter((v) => v.typeOfIncome == 'RefuelCbp');
+  const showStartupCostRecords = () => {
+    let records = cbpOutflowRecords.filter((v) => v.typeOfIncome == 'StartupCost');
+
+    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow.startupCost));
 
     let arrSumInfo = inETH 
-        ? [{title: 'Gas Sold (ETH', data: (ftCbpflow.refuelCbp * 10000n / exRate)} ]
-        : [{title: 'Gas Sold (CBP', data: (ftCbpflow.refuelCbpInUsd)} ];
+        ? [ {title: 'Startup Cost (ETH ', data: cbpOutflow.startupCost * 10000n / exRate }]
+        : [ {title: 'Startup Cost (USD ', data: cbpOutflow.startupCostInUsd },
+            {title: 'Exchange Gain/Loss', data: cbpOutflow.startupCostInUsd - curSumInUsd },
+          ];
 
     if (records.length > 0) {
       setList(records);
@@ -340,21 +587,18 @@ export function FinStatement() {
     }
   }
 
-  const showCbpPaidOutRecords = () => {
-    let records = cbpOutflowRecords.filter((v) => (v.typeOfIncome == 'GmmTransfer - CBP' || v.typeOfIncome == 'BmmTransfer - CBP'));
+  const displaySGNA = () => {
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Sales, General & Administrative', amt: sgNa, amtInUsd: sgNaInUsd, show: ()=>{}},
+      {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow.newUserAward) , amtInUsd: cbpOutflow.newUserAwardInUsd, show: showNewUserAwardRecords},
+      {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow.startupCost) , amtInUsd: cbpOutflow.startupCostInUsd, show: showStartupCostRecords},
+      {simbol: '+', title: 'GMM Approved Expense', amt:gmmExp , amtInUsd: gmmExpInUsd, show: showGmmExpRecords},
+      {simbol: '+', title: 'BMM Approved Expense', amt:bmmExp , amtInUsd: bmmExpInUsd, show: showBmmExpRecords},
+    ];
 
-    let arrSumInfo = inETH
-        ? [ {title: 'CBP Paid Out (ETH', data: (cbpOutflow.gmmTransfer + cbpOutflow.bmmTransfer) * 10000n / exRate},
-            {title: 'GMM Transfer (ETH)', data: (cbpOutflow.gmmTransfer * 10000n / exRate)},
-            {title: 'BMM Transfer (ETH)', data: (cbpOutflow.bmmTransfer * 10000n / exRate)}]
-        : [ {title: 'CBP Paid Out (USD', data: (cbpOutflow.gmmTransferInUsd + cbpOutflow.bmmTransferInUsd)},
-            {title: 'GMM Transfer (USD)', data: (cbpOutflow.gmmTransferInUsd)},
-            {title: 'BMM Transfer (USD)', data: (cbpOutflow.bmmTransferInUsd)}];
-
-    if (records.length > 0) {
-      setList(records);
-      setSumInfo(arrSumInfo);
-      setOpen(true);
+    if (items.length > 0) {
+      setItems(items);
+      setShowSGNA(true);
     }
   }
 
@@ -387,7 +631,7 @@ export function FinStatement() {
         </Typography>
 
 
-        <Typography variant='body2' sx={{ m:2, ml: 30, textDecoration:'underline'}} >
+        <Typography variant='body2' sx={{ m:2, ml: 88, textDecoration:'underline'}} >
           <b>ETH Price:</b> ({ baseToDollar((10n**20n/centPrice).toString()) } USD/ETH)
         </Typography>
 
@@ -400,7 +644,9 @@ export function FinStatement() {
 
       <Stack direction='row' >
 
-        <CashFlowList arrSum={sumInfo} records={list} open={open} setOpen={setOpen}/>
+        <CashFlowList inETH={inETH} arrSum={sumInfo} records={list} open={open} setOpen={setOpen}/>
+
+        <SGNA inETH={inETH} items={items} open={showSGNA} setOpen={setShowSGNA} />
     
         <Paper elevation={3} 
           sx={{
@@ -447,7 +693,7 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>displayEthOfComp()} >
               <b>ETH Of Comp: ({ inETH 
                 ? weiToEth9Dec(ethOfComp)
                 : showUSD(ethOfCompInUsd) }) </b>
@@ -485,7 +731,7 @@ export function FinStatement() {
             <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>Total Assets: ({ inETH
                 ? weiToEth9Dec(totalAssets)
-                : weiToUSD(totalAssets)}) </b>
+                : showUSD(totalAssetsInUsd)}) </b>
             </Button>
           </Stack>
 
@@ -506,7 +752,7 @@ export function FinStatement() {
           </Stack>
 
           <Stack direction='row' width='100%' >
-            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>displayDeferredRevenue()} >
               <b>Deferred Revenue: ({ inETH
                 ? weiToEth9Dec(deferredRevenue)
                 : showUSD(deferredRevenueInUsd)}) </b>
@@ -547,7 +793,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               +
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showPaidInCapRecords()} >
               <b>Additional Paid In Capital: ({ inETH
                 ? weiToEth9Dec(ethIncome.capital)
                 : showUSD(ethIncome.capitalInUsd)}) </b>
@@ -632,7 +878,7 @@ export function FinStatement() {
             <Typography variant="h6" textAlign='center' width='10%'>
               -
             </Typography>
-            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={showNewUserAwardRecords}>
+            <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>displaySGNA()}>
               <b>Sales, General & Administrative: ({ inETH
                 ? weiToEth9Dec(sgNa)
                 : showUSD(sgNaInUsd)}) </b>
@@ -738,7 +984,7 @@ export function FinStatement() {
               <Typography variant="h6" textAlign='center' width='10%'>
                 -
               </Typography>
-              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+              <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>showDistributionRecords()} >
                 <b>Distribution: ({ inETH
                   ? weiToEth9Dec(ethOutflow.distribution)
                   : showUSD(ethOutflow.distributionInUsd)}) </b>
