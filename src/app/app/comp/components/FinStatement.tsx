@@ -83,7 +83,10 @@ export function FinStatement() {
   const [ ethRateDate, setEthRateDate ] = useState('0');
 
   useEffect(()=>{
-    let mark = getCentPriceInWeiAtTimestamp(Date.now());
+    let today = new Date();
+    let lastMonthEnd = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 0, 23, 59, 59);
+
+    let mark = getCentPriceInWeiAtTimestamp(lastMonthEnd);
     setCentPrice(mark.centPrice);
     setEthRateDate((mark.timestamp / 1000).toString());
     console.log('mark: ', mark.timestamp, mark.centPrice.toString());

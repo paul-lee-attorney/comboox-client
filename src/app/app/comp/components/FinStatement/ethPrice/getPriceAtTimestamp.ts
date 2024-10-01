@@ -10,6 +10,7 @@ import ethPriceJun2024 from './eth_price_2024-06.json';
 import ethPriceJul2024 from './eth_price_2024-07.json';
 import ethPriceAug2024 from './eth_price_2024-08.json';
 import ethPriceSep2024 from './eth_price_2024-09.json';
+import ethPriceOct2024 from './eth_price_2024-10.json';
 
 const ethPriceData = {
     '2023-11': ethPriceNov2023.prices,
@@ -23,6 +24,7 @@ const ethPriceData = {
     '2024-07': ethPriceJul2024.prices,
     '2024-08': ethPriceAug2024.prices,
     '2024-09': ethPriceSep2024.prices,
+    '2024-10': ethPriceOct2024.prices,
 }
 
 export type EthPrice ={

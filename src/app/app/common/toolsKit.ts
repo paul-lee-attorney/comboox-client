@@ -1,8 +1,11 @@
 import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
 import { keccak256, toHex } from "viem";
 import { HexType } from ".";
 import { waitForTransaction } from "@wagmi/core";
 import { Dispatch, SetStateAction } from "react";
+
+dayjs.extend(utc);
 
 export function toPercent(strNum: string): string {
   let num = Number(strNum);
@@ -23,7 +26,7 @@ export function toBasePoint(percent: string): number {
 
 export function dateParser(timestampStr: string): string {
   let timestamp = Number(timestampStr);
-  return timestamp == 0 ? '-' : dayjs.unix(timestamp).format('YYYY-MM-DD HH:mm:ss');
+  return timestamp == 0 ? '-' : dayjs.unix(timestamp).utc().format('YYYY-MM-DD HH:mm:ss');
 }
 
 export function longSnParser(sn: string): string {
