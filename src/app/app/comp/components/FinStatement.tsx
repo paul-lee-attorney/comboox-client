@@ -18,7 +18,7 @@ import { totalDeposits } from "../gk";
 import { defaultFtEthSum, FtEthflow, FtEthflowSumProps } from "./FinStatement/FtEthflow";
 import { defaultFtCbpSum, FtCbpflow, FtCbpflowSumProps } from "./FinStatement/FtCbpflow";
 import { BtnProps, SGNA } from "./FinStatement/SGNA";
-import { getEthPricesForAppendRecords, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
+import { getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
 
 export type CashflowProps = {
   seq: number,
@@ -90,11 +90,11 @@ export function FinStatement() {
       let prices = await getEthPricesForAppendRecords(today.getTime());
       if (!prices) return;
 
-      let mark = prices[prices.length - 1];
+      let mark = getPriceAtTimestamp(today.getTime(), prices);
   
-      setCentPrice(BigInt(mark.price));
+      setCentPrice(mark.centPrice);
       setEthRateDate((mark.timestamp / 1000).toString());
-      // console.log('mark: ', mark.timestamp, mark.price.toString());
+      console.log('mark: ', mark.timestamp, mark.centPrice.toString());
     }
 
     getCentPrice();
