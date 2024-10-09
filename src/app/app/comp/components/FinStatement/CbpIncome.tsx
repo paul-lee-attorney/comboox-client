@@ -184,10 +184,8 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         return;
       }
 
-      if (logs) {
-        sumArry(logs);
-        sum.flag = true;
-      }
+      sumArry(logs);
+      sum.flag = true;
       
       setRecords(logs);
       setSum(sum);

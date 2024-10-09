@@ -195,10 +195,8 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
         return;
       }
 
-      if (logs) {
-        sumArry(logs);
-        sum.flag = true;
-      }
+      sumArry(logs);
+      sum.flag = true;
 
       setRecords(logs);
       setSum(sum);

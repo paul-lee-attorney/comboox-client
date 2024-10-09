@@ -344,10 +344,9 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         return;
       }
 
-      if (logs) {
-        sumArry(logs);
-        sum.flag = true;
-      }
+
+      sumArry(logs);
+      sum.flag = true;
 
       setRecords(logs);
       setSum(sum);

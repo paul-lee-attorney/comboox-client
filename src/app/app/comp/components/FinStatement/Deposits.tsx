@@ -288,10 +288,8 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
         return;
       }
 
-      if (logs) {
-        sumArry(logs);
-        sum.flag = true;
-      }
+      sumArry(logs);
+      sum.flag = true;
 
       setRecords(logs);
       setSum(sum);
