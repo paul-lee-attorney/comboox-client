@@ -7,9 +7,8 @@ import { parseAbiItem } from "viem";
 import { baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { CashflowRecordsProps } from "./CbpIncome";
-import { EthPrice } from "./ethPrice/getPriceAtTimestamp";
 import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../../api/firebase/ethPriceTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
 export type CbpOutflowSumProps = {
   totalAmt: bigint;
