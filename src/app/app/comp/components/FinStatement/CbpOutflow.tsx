@@ -310,7 +310,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         }
 
       } else if (!logs) {
-        return;
+        logs = [];
       }
 
       sumArry(logs);

@@ -192,7 +192,7 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
         }
         
       } else if (!logs) {
-        return;
+        logs = [];
       }
 
       sumArry(logs);

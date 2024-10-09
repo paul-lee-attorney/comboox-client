@@ -181,7 +181,7 @@ export function CbpIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           logs = arr;
         }
       } else if (!logs) {
-        return;
+        logs = [];
       }
 
       sumArry(logs);

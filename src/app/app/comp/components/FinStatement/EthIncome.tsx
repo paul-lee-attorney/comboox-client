@@ -390,7 +390,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         }
 
       } else if (!logs) {
-        return;
+        logs = [];
       }
 
 
