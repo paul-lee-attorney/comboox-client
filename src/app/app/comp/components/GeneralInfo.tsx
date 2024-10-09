@@ -481,9 +481,9 @@ export function GeneralInfo() {
           </Grid>
         </Paper>
 
-
-        <FinStatement />
-
+        {compInfo?.regNum == 8 && (
+          <FinStatement />
+        )}
 
       </Paper>
     </>

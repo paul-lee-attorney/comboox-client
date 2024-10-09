@@ -8,9 +8,8 @@ import { baseToDollar, bigIntToStrNum,  HexParser, } from "../../../common/tools
 import { CashflowRecordsProps } from "./CbpIncome";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
-import { EthPrice } from "./ethPrice/getPriceAtTimestamp";
 import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
 export type EthOutflowSumProps = {
   totalAmt: bigint;

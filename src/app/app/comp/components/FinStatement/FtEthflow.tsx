@@ -7,7 +7,6 @@ import { parseAbiItem } from "viem";
 import {  baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
-import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
@@ -80,7 +79,7 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
               sum.totalEthInUsd += v.usd;
               sum.refuelEthInUsd += v.usd;
 
-            break;
+              break;
           }
         });
       }
