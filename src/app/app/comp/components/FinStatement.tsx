@@ -17,9 +17,8 @@ import { usePublicClient } from "wagmi";
 import { totalDeposits } from "../gk";
 import { defaultFtEthSum, FtEthflow, FtEthflowSumProps } from "./FinStatement/FtEthflow";
 import { defaultFtCbpSum, FtCbpflow, FtCbpflowSumProps } from "./FinStatement/FtCbpflow";
-import { getCentPriceInWeiAtTimestamp } from "./FinStatement/ethPrice/getPriceAtTimestamp";
 import { BtnProps, SGNA } from "./FinStatement/SGNA";
-import { updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
+import { getEthPricesForAppendRecords, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
 
 export type CashflowProps = {
   seq: number,
@@ -73,7 +72,6 @@ export function FinStatement() {
 
   useEffect(()=>{
     const getRate = async ()=> {
-      await updateMonthlyEthPrices();
       let rateOfEx = await rate();
       setExRate(rateOfEx);
     }
@@ -84,13 +82,23 @@ export function FinStatement() {
   const [ ethRateDate, setEthRateDate ] = useState('0');
 
   useEffect(()=>{
-    let today = new Date();
-    let lastMonthEnd = Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 0, 23, 59, 59);
 
-    let mark = getCentPriceInWeiAtTimestamp(lastMonthEnd);
-    setCentPrice(mark.centPrice);
-    setEthRateDate((mark.timestamp / 1000).toString());
-    console.log('mark: ', mark.timestamp, mark.centPrice.toString());
+    const getCentPrice = async () => {
+      await updateMonthlyEthPrices();
+
+      let today = new Date();
+      let prices = await getEthPricesForAppendRecords(today.getTime());
+      if (!prices) return;
+
+      let mark = prices[prices.length - 1];
+  
+      setCentPrice(BigInt(mark.price));
+      setEthRateDate((mark.timestamp / 1000).toString());
+      // console.log('mark: ', mark.timestamp, mark.price.toString());
+    }
+
+    getCentPrice();
+
   }, [setCentPrice, setEthRateDate]);
 
   const [ days, setDays ] = useState(0n);
