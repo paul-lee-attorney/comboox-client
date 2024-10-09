@@ -4,11 +4,12 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
+import {  baseToDollar, bigIntToStrNum, HexParser, } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
-import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
 import { ethers } from "ethers";
+import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../../api/firebase/ethPriceTools";
 
 
 export type EthIncomeSumProps = {
@@ -48,63 +49,82 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
   useEffect(()=>{
 
     let sum: EthIncomeSumProps = { ...defaultEthIncomeSum };
+
     const getEthIncome = async ()=>{
 
       if (!gk || !keepers) return;
 
+      let logs = await getFinData(gk, 'ethIncome');
+      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      console.log('lastItemOfEthIncome: ', lastBlkNum);
+
       let arr: CashflowProps[] = [];
-      let counter = 0;
+      let ethPrices: EthPrice[] = [];
 
-      const appendItem = (newItem: CashflowProps) => {
+      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+        if (!prices) return [];
+        else return prices;
+      }
 
-        if (newItem.amt > 0n) {
+      const sumArry = (arr: CashflowProps[]) => {
+        arr.forEach(v => {
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
 
-          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
-          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;          
-
-          sum.totalAmt += newItem.amt;
-          sum.sumInUsd += newItem.usd;
-
-          newItem.seq = counter;
-
-          switch (newItem.typeOfIncome) {
+          switch (v.typeOfIncome) {
             case 'TransferIncome':
-              sum.transfer += newItem.amt;
-              sum.transferInUsd += newItem.usd;
+              sum.transfer += v.amt;
+              sum.transferInUsd += v.usd;
               break;
             case 'GasIncome':
-              sum.gas += newItem.amt;
-              sum.gasInUsd += newItem.usd;
+              sum.gas += v.amt;
+              sum.gasInUsd += v.usd;
               break;
             case 'PayInCap':
             case 'PayOffCIDeal':
             case 'CloseBidAgainstInitOffer':
-              sum.capital += newItem.amt;
-              sum.capitalInUsd += newItem.usd;
+              sum.capital += v.amt;
+              sum.capitalInUsd += v.usd;
               break;
             case 'CloseInitOfferAgainstBid':
-              sum.capital += newItem.amt;
-              sum.capitalInUsd += newItem.usd;
-              newItem.acct = BigInt(newItem.acct / 2n**40n);
+              sum.capital += v.amt;
+              sum.capitalInUsd += v.usd;
+              v.acct = BigInt(v.acct / 2n**40n);
               break;
           }
 
+        });
+      }
+
+      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+
+        if (newItem.amt > 0n) {
+
+          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
+          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+
           arr.push(newItem);
-          counter++;
         }
       } 
 
       let recievedCashLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event ReceivedCash(address indexed from, uint indexed amt)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
     
-      let cnt = recievedCashLogs.length;
-    
-      while (cnt > 0) {
-        let log = recievedCashLogs[cnt-1];
+      recievedCashLogs = recievedCashLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+          (v.args.from?.toLowerCase() != AddrOfTank.toLowerCase()));
+      console.log('recievedCashLogs: ', recievedCashLogs);
+
+      let len = recievedCashLogs.length;
+      let cnt = 0;
+
+      while (cnt < len) {
+        let log = recievedCashLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -121,26 +141,29 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
         
-        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
-          item.typeOfIncome = 'GasIncome';
-          cnt--;
-          continue;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
         }
 
-        appendItem(item);
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let gasIncomeLogs = await client.getLogs({
         address: AddrOfTank,
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
+
+      gasIncomeLogs = gasIncomeLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('gasIncomeLogs: ', gasIncomeLogs);
     
-      cnt = gasIncomeLogs.length;
-    
-      while (cnt > 0) {
-        let log = gasIncomeLogs[cnt-1];
+      len = gasIncomeLogs.length;
+      cnt = 0;
+
+      while (cnt < len) {
+        let log = gasIncomeLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -157,21 +180,30 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
         
-        appendItem(item);
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let payInCapLogs = await client.getLogs({
         address: keepers[keepersMap.ROMKeeper],
         event: parseAbiItem('event PayInCapital(uint indexed seqOfShare, uint indexed amt, uint indexed valueOfDeal)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = payInCapLogs.length;
-      
-      while(cnt > 0) {
+      payInCapLogs = payInCapLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('payInCapLogs: ', payInCapLogs);
 
-        let log = payInCapLogs[cnt-1];
+      len = payInCapLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = payInCapLogs[cnt];
 
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
@@ -194,23 +226,31 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         });
 
         item.addr = tran.from;
-    
-        appendItem(item);
 
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+    
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let payOffCIDealLogs = await client.getLogs({
         address: keepers[keepersMap.ROAKeeper],
         event: parseAbiItem('event PayOffCIDeal(uint indexed caller, uint indexed valueOfDeal)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = payOffCIDealLogs.length;
-      
-      while(cnt > 0) {
+      payOffCIDealLogs = payOffCIDealLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('payOffCIDealLogs: ', payOffCIDealLogs);
 
-        let log = payOffCIDealLogs[cnt-1];
+      len = payOffCIDealLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = payOffCIDealLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -233,22 +273,30 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
 
         item.addr = tran.from;
 
-        appendItem(item);
-    
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);    
+        cnt++;
       }
 
       let closeBidAgainstInitOfferLogs = await client.getLogs({
         address: keepers[keepersMap.LOOKeeper],
         event: parseAbiItem('event CloseBidAgainstInitOffer(uint indexed buyer, uint indexed amt)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = closeBidAgainstInitOfferLogs.length;
-      
-      while(cnt > 0) {
+      closeBidAgainstInitOfferLogs = closeBidAgainstInitOfferLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('closeBidAgainstInitOfferLogs: ', closeBidAgainstInitOfferLogs);
 
-        let log = closeBidAgainstInitOfferLogs[cnt-1];
+      len = closeBidAgainstInitOfferLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = closeBidAgainstInitOfferLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -271,22 +319,31 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
 
         item.addr = tran.from;
 
-        appendItem(item);
-    
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let closeInitOfferAgainstBidLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = closeInitOfferAgainstBidLogs.length;
-      
-      while(cnt > 0) {
+      closeInitOfferAgainstBidLogs = closeInitOfferAgainstBidLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+          (v.args.reason == '0x436c6f7365496e69744f66666572416761696e73744269640000000000000000'));
+      console.log('closeInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
 
-        let log = closeInitOfferAgainstBidLogs[cnt-1];
+      len = closeInitOfferAgainstBidLogs.length;
+      cnt = 0;
+      
+      while(cnt < len) {
+
+        let log = closeInitOfferAgainstBidLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -308,23 +365,46 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         })
 
         item.addr = tran.from;
+        console.log('releaseCustodyLogs: ', item);
 
-        if (item.typeOfIncome == 'CloseInitOfferAgainstBid') {
-          appendItem(item);
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
         }
-        
-        cnt--;
+
+        appendItem(item, ethPrices);        
+        cnt++;
       }      
 
-      sum.flag = true;
+      if (arr.length > 0) {
+        arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+        arr = arr.map((v, i) => ({...v, seq:i}));
+        console.log('arr: ', arr);
 
-      setRecords(arr);
+        await setFinData(gk, 'ethIncome', arr);
+
+        if (logs) {
+          logs = logs.concat(arr);
+        } else {
+          logs = arr;
+        }
+
+      } else if (!logs) {
+        return;
+      }
+
+      if (logs) {
+        sumArry(logs);
+        sum.flag = true;
+      }
+
+      setRecords(logs);
       setSum(sum);
     }
 
     getEthIncome();
 
-  }, [gk, client, keepers, centPrice, setSum, setRecords]);
+  }, [gk, client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;

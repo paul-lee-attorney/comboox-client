@@ -8,7 +8,9 @@ import { baseToDollar, bigIntToStrNum,  HexParser, } from "../../../common/tools
 import { CashflowRecordsProps } from "./CbpIncome";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
-import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { EthPrice } from "./ethPrice/getPriceAtTimestamp";
+import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
+import { getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
 export type EthOutflowSumProps = {
   totalAmt: bigint;
@@ -55,66 +57,84 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
   useEffect(()=>{
 
     let sum: EthOutflowSumProps = { ...defaultEthOutSum };
+
     const getEthOutflow = async ()=>{
 
       if (!gk || !keepers ) return;
 
+      let logs = await getFinData(gk, 'ethOutflow');
+      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      console.log('lastItemOfEthOutflow: ', lastBlkNum);
+
       let arr: CashflowProps[] = [];
-      let counter = 0;
+      let ethPrices: EthPrice[] = [];
 
-      const appendItem = (newItem: CashflowProps) => {
-        if (newItem.amt > 0n) {
+      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+        if (!prices) return [];
+        else return prices;
+      }
 
-          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
-          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;          
-    
-          sum.totalAmt += newItem.amt;
-          sum.sumInUsd += newItem.usd;
+      const sumArry = (arr: CashflowProps[]) => {
+        arr.forEach(v => {
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
   
-          newItem.seq = counter;
-  
-          switch (newItem.typeOfIncome) {
+          switch (v.typeOfIncome) {
             case 'GmmTransfer':
-              sum.gmmTransfer += newItem.amt;
-              sum.gmmTransferInUsd += newItem.usd;
+              sum.gmmTransfer += v.amt;
+              sum.gmmTransferInUsd += v.usd;
               break;
             case 'GmmExpense':
-              sum.gmmExpense += newItem.amt;
-              sum.gmmExpenseInUsd += newItem.usd;
+              sum.gmmExpense += v.amt;
+              sum.gmmExpenseInUsd += v.usd;
               break;
             case 'BmmTransfer':
-              sum.bmmTransfer += newItem.amt;
-              sum.bmmTransferInUsd += newItem.usd;
+              sum.bmmTransfer += v.amt;
+              sum.bmmTransferInUsd += v.usd;
               break;
             case 'BmmExpense':
-              sum.bmmExpense += newItem.amt;
-              sum.bmmExpenseInUsd += newItem.usd;
+              sum.bmmExpense += v.amt;
+              sum.bmmExpenseInUsd += v.usd;
               break;
             case 'Distribution':
-              sum.distribution += newItem.amt;
-              sum.distributionInUsd += newItem.usd;
+              sum.distribution += v.amt;
+              sum.distributionInUsd += v.usd;
           }
-          
+        });
+      }
+
+      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+        if (newItem.amt > 0n) {
+
+          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
+          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+              
           arr.push(newItem);
-          counter++;
         }
       } 
 
       let gmmTransferLogs = await client.getLogs({
         address: keepers[keepersMap.GMMKeeper],
         event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        fromBlock: 1n,
         args: {
           isCBP: false
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      let cnt = gmmTransferLogs.length;
-      
-      while(cnt > 0) {
+      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+          (v.args.isCBP == false));
 
-        let log = gmmTransferLogs[cnt-1];
+      console.log('gmmTransferEthLogs: ', gmmTransferLogs);
+
+      let len = gmmTransferLogs.length;
+      let cnt = 0;
+      
+      while(cnt < len) {
+
+        let log = gmmTransferLogs[cnt];
 
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
@@ -132,23 +152,30 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
           acct: 0n,
         }
 
-        if (!log.args.isCBP)
-            appendItem(item);
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
 
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let gmmExpenseLogs = await client.getLogs({
         address: keepers[keepersMap.GMMKeeper],
         event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = gmmExpenseLogs.length;
+      gmmExpenseLogs = gmmExpenseLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('gmmEthExpLogs: ', gmmExpenseLogs);
       
-      while(cnt > 0) {
+      len = gmmExpenseLogs.length;
+      cnt = 0;
 
-        let log = gmmExpenseLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = gmmExpenseLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -165,25 +192,33 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
           acct: 0n,
         }
 
-        appendItem(item);
-    
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);    
+        cnt++;
       }
 
       let bmmTransferLogs = await client.getLogs({
         address: keepers[keepersMap.BMMKeeper],
         event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        fromBlock: 1n,
         args: {
           isCBP: false
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = bmmTransferLogs.length;
-      
-      while(cnt > 0) {
+      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('bmmEthTransferLogs:', bmmTransferLogs);
 
-        let log = bmmTransferLogs[cnt-1];
+      len = bmmTransferLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = bmmTransferLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -200,22 +235,30 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
           acct: 0n,
         }
 
-        appendItem(item);
-    
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);    
+        cnt++;
       }
 
       let bmmExpenseLogs = await client.getLogs({
-        address: gk,
+        address: keepers[keepersMap.BMMKeeper],
         event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = bmmExpenseLogs.length;
+      bmmExpenseLogs = bmmExpenseLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('bmmEthExpLogs: ', bmmExpenseLogs);
 
-      while(cnt > 0) {
+      len = bmmExpenseLogs.length;
+      cnt = 0;
 
-        let log = bmmExpenseLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = bmmExpenseLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -231,26 +274,34 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
           addr: log.args.targets ?? AddrZero,
           acct: 0n,
         }
-    
-        appendItem(item);
 
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+        
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let distributionLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
-        fromBlock: 1n,
         args: {
           reason: HexParser(ethers.encodeBytes32String("DistributeProfits"))
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = distributionLogs.length;
+      distributionLogs = distributionLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('distributionLogs: ', distributionLogs);
 
-      while(cnt > 0) {
+      len = distributionLogs.length;
+      cnt = 0;
 
-        let log = distributionLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = distributionLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -267,20 +318,44 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
           acct: log.args.acct ?? 0n,
         }
     
-        appendItem(item);
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
 
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
-      sum.flag = true;
+      if (arr.length > 0) {
+        arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+        arr = arr.map((v, i) => ({...v, seq:i}));
+        console.log('arr: ', arr);
 
-      setRecords(arr);
+        await setFinData(gk, 'ethOutflow', arr);
+
+        if (logs) {
+          logs = logs.concat(arr);
+        } else {
+          logs = arr;
+        }
+        
+      } else if (!logs) {
+        return;
+      }
+
+      if (logs) {
+        sumArry(logs);
+        sum.flag = true;
+      }
+
+      setRecords(logs);
       setSum(sum);
     }
 
     getEthOutflow();
 
-  }, [gk, client, keepers, centPrice, setSum, setRecords]);
+  }, [gk, client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;

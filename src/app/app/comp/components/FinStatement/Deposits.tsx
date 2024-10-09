@@ -8,7 +8,8 @@ import { baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { ethers } from "ethers";
 import { CashflowProps } from "../FinStatement";
 import { CashflowRecordsProps } from "./CbpIncome";
-import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
 export type DepositsSumProps = {
   totalAmt: bigint;
@@ -60,94 +61,111 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
 
       if (!gk) return;
 
+      let logs = await getFinData(gk, 'deposits');
+      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      console.log('latestBlkOfDeposits: ', lastBlkNum);
+
       let arr: CashflowProps[] = [];
-      let counter = 0;
+      let ethPrices: EthPrice[] = [];
 
-      const appendItem = (newItem: CashflowProps) => {
-        if (newItem.amt > 0n) {
+      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+        if (!prices) return [];
+        else return prices;
+      }
 
-          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
-          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
-          
-          newItem.seq = counter;
+      const sumArry = (arr: CashflowProps[]) => {
 
-          switch (newItem.typeOfIncome) {
+        arr.forEach(v => {
+          switch (v.typeOfIncome) {
             case 'Pickup':
-              sum.totalAmt -= newItem.amt;
-              sum.sumInUsd -= newItem.usd;
-              sum.pickup += newItem.amt;
-              sum.pickupInUsd += newItem.usd;
+              sum.totalAmt -= v.amt;
+              sum.sumInUsd -= v.usd;
+              sum.pickup += v.amt;
+              sum.pickupInUsd += v.usd;
               break;
             case 'DepositConsiderationOfSTDeal':
             case 'CloseBidAgainstOffer':
             case 'DepositConsiderationOfSwap': 
             case 'DepositConsiderOfRejectedDeal':
-              sum.totalAmt += newItem.amt;
-              sum.sumInUsd += newItem.usd;
-              sum.consideration += newItem.amt;
-              sum.considerationInUsd += newItem.usd;
+              sum.totalAmt += v.amt;
+              sum.sumInUsd += v.usd;
+              sum.consideration += v.amt;
+              sum.considerationInUsd += v.usd;
               break;
             case 'DepositBalanceOfOTCDeal': 
             case 'DepositBalanceOfPayInCap':
             case 'DepositBalanceOfSwap':
             case 'DepositBalanceOfBidOrder':
             case 'DepositBalanceOfRejectedDeal':
-              sum.totalAmt += newItem.amt;
-              sum.sumInUsd += newItem.usd;
-              sum.balance += newItem.amt;
-              sum.balanceInUsd += newItem.usd;
+              sum.totalAmt += v.amt;
+              sum.sumInUsd += v.usd;
+              sum.balance += v.amt;
+              sum.balanceInUsd += v.usd;
               break;
             case 'CustodyValueOfBidOrder':
-              sum.totalAmt += newItem.amt;
-              sum.sumInUsd += newItem.usd;
-              sum.custody += newItem.amt;
-              sum.custodyInUsd += newItem.usd;
-              newItem.acct = BigInt(newItem.acct / 2n**40n);
+              sum.totalAmt += v.amt;
+              sum.sumInUsd += v.usd;
+              sum.custody += v.amt;
+              sum.custodyInUsd += v.usd;
+              v.acct = BigInt(v.acct / 2n**40n);
               break;
             case 'CloseOfferAgainstBid': 
-              sum.custody -= newItem.amt;
-              sum.custodyInUsd -= newItem.usd;
-              sum.consideration += newItem.amt;
-              sum.considerationInUsd += newItem.usd;
+              sum.custody -= v.amt;
+              sum.custodyInUsd -= v.usd;
+              sum.consideration += v.amt;
+              sum.considerationInUsd += v.usd;
               break;
             case 'RefundValueOfBidOrder':
-              sum.custody -= newItem.amt;
-              sum.custodyInUsd -= newItem.usd;
-              sum.balance += newItem.amt;
-              sum.balanceInUsd += newItem.usd;
+              sum.custody -= v.amt;
+              sum.custodyInUsd -= v.usd;
+              sum.balance += v.amt;
+              sum.balanceInUsd += v.usd;
               break;
             case 'CloseInitOfferAgainstBid':
-              sum.totalAmt -= newItem.amt;
-              sum.sumInUsd -= newItem.usd;
-              sum.custody -= newItem.amt;
-              sum.custodyInUsd -= newItem.usd;
+              sum.totalAmt -= v.amt;
+              sum.sumInUsd -= v.usd;
+              sum.custody -= v.amt;
+              sum.custodyInUsd -= v.usd;
               break;
             case 'DistributeProfits':
-              sum.totalAmt += newItem.amt;
-              sum.sumInUsd += newItem.usd;
-              sum.distribution += newItem.amt;
-              sum.distributionInUsd += newItem.usd;
+              sum.totalAmt += v.amt;
+              sum.sumInUsd += v.usd;
+              sum.distribution += v.amt;
+              sum.distributionInUsd += v.usd;
               break;
           }
 
-          arr.push(newItem);
+        });
+      }
 
-          counter++;
+
+      const appendItem = (newItem: CashflowProps, refPrices: EthPrice[]) => {
+        if (newItem.amt > 0n) {
+
+          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
+          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+          
+          arr.push(newItem);
         }
       } 
 
       let pickupLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      let cnt = pickupLogs.length;
+      pickupLogs = pickupLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('pickupLogs: ', pickupLogs);
 
-      while(cnt > 0) {
+      let len = pickupLogs.length;
+      let cnt = 0;
 
-        let log = pickupLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = pickupLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -164,22 +182,30 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: log.args.caller ?? 0n,
         }
     
-        appendItem(item);
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
 
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let depositLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = depositLogs.length;
+      depositLogs = depositLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('depositLogs: ', depositLogs);
 
-      while(cnt > 0) {
+      len = depositLogs.length;
+      cnt = 0;
 
-        let log = depositLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = depositLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -195,23 +221,31 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
           addr: AddrZero,
           acct: log.args.acct ?? 0n,
         }
-  
-        appendItem(item);
 
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+  
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let custodyLogs = await client.getLogs({
         address: gk,
         event: parseAbiItem('event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = custodyLogs.length;
+      custodyLogs = custodyLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('custodyLogs: ', custodyLogs);
 
-      while(cnt > 0) {
+      len = custodyLogs.length;
+      cnt = 0;
 
-        let log = custodyLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = custodyLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -228,20 +262,44 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: log.args.to ?? 0n,
         }
 
-        appendItem(item);
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
 
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
-      sum.flag = true;
+      if (arr.length > 0) {
+        arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+        arr = arr.map((v, i) => ({...v, seq:i}));
+        console.log('arr: ', arr);
 
-      setRecords(arr);
+        await setFinData(gk, 'deposits', arr);
+
+        if (logs) {
+          logs = logs.concat(arr);
+        } else {
+          logs = arr;
+        }
+        
+      } else if (!logs) {
+        return;
+      }
+
+      if (logs) {
+        sumArry(logs);
+        sum.flag = true;
+      }
+
+      setRecords(logs);
       setSum(sum);
     }
 
     getDeposits();
 
-  }, [gk, client, centPrice, setSum, setRecords]);
+  }, [gk, client, setSum, setRecords]);
 
   const showList = () => {
 

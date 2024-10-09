@@ -7,7 +7,9 @@ import { parseAbiItem } from "viem";
 import { baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
 import { CashflowProps } from "../FinStatement";
 import { CashflowRecordsProps } from "./CbpIncome";
-import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { EthPrice } from "./ethPrice/getPriceAtTimestamp";
+import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
+import { getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../../api/firebase/ethPriceTools";
 
 export type CbpOutflowSumProps = {
   totalAmt: bigint;
@@ -61,63 +63,81 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
 
     const getEthOutflow = async ()=>{
 
-      if ( !keepers ) return;
+      if ( !gk || !keepers ) return;
+
+      let logs = await getFinData(gk, 'cbpOutflow');
+      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      console.log('lastItemOfCbpOutflow: ', lastBlkNum);
 
       let arr: CashflowProps[] = [];
-      let counter = 0;
+      let ethPrices: EthPrice[] = [];
 
-      const appendItem = (newItem: CashflowProps) => {
-        if (newItem.amt > 0n) {
+      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+        if (!prices) return [];
+        else return prices;
+      }
 
-          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
-          newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
+      const sumArry = (arr: CashflowProps[]) => {
+        arr.forEach(v => {
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
 
-          sum.totalAmt += newItem.amt;
-          sum.sumInUsd += newItem.usd;
-
-          newItem.seq = counter;
-  
-          switch (newItem.typeOfIncome) {
+          switch (v.typeOfIncome) {
             case 'NewUserAward': 
-              sum.newUserAward += newItem.amt;
-              sum.newUserAwardInUsd += newItem.usd;
+              sum.newUserAward += v.amt;
+              sum.newUserAwardInUsd += v.usd;
               break;
             case 'StartupCost': 
-              sum.startupCost += newItem.amt;
-              sum.startupCostInUsd += newItem.usd;
+              sum.startupCost += v.amt;
+              sum.startupCostInUsd += v.usd;
               break;
             case 'FuelSold':
-              sum.fuelSold += newItem.amt;
-              sum.fuelSoldInUsd += newItem.usd;
+              sum.fuelSold += v.amt;
+              sum.fuelSoldInUsd += v.usd;
               break;
             case 'GmmTransfer':
-              sum.gmmTransfer += newItem.amt;
-              sum.gmmTransferInUsd += newItem.usd;
+              sum.gmmTransfer += v.amt;
+              sum.gmmTransferInUsd += v.usd;
               break;
             case 'BmmTransfer':
-              sum.bmmTransfer += newItem.amt;
-              sum.bmmTransferInUsd += newItem.usd;
+              sum.bmmTransfer += v.amt;
+              sum.bmmTransferInUsd += v.usd;
+              break;
           }
-          
+
+        });
+      }
+
+      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+        if (newItem.amt > 0n) {
+
+          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
+          newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
+            
           arr.push(newItem);
-          counter++;
         }
       } 
 
       let newUserAwardLogs = await client.getLogs({
         address: AddrOfRegCenter,
         event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        fromBlock: 1n,
         args: {
           from: AddrZero,
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
     
-      let cnt = newUserAwardLogs.length;
-    
-      while (cnt > 0) {
-        let log = newUserAwardLogs[cnt-1];
+      newUserAwardLogs = newUserAwardLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+          v.args.to?.toLowerCase() != gk.toLowerCase());
+      console.log('newUserAwardlogs: ', newUserAwardLogs);
+
+      let len = newUserAwardLogs.length;
+      let cnt = 0;
+
+      while (cnt < len) {
+        let log = newUserAwardLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -134,28 +154,34 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
         
-        if (item.addr.toLowerCase() == gk?.toLowerCase()) {
-          cnt--;
-          continue;
-        } else if (item.addr.toLowerCase() == FirstUser.toLowerCase() ||
+        if (item.addr.toLowerCase() == FirstUser.toLowerCase() ||
           item.addr.toLowerCase() == SecondUser.toLowerCase()) {
           item.typeOfIncome = 'StartupCost';
         } 
 
-        appendItem(item);
-        cnt--;        
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let fuelSoldLogs = await client.getLogs({
         address: AddrOfTank,
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
+
+      fuelSoldLogs = fuelSoldLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('fuelSoldLogs: ')
     
-      cnt = fuelSoldLogs.length;
+      len = fuelSoldLogs.length;
+      cnt = 0;
     
-      while (cnt > 0) {
-        let log = fuelSoldLogs[cnt-1];
+      while (cnt < len) {
+        let log = fuelSoldLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -172,23 +198,36 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
         
-        appendItem(item);
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let gmmTransferLogs = await client.getLogs({
         address: keepers[keepersMap.GMMKeeper],
         event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        fromBlock: 1n,
         args: {
           isCBP: true
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
     
-      cnt = gmmTransferLogs.length;
-    
-      while (cnt > 0) {
-        let log = gmmTransferLogs[cnt-1];
+      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+          v.args.isCBP == true &&
+          v.args.to?.toLowerCase() != AddrOfTank.toLowerCase() &&
+          v.args.to?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase());
+
+      console.log('gmmTransferCbpLogs: ', gmmTransferLogs);
+
+      len = gmmTransferLogs.length;
+      cnt = 0;
+
+      while (cnt < len) {
+        let log = gmmTransferLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -205,31 +244,33 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
         
-        if (item.addr.toLowerCase() == AddrOfTank.toLowerCase() ||
-            item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()) {
-          item.typeOfIncome = 'FuelCost';
-          cnt--;
-          continue;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
         }
 
-        appendItem(item);
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let bmmTransferLogs = await client.getLogs({
         address: keepers[keepersMap.BMMKeeper],
         event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        fromBlock: 1n,
         args:{
           isCBP: true
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = bmmTransferLogs.length;
-      
-      while(cnt > 0) {
+      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
 
-        let log = bmmTransferLogs[cnt-1];
+      len = bmmTransferLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = bmmTransferLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -246,19 +287,45 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
 
-        appendItem(item);
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
-      sum.flag = true;
+      if (arr.length > 0) {
 
-      setRecords(arr);
+        arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+        arr = arr.map((v, i) => ({...v, seq:i}));
+        console.log('arr: ', arr);
+
+        await setFinData(gk, 'cbpOutflow', arr);
+
+        if (logs) {
+          logs = logs.concat(arr);
+        } else {
+          logs = arr;
+        }
+
+      } else if (!logs) {
+        return;
+      }
+
+      if (logs) {
+        sumArry(logs);
+        sum.flag = true;
+      }
+
+      setRecords(logs);
       setSum(sum);
     }
 
     getEthOutflow();
 
-  }, [ gk, client, keepers, centPrice, exRate, setSum, setRecords]);
+  }, [ gk, client, keepers, exRate, setSum, setRecords]);
 
 
   const showList = () => {

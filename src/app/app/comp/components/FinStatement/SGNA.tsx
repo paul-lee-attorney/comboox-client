@@ -43,14 +43,6 @@ export function SGNA ({inETH, items, open, setOpen}:SGNAProps ) {
 
           <Box width={680} >
 
-            {/* {items.length > 0 && (
-              <Stack direction='row' sx={{ alignItems:'center' }} >
-                <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-                  <b>{items[0].title}</b> ({inETH ? 'ETH' : 'USD'}:&nbsp; { inETH ? weiToEth9Dec(items[0].amt) : showUSD(items[0].amtInUsd) })
-                </Typography>
-              </Stack>
-            )} */}
-
             {items.map((v,i) => {
               if (i == 0) return;
               return (

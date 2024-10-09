@@ -8,6 +8,8 @@ import {  baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
 export type FtEthflowSumProps = {
   totalEth: bigint;
@@ -42,58 +44,75 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
   useEffect(()=>{
 
     let sum: FtEthflowSumProps = { ...defaultFtEthSum };
+
     const getFtCashflow = async ()=>{
 
       if (!gk || !keepers) return;
 
+      let logs = await getFinData(gk, 'ftEthflow');
+      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      console.log('lastItemOfEthOutflow: ', lastBlkNum);
+
       let arr: CashflowProps[] = [];
-      let counter = 0;
-  
-      const appendItem = (newItem: CashflowProps) => {
+      let ethPrices: EthPrice[] = [];
 
-        if (newItem.amt > 0n) {
+      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+        if (!prices) return [];
+        else return prices;
+      }
 
-          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
-          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
-
-          switch (newItem.typeOfIncome) {
+      const sumArry = (arr: CashflowProps[]) => {
+        arr.forEach(v => {
+          switch (v.typeOfIncome) {            
             case 'WithdrawEth':
-              sum.totalEth -= newItem.amt;
-              sum.withdrawEth += newItem.amt;
+              sum.totalEth -= v.amt;
+              sum.withdrawEth += v.amt;
 
-              sum.totalEthInUsd -= newItem.usd;
-              sum.withdrawEthInUsd += newItem.usd;
+              sum.totalEthInUsd -= v.usd;
+              sum.withdrawEthInUsd += v.usd;
 
               break;
             case 'RefuelEth':
-              sum.totalEth += newItem.amt;
-              sum.refuelEth += newItem.amt;
+              sum.totalEth += v.amt;
+              sum.refuelEth += v.amt;
 
-              sum.totalEthInUsd += newItem.usd;
-              sum.refuelEthInUsd += newItem.usd;
+              sum.totalEthInUsd += v.usd;
+              sum.refuelEthInUsd += v.usd;
 
             break;
-          } 
+          }
+        });
+      }
 
-          newItem.seq = counter;
+      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+
+        if (newItem.amt > 0n) {
+
+          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
+          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
   
           arr.push(newItem);
-          counter++;          
         }
+
       } 
 
       let refuelLogs = await client.getLogs({
         address: AddrOfTank,
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      let cnt = refuelLogs.length;
-      
-      while(cnt > 0) {
+      refuelLogs = refuelLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('refuelLogs: ', refuelLogs);
 
-        let log = refuelLogs[cnt-1];
+      let len = refuelLogs.length;
+      let cnt = 0;
+      
+      while(cnt < len) {
+
+        let log = refuelLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -110,22 +129,30 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
 
-        appendItem(item);
-            
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let withdrawEthLogs = await client.getLogs({
         address: AddrOfTank,
         event: parseAbiItem('event WithdrawIncome(address indexed owner, uint indexed amt)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = withdrawEthLogs.length;
+      withdrawEthLogs = withdrawEthLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('withdrawEthLogs: ', withdrawEthLogs);
       
-      while(cnt > 0) {
+      len = withdrawEthLogs.length;
+      cnt = 0;
 
-        let log = withdrawEthLogs[cnt-1];
+      while(cnt < len) {
+
+        let log = withdrawEthLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -142,20 +169,44 @@ export function FtEthflow({ inETH, exRate, centPrice, sum, setSum, records, setR
           acct: 0n,
         }
 
-        appendItem(item);
-    
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);    
+        cnt++;
       }
 
-      sum.flag = true;
+      if (arr.length > 0) {
+        arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+        arr = arr.map((v, i) => ({...v, seq:i}));
+        console.log('arr: ', arr);
 
-      setRecords(arr);
+        await setFinData(gk, 'ftEthflow', arr);
+
+        if (logs) {
+          logs = logs.concat(arr);
+        } else {
+          logs = arr;
+        }
+        
+      } else if (!logs) {
+        return;
+      }
+
+      if (logs) {
+        sumArry(logs);
+        sum.flag = true;
+      }
+
+      setRecords(logs);
       setSum(sum);
     }
 
     getFtCashflow();
 
-  }, [gk, client, centPrice, keepers, setSum, setRecords]);
+  }, [gk, client, keepers, setSum, setRecords]);
 
   const showList = () => {
     let curSumInUsd = sum.totalEth * 10n ** 16n / centPrice;

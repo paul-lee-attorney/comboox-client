@@ -18,8 +18,8 @@ import { totalDeposits } from "../gk";
 import { defaultFtEthSum, FtEthflow, FtEthflowSumProps } from "./FinStatement/FtEthflow";
 import { defaultFtCbpSum, FtCbpflow, FtCbpflowSumProps } from "./FinStatement/FtCbpflow";
 import { getCentPriceInWeiAtTimestamp } from "./FinStatement/ethPrice/getPriceAtTimestamp";
-import dayjs from "dayjs";
 import { BtnProps, SGNA } from "./FinStatement/SGNA";
+import { updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
 
 export type CashflowProps = {
   seq: number,
@@ -73,6 +73,7 @@ export function FinStatement() {
 
   useEffect(()=>{
     const getRate = async ()=> {
+      await updateMonthlyEthPrices();
       let rateOfEx = await rate();
       setExRate(rateOfEx);
     }

@@ -4,10 +4,12 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
+import {  baseToDollar, bigIntToStrNum, HexParser } from "../../../common/toolsKit";
 import { CashflowRecordsProps } from "./CbpIncome";
 import { CashflowProps } from "../FinStatement";
 import { getCentPriceInWeiAtTimestamp } from "./ethPrice/getPriceAtTimestamp";
+import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
 
 export type FtCbpflowSumProps = {
   totalCbp: bigint;
@@ -46,72 +48,95 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
   useEffect(()=>{
 
     let sum: FtCbpflowSumProps = { ...defaultFtCbpSum };
+
     const getFtCashflow = async ()=>{
 
       if (!gk || !keepers) return;
 
+      let logs = await getFinData(gk, 'ftCbpflow');
+      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      console.log('lastItemOfFtCbpflow: ', lastBlkNum);
+
       let arr: CashflowProps[] = [];
-      let counter = 0;
+      let ethPrices: EthPrice[] = [];
+
+      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+        if (!prices) return [];
+        else return prices;
+      }
 
       const cbpToETH = (cbp:bigint) => {
         return cbp * 10000n / exRate;
       }    
   
-      const appendItem = (newItem: CashflowProps) => {
+      const sumArry = (arr: CashflowProps[]) => {
 
+        arr.forEach(v => {
+
+          switch (v.typeOfIncome) {
+            case 'AddCbp':
+              sum.totalCbp += v.amt;
+              sum.addCbp += v.amt;
+              
+              sum.totalCbpInUsd += v.usd;
+              sum.addCbpInUsd += v.usd;
+
+              break;
+
+            case 'WithdrawCbp':
+              sum.totalCbp -= v.amt;
+              sum.withdrawCbp += v.amt;
+
+              sum.totalCbpInUsd -= v.usd;
+              sum.withdrawCbpInUsd += v.usd;
+
+              break;
+
+            case 'RefuelCbp':
+              sum.totalCbp -= v.amt;
+              sum.refuelCbp += v.amt;
+
+              sum.totalCbpInUsd -= v.usd;
+              sum.refuelCbpInUsd += v.usd;
+
+              break;
+          }
+
+        });
+      }
+
+
+      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
 
-          let mark = getCentPriceInWeiAtTimestamp(Number(newItem.timestamp * 1000n));
-          newItem.ethPrice = mark.centPrice ?  10n ** 25n / mark.centPrice : 10n ** 25n / centPrice;
+          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
           newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
-
-          switch (newItem.typeOfIncome) {
-            case 'AddCbp':
-              sum.totalCbp += newItem.amt;
-              sum.addCbp += newItem.amt;
-              
-              sum.totalCbpInUsd += newItem.usd;
-              sum.addCbpInUsd += newItem.usd;
-
-              break;
-            case 'WithdrawCbp':
-              sum.totalCbp -= newItem.amt;
-              sum.withdrawCbp += newItem.amt;
-
-              sum.totalCbpInUsd -= newItem.usd;
-              sum.withdrawCbpInUsd += newItem.usd;
-
-              break;
-            case 'RefuelCbp':
-              sum.totalCbp -= newItem.amt;
-              sum.refuelCbp += newItem.amt;
-
-              sum.totalCbpInUsd -= newItem.usd;
-              sum.refuelCbpInUsd += newItem.usd;
-
-              break; 
-          } 
-
-          newItem.seq = counter;
   
           arr.push(newItem);
-          counter++;          
         }
       } 
 
       let addCbpLogs = await client.getLogs({
         address: AddrOfRegCenter,
         event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        fromBlock: 1n,
         args: {
           from: gk,
-        }
+          to: [ HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7"),
+              AddrOfTank],
+        },
+        fromBlock: lastBlkNum ? lastBlkNum + 1n : 'earliest',
       });
+
+      addCbpLogs = addCbpLogs.filter( v => v.blockNumber > lastBlkNum);
+      console.log('addCbpLogs: ', addCbpLogs);
     
-      let cnt = addCbpLogs.length;
+      let len = addCbpLogs.length;
+      let cnt = 0;
     
-      while (cnt > 0) {
-        let log = addCbpLogs[cnt-1];
+      while (cnt < len) {
+        let log = addCbpLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -128,25 +153,30 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
         
-        if (item.addr.toLowerCase() == "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() ||
-          item.addr.toLowerCase() == AddrOfTank.toLowerCase()) {
-            appendItem(item);
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
         }
 
-        cnt--;
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let withdrawCbpLogs = await client.getLogs({
         address: AddrOfTank,
         event: parseAbiItem('event WithdrawFuel(address indexed owner, uint indexed amt)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = withdrawCbpLogs.length;
-      
-      while(cnt > 0) {
+      withdrawCbpLogs = withdrawCbpLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('withdrawCbpLogs: ', withdrawCbpLogs);
 
-        let log = withdrawCbpLogs[cnt-1];
+      len = withdrawCbpLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = withdrawCbpLogs[cnt];
 
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
@@ -164,24 +194,33 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
     
-        appendItem(item);
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let deprecateLogs = await client.getLogs({
         address: AddrOfRegCenter,
         event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        fromBlock: 1n,
         args: {
           from: `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`,
           to: gk,
-        }
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
     
-      cnt = deprecateLogs.length;
+      deprecateLogs = deprecateLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('deprecateLogs: ', deprecateLogs);
+
+      len = deprecateLogs.length;
+      cnt = 0;
     
-      while (cnt > 0) {
-        let log = deprecateLogs[cnt-1];
+      while (cnt < len) {
+        let log = deprecateLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
@@ -198,21 +237,30 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
         
-        appendItem(item);
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
       let refuelLogs = await client.getLogs({
         address: AddrOfTank,
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: 1n,
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      cnt = refuelLogs.length;
-      
-      while(cnt > 0) {
+      refuelLogs = refuelLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('refuelLogs: ', refuelLogs);
 
-        let log = refuelLogs[cnt-1];
+      len = refuelLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = refuelLogs[cnt];
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
@@ -229,20 +277,44 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
           acct: 0n,
         }
 
-        appendItem(item);
-            
-        cnt--;
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
       }
 
-      sum.flag = true;
+      if (arr.length > 0) {
+        arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+        arr = arr.map((v, i) => ({...v, seq:i}));
+        console.log('arr: ', arr);
 
-      setRecords(arr);
+        await setFinData(gk, 'ftCbpflow', arr);
+
+        if (logs) {
+          logs = logs.concat(arr);
+        } else {
+          logs = arr;
+        }
+        
+      } else if (!logs) {
+        return;
+      }
+
+      if (logs) {
+        sumArry(logs);
+        sum.flag = true;
+      }
+
+      setRecords(logs);
       setSum(sum);
     }
 
     getFtCashflow();
 
-  }, [gk, client, exRate, centPrice, keepers, setSum, setRecords]);
+  }, [gk, client, exRate, keepers, setSum, setRecords]);
 
   const showList = () => {
     let curSumCbpInUsd =  sum.totalCbp * 10000n / exRate * 10n ** 16n / centPrice;
