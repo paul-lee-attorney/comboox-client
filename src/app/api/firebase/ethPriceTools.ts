@@ -196,7 +196,7 @@ export function findClosestPrice(targetTimestamp:number, data:EthPrice[]): EthPr
   let right = data.length - 1;
   let mark:EthPrice = {
       timestamp: 0,
-      price: 0,
+      price: 1,
   };
 
   while (left <= right) {
@@ -216,6 +216,7 @@ export function findClosestPrice(targetTimestamp:number, data:EthPrice[]): EthPr
       } else {
           right = mid - 1;
       }
+      
   }
 
   return mark;
@@ -228,6 +229,7 @@ export type CentPrice = {
 
 export function getPriceAtTimestamp(targetTimestamp: number, prices: EthPrice[]): CentPrice {
   let mark:EthPrice = findClosestPrice(targetTimestamp, prices);
+  
   let output:CentPrice = {
       timestamp: mark.timestamp,
       centPrice: 10n ** 34n / BigInt(mark.price * 10 ** 18),

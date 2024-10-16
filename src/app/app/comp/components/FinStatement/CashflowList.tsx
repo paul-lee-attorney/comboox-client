@@ -3,7 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { CashflowProps } from "../FinStatement";
+import { Cashflow } from "../FinStatement";
 
 export interface SumInfo {
   title: string;
@@ -13,7 +13,7 @@ export interface SumInfo {
 export interface CashflowListProps {
   inETH: boolean
   arrSum: SumInfo[];
-  records: CashflowProps[];
+  records: Cashflow[];
   open: boolean;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
@@ -135,7 +135,7 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
             initialState={{pagination:{paginationModel:{pageSize: 10}}}} 
             pageSizeOptions={[5, 10, 15, 20]} 
             rows={ records } 
-            getRowId={(row:CashflowProps) => (row.seq)} 
+            getRowId={(row:Cashflow) => (row.seq)} 
             columns={ columns }
             disableRowSelectionOnClick
           />

@@ -1,18 +1,14 @@
-import { Dispatch, SetStateAction, useEffect, } from "react";
-import { Button,} from "@mui/material";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../common";
+import { useEffect, } from "react";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  baseToDollar, bigIntToStrNum, HexParser, } from "../../../common/toolsKit";
-import { CashflowRecordsProps } from "./CbpIncome";
-import { CashflowProps } from "../FinStatement";
+import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
 import { ethers } from "ethers";
-import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../../api/firebase/ethPriceTools";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
-
-export type EthIncomeSumProps = {
+export type EthInflowSum = {
   totalAmt: bigint;
   sumInUsd: bigint;
   gas: bigint;
@@ -24,7 +20,7 @@ export type EthIncomeSumProps = {
   flag: boolean;
 }
 
-export const defaultEthIncomeSum:EthIncomeSumProps = {
+export const defEthInflowSum:EthInflowSum = {
   totalAmt: 0n,
   sumInUsd: 0n,
   gas: 0n,
@@ -36,29 +32,77 @@ export const defaultEthIncomeSum:EthIncomeSumProps = {
   flag: false,
 }
 
-export interface EthIncomeProps extends CashflowRecordsProps {
-  sum: EthIncomeSumProps;
-  setSum: Dispatch<SetStateAction<EthIncomeSumProps>>;
+export const defEthInflowSumArr:EthInflowSum[] = [
+  defEthInflowSum, defEthInflowSum, defEthInflowSum, defEthInflowSum,
+] 
+
+export const sumArrayOfEthInflow = (arr: Cashflow[]): EthInflowSum => {
+  let sum:EthInflowSum = {...defEthInflowSum};
+
+  if (arr.length > 0) {
+    arr.forEach(v => {
+      sum.totalAmt += v.amt;
+      sum.sumInUsd += v.usd;
+  
+      switch (v.typeOfIncome) {
+        case 'TransferIncome':
+          sum.transfer += v.amt;
+          sum.transferInUsd += v.usd;
+          break;
+        case 'GasIncome':
+          sum.gas += v.amt;
+          sum.gasInUsd += v.usd;
+          break;
+        case 'PayInCap':
+        case 'PayOffCIDeal':
+        case 'CloseBidAgainstInitOffer':
+          sum.capital += v.amt;
+          sum.capitalInUsd += v.usd;
+          break;
+        case 'CloseInitOfferAgainstBid':
+          sum.capital += v.amt;
+          sum.capitalInUsd += v.usd;
+          v.acct = BigInt(v.acct / 2n**40n);
+          break;
+      }  
+    });  
+  }
+
+  sum.flag = true;
+
+  return sum;
 }
 
-export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:EthIncomeProps ) {
+export const updateEthInflowSum = (arr: Cashflow[], info:CashflowRange) => {
+  
+  let sum: EthInflowSum[] = [];
+
+  if (arr.length > 0) {
+    sum.push(sumArrayOfEthInflow(arr));
+    sum.push(sumArrayOfEthInflow(arr.slice(0, info.head)));
+    sum.push(sumArrayOfEthInflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
+    sum.push(sumArrayOfEthInflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+  }
+  
+  return sum;
+}
+
+export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
 
   useEffect(()=>{
 
-    let sum: EthIncomeSumProps = { ...defaultEthIncomeSum };
-
-    const getEthIncome = async ()=>{
+    const getEthInflow = async ()=>{
 
       if (!gk || !keepers) return;
 
-      let logs = await getFinData(gk, 'ethIncome');
+      let logs = await getFinData(gk, 'ethInflow');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('lastItemOfEthIncome: ', lastBlkNum);
+      console.log('lastItemOfEthInflow: ', lastBlkNum);
 
-      let arr: CashflowProps[] = [];
+      let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
       const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
@@ -67,40 +111,8 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         else return prices;
       }
 
-      const sumArry = (arr: CashflowProps[]) => {
-        arr.forEach(v => {
-          sum.totalAmt += v.amt;
-          sum.sumInUsd += v.usd;
-
-          switch (v.typeOfIncome) {
-            case 'TransferIncome':
-              sum.transfer += v.amt;
-              sum.transferInUsd += v.usd;
-              break;
-            case 'GasIncome':
-              sum.gas += v.amt;
-              sum.gasInUsd += v.usd;
-              break;
-            case 'PayInCap':
-            case 'PayOffCIDeal':
-            case 'CloseBidAgainstInitOffer':
-              sum.capital += v.amt;
-              sum.capitalInUsd += v.usd;
-              break;
-            case 'CloseInitOfferAgainstBid':
-              sum.capital += v.amt;
-              sum.capitalInUsd += v.usd;
-              v.acct = BigInt(v.acct / 2n**40n);
-              break;
-          }
-
-        });
-      }
-
-      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
-
+      const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
-
           let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
 
           newItem.ethPrice = 10n ** 25n / mark.centPrice;
@@ -128,7 +140,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -167,7 +179,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -208,7 +220,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -254,7 +266,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -300,7 +312,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -347,7 +359,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -381,7 +393,7 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         arr = arr.map((v, i) => ({...v, seq:i}));
         console.log('arr: ', arr);
 
-        await setFinData(gk, 'ethIncome', arr);
+        await setFinData(gk, 'ethInflow', arr);
 
         if (logs) {
           logs = logs.concat(arr);
@@ -393,53 +405,16 @@ export function EthIncome({inETH, exRate, centPrice, sum, setSum, records, setRe
         logs = [];
       }
 
-
-      sumArry(logs);
-      sum.flag = true;
-
       setRecords(logs);
-      setSum(sum);
+      
     }
 
-    getEthIncome();
+    getEthInflow();
 
-  }, [gk, client, keepers, setSum, setRecords]);
-
-  const showList = () => {
-    let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;
-
-    let arrSumInfo = inETH
-      ? [ {title: 'ETH Income - (ETH ', data: sum.totalAmt},
-          {title: 'GasIncome', data: sum.gas},
-          {title: 'PayInCap', data: sum.capital},
-          {title: 'TransferIncome', data: sum.transfer} 
-        ]
-      : [ {title: 'ETH Income - (USD ', data: sum.sumInUsd},
-          {title: 'Exchange Gain/Loss', data: curSumInUsd - sum.sumInUsd},
-          {title: 'GasIncome', data: sum.gasInUsd},
-          {title: 'PayInCap', data: sum.capitalInUsd},
-          {title: 'TransferIncome', data: sum.transferInUsd}
-        ];
-
-    setSumInfo(arrSumInfo);
-    setList(records);
-    setOpen(true);
-  }
+  }, [gk, client, keepers, setRecords]);
 
   return (
   <>
-    {sum.flag && (
-      <Button 
-        variant="outlined"
-        fullWidth
-        sx={{m:0.5, minWidth:288, justifyContent:'start'}}
-        onClick={()=>showList()}
-      >
-        <b>ETH Income: ({ inETH
-            ? bigIntToStrNum(sum.totalAmt/10n**9n, 9) + ' ETH'
-            : baseToDollar((sum.sumInUsd/10n**14n).toString()) + ' USD' })</b>
-      </Button>
-    )}
   </>
   );
 } 

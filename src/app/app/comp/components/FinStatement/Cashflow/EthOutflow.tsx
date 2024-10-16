@@ -1,17 +1,15 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { Button } from "@mui/material";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrZero, keepersMap } from "../../../common";
+import { useEffect } from "react";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { AddrZero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { baseToDollar, bigIntToStrNum,  HexParser, } from "../../../common/toolsKit";
-import { CashflowRecordsProps } from "./CbpIncome";
+import { HexParser, } from "../../../../common/toolsKit";
 import { ethers } from "ethers";
-import { CashflowProps } from "../FinStatement";
-import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
+import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
-export type EthOutflowSumProps = {
+export type EthOutflowSum = {
   totalAmt: bigint;
   sumInUsd: bigint;
   distribution: bigint;
@@ -27,7 +25,7 @@ export type EthOutflowSumProps = {
   flag: boolean;
 }
 
-export const defaultEthOutSum:EthOutflowSumProps = {
+export const defEthOutflowSum:EthOutflowSum = {
   totalAmt: 0n,
   sumInUsd: 0n,
   distribution: 0n,
@@ -43,19 +41,67 @@ export const defaultEthOutSum:EthOutflowSumProps = {
   flag: false
 }
 
-export interface EthOutflowProps extends CashflowRecordsProps {
-  sum: EthOutflowSumProps;
-  setSum: Dispatch<SetStateAction<EthOutflowSumProps>>;
+export const defEthOutflowSumArr:EthOutflowSum[] = [
+  defEthOutflowSum, defEthOutflowSum, defEthOutflowSum, defEthOutflowSum
+] 
+
+export const sumArrayOfEthOutflow = (arr: Cashflow[]) => {
+  let sum:EthOutflowSum = {...defEthOutflowSum};
+
+  if (arr.length > 0) {
+    arr.forEach(v => {
+      sum.totalAmt += v.amt;
+      sum.sumInUsd += v.usd;
+  
+      switch (v.typeOfIncome) {
+        case 'GmmTransfer':
+          sum.gmmTransfer += v.amt;
+          sum.gmmTransferInUsd += v.usd;
+          break;
+        case 'GmmExpense':
+          sum.gmmExpense += v.amt;
+          sum.gmmExpenseInUsd += v.usd;
+          break;
+        case 'BmmTransfer':
+          sum.bmmTransfer += v.amt;
+          sum.bmmTransferInUsd += v.usd;
+          break;
+        case 'BmmExpense':
+          sum.bmmExpense += v.amt;
+          sum.bmmExpenseInUsd += v.usd;
+          break;
+        case 'Distribution':
+          sum.distribution += v.amt;
+          sum.distributionInUsd += v.usd;
+      }  
+    });
+  }
+
+  sum.flag = true;
+
+  return sum;
 }
 
-export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:EthOutflowProps ) {
+export const updateEthOutflowSum = (arr: Cashflow[], info:CashflowRange) => {
+  
+  let sum: EthOutflowSum[] = [];
+
+  if (arr.length > 0) {
+    sum.push(sumArrayOfEthOutflow(arr));
+    sum.push(sumArrayOfEthOutflow(arr.slice(0, info.head)));
+    sum.push(sumArrayOfEthOutflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
+    sum.push(sumArrayOfEthOutflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+  }
+  
+  return sum;
+}
+
+export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
-  const client = usePublicClient();  
+  const client = usePublicClient();
 
   useEffect(()=>{
-
-    let sum: EthOutflowSumProps = { ...defaultEthOutSum };
 
     const getEthOutflow = async ()=>{
 
@@ -65,7 +111,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       console.log('lastItemOfEthOutflow: ', lastBlkNum);
 
-      let arr: CashflowProps[] = [];
+      let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
       const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
@@ -74,36 +120,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         else return prices;
       }
 
-      const sumArry = (arr: CashflowProps[]) => {
-        arr.forEach(v => {
-          sum.totalAmt += v.amt;
-          sum.sumInUsd += v.usd;
-  
-          switch (v.typeOfIncome) {
-            case 'GmmTransfer':
-              sum.gmmTransfer += v.amt;
-              sum.gmmTransferInUsd += v.usd;
-              break;
-            case 'GmmExpense':
-              sum.gmmExpense += v.amt;
-              sum.gmmExpenseInUsd += v.usd;
-              break;
-            case 'BmmTransfer':
-              sum.bmmTransfer += v.amt;
-              sum.bmmTransferInUsd += v.usd;
-              break;
-            case 'BmmExpense':
-              sum.bmmExpense += v.amt;
-              sum.bmmExpenseInUsd += v.usd;
-              break;
-            case 'Distribution':
-              sum.distribution += v.amt;
-              sum.distributionInUsd += v.usd;
-          }
-        });
-      }
-
-      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+      const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
 
           let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
@@ -138,7 +155,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -178,7 +195,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -221,7 +238,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -261,7 +278,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -304,7 +321,7 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -343,55 +360,15 @@ export function EthOutflow({ inETH, exRate, centPrice, sum, setSum, records, set
         logs = [];
       }
 
-      sumArry(logs);
-      sum.flag = true;
-
       setRecords(logs);
-      setSum(sum);
     }
 
     getEthOutflow();
 
-  }, [gk, client, keepers, setSum, setRecords]);
-
-  const showList = () => {
-    let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;
-
-    let arrSumInfo = inETH
-      ? [ {title: 'ETH Outflow - (ETH ', data: sum.totalAmt},
-          {title: 'Distribution', data: sum.distribution},
-          {title: 'GMM Transfer', data: sum.gmmTransfer},
-          {title: 'GMM Expense', data: sum.gmmExpense},
-          {title: 'BMM Transfer', data: sum.bmmTransfer},
-          {title: 'BMM Expense', data: sum.bmmExpense},
-        ]
-      : [ {title: 'ETH Outflow - (USD ', data: sum.sumInUsd},
-          {title: 'Exchange Gain/Loss', data: sum.sumInUsd - curSumInUsd},
-          {title: 'Distribution', data: sum.distributionInUsd},
-          {title: 'GMM Transfer', data: sum.gmmTransferInUsd},
-          {title: 'GMM Expense', data: sum.gmmExpenseInUsd},
-          {title: 'BMM Transfer', data: sum.bmmTransferInUsd},
-          {title: 'BMM Expense', data: sum.bmmExpenseInUsd}
-        ];
-    setSumInfo(arrSumInfo);
-    setList(records);
-    setOpen(true);
-  }
+  }, [gk, client, keepers, setRecords]);
 
   return (
-  <>
-    {sum.flag && (
-      <Button 
-        variant="outlined"
-        fullWidth
-        sx={{m:0.5, minWidth:288, justifyContent:'start'}}
-        onClick={()=>showList()}
-      >
-        <b>Eth Outflow: ({ inETH 
-            ? bigIntToStrNum(sum.totalAmt / 10n**9n, 9) + ' ETH'
-            : baseToDollar((sum.sumInUsd / 10n**14n).toString()) + ' USD'})</b>
-      </Button>
-    )}
-  </>
+    <>
+    </>
   );
 } 

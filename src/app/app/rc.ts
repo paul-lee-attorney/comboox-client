@@ -618,13 +618,24 @@ export async function balanceOf(acct:HexType, blk:bigint|undefined): Promise<big
 }
 
 export async function balanceOfWei(addr: HexType):Promise<bigint>{
-  let res = await fetchBalance({
+  const res = await fetchBalance({
     address: addr,
-    formatUnits: 'wei'
+    formatUnits: 'wei',
   })
 
   return res.value;
 }
+
+// export async function balanceOfWeiAtBlock(addr: HexType, blk:bigint):Promise<bigint>{
+//   let balance = await getBalance({
+//     address: addr,
+//     blockNumber: blk,
+//   })
+
+//   return balance;
+// }
+
+
 
 export async function getCentPriceInWei(curr:number): Promise<bigint>{
 

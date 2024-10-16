@@ -3,6 +3,7 @@ import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { HexType } from '../../app/common';
 import { CashflowProps } from '../../app/comp/components/FinStatement';
 import { HexParser } from '../../app/common/toolsKit';
+import { getMonthRanges } from './ethPriceTools';
 
 
 export type CashflowStrProps = {
@@ -175,4 +176,3 @@ export async function setFinData(gk: HexType, typeOfInfo:string, data:CashflowPr
   // Check if all operations were successful
   return results.every(result => result === true);
 }
-

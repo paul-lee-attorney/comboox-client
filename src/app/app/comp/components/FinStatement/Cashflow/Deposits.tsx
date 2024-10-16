@@ -1,17 +1,14 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { Button } from "@mui/material";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrZero, Bytes32Zero } from "../../../common";
+import { useEffect } from "react";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { AddrZero, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
 import { ethers } from "ethers";
-import { CashflowProps } from "../FinStatement";
-import { CashflowRecordsProps } from "./CbpIncome";
-import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
+import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
-export type DepositsSumProps = {
+export type DepositsSum = {
   totalAmt: bigint;
   sumInUsd: bigint;
   consideration: bigint;
@@ -27,7 +24,7 @@ export type DepositsSumProps = {
   flag: boolean;
 }
 
-export const defaultDepositsSum:DepositsSumProps = {
+export const defDepositsSum:DepositsSum = {
   totalAmt: 0n,
   sumInUsd: 0n,
   consideration: 0n,
@@ -43,19 +40,102 @@ export const defaultDepositsSum:DepositsSumProps = {
   flag: false,
 }
 
-export interface DepositsProps extends CashflowRecordsProps {
-  sum: DepositsSumProps;
-  setSum: Dispatch<SetStateAction<DepositsSumProps>>;
+export const defDepositsSumArr:DepositsSum[] = [
+  defDepositsSum, defDepositsSum, defDepositsSum, defDepositsSum
+] 
+
+export const sumArrayOfDeposits = (arr: Cashflow[]) => {
+
+  let sum: DepositsSum = {...defDepositsSum};
+
+  if (arr.length > 0) {
+    arr.forEach(v => {
+      switch (v.typeOfIncome) {
+        case 'Pickup':
+          sum.totalAmt -= v.amt;
+          sum.sumInUsd -= v.usd;
+          sum.pickup += v.amt;
+          sum.pickupInUsd += v.usd;
+          break;
+        case 'DepositConsiderationOfSTDeal':
+        case 'CloseBidAgainstOffer':
+        case 'DepositConsiderationOfSwap': 
+        case 'DepositConsiderOfRejectedDeal':
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
+          sum.consideration += v.amt;
+          sum.considerationInUsd += v.usd;
+          break;
+        case 'DepositBalanceOfOTCDeal': 
+        case 'DepositBalanceOfPayInCap':
+        case 'DepositBalanceOfSwap':
+        case 'DepositBalanceOfBidOrder':
+        case 'DepositBalanceOfRejectedDeal':
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
+          sum.balance += v.amt;
+          sum.balanceInUsd += v.usd;
+          break;
+        case 'CustodyValueOfBidOrder':
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
+          sum.custody += v.amt;
+          sum.custodyInUsd += v.usd;
+          v.acct = BigInt(v.acct / 2n**40n);
+          break;
+        case 'CloseOfferAgainstBid': 
+          sum.custody -= v.amt;
+          sum.custodyInUsd -= v.usd;
+          sum.consideration += v.amt;
+          sum.considerationInUsd += v.usd;
+          break;
+        case 'RefundValueOfBidOrder':
+          sum.custody -= v.amt;
+          sum.custodyInUsd -= v.usd;
+          sum.balance += v.amt;
+          sum.balanceInUsd += v.usd;
+          break;
+        case 'CloseInitOfferAgainstBid':
+          sum.totalAmt -= v.amt;
+          sum.sumInUsd -= v.usd;
+          sum.custody -= v.amt;
+          sum.custodyInUsd -= v.usd;
+          break;
+        case 'DistributeProfits':
+          sum.totalAmt += v.amt;
+          sum.sumInUsd += v.usd;
+          sum.distribution += v.amt;
+          sum.distributionInUsd += v.usd;
+          break;
+      }
+    });
+  }
+
+  sum.flag = true;
+
+  return sum;
 }
 
-export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:DepositsProps ) {
+export const updateDepositsSum = (arr: Cashflow[], info:CashflowRange) => {
+  
+  let sum: DepositsSum[] = [];
+
+  if (arr.length > 0) {
+    sum.push(sumArrayOfDeposits(arr));
+    sum.push(sumArrayOfDeposits(arr.slice(0, info.head)));
+    sum.push(sumArrayOfDeposits(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
+    sum.push(sumArrayOfDeposits(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+  }
+  
+  return sum;
+}
+
+export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
   const { gk } = useComBooxContext();
   
   const client = usePublicClient();
 
   useEffect(()=>{
-
-    let sum: DepositsSumProps = { ...defaultDepositsSum };
 
     const getDeposits = async ()=>{
 
@@ -65,7 +145,7 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       console.log('latestBlkOfDeposits: ', lastBlkNum);
 
-      let arr: CashflowProps[] = [];
+      let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
       const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
@@ -74,73 +154,7 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
         else return prices;
       }
 
-      const sumArry = (arr: CashflowProps[]) => {
-
-        arr.forEach(v => {
-          switch (v.typeOfIncome) {
-            case 'Pickup':
-              sum.totalAmt -= v.amt;
-              sum.sumInUsd -= v.usd;
-              sum.pickup += v.amt;
-              sum.pickupInUsd += v.usd;
-              break;
-            case 'DepositConsiderationOfSTDeal':
-            case 'CloseBidAgainstOffer':
-            case 'DepositConsiderationOfSwap': 
-            case 'DepositConsiderOfRejectedDeal':
-              sum.totalAmt += v.amt;
-              sum.sumInUsd += v.usd;
-              sum.consideration += v.amt;
-              sum.considerationInUsd += v.usd;
-              break;
-            case 'DepositBalanceOfOTCDeal': 
-            case 'DepositBalanceOfPayInCap':
-            case 'DepositBalanceOfSwap':
-            case 'DepositBalanceOfBidOrder':
-            case 'DepositBalanceOfRejectedDeal':
-              sum.totalAmt += v.amt;
-              sum.sumInUsd += v.usd;
-              sum.balance += v.amt;
-              sum.balanceInUsd += v.usd;
-              break;
-            case 'CustodyValueOfBidOrder':
-              sum.totalAmt += v.amt;
-              sum.sumInUsd += v.usd;
-              sum.custody += v.amt;
-              sum.custodyInUsd += v.usd;
-              v.acct = BigInt(v.acct / 2n**40n);
-              break;
-            case 'CloseOfferAgainstBid': 
-              sum.custody -= v.amt;
-              sum.custodyInUsd -= v.usd;
-              sum.consideration += v.amt;
-              sum.considerationInUsd += v.usd;
-              break;
-            case 'RefundValueOfBidOrder':
-              sum.custody -= v.amt;
-              sum.custodyInUsd -= v.usd;
-              sum.balance += v.amt;
-              sum.balanceInUsd += v.usd;
-              break;
-            case 'CloseInitOfferAgainstBid':
-              sum.totalAmt -= v.amt;
-              sum.sumInUsd -= v.usd;
-              sum.custody -= v.amt;
-              sum.custodyInUsd -= v.usd;
-              break;
-            case 'DistributeProfits':
-              sum.totalAmt += v.amt;
-              sum.sumInUsd += v.usd;
-              sum.distribution += v.amt;
-              sum.distributionInUsd += v.usd;
-              break;
-          }
-
-        });
-      }
-
-
-      const appendItem = (newItem: CashflowProps, refPrices: EthPrice[]) => {
+      const appendItem = (newItem: Cashflow, refPrices: EthPrice[]) => {
         if (newItem.amt > 0n) {
 
           let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
@@ -169,7 +183,7 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -209,7 +223,7 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -249,7 +263,7 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -288,57 +302,16 @@ export function Deposits({ inETH, exRate, centPrice, sum, setSum, records, setRe
         logs = [];
       }
 
-      sumArry(logs);
-      sum.flag = true;
-
       setRecords(logs);
-      setSum(sum);
+
     }
 
     getDeposits();
 
-  }, [gk, client, setSum, setRecords]);
-
-  const showList = () => {
-
-    let curSumInUsd = sum.totalAmt * 10n ** 16n / centPrice;
-
-    let arrSumInfo = inETH
-      ? [ {title: 'Deposits - (ETH ', data: sum.totalAmt},
-          {title: 'Pickup', data: sum.pickup},     
-          {title: 'Consideration', data: sum.consideration},
-          {title: 'Distribution', data: sum.distribution},
-          {title: 'Custody', data: sum.custody},
-          {title: 'Balance', data: sum.balance} 
-        ]
-      : [ {title: 'Deposits - (USD ', data: sum.sumInUsd},
-          {title: 'Exchange Gain / Loss', data: sum.sumInUsd - curSumInUsd},
-          {title: 'Pickup', data: sum.pickupInUsd},
-          {title: 'Consideration', data: sum.considerationInUsd},
-          {title: 'Distribution', data: sum.distributionInUsd},
-          {title: 'Custody', data: sum.custodyInUsd},
-          {title: 'Balance', data: sum.balanceInUsd}
-        ];
-
-    setSumInfo(arrSumInfo);
-    setList(records);
-    setOpen(true);
-  }
+  }, [gk, client, setRecords]);
 
   return (
     <>
-      {sum.flag && (
-        <Button 
-          variant="outlined"
-          fullWidth
-          sx={{m:0.5, minWidth:288, justifyContent:'start'}}
-          onClick={()=>showList()}
-        >
-          <b>ETH In Deposits: ({ inETH
-              ? bigIntToStrNum(sum.totalAmt / 10n**9n, 9) + ' ETH'
-              : baseToDollar((sum.sumInUsd / 10n**14n).toString()) + ' USD'})</b>
-        </Button>
-      )}
     </>
   );
 } 

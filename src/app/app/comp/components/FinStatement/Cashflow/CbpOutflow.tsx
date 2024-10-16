@@ -1,16 +1,13 @@
-import { Dispatch, SetStateAction, useEffect } from "react";
-import { Button,  } from "@mui/material";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, FirstUser, keepersMap, SecondUser } from "../../../common";
+import { useEffect } from "react";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, FirstUser, keepersMap, SecondUser } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { baseToDollar, bigIntToStrNum, } from "../../../common/toolsKit";
-import { CashflowProps } from "../FinStatement";
-import { CashflowRecordsProps } from "./CbpIncome";
-import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
+import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
-export type CbpOutflowSumProps = {
+export type CbpOutflowSum = {
   totalAmt: bigint;
   sumInUsd: bigint;
   newUserAward: bigint;
@@ -26,7 +23,7 @@ export type CbpOutflowSumProps = {
   flag: boolean;
 }
 
-export const defaultCbpOutSum:CbpOutflowSumProps = {
+export const defCbpOutflowSum:CbpOutflowSum = {
   totalAmt: 0n,
   sumInUsd: 0n,
   newUserAward: 0n,
@@ -42,19 +39,69 @@ export const defaultCbpOutSum:CbpOutflowSumProps = {
   flag: false
 }
 
-export interface CbpOutflowProps extends CashflowRecordsProps {
-  sum: CbpOutflowSumProps;
-  setSum: Dispatch<SetStateAction<CbpOutflowSumProps>>;
+export const defCbpOutflowSumArr:CbpOutflowSum[] = [
+  defCbpOutflowSum, defCbpOutflowSum, defCbpOutflowSum, defCbpOutflowSum
+]
+
+const sumArrayOfCbpOutflow = (arr: Cashflow[]) => {
+
+  let sum: CbpOutflowSum = {...defCbpOutflowSum};
+
+  if (arr.length > 0) {
+    arr.forEach(v => {
+      sum.totalAmt += v.amt;
+      sum.sumInUsd += v.usd;
+  
+      switch (v.typeOfIncome) {
+        case 'NewUserAward': 
+          sum.newUserAward += v.amt;
+          sum.newUserAwardInUsd += v.usd;
+          break;
+        case 'StartupCost': 
+          sum.startupCost += v.amt;
+          sum.startupCostInUsd += v.usd;
+          break;
+        case 'FuelSold':
+          sum.fuelSold += v.amt;
+          sum.fuelSoldInUsd += v.usd;
+          break;
+        case 'GmmTransfer':
+          sum.gmmTransfer += v.amt;
+          sum.gmmTransferInUsd += v.usd;
+          break;
+        case 'BmmTransfer':
+          sum.bmmTransfer += v.amt;
+          sum.bmmTransferInUsd += v.usd;
+          break;
+      }
+    });  
+  }
+
+  sum.flag = true;
+
+  return sum;
 }
 
-export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:CbpOutflowProps ) {
+export const updateCbpOutflowSum = (arr: Cashflow[], info:CashflowRange) => {
+  
+  let sum: CbpOutflowSum[] = [];
+
+  if (arr.length > 0) {
+    sum.push(sumArrayOfCbpOutflow(arr));
+    sum.push(sumArrayOfCbpOutflow(arr.slice(0, info.head)));
+    sum.push(sumArrayOfCbpOutflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
+    sum.push(sumArrayOfCbpOutflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+  }
+  
+  return sum;
+}
+
+export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
  
   useEffect(()=>{
-
-    let sum: CbpOutflowSumProps = { ...defaultCbpOutSum};
 
     const cbpToETH = (cbp:bigint) => {
       return cbp * 10000n / exRate;
@@ -68,7 +115,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       console.log('lastItemOfCbpOutflow: ', lastBlkNum);
 
-      let arr: CashflowProps[] = [];
+      let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
       const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
@@ -77,38 +124,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         else return prices;
       }
 
-      const sumArry = (arr: CashflowProps[]) => {
-        arr.forEach(v => {
-          sum.totalAmt += v.amt;
-          sum.sumInUsd += v.usd;
-
-          switch (v.typeOfIncome) {
-            case 'NewUserAward': 
-              sum.newUserAward += v.amt;
-              sum.newUserAwardInUsd += v.usd;
-              break;
-            case 'StartupCost': 
-              sum.startupCost += v.amt;
-              sum.startupCostInUsd += v.usd;
-              break;
-            case 'FuelSold':
-              sum.fuelSold += v.amt;
-              sum.fuelSoldInUsd += v.usd;
-              break;
-            case 'GmmTransfer':
-              sum.gmmTransfer += v.amt;
-              sum.gmmTransferInUsd += v.usd;
-              break;
-            case 'BmmTransfer':
-              sum.bmmTransfer += v.amt;
-              sum.bmmTransferInUsd += v.usd;
-              break;
-          }
-
-        });
-      }
-
-      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+      const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
 
           let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
@@ -140,7 +156,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -184,7 +200,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -230,7 +246,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -273,7 +289,7 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
      
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -313,57 +329,17 @@ export function CbpOutflow({inETH, exRate, centPrice, sum, setSum, records, setR
         logs = [];
       }
 
-      sumArry(logs);
-      sum.flag = true;
-
       setRecords(logs);
-      setSum(sum);
+
     }
 
     getEthOutflow();
 
-  }, [ gk, client, keepers, exRate, setSum, setRecords]);
+  }, [ gk, client, exRate, keepers, setRecords]);
 
-
-  const showList = () => {
-
-    let curSumInUsd = sum.totalAmt * 10000n / exRate * 10n ** 16n / centPrice;
-
-    let arrSumInfo = inETH
-        ? [ {title: 'CBP Outflow - (CBP ', data: sum.totalAmt},
-            {title: 'New User Award', data: sum.newUserAward},
-            {title: 'Startup Cost', data: sum.startupCost},
-            {title: 'Fuel Sold', data: sum.fuelSold},
-            {title: 'GMM Transfer', data: sum.gmmTransfer},
-            {title: 'BMM Transfer', data: sum.bmmTransfer} 
-          ]
-        : [ {title: 'CBP Outflow - (USD ', data: sum.sumInUsd},
-            {title: 'Exchange Gain/Loss', data: sum.sumInUsd - curSumInUsd},
-            {title: 'New User Award', data: sum.newUserAward},
-            {title: 'Startup Cost', data: sum.startupCostInUsd},
-            {title: 'Fuel Sold', data: sum.fuelSoldInUsd},
-            {title: 'GMM Transfer', data: sum.gmmTransferInUsd},
-            {title: 'BMM Transfer', data: sum.bmmTransferInUsd} 
-          ];
-    setSumInfo(arrSumInfo);
-    setList(records);
-    setOpen(true);
-  }
 
   return (
     <>
-      {sum.flag && (
-        <Button 
-          variant="outlined"
-          fullWidth
-          sx={{m:0.5, minWidth:288, justifyContent:'start'}}
-          onClick={()=>showList()}
-        >
-          <b>CBP Outflow: ({ inETH 
-              ? bigIntToStrNum(sum.totalAmt * 10000n / exRate /10n**9n, 9) + ' ETH'
-              : baseToDollar((sum.sumInUsd / 10n**14n).toString()) + ' USD' })</b>
-        </Button>
-      )}
     </>
   );
 } 

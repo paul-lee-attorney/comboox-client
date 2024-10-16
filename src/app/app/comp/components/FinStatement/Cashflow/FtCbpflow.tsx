@@ -1,16 +1,14 @@
-import { Dispatch, SetStateAction, useEffect, } from "react";
-import { Button,} from "@mui/material";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../common";
+import { useEffect, } from "react";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import {  baseToDollar, bigIntToStrNum, HexParser } from "../../../common/toolsKit";
-import { CashflowRecordsProps } from "./CbpIncome";
-import { CashflowProps } from "../FinStatement";
-import { getFinData, setFinData } from "../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../api/firebase/ethPriceTools";
+import { HexParser } from "../../../../common/toolsKit";
+import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
-export type FtCbpflowSumProps = {
+export type FtCbpflowSum = {
   totalCbp: bigint;
   totalCbpInUsd: bigint;
   addCbp: bigint;
@@ -22,7 +20,7 @@ export type FtCbpflowSumProps = {
   flag: boolean;
 }
 
-export const defaultFtCbpSum:FtCbpflowSumProps = {
+export const defFtCbpflowSum:FtCbpflowSum = {
   totalCbp: 0n,
   totalCbpInUsd: 0n,
   addCbp: 0n,
@@ -34,19 +32,73 @@ export const defaultFtCbpSum:FtCbpflowSumProps = {
   flag: false,
 }
 
-export interface FtCbpflowProps extends CashflowRecordsProps {
-  sum: FtCbpflowSumProps;
-  setSum: Dispatch<SetStateAction<FtCbpflowSumProps>>;
+export const defFtCbpflowSumArr:FtCbpflowSum[] = [
+  defFtCbpflowSum, defFtCbpflowSum, defFtCbpflowSum, defFtCbpflowSum
+] 
+
+export const sumArrayOfFtCbpflow = (arr: Cashflow[]) => {
+
+  let sum: FtCbpflowSum = { ...defFtCbpflowSum };
+
+  if (arr.length > 0) {
+    arr.forEach(v => {
+
+      switch (v.typeOfIncome) {
+        case 'AddCbp':
+          sum.totalCbp += v.amt;
+          sum.addCbp += v.amt;
+          
+          sum.totalCbpInUsd += v.usd;
+          sum.addCbpInUsd += v.usd;
+  
+          break;
+  
+        case 'WithdrawCbp':
+          sum.totalCbp -= v.amt;
+          sum.withdrawCbp += v.amt;
+  
+          sum.totalCbpInUsd -= v.usd;
+          sum.withdrawCbpInUsd += v.usd;
+  
+          break;
+  
+        case 'RefuelCbp':
+          sum.totalCbp -= v.amt;
+          sum.refuelCbp += v.amt;
+  
+          sum.totalCbpInUsd -= v.usd;
+          sum.refuelCbpInUsd += v.usd;
+  
+          break;
+      }  
+    });
+  }
+
+  sum.flag = true;
+  
+  return sum;
 }
 
-export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRecords, setSumInfo, setList, setOpen}:FtCbpflowProps ) {
+export const updateFtCbpflowSum = (arr: Cashflow[], info:CashflowRange) => {
+  
+  let sum: FtCbpflowSum[] = [];
+
+  if (arr.length > 0) {
+    sum.push(sumArrayOfFtCbpflow(arr));
+    sum.push(sumArrayOfFtCbpflow(arr.slice(0, info.head)));
+    sum.push(sumArrayOfFtCbpflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
+    sum.push(sumArrayOfFtCbpflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+  }
+  
+  return sum;
+}
+
+export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
 
   useEffect(()=>{
-
-    let sum: FtCbpflowSumProps = { ...defaultFtCbpSum };
 
     const getFtCashflow = async ()=>{
 
@@ -56,7 +108,7 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       console.log('lastItemOfFtCbpflow: ', lastBlkNum);
 
-      let arr: CashflowProps[] = [];
+      let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
       const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
@@ -69,44 +121,8 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         return cbp * 10000n / exRate;
       }    
   
-      const sumArry = (arr: CashflowProps[]) => {
 
-        arr.forEach(v => {
-
-          switch (v.typeOfIncome) {
-            case 'AddCbp':
-              sum.totalCbp += v.amt;
-              sum.addCbp += v.amt;
-              
-              sum.totalCbpInUsd += v.usd;
-              sum.addCbpInUsd += v.usd;
-
-              break;
-
-            case 'WithdrawCbp':
-              sum.totalCbp -= v.amt;
-              sum.withdrawCbp += v.amt;
-
-              sum.totalCbpInUsd -= v.usd;
-              sum.withdrawCbpInUsd += v.usd;
-
-              break;
-
-            case 'RefuelCbp':
-              sum.totalCbp -= v.amt;
-              sum.refuelCbp += v.amt;
-
-              sum.totalCbpInUsd -= v.usd;
-              sum.refuelCbpInUsd += v.usd;
-
-              break;
-          }
-
-        });
-      }
-
-
-      const appendItem = (newItem: CashflowProps, refPrices:EthPrice[]) => {
+      const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
 
           let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
@@ -139,7 +155,7 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -180,7 +196,7 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -223,7 +239,7 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
     
-        let item:CashflowProps = {
+        let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
           timestamp: blk.timestamp,
@@ -302,52 +318,16 @@ export function FtCbpflow({inETH, exRate, centPrice, sum, setSum, records, setRe
         logs = [];
       }
 
-      sumArry(logs);
-      sum.flag = true;
-
       setRecords(logs);
-      setSum(sum);
+
     }
 
     getFtCashflow();
 
-  }, [gk, client, exRate, keepers, setSum, setRecords]);
-
-  const showList = () => {
-    let curSumCbpInUsd =  sum.totalCbp * 10000n / exRate * 10n ** 16n / centPrice;
-
-    let arrSumInfo = inETH
-      ? [ {title: 'CBP Balance in FT - (CBP ', data: sum.totalCbp},
-          {title: '+ Add Fuel', data: sum.addCbp},
-          {title: '- Fuel Sold', data: sum.refuelCbp},
-          {title: '- Fuel Withdrawn', data: sum.withdrawCbp}
-        ]
-      : [ {title: 'CBP Balance in FT - (USD ', data: sum.totalCbpInUsd},
-          {title: 'Exchange Gain/Loss', data: curSumCbpInUsd - sum.totalCbpInUsd},
-          {title: '+ Add Fuel', data: sum.addCbpInUsd},
-          {title: '- Fuel Sold', data: sum.refuelCbpInUsd},
-          {title: '- Fuel Withdrawn', data: sum.withdrawCbpInUsd}
-        ];
-
-    setSumInfo(arrSumInfo);
-    setList(records);
-    setOpen(true);
-  }
+  }, [gk, client, exRate, keepers, setRecords]);
 
   return (
   <>
-    {sum.flag && (
-      <Button 
-        variant="outlined"
-        fullWidth
-        sx={{m:0.5, minWidth:288, justifyContent:'start'}}
-        onClick={()=>showList()}
-      >
-        <b>CBP in Fuel Tank: ({ inETH
-            ? bigIntToStrNum(sum.totalCbp * 10000n / exRate / 10n**9n, 9) + ' ETH'
-            : baseToDollar((sum.totalCbpInUsd / 10n**14n).toString()) + ' USD' })</b>
-      </Button>
-    )}
   </>
   );
 } 
