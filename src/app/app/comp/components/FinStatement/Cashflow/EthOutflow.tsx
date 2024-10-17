@@ -84,7 +84,7 @@ export const sumArrayOfEthOutflow = (arr: Cashflow[]) => {
 
 export const updateEthOutflowSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: EthOutflowSum[] = [];
+  let sum: EthOutflowSum[] = defEthOutflowSumArr;
 
   if (arr.length > 0) {
     sum.push(sumArrayOfEthOutflow(arr));
@@ -356,11 +356,12 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
           logs = arr;
         }
         
-      } else if (!logs) {
-        logs = [];
-      }
+      } 
 
-      setRecords(logs);
+      if (logs && logs.length > 0) {
+        setRecords(logs);
+      }
+      
     }
 
     getEthOutflow();

@@ -81,7 +81,7 @@ export const sumArrayOfFtCbpflow = (arr: Cashflow[]) => {
 
 export const updateFtCbpflowSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: FtCbpflowSum[] = [];
+  let sum: FtCbpflowSum[] = defFtCbpflowSumArr;
 
   if (arr.length > 0) {
     sum.push(sumArrayOfFtCbpflow(arr));
@@ -314,11 +314,11 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           logs = arr;
         }
         
-      } else if (!logs) {
-        logs = [];
-      }
+      } 
 
-      setRecords(logs);
+      if (logs && logs.length > 0) {
+        setRecords(logs);
+      }
 
     }
 

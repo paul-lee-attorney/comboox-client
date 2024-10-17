@@ -65,7 +65,7 @@ export const sumArrayOfFtEthflow = (arr: Cashflow[]) => {
 
 export const updateFtEthflowSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: FtEthflowSum[] = [];
+  let sum: FtEthflowSum[] = defFtEthflowSumArr;
 
   if (arr.length > 0) {
     sum.push(sumArrayOfFtEthflow(arr));
@@ -207,11 +207,11 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
           logs = arr;
         }
         
-      } else if (!logs) {
-        logs = [];
-      }
+      } 
 
-      setRecords(logs);
+      if (logs && logs.length > 0) {
+        setRecords(logs);
+      }
 
     }
 

@@ -118,7 +118,7 @@ export const sumArrayOfDeposits = (arr: Cashflow[]) => {
 
 export const updateDepositsSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: DepositsSum[] = [];
+  let sum: DepositsSum[] = defDepositsSumArr;
 
   if (arr.length > 0) {
     sum.push(sumArrayOfDeposits(arr));
@@ -298,11 +298,11 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           logs = arr;
         }
         
-      } else if (!logs) {
-        logs = [];
-      }
+      } 
 
-      setRecords(logs);
+      if (logs && logs.length > 0) {
+        setRecords(logs);
+      }
 
     }
 
