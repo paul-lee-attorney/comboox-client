@@ -87,10 +87,10 @@ export const updateEthOutflowSum = (arr: Cashflow[], info:CashflowRange) => {
   let sum: EthOutflowSum[] = defEthOutflowSumArr;
 
   if (arr.length > 0) {
-    sum.push(sumArrayOfEthOutflow(arr));
-    sum.push(sumArrayOfEthOutflow(arr.slice(0, info.head)));
-    sum.push(sumArrayOfEthOutflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
-    sum.push(sumArrayOfEthOutflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+    sum[0]=sumArrayOfEthOutflow(arr);
+    sum[1]=sumArrayOfEthOutflow(arr.slice(0, info.head));
+    sum[2]=sumArrayOfEthOutflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
+    sum[3]=sumArrayOfEthOutflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)); 
   }
   
   return sum;

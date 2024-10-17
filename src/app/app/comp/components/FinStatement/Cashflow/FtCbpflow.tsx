@@ -84,10 +84,10 @@ export const updateFtCbpflowSum = (arr: Cashflow[], info:CashflowRange) => {
   let sum: FtCbpflowSum[] = defFtCbpflowSumArr;
 
   if (arr.length > 0) {
-    sum.push(sumArrayOfFtCbpflow(arr));
-    sum.push(sumArrayOfFtCbpflow(arr.slice(0, info.head)));
-    sum.push(sumArrayOfFtCbpflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));
-    sum.push(sumArrayOfFtCbpflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)));  
+    sum[0]=sumArrayOfFtCbpflow(arr);
+    sum[1]=sumArrayOfFtCbpflow(arr.slice(0, info.head));
+    sum[2]=sumArrayOfFtCbpflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
+    sum[3]=sumArrayOfFtCbpflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)); 
   }
   
   return sum;

@@ -1060,9 +1060,9 @@ export function FinStatement() {
 
       </Stack>
       
-      <Stack direction='row' sx={{m:1, p:1}} >
+      <Stack direction='row'>
 
-        <Stack width='50%' direction='column' >
+        <Stack width='50%' direction='column' sx={{m:1}} >
 
           {ethInflow.length > 0 && (
             <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
@@ -1075,7 +1075,7 @@ export function FinStatement() {
 
         </Stack>
 
-        <Stack width='50%'  direction='column' >
+        <Stack width='50%'  direction='column' sx={{m:1}}>
 
           {ethInflow.length > 0 && ethOutflow.length > 0 && cbpInflow.length > 0 && cbpOutflow.length > 0 && deposits.length > 0 && ftEthflow.length > 0 && ftCbpflow.length > 0 && (
             <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
