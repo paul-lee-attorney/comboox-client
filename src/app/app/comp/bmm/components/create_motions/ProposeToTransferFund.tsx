@@ -5,10 +5,9 @@ import { useGeneralKeeperProposeToTransferFund } from "../../../../../../../gene
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { CreateMotionProps } from "../CreateMotionOfBoardMeeting";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
@@ -160,10 +159,10 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
                 minWidth: 218,
               }} 
               helperText=' '
-              value={ dayjs.unix(paras.expireDate) }
+              value={ stampToUtc(paras.expireDate) }
               onChange={(date) => setParas((v) => ({
                 ...v,
-                expireDate: date ? date.unix() : 0,
+                expireDate: utcToStamp(date),
               }))}
               format='YYYY-MM-DD HH:mm:ss'
             />

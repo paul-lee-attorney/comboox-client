@@ -65,15 +65,16 @@ export const sumArrayOfFtEthflow = (arr: Cashflow[]) => {
 
 export const updateFtEthflowSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: FtEthflowSum[] = defFtEthflowSumArr;
+  let sum: FtEthflowSum[] = [...defFtEthflowSumArr];
 
-  if (arr.length > 0) {
-    sum[0]=sumArrayOfFtEthflow(arr);
+  if (arr.length > 0 && info.head >= 0) {
     sum[1]=sumArrayOfFtEthflow(arr.slice(0, info.head));
     sum[2]=sumArrayOfFtEthflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
     sum[3]=sumArrayOfFtEthflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
   }
   
+  console.log('ftEthflow range:', info);
+  console.log('ftEthflow:', sum);
   return sum;
 }
 

@@ -1,5 +1,4 @@
 import { useEffect, useState, } from 'react';
-import dayjs from 'dayjs';
 
 import { DateTimeField } from '@mui/x-date-pickers';
 import {Box, Stack, TextField, Paper, Toolbar, FormControl, InputLabel,
@@ -8,7 +7,7 @@ import {Box, Stack, TextField, Paper, Toolbar, FormControl, InputLabel,
 import { ListAlt } from '@mui/icons-material';
 
 import { HexType, MaxByte, MaxRatio, MaxSeqNo } from '../../../../../../common';
-import { FormResults, dateParser, defFormResults, longDataParser, onlyInt, onlyNum } from '../../../../../../common/toolsKit';
+import { FormResults, dateParser, defFormResults, longDataParser, onlyInt, onlyNum, stampToUtc, utcToStamp } from '../../../../../../common/toolsKit';
 import { getRule } from '../../../sha';
 
 import { AddRule } from '../AddRule';
@@ -429,10 +428,10 @@ export function SetGovernanceRule({ sha, seq, isFinalized, time, refresh }: Rule
                         m:1,
                         minWidth: 218,
                       }} 
-                      value={ dayjs.unix(objGR.establishedDate) }
+                      value={ stampToUtc(objGR.establishedDate) }
                       onChange={(date) => setObjGR((v) => ({
                         ...v,
-                        establishedDate: date ? date.unix() : 0,
+                        establishedDate: utcToStamp(date),
                       }))}
                       format='YYYY-MM-DD HH:mm:ss'
                     />

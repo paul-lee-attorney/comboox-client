@@ -1,8 +1,6 @@
 import { db } from "./firebase";
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
 
-// const dayjs = require("dayjs");
-
 export type EthPrice = {
   timestamp: number,
   price: number,

@@ -1,7 +1,8 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
+import { defReportItem, ReportItem, showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
 import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
+import { useEffect, useState } from "react";
 
 export interface AssetsProps extends StatementProps {
   ethInflow: EthInflowSum[],
@@ -11,22 +12,40 @@ export interface AssetsProps extends StatementProps {
 const setUpDate = Math.floor((new Date('2024-05-18T00:00:00Z')).getTime()/1000);
 const fullLifeHrs = 15n * 365n * 86400n;
 
-export const getInitContribution = (endDate: number, centPrice: bigint) => {
-  return endDate >= setUpDate
-      ? 3n * 10n ** 7n * centPrice
-      : 0n;
+export const getInitContribution = (type:number, startDate:number, endDate: number, centPrice: bigint) => {
+  return type > 1 
+      ? endDate >= setUpDate  ? 3n * 10n ** 7n * centPrice : 0n
+      : startDate >= setUpDate ? 3n * 10n ** 7n * centPrice : 0n;
 }
 
-export const getArmontization = (startDate: number, endDate: number, centPrice: bigint) => {
+export const getArmotization = (type:number, startDate: number, endDate: number, centPrice: bigint) => {
 
-  const initContribution = getInitContribution(endDate, centPrice);
+  const initContribution = getInitContribution(type, startDate, endDate, centPrice);
 
-  const daysOfPeriod = startDate >= setUpDate
-      ? BigInt(endDate - startDate)
-      : endDate >= setUpDate ? BigInt(endDate - setUpDate) : 0n;
+  let daysOfPeriod = 0n;
 
-  const inEth = initContribution * daysOfPeriod / fullLifeHrs;
-  const inUsd = inEth * 10n ** 16n / centPrice;
+  switch (type) {
+    case 1:
+      daysOfPeriod = startDate >= setUpDate 
+        ? BigInt(startDate - setUpDate) : 0n;
+      break;
+    case 2:
+      daysOfPeriod = startDate >= setUpDate 
+        ? BigInt(endDate - startDate)
+        : endDate >= setUpDate ? BigInt(endDate - setUpDate) : 0n;
+      break;
+    case 3:
+      daysOfPeriod = endDate >= setUpDate
+        ? BigInt(endDate - setUpDate) : 0n;
+      break;
+  }
+  
+  return initContribution * daysOfPeriod / fullLifeHrs;
+}
+
+export const getEthOfComp = (type:number, ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[]) => {
+  const inEth = ethInflow[type].totalAmt - ethOutflow[type].totalAmt;
+  const inUsd = ethInflow[type].sumInUsd - ethOutflow[type].sumInUsd;
 
   return ({inEth:inEth, inUsd:inUsd});
 }
@@ -39,45 +58,25 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
 
   // ---- IPR ----
 
-  const beginValueOfIPR = () => {
-    const daysToStart = startDate >= setUpDate 
-    ? BigInt(startDate - setUpDate)
-    : 0n;
+  const initContribution = getInitContribution(3, startDate, endDate, centPrice);
 
-    const inEth = getInitContribution(endDate, centPrice) * (fullLifeHrs - daysToStart) / fullLifeHrs;
-    const inUsd = weiToDust(inEth);
+  const daysToStart = startDate >= setUpDate 
+  ? BigInt(startDate - setUpDate)
+  : 0n;
 
-    return({inEth:inEth, inUsd:inUsd});
-  }
+  const beginValueOfIPR = initContribution * (fullLifeHrs - daysToStart) / fullLifeHrs;
 
-  const netValueOfIPR = () => {
-    const inEth = beginValueOfIPR().inEth - getArmontization(startDate, endDate, centPrice).inEth;
-    const inUsd = weiToDust(inEth);
+  const armotization = getArmotization(3, startDate, endDate, centPrice);
 
-    return ({inEth:inEth, inUsd:inUsd});
-  }
+  const netValueOfIPR = beginValueOfIPR - armotization;
 
-  // ---- ETH ----
+  const ethOfComp = getEthOfComp(3, ethInflow, ethOutflow);
 
-  const ethOfComp = () => {
-    const inEth = ethInflow[3].totalAmt - ethOutflow[3].totalAmt;
-    const inUsd = ethInflow[3].sumInUsd - ethOutflow[3].sumInUsd;
-
-    return ({inEth:inEth, inUsd:inUsd});
-  }
-
-  const ethGainLoss = weiToDust(ethOfComp().inEth) - ethOfComp().inUsd;
-
-  const curValueOfEth = ()=> {
-    const inEth = ethOfComp().inEth;
-    const inUsd = weiToDust(ethOfComp().inEth);
-
-    return ({inEth:inEth, inUsd:inUsd});
-  }
+  const ethGainLoss = weiToDust(ethOfComp.inEth) - ethOfComp.inUsd;
 
   const totalAssets = ()=>{
-    const inEth = netValueOfIPR().inEth + ethOfComp().inEth;
-    const inUsd = netValueOfIPR().inUsd + curValueOfEth().inUsd;
+    const inEth = netValueOfIPR + ethOfComp.inEth;
+    const inUsd = weiToDust(netValueOfIPR + ethOfComp.inEth);
 
     return({inEth:inEth, inUsd:inUsd});
   }
@@ -100,8 +99,8 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
           <b>Beginning Value of IPR: ({inETH 
-            ? weiToEth9Dec(beginValueOfIPR().inEth) 
-            : showUSD(beginValueOfIPR().inUsd)}) </b>
+            ? weiToEth9Dec(beginValueOfIPR) 
+            : showUSD(weiToDust(beginValueOfIPR)) })</b>
         </Button>
       </Stack>
 
@@ -111,8 +110,8 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
           <b>Amortization: ({ inETH 
-            ? weiToEth9Dec(getArmontization(startDate, endDate, centPrice).inEth) 
-            : showUSD(getArmontization(startDate, endDate, centPrice).inUsd)}) </b>
+            ? weiToEth9Dec(armotization) 
+            : showUSD(weiToDust(armotization))}) </b>
         </Button>
       </Stack>
 
@@ -122,16 +121,16 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Net Value Of IPR: ({ inETH 
-            ? weiToEth9Dec(netValueOfIPR().inEth) 
-            : showUSD(netValueOfIPR().inUsd)}) </b>
+            ? weiToEth9Dec(netValueOfIPR) 
+            : showUSD(weiToDust(netValueOfIPR))}) </b>
         </Button>
       </Stack>
 
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](3)}>
           <b>ETH Of Comp: ({ inETH 
-            ? weiToEth9Dec(ethOfComp().inEth)
-            : showUSD(ethOfComp().inUsd) }) </b>
+            ? weiToEth9Dec(ethOfComp.inEth)
+            : showUSD(ethOfComp.inUsd) }) </b>
         </Button>
       </Stack>
 
@@ -152,8 +151,8 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Current Value of ETH: ({ inETH 
-            ? weiToEth9Dec(ethOfComp().inEth)
-            : showUSD(ethOfComp().inUsd)}) </b>
+            ? weiToEth9Dec(ethOfComp.inEth)
+            : showUSD(weiToDust(ethOfComp.inEth))}) </b>
         </Button>
       </Stack>
 

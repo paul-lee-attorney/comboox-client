@@ -37,12 +37,11 @@ import {
 } from "../../../../../../../../../generated";
 
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { AlongLinks } from "./AlongLinks";
 import { AddTerm } from "../AddTerm";
 import { CopyLongStrSpan } from "../../../../../../common/CopyLongStr";
 import { AlongLink, LinkRule, defaultLinkRule, getLinks, linkRuleCodifier, triggerTypes } from "./da";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx } from "../../../../../../common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, stampToUtc, utcToStamp } from "../../../../../../common/toolsKit";
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { useComBooxContext } from "../../../../../../../_providers/ComBooxContextProvider";
 
@@ -246,10 +245,10 @@ export function Alongs({ sha, term, setTerms, isFinalized, seqOfTitle }: AlongsP
                           minWidth: 218,
                         }} 
                         size="small"
-                        value={ dayjs.unix(rule.triggerDate) }
+                        value={ stampToUtc(rule.triggerDate) }
                         onChange={(date) => setRule((v) => ({
                           ...v,
-                          triggerDate: date ? date.unix() : 0,
+                          triggerDate: utcToStamp(date),
                         }))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />

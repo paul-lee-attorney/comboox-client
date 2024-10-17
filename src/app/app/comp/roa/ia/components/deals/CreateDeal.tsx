@@ -8,12 +8,11 @@ import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Sele
 
 import { AddCircle } from "@mui/icons-material";
 
-import dayjs from 'dayjs';
 import { DateTimeField } from "@mui/x-date-pickers";
 import { StrBody, StrHead, TypeOfDeal, codifyHeadOfDeal, defaultStrBody, defaultStrHead } from "../../ia";
 import { getShare } from "../../../../ros/ros";
 
-import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../common/toolsKit";
+import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -246,10 +245,10 @@ export function CreateDeal({addr, refresh}: CreateDealProps) {
                 minWidth: 218,
               }}
               helperText=' '
-              value={ dayjs.unix(head.closingDeadline) }
+              value={ stampToUtc(head.closingDeadline) }
               onChange={(date) => setHead((v) => ({
                 ...v,
-                closingDeadline: date ? date.unix() : 0,
+                closingDeadline: utcToStamp(date),
               }))}
               format='YYYY-MM-DD HH:mm:ss'
             />

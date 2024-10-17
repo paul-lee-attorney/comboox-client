@@ -6,9 +6,8 @@ import { useGeneralKeeperDistributeProfits } from "../../../../../../../generate
 
 import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { SoupKitchenOutlined } from "@mui/icons-material";
-import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { LoadingButton } from "@mui/lab";
 
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
@@ -88,8 +87,8 @@ export function DistributeProfits({ motion, setOpen, refresh }:ActionsOnMotionPr
             minWidth: 218,
           }}
           helperText=' '
-          value={ dayjs.unix(expireDate) }
-          onChange={(date) => setExpireDate( date ? date.unix() : 0)}
+          value={ stampToUtc(expireDate) }
+          onChange={(date) => setExpireDate( utcToStamp(date) )}
           format='YYYY-MM-DD HH:mm:ss'
         />
 

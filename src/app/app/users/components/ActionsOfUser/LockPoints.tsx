@@ -9,9 +9,9 @@ import { AddrOfRegCenter, Bytes32Zero, HexType, MaxLockValue, MaxUserNo } from '
 import { LockClockOutlined, } from '@mui/icons-material';
 import { useState } from 'react';
 import { DateTimeField } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
+
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../rc';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../../common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from '../../../common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
 
@@ -120,10 +120,10 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head.expireDate) }
+              value={ stampToUtc(head.expireDate) }
               onChange={(date) => setHead((v) => ({
                 ...v,
-                expireDate: date ? date.unix() : 0,
+                expireDate: utcToStamp(date),
               }))}
               format='YYYY-MM-DD HH:mm:ss'
               size='small'

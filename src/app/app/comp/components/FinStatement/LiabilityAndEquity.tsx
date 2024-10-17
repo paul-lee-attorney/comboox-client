@@ -1,9 +1,43 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
-import { IncomeStatementProps } from "./IncomeStatement";
-import { getArmontization, getInitContribution } from "./Assets";
+import { getProfits, IncomeStatementProps } from "./IncomeStatement";
+import { getInitContribution } from "./Assets";
+import { CbpOutflowSum } from "./Cashflow/CbpOutflow";
+import { CbpInflowSum } from "./Cashflow/CbpInflow";
+import { EthOutflowSum } from "./Cashflow/EthOutflow";
+import { EthInflowSum } from "./Cashflow/EthInflow";
 
+
+export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
+  const inEth = cbpToETH(cbpOutflow[type].totalAmt - cbpInflow[type].totalAmt + cbpInflow[type].mint);
+  const inUsd = cbpOutflow[type].sumInUsd - cbpInflow[type].sumInUsd + cbpInflow[type].mintInUsd;
+
+  return ({inEth:inEth, inUsd:inUsd});
+}
+
+export const getRetainedEarnings = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint) => {
+
+  const profits = getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+
+  const inEth = profits.inEth - ethOutflow[type].distribution;
+  const inUsd = profits.inUsd - ethOutflow[type].distributionInUsd;
+
+  return ({inEth:inEth, inUsd:inUsd});
+}
+
+export const getOwnersEquity = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint ) => {
+
+  const initContribution = getInitContribution(type, startDate, endDate, centPrice);
+
+  const retainedEarnings = getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+
+  const inEth = initContribution + ethInflow[type].capital + retainedEarnings.inEth;
+
+  const inUsd = weiToDust(initContribution) + ethInflow[type].capitalInUsd + retainedEarnings.inUsd;
+
+  return ({inEth:inEth, inUsd:inUsd});
+}
 
 export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow}: IncomeStatementProps) {
 
@@ -25,52 +59,19 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   // ==== Liabilities ====
 
-  const deferredRevenue = () => {
-    const inEth = cbpToETH(cbpOutflow[3].totalAmt - cbpInflow[3].totalAmt + cbpInflow[3].mint);
-    const inUsd = cbpOutflow[3].sumInUsd - cbpInflow[3].sumInUsd + cbpInflow[3].mintInUsd;
+  const deferredRevenue = getDeferredRevenue(3, cbpInflow, cbpOutflow, cbpToETH);
 
-    return ({inEth:inEth, inUsd:inUsd});
-  }
-
-  const cbpGainLoss = weiToDust(deferredRevenue().inEth) - deferredRevenue().inUsd;
+  const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
   
   // ==== Profits & Loss ====
 
-  const initContribution = getInitContribution(endDate, centPrice);
-  const armotization = () => {
-    return getArmontization(startDate, endDate, centPrice);
-  } 
+  const initContribution = getInitContribution(3, startDate, endDate, centPrice);
 
-  const retainedEarnings = () => {
-    const ethExp = ethOutflow[3].totalAmt - ethOutflow[3].distribution;
-    const ethExpInUsd = ethOutflow[3].sumInUsd - ethOutflow[3].distributionInUsd;
-    const cbpExp = cbpToETH(cbpOutflow[3].totalAmt - cbpOutflow[3].fuelSold);
-    const cbpExpInUsd = cbpOutflow[3].sumInUsd - cbpOutflow[3].fuelSoldInUsd;
-  
-    const ethGainLoss = weiToDust(ethInflow[3].totalAmt - ethOutflow[3].totalAmt) - (ethInflow[3].sumInUsd - ethOutflow[3].sumInUsd);
-  
-    const exchangeGainLoss = ethGainLoss - cbpGainLoss;
-  
-    const ebitda = cbpToETH(cbpInflow[3].royalty) + ethInflow[3].transfer - (ethExp + cbpExp);
-    const ebitdaInUsd = cbpInflow[3].royaltyInUsd + ethInflow[3].transferInUsd - (ethExpInUsd + cbpExpInUsd) + exchangeGainLoss;
-  
-    const profits = ebitda - armotization().inEth;
-    const profitsInUsd = ebitdaInUsd - armotization().inUsd;
-    
-    const inEth =  profits - ethOutflow[3].distribution;
-    const inUsd =  profitsInUsd - ethOutflow[3].distributionInUsd;
-  
-    return({inEth:inEth, inUsd:inUsd});
-  }
+  const retainedEarnings = getRetainedEarnings(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   // ==== Owners Equity ====
 
-  const ownersEquity = () => {
-    const inEth = initContribution + ethInflow[3].capital + retainedEarnings().inEth;
-    const inUsd = weiToDust(initContribution) + ethInflow[3].capitalInUsd + retainedEarnings().inUsd;
-
-    return ({inEth:inEth, inUsd:inUsd});
-  }
+  const ownersEquity = getOwnersEquity(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   return(
     <Paper elevation={3} 
@@ -90,8 +91,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](3)}  >
           <b>Deferred Revenue: ({ inETH
-            ? weiToEth9Dec(deferredRevenue().inEth)
-            : showUSD(deferredRevenue().inUsd)}) </b>
+            ? weiToEth9Dec(deferredRevenue.inEth)
+            : showUSD(deferredRevenue.inUsd)}) </b>
         </Button>
       </Stack>
 
@@ -112,8 +113,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Total Liabilities: ({ inETH
-            ? weiToEth9Dec(deferredRevenue().inEth)
-            : showUSD(weiToDust(deferredRevenue().inEth))}) </b>
+            ? weiToEth9Dec(deferredRevenue.inEth)
+            : showUSD(weiToDust(deferredRevenue.inEth))}) </b>
         </Button>
       </Stack>
 
@@ -142,8 +143,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
           <b>Retained Earnings: ({ inETH
-            ? weiToEth9Dec(retainedEarnings().inEth)
-            : showUSD(retainedEarnings().inUsd)}) </b>
+            ? weiToEth9Dec(retainedEarnings.inEth)
+            : showUSD(retainedEarnings.inUsd)}) </b>
         </Button>
       </Stack>
 
@@ -153,8 +154,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Total Equity: ({ inETH
-            ? weiToEth9Dec(ownersEquity().inEth)
-            : showUSD(ownersEquity().inUsd)}) </b>
+            ? weiToEth9Dec(ownersEquity.inEth)
+            : showUSD(ownersEquity.inUsd)}) </b>
         </Button>
       </Stack>
 
@@ -166,8 +167,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Total Liabilities & Owners Equity: ({ inETH
-            ? weiToEth9Dec(deferredRevenue().inEth + ownersEquity().inEth)
-            : showUSD(weiToDust(deferredRevenue().inEth) + ownersEquity().inUsd)}) </b>
+            ? weiToEth9Dec(deferredRevenue.inEth + ownersEquity.inEth)
+            : showUSD(weiToDust(deferredRevenue.inEth) + ownersEquity.inUsd)}) </b>
         </Button>
       </Stack>
 

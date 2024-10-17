@@ -6,9 +6,9 @@ import { useRegCenterLockConsideration } from '../../../../../../generated';
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxLockValue, MaxSeqNo, MaxUserNo } from '../../../common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier, strNumToBigInt } from '../../../common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier, stampToUtc, strNumToBigInt, utcToStamp } from '../../../common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
+
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../rc';
 import { LockPointsProps } from './LockPoints';
 import { LoadingButton } from '@mui/lab';
@@ -164,10 +164,10 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(head.expireDate) }
+              value={ stampToUtc(head.expireDate) }
               onChange={(date) => setHead((v) => ({
                   ...v,
-                  expireDate: date ? date.unix() : 0,
+                  expireDate: utcToStamp(date),
               }))}              
               format='YYYY-MM-DD HH:mm:ss'
               size='small'

@@ -118,15 +118,16 @@ export const sumArrayOfDeposits = (arr: Cashflow[]) => {
 
 export const updateDepositsSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: DepositsSum[] = defDepositsSumArr;
+  let sum: DepositsSum[] = [...defDepositsSumArr];
 
-  if (arr.length > 0) {
-    sum[0]=sumArrayOfDeposits(arr);
+  if (arr.length > 0 && info.head >= 0) {
     sum[1]=sumArrayOfDeposits(arr.slice(0, info.head));
     sum[2]=sumArrayOfDeposits(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
     sum[3]=sumArrayOfDeposits(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)); 
   }
   
+  console.log('deposits range:', info);
+  console.log('deposits:', sum);
   return sum;
 }
 

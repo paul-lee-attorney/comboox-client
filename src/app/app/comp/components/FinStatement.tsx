@@ -3,7 +3,7 @@ import { Paper, Stack, Typography, Divider, Button, Switch, Icon } from "@mui/ma
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { rate } from "../../fuel_tank/ft";
-import { baseToDollar, bigIntToNum, dateParser } from "../../common/toolsKit";
+import { baseToDollar, bigIntToNum, dateParser, stampToUtc, utcToStamp } from "../../common/toolsKit";
 import { CbpInflow, CbpInflowSum, defCbpInflowSumArr, updateCbpInflowSum, } from "./FinStatement/Cashflow/CbpInflow";
 import { defEthInflowSumArr, EthInflow, EthInflowSum, updateEthInflowSum } from "./FinStatement/Cashflow/EthInflow";
 import { CbpOutflow, CbpOutflowSum, defCbpOutflowSumArr, updateCbpOutflowSum } from "./FinStatement/Cashflow/CbpOutflow";
@@ -16,8 +16,6 @@ import { defFtCbpflowSumArr, FtCbpflow, FtCbpflowSum, updateFtCbpflowSum } from 
 import { BtnProps, SGNA } from "./FinStatement/SGNA";
 import { getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
 import { Assets } from "./FinStatement/Assets";
 import { LiabilyAndEquity,  } from "./FinStatement/LiabilityAndEquity";
 import { IncomeStatement } from "./FinStatement/IncomeStatement";
@@ -25,8 +23,6 @@ import { EquityChangeStatement } from "./FinStatement/EquityChangeStatement";
 import { CryptoInventory } from "./FinStatement/CryptoInventory";
 import { EthflowStatement } from "./FinStatement/EthflowStatement";
 import { TipsAndUpdates } from "@mui/icons-material";
-
-dayjs.extend(utc);
 
 export interface Cashflow {
   seq: number,
@@ -39,6 +35,16 @@ export interface Cashflow {
   ethPrice: bigint,
   addr: HexType,
   acct: bigint,
+}
+
+export interface ReportItem {
+  inEth: bigint,
+  inUsd: bigint,
+}
+
+export const defReportItem: ReportItem = {
+  inEth: 0n,
+  inUsd: 0n,
 }
 
 export interface CashflowRange {
@@ -80,11 +86,9 @@ export interface StatementProps {
   display: ((type:number)=>void)[],
 }
 
-export function getRangeOfCashflow(start:number, end:number, data:Cashflow[]): CashflowRange {
+export function getRangeOfCashflow(start:bigint, end:bigint, data:Cashflow[]): CashflowRange {
 
-  let output: CashflowRange = {
-    head: 0, tail: data.length-1, len: data.length
-  };
+  let output: CashflowRange = {head: -1, tail: -1, len: data.length};
 
   if (data.length == 0) return output;
 
@@ -96,28 +100,25 @@ export function getRangeOfCashflow(start:number, end:number, data:Cashflow[]): C
   output.head = head;
   output.tail = tail;
 
-  console.log('range: ', output);
-  console.log('Cashflow: ', data);
   return output;
 }
 
 export function trimCashflow(arr: Cashflow[], range: CashflowRange, type: number): Cashflow[] {
   let output: Cashflow[] = [];
 
-  switch (type) {
-    case 1: 
-      output = arr.slice(0, range.head);
-      break;
-    case 2:
-      output = arr.slice(range.head, range.tail + 1);
-      break;
-    case 3:
-      output = arr.slice(0, range.tail + 1);
-      break;
+  if (range.head >= 0) {
+    switch (type) {
+      case 1: 
+        output = arr.slice(0, range.head);
+        break;
+      case 2:
+        output = arr.slice(range.head, range.tail + 1);
+        break;
+      case 3:
+        output = arr.slice(0, range.tail + 1);
+        break;
+    }  
   }
-
-  console.log('range: ', range);
-  console.log('trimmed flow: ', output);
 
   return output;
 }
@@ -181,7 +182,7 @@ export function FinStatement() {
 
 
   const [ startDate, setStartDate ] = useState(Math.floor((new Date('2024-05-18T00:00:00Z')).getTime()/1000));
-  const [ endDate, setEndDate] = useState(Math.floor((new Date()).getTime()/1000) - 900);
+  const [ endDate, setEndDate] = useState(Math.floor((new Date()).getTime()/1000));
 
   const [ centPrice, setCentPrice ] = useState(1n);
   const [ ethRateDate, setEthRateDate ] = useState('0');
@@ -190,13 +191,13 @@ export function FinStatement() {
 
     if (endDate < startDate) return;
 
-    setCbpInflowRange(getRangeOfCashflow(startDate, endDate, cbpInflowRecords));
-    setCbpOutflowRange(getRangeOfCashflow(startDate, endDate, cbpOutflowRecords));
-    setEthInflowRange(getRangeOfCashflow(startDate, endDate, ethInflowRecords));
-    setEthOutflowRange(getRangeOfCashflow(startDate, endDate, ethOutflowRecords));
-    setDepositsRange(getRangeOfCashflow(startDate, endDate, depositsRecords));
-    setFtCbpflowRange(getRangeOfCashflow(startDate, endDate, ftCbpflowRecords));
-    setFtEthflowRange(getRangeOfCashflow(startDate, endDate, ftEthflowRecords));
+    setCbpInflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), cbpInflowRecords)});
+    setCbpOutflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), cbpOutflowRecords)});
+    setEthInflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ethInflowRecords)});
+    setEthOutflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ethOutflowRecords)});
+    setDepositsRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), depositsRecords)});
+    setFtCbpflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ftCbpflowRecords)});
+    setFtEthflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ftEthflowRecords)});
   }
 
   useEffect(()=>{
@@ -218,35 +219,34 @@ export function FinStatement() {
   }, [endDate]);
 
   useEffect(()=>{
-    setCbpInflow(updateCbpInflowSum(cbpInflowRecords, cbpInflowRange));
+    setCbpInflow([...updateCbpInflowSum(cbpInflowRecords, cbpInflowRange)]);
   },[cbpInflowRecords, cbpInflowRange]);
 
   useEffect(()=>{
-    setCbpOutflow(updateCbpOutflowSum(cbpOutflowRecords, cbpOutflowRange));
+    setCbpOutflow([...updateCbpOutflowSum(cbpOutflowRecords, cbpOutflowRange)]);
   }, [cbpOutflowRecords, cbpOutflowRange]);
 
   useEffect(()=>{
-    setEthInflow(updateEthInflowSum(ethInflowRecords, ethInflowRange));
+    setEthInflow([...updateEthInflowSum(ethInflowRecords, ethInflowRange)]);
   }, [ethInflowRecords, ethInflowRange]);
  
   useEffect(()=>{
-    setEthOutflow(updateEthOutflowSum(ethOutflowRecords, ethOutflowRange));
+    setEthOutflow([...updateEthOutflowSum(ethOutflowRecords, ethOutflowRange)]);
   }, [ethOutflowRecords, ethOutflowRange]);
 
   useEffect(()=> {
-    setDeposits(updateDepositsSum(depositsRecords, depositsRange));
+    setDeposits([...updateDepositsSum(depositsRecords, depositsRange)]);
   }, [depositsRecords, depositsRange]);
 
   useEffect(()=>{
-    setFtCbpflow(updateFtCbpflowSum(ftCbpflowRecords, ftCbpflowRange));
+    setFtCbpflow([...updateFtCbpflowSum(ftCbpflowRecords, ftCbpflowRange)]);
   }, [ftCbpflowRecords, ftCbpflowRange]);
 
   useEffect(()=>{
-    setFtEthflow(updateFtEthflowSum(ftEthflowRecords, ftEthflowRange));  
+    setFtEthflow([...updateFtEthflowSum(ftEthflowRecords, ftEthflowRange)]);  
   }, [ftEthflowRecords, ftEthflowRange]);
 
   // ==== Calculation ====
-
 
   const weiToBP = (eth:bigint) => {
     return eth * 100n / centPrice;
@@ -996,8 +996,8 @@ export function FinStatement() {
               label='BeginningDate'
               helperText=' '
               sx={{m:1, mt:3, minWidth:188 }}
-              value={ dayjs.unix(startDate).utc() }
-              onChange={(date) => setStartDate(date ? date.unix() : 0)}
+              value={ stampToUtc(startDate) }
+              onChange={(date) => setStartDate(utcToStamp(date))}
               format='YYYY-MM-DD HH:mm:ss'
               size='small'
             />
@@ -1010,8 +1010,8 @@ export function FinStatement() {
               label='EnddingDate'
               helperText=' '
               sx={{m:1, mt:3, minWidth:188 }}
-              value={ dayjs.unix(endDate).utc() }
-              onChange={(date) => setEndDate(date ? date.unix() : 0)}
+              value={ stampToUtc(endDate) }
+              onChange={(date) => setEndDate( utcToStamp(date) )}
               format='YYYY-MM-DD HH:mm:ss'
               size='small'
             />

@@ -7,6 +7,14 @@ import { Dispatch, SetStateAction } from "react";
 
 dayjs.extend(utc);
 
+export function stampToUtc(stamp: number ): dayjs.Dayjs {
+  return dayjs.unix(stamp).utc();
+}
+
+export function utcToStamp(date: dayjs.Dayjs | null): number {
+  return date ? dayjs(date).utc().unix() : 0;
+}
+
 export function toPercent(strNum: string): string {
   let num = Number(strNum);
   let percent = num == 0 ? '-' : Number(num / 100).toFixed(2) + '%';

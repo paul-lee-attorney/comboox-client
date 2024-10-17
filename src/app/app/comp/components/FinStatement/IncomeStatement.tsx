@@ -3,7 +3,58 @@ import { showUSD, weiToEth9Dec } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
 import { CbpInflowSum } from "./Cashflow/CbpInflow";
 import { CbpOutflowSum } from "./Cashflow/CbpOutflow";
-import { AssetsProps } from "./Assets";
+import { AssetsProps, getArmotization, getEthOfComp } from "./Assets";
+import { getDeferredRevenue } from "./LiabilityAndEquity";
+import { EthOutflowSum } from "./Cashflow/EthOutflow";
+import { EthInflowSum } from "./Cashflow/EthInflow";
+
+
+export const getSGNA = (type:number, ethOutflow:EthOutflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
+  const ethExp = ethOutflow[type].totalAmt - ethOutflow[type].distribution;
+  const ethExpInUsd = ethOutflow[type].sumInUsd - ethOutflow[type].distributionInUsd;
+
+  const cbpExp = cbpToETH(cbpOutflow[type].totalAmt - cbpOutflow[type].fuelSold);
+  const cbpExpInUsd = cbpOutflow[type].sumInUsd - cbpOutflow[type].fuelSoldInUsd;
+
+  const inEth = ethExp + cbpExp;
+  const inUsd = ethExpInUsd + cbpExpInUsd;
+
+  return ({inEth:inEth, inUsd:inUsd});
+}
+
+export const getExchangeGainLoss = (type:number, ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], weiToDust:(eht:bigint)=>bigint, cbpToETH:(cbp:bigint)=>bigint)=> {
+
+  const ethOfComp = getEthOfComp(type, ethInflow, ethOutflow);
+  const ethGainLoss = weiToDust(ethOfComp.inEth) - ethOfComp.inUsd;
+
+  const deferredRevenue = getDeferredRevenue(type, cbpInflow, cbpOutflow,cbpToETH);
+  const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
+
+  return ethGainLoss - cbpGainLoss;
+}
+
+export const getEBITDA = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint)=>{
+
+  const sgNa = getSGNA(type, ethOutflow, cbpOutflow, cbpToETH);
+  const exchangeGainLoss = getExchangeGainLoss(type, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
+
+  const inEth = cbpToETH(cbpInflow[type].royalty) + ethInflow[type].transfer - sgNa.inEth;
+  const inUsd = cbpInflow[type].royaltyInUsd + ethInflow[type].transferInUsd - sgNa.inUsd + exchangeGainLoss;
+
+  return ({inEth:inEth, inUsd:inUsd});
+}
+
+export const getProfits = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint)=>{
+
+  const armotization = getArmotization(type, startDate, endDate, centPrice);
+
+  const ebitda = getEBITDA(type,cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+
+  const inEth = ebitda.inEth - armotization;
+  const inUsd = ebitda.inUsd - weiToDust(armotization);
+
+  return({inEth:inEth, inUsd:inUsd});
+}
 
 export interface IncomeStatementProps extends AssetsProps {
   exRate: bigint,
@@ -29,56 +80,14 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
     return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
 
-  // ---- IPR ----
+  const armotization = getArmotization(2, startDate, endDate, centPrice);
 
-  const setUpDate = Math.floor((new Date('2024-05-18T00:00:00Z')).getTime()/1000);
-  const fullLifeHrs = 15n * 365n * 86400n;
+  const sgNa = getSGNA(2, ethOutflow, cbpOutflow, cbpToETH);
+  const exchangeGainLoss = getExchangeGainLoss(2, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
 
-  let initContribution = endDate >= setUpDate
-      ? 3n * 10n ** 7n * centPrice
-      : 0n;
+  const ebitda = getEBITDA(2, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
-  let daysOfPeriod = startDate >= setUpDate
-      ? BigInt(endDate - startDate)
-      : endDate >= setUpDate ? BigInt(endDate - setUpDate) : 0n;
-
-  let armotization = initContribution * daysOfPeriod / fullLifeHrs;
-
-  // ---- ETH ----
-
-  let ethOfComp = ethInflow[2].totalAmt - ethOutflow[2].totalAmt;
-  let ethOfCompInUsd = ethInflow[2].sumInUsd - ethOutflow[2].sumInUsd;
-
-  let ethGainLoss = weiToDust(ethOfComp) - ethOfCompInUsd;
-
-  // ---- CBP ----
-
-  let deferredRevenue = cbpToETH(cbpOutflow[2].totalAmt - cbpInflow[2].totalAmt + cbpInflow[2].mint);
-  let deferredRevenueInUsd = cbpOutflow[2].sumInUsd - cbpInflow[2].sumInUsd + cbpInflow[2].mintInUsd;
-
-  let cbpGainLoss = weiToDust(deferredRevenue) - deferredRevenueInUsd;
-
-  let exchangeGainLoss = ethGainLoss - cbpGainLoss;
-
-  // ---- SG&A ----
-
-  let ethExp = ethOutflow[2].totalAmt - ethOutflow[2].distribution;
-  let ethExpInUsd = ethOutflow[2].sumInUsd - ethOutflow[2].distributionInUsd;
-
-  let cbpExp = cbpToETH(cbpOutflow[2].totalAmt - cbpOutflow[2].fuelSold);
-  let cbpExpInUsd = cbpOutflow[2].sumInUsd - cbpOutflow[2].fuelSoldInUsd;
-
-  let sgNa = ethExp + cbpExp;
-  let sgNaInUsd = ethExpInUsd + cbpExpInUsd;
-
-  // ---- Profits ----
-
-  let ebitda = cbpToETH(cbpInflow[2].royalty) + ethInflow[2].transfer - sgNa;
-  let ebitdaInUsd = cbpInflow[2].royaltyInUsd + ethInflow[2].transferInUsd - sgNaInUsd + exchangeGainLoss;
-
-  let profits = ebitda - armotization;
-  let profitsInUsd = ebitdaInUsd - weiToDust(armotization);
-
+  const profits = getProfits(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   // onClick={()=>showRoyaltyRecords()} 
   // onClick={()=>showOtherIncomeRecords()}
@@ -125,8 +134,8 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>display[2](2)}>
           <b>Sales, General & Administrative: ({ inETH
-            ? weiToEth9Dec(sgNa)
-            : showUSD(sgNaInUsd)}) </b>
+            ? weiToEth9Dec(sgNa.inEth)
+            : showUSD(sgNa.inUsd)}) </b>
         </Button>
       </Stack>
 
@@ -147,8 +156,8 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>EBITDA: ({ inETH
-            ? weiToEth9Dec(ebitda)
-            : showUSD(ebitdaInUsd)}) </b>
+            ? weiToEth9Dec(ebitda.inEth)
+            : showUSD(ebitda.inUsd)}) </b>
         </Button>
       </Stack>
 
@@ -174,8 +183,8 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         </Typography>
         <Button variant="outlined" sx={{width: '60%', m:0.5, justifyContent:'start'}} >
           <b>Profits: ({ inETH
-            ? weiToEth9Dec(profits)
-            : showUSD(profitsInUsd) }) </b>
+            ? weiToEth9Dec(profits.inEth)
+            : showUSD(profits.inUsd) }) </b>
         </Button>
       </Stack>
 

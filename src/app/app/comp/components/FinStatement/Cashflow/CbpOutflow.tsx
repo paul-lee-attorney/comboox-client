@@ -84,15 +84,16 @@ const sumArrayOfCbpOutflow = (arr: Cashflow[]) => {
 
 export const updateCbpOutflowSum = (arr: Cashflow[], info:CashflowRange) => {
   
-  let sum: CbpOutflowSum[] = defCbpOutflowSumArr;
+  let sum: CbpOutflowSum[] = [...defCbpOutflowSumArr];
 
-  if (arr.length > 0) {
-    sum[0]=sumArrayOfCbpOutflow(arr);
+  if (arr.length > 0 && info.head >=0 ) {
     sum[1]=sumArrayOfCbpOutflow(arr.slice(0, info.head));
     sum[2]=sumArrayOfCbpOutflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
     sum[3]=sumArrayOfCbpOutflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined));  
   }
   
+  console.log('cbpOutflow range:', info);
+  console.log('cbpOutflow:', sum);
   return sum;
 }
 

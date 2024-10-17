@@ -4,8 +4,6 @@ import { DoneOutline } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { useEffect, useState } from "react";
 
-import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { HexType, MaxUserNo, booxMap } from "../../../../common";
 import { getShare } from "../../../ros/ros";
 import { StrBody, StrHead, defaultStrBody, defaultStrHead } from "../../../roa/ia/ia";

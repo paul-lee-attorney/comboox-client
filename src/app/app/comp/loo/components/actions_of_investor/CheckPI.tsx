@@ -2,20 +2,19 @@ import { Box, Button, Dialog, DialogActions, DialogContent, Divider, FormControl
 import Image from "next/image";
 import { CopyLongStrTF } from "../../../../common/CopyLongStr";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { countries, defaultUserInfo, idDocTypes, statesOfUS, UserInfo } from "../../../../../api/firebase";
 import { useState } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { useWalletClient } from "wagmi";
 import { getMyUserNo } from "../../../../rc";
 import { getUserData } from "../../../../../api/firebase/userInfoTools";
-import { longSnParser } from "../../../../common/toolsKit";
+import { longSnParser, stampToUtc } from "../../../../common/toolsKit";
 import { downloadAndDecryptImg } from "../../../../../api/firebase/fileDownloadTools";
 import { booxMap } from "../../../../common";
 import { getSHA } from "../../../gk";
 import { getRule } from "../../../roc/sha/sha";
 import { hasTitle } from "../../../rod/rod";
-import { BadgeOutlined, DownloadOutlined, PermIdentityOutlined } from "@mui/icons-material";
+import { BadgeOutlined } from "@mui/icons-material";
 
 export interface CheckPIProps{
   userNo: string;
@@ -152,7 +151,7 @@ export function CheckPI({userNo, seqOfLR}:CheckPIProps) {
                   m:1,
                   minWidth: 218,
                 }} 
-                value={ dayjs.unix(Number(userInfo.dateOfBirth))}
+                value={ stampToUtc(Number(userInfo.dateOfBirth))}
                 format='YYYY-MM-DD HH:mm:ss'
               />
 
@@ -232,7 +231,7 @@ export function CheckPI({userNo, seqOfLR}:CheckPIProps) {
                 m:1,
                 minWidth: 218,
               }} 
-              value={ dayjs.unix(Number(userInfo.dateOfExpiry))}
+              value={ stampToUtc(Number(userInfo.dateOfExpiry))}
               format='YYYY-MM-DD HH:mm:ss'
             />
 

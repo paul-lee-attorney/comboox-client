@@ -6,9 +6,8 @@ import { useGeneralKeeperProposeToDistributeProfits } from "../../../../../../..
 
 import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { CreateMotionProps } from "../../../bmm/components/CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
@@ -106,8 +105,8 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
                 minWidth: 218,
               }}
               helperText=' '
-              value={ dayjs.unix( expireDate) }
-              onChange={(date) => setExpireDate(date ? date.unix() : 0)}
+              value={ stampToUtc( expireDate) }
+              onChange={(date) => setExpireDate( utcToStamp(date) )}
               format='YYYY-MM-DD HH:mm:ss'
             />
 

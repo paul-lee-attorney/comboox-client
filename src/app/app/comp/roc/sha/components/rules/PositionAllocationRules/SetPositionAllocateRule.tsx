@@ -1,6 +1,5 @@
 
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import { DateTimeField } from '@mui/x-date-pickers';
 import { 
   Stack,
@@ -19,7 +18,7 @@ import {
   FormHelperText,
 } from '@mui/material';
 import { AddRule } from '../AddRule';
-import { FormResults, defFormResults, longSnParser, onlyInt } from '../../../../../../common/toolsKit';
+import { FormResults, defFormResults, longSnParser, onlyInt, stampToUtc, utcToStamp } from '../../../../../../common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
 import { HexType, MaxSeqNo, MaxUserNo, SeqZero } from '../../../../../../common';
 
@@ -340,10 +339,10 @@ export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }
                     m:1,
                     minWidth: 218,
                   }} 
-                  value={ dayjs.unix(objPR.endDate) }
+                  value={ stampToUtc(objPR.endDate) }
                   onChange={(date) => setObjPR((v) => ({
                     ...v,
-                    endDate: date ? date.unix() : 0,
+                    endDate: utcToStamp(date),
                   }))}
                   format='YYYY-MM-DD HH:mm:ss'
                 />

@@ -32,7 +32,6 @@ import {
   useOptionsRemoveObligorFromOpt,
 } from "../../../../../../../../../generated";
 
-import dayjs from "dayjs";
 import { Opt } from "./Opt";
 
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
@@ -45,7 +44,7 @@ import { OptWrap, comOps, condCodifier, logOps, optHeadCodifier, typeOfOpts, Str
 
 import { getOpts } from "./op";
 
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../../../common/toolsKit";
 import { useComBooxContext } from "../../../../../../../_providers/ComBooxContextProvider";
 
 
@@ -369,10 +368,10 @@ export function Options({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           m:1,
                           minWidth: 218,
                         }} 
-                        value={ dayjs.unix(head.triggerDate) }
+                        value={ stampToUtc(head.triggerDate) }
                         onChange={(date) => setHead((v) => ({
                           ...v,
-                          triggerDate: date ? date.unix() : 0,
+                          triggerDate: utcToStamp(date),
                         }))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />

@@ -35,14 +35,14 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
   // ==== Oerating Activity ====
 
   const getEthPayment = () => {
-    let inEth = ethOutflow[2].bmmTransfer + ethOutflow[2].gmmTransfer + ethOutflow[2].bmmExpense + ethOutflow[2].gmmExpense;
-    let inUsd = ethOutflow[2].gmmTransferInUsd + ethOutflow[2].gmmTransferInUsd + ethOutflow[2].gmmExpenseInUsd + ethOutflow[2].gmmExpenseInUsd;
+    const inEth = ethOutflow[2].bmmTransfer + ethOutflow[2].gmmTransfer + ethOutflow[2].bmmExpense + ethOutflow[2].gmmExpense;
+    const inUsd = ethOutflow[2].gmmTransferInUsd + ethOutflow[2].gmmTransferInUsd + ethOutflow[2].gmmExpenseInUsd + ethOutflow[2].gmmExpenseInUsd;
 
     return({inEth: inEth, inUsd: inUsd});
   }
   const getEthInflowFromOperating = () => {
-    let inEth = ethInflow[2].gas + ethInflow[2].transfer - getEthPayment().inEth;
-    let inUsd = ethInflow[2].gasInUsd + ethInflow[2].transferInUsd - getEthPayment().inUsd;
+    const inEth = ethInflow[2].gas + ethInflow[2].transfer - getEthPayment().inEth;
+    const inUsd = ethInflow[2].gasInUsd + ethInflow[2].transferInUsd - getEthPayment().inUsd;
 
     return ({inEth: inEth, inUsd: inUsd});
   }
@@ -50,8 +50,8 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
   // ---- Financing ----
 
   const getNetEthOfFinancing = () => {
-    let inEth = ethInflow[2].capital - ethOutflow[2].distribution;
-    let inUsd = ethInflow[2].capitalInUsd - ethOutflow[2].distributionInUsd;
+    const inEth = ethInflow[2].capital - ethOutflow[2].distribution;
+    const inUsd = ethInflow[2].capitalInUsd - ethOutflow[2].distributionInUsd;
 
     return ({inEth: inEth, inUsd:inUsd});
   }
@@ -59,21 +59,21 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
   // ==== Sum ====
 
   const getNetIncreaseOfEth = () => {
-    let inEth = getEthInflowFromOperating().inEth + getNetEthOfFinancing().inEth;
-    let inUsd = getEthInflowFromOperating().inUsd + getNetEthOfFinancing().inUsd;
+    const inEth = getEthInflowFromOperating().inEth + getNetEthOfFinancing().inEth;
+    const inUsd = getEthInflowFromOperating().inUsd + getNetEthOfFinancing().inUsd;
 
     return ({inEth: inEth, inUsd: inUsd});
   }
 
   const getBeginningValueOfEth = () => {
-    let inEth = ethInflow[1].totalAmt - ethOutflow[1].totalAmt;
-    let inUsd = ethInflow[1].sumInUsd - ethOutflow[1].sumInUsd;
+    const inEth = ethInflow[1].totalAmt - ethOutflow[1].totalAmt;
+    const inUsd = ethInflow[1].sumInUsd - ethOutflow[1].sumInUsd;
     return ({inEth:inEth, inUsd:inUsd});
   }
 
   const getBalanceOfEth = () => {
-    let inEth = getBeginningValueOfEth().inEth + getNetIncreaseOfEth().inEth;
-    let inUsd =  getBeginningValueOfEth().inUsd + getNetIncreaseOfEth().inUsd;
+    const inEth = getBeginningValueOfEth().inEth + getNetIncreaseOfEth().inEth;
+    const inUsd =  getBeginningValueOfEth().inUsd + getNetIncreaseOfEth().inUsd;
     return({inEth:inEth, inUsd:inUsd});
   }
 

@@ -31,7 +31,7 @@ import {
 } from "../../../../../../../../../generated";
 
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
+
 import { SetShaTermProps } from "../AntiDilution/AntiDilution";
 import { CopyLongStrSpan } from "../../../../../../common/CopyLongStr";
 
@@ -39,7 +39,7 @@ import { AddTerm } from "../AddTerm";
 import { LockerOfShare } from "./LockerOfShare";
 import { Locker, getLockers } from "./lu";
 
-import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../../common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx, stampToUtc, utcToStamp } from "../../../../../../common/toolsKit";
 import { useComBooxContext } from "../../../../../../../_providers/ComBooxContextProvider";
 
 
@@ -268,8 +268,8 @@ export function LockUp({ sha, term, setTerms, isFinalized }: SetShaTermProps) {
                           minWidth: 218,
                         }} 
                         size="small"
-                        value={ dayjs.unix(dueDate) }
-                        onChange={(date) => setDueDate(date ? date.unix() : 0)}
+                        value={ stampToUtc(dueDate) }
+                        onChange={(date) => setDueDate(utcToStamp(date))}
                         format='YYYY-MM-DD HH:mm:ss'
                       />
 

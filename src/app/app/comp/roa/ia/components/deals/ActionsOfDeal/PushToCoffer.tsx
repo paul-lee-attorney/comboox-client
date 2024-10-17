@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../../../common";
 import { defaultDeal } from "../../../ia";
-import dayjs, { Dayjs } from "dayjs";
+
 import { useGeneralKeeperPushToCoffer } from "../../../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { LockClock } from "@mui/icons-material";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from "../../../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx, stampToUtc, utcToStamp } from "../../../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../../../_providers/ComBooxContextProvider";
 
@@ -90,8 +90,8 @@ export function PushToCoffer({addr, deal, setOpen, setDeal, refresh}:ActionsOfDe
             m:1,
             minWidth: 218,
           }} 
-          value={ dayjs.unix(closingDate) }
-          onChange={(date) => setClosingDate(date ? date.unix() : 0)}
+          value={ stampToUtc(closingDate) }
+          onChange={(date) => setClosingDate(utcToStamp(date))}
           format='YYYY-MM-DD HH:mm:ss'
         />
 

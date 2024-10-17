@@ -7,7 +7,6 @@ import {
 import { Paper, Stack, TextField } from "@mui/material";
 import { Lock } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { StrLocker, defaultStrLocker } from "../../../../rc";
 import { 
   FormResults, 
@@ -16,7 +15,9 @@ import {
   hasError, onlyHex, 
   onlyNum, 
   refreshAfterTx, 
-  strNumToBigInt 
+  stampToUtc, 
+  strNumToBigInt, 
+  utcToStamp
 } from "../../../../common/toolsKit";
 import { ActionsOfCapProps } from "../ActionsOfCap";
 import { LoadingButton } from "@mui/lab";
@@ -124,12 +125,10 @@ export function SetPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCapProps
             m:1,
             minWidth: 218,
           }} 
-          value={ dayjs.unix(locker.head.expireDate) }
+          value={ stampToUtc(locker.head.expireDate) }
           onChange={(date) => setLocker(v => {
             let lk = v;
-            lk.head.expireDate = date 
-                  ? date.unix() 
-                  : 0;
+            lk.head.expireDate = utcToStamp(date);
             return lk;
           })}
           format='YYYY-MM-DD HH:mm:ss'

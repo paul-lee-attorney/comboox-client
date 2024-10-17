@@ -1,12 +1,14 @@
-import { Button, Divider, Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
-import { showUSD, weiToEth9Dec } from "../FinStatement";
+import { Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
+import { showUSD } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
-import { IncomeStatementProps } from "./IncomeStatement";
+import { getProfits, IncomeStatementProps } from "./IncomeStatement";
 import { useEffect, useState } from "react";
-import { capAtDate, getOwnersEquity } from "../../rom/rom";
+import { capAtDate } from "../../rom/rom";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
+import { getInitContribution } from "./Assets";
+import { getOwnersEquity, getRetainedEarnings } from "./LiabilityAndEquity";
 
 export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow}: IncomeStatementProps) {
 
@@ -30,8 +32,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
   // ---- Cap ----
 
-  const [ openningCap, setOpenningCap ] = useState(30n * 10n ** 8n);
-  const [ endingCap, setEndingCap ] = useState(30n * 10n ** 8n);
+  const [ openningCap, setOpenningCap ] = useState(0n);
+  const [ endingCap, setEndingCap ] = useState(0n);
 
   const client = usePublicClient();
 
@@ -41,14 +43,14 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
       if (!boox) return;
 
       let begCap = await capAtDate(boox[booxMap.ROM], startDate);
-      if (begCap.paid > 0n) setOpenningCap(begCap.paid);
+      if (begCap.paid >= 0n) setOpenningCap(begCap.paid);
       console.log('startDate: ', startDate, 'begCap: ', begCap);
 
       let blk = await client.getBlock();
       let curTime = Number(blk.timestamp);
 
       let endCap = await capAtDate(boox[booxMap.ROM], endDate >= curTime ? curTime : endDate);
-      if (endCap.paid > 0n) setEndingCap(endCap.paid);
+      if (endCap.paid >= 0n) setEndingCap(endCap.paid);
       console.log('endDate: ', endDate, 'endCap: ', endCap);
     }
 
@@ -58,71 +60,23 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
   // ---- IPR ----
 
-  const setUpDate = Math.floor((new Date('2024-05-18T00:00:00Z')).getTime()/1000);
-  const fullLifeHrs = 15n * 365n * 86400n;
-
-  let initContribution = endDate >= setUpDate
-      ? 3n * 10n ** 7n * centPrice
-      : 0n;
   
-  let daysOfPeriod = startDate >= setUpDate
-      ? BigInt(endDate - startDate)
-      : endDate >= setUpDate ? BigInt(endDate - setUpDate) : 0n;
-
   const getCapPremium = (type:number)=> {
-    let paidCap = type == 1
+    const paidCap = type == 1
         ? openningCap * 10n ** 14n
-        : endingCap * 10n ** 14n;
+        : type == 2 ? (endingCap - openningCap) * 10n ** 14n : endingCap * 10n ** 14n;
 
-    return ethInflow[type].capitalInUsd + weiToDust(initContribution) - paidCap;
+    const initContribution = getInitContribution(type, startDate, endDate, centPrice);
+
+    return ethInflow[type].capitalInUsd + initContribution - paidCap;
   }
 
-  const retainedEarnings = (type:number) => {
+  const profits = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
-    let armotization = initContribution * daysOfPeriod / fullLifeHrs;
+  const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
-    // ---- ETH ----
-  
-    let ethOfComp = ethInflow[type].totalAmt - ethOutflow[type].totalAmt;
-    let ethOfCompInUsd = ethInflow[type].sumInUsd - ethOutflow[type].sumInUsd;
-  
-    let ethGainLoss = weiToDust(ethOfComp) - ethOfCompInUsd;
-  
-    // ---- CBP ----
-  
-    let deferredRevenue = cbpToETH(cbpOutflow[type].totalAmt - cbpInflow[type].totalAmt + cbpInflow[type].mint);
-    let deferredRevenueInUsd = cbpOutflow[type].sumInUsd - cbpInflow[type].sumInUsd + cbpInflow[type].mintInUsd;
-  
-    let cbpGainLoss = weiToDust(deferredRevenue) - deferredRevenueInUsd;
-  
-    let exchangeGainLoss = ethGainLoss - cbpGainLoss;
-  
-    // ---- SG&A ----
-  
-    let ethExp = ethOutflow[type].totalAmt - ethOutflow[type].distribution;
-    let ethExpInUsd = ethOutflow[type].sumInUsd - ethOutflow[type].distributionInUsd;
-  
-    let cbpExp = cbpToETH(cbpOutflow[type].totalAmt - cbpOutflow[type].fuelSold);
-    let cbpExpInUsd = cbpOutflow[type].sumInUsd - cbpOutflow[type].fuelSoldInUsd;
-  
-    let sgNa = ethExp + cbpExp;
-    let sgNaInUsd = ethExpInUsd + cbpExpInUsd;
-  
-    // ---- Profits ----
-  
-    let ebitda = cbpToETH(cbpInflow[type].royalty) + ethInflow[type].transfer - sgNa;
-    let ebitdaInUsd = cbpInflow[type].royaltyInUsd + ethInflow[type].transferInUsd - sgNaInUsd + exchangeGainLoss;
-  
-    let profits = ebitda - armotization;
-    let profitsInUsd = ebitdaInUsd - weiToDust(armotization);
-  
-    return {inEth: profits, inUsd: profitsInUsd};
-  }
 
-  const getEquity = (type:number)=> {
-    return ethInflow[type].capitalInUsd + weiToDust(initContribution) + retainedEarnings(type).inUsd;
-  }
-
+  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   return(
 
@@ -202,7 +156,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(getEquity(1))} 
+                  { showUSD(ownersEquity(1).inUsd)} 
                 </Typography>
               </TableCell>
 
@@ -230,13 +184,13 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(retainedEarnings(2).inUsd)} 
+                  { showUSD(profits(2).inUsd)} 
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                { showUSD(retainedEarnings(2).inUsd)} 
+                { showUSD(profits(2).inUsd)} 
                 </Typography>
               </TableCell>
 
@@ -264,13 +218,13 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  - { showUSD(ethOutflow[2].distributionInUsd)} 
+                  -{ showUSD(ethOutflow[2].distributionInUsd)} 
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                - { showUSD(ethOutflow[2].distributionInUsd)} 
+                -{ showUSD(ethOutflow[2].distributionInUsd)} 
                 </Typography>
               </TableCell>
 
@@ -292,7 +246,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(ethInflow[2].capitalInUsd - (endingCap - openningCap) * 10n ** 14n)}
+                  { showUSD(getCapPremium(2))}
                 </Typography>
               </TableCell>
 
@@ -326,7 +280,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(ethInflow[3].capitalInUsd + weiToDust(initContribution) - endingCap * 10n ** 14n)}
+                  { showUSD(getCapPremium(3))}
                 </Typography>
               </TableCell>
 
@@ -338,7 +292,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(getEquity(3))} 
+                  { showUSD(ownersEquity(3).inUsd)} 
                 </Typography>
               </TableCell>
 

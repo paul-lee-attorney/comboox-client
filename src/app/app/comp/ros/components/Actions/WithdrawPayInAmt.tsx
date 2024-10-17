@@ -8,7 +8,7 @@ import {
 import { Paper, Stack, TextField } from "@mui/material";
 import { RedoOutlined } from "@mui/icons-material";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
+
 import { StrLocker, defaultStrLocker, parseOrgLocker } from "../../../../rc";
 import { 
   FormResults, 
@@ -17,6 +17,7 @@ import {
   defFormResults, 
   hasError, onlyHex, 
   refreshAfterTx,
+  stampToUtc,
 } from "../../../../common/toolsKit";
 import { ActionsOfCapProps } from "../ActionsOfCap";
 import { LoadingButton } from "@mui/lab";
@@ -127,7 +128,7 @@ export function WithdrawPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCap
           m:1,
           minWidth: 218,
         }} 
-        value={ dayjs.unix(locker.head.expireDate) }
+        value={ stampToUtc(locker.head.expireDate) }
         format='YYYY-MM-DD HH:mm:ss'
         size="small"
       />          

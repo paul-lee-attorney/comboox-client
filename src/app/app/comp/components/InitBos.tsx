@@ -9,10 +9,9 @@ import { LoadingButton } from '@mui/lab';
 import { useRegisterOfSharesIssueShare, useRegisterOfSharesDecreaseCapital } from '../../../../../generated';
 
 import { HexType, MaxData, MaxPrice, MaxSeqNo, MaxUserNo, booxMap } from '../../common';
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from '../../common/toolsKit';
+import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from '../../common/toolsKit';
 
 import { DateTimeField } from '@mui/x-date-pickers';
-import dayjs from 'dayjs';
 
 import { SharesList } from '../ros/components/SharesList';
 
@@ -285,11 +284,11 @@ export function InitBos({nextStep}: InitCompProps) {
                   label='IssueDate'
                   helperText=' '
                   sx={{m:1, width:188 }}
-                  value={ dayjs.unix(share.head.issueDate) }
+                  value={ stampToUtc(share.head.issueDate) }
                   onChange={(date) => setShare((v) => ({
                     head: {
                       ...v.head,
-                      issueDate: date ? date.unix() : 0 ,
+                      issueDate: utcToStamp(date),
                     },
                     body: v.body,
                   }))}
@@ -301,12 +300,12 @@ export function InitBos({nextStep}: InitCompProps) {
                   label='PayInDeadline'
                   helperText=' '
                   sx={{m:1, width:188 }}
-                  value={ dayjs.unix(share.body.payInDeadline) }
+                  value={ stampToUtc(share.body.payInDeadline) }
                   onChange={(date) => setShare((v) => ({
                     head: v.head,
                     body: {
                       ...v.body,
-                      payInDeadline: date ? date.unix() : 0,
+                      payInDeadline: utcToStamp(date),
                     },
                   }))}
                   format='YYYY-MM-DD HH:mm:ss'

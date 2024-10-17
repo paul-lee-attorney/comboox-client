@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Box, Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField, } from "@mui/material";
 import { BorderColor, Camera, UploadOutlined } from "@mui/icons-material";
 
-import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyChars, onlyEmail, onlyHex, onlyInt, onlyNumOrChar, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyChars, onlyEmail, onlyHex, onlyInt, onlyNumOrChar, refreshAfterTx, stampToUtc, utcToStamp } from "../../../../common/toolsKit";
 import { useGeneralKeeperRegInvestor } from "../../../../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { Bytes32Zero, HexType, MaxUserNo } from "../../../../common";
@@ -14,7 +14,6 @@ import { UserInfo, countries, defaultUserInfo, idDocTypes, statesOfUS } from "..
 
 import { useWalletClient } from "wagmi";
 import { DateTimeField } from "@mui/x-date-pickers";
-import dayjs from "dayjs";
 import { CopyLongStrTF } from "../../../../common/CopyLongStr";
 import { keccak256 } from "viem";
 import { getUserData, setUserData} from "../../../../../api/firebase/userInfoTools";
@@ -184,10 +183,10 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
             m:1,
             minWidth: 218,
           }} 
-          value={ dayjs.unix(Number(userInfo.dateOfBirth))}
+          value={ stampToUtc(Number(userInfo.dateOfBirth))}
           onChange={(date) => setUserInfo((v) => ({
             ...v,
-            dateOfBirth: date ? date.unix().toString() : '0',
+            dateOfBirth: utcToStamp(date).toString(),
           }))}
           format='YYYY-MM-DD HH:mm:ss'
         />
@@ -305,10 +304,10 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
             m:1,
             minWidth: 218,
           }} 
-          value={ dayjs.unix(Number(userInfo.dateOfExpiry))}
+          value={ stampToUtc(Number(userInfo.dateOfExpiry))}
           onChange={(date) => setUserInfo((v) => ({
             ...v,
-            dateOfExpiry: date ? date.unix().toString() : '0',
+            dateOfExpiry: utcToStamp(date).toString(),
           }))}
           format='YYYY-MM-DD HH:mm:ss'
         />
