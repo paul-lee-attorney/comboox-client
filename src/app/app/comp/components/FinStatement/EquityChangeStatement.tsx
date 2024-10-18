@@ -7,7 +7,7 @@ import { capAtDate } from "../../rom/rom";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
-import { getInitContribution } from "./Assets";
+import { getInitContribution, setUpDate } from "./Assets";
 import { getOwnersEquity, getRetainedEarnings } from "./LiabilityAndEquity";
 
 export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow}: IncomeStatementProps) {
@@ -41,21 +41,32 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
     const getPaidCap = async ()=>{
       if (!boox) return;
-
-      let begCap = await capAtDate(boox[booxMap.ROM], startDate);
-      if (begCap.paid > 0n) setOpenningCap(begCap.paid)
-      else setOpenningCap(getInitContribution(1, startDate, endDate, centPrice) / 10n ** 14n);
       
-      console.log('startDate: ', startDate, 'begCap: ', begCap);
+      const systemDate = (new Date('2024-09-12T17:00:00Z')).getTime()/1000;
 
-      let blk = await client.getBlock();
-      let curTime = Number(blk.timestamp);
+      const initCap = 3n*10n**9n;
 
-      let endCap = await capAtDate(boox[booxMap.ROM], endDate >= curTime ? curTime : endDate);
-      if (endCap.paid > 0n) setEndingCap(endCap.paid);
-      else setEndingCap(getInitContribution(3, startDate, endDate, centPrice) / 10n ** 14n);
+      if (startDate < systemDate && startDate >= setUpDate) {
+        setOpenningCap(initCap);
+      } else if( startDate >= systemDate ) {
+        let begCap = await capAtDate(boox[booxMap.ROM], startDate);
+        if (begCap.paid > 0n) setOpenningCap(begCap.paid);
+      } else {
+        setOpenningCap(0n);
+      }
 
-      console.log('endDate: ', endDate, 'endCap: ', endCap);
+      if (endDate < systemDate && endDate >= setUpDate) {
+        setEndingCap(initCap);
+      } else if (endDate >= systemDate) {
+
+        let blk = await client.getBlock();
+        let curTime = Number(blk.timestamp);
+
+        let endCap = await capAtDate(boox[booxMap.ROM], endDate >= curTime ? curTime : endDate);
+        if (endCap.paid > 0n) setEndingCap(endCap.paid);
+      } else {
+        setEndingCap(0n);
+      }
     }
 
     getPaidCap();
@@ -72,7 +83,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
     const initContribution = getInitContribution(type, startDate, endDate, centPrice);
 
-    return ethInflow[type].capitalInUsd + initContribution - paidCap;
+    return ethInflow[type].capitalInUsd - paidCap + (type != 2 ? weiToDust(initContribution) : 0n);
   }
 
   const profits = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
@@ -170,7 +181,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               
               <TableCell>
                 <Typography variant='body1'>
-                  <b>Net Income</b>  
+                  <b>Profits</b>  
                 </Typography>
               </TableCell>
 

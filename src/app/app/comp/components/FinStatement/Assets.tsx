@@ -1,8 +1,7 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { defReportItem, ReportItem, showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
+import { showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
 import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
-import { useEffect, useState } from "react";
 
 export interface AssetsProps extends StatementProps {
   ethInflow: EthInflowSum[],
