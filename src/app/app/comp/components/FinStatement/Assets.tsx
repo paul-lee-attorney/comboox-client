@@ -9,7 +9,7 @@ export interface AssetsProps extends StatementProps {
   ethOutflow: EthOutflowSum[],
 }
 
-const setUpDate = Math.floor((new Date('2024-05-18T00:00:00Z')).getTime()/1000);
+export const setUpDate = Math.floor((new Date('2024-05-18T00:00:00Z')).getTime()/1000);
 const fullLifeHrs = 15n * 365n * 86400n;
 
 export const getInitContribution = (type:number, startDate:number, endDate: number, centPrice: bigint) => {

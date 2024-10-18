@@ -43,14 +43,18 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
       if (!boox) return;
 
       let begCap = await capAtDate(boox[booxMap.ROM], startDate);
-      if (begCap.paid >= 0n) setOpenningCap(begCap.paid);
+      if (begCap.paid > 0n) setOpenningCap(begCap.paid)
+      else setOpenningCap(getInitContribution(1, startDate, endDate, centPrice) / 10n ** 14n);
+      
       console.log('startDate: ', startDate, 'begCap: ', begCap);
 
       let blk = await client.getBlock();
       let curTime = Number(blk.timestamp);
 
       let endCap = await capAtDate(boox[booxMap.ROM], endDate >= curTime ? curTime : endDate);
-      if (endCap.paid >= 0n) setEndingCap(endCap.paid);
+      if (endCap.paid > 0n) setEndingCap(endCap.paid);
+      else setEndingCap(getInitContribution(3, startDate, endDate, centPrice) / 10n ** 14n);
+
       console.log('endDate: ', endDate, 'endCap: ', endCap);
     }
 
