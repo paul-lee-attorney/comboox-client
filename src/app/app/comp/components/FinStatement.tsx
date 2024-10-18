@@ -27,7 +27,7 @@ import { TipsAndUpdates } from "@mui/icons-material";
 export interface Cashflow {
   seq: number,
   blockNumber: bigint,
-  timestamp: bigint,
+  timestamp: number,
   transactionHash: HexType,
   typeOfIncome: string,
   amt: bigint,
@@ -86,39 +86,20 @@ export interface StatementProps {
   display: ((type:number)=>void)[],
 }
 
-export function getRangeOfCashflow(start:bigint, end:bigint, data:Cashflow[]): CashflowRange {
-
-  let output: CashflowRange = {head: -1, tail: -1, len: data.length};
-
-  if (data.length == 0) return output;
-
-  let head = data.findIndex(v => v.timestamp >= start);
-  let tail = data.findLastIndex(v => v.timestamp <= end);
-
-  if (head < 0 || tail < 0) return output;
-
-  output.head = head;
-  output.tail = tail;
-
-  return output;
-}
-
-export function trimCashflow(arr: Cashflow[], range: CashflowRange, type: number): Cashflow[] {
+export function trimCashflow(arr: Cashflow[], startDate:number, endDate:number, type: number): Cashflow[] {
   let output: Cashflow[] = [];
 
-  if (range.head >= 0) {
     switch (type) {
       case 1: 
-        output = arr.slice(0, range.head);
+        output = arr.filter(v => v.timestamp < startDate);
         break;
       case 2:
-        output = arr.slice(range.head, range.tail + 1);
+        output = arr.filter(v => v.timestamp >= startDate && v.timestamp <= endDate);
         break;
       case 3:
-        output = arr.slice(0, range.tail + 1);
+        output = arr.filter(v => v.timestamp <= endDate);
         break;
     }  
-  }
 
   return output;
 }
@@ -127,30 +108,23 @@ export function FinStatement() {
 
   const [ cbpInflow, setCbpInflow ] = useState<CbpInflowSum[]>(defCbpInflowSumArr);
   const [ cbpInflowRecords, setCbpInflowRecords ] = useState<Cashflow[]>([]);
-  const [ cbpInflowRange, setCbpInflowRange ] = useState<CashflowRange>(defCashflowRange);
 
   const [ cbpOutflow, setCbpOutflow ] = useState<CbpOutflowSum[]>(defCbpOutflowSumArr);
   const [ cbpOutflowRecords, setCbpOutflowRecords ] = useState<Cashflow[]>([]);
-  const [ cbpOutflowRange, setCbpOutflowRange ] = useState<CashflowRange>(defCashflowRange);
 
   const [ ethInflow, setEthInflow ] = useState<EthInflowSum[]>(defEthInflowSumArr);
-  const [ ethInflowRange, setEthInflowRange ] = useState<CashflowRange>(defCashflowRange);
   const [ ethInflowRecords, setEthInflowRecords ] = useState<Cashflow[]>([]);
 
   const [ ethOutflow, setEthOutflow ] = useState<EthOutflowSum[]>(defEthOutflowSumArr);
-  const [ ethOutflowRange, setEthOutflowRange ] = useState<CashflowRange>(defCashflowRange);
   const [ ethOutflowRecords, setEthOutflowRecords ] = useState<Cashflow[]>([]);
 
   const [ deposits, setDeposits ] = useState<DepositsSum[]>(defDepositsSumArr);
-  const [ depositsRange, setDepositsRange ] = useState<CashflowRange>(defCashflowRange);
   const [ depositsRecords, setDepositsRecords ] = useState<Cashflow[]>([]);
 
   const [ ftEthflow, setFtEthflow ] = useState<FtEthflowSum[]>(defFtEthflowSumArr);
-  const [ ftEthflowRange, setFtEthflowRange ] = useState<CashflowRange>(defCashflowRange);
   const [ ftEthflowRecords, setFtEthflowRecords] = useState<Cashflow[]>([]);
 
   const [ ftCbpflow, setFtCbpflow ] = useState<FtCbpflowSum[]>(defFtCbpflowSumArr);
-  const [ ftCbpflowRange, setFtCbpflowRange ] = useState<CashflowRange>(defCashflowRange);
   const [ ftCbpflowRecords, setFtCbpflowRecords] = useState<Cashflow[]>([]);
 
   const [ flags, setFlags ] = useState<boolean[]>([false, false, false, false, false, false, false]);
@@ -191,13 +165,13 @@ export function FinStatement() {
 
     if (endDate < startDate) return;
 
-    setCbpInflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), cbpInflowRecords)});
-    setCbpOutflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), cbpOutflowRecords)});
-    setEthInflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ethInflowRecords)});
-    setEthOutflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ethOutflowRecords)});
-    setDepositsRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), depositsRecords)});
-    setFtCbpflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ftCbpflowRecords)});
-    setFtEthflowRange({...getRangeOfCashflow(BigInt(startDate), BigInt(endDate), ftEthflowRecords)});
+    setCbpInflow([...updateCbpInflowSum(cbpInflowRecords, startDate, endDate)]);
+    setCbpOutflow([...updateCbpOutflowSum(cbpOutflowRecords, startDate, endDate)]);
+    setEthInflow([...updateEthInflowSum(ethInflowRecords, startDate, endDate)]);
+    setEthOutflow([...updateEthOutflowSum(ethOutflowRecords, startDate, endDate)]);
+    setDeposits([...updateDepositsSum(depositsRecords, startDate, endDate)]);
+    setFtCbpflow([...updateFtCbpflowSum(ftCbpflowRecords, startDate, endDate)]);
+    setFtEthflow([...updateFtEthflowSum(ftEthflowRecords, startDate, endDate)]);
   }
 
   useEffect(()=>{
@@ -218,33 +192,33 @@ export function FinStatement() {
     
   }, [endDate]);
 
-  useEffect(()=>{
-    setCbpInflow([...updateCbpInflowSum(cbpInflowRecords, cbpInflowRange)]);
-  },[cbpInflowRecords, cbpInflowRange]);
+  // useEffect(()=>{
+  //   setCbpInflow([...updateCbpInflowSum(cbpInflowRecords, cbpInflowRange)]);
+  // },[cbpInflowRecords, cbpInflowRange]);
 
-  useEffect(()=>{
-    setCbpOutflow([...updateCbpOutflowSum(cbpOutflowRecords, cbpOutflowRange)]);
-  }, [cbpOutflowRecords, cbpOutflowRange]);
+  // useEffect(()=>{
+  //   setCbpOutflow([...updateCbpOutflowSum(cbpOutflowRecords, cbpOutflowRange)]);
+  // }, [cbpOutflowRecords, cbpOutflowRange]);
 
-  useEffect(()=>{
-    setEthInflow([...updateEthInflowSum(ethInflowRecords, ethInflowRange)]);
-  }, [ethInflowRecords, ethInflowRange]);
+  // useEffect(()=>{
+  //   setEthInflow([...updateEthInflowSum(ethInflowRecords, ethInflowRange)]);
+  // }, [ethInflowRecords, ethInflowRange]);
  
-  useEffect(()=>{
-    setEthOutflow([...updateEthOutflowSum(ethOutflowRecords, ethOutflowRange)]);
-  }, [ethOutflowRecords, ethOutflowRange]);
+  // useEffect(()=>{
+  //   setEthOutflow([...updateEthOutflowSum(ethOutflowRecords, ethOutflowRange)]);
+  // }, [ethOutflowRecords, ethOutflowRange]);
 
-  useEffect(()=> {
-    setDeposits([...updateDepositsSum(depositsRecords, depositsRange)]);
-  }, [depositsRecords, depositsRange]);
+  // useEffect(()=> {
+  //   setDeposits([...updateDepositsSum(depositsRecords, depositsRange)]);
+  // }, [depositsRecords, depositsRange]);
 
-  useEffect(()=>{
-    setFtCbpflow([...updateFtCbpflowSum(ftCbpflowRecords, ftCbpflowRange)]);
-  }, [ftCbpflowRecords, ftCbpflowRange]);
+  // useEffect(()=>{
+  //   setFtCbpflow([...updateFtCbpflowSum(ftCbpflowRecords, ftCbpflowRange)]);
+  // }, [ftCbpflowRecords, ftCbpflowRange]);
 
-  useEffect(()=>{
-    setFtEthflow([...updateFtEthflowSum(ftEthflowRecords, ftEthflowRange)]);  
-  }, [ftEthflowRecords, ftEthflowRange]);
+  // useEffect(()=>{
+  //   setFtEthflow([...updateFtEthflowSum(ftEthflowRecords, ftEthflowRange)]);  
+  // }, [ftEthflowRecords, ftEthflowRange]);
 
   // ==== Calculation ====
 
@@ -274,7 +248,7 @@ export function FinStatement() {
   const [ sumInfo, setSumInfo ] = useState<SumInfo[]>([]);
 
   const showGasIncomeRecords = (type:number) => {
-    let records = trimCashflow(ethInflowRecords, ethInflowRange, type);
+    let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'GasIncome');
 
@@ -295,7 +269,7 @@ export function FinStatement() {
 
   const showPaidInCapRecords = (type:number) => {
 
-    let records = trimCashflow(ethInflowRecords, ethInflowRange, type);
+    let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'PayInCap' ||
         v.typeOfIncome == 'PayOffCIDeal' || 
@@ -318,7 +292,7 @@ export function FinStatement() {
 
   const showEthTransferIncomeRecords = (type: number) => {
 
-    let records = trimCashflow(ethInflowRecords, ethInflowRange, type);
+    let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'TransferIncome');
     let curSumInUsd = weiToDust(ethInflow[type].transfer);
@@ -338,7 +312,7 @@ export function FinStatement() {
 
   const showEthGmmPaymentRecords = (type:number) => {
 
-    let records = trimCashflow(ethOutflowRecords, ethOutflowRange, type);
+    let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'GmmTransfer' ||
         v.typeOfIncome == 'GmmExpense');
@@ -365,7 +339,7 @@ export function FinStatement() {
 
   const showEthBmmPaymentRecords = (type:number) => {
 
-    let records = trimCashflow(ethOutflowRecords, ethOutflowRange, type);
+    let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'BmmTransfer' ||
         v.typeOfIncome == 'BmmExpense');
@@ -391,7 +365,7 @@ export function FinStatement() {
   }
 
   const showDistributionRecords = (type:number) => {
-    let records = trimCashflow(ethOutflowRecords, ethOutflowRange, type);
+    let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'Distribution');
 
@@ -411,7 +385,7 @@ export function FinStatement() {
   }
 
   const showFtEthRecords = (type:number) => {
-    let records = trimCashflow(ftEthflowRecords, ftEthflowRange, type);
+    let records = trimCashflow(ftEthflowRecords, startDate, endDate, type);
 
     let curSumInUsd = weiToDust(ftEthflow[type].totalEth);
 
@@ -453,7 +427,7 @@ export function FinStatement() {
   // ==== Liabilities ====
 
   const showFuelSoldRecords = (type:number) => {
-    let records = trimCashflow(cbpOutflowRecords, cbpOutflowRange, type);
+    let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'FuelSold');
 
@@ -472,7 +446,7 @@ export function FinStatement() {
   }
 
   const showGmmCbpPaymentRecords = (type:number) => {
-    let records = trimCashflow(cbpOutflowRecords, cbpOutflowRange, type);
+    let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'GmmTransfer');
 
@@ -491,7 +465,7 @@ export function FinStatement() {
   }
 
   const showBmmCbpPaymentRecords = (type:number) => {
-    let records = trimCashflow(cbpOutflowRecords, cbpOutflowRange, type);
+    let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'BmmTransfer');
 
@@ -534,7 +508,7 @@ export function FinStatement() {
 
   const showRoyaltyRecords = (type:number) => {
 
-    let records = trimCashflow(cbpInflowRecords, cbpInflowRange, type);
+    let records = trimCashflow(cbpInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'Royalty');
 
@@ -554,7 +528,7 @@ export function FinStatement() {
 
   const showOtherIncomeRecords = (type:number) => {
 
-    let records = trimCashflow(cbpInflowRecords, cbpInflowRange, type);
+    let records = trimCashflow(cbpInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'TransferIncome');
 
@@ -574,8 +548,8 @@ export function FinStatement() {
 
   const showGmmExpRecords = (type:number) => {
 
-    let records = trimCashflow(ethOutflowRecords, ethOutflowRange, type);
-    records = records.concat(trimCashflow(cbpOutflowRecords, cbpOutflowRange, type));
+    let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
+    records = records.concat(trimCashflow(cbpOutflowRecords, startDate, endDate, type));
 
     records = records.filter((v) => v.typeOfIncome == 'GmmTransfer' ||
         v.typeOfIncome == 'GmmExpense');
@@ -604,8 +578,8 @@ export function FinStatement() {
 
   const showBmmExpRecords = (type:number) => {
 
-    let records = trimCashflow(ethOutflowRecords, ethOutflowRange, type);
-    records = records.concat(trimCashflow(cbpOutflowRecords, cbpOutflowRange, type));
+    let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
+    records = records.concat(trimCashflow(cbpOutflowRecords, startDate, endDate, type));
 
     records = records.filter((v) => v.typeOfIncome == 'BmmTransfer' || v.typeOfIncome == 'BmmExpense');
 
@@ -633,7 +607,7 @@ export function FinStatement() {
 
   const showNewUserAwardRecords = (type:number) => {
 
-    let records = trimCashflow(cbpOutflowRecords, cbpOutflowRange, type);
+    let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v) => v.typeOfIncome == 'NewUserAward');
 
@@ -653,7 +627,7 @@ export function FinStatement() {
   }
 
   const showStartupCostRecords = (type:number) => {
-    let records = trimCashflow(cbpOutflowRecords, cbpOutflowRange, type);
+    let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
     records = records.filter((v) => v.typeOfIncome == 'StartupCost');
 
@@ -718,7 +692,7 @@ export function FinStatement() {
 
   const displayEthInflow = (type:number) => {
 
-    let records = trimCashflow(ethInflowRecords, ethInflowRange, type);
+    let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
     let curSumInUsd = ethInflow[type].totalAmt * 10n ** 16n / centPrice;
 
@@ -742,7 +716,7 @@ export function FinStatement() {
 
   const displayEthOutflow = (type:number) => {
 
-    let records = trimCashflow(ethOutflowRecords, ethOutflowRange, type);
+    let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
 
     let curSumInUsd = ethOutflow[type].totalAmt * 10n ** 16n / centPrice;
 
@@ -769,7 +743,7 @@ export function FinStatement() {
 
   const displayCbpInflow = (type:number) => {
 
-    let records = trimCashflow(cbpInflowRecords, cbpInflowRange, type);
+    let records = trimCashflow(cbpInflowRecords, startDate, endDate, type);
 
     let curSumInUsd = cbpInflow[type].totalAmt * 10000n / exRate * 10n ** 16n / centPrice;
 
@@ -791,7 +765,7 @@ export function FinStatement() {
 
   const displayCbpOutflow = (type:number) => {
 
-    let records = trimCashflow(cbpOutflowRecords, cbpOutflowRange, type);
+    let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
     let curSumInUsd = cbpOutflow[type].totalAmt * 10000n / exRate * 10n ** 16n / centPrice;
 
@@ -817,7 +791,7 @@ export function FinStatement() {
   }
 
   const displayDepositsInflow = (type:number) => {
-    let records = trimCashflow(depositsRecords, depositsRange, type);
+    let records = trimCashflow(depositsRecords, startDate, endDate, type);
 
     records = records.filter(v => v.typeOfIncome != 'Pickup' && v.typeOfIncome != 'CustodyValueOfBidOrder' &&
         v.typeOfIncome != 'CloseOfferAgainstBid' && v.typeOfIncome != 'RefundValueOfBidOrder' && 
@@ -848,7 +822,7 @@ export function FinStatement() {
   }
 
   const displayCustody = (type:number) => {
-    let records = trimCashflow(depositsRecords, depositsRange, type);
+    let records = trimCashflow(depositsRecords, startDate, endDate, type);
 
     records = records.filter(v => v.typeOfIncome == 'CustodyValueOfBidOrder' || v.typeOfIncome == 'CloseOfferAgainstBid' ||
         v.typeOfIncome == 'RefundValueOfBidOrder' || v.typeOfIncome == 'CloseInitOfferAgainstBid'
@@ -869,7 +843,7 @@ export function FinStatement() {
   }
 
   const displayDepositsOutflow = (type:number) => {
-    let records = trimCashflow(depositsRecords, depositsRange, type);
+    let records = trimCashflow(depositsRecords, startDate, endDate, type);
 
     records = records.filter(v => v.typeOfIncome == 'Pickup');
     let exchangeGainLoss = weiToDust(deposits[type].pickup) - deposits[type].pickupInUsd;
@@ -891,7 +865,7 @@ export function FinStatement() {
 
 
   const displayFtCbpflow = (type:number) => {
-    let records = trimCashflow(ftCbpflowRecords, ftCbpflowRange, type);
+    let records = trimCashflow(ftCbpflowRecords, startDate, endDate, type);
 
     let curSumCbpInUsd =  ftCbpflow[type].totalCbp * 10000n / exRate * 10n ** 16n / centPrice;
 
@@ -914,7 +888,7 @@ export function FinStatement() {
   }
 
   const displayFtEthflow = (type:number) => {
-    let records = trimCashflow(ftEthflowRecords, ftEthflowRange, type);
+    let records = trimCashflow(ftEthflowRecords, startDate, endDate, type);
 
     let curSumInUsd = ftEthflow[type].totalEth * 10n ** 16n / centPrice;
 

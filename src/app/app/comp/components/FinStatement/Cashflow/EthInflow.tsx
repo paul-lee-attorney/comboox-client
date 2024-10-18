@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvi
 import { AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { Cashflow, CashflowRecordsProps } from "../../FinStatement";
 import { ethers } from "ethers";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
@@ -73,17 +73,17 @@ export const sumArrayOfEthInflow = (arr: Cashflow[]): EthInflowSum => {
   return sum;
 }
 
-export const updateEthInflowSum = (arr: Cashflow[], info:CashflowRange) => {
+export const updateEthInflowSum = (arr: Cashflow[], startDate:number, endDate:number) => {
   
   let sum: EthInflowSum[] = [...defEthInflowSumArr];
 
-  if (arr.length > 0 && info.head >= 0) {
-    sum[1]=sumArrayOfEthInflow(arr.slice(0, info.head));
-    sum[2]=sumArrayOfEthInflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
-    sum[3]=sumArrayOfEthInflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)); 
+  if (arr.length > 0 ) {
+    sum[1] = sumArrayOfEthInflow(arr.filter(v => v.timestamp < startDate));
+    sum[2] = sumArrayOfEthInflow(arr.filter(v => v.timestamp >= startDate && v.timestamp <= endDate));
+    sum[3] = sumArrayOfEthInflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('ethInflow range:', info);
+  console.log('ethInflow range:', startDate, endDate);
   console.log('ethInflow:', sum);
   return sum;
 }
@@ -106,15 +106,15 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
-      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
-        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+      const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(timestamp * 1000);
         if (!prices) return [];
         else return prices;
       }
 
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
-          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
 
           newItem.ethPrice = 10n ** 25n / mark.centPrice;
           newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
@@ -144,7 +144,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'TransferIncome',
           amt: log.args.amt ?? 0n,
@@ -183,7 +183,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'GasIncome',
           amt: log.args.amtOfEth ?? 0n,
@@ -224,7 +224,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'PayInCap',
           amt: log.args.valueOfDeal ?? 0n,
@@ -270,7 +270,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'PayOffCIDeal',
           amt: log.args.valueOfDeal ?? 0n,
@@ -316,7 +316,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'CloseBidAgainstInitOffer',
           amt: log.args.amt ?? 0n,
@@ -363,7 +363,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: ethers.decodeBytes32String(log.args.reason ?? Bytes32Zero),
           amt: log.args.amt ?? 0n,

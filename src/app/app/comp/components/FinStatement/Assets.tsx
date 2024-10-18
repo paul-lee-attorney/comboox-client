@@ -66,7 +66,7 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
 
   const beginValueOfIPR = initContribution * (fullLifeHrs - daysToStart) / fullLifeHrs;
 
-  const armotization = getArmotization(3, startDate, endDate, centPrice);
+  const armotization = getArmotization(2, startDate, endDate, centPrice);
 
   const netValueOfIPR = beginValueOfIPR - armotization;
 

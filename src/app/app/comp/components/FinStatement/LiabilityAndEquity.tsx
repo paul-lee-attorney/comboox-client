@@ -132,8 +132,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Additional Paid In Capital: ({ inETH
-            ? weiToEth9Dec(ethInflow[2].capital)
-            : showUSD(ethInflow[2].capitalInUsd)}) </b>
+            ? weiToEth9Dec(ethInflow[3].capital)
+            : showUSD(ethInflow[3].capitalInUsd)}) </b>
         </Button>
       </Stack>
 

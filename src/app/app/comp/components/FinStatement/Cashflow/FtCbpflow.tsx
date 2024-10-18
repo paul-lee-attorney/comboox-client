@@ -79,17 +79,17 @@ export const sumArrayOfFtCbpflow = (arr: Cashflow[]) => {
   return sum;
 }
 
-export const updateFtCbpflowSum = (arr: Cashflow[], info:CashflowRange) => {
+export const updateFtCbpflowSum = (arr: Cashflow[], startDate:number, endDate:number) => {
   
   let sum: FtCbpflowSum[] = [...defFtCbpflowSumArr];
 
-  if (arr.length > 0 && info.head >= 0) {
-    sum[1]=sumArrayOfFtCbpflow(arr.slice(0, info.head));
-    sum[2]=sumArrayOfFtCbpflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
-    sum[3]=sumArrayOfFtCbpflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined)); 
+  if (arr.length > 0 ) {
+    sum[1] = sumArrayOfFtCbpflow(arr.filter(v => v.timestamp < startDate));
+    sum[2] = sumArrayOfFtCbpflow(arr.filter(v => v.timestamp >= startDate && v.timestamp <= endDate));
+    sum[3] = sumArrayOfFtCbpflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('ftCbpflow range:', info);
+  console.log('ftCbpflow range:', startDate, endDate);
   console.log('ftCbpflow:', sum);
   return sum;
 }
@@ -112,8 +112,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
-      const getEthPrices = async (timestamp: bigint): Promise<EthPrice[]> => {
-        let prices = await getEthPricesForAppendRecords(Number(timestamp * 1000n));
+      const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
+        let prices = await getEthPricesForAppendRecords(timestamp * 1000);
         if (!prices) return [];
         else return prices;
       }
@@ -126,7 +126,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
 
-          let mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
           newItem.ethPrice = 10n ** 25n / mark.centPrice;
           newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
   
@@ -159,7 +159,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'AddCbp',
           amt: log.args.value ?? 0n,
@@ -200,7 +200,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'WithdrawCbp',
           amt: log.args.amt ?? 0n,
@@ -243,7 +243,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item:Cashflow = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'WithdrawCbp',
           amt: log.args.value ?? 0n,
@@ -283,7 +283,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         let item = {
           seq:0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'RefuelCbp',
           amt: log.args.amtOfCbp ?? 0n,

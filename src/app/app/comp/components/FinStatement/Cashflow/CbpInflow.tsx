@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvi
 import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { Cashflow, CashflowRecordsProps } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
@@ -66,17 +66,17 @@ export const sumArrayOfCbpInflow = (arr: Cashflow[]) => {
   return sum;
 }
 
-export const updateCbpInflowSum = (arr: Cashflow[], info:CashflowRange) => {
+export const updateCbpInflowSum = (arr: Cashflow[], startDate:number, endDate:number ) => {
   
   let sum: CbpInflowSum[] = [...defCbpInflowSumArr];
 
-  if (arr.length > 0 && info.head >= 0 ) {
-    sum[1] = sumArrayOfCbpInflow(arr.slice(0, info.head));
-    sum[2] = sumArrayOfCbpInflow(arr.slice(info.head, info.tail < (info.len - 1) ? info.tail + 1 : undefined));
-    sum[3] = sumArrayOfCbpInflow(arr.slice(0, info.tail < (info.len - 1) ? info.tail + 1 : undefined));  
+  if (arr.length > 0 ) {
+    sum[1] = sumArrayOfCbpInflow(arr.filter(v => v.timestamp < startDate));
+    sum[2] = sumArrayOfCbpInflow(arr.filter(v => v.timestamp >= startDate && v.timestamp <= endDate));
+    sum[3] = sumArrayOfCbpInflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('cbpInflow range:', info);
+  console.log('range:', startDate, endDate);
   console.log('cbpInflow:', sum);
   return sum;
 }
@@ -107,7 +107,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       const appendItem = (newItem: Cashflow, refPrices: EthPrice[]) => {
         if (newItem.amt > 0n && refPrices.length > 0) {
 
-          const mark = getPriceAtTimestamp(Number(newItem.timestamp * 1000n), refPrices);
+          const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
           newItem.ethPrice = 10n ** 25n / mark.centPrice;
           newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
            
@@ -142,7 +142,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         let item:Cashflow = {
           seq: 0,
           blockNumber: blkNo,
-          timestamp: blk.timestamp,
+          timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
           typeOfIncome: 'Royalty',
           amt: log.args.value ?? 0n,
@@ -165,7 +165,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
 
         if (cnt == 0) {
-          ethPrices = await getEthPricesForAppendRecords(Number(item.timestamp * 1000n));
+          ethPrices = await getEthPricesForAppendRecords(item.timestamp * 1000);
           if (!ethPrices) return;
           else console.log('ethPrices: ', ethPrices);
         }
