@@ -187,13 +187,13 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  &nbsp; 
+                  -
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  &nbsp; 
+                  -
                 </Typography>
               </TableCell>
 
@@ -221,13 +221,13 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  &nbsp; 
+                  -
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  &nbsp; 
+                  -
                 </Typography>
               </TableCell>
 
@@ -267,7 +267,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  &nbsp;
+                  -
                 </Typography>
               </TableCell>
 
