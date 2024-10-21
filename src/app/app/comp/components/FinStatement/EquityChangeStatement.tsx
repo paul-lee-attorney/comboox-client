@@ -181,7 +181,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               
               <TableCell>
                 <Typography variant='body1'>
-                  <b>Profits</b>  
+                  <b>Net Income</b>  
                 </Typography>
               </TableCell>
 

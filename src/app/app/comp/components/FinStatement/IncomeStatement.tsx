@@ -182,7 +182,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
           &nbsp;
         </Typography>
         <Button variant="outlined" sx={{width: '60%', m:0.5, justifyContent:'start'}} >
-          <b>Profits: ({ inETH
+          <b>Net Income: ({ inETH
             ? weiToEth9Dec(profits.inEth)
             : showUSD(profits.inUsd) }) </b>
         </Button>
