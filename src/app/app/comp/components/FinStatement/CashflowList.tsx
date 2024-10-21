@@ -102,7 +102,20 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
   ];
 
   const exportData = ()=>{
-    exportToExcel(records, arrSum[0].title);
+
+    const rows = records.map(v => ({
+      ...v,
+      blockNumber: longSnParser(v.blockNumber.toString()),
+      timestamp: dateParser(v.timestamp.toString()),
+      amt: bigIntToStrNum(v.amt, 18),
+      ethPrice: bigIntToStrNum(v.ethPrice, 9),
+      usd: bigIntToStrNum(v.usd / 10n ** 9n, 9),
+      acct: v.acct.toString(),
+    }));
+
+    const title = arrSum[0].title;
+
+    exportToExcel(rows, title.substring(0, title.length - 5));
   }
 
   return (
