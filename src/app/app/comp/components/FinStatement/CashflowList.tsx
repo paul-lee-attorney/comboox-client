@@ -115,7 +115,7 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
 
     const title = arrSum[0].title;
 
-    exportToExcel(rows, title.trim().replace(' (', '_'));
+    exportToExcel(rows, title.substring(0, title.length-6));
   }
 
   return (
