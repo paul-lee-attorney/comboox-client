@@ -1,10 +1,11 @@
 import { Dispatch, SetStateAction } from "react";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Typography } from "@mui/material";
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { Cashflow } from "../FinStatement";
 import { exportToExcel } from "../../../../api/dataTools";
+import { CloudDownloadOutlined } from "@mui/icons-material";
 
 export interface SumInfo {
   title: string;
@@ -150,7 +151,11 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
       </DialogContent>
 
       <DialogActions>
-      <Button variant="contained" color="success" sx={{ m:1, mx:3 }} onClick={()=>exportData}>DownLoad</Button>
+        <Tooltip title='Export Data' placement="top" arrow >
+            <IconButton size="medium" sx={{m:1}} color="primary" onClick={()=>exportData()}>
+              <CloudDownloadOutlined />
+            </IconButton>
+        </Tooltip>
         <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
 
