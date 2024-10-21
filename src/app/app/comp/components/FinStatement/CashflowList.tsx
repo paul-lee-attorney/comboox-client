@@ -4,6 +4,7 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { Cashflow } from "../FinStatement";
+import { exportToExcel } from "../../../../api/dataTools";
 
 export interface SumInfo {
   title: string;
@@ -99,6 +100,10 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
     },
   ];
 
+  const exportData = ()=>{
+    exportToExcel(records, arrSum[0].title);
+  }
+
   return (
     <Dialog
       maxWidth={false}
@@ -110,7 +115,8 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
       <DialogTitle id="dialog-title" sx={{ mx:2, textDecoration:'underline' }} >
         <b> { arrSum.length > 0 
               ? (arrSum[0].title + (inETH ? bigIntToStrNum(arrSum[0].data/10n**9n, 9) : baseToDollar((arrSum[0].data/10n**14n).toString())) + ')') 
-              : '' } </b>
+              : '' } 
+        </b>
       </DialogTitle>
 
       <DialogContent>
@@ -144,6 +150,7 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
       </DialogContent>
 
       <DialogActions>
+      <Button variant="contained" color="success" sx={{ m:1, mx:3 }} onClick={()=>exportData}>DownLoad</Button>
         <Button variant="outlined" sx={{ m:1, mx:3 }} onClick={()=>setOpen(false)}>Close</Button>
       </DialogActions>
 
