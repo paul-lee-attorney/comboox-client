@@ -1,7 +1,12 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
+import { defReportItem, showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
 import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
+import { usePublicClient } from "wagmi";
+import { useEffect, useState } from "react";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { AddrOfTank } from "../../../common";
+import { totalDeposits } from "../../gk";
 
 export interface AssetsProps extends StatementProps {
   ethInflow: EthInflowSum[],
@@ -49,7 +54,7 @@ export const getEthOfComp = (type:number, ethInflow:EthInflowSum[], ethOutflow:E
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow, ethOutflow}: AssetsProps) {
+export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display, ethInflow, ethOutflow}: AssetsProps) {
 
   const weiToDust = (eth:bigint) => {
     return eth * 10n ** 16n / centPrice;
@@ -69,13 +74,45 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
 
   const netValueOfIPR = beginValueOfIPR - armotization;
 
-  const ethOfComp = getEthOfComp(3, ethInflow, ethOutflow);
+  const [ethOfComp, setEthOfComp] = useState(0n);
 
-  const ethGainLoss = weiToDust(ethOfComp.inEth) - ethOfComp.inUsd;
+  const client = usePublicClient();
+  const {gk} = useComBooxContext();
+
+  useEffect(()=>{
+    const getEthOfComp = async ()=>{
+      if (!gk) return 0n;
+
+      const balaOfGK = await client.getBalance({
+        address: gk,
+        blockNumber: rptBlkNo,
+      });
+
+      const balaOfFT = await client.getBalance({
+        address: AddrOfTank,
+        blockNumber: rptBlkNo,
+      });
+
+      const balaOfDeposits = await totalDeposits(gk, rptBlkNo);
+
+      const output = balaOfGK + balaOfFT - balaOfDeposits;
+
+      return output;
+    }
+
+    getEthOfComp().then(
+      res => setEthOfComp(res)
+    );
+
+  }, [rptBlkNo, gk, client]);
+
+  // const ethOfComp = getEthOfComp(3, ethInflow, ethOutflow);
+
+  // const ethGainLoss = weiToDust(ethOfComp.inEth) - ethOfComp.inUsd;
 
   const totalAssets = ()=>{
-    const inEth = netValueOfIPR + ethOfComp.inEth;
-    const inUsd = weiToDust(netValueOfIPR + ethOfComp.inEth);
+    const inEth = netValueOfIPR + ethOfComp;
+    const inUsd = weiToDust(netValueOfIPR + ethOfComp);
 
     return({inEth:inEth, inUsd:inUsd});
   }
@@ -128,12 +165,12 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](3)}>
           <b>ETH Of Comp: ({ inETH 
-            ? weiToEth9Dec(ethOfComp.inEth)
-            : showUSD(ethOfComp.inUsd) }) </b>
+            ? weiToEth9Dec(ethOfComp)
+            : showUSD(weiToDust(ethOfComp)) }) </b>
         </Button>
       </Stack>
 
-      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+      {/* <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
         <Typography variant="h6" textAlign='center' width='10%'>
           +
         </Typography>
@@ -153,7 +190,7 @@ export function Assets({inETH, centPrice, startDate, endDate, display, ethInflow
             ? weiToEth9Dec(ethOfComp.inEth)
             : showUSD(weiToDust(ethOfComp.inEth))}) </b>
         </Button>
-      </Stack>
+      </Stack> */}
 
       <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 

@@ -349,7 +349,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       closeInitOfferAgainstBidLogs = closeInitOfferAgainstBidLogs.filter(v => (v.blockNumber > lastBlkNum) &&
           (v.args.reason == '0x436c6f7365496e69744f66666572416761696e73744269640000000000000000'));
-      console.log('closeInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
+      console.log('CloseInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
 
       len = closeInitOfferAgainstBidLogs.length;
       cnt = 0;

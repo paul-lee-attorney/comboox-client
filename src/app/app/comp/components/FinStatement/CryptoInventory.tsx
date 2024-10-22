@@ -13,7 +13,7 @@ export interface CryptoInventoryProps extends IncomeStatementProps {
 }
 
 
-export function CryptoInventory({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, ftCbpflow, ftEthflow, deposits}: CryptoInventoryProps) {
+export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, ftCbpflow, ftEthflow, deposits}: CryptoInventoryProps) {
 
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;

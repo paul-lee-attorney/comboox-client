@@ -8,7 +8,7 @@ import { CbpInflow, CbpInflowSum, defCbpInflowSumArr, updateCbpInflowSum, } from
 import { defEthInflowSumArr, EthInflow, EthInflowSum, updateEthInflowSum } from "./FinStatement/Cashflow/EthInflow";
 import { CbpOutflow, CbpOutflowSum, defCbpOutflowSumArr, updateCbpOutflowSum } from "./FinStatement/Cashflow/CbpOutflow";
 import { defEthOutflowSumArr, EthOutflow, EthOutflowSum, updateEthOutflowSum } from "./FinStatement/Cashflow/EthOutflow";
-import { HexType } from "../../common";
+import { AddrOfTank, HexType } from "../../common";
 import { CashFlowList, SumInfo } from "./FinStatement/CashflowList";
 import { defDepositsSumArr, Deposits, DepositsSum, updateDepositsSum } from "./FinStatement/Cashflow/Deposits";
 import { defFtEthflowSumArr, FtEthflow, FtEthflowSum, updateFtEthflowSum, } from "./FinStatement/Cashflow/FtEthflow";
@@ -23,6 +23,9 @@ import { EquityChangeStatement } from "./FinStatement/EquityChangeStatement";
 import { CryptoInventory } from "./FinStatement/CryptoInventory";
 import { EthflowStatement } from "./FinStatement/EthflowStatement";
 import { TipsAndUpdates } from "@mui/icons-material";
+import { usePublicClient } from "wagmi";
+import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { error } from "console";
 
 export interface Cashflow {
   seq: number,
@@ -82,6 +85,7 @@ export interface StatementProps {
   inETH: boolean,
   startDate: number,
   endDate: number,
+  rptBlkNo: bigint,
   centPrice: bigint,
   display: ((type:number)=>void)[],
 }
@@ -161,6 +165,9 @@ export function FinStatement() {
   const [ centPrice, setCentPrice ] = useState(1n);
   const [ ethRateDate, setEthRateDate ] = useState('0');
 
+  const [ rptBlkNo, setRptBlkNo ] = useState(0n);
+  const client = usePublicClient();
+
   const updateCashflowRange = () => {
 
     if (endDate < startDate) return;
@@ -172,6 +179,41 @@ export function FinStatement() {
     setDeposits([...updateDepositsSum(depositsRecords, startDate, endDate)]);
     setFtCbpflow([...updateFtCbpflowSum(ftCbpflowRecords, startDate, endDate)]);
     setFtEthflow([...updateFtEthflowSum(ftEthflowRecords, startDate, endDate)]);
+
+
+    const findBlocknumberByTimestamp = async (targetTimestamp: bigint) => {
+
+      const latestBlock = await client.getBlock();
+      let high = latestBlock.number;
+      let low = 0n; 
+      let output = high;
+    
+      while (low <= high) {
+        const mid = (low + high) / 2n;
+        const block = await client.getBlock({ blockNumber: mid });
+    
+        if (!block) break; // Block may not be found
+        const blockTimestamp = block.timestamp;
+    
+        if (blockTimestamp < targetTimestamp) {
+          low = mid + 1n;
+        } else if (blockTimestamp > targetTimestamp) {
+          high = mid - 1n;
+        } else {
+          output = block.number; // Exact match
+          break;
+        }
+    
+        output = block.number;
+      }
+    
+      return output;
+    }
+  
+    findBlocknumberByTimestamp(BigInt(endDate)).then(
+      blkNo => setRptBlkNo(blkNo)
+    );
+
   }
 
   useEffect(()=>{
@@ -996,9 +1038,9 @@ export function FinStatement() {
           
       <Stack direction='row' >
 
-        <Assets inETH={inETH} centPrice={centPrice} startDate={startDate} endDate={endDate} display={[()=>displayEthOfComp(3)]} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <Assets inETH={inETH} centPrice={centPrice} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayEthOfComp(3)]} ethInflow={ethInflow} ethOutflow={ethOutflow} />
 
-        <LiabilyAndEquity inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} display={[()=>displayDeferredRevenue(3), ()=>showPaidInCapRecords(3)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <LiabilyAndEquity inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayDeferredRevenue(3), ()=>showPaidInCapRecords(3)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
 
       </Stack>
       
@@ -1006,15 +1048,15 @@ export function FinStatement() {
 
         <Stack width='50%' direction='column' sx={{m:1}} >
 
-          <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+          <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
  
-          <EquityChangeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} display={[()=>showPaidInCapRecords(2), ()=>showDistributionRecords(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+          <EquityChangeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>showPaidInCapRecords(2), ()=>showDistributionRecords(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
 
         </Stack>
 
         <Stack width='50%'  direction='column' sx={{m:1}}>
 
-          <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
+          <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
 
         </Stack>
 
@@ -1022,7 +1064,7 @@ export function FinStatement() {
 
       <Stack direction='row' >
 
-        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
+        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
 
       </Stack>
 
