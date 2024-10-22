@@ -24,6 +24,7 @@ import { CryptoInventory } from "./FinStatement/CryptoInventory";
 import { EthflowStatement } from "./FinStatement/EthflowStatement";
 import { TipsAndUpdates } from "@mui/icons-material";
 import { usePublicClient } from "wagmi";
+import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 export interface Cashflow {
   seq: number,
@@ -169,9 +170,12 @@ export function FinStatement() {
 
   const client = usePublicClient();
 
+  const { compInfo } = useComBooxContext();
+
   const updateCashflowRange = () => {
 
     if (endDate < startDate) return;
+    if (!compInfo?.regDate) return;
 
     setCbpInflow([...updateCbpInflowSum(cbpInflowRecords, startDate, endDate)]);
     setCbpOutflow([...updateCbpOutflowSum(cbpOutflowRecords, startDate, endDate)]);
@@ -211,14 +215,14 @@ export function FinStatement() {
       return output;
     }
   
-    findBlocknumberByTimestamp(BigInt(endDate)).then(
+    findBlocknumberByTimestamp(BigInt(endDate > compInfo.regDate ? endDate : compInfo.regDate )).then(
       blkNo => {
         setRptBlkNo(blkNo);
         console.log('endDate: ', endDate, 'rptBlkNo: ', blkNo);
       }
     );
 
-    findBlocknumberByTimestamp(BigInt(startDate)).then(
+    findBlocknumberByTimestamp(BigInt(startDate > compInfo.regDate ? startDate : compInfo.regDate)).then(
       blkNo => {
         setOpnBlkNo(blkNo);
         console.log('startDate: ', startDate, 'opnBlkNo: ', blkNo);
