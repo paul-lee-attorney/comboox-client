@@ -106,10 +106,6 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
 
   }, [rptBlkNo, gk, client]);
 
-  // const ethOfComp = getEthOfComp(3, ethInflow, ethOutflow);
-
-  // const ethGainLoss = weiToDust(ethOfComp.inEth) - ethOfComp.inUsd;
-
   const totalAssets = ()=>{
     const inEth = netValueOfIPR + ethOfComp;
     const inUsd = weiToDust(netValueOfIPR + ethOfComp);

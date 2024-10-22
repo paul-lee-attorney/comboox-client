@@ -22,12 +22,12 @@ export const getSGNA = (type:number, ethOutflow:EthOutflowSum[], cbpOutflow:CbpO
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export const getExchangeGainLoss = (type:number, ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], weiToDust:(eht:bigint)=>bigint, cbpToETH:(cbp:bigint)=>bigint)=> {
+export const getOpExchangeGainLoss = (type:number, ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], weiToDust:(eht:bigint)=>bigint, cbpToETH:(cbp:bigint)=>bigint)=> {
 
   const ethOfComp = getEthOfComp(type, ethInflow, ethOutflow);
-  const ethGainLoss = weiToDust(ethOfComp.inEth) - ethOfComp.inUsd;
+  const ethGainLoss = weiToDust(ethOfComp.inEth - ethInflow[type].capital) - (ethOfComp.inUsd - ethInflow[type].capitalInUsd);
 
-  const deferredRevenue = getDeferredRevenue(type, cbpInflow, cbpOutflow,cbpToETH);
+  const deferredRevenue = getDeferredRevenue(type, cbpInflow, cbpOutflow, cbpToETH);
   const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
 
   return ethGainLoss - cbpGainLoss;
@@ -36,7 +36,7 @@ export const getExchangeGainLoss = (type:number, ethInflow:EthInflowSum[], ethOu
 export const getEBITDA = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint)=>{
 
   const sgNa = getSGNA(type, ethOutflow, cbpOutflow, cbpToETH);
-  const exchangeGainLoss = getExchangeGainLoss(type, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
+  const exchangeGainLoss = getOpExchangeGainLoss(type, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
 
   const inEth = cbpToETH(cbpInflow[type].royalty) + ethInflow[type].transfer - sgNa.inEth;
   const inUsd = cbpInflow[type].royaltyInUsd + ethInflow[type].transferInUsd - sgNa.inUsd + exchangeGainLoss;
@@ -83,7 +83,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
   const armotization = getArmotization(2, startDate, endDate, centPrice);
 
   const sgNa = getSGNA(2, ethOutflow, cbpOutflow, cbpToETH);
-  const exchangeGainLoss = getExchangeGainLoss(2, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
+  const exchangeGainLoss = getOpExchangeGainLoss(2, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
 
   const ebitda = getEBITDA(2, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
@@ -144,7 +144,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
           +
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-          <b>Crypto Exchange Gain/Loss: ({ inETH
+          <b>Operational Crypto Exchange Gain/Loss: ({ inETH
             ? 0
             : showUSD(exchangeGainLoss) }) </b>
         </Button>

@@ -38,7 +38,7 @@ export const getOwnersEquity = (type:number, startDate:number, endDate:number, c
 
   const inEth = initContribution + ethInflow[type].capital + retainedEarnings.inEth;
 
-  const inUsd = weiToDust(initContribution) + ethInflow[type].capitalInUsd + retainedEarnings.inUsd;
+  const inUsd = weiToDust(initContribution) + weiToDust(ethInflow[type].capital) + retainedEarnings.inUsd;
 
   return ({inEth:inEth, inUsd:inUsd});
 }
@@ -85,10 +85,6 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
     );
 
   }, [rptBlkNo, gk, client]);
-
-  // const deferredRevenue = getDeferredRevenue(3, cbpInflow, cbpOutflow, cbpToETH);
-
-  // const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
   
   // ==== Profits & Loss ====
 
@@ -123,17 +119,6 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Button>
       </Stack>
 
-      {/* <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-        <Typography variant="h6" textAlign='center' width='10%'>
-          +
-        </Typography>
-        <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-          <b>Appreciation of CBP: ({ inETH
-            ? '0'
-            : showUSD(cbpGainLoss)}) </b>
-        </Button>
-      </Stack> */}
-
       <Stack direction='row' width='100%' >
         <Typography variant="h6" textAlign='center' width='20%'>
           &nbsp;
@@ -160,7 +145,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Additional Paid In Capital: ({ inETH
             ? weiToEth9Dec(ethInflow[3].capital)
-            : showUSD(ethInflow[3].capitalInUsd)}) </b>
+            : showUSD(weiToDust(ethInflow[3].capital))}) </b>
         </Button>
       </Stack>
 

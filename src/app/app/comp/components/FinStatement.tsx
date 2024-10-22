@@ -85,6 +85,7 @@ export interface StatementProps {
   inETH: boolean,
   startDate: number,
   endDate: number,
+  opnBlkNo: bigint,
   rptBlkNo: bigint,
   centPrice: bigint,
   display: ((type:number)=>void)[],
@@ -166,6 +167,8 @@ export function FinStatement() {
   const [ ethRateDate, setEthRateDate ] = useState('0');
 
   const [ rptBlkNo, setRptBlkNo ] = useState(0n);
+  const [ opnBlkNo, setOpnBlkNo ] = useState(0n);
+
   const client = usePublicClient();
 
   const updateCashflowRange = () => {
@@ -212,6 +215,10 @@ export function FinStatement() {
   
     findBlocknumberByTimestamp(BigInt(endDate)).then(
       blkNo => setRptBlkNo(blkNo)
+    );
+
+    findBlocknumberByTimestamp(BigInt(startDate)).then(
+      blkNo => setOpnBlkNo(blkNo)
     );
 
   }
@@ -287,7 +294,9 @@ export function FinStatement() {
 
     records = records.filter((v)=>v.typeOfIncome == 'PayInCap' ||
         v.typeOfIncome == 'PayOffCIDeal' || 
-        v.typeOfIncome =='CloseBidAgainstInitOffer');
+        v.typeOfIncome =='CloseBidAgainstInitOffer' ||
+        v.typeOfIncome == 'CloseInitOfferAgainstBid'
+    );
 
     let curSumInUsd = weiToDust(ethInflow[type].capital);
     
@@ -423,13 +432,13 @@ export function FinStatement() {
 
   const displayEthOfComp = (type:number) => {
     let items:BtnProps[] = [
-      {simbol: ' ', title: 'ETH of Comp', amt: ethInflow[type].totalAmt - ethOutflow[type].totalAmt, amtInUsd: ethInflow[type].sumInUsd - ethOutflow[type].sumInUsd, show: ()=>{}},
-      {simbol: '+', title: 'Gas Income', amt: ethInflow[type].gas, amtInUsd: ethInflow[type].gasInUsd, show: ()=>showGasIncomeRecords(type)},
-      {simbol: '+', title: 'Paid In Cap', amt: ethInflow[type].capital, amtInUsd: ethInflow[type].capitalInUsd, show: ()=>showPaidInCapRecords(type)},
-      {simbol: '+', title: 'Transfer Income', amt: ethInflow[type].transfer, amtInUsd: ethInflow[type].transferInUsd, show: ()=>showEthTransferIncomeRecords(type)},
-      {simbol: '-', title: 'Gmm Payment', amt: ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense, amtInUsd: ethOutflow[type].gmmExpenseInUsd + ethOutflow[type].gmmTransferInUsd, show: ()=>showEthGmmPaymentRecords(type)},
-      {simbol: '-', title: 'Bmm Payment', amt: ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense, amtInUsd: ethOutflow[type].bmmExpenseInUsd + ethOutflow[type].bmmTransferInUsd, show: ()=>showEthBmmPaymentRecords(type)},
-      {simbol: '-', title: 'Distribution', amt: ethOutflow[type].distribution, amtInUsd: ethOutflow[type].distributionInUsd, show: ()=>showDistributionRecords(type)},
+      {simbol: ' ', title: 'ETH of Comp', amt: ethInflow[type].totalAmt - ethOutflow[type].totalAmt, amtInUsd: weiToDust(ethInflow[type].totalAmt - ethOutflow[type].totalAmt), show: ()=>{}},
+      {simbol: '+', title: 'Gas Income', amt: ethInflow[type].gas, amtInUsd: weiToDust(ethInflow[type].gas), show: ()=>showGasIncomeRecords(type)},
+      {simbol: '+', title: 'Paid In Cap', amt: ethInflow[type].capital, amtInUsd: weiToDust(ethInflow[type].capital), show: ()=>showPaidInCapRecords(type)},
+      {simbol: '+', title: 'Transfer Income', amt: ethInflow[type].transfer, amtInUsd: weiToDust(ethInflow[type].transfer), show: ()=>showEthTransferIncomeRecords(type)},
+      {simbol: '-', title: 'Gmm Payment', amt: ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense, amtInUsd: weiToDust(ethOutflow[type].gmmExpense + ethOutflow[type].gmmTransfer), show: ()=>showEthGmmPaymentRecords(type)},
+      {simbol: '-', title: 'Bmm Payment', amt: ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense, amtInUsd: weiToDust(ethOutflow[type].bmmExpense + ethOutflow[type].bmmTransfer), show: ()=>showEthBmmPaymentRecords(type)},
+      {simbol: '-', title: 'Distribution', amt: ethOutflow[type].distribution, amtInUsd: weiToDust(ethOutflow[type].distribution), show: ()=>showDistributionRecords(type)},
     ];
 
     if (items.length > 0) {
@@ -500,16 +509,16 @@ export function FinStatement() {
   const displayDeferredRevenue = (type:number) => {
 
     let deferredRevenue = cbpToETH(cbpOutflow[type].totalAmt - cbpInflow[type].totalAmt + cbpInflow[type].mint);
-    let deferredRevenueInUsd = cbpOutflow[type].sumInUsd - cbpInflow[type].sumInUsd + cbpInflow[type].mintInUsd;
+    let deferredRevenueInUsd = weiToDust(deferredRevenue);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Deferred Revenue', amt: deferredRevenue, amtInUsd: deferredRevenueInUsd, show: ()=>{}},
-      {simbol: '+', title: 'Fuel Sold', amt: cbpToETH(cbpOutflow[type].fuelSold), amtInUsd: cbpOutflow[type].fuelSoldInUsd, show: ()=>showFuelSoldRecords(3)},
-      {simbol: '+', title: 'Gmm CBP Payment', amt: cbpToETH(cbpOutflow[type].gmmTransfer), amtInUsd: cbpOutflow[type].gmmTransferInUsd, show: ()=>showGmmCbpPaymentRecords(3)},
-      {simbol: '+', title: 'Bmm CBP Payment', amt: cbpToETH(cbpOutflow[type].bmmTransfer), amtInUsd: cbpOutflow[type].bmmTransferInUsd, show: ()=>showBmmCbpPaymentRecords(3)},
-      {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow[type].newUserAward), amtInUsd: cbpOutflow[type].newUserAwardInUsd, show: ()=>showNewUserAwardRecords(3)},
-      {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow[type].startupCost), amtInUsd: cbpOutflow[type].startupCostInUsd, show: ()=>showStartupCostRecords(3)},
-      {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpInflow[type].royalty), amtInUsd: cbpInflow[type].royaltyInUsd, show: ()=>showRoyaltyRecords(3)},
+      {simbol: '+', title: 'Fuel Sold', amt: cbpToETH(cbpOutflow[type].fuelSold), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].fuelSold)), show: ()=>showFuelSoldRecords(3)},
+      {simbol: '+', title: 'Gmm CBP Payment', amt: cbpToETH(cbpOutflow[type].gmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer)), show: ()=>showGmmCbpPaymentRecords(3)},
+      {simbol: '+', title: 'Bmm CBP Payment', amt: cbpToETH(cbpOutflow[type].bmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer)), show: ()=>showBmmCbpPaymentRecords(3)},
+      {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow[type].newUserAward), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(3)},
+      {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow[type].startupCost), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(3)},
+      {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpInflow[type].royalty), amtInUsd: weiToDust(cbpToETH(cbpInflow[type].royalty)), show: ()=>showRoyaltyRecords(3)},
     ];
 
     if (items.length > 0) {
@@ -542,7 +551,7 @@ export function FinStatement() {
 
   const showOtherIncomeRecords = (type:number) => {
 
-    let records = trimCashflow(cbpInflowRecords, startDate, endDate, type);
+    let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'TransferIncome');
 
@@ -1038,9 +1047,9 @@ export function FinStatement() {
           
       <Stack direction='row' >
 
-        <Assets inETH={inETH} centPrice={centPrice} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayEthOfComp(3)]} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <Assets inETH={inETH} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>displayEthOfComp(3)]} ethInflow={ethInflow} ethOutflow={ethOutflow} />
 
-        <LiabilyAndEquity inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayDeferredRevenue(3), ()=>showPaidInCapRecords(3)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <LiabilyAndEquity inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} opnBlkNo={opnBlkNo} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayDeferredRevenue(3), ()=>showPaidInCapRecords(3)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
 
       </Stack>
       
@@ -1048,15 +1057,15 @@ export function FinStatement() {
 
         <Stack width='50%' direction='column' sx={{m:1}} >
 
-          <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+          <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
  
-          <EquityChangeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>showPaidInCapRecords(2), ()=>showDistributionRecords(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+          <EquityChangeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showPaidInCapRecords(2), ()=>showDistributionRecords(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
 
         </Stack>
 
         <Stack width='50%'  direction='column' sx={{m:1}}>
 
-          <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
+          <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
 
         </Stack>
 
@@ -1064,7 +1073,7 @@ export function FinStatement() {
 
       <Stack direction='row' >
 
-        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
+        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>displayCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>displayCbpOutflow(2), ()=>displayFtCbpflow(2), ()=>displayEthInflow(2), ()=>displayEthOutflow(2), ()=>displayFtEthflow(3), ()=>displayDepositsInflow(2), ()=>displayCustody(2),  ()=>displayDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
 
       </Stack>
 
