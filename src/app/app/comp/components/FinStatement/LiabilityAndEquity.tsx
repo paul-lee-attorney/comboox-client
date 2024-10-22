@@ -7,6 +7,10 @@ import { CbpOutflowSum } from "./Cashflow/CbpOutflow";
 import { CbpInflowSum } from "./Cashflow/CbpInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
 import { EthInflowSum } from "./Cashflow/EthInflow";
+import { useEffect, useState } from "react";
+import { usePublicClient } from "wagmi";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { balanceOf, getTotalSupply } from "../../../rc";
 
 
 export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
@@ -39,7 +43,7 @@ export const getOwnersEquity = (type:number, startDate:number, endDate:number, c
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow}: IncomeStatementProps) {
+export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, rptBlkNo, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow}: IncomeStatementProps) {
 
   const weiToBP = (eth:bigint) => {
     return eth * 100n / centPrice;
@@ -59,9 +63,32 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   // ==== Liabilities ====
 
-  const deferredRevenue = getDeferredRevenue(3, cbpInflow, cbpOutflow, cbpToETH);
+  const [ deferredRevenue, setDeferredRevenue] = useState(0n);
 
-  const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
+  const client = usePublicClient();
+  const {gk} = useComBooxContext();
+
+  useEffect(()=>{
+    const getDeferredRevenue = async ()=>{
+      if (!gk) return 0n;
+
+      const cbpSupply = await getTotalSupply();
+      const cbpOfComp = await balanceOf(gk, rptBlkNo);
+
+      const output = cbpSupply - cbpOfComp;
+
+      return output;
+    }
+
+    getDeferredRevenue().then(
+      res => setDeferredRevenue(res)
+    );
+
+  }, [rptBlkNo, gk, client]);
+
+  // const deferredRevenue = getDeferredRevenue(3, cbpInflow, cbpOutflow, cbpToETH);
+
+  // const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
   
   // ==== Profits & Loss ====
 
@@ -91,12 +118,12 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](3)}  >
           <b>Deferred Revenue: ({ inETH
-            ? weiToEth9Dec(deferredRevenue.inEth)
-            : showUSD(deferredRevenue.inUsd)}) </b>
+            ? weiToEth9Dec(cbpToETH(deferredRevenue))
+            : showUSD(weiToDust(cbpToETH(deferredRevenue)))}) </b>
         </Button>
       </Stack>
 
-      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+      {/* <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
         <Typography variant="h6" textAlign='center' width='10%'>
           +
         </Typography>
@@ -105,7 +132,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
             ? '0'
             : showUSD(cbpGainLoss)}) </b>
         </Button>
-      </Stack>
+      </Stack> */}
 
       <Stack direction='row' width='100%' >
         <Typography variant="h6" textAlign='center' width='20%'>
@@ -113,8 +140,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Total Liabilities: ({ inETH
-            ? weiToEth9Dec(deferredRevenue.inEth)
-            : showUSD(weiToDust(deferredRevenue.inEth))}) </b>
+            ? weiToEth9Dec(cbpToETH(deferredRevenue))
+            : showUSD(weiToDust(cbpToETH(deferredRevenue)))}) </b>
         </Button>
       </Stack>
 
@@ -167,8 +194,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Total Liabilities & Owners Equity: ({ inETH
-            ? weiToEth9Dec(deferredRevenue.inEth + ownersEquity.inEth)
-            : showUSD(weiToDust(deferredRevenue.inEth) + ownersEquity.inUsd)}) </b>
+            ? weiToEth9Dec(cbpToETH(deferredRevenue) + ownersEquity.inEth)
+            : showUSD(weiToDust(cbpToETH(deferredRevenue)) + ownersEquity.inUsd)}) </b>
         </Button>
       </Stack>
 

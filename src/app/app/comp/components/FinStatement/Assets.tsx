@@ -1,5 +1,5 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { defReportItem, showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
+import { showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
 import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
 import { usePublicClient } from "wagmi";
@@ -170,35 +170,13 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
         </Button>
       </Stack>
 
-      {/* <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-        <Typography variant="h6" textAlign='center' width='10%'>
-          +
-        </Typography>
-        <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-          <b>Appreciation of ETH: ({ inETH 
-            ? 0
-            : showUSD(ethGainLoss)}) </b>
-        </Button>
-      </Stack>
+      <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
 
       <Stack direction='row' width='100%' >
         <Typography variant="h6" textAlign='center' width='20%'>
           &nbsp;
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-          <b>Current Value of ETH: ({ inETH 
-            ? weiToEth9Dec(ethOfComp.inEth)
-            : showUSD(weiToDust(ethOfComp.inEth))}) </b>
-        </Button>
-      </Stack> */}
-
-      <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
-
-      <Stack direction='row' width='100%' >
-        <Typography variant="h6" textAlign='center' width='30%'>
-          &nbsp;
-        </Typography>
-        <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
           <b>Total Assets: ({ inETH
             ? weiToEth9Dec(totalAssets().inEth)
             : showUSD(totalAssets().inUsd)}) </b>
