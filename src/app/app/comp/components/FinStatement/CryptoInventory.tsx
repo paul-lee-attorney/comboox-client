@@ -1,10 +1,16 @@
-import { Box, Button, Divider, Paper, Stack, Typography } from "@mui/material";
+import { Button, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
-import { baseToDollar, bigIntToStrNum } from "../../../common/toolsKit";
+import { baseToDollar } from "../../../common/toolsKit";
 import { FtCbpflowSum } from "./Cashflow/FtCbpflow";
 import { IncomeStatementProps } from "./IncomeStatement";
 import { FtEthflowSum } from "./Cashflow/FtEthflow";
 import { DepositsSum } from "./Cashflow/Deposits";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { usePublicClient } from "wagmi";
+import { useEffect, useState } from "react";
+import { AddrOfTank } from "../../../common";
+import { totalDeposits } from "../../gk";
+import { balanceOf } from "../../../rc";
 
 export interface CryptoInventoryProps extends IncomeStatementProps {
   ftCbpflow: FtCbpflowSum[],
@@ -12,8 +18,18 @@ export interface CryptoInventoryProps extends IncomeStatementProps {
   deposits: DepositsSum[],
 }
 
+interface Balance {
+  opnAmt: bigint;
+  endAmt: bigint;
+}
 
-export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, ftCbpflow, ftEthflow, deposits}: CryptoInventoryProps) {
+const defBala:Balance = {
+  opnAmt: 0n,
+  endAmt: 0n,
+}
+
+
+export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, ftCbpflow, ftEthflow, deposits}: CryptoInventoryProps) {
 
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
@@ -31,42 +47,156 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
     return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
 
+  const { gk } = useComBooxContext();
+  const client = usePublicClient();
+
+  const [ ethOfGK, setEthOfGK ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getEthOfGK = async ()=>{
+      if (!gk) return {...defBala};
+
+      const opnBalaOfGK = await client.getBalance({
+        address: gk,
+        blockNumber: opnBlkNo,
+      });
+
+      const endBalaOfGK = await client.getBalance({
+        address: gk,
+        blockNumber: rptBlkNo,
+      });
+
+      const opnDep = await totalDeposits(gk, opnBlkNo);
+      const endDep = await totalDeposits(gk, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnBalaOfGK - opnDep,
+        endAmt: endBalaOfGK - endDep,
+      }
+
+      return output;
+    }
+
+    getEthOfGK().then(
+      res => setEthOfGK(res)
+    );
+
+  }, [opnBlkNo, rptBlkNo, gk, client]);
+
+  const [ ethOfFT, setEthOfFT ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getEthOfFT = async ()=>{
+      if (!gk) return {...defBala};
+
+      const opnBalaOfFT = await client.getBalance({
+        address: AddrOfTank,
+        blockNumber: opnBlkNo,
+      });
+
+      const endBalaOfFT = await client.getBalance({
+        address: AddrOfTank,
+        blockNumber: rptBlkNo,
+      });
+
+      const output:Balance = {
+        opnAmt: opnBalaOfFT,
+        endAmt: endBalaOfFT,
+      }
+
+      return output;
+    }
+
+    getEthOfFT().then(
+      res => setEthOfFT(res)
+    );
+
+  }, [opnBlkNo, rptBlkNo, gk, client]);
+
+  const ethOfComp:Balance = {
+    opnAmt: ethOfGK.opnAmt + ethOfFT.opnAmt,
+    endAmt: ethOfGK.endAmt + ethOfFT.endAmt,
+  } 
+
+  const [ cbpOfGK, setCbpOfGK ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getCbpOfGK = async ()=>{
+      if (!gk) return {...defBala};
+
+      const opnBalaOfGK = await balanceOf(gk, opnBlkNo);
+      const endBalaOfGK = await balanceOf(gk, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnBalaOfGK,
+        endAmt: endBalaOfGK,
+      }
+
+      return output;
+    }
+
+    getCbpOfGK().then(
+      res => setCbpOfGK(res)
+    );
+
+  }, [opnBlkNo, rptBlkNo, gk, client]);
+
+  const [ cbpOfFT, setCbpOfFT ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getCbpOfFT = async ()=>{
+      if (!gk) return {...defBala};
+
+      const opnBalaOfFT = await balanceOf(AddrOfTank, opnBlkNo);
+      const endBalaOfFT = await balanceOf(AddrOfTank, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnBalaOfFT,
+        endAmt: endBalaOfFT,
+      }
+
+      return output;
+    }
+
+    getCbpOfFT().then(
+      res => setCbpOfFT(res)
+    );
+
+  }, [opnBlkNo, rptBlkNo, gk, client]);
+
+  const cbpOfComp:Balance = {
+    opnAmt: cbpOfGK.opnAmt + cbpOfFT.opnAmt,
+    endAmt: cbpOfGK.endAmt + cbpOfFT.endAmt,
+  } 
+
+  const [ dep, setDep ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getDepOfComp = async ()=>{
+      if (!gk) return {...defBala};
+
+      const opnDep = await totalDeposits(gk, opnBlkNo);
+      const endDep = await totalDeposits(gk, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnDep,
+        endAmt: endDep,
+      }
+
+      return output;
+    }
+
+    getDepOfComp().then(
+      res => setDep(res)
+    );
+
+  }, [opnBlkNo, rptBlkNo, gk, client]);
+
   const getMintToOthers = (type:number) => {
-    let mintToOthers = cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
-    let mintToOthersInUsd = cbpOutflow[type].newUserAwardInUsd + cbpOutflow[type].startupCostInUsd;
+    const mintToOthers = cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
+    const mintToOthersInUsd = weiToDust(mintToOthers);
 
     return {inEth: mintToOthers, inUsd: mintToOthersInUsd};
-  }
-
-  const getCbpOfComp = (type:number) => {
-
-    let cbpBalance = cbpToETH(cbpInflow[type].totalAmt - cbpOutflow[type].totalAmt) + getMintToOthers(type).inEth;
-    let cbpBalanceInUsd = cbpInflow[type].sumInUsd - cbpOutflow[type].sumInUsd + getMintToOthers(type).inUsd;
-
-    return {inEth: cbpBalance, inUsd: cbpBalanceInUsd};
-  }
-
-
-  const getCbpOfGK = (type:number) => {
-
-    let inEth = getCbpOfComp(type).inEth - cbpToETH(ftCbpflow[type > 1 ? 3 : 1].totalCbp);
-    let inUsd = getCbpOfComp(type).inUsd - ftCbpflow[type > 1 ? 3 : 1].totalCbpInUsd;
-
-    return {inEth: inEth, inUsd: inUsd};
-  }
-
-  const getEthOfComp = (type:number) => {
-    let ethBalance = ethInflow[type].totalAmt - ethOutflow[type].totalAmt;
-    let ethBalanceInUsd = ethInflow[type].sumInUsd - ethOutflow[type].sumInUsd;
-
-    return {inEth: ethBalance, inUsd: ethBalanceInUsd};
-  }
-
-  const getEthOfGK = (type:number) => {
-    let ethBalance = getEthOfComp(type).inEth - ftEthflow[type > 1 ? 3 : 1].totalEth;
-    let ethBalanceInUsd = getEthOfComp(type).inUsd - ftEthflow[type > 1 ? 3 : 1].totalEthInUsd;
-
-    return {inEth: ethBalance, inUsd: ethBalanceInUsd};
   }
 
   const getIncreasedDeposits = (type:number) => {
@@ -118,8 +248,8 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 sx={{m:0.5, minWidth:288, justifyContent:'start'}}
               >
                 <b>Beginning Value of CBP: ({ inETH
-                    ? weiToEth9Dec(getCbpOfComp(1).inEth) 
-                    : showUSD(getCbpOfComp(1).inUsd)})</b>
+                    ? weiToEth9Dec(cbpOfComp.opnAmt)
+                    : showUSD(weiToDust(cbpToETH(cbpOfComp.opnAmt)))})</b>
               </Button>
             </Stack>
 
@@ -135,7 +265,7 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
               >
                 <b>CBP Inflow: ({ inETH
                     ? weiToEth9Dec(cbpInflow[2].totalAmt) 
-                    : showUSD(cbpInflow[2].sumInUsd)})</b>
+                    : showUSD(weiToDust(cbpToETH(cbpInflow[2].totalAmt)))})</b>
               </Button>
             </Stack>
 
@@ -145,7 +275,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
               </Typography>
 
               <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](2)} >
-                <b>CBP Mint To Others: ({inETH ? weiToEth9Dec(getMintToOthers(2).inEth) : showUSD(getMintToOthers(2).inUsd)}) </b>
+                <b>CBP Mint To Others: ({inETH 
+                    ? weiToEth9Dec(getMintToOthers(2).inEth)
+                    : showUSD(weiToDust(cbpToETH(getMintToOthers(2).inEth)))}) </b>
               </Button>
             </Stack>
 
@@ -154,7 +286,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 -
               </Typography>
               <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[2](2)} >
-                <b>CBP Outflow: ({inETH ? weiToEth9Dec(cbpToETH(cbpOutflow[2].totalAmt)) : showUSD(cbpOutflow[2].sumInUsd)}) </b>
+                <b>CBP Outflow: ({inETH 
+                    ? weiToEth9Dec(cbpOutflow[2].totalAmt) 
+                    : showUSD(weiToDust(cbpToETH(cbpOutflow[2].totalAmt)))}) </b>
               </Button>
             </Stack>
 
@@ -163,7 +297,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 &nbsp;
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>CBP Of Comp: ({inETH ? weiToEth9Dec(getCbpOfComp(3).inEth) : showUSD(getCbpOfComp(3).inUsd)}) </b>
+                <b>CBP Of Comp: ({inETH 
+                  ? weiToEth9Dec(cbpOfComp.endAmt) 
+                  : showUSD(weiToDust(cbpToETH(cbpOfComp.endAmt)))}) </b>
               </Button>
             </Stack>
 
@@ -175,12 +311,16 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 -
               </Typography>
               <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[3](2)} >
-                <b>CBP In Fuel Tank: ({inETH ? weiToEth9Dec(cbpToETH(ftCbpflow[3].totalCbp)) : showUSD(ftCbpflow[3].totalCbpInUsd)}) </b>
+                <b>CBP In Fuel Tank: ({inETH 
+                    ? weiToEth9Dec(cbpOfFT.endAmt) 
+                    : showUSD(weiToDust(cbpOfFT.endAmt))}) </b>
               </Button>
             </Stack>
 
             <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
-              <b>CBP In GK: ({inETH ? weiToEth9Dec(getCbpOfGK(3).inEth) : showUSD(getCbpOfGK(3).inUsd)}) </b>
+              <b>CBP In GK: ({inETH 
+                  ? weiToEth9Dec(cbpOfGK.endAmt) 
+                  : showUSD(weiToDust(cbpOfGK.endAmt))}) </b>
             </Button>
 
           </Stack>
@@ -211,8 +351,8 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 sx={{m:0.5, minWidth:288, justifyContent:'start'}}
               >
                 <b>Beginning Value of ETH: ({ inETH
-                    ? weiToEth9Dec(getEthOfComp(1).inEth) 
-                    : showUSD(getEthOfComp(1).inUsd)})</b>
+                    ? weiToEth9Dec(ethOfComp.opnAmt) 
+                    : showUSD(weiToDust(ethOfComp.opnAmt))})</b>
               </Button>
             </Stack>
 
@@ -221,7 +361,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 +
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[4](2)} >
-                <b>ETH Inflow: ({inETH ? weiToEth9Dec(ethInflow[2].totalAmt) : showUSD(ethInflow[2].sumInUsd)}) </b>
+                <b>ETH Inflow: ({inETH 
+                    ? weiToEth9Dec(ethInflow[2].totalAmt) 
+                    : showUSD(weiToDust(ethInflow[2].totalAmt))}) </b>
               </Button>
             </Stack>
 
@@ -230,7 +372,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 -
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[5](2)} >
-                <b>ETH Outflow: ({inETH ? weiToEth9Dec(ethOutflow[2].totalAmt) : showUSD(ethOutflow[2].sumInUsd)}) </b>
+                <b>ETH Outflow: ({inETH 
+                    ? weiToEth9Dec(ethOutflow[2].totalAmt) 
+                    : showUSD(weiToDust(ethOutflow[2].totalAmt))}) </b>
               </Button>
 
             </Stack>
@@ -240,7 +384,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 &nbsp;
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>ETH Of Comp: ({inETH ? weiToEth9Dec(getEthOfComp(3).inEth) : showUSD(getEthOfComp(3).inUsd)}) </b>
+                <b>ETH Of Comp: ({inETH 
+                  ? weiToEth9Dec(ethOfComp.endAmt) 
+                  : showUSD(weiToDust(ethOfComp.endAmt))}) </b>
               </Button>
             </Stack>
 
@@ -252,12 +398,16 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 -
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[6](3)} >
-                <b>ETH In Fuel Tank: ({inETH ? weiToEth9Dec(ftEthflow[3].totalEth) : showUSD(ftEthflow[3].totalEthInUsd)}) </b>
+                <b>ETH In Fuel Tank: ({inETH 
+                    ? weiToEth9Dec(ethOfFT.endAmt) 
+                    : showUSD(weiToDust(ethOfFT.endAmt))}) </b>
               </Button>
             </Stack>
 
             <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
-              <b>ETH in GK: ({ inETH ? weiToEth9Dec(getEthOfGK(3).inEth) : showUSD(getEthOfGK(3).inUsd) }) </b>
+              <b>ETH in GK: ({ inETH 
+                  ? weiToEth9Dec(ethOfGK.endAmt) 
+                  : showUSD(weiToDust(ethOfGK.endAmt)) }) </b>
             </Button>
 
           </Stack>
@@ -282,7 +432,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
 
             <Stack direction='row' width='100%' >
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-                <b>Beginning Value of Deposits: ({inETH ? weiToEth9Dec(deposits[1].totalAmt) : showUSD(deposits[1].sumInUsd) }) </b>
+                <b>Beginning Value of Deposits: ({inETH 
+                    ? weiToEth9Dec(dep.opnAmt) 
+                    : showUSD(weiToDust(dep.opnAmt)) }) </b>
               </Button>
             </Stack>
 
@@ -291,7 +443,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 +
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[7](2)} >
-                <b>Deposits Inflow: ({inETH ? weiToEth9Dec(getIncreasedDeposits(2).inEth) : showUSD(getIncreasedDeposits(2).inUsd) }) </b>
+                <b>Deposits Inflow: ({inETH 
+                    ? weiToEth9Dec(getIncreasedDeposits(2).inEth) 
+                    : showUSD(weiToDust(getIncreasedDeposits(2).inEth)) }) </b>
               </Button>
             </Stack>
 
@@ -300,7 +454,9 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 -
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[9](2)} >
-                <b>Deposits Outflow: ({inETH ? weiToEth9Dec(deposits[2].pickup) : showUSD(deposits[2].pickupInUsd) }) </b>
+                <b>Deposits Outflow: ({inETH 
+                    ? weiToEth9Dec(deposits[2].pickup) 
+                    : showUSD(weiToDust(deposits[2].pickup)) }) </b>
               </Button>
             </Stack>
 
@@ -312,13 +468,17 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
                 +
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[8](2)} >
-                <b>Deposits in Custody: ({inETH ? weiToEth9Dec(deposits[2].custody) : showUSD(deposits[2].custodyInUsd) }) </b>
+                <b>Deposits in Custody: ({inETH 
+                    ? weiToEth9Dec(deposits[2].custody) 
+                    : showUSD(weiToDust(deposits[2].custody)) }) </b>
               </Button>
             </Stack>
 
 
             <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
-              <b>Deposits Balance: ({inETH ? weiToEth9Dec(deposits[3].totalAmt) : showUSD(deposits[2].sumInUsd) }) </b>
+              <b>Deposits Balance: ({inETH 
+                  ? weiToEth9Dec(dep.endAmt) 
+                  : showUSD(weiToDust(dep.endAmt)) }) </b>
             </Button>
 
           </Stack>
@@ -328,7 +488,6 @@ export function CryptoInventory({inETH, exRate, centPrice, display, ethInflow, e
       </Stack>
 
     </Paper>
-
 
   );   
 }
