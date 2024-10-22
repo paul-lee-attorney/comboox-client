@@ -212,11 +212,17 @@ export function FinStatement() {
     }
   
     findBlocknumberByTimestamp(BigInt(endDate)).then(
-      blkNo => setRptBlkNo(blkNo)
+      blkNo => {
+        setRptBlkNo(blkNo);
+        console.log('endDate: ', endDate, 'rptBlkNo: ', blkNo);
+      }
     );
 
     findBlocknumberByTimestamp(BigInt(startDate)).then(
-      blkNo => setOpnBlkNo(blkNo)
+      blkNo => {
+        setOpnBlkNo(blkNo);
+        console.log('startDate: ', startDate, 'opnBlkNo: ', blkNo);
+      }
     );
 
   }
