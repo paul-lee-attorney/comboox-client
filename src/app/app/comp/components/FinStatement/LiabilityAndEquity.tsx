@@ -1,7 +1,7 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
-import { getProfits, IncomeStatementProps } from "./IncomeStatement";
+import { getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
 import { getInitContribution } from "./Assets";
 import { CbpOutflowSum } from "./Cashflow/CbpOutflow";
 import { CbpInflowSum } from "./Cashflow/CbpInflow";
@@ -16,16 +16,6 @@ import { balanceOf, getTotalSupply } from "../../../rc";
 export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
   const inEth = cbpToETH(cbpOutflow[type].totalAmt - cbpInflow[type].totalAmt + cbpInflow[type].mint);
   const inUsd = cbpOutflow[type].sumInUsd - cbpInflow[type].sumInUsd + cbpInflow[type].mintInUsd;
-
-  return ({inEth:inEth, inUsd:inUsd});
-}
-
-export const getRetainedEarnings = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint) => {
-
-  const profits = getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
-
-  const inEth = profits.inEth - ethOutflow[type].distribution;
-  const inUsd = profits.inUsd - ethOutflow[type].distributionInUsd;
 
   return ({inEth:inEth, inUsd:inUsd});
 }

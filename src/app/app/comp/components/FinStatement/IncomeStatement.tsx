@@ -56,6 +56,16 @@ export const getProfits = (type:number, startDate:number, endDate:number, centPr
   return({inEth:inEth, inUsd:inUsd});
 }
 
+export const getRetainedEarnings = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint) => {
+
+  const profits = getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+
+  const inEth = profits.inEth - ethOutflow[type].distribution;
+  const inUsd = profits.inUsd - weiToDust(ethOutflow[type].distribution);
+
+  return ({inEth:inEth, inUsd:inUsd});
+}
+
 export interface IncomeStatementProps extends AssetsProps {
   exRate: bigint,
   cbpInflow: CbpInflowSum[],
@@ -88,6 +98,8 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
   const ebitda = getEBITDA(2, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   const profits = getProfits(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+
+  const retainedEarnings = getRetainedEarnings(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust)
 
   // onClick={()=>showRoyaltyRecords()} 
   // onClick={()=>showOtherIncomeRecords()}
@@ -185,6 +197,33 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
           <b>Net Income: ({ inETH
             ? weiToEth9Dec(profits.inEth)
             : showUSD(profits.inUsd) }) </b>
+        </Button>
+      </Stack>
+
+      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+        <Typography variant="h6" textAlign='center' width='40%'>
+          &nbsp;
+        </Typography>
+        <Typography variant="h6" textAlign='center' width='10%'>
+          -
+        </Typography>
+        <Button variant="outlined" sx={{width: '50%', m:0.5, justifyContent:'start'}} >
+          <b>Distribution: ({ inETH
+            ? weiToEth9Dec(ethOutflow[2].distribution)
+            : showUSD(weiToDust(ethOutflow[2].distribution)) }) </b>
+        </Button>
+      </Stack>
+
+      <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
+
+      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+        <Typography variant="h6" textAlign='center' width='60%'>
+          &nbsp;
+        </Typography>
+        <Button variant="outlined" sx={{width: '40%', m:0.5, justifyContent:'start'}} >
+          <b>Distribution: ({ inETH
+            ? weiToEth9Dec(retainedEarnings.inEth)
+            : showUSD(retainedEarnings.inUsd) }) </b>
         </Button>
       </Stack>
 
