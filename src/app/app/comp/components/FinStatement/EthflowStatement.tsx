@@ -65,18 +65,6 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
     return ({inEth: inEth, inUsd: inUsd});
   }
 
-  const getBeginningValueOfEth = () => {
-    const inEth = ethInflow[1].totalAmt - ethOutflow[1].totalAmt;
-    const inUsd = ethInflow[1].sumInUsd - ethOutflow[1].sumInUsd;
-    return ({inEth:inEth, inUsd:inUsd});
-  }
-
-  const getBalanceOfEth = () => {
-    const inEth = getBeginningValueOfEth().inEth + getNetIncreaseOfEth().inEth;
-    const inUsd =  getBeginningValueOfEth().inUsd + getNetIncreaseOfEth().inUsd;
-    return({inEth:inEth, inUsd:inUsd});
-  }
-
   return(
 
     <Paper elevation={3} 
@@ -223,39 +211,7 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
           </Button>
         </Stack>
 
-        <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-          <Typography variant="h6" textAlign='center' width='20%'>
-            &nbsp;
-          </Typography>
-          <Typography variant="h6" textAlign='center' width='10%'>
-            +
-          </Typography>
-          <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-            <b>Begginning Value of ETH: ({inETH 
-                ? weiToEth9Dec(getBeginningValueOfEth().inEth) 
-                : showUSD(getBeginningValueOfEth().inUsd)}) </b>
-          </Button>
-        </Stack>
-
-        <Divider orientation="horizontal"  sx={{ my:2, color:'blue' }} flexItem  />
-
-        <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-          <Typography variant="h6" textAlign='center' width='40%'>
-            &nbsp;
-          </Typography>
-          <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-            <b>Ending Value of ETH: ({inETH 
-                ? weiToEth9Dec(getBalanceOfEth().inEth) 
-                : showUSD(getBalanceOfEth().inUsd)}) </b>
-          </Button>
-        </Stack>
-
       </Stack>    
-      <br/>
-      <br/>
-      <br/>
-      <br/>
-      <br/>
     </Paper>
   );   
 }

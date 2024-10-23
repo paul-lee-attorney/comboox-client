@@ -317,8 +317,6 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
         </Table>
 
-
-
     </Paper>
 
   );   
