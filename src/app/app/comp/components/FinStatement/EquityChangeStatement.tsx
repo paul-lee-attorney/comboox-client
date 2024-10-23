@@ -1,14 +1,14 @@
 import { Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
 import { showUSD } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
-import { getProfits, IncomeStatementProps } from "./IncomeStatement";
+import { getProfits, getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
 import { useEffect, useState } from "react";
 import { capAtDate } from "../../rom/rom";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { getInitContribution, setUpDate } from "./Assets";
-import { getOwnersEquity, getRetainedEarnings } from "./LiabilityAndEquity";
+import { getOwnersEquity } from "./LiabilityAndEquity";
 
 export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow}: IncomeStatementProps) {
 
