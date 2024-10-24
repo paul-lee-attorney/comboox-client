@@ -155,7 +155,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         <Typography variant="h6" textAlign='center' width='10%'>
           +
         </Typography>
-        <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+        <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>display[3](2)} >
           <b>Operational Crypto Exchange Gain/Loss: ({ inETH
             ? 0
             : showUSD(exchangeGainLoss) }) </b>
