@@ -657,15 +657,12 @@ export function FinStatement() {
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Operational Exchange Gain (Loss)', amt: 0n, amtInUsd: gl, show: ()=>{}},
-      {simbol: '+', title: 'ETH Gas Income - G/L', amt:0n, amtInUsd: (weiToDust(ethInflow[type].gas) - ethInflow[type].gasInUsd), show: ()=>{}},
-      {simbol: '+', title: 'ETH Transfer Income - G/L', amt:0n, amtInUsd: (weiToDust(ethInflow[type].transfer) - ethInflow[type].transferInUsd), show: ()=>{}},
       {simbol: '+', title: 'ETH Transfer Income - G/L', amt:0n, amtInUsd: (weiToDust(ethInflow[type].transfer) - ethInflow[type].transferInUsd), show: ()=>{}},
       {simbol: '-', title: 'ETH GMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense) - (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd)), show: ()=>{}},
       {simbol: '-', title: 'ETH BMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense) - (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd)), show: ()=>{}},
       {simbol: '+', title: 'CBP Royalty Income - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpInflow[type].royalty)) - cbpInflow[type].royaltyInUsd), show: ()=>{}},
       {simbol: '-', title: 'CBP New User Awards - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].newUserAward)) - cbpOutflow[type].newUserAwardInUsd), show: ()=>{}},
       {simbol: '-', title: 'CBP Startup Cost - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].startupCost)) - cbpOutflow[type].startupCostInUsd), show: ()=>{}},
-      {simbol: '-', title: 'CBP Fuel Sold - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].fuelSold)) - cbpOutflow[type].fuelSoldInUsd), show: ()=>{}},
       {simbol: '-', title: 'CBP GMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer)) - cbpOutflow[type].gmmTransferInUsd), show: ()=>{}},
       {simbol: '-', title: 'CBP BMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer)) - cbpOutflow[type].bmmTransferInUsd), show: ()=>{}},
 
