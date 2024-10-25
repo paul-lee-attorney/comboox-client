@@ -42,6 +42,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
     const getPaidCap = async ()=>{
       if (!boox) return;
       
+      if (startDate > endDate) return;
+
       const systemDate = (new Date('2024-09-12T17:00:00Z')).getTime()/1000;
 
       const initCap = 3n*10n**9n;
@@ -83,7 +85,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
     const initContribution = getInitContribution(type, startDate, endDate, centPrice);
 
-    return ethInflow[type].capitalInUsd - paidCap + (type != 2 ? weiToDust(initContribution) : 0n);
+    return ethInflow[type].capitalInUsd - paidCap + weiToDust(initContribution);
   }
 
   const profits = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
