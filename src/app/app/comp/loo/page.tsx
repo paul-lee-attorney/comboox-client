@@ -106,6 +106,7 @@ function ListOfOrders() {
         // fromBlock: lastBlock > 60000n + BigInt(left) ? lastBlock - 60000n - BigInt(left) : 0n,
         // toBlock: lastBlock > BigInt(right) ? lastBlock - BigInt(right) : 0n
       });
+      console.log('dealLogs: ', dealLogs);
 
       let cnt = dealLogs.length;
 
@@ -153,6 +154,7 @@ function ListOfOrders() {
 
         arr.push(item); 
         counter++;
+        console.log('add item:', item, 'with counter:', counter);
       }
 
       setQty(qty);

@@ -76,7 +76,7 @@ export function DealsList({list, qty, amt, refresh, setDeal, setShow}: DealsList
     },    
   ];
 
-  const [ valid, setValid ] = useState<FormResults>(defFormResults);
+  // const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
     setDeal(p.row);
