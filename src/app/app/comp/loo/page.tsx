@@ -88,8 +88,8 @@ function ListOfOrders() {
   const [ qty, setQty ] = useState(0n);
   const [ amt, setAmt ] = useState(0n);
 
-  const [ left, setLeft ] = useState(0);
-  const [ right, setRight ] = useState(0);
+  // const [ left, setLeft ] = useState(0);
+  // const [ right, setRight ] = useState(0);
 
   useEffect(()=>{
 
@@ -97,13 +97,13 @@ function ListOfOrders() {
 
       if (addr.toLowerCase() == AddrZero.toLowerCase()) return;
 
-      const lastBlock = await client.getBlockNumber();
+      // const lastBlock = await client.getBlockNumber();
 
       let dealLogs = await client.getLogs({
         address: addr,
         event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
-        fromBlock: lastBlock > 60000n + BigInt(left) ? lastBlock - 60000n - BigInt(left) : 0n,
-        toBlock: lastBlock > BigInt(right) ? lastBlock - BigInt(right) : 0n
+        // fromBlock: lastBlock > 60000n + BigInt(left) ? lastBlock - 60000n - BigInt(left) : 0n,
+        // toBlock: lastBlock > BigInt(right) ? lastBlock - BigInt(right) : 0n
       });
 
       let cnt = dealLogs.length;
@@ -162,7 +162,7 @@ function ListOfOrders() {
 
     getEvents();
 
-  },[addr, client, classOfShare, setQty, setAmt, time, left, right, time]);  
+  },[addr, client, classOfShare, setQty, setAmt, time]);  
 
   const [ deal, setDeal ] = useState<DealProps | undefined>();
   const [ show, setShow ] = useState<boolean>(false);
@@ -223,7 +223,7 @@ function ListOfOrders() {
           <OrdersList name={'Sell'} list={offers} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
           <OrdersList name={'Buy'} list={bids} setOrder={setOrder} setOpen={setOpen} refresh={refresh} />
 
-          <DealsList list={deals} qty={baseToDollar(qty.toString())} amt={baseToDollar((amt/10000n).toString())} left={left} setLeft={setLeft} right={right} setRight={setRight} refresh={refresh} setDeal={setDeal} setShow={setShow} />
+          <DealsList list={deals} qty={baseToDollar(qty.toString())} amt={baseToDollar((amt/10000n).toString())} refresh={refresh} setDeal={setDeal} setShow={setShow} />
           
           <BillOfOrder order={order} open={open} setOpen={setOpen} />
           {deal && (

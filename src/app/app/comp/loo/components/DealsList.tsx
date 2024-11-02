@@ -3,23 +3,19 @@ import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/m
 import { MaxPrice } from "../../../common";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { baseToDollar, dateParser, defFormResults, FormResults, longSnParser, onlyInt } from "../../../common/toolsKit";
-import { Deal, DealProps, defaultDeal } from "../loo";
+import { DealProps } from "../loo";
 import { Refresh } from "@mui/icons-material";
 
 export interface DealsListProps {
   list: readonly DealProps[];
   qty: string;
   amt: string;
-  left: number;
-  setLeft: Dispatch<SetStateAction<number>>;
-  right: number;
-  setRight: Dispatch<SetStateAction<number>>;
   setDeal: Dispatch<SetStateAction<DealProps | undefined>>;
   setShow: Dispatch<SetStateAction<boolean>>;
   refresh: ()=>void;
 }
 
-export function DealsList({list, qty, amt, left, setLeft, right, setRight, refresh, setDeal, setShow}: DealsListProps) {
+export function DealsList({list, qty, amt, refresh, setDeal, setShow}: DealsListProps) {
 
   const columns: GridColDef[] = [
     {
@@ -115,7 +111,7 @@ export function DealsList({list, qty, amt, left, setLeft, right, setRight, refre
           </IconButton>
         </Tooltip>
 
-        <TextField 
+        {/* <TextField 
           variant='outlined'
           size="small"
           label='StartBlock'
@@ -151,7 +147,7 @@ export function DealsList({list, qty, amt, left, setLeft, right, setRight, refre
           }}
 
           value={ right.toString() } 
-        />
+        /> */}
 
       </Stack>
 

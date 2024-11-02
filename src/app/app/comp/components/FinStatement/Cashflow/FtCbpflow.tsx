@@ -4,7 +4,7 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { HexParser } from "../../../../common/toolsKit";
-import { Cashflow, CashflowRange, CashflowRecordsProps } from "../../FinStatement";
+import { Cashflow, CashflowRecordsProps } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
