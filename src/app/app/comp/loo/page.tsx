@@ -102,6 +102,7 @@ function ListOfOrders() {
       let dealLogs = await client.getLogs({
         address: addr,
         event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
+        fromBlock: 'earliest',
         // fromBlock: lastBlock > 60000n + BigInt(left) ? lastBlock - 60000n - BigInt(left) : 0n,
         // toBlock: lastBlock > BigInt(right) ? lastBlock - BigInt(right) : 0n
       });
@@ -152,7 +153,6 @@ function ListOfOrders() {
 
         arr.push(item); 
         counter++;
-
       }
 
       setQty(qty);
