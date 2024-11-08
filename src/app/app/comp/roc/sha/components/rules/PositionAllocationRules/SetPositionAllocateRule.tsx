@@ -20,7 +20,7 @@ import {
 import { AddRule } from '../AddRule';
 import { FormResults, defFormResults, longSnParser, onlyInt, stampToUtc, utcToStamp } from '../../../../../../common/toolsKit';
 import { ListAlt } from '@mui/icons-material';
-import { HexType, MaxSeqNo, MaxUserNo, SeqZero } from '../../../../../../common';
+import { HexType, MaxSeqNo, MaxUserNo } from '../../../../../../common';
 
 import { getRule, titleOfPositions } from '../../../sha';
 import { RulesEditProps } from '../GovernanceRules/SetGovernanceRule';
@@ -80,13 +80,6 @@ export function prParser(hexRule: HexType): PosAllocateRule {
   return rule;
 }
 
-// ==== Num Interface ====
-
-// export const titleOfPositions: string[] = [
-//   'Shareholder', 'Chairman', 'ViceChairman', 'ManagintDirector', 'Director', 
-//   'CEO', 'CFO', 'COO', 'CTO', 'President', 'VicePresident', 'Supervisor', 
-//   'SeniorManager', 'Manager', 'ViceManager'
-// ];
 
 export function SetPositionAllocateRule({ sha, seq, isFinalized, time, refresh }: RulesEditProps ) {
 
