@@ -149,7 +149,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
                   <Chip
                     variant='filled'
                     color='primary'
-                    label='RomKeeper'
+                    label='ROMKeeper'
                     sx={{width:120}}
                   />
 
@@ -162,7 +162,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
                   <Chip
                     variant={ dkOfRom == romKeeper ? 'filled' : 'outlined' }
                     color={ dkOfRom == romKeeper ? 'primary' : 'default' }
-                    label='KeeperOfRom'
+                    label='KeeperOfROM'
                     sx={{width:120}}
                   />
 
@@ -177,7 +177,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
                   <Chip
                     variant='filled'
                     color='success'
-                    label='RosKeeper'
+                    label='ROMKeeper'
                     sx={{width:120}}
                   />
 
@@ -190,7 +190,7 @@ export function TurnKey({ nextStep }:InitCompProps) {
                   <Chip
                     variant={ dkOfRos == romKeeper ? 'filled' : 'outlined' }
                     color={ dkOfRos == romKeeper ? 'success' : 'default' }
-                    label='KeeperOfRos'
+                    label='KeeperOfROS'
                     sx={{width:120}}
                   />
 
