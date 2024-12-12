@@ -211,6 +211,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       } 
 
       if (logs && logs.length > 0) {
+        logs = logs.map((v,i) => ({...v, seq:i}));
         setRecords(logs);
       }
 
