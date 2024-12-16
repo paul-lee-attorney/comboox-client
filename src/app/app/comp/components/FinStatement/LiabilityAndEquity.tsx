@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import { usePublicClient } from "wagmi";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { balanceOf, getTotalSupply } from "../../../rc";
+import { AddrOfTank } from "../../../common";
 
 
 export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
@@ -63,7 +64,9 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       if (!gk) return 0n;
 
       const cbpSupply = await getTotalSupply();
-      const cbpOfComp = await balanceOf(gk, rptBlkNo);
+      const cbpOfGK = await balanceOf(gk, rptBlkNo);
+      const cbpOfFT = await balanceOf(AddrOfTank, rptBlkNo);
+      const cbpOfComp = cbpOfGK + cbpOfFT;
 
       const output = cbpSupply - cbpOfComp;
 
