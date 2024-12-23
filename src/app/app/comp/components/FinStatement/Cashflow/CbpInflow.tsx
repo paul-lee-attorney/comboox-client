@@ -174,6 +174,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
+      console.log('arr in cbpInflow:', arr);
+
       if (arr.length > 0) {
         
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
@@ -192,6 +194,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       if (logs && logs.length > 0) {
         logs = logs.map((v,i) => ({...v, seq:i}));
         setRecords(logs);
+        console.log('logs in cbpInflow:', logs);
       }
       
     }

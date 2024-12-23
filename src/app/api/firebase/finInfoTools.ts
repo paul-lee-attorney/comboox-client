@@ -1,9 +1,8 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { HexType } from '../../app/common';
-import { CashflowProps } from '../../app/comp/components/FinStatement';
+import { Cashflow } from '../../app/comp/components/FinStatement';
 import { HexParser } from '../../app/common/toolsKit';
-import { getMonthRanges } from './ethPriceTools';
 
 
 export type CashflowStrProps = {
@@ -19,7 +18,7 @@ export type CashflowStrProps = {
   acct: string,
 }
 
-export function cashflowDataToString(input:CashflowProps[]): CashflowStrProps[] {
+export function cashflowDataToString(input:Cashflow[]): CashflowStrProps[] {
   let output = input.map(v=>({
     seq: v.seq.toString(),
     blockNumber: v.blockNumber.toString(),
@@ -36,11 +35,11 @@ export function cashflowDataToString(input:CashflowProps[]): CashflowStrProps[] 
   return output;
 }
 
-export function cashflowStringToData(input:CashflowStrProps[]): CashflowProps[] {
+export function cashflowStringToData(input:CashflowStrProps[]): Cashflow[] {
   let output = input.map(v=>({
     seq: Number(v.seq),
     blockNumber: BigInt(v.blockNumber),
-    timestamp: BigInt(v.timestamp),
+    timestamp: Number(v.timestamp),
     transactionHash: HexParser(v.transactionHash),
     typeOfIncome: v.typeOfIncome,
     amt: BigInt(v.amt),
@@ -53,7 +52,7 @@ export function cashflowStringToData(input:CashflowStrProps[]): CashflowProps[] 
   return output;
 }
 
-export async function getFinDataByMonth(gk: HexType, typeOfInfo:string, month:string): Promise<CashflowProps[] | undefined> {
+export async function getFinDataByMonth(gk: HexType, typeOfInfo:string, month:string): Promise<Cashflow[] | undefined> {
 
   // 获取特定文档
   const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, month);
@@ -68,8 +67,8 @@ export async function getFinDataByMonth(gk: HexType, typeOfInfo:string, month:st
   }
 }
 
-export async function getFinData(gk: HexType, typeOfInfo: string): Promise<CashflowProps[] | undefined> {
-  let output: CashflowProps[] = [];
+export async function getFinData(gk: HexType, typeOfInfo: string): Promise<Cashflow[] | undefined> {
+  let output: Cashflow[] = [];
 
   try {
     const monthCollRef = collection(db, gk.toLowerCase(), 'finInfo', typeOfInfo);
@@ -99,7 +98,7 @@ export async function getFinData(gk: HexType, typeOfInfo: string): Promise<Cashf
   }
 }
 
-export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:string, data:CashflowProps[]): Promise<boolean> {
+export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:string, data:Cashflow[]): Promise<boolean> {
 
   // 创建一个文档引用
   const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, month);
@@ -121,14 +120,14 @@ export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:st
     
     return true;
   } catch (error: any) {
-    console.error("Error fetching financial data: ", error);
+    console.error("Error set financial data: ", error);
     return false;
   }
 
 }
 
 
-export async function setFinData(gk: HexType, typeOfInfo:string, data:CashflowProps[]): Promise<boolean> {
+export async function setFinData(gk: HexType, typeOfInfo:string, data:Cashflow[]): Promise<boolean> {
 
   if (!data || data.length === 0) {
     console.log("No cashflow data to process.");
@@ -136,7 +135,7 @@ export async function setFinData(gk: HexType, typeOfInfo:string, data:CashflowPr
   }
 
   // Group the data by year and month
-  const groupedByMonth:{[key:string]:CashflowProps[]} = {};
+  const groupedByMonth:{[key:string]:Cashflow[]} = {};
 
   data.forEach(v => {
     const date = new Date(Number(v.timestamp) * 1000);  // Convert the timestamp to Date
