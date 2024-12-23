@@ -190,7 +190,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Additional Paid In Capital: ({ inETH
             ? weiToEth9Dec(ethInflow[3].capital - baseToWei(paidOfCap))
-            : showUSD(weiToDust(ethInflow[3].capital) - paidOfCap * 10n ** 14n)}) </b>
+            : showUSD(ethInflow[3].capitalInUsd - paidOfCap * 10n ** 14n)}) </b>
         </Button>
       </Stack>
 
