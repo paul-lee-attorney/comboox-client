@@ -4,7 +4,8 @@ import { MaxPrice } from "../../../common";
 import { DataGrid, GridColDef, GridEventListener } from "@mui/x-data-grid";
 import { baseToDollar, dateParser, defFormResults, FormResults, longSnParser, onlyInt } from "../../../common/toolsKit";
 import { DealProps } from "../loo";
-import { Refresh } from "@mui/icons-material";
+import { CloudDownloadOutlined, Refresh } from "@mui/icons-material";
+import { exportToExcel } from "../../../../api/dataTools";
 
 export interface DealsListProps {
   list: readonly DealProps[];
@@ -76,6 +77,24 @@ export function DealsList({list, qty, amt, refresh, setDeal, setShow}: DealsList
     },    
   ];
 
+  const exportData = ()=>{
+
+    const rows = list.map(v => ({
+      ...v,
+      blockNumber: longSnParser(v.blockNumber.toString()),
+      timestamp: dateParser(v.timestamp.toString()),
+      buyer: v.buyer,
+      paid: baseToDollar(v.paid.toString()),
+      price: baseToDollar(v.price.toString()),
+      value: baseToDollar((BigInt(v.paid) * BigInt(v.price) / 10000n).toString()),
+      consideration: baseToDollar((v.consideration / 10n ** 9n).toString()),
+    }));
+
+    const title = 'Deals List';
+
+    exportToExcel(rows, title);
+  }
+
   // const [ valid, setValid ] = useState<FormResults>(defFormResults);
 
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
@@ -111,43 +130,11 @@ export function DealsList({list, qty, amt, refresh, setDeal, setShow}: DealsList
           </IconButton>
         </Tooltip>
 
-        {/* <TextField 
-          variant='outlined'
-          size="small"
-          label='StartBlock'
-          error={ valid['StartBlock']?.error }
-          helperText={ valid['StartBlock']?.helpTx ?? ' ' }
-          sx={{
-            m:1, ml:20,
-            minWidth: 218,
-          }}
-          onChange={ e => {
-            let input = e.target.value;
-            onlyInt('StartBlock', input, MaxPrice, setValid);
-            setLeft(Number(input));
-          }}
-
-          value={ left.toString() } 
-        />
-
-        <TextField 
-          variant='outlined'
-          size="small"
-          label='EndBlock'
-          error={ valid['EndBlock']?.error }
-          helperText={ valid['EndBlock']?.helpTx ?? ' ' }
-          sx={{
-            m:1,
-            minWidth: 218,
-          }}
-          onChange={ e => {
-            let input = e.target.value;
-            onlyInt('EndBlock', input, MaxPrice, setValid);
-            setRight(Number(input));
-          }}
-
-          value={ right.toString() } 
-        /> */}
+        <Tooltip title='Export Data' placement="top" arrow >
+          <IconButton size="medium" sx={{m:1}} color="primary" onClick={()=>exportData()}>
+            <CloudDownloadOutlined />
+          </IconButton>
+        </Tooltip>
 
       </Stack>
 
@@ -160,6 +147,7 @@ export function DealsList({list, qty, amt, refresh, setDeal, setShow}: DealsList
         disableRowSelectionOnClick
         onRowClick={handleRowClick}
       />
+
     </Paper>
   );
 } 
