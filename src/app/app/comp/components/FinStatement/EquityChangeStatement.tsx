@@ -74,18 +74,27 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
   // ---- Cap Premium ----
   
-
   const getCapPremium = (type:number)=> {
     const paidCap = type == 1
-        ? baseToDust(opnClassA + opnClassB)
+        ? (opnClassA + opnClassB)
         : type == 2 
-            ? baseToDust(endClassA + endClassB - opnClassA - opnClassB) 
-            : baseToDust(endClassA + endClassB);
+            ? (endClassA + endClassB - opnClassA - opnClassB) 
+            : (endClassA + endClassB);
 
     const initContribution = getInitContribution(type, startDate, endDate);
 
     const inEth = ethInflow[type].capital + baseToWei(initContribution - paidCap);
     const inUsd = ethInflow[type].capitalInUsd + baseToDust(initContribution - paidCap);
+
+    return {inEth: inEth, inUsd: inUsd};
+  }
+
+  const getPaidInCap = (type:number)=> {
+
+    const initContribution = getInitContribution(type, startDate, endDate);
+
+    const inEth = ethInflow[type].capital + baseToWei(initContribution);
+    const inUsd = ethInflow[type].capitalInUsd + baseToDust(initContribution);
 
     return {inEth: inEth, inUsd: inUsd};
   }
@@ -329,8 +338,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   { inETH
-                    ? weiToEth9Dec(ownersEquity(2).inEth)
-                    : showUSD(ownersEquity(2).inUsd)} 
+                    ? weiToEth9Dec(getPaidInCap(2).inEth)
+                    : showUSD(getPaidInCap(2).inUsd)} 
                 </Typography>
               </TableCell>
 
