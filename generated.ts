@@ -4178,6 +4178,31 @@ export const fuelTankABI = [
     anonymous: false,
     inputs: [
       {
+        name: 'buyer',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amtOfEth',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'amtOfCbp',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'Refuel',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'owner',
         internalType: 'address',
         type: 'address',
@@ -4185,6 +4210,34 @@ export const fuelTankABI = [
       },
     ],
     name: 'SetNewOwner',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'WithdrawFuel',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'WithdrawIncome',
   },
   {
     stateMutability: 'view',
@@ -15899,6 +15952,26 @@ export const iRegisterOfMembersABI = [
     stateMutability: 'view',
     type: 'function',
     inputs: [],
+    name: 'ownersEquityHistory',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct Checkpoints.Checkpoint[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
     name: 'ownersPoints',
     outputs: [
       {
@@ -16035,6 +16108,123 @@ export const iRegisterOfMembersABI = [
       },
     ],
     name: 'removeShareFromMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'shares',
+        internalType: 'struct SharesRepo.Share[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'restoreSharesInRom',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'list',
+        internalType: 'struct TopChain.Node[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'prev', internalType: 'uint40', type: 'uint40' },
+          { name: 'next', internalType: 'uint40', type: 'uint40' },
+          { name: 'ptr', internalType: 'uint40', type: 'uint40' },
+          { name: 'amt', internalType: 'uint64', type: 'uint64' },
+          { name: 'sum', internalType: 'uint64', type: 'uint64' },
+          { name: 'cat', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+      {
+        name: 'para',
+        internalType: 'struct TopChain.Para',
+        type: 'tuple',
+        components: [
+          { name: 'tail', internalType: 'uint40', type: 'uint40' },
+          { name: 'head', internalType: 'uint40', type: 'uint40' },
+          { name: 'maxQtyOfMembers', internalType: 'uint32', type: 'uint32' },
+          {
+            name: 'minVoteRatioOnChain',
+            internalType: 'uint16',
+            type: 'uint16',
+          },
+          { name: 'qtyOfSticks', internalType: 'uint32', type: 'uint32' },
+          { name: 'qtyOfBranches', internalType: 'uint32', type: 'uint32' },
+          { name: 'qtyOfMembers', internalType: 'uint32', type: 'uint32' },
+          { name: 'para', internalType: 'uint16', type: 'uint16' },
+          { name: 'argu', internalType: 'uint16', type: 'uint16' },
+        ],
+      },
+    ],
+    name: 'restoreTopChainInRom',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'list',
+        internalType: 'struct Checkpoints.Checkpoint[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+      {
+        name: 'distrPts',
+        internalType: 'struct Checkpoints.Checkpoint',
+        type: 'tuple',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    name: 'restoreVotesHistoryInRom',
     outputs: [],
   },
   {
@@ -17733,6 +17923,27 @@ export const iRegisterOfSharesABI = [
     anonymous: false,
     inputs: [
       {
+        name: 'shareNumber',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'newShareNumber',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'par', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferShare',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'seqOfShare',
         internalType: 'uint256',
         type: 'uint256',
@@ -17958,6 +18169,13 @@ export const iRegisterOfSharesABI = [
     stateMutability: 'view',
     type: 'function',
     inputs: [],
+    name: 'getPremium',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
     name: 'getQtyOfShares',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
@@ -17991,6 +18209,49 @@ export const iRegisterOfSharesABI = [
     type: 'function',
     inputs: [{ name: 'seqOfShare', internalType: 'uint256', type: 'uint256' }],
     name: 'getShare',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SharesRepo.Share',
+        type: 'tuple',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getShareZero',
     outputs: [
       {
         name: '',
@@ -18188,6 +18449,84 @@ export const iRegisterOfSharesABI = [
       { name: 'hashKey', internalType: 'string', type: 'string' },
     ],
     name: 'requestPaidInCapital',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'shares',
+        internalType: 'struct SharesRepo.Share[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'classes',
+        internalType: 'struct SharesRepo.Share[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'restoreShares',
     outputs: [],
   },
   {
@@ -27629,6 +27968,26 @@ export const registerOfMembersABI = [
     stateMutability: 'view',
     type: 'function',
     inputs: [],
+    name: 'ownersEquityHistory',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct Checkpoints.Checkpoint[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
     name: 'ownersPoints',
     outputs: [
       {
@@ -27765,6 +28124,123 @@ export const registerOfMembersABI = [
       },
     ],
     name: 'removeShareFromMember',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'shares',
+        internalType: 'struct SharesRepo.Share[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'restoreSharesInRom',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'list',
+        internalType: 'struct TopChain.Node[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'prev', internalType: 'uint40', type: 'uint40' },
+          { name: 'next', internalType: 'uint40', type: 'uint40' },
+          { name: 'ptr', internalType: 'uint40', type: 'uint40' },
+          { name: 'amt', internalType: 'uint64', type: 'uint64' },
+          { name: 'sum', internalType: 'uint64', type: 'uint64' },
+          { name: 'cat', internalType: 'uint8', type: 'uint8' },
+        ],
+      },
+      {
+        name: 'para',
+        internalType: 'struct TopChain.Para',
+        type: 'tuple',
+        components: [
+          { name: 'tail', internalType: 'uint40', type: 'uint40' },
+          { name: 'head', internalType: 'uint40', type: 'uint40' },
+          { name: 'maxQtyOfMembers', internalType: 'uint32', type: 'uint32' },
+          {
+            name: 'minVoteRatioOnChain',
+            internalType: 'uint16',
+            type: 'uint16',
+          },
+          { name: 'qtyOfSticks', internalType: 'uint32', type: 'uint32' },
+          { name: 'qtyOfBranches', internalType: 'uint32', type: 'uint32' },
+          { name: 'qtyOfMembers', internalType: 'uint32', type: 'uint32' },
+          { name: 'para', internalType: 'uint16', type: 'uint16' },
+          { name: 'argu', internalType: 'uint16', type: 'uint16' },
+        ],
+      },
+    ],
+    name: 'restoreTopChainInRom',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'acct', internalType: 'uint256', type: 'uint256' },
+      {
+        name: 'list',
+        internalType: 'struct Checkpoints.Checkpoint[]',
+        type: 'tuple[]',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+      {
+        name: 'distrPts',
+        internalType: 'struct Checkpoints.Checkpoint',
+        type: 'tuple',
+        components: [
+          { name: 'timestamp', internalType: 'uint48', type: 'uint48' },
+          { name: 'rate', internalType: 'uint16', type: 'uint16' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'points', internalType: 'uint64', type: 'uint64' },
+        ],
+      },
+    ],
+    name: 'restoreVotesHistoryInRom',
     outputs: [],
   },
   {
@@ -29731,6 +30207,27 @@ export const registerOfSharesABI = [
     anonymous: false,
     inputs: [
       {
+        name: 'shareNumber',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      {
+        name: 'newShareNumber',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+      { name: 'paid', internalType: 'uint256', type: 'uint256', indexed: true },
+      { name: 'par', internalType: 'uint256', type: 'uint256', indexed: false },
+    ],
+    name: 'TransferShare',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
         name: 'seqOfShare',
         internalType: 'uint256',
         type: 'uint256',
@@ -29970,6 +30467,13 @@ export const registerOfSharesABI = [
     stateMutability: 'view',
     type: 'function',
     inputs: [],
+    name: 'getPremium',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
     name: 'getQtyOfShares',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
@@ -30010,6 +30514,49 @@ export const registerOfSharesABI = [
     type: 'function',
     inputs: [{ name: 'seqOfShare', internalType: 'uint256', type: 'uint256' }],
     name: 'getShare',
+    outputs: [
+      {
+        name: '',
+        internalType: 'struct SharesRepo.Share',
+        type: 'tuple',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+    ],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getShareZero',
     outputs: [
       {
         name: '',
@@ -30227,6 +30774,84 @@ export const registerOfSharesABI = [
       { name: 'hashKey', internalType: 'string', type: 'string' },
     ],
     name: 'requestPaidInCapital',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'shares',
+        internalType: 'struct SharesRepo.Share[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+      {
+        name: 'classes',
+        internalType: 'struct SharesRepo.Share[]',
+        type: 'tuple[]',
+        components: [
+          {
+            name: 'head',
+            internalType: 'struct SharesRepo.Head',
+            type: 'tuple',
+            components: [
+              { name: 'class', internalType: 'uint16', type: 'uint16' },
+              { name: 'seqOfShare', internalType: 'uint32', type: 'uint32' },
+              { name: 'preSeq', internalType: 'uint32', type: 'uint32' },
+              { name: 'issueDate', internalType: 'uint48', type: 'uint48' },
+              { name: 'shareholder', internalType: 'uint40', type: 'uint40' },
+              { name: 'priceOfPaid', internalType: 'uint32', type: 'uint32' },
+              { name: 'priceOfPar', internalType: 'uint32', type: 'uint32' },
+              { name: 'votingWeight', internalType: 'uint16', type: 'uint16' },
+              { name: 'argu', internalType: 'uint8', type: 'uint8' },
+            ],
+          },
+          {
+            name: 'body',
+            internalType: 'struct SharesRepo.Body',
+            type: 'tuple',
+            components: [
+              { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+              { name: 'paid', internalType: 'uint64', type: 'uint64' },
+              { name: 'par', internalType: 'uint64', type: 'uint64' },
+              { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+              { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+            ],
+          },
+        ],
+      },
+    ],
+    name: 'restoreShares',
     outputs: [],
   },
   {
@@ -31790,6 +32415,26 @@ export const sharesRepoABI = [
     ],
     name: 'codifyHead',
     outputs: [{ name: 'sn', internalType: 'bytes32', type: 'bytes32' }],
+  },
+  {
+    stateMutability: 'pure',
+    type: 'function',
+    inputs: [{ name: 'premium', internalType: 'uint256', type: 'uint256' }],
+    name: 'codifyPremium',
+    outputs: [
+      {
+        name: 'body',
+        internalType: 'struct SharesRepo.Body',
+        type: 'tuple',
+        components: [
+          { name: 'payInDeadline', internalType: 'uint48', type: 'uint48' },
+          { name: 'paid', internalType: 'uint64', type: 'uint64' },
+          { name: 'par', internalType: 'uint64', type: 'uint64' },
+          { name: 'cleanPaid', internalType: 'uint64', type: 'uint64' },
+          { name: 'distrWeight', internalType: 'uint16', type: 'uint16' },
+        ],
+      },
+    ],
   },
   {
     stateMutability: 'pure',
@@ -44036,6 +44681,22 @@ export function useFuelTankEvent<TEventName extends string>(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuelTankABI}__ and `eventName` set to `"Refuel"`.
+ */
+export function useFuelTankRefuelEvent(
+  config: Omit<
+    UseContractEventConfig<typeof fuelTankABI, 'Refuel'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: fuelTankABI,
+    eventName: 'Refuel',
+    ...config,
+  } as UseContractEventConfig<typeof fuelTankABI, 'Refuel'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuelTankABI}__ and `eventName` set to `"SetNewOwner"`.
  */
 export function useFuelTankSetNewOwnerEvent(
@@ -44049,6 +44710,38 @@ export function useFuelTankSetNewOwnerEvent(
     eventName: 'SetNewOwner',
     ...config,
   } as UseContractEventConfig<typeof fuelTankABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuelTankABI}__ and `eventName` set to `"WithdrawFuel"`.
+ */
+export function useFuelTankWithdrawFuelEvent(
+  config: Omit<
+    UseContractEventConfig<typeof fuelTankABI, 'WithdrawFuel'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: fuelTankABI,
+    eventName: 'WithdrawFuel',
+    ...config,
+  } as UseContractEventConfig<typeof fuelTankABI, 'WithdrawFuel'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link fuelTankABI}__ and `eventName` set to `"WithdrawIncome"`.
+ */
+export function useFuelTankWithdrawIncomeEvent(
+  config: Omit<
+    UseContractEventConfig<typeof fuelTankABI, 'WithdrawIncome'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: fuelTankABI,
+    eventName: 'WithdrawIncome',
+    ...config,
+  } as UseContractEventConfig<typeof fuelTankABI, 'WithdrawIncome'>)
 }
 
 /**
@@ -77445,6 +78138,33 @@ export function useIRegisterOfMembersOwnersEquity<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"ownersEquityHistory"`.
+ */
+export function useIRegisterOfMembersOwnersEquityHistory<
+  TFunctionName extends 'ownersEquityHistory',
+  TSelectData = ReadContractResult<typeof iRegisterOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iRegisterOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegisterOfMembersABI,
+    functionName: 'ownersEquityHistory',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iRegisterOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"ownersPoints"`.
  */
 export function useIRegisterOfMembersOwnersPoints<
@@ -78252,6 +78972,111 @@ export function useIRegisterOfMembersRemoveShareFromMember<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"restoreSharesInRom"`.
+ */
+export function useIRegisterOfMembersRestoreSharesInRom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegisterOfMembersABI,
+          'restoreSharesInRom'
+        >['request']['abi'],
+        'restoreSharesInRom',
+        TMode
+      > & { functionName?: 'restoreSharesInRom' }
+    : UseContractWriteConfig<
+        typeof iRegisterOfMembersABI,
+        'restoreSharesInRom',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreSharesInRom'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iRegisterOfMembersABI,
+    'restoreSharesInRom',
+    TMode
+  >({
+    abi: iRegisterOfMembersABI,
+    functionName: 'restoreSharesInRom',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"restoreTopChainInRom"`.
+ */
+export function useIRegisterOfMembersRestoreTopChainInRom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegisterOfMembersABI,
+          'restoreTopChainInRom'
+        >['request']['abi'],
+        'restoreTopChainInRom',
+        TMode
+      > & { functionName?: 'restoreTopChainInRom' }
+    : UseContractWriteConfig<
+        typeof iRegisterOfMembersABI,
+        'restoreTopChainInRom',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreTopChainInRom'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iRegisterOfMembersABI,
+    'restoreTopChainInRom',
+    TMode
+  >({
+    abi: iRegisterOfMembersABI,
+    functionName: 'restoreTopChainInRom',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"restoreVotesHistoryInRom"`.
+ */
+export function useIRegisterOfMembersRestoreVotesHistoryInRom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegisterOfMembersABI,
+          'restoreVotesHistoryInRom'
+        >['request']['abi'],
+        'restoreVotesHistoryInRom',
+        TMode
+      > & { functionName?: 'restoreVotesHistoryInRom' }
+    : UseContractWriteConfig<
+        typeof iRegisterOfMembersABI,
+        'restoreVotesHistoryInRom',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreVotesHistoryInRom'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof iRegisterOfMembersABI,
+    'restoreVotesHistoryInRom',
+    TMode
+  >({
+    abi: iRegisterOfMembersABI,
+    functionName: 'restoreVotesHistoryInRom',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"setMaxQtyOfMembers"`.
  */
 export function useIRegisterOfMembersSetMaxQtyOfMembers<
@@ -78512,6 +79337,72 @@ export function usePrepareIRegisterOfMembersRemoveShareFromMember(
   } as UsePrepareContractWriteConfig<
     typeof iRegisterOfMembersABI,
     'removeShareFromMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"restoreSharesInRom"`.
+ */
+export function usePrepareIRegisterOfMembersRestoreSharesInRom(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iRegisterOfMembersABI,
+      'restoreSharesInRom'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegisterOfMembersABI,
+    functionName: 'restoreSharesInRom',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iRegisterOfMembersABI,
+    'restoreSharesInRom'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"restoreTopChainInRom"`.
+ */
+export function usePrepareIRegisterOfMembersRestoreTopChainInRom(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iRegisterOfMembersABI,
+      'restoreTopChainInRom'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegisterOfMembersABI,
+    functionName: 'restoreTopChainInRom',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iRegisterOfMembersABI,
+    'restoreTopChainInRom'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfMembersABI}__ and `functionName` set to `"restoreVotesHistoryInRom"`.
+ */
+export function usePrepareIRegisterOfMembersRestoreVotesHistoryInRom(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof iRegisterOfMembersABI,
+      'restoreVotesHistoryInRom'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegisterOfMembersABI,
+    functionName: 'restoreVotesHistoryInRom',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iRegisterOfMembersABI,
+    'restoreVotesHistoryInRom'
   >)
 }
 
@@ -81156,6 +82047,33 @@ export function useIRegisterOfSharesGetLocksList<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"getPremium"`.
+ */
+export function useIRegisterOfSharesGetPremium<
+  TFunctionName extends 'getPremium',
+  TSelectData = ReadContractResult<typeof iRegisterOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iRegisterOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegisterOfSharesABI,
+    functionName: 'getPremium',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iRegisterOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"getQtyOfShares"`.
  */
 export function useIRegisterOfSharesGetQtyOfShares<
@@ -81282,6 +82200,33 @@ export function useIRegisterOfSharesGetShare<
   return useContractRead({
     abi: iRegisterOfSharesABI,
     functionName: 'getShare',
+    ...config,
+  } as UseContractReadConfig<
+    typeof iRegisterOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"getShareZero"`.
+ */
+export function useIRegisterOfSharesGetShareZero<
+  TFunctionName extends 'getShareZero',
+  TSelectData = ReadContractResult<typeof iRegisterOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof iRegisterOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iRegisterOfSharesABI,
+    functionName: 'getShareZero',
     ...config,
   } as UseContractReadConfig<
     typeof iRegisterOfSharesABI,
@@ -81693,6 +82638,37 @@ export function useIRegisterOfSharesRequestPaidInCapital<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"restoreShares"`.
+ */
+export function useIRegisterOfSharesRestoreShares<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iRegisterOfSharesABI,
+          'restoreShares'
+        >['request']['abi'],
+        'restoreShares',
+        TMode
+      > & { functionName?: 'restoreShares' }
+    : UseContractWriteConfig<
+        typeof iRegisterOfSharesABI,
+        'restoreShares',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreShares'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iRegisterOfSharesABI, 'restoreShares', TMode>({
+    abi: iRegisterOfSharesABI,
+    functionName: 'restoreShares',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"setPayInAmt"`.
  */
 export function useIRegisterOfSharesSetPayInAmt<
@@ -82039,6 +83015,25 @@ export function usePrepareIRegisterOfSharesRequestPaidInCapital(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"restoreShares"`.
+ */
+export function usePrepareIRegisterOfSharesRestoreShares(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iRegisterOfSharesABI, 'restoreShares'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iRegisterOfSharesABI,
+    functionName: 'restoreShares',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof iRegisterOfSharesABI,
+    'restoreShares'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `functionName` set to `"setPayInAmt"`.
  */
 export function usePrepareIRegisterOfSharesSetPayInAmt(
@@ -82292,6 +83287,22 @@ export function useIRegisterOfSharesSubAmountFromShareEvent(
     typeof iRegisterOfSharesABI,
     'SubAmountFromShare'
   >)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iRegisterOfSharesABI}__ and `eventName` set to `"TransferShare"`.
+ */
+export function useIRegisterOfSharesTransferShareEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iRegisterOfSharesABI, 'TransferShare'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iRegisterOfSharesABI,
+    eventName: 'TransferShare',
+    ...config,
+  } as UseContractEventConfig<typeof iRegisterOfSharesABI, 'TransferShare'>)
 }
 
 /**
@@ -108531,6 +109542,33 @@ export function useRegisterOfMembersOwnersEquity<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"ownersEquityHistory"`.
+ */
+export function useRegisterOfMembersOwnersEquityHistory<
+  TFunctionName extends 'ownersEquityHistory',
+  TSelectData = ReadContractResult<typeof registerOfMembersABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfMembersABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfMembersABI,
+    functionName: 'ownersEquityHistory',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfMembersABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"ownersPoints"`.
  */
 export function useRegisterOfMembersOwnersPoints<
@@ -109396,6 +110434,111 @@ export function useRegisterOfMembersRemoveShareFromMember<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"restoreSharesInRom"`.
+ */
+export function useRegisterOfMembersRestoreSharesInRom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfMembersABI,
+          'restoreSharesInRom'
+        >['request']['abi'],
+        'restoreSharesInRom',
+        TMode
+      > & { functionName?: 'restoreSharesInRom' }
+    : UseContractWriteConfig<
+        typeof registerOfMembersABI,
+        'restoreSharesInRom',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreSharesInRom'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof registerOfMembersABI,
+    'restoreSharesInRom',
+    TMode
+  >({
+    abi: registerOfMembersABI,
+    functionName: 'restoreSharesInRom',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"restoreTopChainInRom"`.
+ */
+export function useRegisterOfMembersRestoreTopChainInRom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfMembersABI,
+          'restoreTopChainInRom'
+        >['request']['abi'],
+        'restoreTopChainInRom',
+        TMode
+      > & { functionName?: 'restoreTopChainInRom' }
+    : UseContractWriteConfig<
+        typeof registerOfMembersABI,
+        'restoreTopChainInRom',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreTopChainInRom'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof registerOfMembersABI,
+    'restoreTopChainInRom',
+    TMode
+  >({
+    abi: registerOfMembersABI,
+    functionName: 'restoreTopChainInRom',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"restoreVotesHistoryInRom"`.
+ */
+export function useRegisterOfMembersRestoreVotesHistoryInRom<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfMembersABI,
+          'restoreVotesHistoryInRom'
+        >['request']['abi'],
+        'restoreVotesHistoryInRom',
+        TMode
+      > & { functionName?: 'restoreVotesHistoryInRom' }
+    : UseContractWriteConfig<
+        typeof registerOfMembersABI,
+        'restoreVotesHistoryInRom',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreVotesHistoryInRom'
+      } = {} as any,
+) {
+  return useContractWrite<
+    typeof registerOfMembersABI,
+    'restoreVotesHistoryInRom',
+    TMode
+  >({
+    abi: registerOfMembersABI,
+    functionName: 'restoreVotesHistoryInRom',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"setDirectKeeper"`.
  */
 export function useRegisterOfMembersSetDirectKeeper<
@@ -109815,6 +110958,72 @@ export function usePrepareRegisterOfMembersRemoveShareFromMember(
   } as UsePrepareContractWriteConfig<
     typeof registerOfMembersABI,
     'removeShareFromMember'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"restoreSharesInRom"`.
+ */
+export function usePrepareRegisterOfMembersRestoreSharesInRom(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof registerOfMembersABI,
+      'restoreSharesInRom'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfMembersABI,
+    functionName: 'restoreSharesInRom',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfMembersABI,
+    'restoreSharesInRom'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"restoreTopChainInRom"`.
+ */
+export function usePrepareRegisterOfMembersRestoreTopChainInRom(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof registerOfMembersABI,
+      'restoreTopChainInRom'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfMembersABI,
+    functionName: 'restoreTopChainInRom',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfMembersABI,
+    'restoreTopChainInRom'
+  >)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfMembersABI}__ and `functionName` set to `"restoreVotesHistoryInRom"`.
+ */
+export function usePrepareRegisterOfMembersRestoreVotesHistoryInRom(
+  config: Omit<
+    UsePrepareContractWriteConfig<
+      typeof registerOfMembersABI,
+      'restoreVotesHistoryInRom'
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfMembersABI,
+    functionName: 'restoreVotesHistoryInRom',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfMembersABI,
+    'restoreVotesHistoryInRom'
   >)
 }
 
@@ -113440,6 +114649,33 @@ export function useRegisterOfSharesGetOwner<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"getPremium"`.
+ */
+export function useRegisterOfSharesGetPremium<
+  TFunctionName extends 'getPremium',
+  TSelectData = ReadContractResult<typeof registerOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfSharesABI,
+    functionName: 'getPremium',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"getQtyOfShares"`.
  */
 export function useRegisterOfSharesGetQtyOfShares<
@@ -113593,6 +114829,33 @@ export function useRegisterOfSharesGetShare<
   return useContractRead({
     abi: registerOfSharesABI,
     functionName: 'getShare',
+    ...config,
+  } as UseContractReadConfig<
+    typeof registerOfSharesABI,
+    TFunctionName,
+    TSelectData
+  >)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"getShareZero"`.
+ */
+export function useRegisterOfSharesGetShareZero<
+  TFunctionName extends 'getShareZero',
+  TSelectData = ReadContractResult<typeof registerOfSharesABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<
+      typeof registerOfSharesABI,
+      TFunctionName,
+      TSelectData
+    >,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: registerOfSharesABI,
+    functionName: 'getShareZero',
     ...config,
   } as UseContractReadConfig<
     typeof registerOfSharesABI,
@@ -114055,6 +115318,37 @@ export function useRegisterOfSharesRequestPaidInCapital<
   >({
     abi: registerOfSharesABI,
     functionName: 'requestPaidInCapital',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"restoreShares"`.
+ */
+export function useRegisterOfSharesRestoreShares<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof registerOfSharesABI,
+          'restoreShares'
+        >['request']['abi'],
+        'restoreShares',
+        TMode
+      > & { functionName?: 'restoreShares' }
+    : UseContractWriteConfig<
+        typeof registerOfSharesABI,
+        'restoreShares',
+        TMode
+      > & {
+        abi?: never
+        functionName?: 'restoreShares'
+      } = {} as any,
+) {
+  return useContractWrite<typeof registerOfSharesABI, 'restoreShares', TMode>({
+    abi: registerOfSharesABI,
+    functionName: 'restoreShares',
     ...config,
   } as any)
 }
@@ -114557,6 +115851,25 @@ export function usePrepareRegisterOfSharesRequestPaidInCapital(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"restoreShares"`.
+ */
+export function usePrepareRegisterOfSharesRestoreShares(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof registerOfSharesABI, 'restoreShares'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: registerOfSharesABI,
+    functionName: 'restoreShares',
+    ...config,
+  } as UsePrepareContractWriteConfig<
+    typeof registerOfSharesABI,
+    'restoreShares'
+  >)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link registerOfSharesABI}__ and `functionName` set to `"setDirectKeeper"`.
  */
 export function usePrepareRegisterOfSharesSetDirectKeeper(
@@ -114922,6 +116235,22 @@ export function useRegisterOfSharesSubAmountFromShareEvent(
     eventName: 'SubAmountFromShare',
     ...config,
   } as UseContractEventConfig<typeof registerOfSharesABI, 'SubAmountFromShare'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link registerOfSharesABI}__ and `eventName` set to `"TransferShare"`.
+ */
+export function useRegisterOfSharesTransferShareEvent(
+  config: Omit<
+    UseContractEventConfig<typeof registerOfSharesABI, 'TransferShare'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: registerOfSharesABI,
+    eventName: 'TransferShare',
+    ...config,
+  } as UseContractEventConfig<typeof registerOfSharesABI, 'TransferShare'>)
 }
 
 /**
@@ -119513,6 +120842,25 @@ export function useSharesRepoCodifyHead<
   return useContractRead({
     abi: sharesRepoABI,
     functionName: 'codifyHead',
+    ...config,
+  } as UseContractReadConfig<typeof sharesRepoABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link sharesRepoABI}__ and `functionName` set to `"codifyPremium"`.
+ */
+export function useSharesRepoCodifyPremium<
+  TFunctionName extends 'codifyPremium',
+  TSelectData = ReadContractResult<typeof sharesRepoABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof sharesRepoABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: sharesRepoABI,
+    functionName: 'codifyPremium',
     ...config,
   } as UseContractReadConfig<typeof sharesRepoABI, TFunctionName, TSelectData>)
 }

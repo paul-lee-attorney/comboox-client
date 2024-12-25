@@ -1,6 +1,5 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
-import { baseToDollar } from "../../../common/toolsKit";
 import { FtCbpflowSum } from "./Cashflow/FtCbpflow";
 import { IncomeStatementProps } from "./IncomeStatement";
 import { FtEthflowSum } from "./Cashflow/FtEthflow";
@@ -14,23 +13,6 @@ export interface CryptoflowStatementProps extends IncomeStatementProps {
 
 
 export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, ftCbpflow, ftEthflow, deposits}: CryptoflowStatementProps) {
-
-  const cbpToETH = (cbp:bigint) => {
-    return cbp * 10000n / exRate;
-  }
-
-  const weiToBP = (eth:bigint) => {
-    return eth * 100n / centPrice;
-  }
-
-  const weiToDust = (eth:bigint) => {
-    return eth * 10n ** 16n / centPrice;
-  }
-
-  const weiToUSD = (eth:bigint) => {
-    return baseToDollar(weiToBP(eth).toString()) + ' USD';
-  }
-
   
   // ==== Oerating Activity ====
 

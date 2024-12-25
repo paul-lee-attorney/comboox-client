@@ -1,5 +1,5 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
+import { baseToDust, showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
 import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
 import { usePublicClient } from "wagmi";
@@ -15,16 +15,18 @@ export interface AssetsProps extends StatementProps {
 
 export const setUpDate = Math.floor((new Date('2026-12-31T23:59:59Z')).getTime()/1000);
 const fullLifeHrs = 15n * 365n * 86400n;
+const iprValue = 30n * 10n ** 8n;
 
-export const getInitContribution = (type:number, startDate:number, endDate: number, centPrice: bigint) => {
+export const getInitContribution = (type:number, startDate:number, endDate: number) => {
+
   return type > 1 
-      ? endDate >= setUpDate  ? 3n * 10n ** 7n * centPrice : 0n
-      : startDate >= setUpDate ? 3n * 10n ** 7n * centPrice : 0n;
+      ? endDate >= setUpDate ? iprValue : 0n
+      : startDate >= setUpDate ? iprValue : 0n;
 }
 
-export const getArmotization = (type:number, startDate: number, endDate: number, centPrice: bigint) => {
+export const getArmotization = (type:number, startDate: number, endDate: number) => {
 
-  const initContribution = getInitContribution(type, startDate, endDate, centPrice);
+  const initContribution = getInitContribution(type, startDate, endDate);
 
   let daysOfPeriod = 0n;
 
@@ -60,9 +62,12 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
     return eth * 10n ** 16n / centPrice;
   }
 
+  const baseToWei = (usd:bigint) => {
+    return usd * centPrice / 100n;
+  }
   // ---- IPR ----
 
-  const initContribution = getInitContribution(3, startDate, endDate, centPrice);
+  const initContribution = getInitContribution(3, startDate, endDate);
 
   const daysToStart = startDate >= setUpDate 
   ? BigInt(startDate - setUpDate)
@@ -70,7 +75,7 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
 
   const beginValueOfIPR = initContribution * (fullLifeHrs - daysToStart) / fullLifeHrs;
 
-  const armotization = getArmotization(2, startDate, endDate, centPrice);
+  const armotization = getArmotization(2, startDate, endDate);
 
   const netValueOfIPR = beginValueOfIPR - armotization;
 
@@ -107,8 +112,8 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
   }, [rptBlkNo, gk, client]);
 
   const totalAssets = ()=>{
-    const inEth = netValueOfIPR + ethOfComp;
-    const inUsd = weiToDust(netValueOfIPR + ethOfComp);
+    const inEth = baseToWei(netValueOfIPR) + ethOfComp;
+    const inUsd = baseToDust(netValueOfIPR) + weiToDust(ethOfComp);
 
     return({inEth:inEth, inUsd:inUsd});
   }
@@ -131,8 +136,8 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
           <b>Beginning Value of IPR: ({inETH 
-            ? weiToEth9Dec(beginValueOfIPR) 
-            : showUSD(weiToDust(beginValueOfIPR)) })</b>
+            ? weiToEth9Dec(baseToWei(beginValueOfIPR)) 
+            : showUSD(baseToDust(beginValueOfIPR)) })</b>
         </Button>
       </Stack>
 
@@ -142,8 +147,8 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
           <b>Amortization: ({ inETH 
-            ? weiToEth9Dec(armotization) 
-            : showUSD(weiToDust(armotization))}) </b>
+            ? weiToEth9Dec(baseToWei(armotization)) 
+            : showUSD(baseToDust(armotization))}) </b>
         </Button>
       </Stack>
 
@@ -153,8 +158,8 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Net Value Of IPR: ({ inETH 
-            ? weiToEth9Dec(netValueOfIPR) 
-            : showUSD(weiToDust(netValueOfIPR))}) </b>
+            ? weiToEth9Dec(baseToWei(netValueOfIPR)) 
+            : showUSD(baseToDust(netValueOfIPR))}) </b>
         </Button>
       </Stack>
 

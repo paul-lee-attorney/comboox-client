@@ -46,7 +46,7 @@ export const getEBITDA = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpO
 
 export const getProfits = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint)=>{
 
-  const armotization = getArmotization(type, startDate, endDate, centPrice);
+  const armotization = getArmotization(type, startDate, endDate);
 
   const ebitda = getEBITDA(type,cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
@@ -90,7 +90,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
     return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
 
-  const armotization = getArmotization(2, startDate, endDate, centPrice);
+  const armotization = getArmotization(2, startDate, endDate);
 
   const sgNa = getSGNA(2, ethOutflow, cbpOutflow, cbpToETH);
   const exchangeGainLoss = getOpExchangeGainLoss(2, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
@@ -99,11 +99,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
 
   const profits = getProfits(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
-  const retainedEarnings = getRetainedEarnings(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust)
-
-  // onClick={()=>showRoyaltyRecords()} 
-  // onClick={()=>showOtherIncomeRecords()}
-  // onClick={()=>displaySGNA()}
+  const retainedEarnings = getRetainedEarnings(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   return(
 

@@ -1,13 +1,12 @@
 import { Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typography } from "@mui/material";
-import { showUSD } from "../FinStatement";
-import { baseToDollar } from "../../../common/toolsKit";
-import { getProfits, getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
+import { showUSD, weiToEth9Dec } from "../FinStatement";
+import { getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
 import { useEffect, useState } from "react";
 import { capAtDate } from "../../rom/rom";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
-import { getInitContribution, setUpDate } from "./Assets";
+import {  getInitContribution, setUpDate } from "./Assets";
 import { getOwnersEquity } from "./LiabilityAndEquity";
 
 export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow}: IncomeStatementProps) {
@@ -18,82 +17,83 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
     return cbp * 10000n / exRate;
   }
 
-  const weiToBP = (eth:bigint) => {
-    return eth * 100n / centPrice;
-  }
-
   const weiToDust = (eth:bigint) => {
     return eth * 10n ** 16n / centPrice;
   }
 
-  const weiToUSD = (eth:bigint) => {
-    return baseToDollar(weiToBP(eth).toString()) + ' USD';
+  const baseToWei = (bp:bigint) => {
+    return bp * centPrice / 100n;
+  }
+
+  const baseToDust = (usd:bigint) => {
+    return usd * 10n ** 14n;
   }
 
   // ---- Cap ----
 
-  const [ openningCap, setOpenningCap ] = useState(0n);
-  const [ endingCap, setEndingCap ] = useState(0n);
+  const [ opnClassA, setOpnClassA ] = useState(0n);
+  const [ opnClassB, setOpnClassB ] = useState(0n);
+  const [ endClassA, setEndClassA ] = useState(0n);
+  const [ endClassB, setEndClassB ] = useState(0n);
 
   const client = usePublicClient();
 
   useEffect(()=>{
 
-    const getPaidCap = async ()=>{
+    const getPaidCap = async () =>{
       if (!boox) return;
+
+      const blk = await client.getBlock();
+      const curTime = Number(blk.timestamp);
+
+      if (startDate > endDate || endDate > curTime) return;
+
+      const initClassA = 25n*10n**8n;
+
+      const opnCap = await capAtDate(boox[booxMap.ROM], startDate);
+      const endCap = await capAtDate(boox[booxMap.ROM], endDate);
+
+      if (endDate < setUpDate) {
+        setOpnClassB(opnCap.paid);
+        setEndClassB(endCap.paid);
+      } else if (startDate < setUpDate && endDate >= setUpDate) {
+        setOpnClassB(opnCap.paid);
+        setEndClassA(initClassA);
+        setEndClassB(endCap.paid - initClassA);
+      } if (startDate >= setUpDate) {
+        setOpnClassA(initClassA);
+        setOpnClassB(opnCap.paid - initClassA);
+        setEndClassA(initClassA);
+        setEndClassB(endCap.paid - initClassA);
+      }
       
-      if (startDate > endDate) return;
-
-      const systemDate = (new Date('2024-09-12T17:00:00Z')).getTime()/1000;
-
-      const initCap = 3n*10n**9n;
-
-      if (startDate < systemDate && startDate >= setUpDate) {
-        setOpenningCap(initCap);
-      } else if( startDate >= systemDate ) {
-        let begCap = await capAtDate(boox[booxMap.ROM], startDate);
-        if (begCap.paid > 0n) setOpenningCap(begCap.paid);
-      } else {
-        setOpenningCap(0n);
-      }
-
-      if (endDate < systemDate && endDate >= setUpDate) {
-        setEndingCap(initCap);
-      } else if (endDate >= systemDate) {
-
-        let blk = await client.getBlock();
-        let curTime = Number(blk.timestamp);
-
-        let endCap = await capAtDate(boox[booxMap.ROM], endDate >= curTime ? curTime : endDate);
-        if (endCap.paid > 0n) setEndingCap(endCap.paid);
-      } else {
-        setEndingCap(0n);
-      }
     }
 
     getPaidCap();
   }, [startDate, endDate, client, boox]);
 
-
-  // ---- IPR ----
-
+  // ---- Cap Premium ----
   
+
   const getCapPremium = (type:number)=> {
     const paidCap = type == 1
-        ? openningCap * 10n ** 14n
-        : type == 2 ? (endingCap - openningCap) * 10n ** 14n : endingCap * 10n ** 14n;
+        ? baseToDust(opnClassA + opnClassB)
+        : type == 2 
+            ? baseToDust(endClassA + endClassB - opnClassA - opnClassB) 
+            : baseToDust(endClassA + endClassB);
 
-    const initContribution = getInitContribution(type, startDate, endDate, centPrice);
+    const initContribution = getInitContribution(type, startDate, endDate);
 
-    return ethInflow[type].capitalInUsd - paidCap + weiToDust(initContribution);
+    const inEth = ethInflow[type].capital + baseToWei(initContribution - paidCap);
+    const inUsd = ethInflow[type].capitalInUsd + baseToDust(initContribution - paidCap);
+
+    return {inEth: inEth, inUsd: inUsd};
   }
-
-  const profits = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
 
-  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, baseToWei, weiToDust);
 
   return(
 
@@ -122,12 +122,17 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               </TableCell>
               <TableCell>
                 <Typography variant='body1'>
-                  <b>Share Capital</b>
+                  <b>Class A (Paid In Capital)</b>
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant='body1'>
-                  <b>Share Premium</b>
+                  <b>Class B (Paid In Capital)</b>
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant='body1'>
+                  <b>Additional Paid In Capital</b>
                 </Typography>
               </TableCell>
               <TableCell>
@@ -155,25 +160,41 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { baseToDollar(openningCap.toString()) } 
+                  { inETH
+                    ? weiToEth9Dec(baseToWei(opnClassA))
+                    : showUSD(baseToDust(opnClassA)) }
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(getCapPremium(1))} 
+                { inETH
+                    ? weiToEth9Dec(baseToWei(opnClassB))
+                    : showUSD(baseToDust(opnClassB)) }
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(retainedEarnings(1).inUsd)} 
+                  { inETH
+                    ? weiToEth9Dec(getCapPremium(1).inEth)
+                    : showUSD(getCapPremium(1).inUsd) }
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(ownersEquity(1).inUsd)} 
+                  { inETH
+                    ? weiToEth9Dec(retainedEarnings(1).inEth)
+                    : showUSD(retainedEarnings(1).inUsd) }
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                  { inETH
+                    ? weiToEth9Dec(ownersEquity(1).inEth)
+                    : showUSD(ownersEquity(1).inUsd) }
                 </Typography>
               </TableCell>
 
@@ -201,13 +222,23 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(profits(2).inUsd)} 
+                  -
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                { showUSD(profits(2).inUsd)} 
+                  { inETH
+                    ? weiToEth9Dec(retainedEarnings(2).inEth)
+                    : showUSD(retainedEarnings(2).inUsd) }
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                  { inETH
+                    ? weiToEth9Dec(retainedEarnings(2).inEth)
+                    : showUSD(retainedEarnings(2).inUsd) }
                 </Typography>
               </TableCell>
 
@@ -217,7 +248,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               
               <TableCell>
                 <Typography variant='body1'>
-                  <b>Dividends Paid</b>  
+                  <b>Dividends Paid</b>
                 </Typography>
               </TableCell>
 
@@ -235,13 +266,23 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  -{ showUSD(ethOutflow[2].distributionInUsd)} 
+                  -
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                -{ showUSD(ethOutflow[2].distributionInUsd)} 
+                  -{  inETH
+                      ? weiToEth9Dec(ethOutflow[2].distribution)
+                      : showUSD(ethOutflow[2].distributionInUsd) } 
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                  -{  inETH
+                      ? weiToEth9Dec(ethOutflow[2].distribution)
+                      : showUSD(ethOutflow[2].distributionInUsd) } 
                 </Typography>
               </TableCell>
 
@@ -257,13 +298,25 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                { baseToDollar((endingCap - openningCap).toString())} 
+                { inETH
+                  ? weiToEth9Dec(baseToWei(endClassA - opnClassA))
+                  : showUSD(baseToDust(endClassA - opnClassA)) } 
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(getCapPremium(2))}
+                { inETH
+                  ? weiToEth9Dec(baseToWei(endClassB - opnClassB))
+                  : showUSD(baseToDust(endClassB - opnClassB)) } 
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                { inETH
+                  ? weiToEth9Dec(getCapPremium(2).inEth)
+                  : showUSD(getCapPremium(2).inUsd) } 
                 </Typography>
               </TableCell>
 
@@ -275,7 +328,9 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(ethInflow[2].capitalInUsd)} 
+                  { inETH
+                    ? weiToEth9Dec(ownersEquity(2).inEth)
+                    : showUSD(ownersEquity(2).inUsd)} 
                 </Typography>
               </TableCell>
 
@@ -291,25 +346,41 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
-                  {baseToDollar(endingCap.toString())} 
+                  { inETH
+                    ? weiToEth9Dec(baseToWei(endClassA))
+                    : showUSD(baseToDust(endClassA)) }
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(getCapPremium(3))}
+                  { inETH
+                    ? weiToEth9Dec(baseToWei(endClassB))
+                    : showUSD(baseToDust(endClassB)) }
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                   { showUSD(retainedEarnings(3).inUsd)}
+                  { inETH
+                    ? weiToEth9Dec(getCapPremium(3).inEth)
+                    : showUSD(getCapPremium(3).inUsd)}
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
-                  { showUSD(ownersEquity(3).inUsd)} 
+                  { inETH
+                    ? weiToEth9Dec(retainedEarnings(3).inEth)
+                    : showUSD(retainedEarnings(3).inUsd)}
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                { inETH
+                    ? weiToEth9Dec(ownersEquity(3).inEth)
+                    : showUSD(ownersEquity(3).inUsd) }
                 </Typography>
               </TableCell>
 

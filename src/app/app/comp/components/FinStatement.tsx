@@ -80,6 +80,10 @@ export const weiToEth9Dec = (eth:bigint) => {
   return bigIntToNum(eth / 10n**9n, 9) + ' ETH';
 }
 
+export const baseToDust = (usd:bigint) => {
+  return usd * 10n ** 14n;
+}
+
 export interface StatementProps {
   inETH: boolean,
   startDate: number,
@@ -251,10 +255,6 @@ export function FinStatement() {
 
   // ==== Calculation ====
 
-  const weiToBP = (eth:bigint) => {
-    return eth * 100n / centPrice;
-  }
-
   const weiToDust = (eth:bigint) => {
     return eth * 10n ** 16n / centPrice;
   }
@@ -262,11 +262,7 @@ export function FinStatement() {
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
   }
-  
-  const weiToUSD = (eth:bigint) => {
-    return baseToDollar(weiToBP(eth).toString()) + ' USD';
-  }
- 
+   
   // ==== Breakdown Display ====
 
   const [ items, setItems ] = useState<BtnProps[]>([]);

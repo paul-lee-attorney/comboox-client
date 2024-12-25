@@ -1,5 +1,5 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
-import { showUSD, weiToEth9Dec } from "../FinStatement";
+import { baseToDust, showUSD, weiToEth9Dec } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
 import { getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
 import { getInitContribution } from "./Assets";
@@ -22,24 +22,20 @@ export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOut
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export const getOwnersEquity = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint ) => {
+export const getOwnersEquity = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, baseToWei:(usd:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint ) => {
 
-  const initContribution = getInitContribution(type, startDate, endDate, centPrice);
+  const initContribution = getInitContribution(type, startDate, endDate);
 
   const retainedEarnings = getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
-  const inEth = initContribution + ethInflow[type].capital + retainedEarnings.inEth;
+  const inEth = baseToWei(initContribution) + ethInflow[type].capital + retainedEarnings.inEth;
 
-  const inUsd = weiToDust(initContribution) + weiToDust(ethInflow[type].capital) + retainedEarnings.inUsd;
+  const inUsd = baseToDust(initContribution) + weiToDust(ethInflow[type].capital) + retainedEarnings.inUsd;
 
   return ({inEth:inEth, inUsd:inUsd});
 }
 
 export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, rptBlkNo, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow}: IncomeStatementProps) {
-
-  const weiToBP = (eth:bigint) => {
-    return eth * 100n / centPrice;
-  }
 
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
@@ -47,10 +43,6 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   const weiToDust = (eth:bigint) => {
     return eth * 10n ** 16n / centPrice;
-  }
-
-  const weiToUSD = (eth:bigint) => {
-    return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
 
   const baseToWei = (base:bigint) => {
@@ -108,13 +100,13 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   // ==== Profits & Loss ====
 
-  const initContribution = getInitContribution(3, startDate, endDate, centPrice);
+  const initContribution = getInitContribution(3, startDate, endDate);
 
   const retainedEarnings = getRetainedEarnings(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
 
   // ==== Owners Equity ====
 
-  const ownersEquity = getOwnersEquity(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const ownersEquity = getOwnersEquity(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, baseToWei, weiToDust);
 
   return(
     <Paper elevation={3} 
@@ -189,8 +181,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Additional Paid In Capital: ({ inETH
-            ? weiToEth9Dec(ethInflow[3].capital + initContribution - baseToWei(paidOfCap))
-            : showUSD(ethInflow[3].capitalInUsd + weiToDust(initContribution) - paidOfCap * 10n ** 14n)}) </b>
+            ? weiToEth9Dec(ethInflow[3].capital + baseToWei(initContribution - paidOfCap))
+            : showUSD(ethInflow[3].capitalInUsd + baseToDust(initContribution - paidOfCap))}) </b>
         </Button>
       </Stack>
 

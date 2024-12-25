@@ -283,6 +283,19 @@ export async function getSharesOfClass(ros: HexType, classOfShare: string): Prom
   return list;
 }
 
+export async function getPremium(ros: HexType): Promise<bigint>{
+
+  let res = await readContract({
+    address: ros,
+    abi: registerOfSharesABI,
+    functionName: 'getPremium',
+  })
+  
+  return res;
+}
+
+
+
 // ==== PayInCap ====
 
 export async function getLocker(ros: HexType, hashLock: HexType): Promise<StrLocker>{
