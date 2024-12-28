@@ -91,7 +91,7 @@ export async function getRoyaltySource(txHash:HexType): Promise<RoyaltySource> {
     let len = calls.length;
     for (let i=0; i<len; i++) {
       const v = calls[i];
-      if (v.to == AddrOfRegCenter.toLowerCase() && v.input?.substring(0, 10) == "0xdf1a1490") {
+      if (v.to == AddrOfRegCenter.toLowerCase() && v.input.substring(0, 10) == "0xdf1a1490") {
         rs.input = HexParser(data.result.input);
         rs.target = HexParser(v.from);
         break;
