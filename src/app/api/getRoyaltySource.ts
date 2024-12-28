@@ -21,12 +21,12 @@ export function getFuncNameByPayload(payload:HexType):string {
 
   try {
     const parsed = iface.parseTransaction({data: payload});
-    console.log('func name:', parsed?.name);
+    // console.log('func name:', parsed?.name);
     if (parsed?.name) res = parsed.name;
   } catch(err:any) {
     console.log('failed to parse payload:', err.message);
   }
-  console.log('res of funcName: ', res);
+  // console.log('res of funcName: ', res);
   return res;
 }
 
@@ -84,9 +84,9 @@ export async function getRoyaltySource(txHash:HexType): Promise<RoyaltySource> {
     };
 
     const data = await response.json();
-    console.log('data:', data, '\n');
+    // console.log('data:', data, '\n');
     const calls:Call[] = data.result.calls[0].calls[0].calls[0].calls;
-    console.log('calls: ', calls, '\n');
+    // console.log('calls: ', calls, '\n');
 
     let len = calls.length;
     for (let i=0; i<len; i++) {
@@ -110,7 +110,7 @@ export async function getRoyaltySource(txHash:HexType): Promise<RoyaltySource> {
     rs.api = getFuncNameByPayload(rs.input);
   }
 
-  console.log('rs: ', rs, '\n');
+  // console.log('rs: ', rs, '\n');
 
   return rs;
 }

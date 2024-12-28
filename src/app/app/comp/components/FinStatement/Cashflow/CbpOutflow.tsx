@@ -92,8 +92,8 @@ export const updateCbpOutflowSum = (arr: Cashflow[], startDate:number, endDate:n
     sum[3] = sumArrayOfCbpOutflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('cbpOutflow range:', startDate, endDate);
-  console.log('cbpOutflow:', sum);
+  // console.log('cbpOutflow range:', startDate, endDate);
+  // console.log('cbpOutflow:', sum);
   return sum;
 }
 
@@ -114,7 +114,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'cbpOutflow');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('lastItemOfCbpOutflow: ', lastBlkNum);
+      // console.log('lastItemOfCbpOutflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -147,7 +147,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
     
       newUserAwardLogs = newUserAwardLogs.filter(v => (v.blockNumber > lastBlkNum) &&
           v.args.to?.toLowerCase() != gk.toLowerCase());
-      console.log('newUserAwardlogs: ', newUserAwardLogs);
+      // console.log('newUserAwardlogs: ', newUserAwardLogs);
 
       let len = newUserAwardLogs.length;
       let cnt = 0;
@@ -191,7 +191,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       fuelSoldLogs = fuelSoldLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('fuelSoldLogs: ')
+      // console.log('fuelSoldLogs: ')
     
       len = fuelSoldLogs.length;
       cnt = 0;
@@ -237,7 +237,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           v.args.to?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.to?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase());
 
-      console.log('gmmTransferCbpLogs: ', gmmTransferLogs);
+      // console.log('gmmTransferCbpLogs: ', gmmTransferLogs);
 
       len = gmmTransferLogs.length;
       cnt = 0;
@@ -279,7 +279,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
+      // console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
 
       len = bmmTransferLogs.length;
       cnt = 0;
@@ -316,7 +316,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
 
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
-        console.log('arr: ', arr);
+        console.log('arr added into cbpOutflow:', arr);
 
         await setFinData(gk, 'cbpOutflow', arr);
 

@@ -126,8 +126,8 @@ export const updateDepositsSum = (arr: Cashflow[], startDate:number, endDate:num
     sum[3] = sumArrayOfDeposits(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('deposits range:', startDate, endDate);
-  console.log('deposits:', sum);
+  // console.log('deposits range:', startDate, endDate);
+  // console.log('deposits:', sum);
   return sum;
 }
 
@@ -144,7 +144,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'deposits');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('latestBlkOfDeposits: ', lastBlkNum);
+      // console.log('latestBlkOfDeposits: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -173,7 +173,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       pickupLogs = pickupLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('pickupLogs: ', pickupLogs);
+      // console.log('pickupLogs: ', pickupLogs);
 
       let len = pickupLogs.length;
       let cnt = 0;
@@ -213,7 +213,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       depositLogs = depositLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('depositLogs: ', depositLogs);
+      // console.log('depositLogs: ', depositLogs);
 
       len = depositLogs.length;
       cnt = 0;
@@ -253,7 +253,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       custodyLogs = custodyLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('custodyLogs: ', custodyLogs);
+      // console.log('custodyLogs: ', custodyLogs);
 
       len = custodyLogs.length;
       cnt = 0;
@@ -289,7 +289,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
-        console.log('arr: ', arr);
+        console.log('arr added into Deposits:', arr);
 
         await setFinData(gk, 'deposits', arr);
 

@@ -92,8 +92,8 @@ export const updateEthOutflowSum = (arr: Cashflow[], startDate:number, endDate:n
     sum[3] = sumArrayOfEthOutflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('ethOutflow range:', startDate, endDate);
-  console.log('ethOutflow:', sum);
+  // console.log('ethOutflow range:', startDate, endDate);
+  // console.log('ethOutflow:', sum);
   return sum;
 }
 
@@ -110,7 +110,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'ethOutflow');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('lastItemOfEthOutflow: ', lastBlkNum);
+      // console.log('lastItemOfEthOutflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -144,7 +144,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
           (v.args.isCBP == false));
 
-      console.log('gmmTransferEthLogs: ', gmmTransferLogs);
+      // console.log('gmmTransferEthLogs: ', gmmTransferLogs);
 
       let len = gmmTransferLogs.length;
       let cnt = 0;
@@ -185,7 +185,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       gmmExpenseLogs = gmmExpenseLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('gmmEthExpLogs: ', gmmExpenseLogs);
+      // console.log('gmmEthExpLogs: ', gmmExpenseLogs);
       
       len = gmmExpenseLogs.length;
       cnt = 0;
@@ -228,7 +228,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('bmmEthTransferLogs:', bmmTransferLogs);
+      // console.log('bmmEthTransferLogs:', bmmTransferLogs);
 
       len = bmmTransferLogs.length;
       cnt = 0;
@@ -268,7 +268,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       bmmExpenseLogs = bmmExpenseLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('bmmEthExpLogs: ', bmmExpenseLogs);
+      // console.log('bmmEthExpLogs: ', bmmExpenseLogs);
 
       len = bmmExpenseLogs.length;
       cnt = 0;
@@ -311,7 +311,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       distributionLogs = distributionLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('distributionLogs: ', distributionLogs);
+      // console.log('distributionLogs: ', distributionLogs);
 
       len = distributionLogs.length;
       cnt = 0;
@@ -347,7 +347,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
-        console.log('arr: ', arr);
+        console.log('arr added into EthOutflow:', arr);
 
         await setFinData(gk, 'ethOutflow', arr);
 

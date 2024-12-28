@@ -89,8 +89,8 @@ export const updateFtCbpflowSum = (arr: Cashflow[], startDate:number, endDate:nu
     sum[3] = sumArrayOfFtCbpflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('ftCbpflow range:', startDate, endDate);
-  console.log('ftCbpflow:', sum);
+  // console.log('ftCbpflow range:', startDate, endDate);
+  // console.log('ftCbpflow:', sum);
   return sum;
 }
 
@@ -107,7 +107,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'ftCbpflow');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('lastItemOfFtCbpflow: ', lastBlkNum);
+      // console.log('lastItemOfFtCbpflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -146,7 +146,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       addCbpLogs = addCbpLogs.filter( v => v.blockNumber > lastBlkNum);
-      console.log('addCbpLogs: ', addCbpLogs);
+      // console.log('addCbpLogs: ', addCbpLogs);
     
       let len = addCbpLogs.length;
       let cnt = 0;
@@ -185,7 +185,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       withdrawCbpLogs = withdrawCbpLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('withdrawCbpLogs: ', withdrawCbpLogs);
+      // console.log('withdrawCbpLogs: ', withdrawCbpLogs);
 
       len = withdrawCbpLogs.length;
       cnt = 0;
@@ -230,7 +230,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
     
       deprecateLogs = deprecateLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('deprecateLogs: ', deprecateLogs);
+      // console.log('deprecateLogs: ', deprecateLogs);
 
       len = deprecateLogs.length;
       cnt = 0;
@@ -269,7 +269,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       refuelLogs = refuelLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('refuelLogs: ', refuelLogs);
+      // console.log('refuelLogs: ', refuelLogs);
 
       len = refuelLogs.length;
       cnt = 0;
@@ -305,7 +305,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
-        console.log('arr: ', arr);
+        console.log('arr added into FtCbpflow:', arr);
 
         await setFinData(gk, 'ftCbpflow', arr);
 

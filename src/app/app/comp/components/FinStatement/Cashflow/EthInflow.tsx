@@ -83,8 +83,8 @@ export const updateEthInflowSum = (arr: Cashflow[], startDate:number, endDate:nu
     sum[3] = sumArrayOfEthInflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('ethInflow range:', startDate, endDate);
-  console.log('ethInflow:', sum);
+  // console.log('ethInflow range:', startDate, endDate);
+  // console.log('ethInflow:', sum);
   return sum;
 }
 
@@ -101,7 +101,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'ethInflow');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('lastItemOfEthInflow: ', lastBlkNum);
+      // console.log('lastItemOfEthInflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -131,7 +131,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
     
       recievedCashLogs = recievedCashLogs.filter(v => (v.blockNumber > lastBlkNum) &&
           (v.args.from?.toLowerCase() != AddrOfTank.toLowerCase()));
-      console.log('recievedCashLogs: ', recievedCashLogs);
+      // console.log('recievedCashLogs: ', recievedCashLogs);
 
       let len = recievedCashLogs.length;
       let cnt = 0;
@@ -170,7 +170,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       gasIncomeLogs = gasIncomeLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('gasIncomeLogs: ', gasIncomeLogs);
+      // console.log('gasIncomeLogs: ', gasIncomeLogs);
     
       len = gasIncomeLogs.length;
       cnt = 0;
@@ -209,7 +209,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       payInCapLogs = payInCapLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('payInCapLogs: ', payInCapLogs);
+      // console.log('payInCapLogs: ', payInCapLogs);
 
       len = payInCapLogs.length;
       cnt = 0;
@@ -256,7 +256,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       payOffCIDealLogs = payOffCIDealLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('payOffCIDealLogs: ', payOffCIDealLogs);
+      // console.log('payOffCIDealLogs: ', payOffCIDealLogs);
 
       len = payOffCIDealLogs.length;
       cnt = 0;
@@ -302,7 +302,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
 
       closeBidAgainstInitOfferLogs = closeBidAgainstInitOfferLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('closeBidAgainstInitOfferLogs: ', closeBidAgainstInitOfferLogs);
+      // console.log('closeBidAgainstInitOfferLogs: ', closeBidAgainstInitOfferLogs);
 
       len = closeBidAgainstInitOfferLogs.length;
       cnt = 0;
@@ -349,7 +349,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       closeInitOfferAgainstBidLogs = closeInitOfferAgainstBidLogs.filter(v => (v.blockNumber > lastBlkNum) &&
           (v.args.reason == '0x436c6f7365496e69744f66666572416761696e73744269640000000000000000'));
-      console.log('CloseInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
+      // console.log('CloseInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
 
       len = closeInitOfferAgainstBidLogs.length;
       cnt = 0;
@@ -378,7 +378,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         })
 
         item.addr = tran.from;
-        console.log('releaseCustodyLogs: ', item);
+        // console.log('releaseCustodyLogs: ', item);
 
         if (cnt == 0) {
           ethPrices = await getEthPrices(item.timestamp);
@@ -392,7 +392,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
-        console.log('arr: ', arr);
+        console.log('arr added into EthInflow:', arr);
 
         await setFinData(gk, 'ethInflow', arr);
 

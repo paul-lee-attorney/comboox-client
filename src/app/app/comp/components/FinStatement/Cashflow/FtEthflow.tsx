@@ -73,8 +73,8 @@ export const updateFtEthflowSum = (arr: Cashflow[], startDate:number, endDate:nu
     sum[3] = sumArrayOfFtEthflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  console.log('ftCbpflow range:', startDate, endDate);
-  console.log('ftEthflow:', sum);
+  // console.log('ftCbpflow range:', startDate, endDate);
+  // console.log('ftEthflow:', sum);
   return sum;
 }
 
@@ -91,7 +91,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'ftEthflow');
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      console.log('lastItemOfEthOutflow: ', lastBlkNum);
+      // console.log('lastItemOfEthOutflow: ', lastBlkNum);
 
       let arr:Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -122,7 +122,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       });
 
       refuelLogs = refuelLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('refuelLogs: ', refuelLogs);
+      // console.log('refuelLogs: ', refuelLogs);
 
       let len = refuelLogs.length;
       let cnt = 0;
@@ -162,7 +162,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       });
 
       withdrawEthLogs = withdrawEthLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('withdrawEthLogs: ', withdrawEthLogs);
+      // console.log('withdrawEthLogs: ', withdrawEthLogs);
       
       len = withdrawEthLogs.length;
       cnt = 0;
@@ -198,7 +198,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
-        console.log('arr: ', arr);
+        console.log('arr added into FtEthflow:', arr);
 
         await setFinData(gk, 'ftEthflow', arr);
 
