@@ -168,6 +168,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
             const rs = await getRoyaltySource(item.transactionHash);
             item.input = rs.input;
             item.api = rs.api;
+            item.target = rs.target;
             item.typeOfDoc = rs.typeOfDoc;
             item.version = rs.version;
           }
