@@ -6,8 +6,6 @@ import { parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { isTeamLeader } from "../../../lop/lop";
-import { getRoyaltyRule } from "../../../../rc";
 import { getRoyaltySource } from "../../../../../api/getRoyaltySource";
 
 export type CbpInflowSum = {
@@ -102,7 +100,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       // let logs = await getFinData(gk, 'cbpInflow');
       let logs: Cashflow[] = [];
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      let lastBlkNum = logs.length > 0 ? logs[logs.length - 1].blockNumber : 0n;
       console.log('lastItemOfCbpInflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
