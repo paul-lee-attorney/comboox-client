@@ -8,7 +8,7 @@ import { CbpInflow, CbpInflowSum, defCbpInflowSumArr, updateCbpInflowSum, } from
 import { defEthInflowSumArr, EthInflow, EthInflowSum, updateEthInflowSum } from "./FinStatement/Cashflow/EthInflow";
 import { CbpOutflow, CbpOutflowSum, defCbpOutflowSumArr, updateCbpOutflowSum } from "./FinStatement/Cashflow/CbpOutflow";
 import { defEthOutflowSumArr, EthOutflow, EthOutflowSum, updateEthOutflowSum } from "./FinStatement/Cashflow/EthOutflow";
-import { HexType } from "../../common";
+import { AddrZero, Bytes32Zero, HexType } from "../../common";
 import { CashFlowList, SumInfo } from "./FinStatement/CashflowList";
 import { defDepositsSumArr, Deposits, DepositsSum, updateDepositsSum } from "./FinStatement/Cashflow/Deposits";
 import { defFtEthflowSumArr, FtEthflow, FtEthflowSum, updateFtEthflowSum, } from "./FinStatement/Cashflow/FtEthflow";
@@ -25,8 +25,10 @@ import { EthflowStatement } from "./FinStatement/EthflowStatement";
 import { TipsAndUpdates } from "@mui/icons-material";
 import { usePublicClient } from "wagmi";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { RoyaltySource } from "../../../api/getRoyaltySource";
+import { ZeroHash } from "ethers";
 
-export interface Cashflow {
+export interface Cashflow extends RoyaltySource {
   seq: number,
   blockNumber: bigint,
   timestamp: number,
@@ -38,6 +40,25 @@ export interface Cashflow {
   addr: HexType,
   acct: bigint,
 }
+
+export const defaultCashflow: Cashflow = {
+  seq: 0,
+  blockNumber: 0n,
+  timestamp: 0,
+  transactionHash: Bytes32Zero,
+  typeOfIncome: '',
+  amt: 0n,
+  usd: 0n,
+  ethPrice: 0n,
+  addr: AddrZero,
+  acct: 0n,
+  input: Bytes32Zero,
+  api: '',
+  target: AddrZero,
+  typeOfDoc: 0,
+  version: 0,
+}
+
 
 export interface ReportItem {
   inEth: bigint,

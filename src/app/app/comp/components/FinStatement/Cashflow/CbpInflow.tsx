@@ -3,9 +3,12 @@ import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvi
 import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { Cashflow, CashflowRecordsProps } from "../../FinStatement";
+import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { isTeamLeader } from "../../../lop/lop";
+import { getRoyaltyRule } from "../../../../rc";
+import { getRoyaltySource } from "../../../../../api/getRoyaltySource";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -139,7 +142,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         let blkNo = log.blockNumber;
         let blk = await client.getBlock({blockNumber: blkNo});
 
-        let item:Cashflow = {
+        let item:Cashflow = { ...defaultCashflow,
           seq: 0,
           blockNumber: blkNo,
           timestamp: Number(blk.timestamp),
@@ -161,6 +164,12 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
                 tran.input.substring(0,10).toLowerCase() == '0xa9059cbb') 
           {  
             item.typeOfIncome = 'Transfer';
+          } else {
+            const rs = await getRoyaltySource(item.transactionHash);
+            item.input = rs.input;
+            item.api = rs.api;
+            item.typeOfDoc = rs.typeOfDoc;
+            item.version = rs.version;
           }
         }
 
