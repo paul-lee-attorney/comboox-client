@@ -100,7 +100,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       if (!gk) return;
 
-      let logs = await getFinData(gk, 'cbpInflow');
+      // let logs = await getFinData(gk, 'cbpInflow');
+      let logs: Cashflow[] = [];
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       console.log('lastItemOfCbpInflow: ', lastBlkNum);
 
