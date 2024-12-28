@@ -16,6 +16,11 @@ export type CashflowStrProps = {
   ethPrice: string,
   addr: string,
   acct: string,
+  input: string,
+  api: string,
+  target: string,
+  typeOfDoc: string,
+  version: string,
 }
 
 export function cashflowDataToString(input:Cashflow[]): CashflowStrProps[] {
@@ -29,7 +34,12 @@ export function cashflowDataToString(input:Cashflow[]): CashflowStrProps[] {
     usd: v.usd.toString(),
     ethPrice: v.ethPrice.toString(),
     addr: v.addr.toLowerCase(),
-    acct: v.acct.toString()
+    acct: v.acct.toString(),
+    input: v.input,
+    api: v.api,
+    target: v.target.toLowerCase(),
+    typeOfDoc: v.typeOfDoc.toString(),
+    version: v.version.toString(),
   }));
 
   return output;
@@ -46,7 +56,12 @@ export function cashflowStringToData(input:CashflowStrProps[]): Cashflow[] {
     usd: BigInt(v.usd),
     ethPrice: BigInt(v.ethPrice),
     addr: HexParser(v.addr),
-    acct: BigInt(v.acct)
+    acct: BigInt(v.acct),
+    input: HexParser(v.input),
+    api: v.api,
+    target: HexParser(v.target),
+    typeOfDoc: Number(v.typeOfDoc),
+    version: Number(v.version),
   }));
 
   return output;
