@@ -85,7 +85,7 @@ export async function getRoyaltySource(txHash:HexType): Promise<RoyaltySource> {
 
     const data = await response.json();
     console.log('data:', data, '\n');
-    const calls:Call[] = data.calls[0].calls[0].calls[0].calls;
+    const calls:Call[] = data.result.calls[0].calls[0].calls[0].calls;
     console.log('calls: ', calls, '\n');
 
     let len = calls.length;
