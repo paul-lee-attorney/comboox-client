@@ -4,7 +4,7 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { getRoyaltySource } from "../../../../../api/getRoyaltySource";
 
@@ -98,11 +98,34 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       if (!gk) return;
 
+      const updateRoyaltyInfo = async (item:Cashflow) => {
+        
+        const rs = await getRoyaltySource(item.transactionHash);
+        
+        item.input = rs.input;
+        item.api = rs.api;
+        item.target = rs.target;
+        item.typeOfDoc = rs.typeOfDoc;
+        item.version = rs.version;
+
+        const monthLab = getMonthLableByTimestamp(item.timestamp);
+
+        await updateRoyaltyByItem(gk, monthLab, item);
+      }
+
       let logs = await getFinData(gk, 'cbpInflow');
-      // let logs: Cashflow[] = [];
-      // let lastBlkNum = 0n;
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       // console.log('lastItemOfCbpInflow: ', lastBlkNum);
+
+      if (logs) {
+        let len = logs.length; 
+        for (let i=0; i<len; i++) {
+            const v = logs[i];
+            if (v.typeOfIncome == 'Royalty' && v.api == '') {
+              await updateRoyaltyInfo(v);
+            }
+        }
+      }
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] | undefined = [];

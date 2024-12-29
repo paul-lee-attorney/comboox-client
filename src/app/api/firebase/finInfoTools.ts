@@ -141,6 +141,54 @@ export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:st
 
 }
 
+export async function updateRoyaltyByItem(gk: HexType, month:string, item:Cashflow): Promise<boolean> {
+
+  // 创建一个文档引用
+  const docRef = doc(db, gk.toLowerCase(), 'finInfo', 'cbpInflow', month);
+
+  try {
+
+    let list = await getFinDataByMonth(gk, 'cbpInflow', month);
+
+    if (list && list.length > 0) {
+
+      let i = list.findIndex(v => (
+        v.transactionHash == item.transactionHash &&
+        v.typeOfIncome == 'Royalty' &&
+        v.amt == item.amt &&
+        v.addr == item.addr
+      ));
+
+      if (i > 0) {
+        list[i] = item;
+      } else {
+        return false;
+      }
+
+    } else {
+      return false;
+    }
+
+    await setDoc(docRef, {records: cashflowDataToString(list)});
+    console.log('successfully updateRoyaltyByItem');
+    
+    return true;
+
+  } catch (error: any) {
+    console.error("Error setRoyaltyByItem:", error);
+    return false;
+  }
+
+}
+
+export function getMonthLableByTimestamp(stamp:number):string {
+  const date = new Date(Number(stamp) * 1000);  // Convert the timestamp to Date
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, '0');  // Months are 0-based in JS
+
+  const key = `${year}-${month}`;  // e.g., '2023-09' 
+  return key; 
+}
 
 export async function setFinData(gk: HexType, typeOfInfo:string, data:Cashflow[]): Promise<boolean> {
 
@@ -153,11 +201,7 @@ export async function setFinData(gk: HexType, typeOfInfo:string, data:Cashflow[]
   const groupedByMonth:{[key:string]:Cashflow[]} = {};
 
   data.forEach(v => {
-    const date = new Date(Number(v.timestamp) * 1000);  // Convert the timestamp to Date
-    const year = date.getUTCFullYear();
-    const month = String(date.getUTCMonth() + 1).padStart(2, '0');  // Months are 0-based in JS
-
-    const key = `${year}-${month}`;  // e.g., '2023-09'
+    const key = getMonthLableByTimestamp(v.timestamp);
 
     if (!groupedByMonth[key]) {
       groupedByMonth[key] = [];
