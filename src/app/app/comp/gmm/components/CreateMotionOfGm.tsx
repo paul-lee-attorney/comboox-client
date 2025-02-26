@@ -28,7 +28,7 @@ export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
   const nameOfTypes = [
     'Nominate/Remove Officer', 'Approve Document', 'Transfer Fund', 
     'Distribute Profits', 'Approve Action', 'Deprecate GK', 'Mint CBP',
-    'Pickup Fuel Income'
+    'Pickup Fuel Income', 'Withdraw CBP from Tank'
   ];
 
   const compOfTypes = [

@@ -35,7 +35,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
   const actionsOnMotion = [
     'Propose Motion', 'Upload File', 'Cast Vote', 'Count Results', 'Take Seat', 
     'Remove Director', 'Exec Actions', 'Transfer Fund', 'Distribute Profits',
-    'Deprecate GK', 'Mint CBP', 'Pickup FuelIncome'
+    'Deprecate GK', 'Mint CBP', 'Pickup FuelIncome', 'Withdraw CBP from Tank'
   ]
 
   const compsOfAction = [
