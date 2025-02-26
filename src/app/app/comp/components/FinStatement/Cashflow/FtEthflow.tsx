@@ -6,6 +6,7 @@ import { parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { HexParser } from "../../../../common/toolsKit";
 
 export type FtEthflowSum = {
   totalEth: bigint;
@@ -116,7 +117,9 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       } 
 
       let refuelLogs = await client.getLogs({
-        address: AddrOfTank,
+        address: [  AddrOfTank, 
+                    HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
+                    HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
         fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
@@ -156,7 +159,9 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       }
 
       let withdrawEthLogs = await client.getLogs({
-        address: AddrOfTank,
+        address: [  AddrOfTank, 
+                    HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
+                    HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
         event: parseAbiItem('event WithdrawIncome(address indexed owner, uint indexed amt)'),
         fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });

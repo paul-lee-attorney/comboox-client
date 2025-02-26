@@ -155,7 +155,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       transferLogs = transferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
           v.args.from?.toLowerCase() != AddrOfTank.toLowerCase() &&
-          v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase());
+          v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
+          v.args.from?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase());
 
       // console.log('transferLogs: ', transferLogs);
 
