@@ -1,12 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { 
   Box, Collapse, 
   FormControl, 
-  FormControlLabel, 
   InputLabel, 
   MenuItem, 
-  Paper, Radio, RadioGroup, 
+  Paper, 
   Select, 
   Stack, Typography, 
 } from "@mui/material";
@@ -20,8 +19,8 @@ import { ProposeToDistributeProfits } from "./create_motions/ProposeToDistribute
 import { CreateMotionProps } from "../../bmm/components/CreateMotionOfBoardMeeting";
 import { ProposeToDeprecateGK } from "./create_motions/ProposeToDeprecateGK";
 import { ProposeToMintCBP } from "./create_motions/ProposeToMintCBP";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { ProposeToPickupFuelIncome } from "./create_motions/ProposeToPickupFuelIncome";
+import { ProposeToWithdrawCBP } from "./create_motions/ProposeToWithdrawCBP";
 
 export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
 
@@ -41,6 +40,7 @@ export function CreateMotionOfGm({ refresh }: CreateMotionProps) {
     <ProposeToDeprecateGK key={5} refresh={refresh} />,
     <ProposeToMintCBP key={6} refresh={refresh} />,
     <ProposeToPickupFuelIncome key={7} refresh={refresh} />,
+    <ProposeToWithdrawCBP key={8} refresh={refresh} />
   ]
   
   const [ typeOfMotion, setTypeOfMotion ] = useState('0');

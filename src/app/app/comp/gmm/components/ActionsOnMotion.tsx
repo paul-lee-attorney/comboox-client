@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
 import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Toolbar } from "@mui/material";
 
@@ -16,6 +16,7 @@ import { DeprecateGK } from "./actions_on_motion/DeprecateGK";
 import { UploadMotionFile } from "./actions_on_motion/UploadMotionFile";
 import { MintCBP } from "./actions_on_motion/MintCBP";
 import { PickupFuelIncome } from "./actions_on_motion/PickupFuelIncome";
+import { WithdrawCBP } from "./actions_on_motion/WithdrawCBP";
 
 export interface ActionsOnMotionProps {
   motion: Motion;
@@ -50,6 +51,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
     <DeprecateGK key={9} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
     <MintCBP key={10} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
     <PickupFuelIncome key={11} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
+    <WithdrawCBP key={12} motion={motion} setOpen={setOpen} refresh={refresh} />
   ]
 
   return (
