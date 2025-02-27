@@ -159,7 +159,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               }}
               onChange={(e) => {
                 let input = e.target.value;
-                onlyNum('Amount', input, 0n, 4, setValid);
+                onlyNum('Amount', input, 0n, 9, setValid);
                 setParas(v => ({
                   ...v,
                   amt: input,
