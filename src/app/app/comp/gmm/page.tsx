@@ -12,10 +12,12 @@ import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, booxMap, HexType } from "../../common";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { SetBookAddr } from "../../components/SetBookAddr";
+import { HexParser } from "../../common/toolsKit";
+import { HistOfGMM } from "./components/HistOfGMM";
 
 function GeneralMeetingMinutes() {
 
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   const [ addr, setAddr ] = useState<HexType>(boox ? boox[booxMap.GMM] : AddrZero);
 
@@ -47,6 +49,11 @@ function GeneralMeetingMinutes() {
         <Box width='188'>
           <CopyLongStrTF title="Addr"  src={ addr.toLowerCase() }  />
         </Box>
+
+        {gk && 
+          gk.toLowerCase() == HexParser("0x68233E877575E8C7e057e83eF0D16FFa7F98984D").toLowerCase() && (
+            <HistOfGMM setAddr={setAddr} />
+        )}
 
         <SetBookAddr setAddr={setAddr} />
 
