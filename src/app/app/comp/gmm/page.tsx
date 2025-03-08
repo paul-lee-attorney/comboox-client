@@ -42,7 +42,7 @@ function GeneralMeetingMinutes() {
 
       <Stack direction="row" >
 
-        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <Typography variant='h5' sx={{ m:2, textDecoration:'underline', minWidth:368}}  >
           <b>GMM - General Meeting Minutes</b>
         </Typography>
 
