@@ -50,8 +50,8 @@ function GeneralMeetingMinutes() {
           <CopyLongStrTF title="Addr"  src={ addr.toLowerCase() }  />
         </Box>
 
-        {gk && 
-          gk.toLowerCase() == HexParser("0x68233E877575E8C7e057e83eF0D16FFa7F98984D").toLowerCase() && (
+        {gk && gk.toLowerCase() == 
+                HexParser("0x68233E877575E8C7e057e83eF0D16FFa7F98984D").toLowerCase() && (
             <HistOfGMM setAddr={setAddr} />
         )}
 

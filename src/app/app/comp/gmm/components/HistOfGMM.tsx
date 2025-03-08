@@ -1,17 +1,20 @@
 "use client"
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { 
   FormControl, 
+  IconButton, 
   InputLabel, 
   MenuItem, 
   Select,
+  Stack,
 } from '@mui/material';
 
 import { AddrZero, HexType } from '../../../common';
 import { HexParser } from '../../../common/toolsKit';
 import { SetBookAddrProps } from '../../../components/SetBookAddr';
+import { ChangeCircleOutlined } from '@mui/icons-material';
 
 const gmms = [
   "0x5887E0768fdE5Bb1673d7F9A0e084cc87A2488FB",
@@ -22,28 +25,38 @@ const gmms = [
 
 export function HistOfGMM({ setAddr }: SetBookAddrProps) {
 
-  const [ temp, setTemp ] = useState<HexType>(AddrZero);
+  const [ temp, setTemp ] = useState<HexType>();
 
-  useEffect(()=>{
-    if (!temp) {
-      setAddr(temp);
-    }
-  }, [temp, setAddr]);
+  function setBookAddr() {
+    setAddr(temp ?? AddrZero);
+  };
 
   return (
-    <FormControl variant="outlined" size="small" sx={{ m:1, mr:5, minWidth: 218 }}>
+    <FormControl variant="outlined" size="small" sx={{ m:1, ml:5 }}>
       <InputLabel id="typeOfAction-label">HistOfGMM:</InputLabel>
-      <Select
-        labelId="typeOfAction-label"
-        id="typeOfAction-select"
-        label="HistOfGMM"
-        value={ temp }
-        onChange={(e) => setTemp(HexParser(e.target.value))}
-      >
-        {gmms.map((v,i) => (
-          <MenuItem key={v} value={ v } > <b>GMM_{i+1}</b> </MenuItem>
-        ))}
-      </Select>
+      <Stack direction="row" >
+        <Select
+          labelId="typeOfAction-label"
+          id="typeOfAction-select"
+          label="HistOfGMM"
+          sx={{minWidth: 128}}
+          value={ temp }
+          onChange={(e) => setTemp(HexParser(e.target.value))}
+        >
+          {gmms.map((v,i) => (
+            <MenuItem key={v} value={ v } > <b>GMM_{i+1}</b> </MenuItem>
+          ))}
+        </Select>
+        <IconButton
+          size='small'
+          disabled={!temp}
+          color='primary'
+          onClick={ setBookAddr }
+          edge="end"
+        >
+          <ChangeCircleOutlined />
+        </IconButton>
+      </Stack>
     </FormControl>
   )
 }
