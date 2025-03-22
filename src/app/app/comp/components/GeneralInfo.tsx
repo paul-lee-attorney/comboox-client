@@ -3,8 +3,9 @@ import { Paper } from "@mui/material";
 
 import { CashBox } from "./GeneralInfo/CashBox";
 import { DirectorsList } from "./GeneralInfo/DirectorsList";
-import { MembersList } from "./GeneralInfo/MembersList";
+
 import { HeadChart } from "./GeneralInfo/HeadChart";
+import { MembersList } from "../rom/components/MembersList";
 
 export function GeneralInfo() {
 
