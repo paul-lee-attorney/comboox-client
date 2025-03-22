@@ -48,7 +48,7 @@ export function PayOffSwapUsd({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfS
         }
       )
     }
-  }, [boox]);
+  }, [boox, seqOfOpt, seqOfSwap]);
 
   const [ to, setTo ] = useState<HexType>(AddrZero);
   
