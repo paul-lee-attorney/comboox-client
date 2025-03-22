@@ -139,7 +139,7 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
                 onChange={(e) => setTypeOfCurrency(Number(e.target.value))}
               >
                 {typesOfCurrency.map((v,i) => (
-                  <MenuItem key={v} value={i} ><b>{v}</b></MenuItem>
+                  <MenuItem value={i} ><b>{v}</b></MenuItem>
                 ))}
               </Select>
               <FormHelperText>{' '}</FormHelperText>
