@@ -1,8 +1,8 @@
 import { useState } from "react";
 
-import { HexType } from "../../../../common";
+import { booxMap, HexType } from "../../../../common";
 
-import { useGeneralKeeperTransferFund } from "../../../../../../../generated";
+import { cashierABI, useGeneralKeeperExecActionOfGm, useGeneralKeeperTransferFund } from "../../../../../../../generated";
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { PaymentOutlined } from "@mui/icons-material";
@@ -12,12 +12,15 @@ import { LoadingButton } from "@mui/lab";
 
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { ParasOfTransfer, defaultParasOfTransfer } from "../create_motions/ProposeToTransferFund";
+import { ParasOfTransfer, defaultParasOfTransfer, typesOfCurrency } from "../create_motions/ProposeToTransferFund";
+import { encodeFunctionData, keccak256, stringToBytes } from "viem";
 
 
 export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) {
 
-  const { gk, setErrMsg } = useComBooxContext();
+  const { gk, boox, userNo, setErrMsg } = useComBooxContext();
+
+  const [ typeOfCurrency, setTypeOfCurrency ] = useState(0);
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
 
@@ -45,17 +48,75 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
     }
   });
 
+  const {
+    isLoading: transferUsdLoading,
+    write: transferUsd,
+  } = useGeneralKeeperExecActionOfGm({
+    address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }
+  });
+
   const handleClick = ()=> {
-    transferFund({
-      args: [
-        false, 
-        paras.to, 
-        paras.isCBP, 
-        strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
-        BigInt(paras.expireDate), 
-        BigInt(motion.head.seqOfMotion)
-      ],
-    });
+
+    if (typeOfCurrency > 0) {
+
+      if (typeOfCurrency == 2) {
+        setParas(v => ({
+          ...v,
+          isCBP: true,
+        }));
+      }
+
+      transferFund({
+        args: [
+          false, 
+          paras.to, 
+          paras.isCBP, 
+          strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
+          BigInt(paras.expireDate), 
+          BigInt(motion.head.seqOfMotion)
+        ],
+      });
+
+    } else {
+
+      if (boox && userNo) {
+
+        const cashier = boox[booxMap.Cashier];
+        const amtOfUsd = strNumToBigInt(paras.amt, 6);
+        const desHash = keccak256(stringToBytes(
+          paras.to + 
+          amtOfUsd.toString(16).padStart(64, '0') +
+          paras.expireDate.toString(16).padStart(12, '0') + 
+          motion.votingRule.seqOfRule.toString(16).padStart(2, '0') +
+          userNo.toString(16).padStart(10, '0') 
+        ));
+
+        const data = encodeFunctionData({
+          abi: cashierABI,
+          functionName: 'transferUsd',
+          args: [paras.to, amtOfUsd],
+        });
+
+        transferUsd({
+          args: [
+            BigInt(motion.votingRule.seqOfRule),
+            [cashier],
+            [0n],
+            [data],
+            desHash,
+            motion.head.seqOfMotion
+          ],
+        });
+      }
+    }
   };
 
   return (
@@ -74,14 +135,12 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
                 labelId="symbolOfToken-label"
                 id="symbolOfToken-select"
                 label="Token"
-                value={ paras.isCBP ? '1' : '0' }
-                onChange={(e) => setParas( v => ({
-                  ...v,
-                  isCBP: e.target.value == '1',
-                }))}
+                value={ typeOfCurrency }
+                onChange={(e) => setTypeOfCurrency(Number(e.target.value))}
               >
-                  <MenuItem value={ '0' } > <b>{'ETH'}</b> </MenuItem>
-                  <MenuItem value={ '1' } > <b>{'CBP'}</b> </MenuItem>
+                {typesOfCurrency.map((v,i) => (
+                  <MenuItem value={i} ><b>{v}</b></MenuItem>
+                ))}
               </Select>
               <FormHelperText>{' '}</FormHelperText>
             </FormControl>
@@ -156,7 +215,7 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
         <LoadingButton
-          disabled={ transferFundLoading || hasError(valid)}
+          disabled={ transferFundLoading || transferUsdLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           variant="contained"

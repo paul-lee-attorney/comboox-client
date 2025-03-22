@@ -38,7 +38,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       field: 'title',
       headerName: 'Title',
       valueGetter: p =>  p.row.name,
-      width: 128,
+      width: 218,
       headerAlign:'center',
       align: 'center',
       renderCell: ({ value }) => (
@@ -52,7 +52,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       field: 'addr',
       headerName: 'Address',
       valueGetter: p => p.row.addr,
-      width: 218,
+      width: 268,
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
@@ -63,7 +63,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       field: 'owner',
       headerName: 'Owner',
       valueGetter: p => p.row.owner,
-      width: 218,
+      width: 268,
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
@@ -74,7 +74,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
       field: 'dk',
       headerName: 'DirectKeeper',
       valueGetter: p => p.row.dk,
-      width: 218,
+      width: 268,
       headerAlign:'center',
       align: 'center',
       renderCell: ({value}) => (
@@ -97,7 +97,7 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
 
       {list && (
         <DataGrid
-          initialState={{pagination:{paginationModel:{pageSize: 5}}}} 
+          initialState={{pagination:{paginationModel:{pageSize: 15}}}} 
           pageSizeOptions={[5, 10, 15, 20]} 
           rows={ list.map((v) => ({
             ...v,

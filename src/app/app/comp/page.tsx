@@ -38,79 +38,75 @@ function HomePage() {
   }, [boox, gk]);
 
   return (
-    <Stack direction='column' width='100%' height='100%' >
-      <Box width={'100%'} height={'100%'} >
-        <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider' }}>
+    <Paper elevation={3} sx={{m:2, p:1, border:1, height:'100%', borderColor:'divider', width:'fit-content' }}>
 
-          {activeStep != undefined && activeStep < 4 && (
-            <Stepper sx={{ mt: 2, height: 1200, alignItems:'start' }} activeStep={ activeStep } orientation="vertical" >
+      {activeStep != undefined && activeStep < 4 && (
+        <Stepper sx={{ mt: 2, height: 1200, alignItems:'start' }} activeStep={ activeStep } orientation="vertical" >
 
-              <Step index={0} >
+          <Step index={0} >
 
-                <StepLabel>
-                  <h3>Company ID</h3>
-                </StepLabel>
+            <StepLabel>
+              <h3>Company ID</h3>
+            </StepLabel>
 
-                <StepContent sx={{ alignItems:'start', justifyContent:'start', justifyItems:'start'}} >
+            <StepContent sx={{ alignItems:'start', justifyContent:'start', justifyItems:'start'}} >
 
-                  <SetCompInfo nextStep={setActiveStep} />
+              <SetCompInfo nextStep={setActiveStep} />
 
-                </StepContent>
+            </StepContent>
 
-              </Step>
+          </Step>
 
-              <Step index={1} >
+          <Step index={1} >
 
-                <StepLabel>
-                  <h3>Max Members</h3>
-                </StepLabel>
+            <StepLabel>
+              <h3>Max Members</h3>
+            </StepLabel>
 
-                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+            <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
 
-                  <SetMaxQtyOfMembers nextStep={setActiveStep} />
+              <SetMaxQtyOfMembers nextStep={setActiveStep} />
 
-                </StepContent>
+            </StepContent>
 
-              </Step>
+          </Step>
 
-              <Step index={2} >
+          <Step index={2} >
 
-                <StepLabel>
-                  <h3>Register Of Shares</h3>
-                </StepLabel>
+            <StepLabel>
+              <h3>Register Of Shares</h3>
+            </StepLabel>
 
-                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+            <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
 
-                  <InitBos nextStep={setActiveStep} />
+              <InitBos nextStep={setActiveStep} />
 
-                </StepContent>
+            </StepContent>
 
-              </Step>
+          </Step>
 
-              <Step index={3} >
+          <Step index={3} >
 
-                <StepLabel>
-                  <h3>Turn Key</h3>
-                </StepLabel>
+            <StepLabel>
+              <h3>Turn Key</h3>
+            </StepLabel>
 
-                <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
+            <StepContent sx={{ alignItems:'center', justifyContent:'center'}} >
 
-                  <TurnKey nextStep={setActiveStep} />
+              <TurnKey nextStep={setActiveStep} />
 
-                </StepContent>
+            </StepContent>
 
-              </Step>
+          </Step>
 
-            </Stepper>
-          )}
+        </Stepper>
+      )}
 
-          {activeStep != undefined && activeStep > 3 && (
-            <GeneralInfo />
-          )}
+      {activeStep != undefined && activeStep > 3 && (
+        <GeneralInfo />
+      )}
 
-        </Paper>
-      </Box>
-    </Stack>
+    </Paper>
   );
 } 
 

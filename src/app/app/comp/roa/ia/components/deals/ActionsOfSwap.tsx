@@ -3,6 +3,7 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { HexType } from "../../../../../common";
 import { PickUpPledgedShare } from "./ActionsOfSwap/PickupPledgedShare";
 import { PayOffSwap } from "./ActionsOfSwap/PayOffSwap";
+import { PayOffSwapUsd } from "./ActionsOfSwap/PayOffSwapUsd";
 
 export interface ActionsOfSwapProps{
   ia: HexType;
@@ -17,12 +18,13 @@ export function ActionsOfSwap({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: Acti
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
-    'Pay Off Swap', 'Pickup Pledged Share'
+    'Pay Off Swap In ETH', 'Pay Off Swap In USD', 'Pickup Pledged Share'
   ]
   
   const compsOfAction = [
     <PayOffSwap key={0} ia={ia} seqOfDeal={seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setOpen} refresh={refresh} />,  
-    <PickUpPledgedShare key={1} ia={ia} seqOfDeal={seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setOpen} refresh={refresh} />,  
+    <PayOffSwapUsd key={1} ia={ia} seqOfDeal={seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setOpen} refresh={refresh} />,  
+    <PickUpPledgedShare key={2} ia={ia} seqOfDeal={seqOfDeal} seqOfSwap={seqOfSwap} setOpen={setOpen} refresh={refresh} />,  
   ]
 
   return(

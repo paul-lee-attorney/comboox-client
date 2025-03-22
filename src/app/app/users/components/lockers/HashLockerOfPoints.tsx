@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
 import { StrLocker } from "../../../rc";
-import { bigIntToStrNum, dateParser, longDataParser, longSnParser, splitStrArr } from "../../../common/toolsKit";
+import { bigIntToStrNum, dateParser, longSnParser, splitStrArr } from "../../../common/toolsKit";
 import { AddrZero } from "../../../common";
 import { PickupPoints } from "./PickupPoints";
 import { WithdrawPoints } from "./WithdrawPoints";
@@ -11,12 +11,10 @@ export interface HashLockerOfPointsProps{
   locker: StrLocker,
   userNo: number,
   setOpen: Dispatch<SetStateAction<boolean>>,
-  refreshList: () => void,
-  getUser: () => void,
-  getBalanceOf: () => void,
+  refresh: () => void,
 }
 
-export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, getUser, getBalanceOf}: HashLockerOfPointsProps) {
+export function HashLockerOfPoints({open, locker, userNo, setOpen, refresh}: HashLockerOfPointsProps) {
 
   return (
     <Dialog
@@ -153,10 +151,10 @@ export function HashLockerOfPoints({open, locker, userNo, setOpen, refreshList, 
               <tr>
                 <td colSpan={3}>
                   {userNo == Number(locker.head.to) && (
-                    <PickupPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} getBalanceOf={getBalanceOf} />
+                    <PickupPoints hashLock={locker.hashLock} refresh={refresh} setOpen={setOpen} />
                   )}
                   {userNo == Number(locker.head.from) && (
-                    <WithdrawPoints hashLock={locker.hashLock} refreshList={refreshList} getUser={getUser} setOpen={setOpen} getBalanceOf={getBalanceOf} />
+                    <WithdrawPoints hashLock={locker.hashLock} refresh={refresh} setOpen={setOpen} />
                   )}
                 </td>
               </tr>

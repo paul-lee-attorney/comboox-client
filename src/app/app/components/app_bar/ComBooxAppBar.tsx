@@ -39,7 +39,12 @@ import {
   CurrencyExchange,
   LocalGasStationOutlined,
   Hub,
-  HubOutlined
+  HubOutlined,
+  AutoModeOutlined,
+  CurrencyBitcoinOutlined,
+  CurrencyExchangeOutlined,
+  ReduceCapacityOutlined,
+  PublishedWithChangesOutlined
 }  from '@mui/icons-material';
 
 // import Image from 'next/image';
@@ -131,7 +136,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     {href: '/app/comp/ros', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
     {href: '/app/comp/rop', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
     {href: '/app/comp/roo', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: true},
-    {href: '/app/comp/loo', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchange />, divider: false},
+    {href: '/app/comp/roi', label: 'ROI', tip:'Register of Investors', icon: <ReduceCapacityOutlined />, divider: false},
+    {href: '/app/comp/loe', label: 'LOE', tip:'List of Orders (ETH)', icon: <PublishedWithChangesOutlined />, divider: false},
+    {href: '/app/comp/lou', label: 'LOU', tip:'List of Orders (USD)', icon: <CurrencyExchangeOutlined />, divider: true},
     {href: '/app/comp/lop', label: 'LOP', tip:'List of Projects', icon: <HubOutlined />, divider: false},
   ]
 

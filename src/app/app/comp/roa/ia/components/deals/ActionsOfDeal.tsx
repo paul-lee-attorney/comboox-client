@@ -13,7 +13,8 @@ import { ExecTagAlong } from "./ActionsOfDeal/ExecTagAlong";
 import { ExecAntiDilution } from "./ActionsOfDeal/ExecAntiDilution";
 import { ExecFirstRefusal } from "./ActionsOfDeal/ExecFirstRefusal";
 import { TakeGiftShares } from "./ActionsOfDeal/TakeGiftShares";
-import { PayOffApprovedDeal } from "./ActionsOfDeal/PayOffApprovedDeal";
+import { PayOffInEth } from "./ActionsOfDeal/PayOffInEth";
+import { PayOffInUsd } from "./ActionsOfDeal/PayOffInUsd";
 import { RequestToBuy } from "./ActionsOfDeal/RequestToBuy";
 
 export interface ActionsOfDealProps{
@@ -35,8 +36,8 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
 
   const actionsOfDeal = [
     'FirstRefusal', 'AntiDilution', 'DragAlong', 'TagAlong', 'PushToCoffer',
-    'IssueShare', 'TransferShare', 'PayOffApprovedDeal', 'RequestToBuy', 'PickupShare', 
-    'TerminateDeal', 'TakeGift',
+    'IssueShare', 'TransferShare', 'PayOffInEth', 'PayOffInUsd', 'RequestToBuy', 
+    'PickupShare', 'TerminateDeal', 'TakeGift',
   ]
 
   const compsOfAction = [
@@ -47,11 +48,12 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
     <PushToCoffer key={4} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
     <IssueShare key={5} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
     <TransferShare key={6} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <PayOffApprovedDeal key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <RequestToBuy key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <PickupShare key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <TerminateDeal key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <TakeGiftShares key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PayOffInEth key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PayOffInUsd key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <RequestToBuy key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PickupShare key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TerminateDeal key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TakeGiftShares key={12} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
   ]
 
   let activeSteps:number[] = [];
@@ -80,14 +82,14 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
         
         if (deal.body.state == 1) {
 
-          if (deal.head.typeOfDeal == 1) activeSteps = [ 4, 5, 7 ];
+          if (deal.head.typeOfDeal == 1) activeSteps = [ 4, 5, 7, 8 ];
           else if (deal.head.typeOfDeal == 8) activeSteps = [ 11 ];
-          else activeSteps = [ 4, 6, 7 ];
+          else activeSteps = [ 4, 6, 7, 8 ];
 
         } else if (deal.body.state == 2) {
 
-          if (deal.head.typeOfDeal == 1) activeSteps = [ 5, 7, 9 ];
-          else activeSteps = [ 6, 7, 9 ];
+          if (deal.head.typeOfDeal == 1) activeSteps = [ 5, 7, 8, 9 ];
+          else activeSteps = [ 6, 7, 8, 9 ];
 
         } else activeSteps = [];
 

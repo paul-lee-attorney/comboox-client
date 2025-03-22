@@ -1,11 +1,11 @@
 import { 
-  readContract, getWalletClient, getContract, 
-  waitForTransaction, fetchBalance, 
+  readContract, waitForTransaction, fetchBalance, 
 } from "@wagmi/core";
 
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "./common";
-import { ownableABI, regCenterABI } from "../../../generated";
+import { regCenterABI } from "../../../generated";
 import { HexParser, strNumToBigInt } from "./common/toolsKit";
+import { WalletClient } from "viem";
 
 // ==== StrLocker === 
 
@@ -302,19 +302,16 @@ export async function getCounterOfUsers(): Promise<number>{
   return res;
 }
 
-export async function getUser(): Promise<User>{
+export async function getUser(signer: WalletClient): Promise<User>{
 
-  const walletClient = await getWalletClient();
-
-  const rc = getContract({
+  const user = await readContract({
     address: AddrOfRegCenter,
     abi: regCenterABI,
-    walletClient: walletClient ? walletClient : undefined,
+    functionName: 'getUser',
+    account: signer.account,
   })
 
-  let res = await rc.read.getUser();    
-
-  return res;
+  return user;
 }
 
 export async function getMyUserNo(acct: HexType): Promise<number>{
@@ -638,14 +635,30 @@ export async function getCentPriceInWei(curr:number): Promise<bigint>{
   return res;
 }
 
+// ==== App ====
 
-export async function isOwnerOfRegCenter(gk:HexType): Promise<boolean>{
+export async function isOwnerOfRegCenter(addr:HexType): Promise<boolean>{
 
   let res = await readContract({
     address: AddrOfRegCenter,
-    abi: ownableABI,
+    abi: regCenterABI,
     functionName:'getOwner',
   });
 
-  return res.toLowerCase() == gk.toLowerCase();
+  return res.toLowerCase() == addr.toLowerCase();
 }
+
+export async function getLockersList(): Promise<StrLocker[]>{
+
+  let list = await getLocksList();
+  let len = list.length;
+  let out:StrLocker[] = [];
+
+  while (len > 0) {
+    out.push(await getLocker(list[len-1]));
+    len--;
+  }
+
+  return out;
+}
+

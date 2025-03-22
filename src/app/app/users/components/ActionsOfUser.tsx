@@ -11,38 +11,47 @@ import { SetRoyaltyRule } from "./ActionsOfUser/SetRoyaltyRule";
 import { User } from "../../rc";
 import { AddrZero } from "../../common";
 import { TransferIPR } from "./ActionsOfUser/TransferIPR";
+import { TransferUSD } from "./ActionsOfUser/TransferUSD";
+import { LockUSD } from "./ActionsOfUser/LockUSD";
+import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
+import { LockUsdConsideration } from "./ActionsOfUser/LockUsdConsideration";
 
 export interface ActionsOfUserProps{
-  refreshList: ()=>void;
-  getUser: ()=>void;
-  getBalanceOf: ()=>void;
+  refresh: ()=>void;
 }
 
 interface ActionsOfUserPanelProps extends ActionsOfUserProps {
   user: User | undefined;
   isOwner: boolean;
   showList: boolean;
+  showUsdList: boolean;
   setShowList: Dispatch<SetStateAction<boolean>>;
+  setShowUsdList: Dispatch<SetStateAction<boolean>>;
 }
 
-export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshList, getUser, getBalanceOf}: ActionsOfUserPanelProps) {
+export function ActionsOfUser({ user, isOwner, showList, showUsdList, setShowList, setShowUsdList, refresh}: ActionsOfUserPanelProps) {
+
+  const { boox } = useComBooxContext();
 
   const [ typeOfAction, setTypeOfAction ] = useState<string>('1');
   
   const actionsOfUser = [
-    'Set Backup Key', 'Set Royalty Rule', 'Mint Points', 
-    'Mint & Lock Points', 'Transfer Points', 'Lock Points', 'Lock Consideration', 'Transfer IPR' 
+    'Set Backup Key', 'Set Royalty Rule', 'Mint CBP', 'Mint & Lock CBP', 'Transfer IPR',
+    'Transfer CBP', 'Lock CBP', 
+    'Transfer USD', 'Lock USD', 'Lock USD Consideration',
   ]
 
   const compsOfAction = [
-    <SetBackupKey key={0} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
-    <SetRoyaltyRule key={1} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
-    <MintPoints key={2} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
-    <MintAndLockPoints key={3} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
-    <TransferPoints key={4} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
-    <LockPoints key={5} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,       
-    <LockConsideration key={6} refreshList={refreshList} getUser={ getUser } getBalanceOf={getBalanceOf} />,
-    <TransferIPR key={7} />,
+    <SetBackupKey key={0} refresh={refresh} />,
+    <SetRoyaltyRule key={1} refresh={refresh} />,
+    <MintPoints key={2} refresh={refresh} />,
+    <MintAndLockPoints key={3} refresh={refresh} />,
+    <TransferIPR key={4} />,
+    <TransferPoints key={5} refresh={refresh} />,
+    <LockPoints key={6} refresh={refresh} />,       
+    <TransferUSD key={7} refresh={refresh} />,
+    <LockUSD key={8} refresh={refresh} />,
+    <LockUsdConsideration key={9} refresh={refresh} />,
   ]
 
   return( 
@@ -65,18 +74,18 @@ export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshLis
             {actionsOfUser.map((v, i) => {
               if (i==0 && user?.backupKey?.pubKey != AddrZero) return null;
               if ((i==2 || i==3) && !isOwner ) return null;
+              if (i==9 && !boox) return null;
               
-
               return (<MenuItem key={v} value={ i } > <b>{v}</b> </MenuItem>);
             })}
           </Select>
         </FormControl>
 
         <FormControlLabel 
-          label='Show Lockers List'
+          label='Show CBP Lockers'
           sx={{
             m:1,
-            ml:50,
+            ml:30,
           }}
           control={
             <Checkbox 
@@ -86,6 +95,24 @@ export function ActionsOfUser({ user, isOwner, showList, setShowList, refreshLis
               }}
               onChange={e => setShowList(e.target.checked)}
               checked={ showList }
+            />
+          }
+        />
+
+        <FormControlLabel 
+          label='Show USD Lockers'
+          sx={{
+            m:1,
+            ml:5,
+          }}
+          control={
+            <Checkbox 
+              sx={{
+                m: 1,
+                height: 64,
+              }}
+              onChange={e => setShowUsdList(e.target.checked)}
+              checked={ showUsdList }
             />
           }
         />

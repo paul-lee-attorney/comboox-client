@@ -23,7 +23,7 @@ export interface Receipt{
   amt: string;
 }
 
-export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOfUserProps) {
+export function TransferPoints({ refresh}: ActionsOfUserProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -59,7 +59,7 @@ export function TransferPoints({ refreshList, getUser, getBalanceOf }: ActionsOf
               };
             setReceipt(rpt);
             setOpen(true);
-            getBalanceOf();
+            refresh();
             setLoading(false);
           }
         }

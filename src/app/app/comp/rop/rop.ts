@@ -26,21 +26,6 @@ export interface Head {
   state: number;
 }
 
-// export function parseOrgHead(head: OrgHead): Head {
-//   let out:Head ={
-//     seqOfShare: head.seqOfShare.toString(),
-//     seqOfPld: head.seqOfPld.toString(),
-//     createDate: head.createDate,
-//     daysToMaturity: head.daysToMaturity.toString(),
-//     guaranteeDays: head.guaranteeDays.toString(),
-//     creditor: head.creditor.toString(),
-//     debtor: head.debtor.toString(),
-//     pledgor: head.pledgor.toString(),
-//     state: head.state,
-//   };
-//   return out;
-// }
-
 export const defaultStrHead: StrHead = {
   seqOfShare: '0',
   seqOfPld: '0',
@@ -85,21 +70,6 @@ export interface Body{
   argu: number;
 }
 
-
-
-// export function parseOrgBody(body: OrgBody): Body {
-//   let out: Body = {
-//     paid: body.paid.toString(),
-//     par: body.par.toString(),
-//     guaranteedAmt: body.guaranteedAmt.toString(),
-//     preSeq: body.preSeq.toString(),
-//     execDays: body.execDays.toString(),
-//     para: body.para.toString(),
-//     argu: body.argu.toString(),
-//   };
-//   return out;
-// }
-
 export const defaultStrBody: StrBody = {
   paid: '0',
   par: '0',
@@ -132,39 +102,11 @@ export interface Pledge{
   hashLock: HexType;
 }
 
-
-// export function parseOrgPledge(pld: OrgPledge): Pledge {
-//   let out: Pledge = {
-//     head: parseOrgHead(pld.head),
-//     body: parseOrgBody(pld.body),
-//     hashLock: pld.hashLock,
-//   };
-
-//   return out;
-// }
-
 export const defaultPledge: Pledge = {
   head: defaultHead,
   body: defaultBody,
   hashLock: Bytes32Zero,
 }
-
-// export function parseSnOfPledge(sn:HexType): Head {
-
-//   let head: Head = {
-//     seqOfShare: parseInt(sn.substring(2, 10), 16),
-//     seqOfPld: parseInt(sn.substring(10,14), 16),
-//     createDate: parseInt(sn.substring(14, 26), 16),
-//     daysToMaturity: parseInt(sn.substring(26, 30), 16),
-//     guaranteeDays: parseInt(sn.substring(30, 34), 16),
-//     creditor: parseInt(sn.substring(34, 44), 16),
-//     debtor: parseInt(sn.substring(44, 54), 16),
-//     pledgor: parseInt(sn.substring(54, 64), 16),
-//     state: parseInt(sn.substring(64, 66), 16),
-//   }
-
-//   return head;
-// }
 
 export function codifyHeadOfPledge(head: StrHead): HexType {
   let sn: HexType = `0x${

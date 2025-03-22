@@ -1,0 +1,384 @@
+2024-09-26 22:29:57 +0800	update bp and usd	5	5
+2024-09-26 22:13:04 +0800	update usd concerned funcs	24	7
+2024-09-26 20:36:50 +0800	add ethPriceModule	123	6
+2024-09-25 17:43:14 +0800	correct errors in Licnese page and update financial statement item names	31	34
+2024-09-25 16:20:24 +0800	upload License page	360	3
+2024-09-18 14:23:43 +0800	update NewUserAward func	1	1
+2024-09-18 13:58:53 +0800	update financial statement  with detailed records interfaces	59	13
+2024-09-17 23:38:50 +0800	update cbp paid out into deferred revenue	20	3
+2024-09-17 19:09:45 +0800	upate format of financial statement	27	35
+2024-09-17 18:32:08 +0800	update financial statement with FT records	315	32
+2024-09-17 14:43:57 +0800	update newUserReward and deferred assets into financial statement	244	111
+2024-09-16 20:45:29 +0800	add boox reg history module	258	0
+2024-09-15 23:53:30 +0800	add targetBook setting funcs in Registers	269	166
+2024-09-15 09:14:57 +0800	update docLists func	54	7
+2024-09-14 22:27:37 +0800	update the title of typeOfFlow	2	2
+2024-09-14 22:15:10 +0800	uniform modules of bmm execActions	111	108
+2024-09-12 21:31:41 +0800	update DocList concerned module	54	43
+2024-09-12 19:40:38 +0800	update TempList and ETH unit of frontpage	9	6
+2024-09-12 11:09:38 +0800	remove block for checking RC owner in create/act motions	1	32
+2024-09-12 08:22:47 +0800	convert initContri into Eth	7	7
+2024-09-12 08:12:05 +0800	separate initContri and armotization	14	10
+2024-09-12 00:55:56 +0800	update owner qualification	31	9
+2024-09-12 00:37:32 +0800	add consoleLog to check userNo	5	1
+2024-09-11 23:26:19 +0800	move initContr and armotization into useEffect	20	9
+2024-09-11 22:38:53 +0800	update isComBoox component	41	51
+2024-09-11 22:28:26 +0800	update isComBoox concerned funcs	245	268
+2024-09-11 19:52:21 +0800	correct errors of compile	8	8
+2024-09-11 17:52:11 +0800	upgrade finStatement and loo modules	2484	1705
+2024-09-06 09:22:07 +0800	let Expense comp get addr inside	4	5
+2024-09-06 09:06:14 +0800	revise Expense comp	16	10
+2024-09-06 08:13:49 +0800	fixed zero error	1	1
+2024-09-06 01:16:21 +0800	update error of divide zero	3	1
+2024-09-06 00:59:24 +0800	update fianncial statement	353	340
+2024-09-05 13:56:49 +0800	correct errors concerning GeneralKeeper_5	28	28
+2024-09-05 09:25:41 +0800	update draftControl concerned funcs	23	23
+2024-09-05 08:32:18 +0800	add SetNewGK panel into ConfigSetting Module	127	1
+2024-09-03 21:38:16 +0800	update LOO mudules	1304	632
+2024-08-28 00:57:17 +0800	add left and right blocks	58	10
+2024-08-27 23:21:31 +0800	update DealsList module	7	10
+2024-08-27 19:53:31 +0800	add BuyOrders panel into LOO	388	19
+2024-08-27 11:22:17 +0800	exclude mint income from Revenue	2	2
+2024-08-22 19:38:37 +0800	remove unused modules	0	704
+2024-08-22 12:19:56 +0800	revise GK and Boox setting to avoid info remainning	7	2
+2024-08-22 10:43:26 +0800	identify mint income from regular Revenue	3	3
+2024-08-22 02:09:02 +0800	update Revenue logs calculation module	7	3
+2024-08-21 14:41:30 +0800	add CreateCorpSeal into DocsSetting Module	84	5
+2024-08-21 13:24:02 +0800	add CreateCorpSeal module into App	80	1
+2024-08-21 12:59:40 +0800	correct setCompInfo error of bytes19	1	1
+2024-08-20 11:28:16 +0800	change tag of sign up	1	1
+2024-08-15 14:54:28 +0800	update Certificate of Contribution	42	16
+2024-08-01 18:47:36 +0800	Update Motion VoteCounting funcs	23	17
+2024-07-27 17:00:34 +0800	update bmm will MotionDownloader component	3	3
+2024-07-27 16:44:12 +0800	add face-recoginition and encrypt moduels	1298	933
+2024-07-24 23:09:50 +0800	update components of file and userInfo up down load	643	47
+2024-07-24 23:04:32 +0800	sort firebase concerned middleware and tools	435	703
+2024-07-24 23:02:31 +0800	add face-api.js	240	0
+2024-07-20 15:59:33 +0800	add salt to userInfo encrypt and decrypt funcs	126	37
+2024-07-13 14:41:00 +0800	update mint func width	1	1
+2024-07-10 19:04:49 +0800	correct index error	7	7
+2024-07-10 18:07:55 +0800	update cashflow concerned funcs	50	30
+2024-07-09 20:54:53 +0800	remove V2 requirements for Deposits	2	4
+2024-06-28 15:03:55 +0800	add Date into finStatements	130	39
+2024-06-25 13:33:17 +0800	introduce ArbiSepo	6	5
+2024-06-19 02:01:49 +0800	upgrade revenue	2	2
+2024-06-18 18:41:05 +0800	add fuel withDraw scenario	37	0
+2024-06-18 15:41:10 +0800	correct negative fiture format error	9	1
+2024-06-18 14:55:03 +0800	update index for RC address	3	3
+2024-06-18 14:48:35 +0800	update addrOfRC	3	3
+2024-06-18 14:06:33 +0800	add FinStatement into MainPage	1846	84
+2024-06-04 17:57:18 +0800	revise menu item from fule ino fuel	1	1
+2024-06-04 17:50:41 +0800	rename Fule as Fuel	38	38
+2024-06-03 19:39:15 +0800	update FileIndex component with seqOfMotion para	2	3
+2024-06-03 19:26:23 +0800	add seqOfMotion into file path	6	5
+2024-06-03 11:16:27 +0800	update frontpage openning words	7	7
+2024-06-01 03:20:22 +0800	recover index of RC and other general address	6	6
+2024-06-01 03:12:15 +0800	remove hardhat from wagmi provider to last one	1	1
+2024-05-31 20:10:16 +0800	correct ethers.utils.verifyMessage and remove ProposalIndex	2	95
+2024-05-31 20:01:59 +0800	install eterhs	0	0
+2024-05-31 19:47:22 +0800	add Firebase Firestore and Storage for doc up and down load	1668	276
+2024-05-22 18:15:45 +0800	change name of Pledge into Deed	10	10
+2024-04-15 17:42:12 +0800	update funcs of deprecateGK	248	49
+2024-04-14 13:30:49 +0800	update for adding distrWeight paras	680	516
+2024-03-31 14:43:38 +0800	add whitePaper and udpate templates serach funcs	17	21
+2024-03-29 18:37:08 +0800	Revise charactors of CopyLongStr from 8 to 10	2	2
+2024-03-29 17:15:40 +0800	adjust format of LockerFinder and BigData in RyoaltyRule	4	4
+2024-03-28 17:01:35 +0800	removed access control of payroll	23	39
+2024-03-28 13:25:46 +0800	correct actions default value as ''	14	11
+2024-03-28 00:18:30 +0800	update formats	10	30
+2024-03-28 00:18:12 +0800	update errors of Terms	5	5
+2024-03-27 19:26:19 +0800	add DistributeProfits funcs	284	4
+2024-03-27 16:48:39 +0800	update for formating and correct some errors	607	100
+2024-03-22 22:44:45 +0800	Add InitKeepers Module	0	0
+2024-03-22 20:18:59 +0800	update GetValueOf func	0	0
+2024-03-22 19:46:54 +0800	update getValueOf	0	0
+2024-03-22 17:01:35 +0800	update page of FuleTank	0	0
+2024-03-22 16:45:51 +0800	updated after reverse	0	0
+2024-03-22 16:43:09 +0800	correnct ActionsOfFule	0	0
+2024-03-22 16:33:42 +0800	reverse filesList sequence	0	0
+2024-03-22 10:04:06 +0800	correct some error concerning wagmi	0	0
+2024-03-20 18:49:33 +0800	adjust width of video and url of youtube	0	0
+2024-03-20 16:56:41 +0800	remove frameborder and allowfullscrean	0	0
+2024-03-20 16:31:31 +0800	add frontPage	0	0
+2024-03-19 23:50:12 +0800	updated some loop interface defination	22	197
+2024-03-19 20:55:42 +0800	update next.config.js to skip verifying TS	1	6
+2024-03-19 19:39:07 +0800	upload about page	1	0
+2024-03-19 19:30:21 +0800	upgrade type/react module	19	6
+2024-03-19 17:01:58 +0800	installed sharp as per instruction of Vercel	0	0
+2024-03-19 16:52:39 +0800	udpated with some remarks	8	0
+2024-03-19 15:13:53 +0800	add network of arbitrum	1	1
+2024-03-19 14:45:01 +0800	update env of sepolia	6	6
+2024-03-19 14:30:09 +0800	updated index file of testing net	2	10
+2024-03-19 14:29:33 +0800	corrected dec length error	69	511
+2024-03-19 00:21:40 +0800	tested all UI funcs of ListOfProjects	829	774
+2024-03-15 19:17:53 +0800	replace ToolBar with Typology	476	511
+2024-03-15 14:23:55 +0800	updated Dec from 2 to 4	179	177
+2024-03-15 11:10:15 +0800	updated Link funcs of Nextjs	92	71
+2024-03-14 18:31:38 +0800	cleared errors of scripts/common	67	67
+2024-03-14 18:10:08 +0800	closed Err Notice of AcctPage	17	16
+2024-03-14 17:42:45 +0800	upgrade center/users funcs	465	69
+2024-03-14 17:15:00 +0800	upgraded FuleTank funcs	3079	0
+2024-03-14 15:41:31 +0800	add "use client" to some pages	4	0
+2024-03-14 15:40:17 +0800	Upgraded ROP funs	1678	2
+2024-03-14 15:01:12 +0800	upgrated ROO functions	1555	2
+2024-03-14 14:18:41 +0800	upgraded LOP funcs	3443	7
+2024-03-14 12:26:21 +0800	upgraded LOO funcs	1646	2
+2024-03-14 11:55:42 +0800	updated ROD funcs	60	1
+2024-03-14 11:51:17 +0800	upgraded ROM funcs	46	1
+2024-03-14 11:45:23 +0800	upgraded BMM funcs	166	707
+2024-03-14 09:08:52 +0800	upgraded GMM funcs	77	0
+2024-03-14 09:04:50 +0800	upgraded ROA funcs	1171	135
+2024-03-14 06:49:15 +0800	upgraded SHA concerned pages and components	13496	60
+2024-03-13 17:32:51 +0800	upgraded ros page	15534	270
+2024-03-12 09:51:45 +0800	Changes before Nextjs14	3928	17
+2024-02-01 21:57:23 +0800	correct double reverse	1	1
+2024-02-01 21:55:50 +0800	reverse filesListWithInfo	1	1
+2024-02-01 21:48:34 +0800	reverse elements of array	2	2
+2024-01-27 23:19:51 +0800	add cond for executed motion	6	4
+2024-01-24 10:29:50 +0800	add state < 4 as appearance cond of ActionsOnMotion	6	4
+2024-01-18 13:30:54 +0800	correct format of SetGroupUpdateOrder	1	0
+2024-01-18 12:27:16 +0800	uniform Rules collective palens	22	17
+2024-01-18 12:10:54 +0800	update sorted alg of FR rules	11	2
+2024-01-18 12:02:30 +0800	update FR rules	6	5
+2024-01-18 10:41:28 +0800	update FR rules palen	7	21
+2024-01-16 17:54:52 +0800	correct format error of SetGovernanceRule	5	3
+2023-12-29 11:28:37 +0800	include zero into OnlyNum verify	1	1
+2023-12-22 17:08:24 +0800	update all swaps concerned panels	475	527
+2023-12-18 18:22:05 +0800	updated some format of CBP and location of controls	27	18
+2023-12-16 13:16:27 +0800	move all pics into public folder	3	3
+2023-12-16 10:00:38 +0800	update frontPage	17	2
+2023-12-16 08:32:41 +0800	install sharp as per instruction	0	0
+2023-12-16 08:15:52 +0800	remove unused imgs	5	30
+2023-12-16 01:17:51 +0800	update rc.ts for getPriceFeed func	5	4
+2023-12-16 00:00:17 +0800	remove description sentence from mainpage	0	1
+2023-12-15 23:38:48 +0800	removed shadow from Logo	0	0
+2023-12-15 23:35:53 +0800	udpate logo with special effects	1	1
+2023-12-15 23:24:38 +0800	update logo with full slogan	0	0
+2023-12-15 23:21:19 +0800	update Logo with shadow	0	0
+2023-12-15 22:40:08 +0800	update logo file	1	1
+2023-12-15 14:28:31 +0800	add Logo in ReadMe	58	27
+2023-12-15 14:27:35 +0800	Add Logo into ReadMe file	0	0
+2023-12-12 12:32:59 +0800	add Arbitrum One into Wagmi.ts	2	2
+2023-12-11 16:33:16 +0800	update BMM setting in BMM	3	3
+2023-12-02 11:57:56 +0800	add github link to client ui	7	1
+2023-12-02 11:26:39 +0800	update gitignore	0	0
+2023-12-02 11:21:04 +0800	update local config files	0	0
+2023-12-02 11:11:28 +0800	update License and Readme	0	0
+2023-12-02 10:01:56 +0800	update Copyright footnotes	251	17
+2023-11-08 19:08:10 +0800	removed Dollar as Unit symble	12	12
+2023-11-08 19:03:52 +0800	update Format of ProposeToTransferFund	3	3
+2023-11-08 18:55:33 +0800	update alignItems config of Motion create funcs	13	11
+2023-11-08 18:47:36 +0800	update alignItems from stretch to start	11	11
+2023-11-08 18:30:14 +0800	change VoteResults size	3	3
+2023-11-06 18:35:13 +0800	trim zero in tail	14	1
+2023-11-06 17:49:06 +0800	update Alchemy EnvVal funcs	5	5
+2023-11-06 17:46:26 +0800	update MM funcs	691	666
+2023-11-05 18:58:16 +0800	sorted some imports	16	5
+2023-11-05 15:49:01 +0800	update wagmi config	1	1
+2023-11-05 15:26:03 +0800	update Refule funcs	1	1
+2023-11-04 23:37:42 +0800	add FT add in index	5	0
+2023-11-04 23:33:37 +0800	add FuleTank	1172	145
+2023-10-31 20:42:16 +0800	remove api keys	0	6
+2023-10-31 20:28:18 +0800	change EV input method	7	11
+2023-10-31 19:45:23 +0800	change NODE_ENV variable value	4	6
+2023-10-31 17:37:31 +0800	change envName into NETWORK	4	4
+2023-10-31 16:37:52 +0800	add sepolia and mainnet env	11	5
+2023-10-31 13:47:47 +0800	update addrOfRegCenter	2	2
+2023-10-31 13:41:34 +0800	deployed on mainnet	3	2
+2023-10-30 14:20:41 +0800	update RC address	1	1
+2023-10-29 23:08:02 +0800	update loadingButtons logo position	7	2
+2023-10-29 16:15:18 +0800	update new AddrOfRegCenter	2	2
+2023-10-29 12:25:06 +0800	add ErrMsg	46	37
+2023-10-28 15:21:09 +0800	update icon of valueQuery	7	7
+2023-10-28 02:26:27 +0800	udpate setErrMsg	0	1
+2023-10-27 13:35:26 +0800	Update Loo funcs	67	94
+2023-10-25 12:27:59 +0800	reviewed BigInt funcs into click event	183	145
+2023-10-23 17:38:04 +0800	format correction	49	63
+2023-10-22 20:55:09 +0800	update onlyNum	1579	1110
+2023-10-20 21:21:35 +0800	update center funcs with click method	135	113
+2023-10-20 20:31:49 +0800	updated options funcs	80	91
+2023-10-20 17:36:39 +0800	updated AD funcs	11	9
+2023-10-20 17:09:52 +0800	updated all rules setting funcs	309	426
+2023-10-20 14:44:24 +0800	update setVotingRule	311	494
+2023-10-19 22:16:33 +0800	add onlyNum funcs	395	482
+2023-10-19 01:03:34 +0800	update format	9	9
+2023-10-19 00:34:36 +0800	update frCodifier	1	1
+2023-10-19 00:32:04 +0800	update formats and rule setting funcs	446	351
+2023-10-18 16:26:45 +0800	update toASCII and toStr	4	4
+2023-10-18 14:40:32 +0800	set default Page as Home	2	2
+2023-10-18 14:31:48 +0800	update AcctPage with Signer.Account info	1	0
+2023-10-18 14:28:57 +0800	update AcctPage	11	11
+2023-10-18 12:21:11 +0800	separate funcs loading	257	159
+2023-10-18 10:47:11 +0800	update IconButtons	68	18
+2023-10-18 09:56:33 +0800	replace into LaodingButton	1275	380
+2023-10-17 18:03:10 +0800	add loading button comp	14	28
+2023-10-17 16:52:52 +0800	update MaxByte const	17	18
+2023-10-17 16:46:26 +0800	update DateTimeField write funcs	25	44
+2023-10-17 12:01:44 +0800	add !hasError() into write funcs	233	202
+2023-10-17 10:42:37 +0800	udpate dateTime atrributes	125	128
+2023-10-17 09:13:44 +0800	update validation funcs	436	436
+2023-10-17 00:12:28 +0800	update interface of InitComp	11	19
+2023-10-16 23:53:50 +0800	update wagmi option	5	5
+2023-10-16 23:43:02 +0800	update AddrOfRegCenter	2	2
+2023-10-16 23:39:34 +0800	add input validate funcs	2212	2015
+2023-10-15 01:18:20 +0800	updated to SetGR	3813	2657
+2023-10-12 10:46:12 +0800	updated all read funcs with waitForTx	139	113
+2023-10-11 23:00:37 +0800	update ROS read funcs	248	120
+2023-10-11 22:08:41 +0800	update read funcs of ROD	143	88
+2023-10-11 21:03:00 +0800	update Read funcs of ROA	848	546
+2023-10-11 13:54:58 +0800	unified into refreshAfterTx	14	9
+2023-10-11 13:49:07 +0800	restored into useEffect mode	35	16
+2023-10-11 13:26:26 +0800	simplified refreshAfterTx	8	76
+2023-10-11 12:54:05 +0800	add console.log into callback of write	5	17
+2023-10-11 12:47:15 +0800	simplified refresh funcs	7	3
+2023-10-11 12:19:33 +0800	update GetTxReceipt format	1	1
+2023-10-11 12:07:03 +0800	add GetTxReceipt module	94	8
+2023-10-10 23:06:04 +0800	update read funcs of ROS	189	141
+2023-10-10 21:17:57 +0800	update read funcs of ROP	122	72
+2023-10-10 20:33:03 +0800	update read funcs of ROO	251	167
+2023-10-10 16:58:26 +0800	updated readFuncs of ROD	218	88
+2023-10-10 16:05:51 +0800	updated sha funcs	2476	2675
+2023-10-09 23:06:23 +0800	updated read funcs of ia and roa	861	595
+2023-10-09 14:31:00 +0800	updated gmm funcs	671	563
+2023-10-09 02:20:41 +0800	updated BMM funcs	116	231
+2023-10-08 23:45:03 +0800	updated useEffect funcs	37	38
+2023-10-08 22:09:06 +0800	add AcceptSha funcs	4	6
+2023-10-08 22:08:44 +0800	add useEffect funcs	136	218
+2023-10-08 17:40:23 +0800	fixed error of UserInfo getLocker func	1	1
+2023-10-08 16:36:34 +0800	update rc readfuncs	171	62
+2023-10-08 15:00:05 +0800	update readFuncs	124	164
+2023-10-08 13:07:05 +0800	update roc mod	0	1
+2023-10-08 13:05:26 +0800	update ROA module	1	2
+2023-10-08 13:03:19 +0800	replace with Effect get funcs	50	53
+2023-10-07 22:40:26 +0800	update network config	2	2
+2023-10-07 21:24:00 +0800	replace ethers with viem	2	2
+2023-10-07 21:06:59 +0800	update contractsAddressTable	1	12
+2023-10-07 20:36:33 +0800	update ProposeToTransferFund module	1	1
+2023-10-07 15:57:34 +0800	update CreateMotionForDoc comp	1	1
+2023-10-07 15:42:35 +0800	sorted import modules	160	220
+2023-10-07 11:38:19 +0800	remove useMeetingMinutes from VoteResult comp	1	1
+2023-10-07 11:26:05 +0800	add alchemyProvider into config	5	0
+2023-10-07 11:14:38 +0800	updated wagmi and config	69	158
+2023-10-06 21:59:35 +0800	update packageJson	2	2
+2023-10-06 19:31:06 +0800	add sepolia into config	2	2
+2023-10-06 19:11:49 +0800	updated after sepolia setting	1395	1014
+2023-09-22 05:27:31 +0800	update rules funcs	197	154
+2023-09-21 17:22:36 +0800	add LOO funcs	2238	268
+2023-09-03 09:24:11 +0800	updated cond funcs	360	254
+2023-08-27 22:58:29 +0800	update ROM funcs	239	58
+2023-08-27 10:35:35 +0800	updated filesFolder funcs	430	255
+2023-08-25 15:17:48 +0800	passed AntiDilution test	47	85
+2023-08-25 10:08:47 +0800	passed FR test	2513	1148
+2023-08-22 03:40:01 +0800	passed ROO test	1022	1068
+2023-08-14 16:51:54 +0800	passed AD test	463	433
+2023-08-09 11:56:21 +0800	updated typeOfDoc and titleOfTerm funcs	909	341
+2023-08-07 12:29:22 +0800	updated ActionsOfUser	837	961
+2023-08-02 23:03:10 +0800	updated HexParser	818	679
+2023-08-01 10:00:40 +0800	udpated sha and ia	767	562
+2023-07-30 22:44:30 +0800	updated all funcs of BOO and BOP	794	816
+2023-07-30 00:29:23 +0800	update decorations of funcs	4782	2315
+2023-07-25 18:39:47 +0800	udpate pld concerned funcs	511	403
+2023-07-23 14:20:05 +0800	updated terms funcs of SHA	249	576
+2023-07-20 16:59:23 +0800	finalized terms of sha	1004	979
+2023-07-20 00:25:12 +0800	update with routing funcs	481	434
+2023-07-18 14:54:37 +0800	updated Options and Pledges funcs	4640	262
+2023-07-11 11:29:58 +0800	updated funcs concerning lockers	720	34
+2023-07-10 08:42:33 +0800	updated rom into bom	1009	243
+2023-07-06 20:18:03 +0800	update pld concerned funcs	1927	416
+2023-07-03 22:03:44 +0800	update pr funcs	8	10
+2023-07-03 17:50:31 +0800	update BOD functions	450	150
+2023-07-03 02:31:21 +0800	create BOD panel	1891	222
+2023-07-01 16:39:04 +0800	update BOG funcs	1112	663
+2023-06-29 09:49:41 +0800	update Grid tables	707	1078
+2023-06-27 22:15:12 +0800	update Sha and Ia	43	697
+2023-06-27 18:44:19 +0800	add stepers into initiate procedure	1416	1353
+2023-06-26 08:46:02 +0800	update Ia funcs	948	313
+2023-06-24 20:12:11 +0800	remove sigPage	0	21
+2023-06-24 20:10:19 +0800	udpated Sha models	4000	4188
+2023-06-19 13:29:35 +0800	add queries of SigPage	1810	883
+2023-06-16 02:13:01 +0800	updated all Rules funcs/	387	261
+2023-06-16 02:12:20 +0800	create BOG flowchart	3063	1468
+2023-06-09 14:43:00 +0800	create GM funcs	1169	771
+2023-06-07 13:10:00 +0800	update cancel and revoke funcs of IA	1116	147
+2023-06-05 15:50:24 +0800	updated ia and boa funcs	110	675
+2023-06-03 07:14:33 +0800	updated cleanPaid funcs	3893	1723
+2023-05-25 18:53:08 +0800	add bookOfIA	370	4
+2023-05-25 15:01:25 +0800	update sha sections	74	61
+2023-05-25 11:24:49 +0800	first draft of sha pages and components	671	398
+2023-05-24 01:09:12 +0800	update fileCycle funcs	41	26
+2023-05-23 22:54:23 +0800	udpate lifeCycle funcs of Sha	180	149
+2023-05-23 10:05:35 +0800	add lifecycle section to SHA pages	1347	363
+2023-05-20 13:37:56 +0800	update vr for sha init	1819	1929
+2023-05-18 17:19:12 +0800	drafted Attorney funcs	592	9
+2023-05-18 13:26:25 +0800	finalize AntiDiluton	253	217
+2023-05-17 22:57:16 +0800	update AD models	1503	81
+2023-05-16 14:36:18 +0800	add rules funcs of Sha	3499	25
+2023-05-12 01:24:13 +0800	update FilesList func	596	481
+2023-05-10 13:24:36 +0800	update SHA page	449	3
+2023-05-09 09:00:47 +0800	update disabled prop in appBar	17	20
+2023-05-08 23:11:40 +0800	add Members List	501	255
+2023-05-08 09:34:25 +0800	add useContext	2065	179
+2023-04-26 07:17:47 +0800	created ROM apis	1114	178
+2023-04-24 17:20:30 +0800	test for client UI	728	36
+2023-04-23 10:07:54 +0800	first commit	515	0
+2024-12-12 12:24:59 +0800	resort logs seqNum to fix detailed data overlapping in list	7	0
+2024-10-18 00:15:02 +0800	update all dayjs funcs	368	406
+2024-12-16 11:24:14 +0800	add FuelTank CBP into CbpOfComp in Liability Section	4	1
+2024-11-08 10:25:15 +0800	update LOO deals list	1	12
+2024-11-29 18:21:10 +0800	correct wording of TurnKey moduel	4	4
+2024-12-10 11:57:44 +0800	remove manually update ethPrice setting	0	69
+2024-03-25 11:29:17 +0800	restructured folders and components	382	402
+2023-10-28 02:24:54 +0800	add setErrMsg funcs	1521	414
+2023-08-28 16:11:04 +0800	sorted src codes	698	706
+2023-08-04 19:16:34 +0800	passed lockup test	482	256
+2023-07-15 01:32:22 +0800	updated to migrate into Wagmi 1.0	3848	3624
+2024-11-02 10:57:30 +0800	add consoleLog	3	1
+2024-11-02 10:51:59 +0800	add fromBlock para in Deals List Moduel	1	1
+2024-11-02 10:20:41 +0800	 update loo module	12	16
+2024-10-25 11:06:21 +0800	update share premium func	3	1
+2024-10-24 20:29:30 +0800	remove fule sold g/l from op ex gl	0	3
+2024-10-24 19:42:40 +0800	update wording of exGL	2	2
+2024-10-24 19:28:48 +0800	add exGL display func into finStatement	108	136
+2024-10-23 12:05:39 +0800	update out appearance of finStatement	7	56
+2024-10-23 10:41:11 +0800	correct btn name of retained earnings	1	1
+2024-10-23 10:37:18 +0800	correct error of import getRetainedEarnings	2	2
+2024-10-23 09:20:23 +0800	add retainedEarnings in Income Statement	40	11
+2024-10-22 23:57:09 +0800	set regDate as boundery of startDate and endDate	6	2
+2024-10-22 22:39:48 +0800	update opnBlkNo endBlkNo	8	2
+2024-10-22 22:21:07 +0800	update inventory statement	209	52
+2024-10-22 19:57:40 +0800	update EthOfComp and DeferredRev	39	60
+2024-10-22 17:40:34 +0800	update deferredRevenue	40	35
+2024-10-22 17:05:57 +0800	update ethOfComp	98	19
+2024-10-21 13:08:16 +0800	update title of exportDate	1	1
+2024-10-21 12:41:25 +0800	update title of export file	1	1
+2024-10-21 12:28:53 +0800	optmize export date format	14	1
+2024-10-21 11:47:42 +0800	update export date button	7	2
+2024-10-21 11:31:19 +0800	add data export module	18	1
+2024-10-21 11:31:08 +0800	revise profits into net income	2	2
+2024-10-18 14:40:11 +0800	update equityChange statement	5	5
+2024-10-18 14:29:48 +0800	update equityChangeStatement	29	19
+2024-10-18 12:47:31 +0800	update initContribution concerned issues	17	51
+2024-10-18 12:10:17 +0800	change records filter from seq into timestamp	154	180
+2024-10-17 10:55:42 +0800	update records update modules	31	31
+2024-10-17 09:07:26 +0800	update records update funcs	38	37
+2024-10-17 02:13:24 +0800	upgrade finStatement as real time version based on start and end date.	2744	1449
+2024-10-10 07:21:26 +0800	remove error reference for ethPriceTools	5	8
+2024-10-10 06:57:21 +0800	ensure buttons will show even for empty records	7	8
+2024-10-10 06:39:56 +0800	correct an error for creation buttons of finStatements	16	28
+2024-10-09 23:48:32 +0800	update report mark prices	4	4
+2024-10-09 23:43:27 +0800	update FinStatement with respect to ethPrice	17	9
+2024-10-09 23:15:49 +0800	update CbpOutflow	1	2
+2024-10-09 23:10:06 +0800	update financialStatement funcs	1339	542
+2024-10-01 12:02:24 +0800	update prices and relevant toolkits	10	2
+2024-10-01 07:41:46 +0800	udpate september eth price and start date of ipr	2	2
+2024-10-01 00:00:10 +0800	update finStatement concerned funcs	108	34
+2024-09-30 18:49:05 +0800	correct some error of LOO	3	3
+2024-09-30 16:16:54 +0800	add sub breakdown funcs in finStatements	437	86
+2024-09-29 01:04:01 +0800	update fin statements	347	372
+2024-09-28 00:34:19 +0800	update cbp concered funcs	46	10
+2024-09-27 23:04:27 +0800	upgrade ethPrice dec to 18 gread	1	1
+2024-09-27 22:45:27 +0800	update usd and exchang g/l funcs	772	390
+2024-09-27 01:21:33 +0800	update eth price func	57	46
+2024-03-25 00:35:42 +0800	update Nextjs13 and Wagmi framwork	45897	0
+2024-03-20 02:24:09 +0800	after local npm run build	0	44273
+2024-03-14 18:12:05 +0800	remove pages files	0	40429

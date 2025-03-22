@@ -14,14 +14,10 @@ import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../rc';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from '../../../common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
+import { ActionsOfUserProps } from '../ActionsOfUser';
 
-export interface LockPointsProps{
-  refreshList: ()=>void;
-  getUser: ()=>void;
-  getBalanceOf: ()=>void;
-}
 
-export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps) {
+export function LockPoints({refresh}:ActionsOfUserProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -33,10 +29,8 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [loading, setLoading] = useState(false);
 
-  const refresh = ()=>{
-    refreshList();
-    getUser();
-    getBalanceOf();
+  const updateResults = ()=>{
+    refresh();
     setLoading(false);
   }
 
@@ -51,7 +45,7 @@ export function LockPoints({refreshList, getUser, getBalanceOf}:LockPointsProps)
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 

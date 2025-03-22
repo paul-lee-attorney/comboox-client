@@ -5,8 +5,9 @@ import {
 import { DataGrid, GridColDef, GridEventListener } from '@mui/x-data-grid'
 import { bigIntToStrNum, dateParser, longDataParser, longSnParser } from '../../../common/toolsKit';
 import { StrLocker } from '../../../rc';
-import { LockerFinder } from './LockerFinder';
+
 import { Dispatch, SetStateAction } from 'react';
+import { LockerFinder } from './LockerFinder';
 
 const columns: GridColDef[] = [
   { 
@@ -65,7 +66,7 @@ export function LockersList({ list, setLocker, setOpen }:LocksListProps ) {
   return (
     <Paper elevation={3} sx={{m:1, p:1, border: 1, borderColor:'divider'}} >
       <Toolbar>
-        <h4>Lockers List</h4>
+        <h4>CBP Lockers List</h4>
       </Toolbar>
 
       <LockerFinder setLocker={ setLocker } setOpen={ setOpen } />

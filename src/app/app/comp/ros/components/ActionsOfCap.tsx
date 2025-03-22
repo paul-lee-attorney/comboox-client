@@ -5,10 +5,11 @@ import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Tool
 
 import { Share } from "../ros";
 
-import { PayInCap } from "./Actions/PayInCap";
+import { PayInUsd } from "./Actions/PayInUsd";
 import { SetPayInAmt } from "./Actions/SetPayInAmt";
 import { RequestPaidInCap } from "./Actions/RequestPaidInCap";
 import { WithdrawPayInAmt } from "./Actions/WithdrawPayInAmt";
+import { PayInEth } from "./Actions/PayInEth";
 
 export interface ActionsOfCapProps {
   share: Share;
@@ -21,14 +22,15 @@ export function ActionsOfCap({share, setDialogOpen, refresh}: ActionsOfCapProps)
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfCap = [
-    'PayIn Cash', 'Lock PayInAmt', 'Pickup PayInAmt', 'Withdraw PayInAmt' 
+    'PayIn ETH', 'PayIn USD', 'Lock PayInAmt', 'Pickup PayInAmt', 'Withdraw PayInAmt' 
   ]
 
   const compsOfAction = [
-    <PayInCap key={0} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
-    <SetPayInAmt key={1} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
-    <RequestPaidInCap key={2} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
-    <WithdrawPayInAmt key={3} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
+    <PayInEth key={0} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
+    <PayInUsd key={1} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
+    <SetPayInAmt key={2} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
+    <RequestPaidInCap key={3} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
+    <WithdrawPayInAmt key={4} share={share} setDialogOpen={setDialogOpen} refresh={refresh} />, 
   ]
 
   return(

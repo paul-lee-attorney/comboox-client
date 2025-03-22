@@ -76,7 +76,7 @@ function RegisterOfAgreements() {
 
   return (
     <>
-      <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+      <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:2, m:1, border:1, borderColor:'divider', width:'fit-content' }} >
         <Stack direction='row' sx={{ alignContent:'space-between' }}>
 
           <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >

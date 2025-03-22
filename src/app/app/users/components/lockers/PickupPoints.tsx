@@ -14,13 +14,11 @@ import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider
 
 interface PickupPointsProps{
   hashLock: HexType;
-  refreshList: ()=>void;
-  getUser: ()=>void;
+  refresh: ()=>void;
   setOpen: (flag: boolean)=>void;
-  getBalanceOf: () => void;
 }
 
-export function PickupPoints({hashLock, refreshList, getUser, setOpen, getBalanceOf}:PickupPointsProps) {
+export function PickupPoints({hashLock, refresh, setOpen }:PickupPointsProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -28,11 +26,9 @@ export function PickupPoints({hashLock, refreshList, getUser, setOpen, getBalanc
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
-    refreshList();
-    getUser();
+    refresh();
     setOpen(false);
     setLoading(false);
-    getBalanceOf();
   }
 
   const {

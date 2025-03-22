@@ -6,7 +6,7 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 
 import { MembersEquityList } from "./components/MembersList";
 
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { InvHistoryOfMember } from "./components/InvHistoryOfMember";
 import { AddrZero, booxMap } from "../../common";
 
@@ -22,7 +22,7 @@ function RegisterOfMembers() {
   const [ open, setOpen ] = useState(false);
   
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider', width:'fit-content' }} >
 
       <Stack direction='row' >
         <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >

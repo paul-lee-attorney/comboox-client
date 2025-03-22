@@ -274,7 +274,7 @@ export interface StrCheckPoint {
   timestamp: string;
   paid: string;
   par: string;
-  cleanPaid: string;
+  points: string;
 }
 
 
@@ -282,7 +282,7 @@ export interface CheckPoint {
   timestamp: number;
   paid: bigint;
   par: bigint;
-  cleanPaid: bigint;
+  points: bigint;
 }
 
 // export function parseOrgOracle(oracle: OrgCheckPoint): CheckPoint {

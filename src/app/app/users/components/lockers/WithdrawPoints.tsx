@@ -14,24 +14,20 @@ import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider
 
 interface WithdrawPointsProps{
   hashLock: HexType;
-  refreshList: ()=>void;
-  getUser: ()=>void;
+  refresh: ()=>void;
   setOpen: (flag: boolean)=>void;
-  getBalanceOf: () => void;
 }
 
-export function WithdrawPoints({hashLock, refreshList, getUser, setOpen, getBalanceOf}:WithdrawPointsProps) {
+export function WithdrawPoints({hashLock, refresh, setOpen}:WithdrawPointsProps) {
 
   const { setErrMsg } = useComBooxContext();
 
   const [loading, setLoading] = useState(false);
 
   const updateResults = ()=>{
-    refreshList();
-    getUser();
+    refresh();
     setOpen(false);
     setLoading(false);
-    getBalanceOf();
   }
 
   const {

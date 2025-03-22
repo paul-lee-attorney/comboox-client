@@ -6,57 +6,17 @@ import { useRegCenterLockConsideration } from '../../../../../../generated';
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, MaxLockValue, MaxSeqNo, MaxUserNo } from '../../../common';
 import { LockClockOutlined } from '@mui/icons-material';
 import { useState } from 'react';
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, selectorCodifier, stampToUtc, strNumToBigInt, utcToStamp } from '../../../common/toolsKit';
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from '../../../common/toolsKit';
 import { DateTimeField } from '@mui/x-date-pickers';
 
 import { StrHeadOfLocker, defaultStrHeadOfLocker } from '../../../rc';
-import { LockPointsProps } from './LockPoints';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
+import { ActionsOfUserProps } from '../ActionsOfUser';
+import { calDefaultParas, constructPayload, funcNames, selectors } from '../../../common/payloadTools';
 
 
-export interface Selector {
-  selector: HexType;
-  offSet:number;
-}
-
-export interface Selectors {
-  [key: string]: Selector
-}
-
-export const selectors: Selectors = {
-  'requestPaidInCapital': {selector: selectorCodifier('requestPaidInCapital(bytes32,string)'), offSet: 0x40},
-  'closeDeal': {selector: selectorCodifier('closeDeal(address,uint256,string)'), offSet: 0x60},
-  'releasePledge': {selector: selectorCodifier('releasePledge(uint256,uint256,string)'), offSet: 0x60},
-}
-
-export const funcNames:string[] = [
-  'requestPaidInCapital',
-  'closeDeal',
-  'releasePledge',
-]
-
-function constructPayload(func:string, paras:string[]):HexType {
-  let selector = selectors[func].selector;
-  let strParas:string = '';
-  paras.forEach(v=>strParas = strParas.concat(v));
-  let offSet = selectors[func].offSet.toString(16).padStart(64, '0');
-
-  return `0x${selector.substring(2) + strParas + offSet }`;    
-}
-
-function calDefaultParas(hashLock:HexType, offSet:number):string[]{
-
-  let out:string[] = [ hashLock.padStart(0x40, '0') ];
-  let len = parseInt(`${offSet/0x20}`) - 1;
-  while (len > 1) {
-    out.push(Bytes32Zero);
-    len--;
-  }
-  return out;
-}
-
-export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPointsProps) {
+export function LockConsideration({refresh}:ActionsOfUserProps) {
 
   const { setErrMsg } = useComBooxContext();
 
@@ -73,11 +33,9 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [loading, setLoading] = useState(false);
 
-  const refresh = ()=> {
+  const updateResults = ()=> {
     console.log('payloads: ', constructPayload(func, paras));
-    refreshList();
-    getUser();
-    getBalanceOf();
+    refresh();
     setLoading(false);
   }
 
@@ -92,7 +50,7 @@ export function LockConsideration({refreshList, getUser, getBalanceOf}:LockPoint
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      refreshAfterTx(hash, refresh);
+      refreshAfterTx(hash, updateResults);
     }
   })
 

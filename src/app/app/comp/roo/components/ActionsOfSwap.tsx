@@ -2,6 +2,7 @@ import { Collapse, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Tool
 import { Dispatch, SetStateAction, useState } from "react";
 import { PayOffSwap } from "./ActionsOfSwap/PayOffSwap";
 import { TerminateSwap } from "./ActionsOfSwap/TerminateSwap";
+import { PayOffSwapUsd } from "./ActionsOfSwap/PayOffSwapUsd";
 
 export interface ActionsOfSwapProps{
   seqOfOpt: number;
@@ -15,12 +16,13 @@ export function ActionsOfSwap({seqOfOpt, seqOfSwap, setOpen, refresh}: ActionsOf
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
 
   const typesOfAction = [
-    'Pay Off Swap', 'Terminate Swap'
+    'Pay Off Swap In ETH', 'Pay Off Swap In USD', 'Terminate Swap'
   ]
   
   const compsOfAction = [
     <PayOffSwap key={0} seqOfOpt={seqOfOpt} seqOfSwap={seqOfSwap} setOpen={ setOpen } refresh={ refresh } />, 
-    <TerminateSwap key={1} seqOfOpt={seqOfOpt} seqOfSwap={seqOfSwap} setOpen={ setOpen } refresh={ refresh } />,
+    <PayOffSwapUsd key={1} seqOfOpt={seqOfOpt} seqOfSwap={seqOfSwap} setOpen={ setOpen } refresh={ refresh } />, 
+    <TerminateSwap key={2} seqOfOpt={seqOfOpt} seqOfSwap={seqOfSwap} setOpen={ setOpen } refresh={ refresh } />,
   ]
 
   return(

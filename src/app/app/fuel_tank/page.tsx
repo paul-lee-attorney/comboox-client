@@ -138,7 +138,7 @@ function FuelTank() {
   const [ open, setOpen ] = useState(false);
 
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:1, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:2, border:1, borderColor:'divider', width:'fit-content' }} >
 
       <Stack direction='row' sx={{alignItems:'center'}}>
 

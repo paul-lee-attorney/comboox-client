@@ -1,5 +1,5 @@
 import { readContract } from "@wagmi/core";
-import { HexType } from "../common";
+import { AddrZero, HexType } from "../common";
 import { generalKeeperABI } from "../../../../generated";
 import { getDK } from "./common/draftControl";
 import { toStr } from "../common/toolsKit";
@@ -7,12 +7,14 @@ import { getOwner } from "../common/ownable";
 
 export const nameOfBooks = [
   'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 
-  'ROA', 'ROO', 'ROP', 'ROS', 'LOO'
+  'ROA', 'ROO', 'ROP', 'ROS', 'LOE', 
+  'Cashier', 'USDC', 'LOU'
 ]
 
 export const titleOfKeepers = [
   'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 'GmmKeeper', 
-  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper', 'LooKeeper'
+  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper', 'LooKeeper',
+  'UsdRomKeeper', 'UsdRoaKeeper', 'UsdLooKeeper', 'UsdRooKeeper', 'UsdKeeper'
 ]
 
 export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
@@ -54,12 +56,14 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<11; i++) {
+  for (let i = 1; i<=13; i++) {
  
     let addr = await getBook(gk, i);
-    let owner = await getOwner(addr); 
-    let dk = await getDK(addr);
- 
+    let owner = await getOwner(addr);
+    let dk = i == 12 
+        ? AddrZero
+        : await getDK(addr);
+     
     let item: BookInfo = {
       title: i,
       addr: addr,
@@ -83,7 +87,7 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<11; i++) {
+  for (let i = 1; i<=15; i++) {
  
     let addr = await getKeeper(gk, i);
     let owner = await getOwner(addr);

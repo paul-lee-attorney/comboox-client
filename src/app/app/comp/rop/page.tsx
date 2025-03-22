@@ -14,7 +14,7 @@ import { Pledge, getAllPledges } from "./rop";
 import { PledgesList } from "./components/PledgesList";
 import { CertificateOfPledge } from "./components/CertificateOfPledge";
 import { CreatePledge } from "./components/CreatePledge";
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, booxMap } from "../../common";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { SetBookAddr } from "../../components/SetBookAddr";
@@ -41,7 +41,7 @@ function RegisterOfPledges() {
   const [ pld, setPld ] = useState<Pledge>();
 
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:2, m:1, maxWidth:1680, border:1, borderColor:'divider', width:'fit-content' }} >
 
       <Stack direction="row" >
 

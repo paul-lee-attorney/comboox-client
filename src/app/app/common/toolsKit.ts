@@ -51,11 +51,6 @@ export function longDataParser(data: string): string {
     return data.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",");
 }
 
-export function selectorCodifier(func: string): HexType {
-  let hash = keccak256(toHex(func));
-  return `0x${hash.substring(2,10)}`;
-}
-
 export function splitStrArr(input: string[]):string{
   let out:string = '';
   input.forEach(v => {

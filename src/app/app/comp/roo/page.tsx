@@ -41,7 +41,7 @@ function RegisterOfOptions() {
   const [ opt, setOpt ] = useState<OptWrap>( defaultOptWrap );
 
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, maxWidth:1680, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:2, m:1, border:1, borderColor:'divider', width:'fit-content' }} >
 
       <Stack direction="row" >
 
@@ -57,7 +57,7 @@ function RegisterOfOptions() {
 
       </Stack>
 
-      <Stack direction='column' sx={{m:1, p:1}} >
+      <Stack direction='column' sx={{ m:1 }} >
 
         <OptionsList 
           list={ optsList }  

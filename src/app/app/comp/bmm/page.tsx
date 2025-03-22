@@ -36,10 +36,10 @@ function BoardMeetingMinutes() {
   }, [addr, time]);
 
   return (
-    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:1, m:1, border:1, borderColor:'divider' }} >
+    <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', p:2, m:1, border:1, borderColor:'divider', width:'fit-content' }} >
 
       <Stack direction='row' >
-        <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
+        <Typography variant='h5' sx={{ m:1, textDecoration:'underline'  }}  >
           <b>BMM - Board Meeting Minutes </b>
         </Typography>
         
@@ -50,7 +50,7 @@ function BoardMeetingMinutes() {
         <SetBookAddr setAddr={setAddr}/>
 
       </Stack>
-      <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1, p:1}} >
+      <Stack direction='column' justifyContent='center' alignItems='start' sx={{m:1}} >
 
         <CreateMotionOfBoardMeeting  refresh={refresh} />
 
