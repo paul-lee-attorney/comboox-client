@@ -2,9 +2,9 @@ import { Paper, Stack, Table, TableBody, TableCell, TableHead, TableRow, Typogra
 import { showUSD, weiToEth9Dec } from "../FinStatement";
 import { getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
 import { useEffect, useState } from "react";
-import { capAtDate } from "../../../rom/rom";
-import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { booxMap } from "../../../../common";
+import { capAtDate } from "../../rom/rom";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import {  getInitContribution, setUpDate } from "./Assets";
 import { getOwnersEquity } from "./LiabilityAndEquity";

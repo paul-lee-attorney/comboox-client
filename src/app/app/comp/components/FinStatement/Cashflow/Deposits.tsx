@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
-import { AddrZero, Bytes32Zero } from "../../../../../common";
+import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { AddrZero, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../../api/firebase/ethPriceTools";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
 export type DepositsSum = {
   totalAmt: bigint;

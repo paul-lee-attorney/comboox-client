@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../../common/toolsKit";
-import { CopyLongStrTF } from "../../../../common/CopyLongStr";
+import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
+import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { Cashflow } from "../FinStatement";
-import { exportToExcel } from "../../../../../api/dataTools";
+import { exportToExcel } from "../../../../api/dataTools";
 import { CloudDownloadOutlined } from "@mui/icons-material";
 
 export interface SumInfo {

@@ -8584,13 +8584,6 @@ export const iCashLockersABI = [
     outputs: [],
   },
   {
-    stateMutability: 'view',
-    type: 'function',
-    inputs: [],
-    name: 'usdc',
-    outputs: [{ name: '', internalType: 'contract IUSDC', type: 'address' }],
-  },
-  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [{ name: 'lock', internalType: 'bytes32', type: 'bytes32' }],
@@ -61689,29 +61682,6 @@ export function useICashLockersTotalCustody<
   return useContractRead({
     abi: iCashLockersABI,
     functionName: 'totalCustody',
-    ...config,
-  } as UseContractReadConfig<
-    typeof iCashLockersABI,
-    TFunctionName,
-    TSelectData
-  >)
-}
-
-/**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iCashLockersABI}__ and `functionName` set to `"usdc"`.
- */
-export function useICashLockersUsdc<
-  TFunctionName extends 'usdc',
-  TSelectData = ReadContractResult<typeof iCashLockersABI, TFunctionName>,
->(
-  config: Omit<
-    UseContractReadConfig<typeof iCashLockersABI, TFunctionName, TSelectData>,
-    'abi' | 'functionName'
-  > = {} as any,
-) {
-  return useContractRead({
-    abi: iCashLockersABI,
-    functionName: 'usdc',
     ...config,
   } as UseContractReadConfig<
     typeof iCashLockersABI,

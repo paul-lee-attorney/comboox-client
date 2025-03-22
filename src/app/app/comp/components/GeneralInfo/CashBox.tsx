@@ -5,9 +5,10 @@ import { totalDeposits } from "../../gk";
 import { balanceOfComp, totalCustody } from "../../cashier";
 import { booxMap } from "../../../common";
 import { Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material";
+
+import { getEthPart, getGWeiPart, getWeiPart, longDataParser } from "../../../common/toolsKit";
 import { PickupDeposit } from "./CashBox/PickupDeposit";
 import { DepositOfMine } from "./CashBox/DepositOfMine";
-import { getEthPart, getGWeiPart, getWeiPart, longDataParser } from "../../../common/toolsKit";
 
 export function CashBox() {
 

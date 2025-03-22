@@ -1,16 +1,16 @@
 import { Button, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
-import { baseToDollar } from "../../../../common/toolsKit";
+import { baseToDollar } from "../../../common/toolsKit";
 import { FtCbpflowSum } from "./Cashflow/FtCbpflow";
 import { IncomeStatementProps } from "./IncomeStatement";
 import { FtEthflowSum } from "./Cashflow/FtEthflow";
 import { DepositsSum } from "./Cashflow/Deposits";
-import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { usePublicClient } from "wagmi";
 import { useEffect, useState } from "react";
-import { AddrOfTank } from "../../../../common";
-import { totalDeposits } from "../../../gk";
-import { balanceOf } from "../../../../rc";
+import { AddrOfTank } from "../../../common";
+import { totalDeposits } from "../../gk";
+import { balanceOf } from "../../../rc";
 
 export interface CryptoInventoryProps extends IncomeStatementProps {
   ftCbpflow: FtCbpflowSum[],

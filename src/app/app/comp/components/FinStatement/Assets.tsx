@@ -4,9 +4,9 @@ import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
 import { usePublicClient } from "wagmi";
 import { useEffect, useState } from "react";
-import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrOfTank } from "../../../../common";
-import { totalDeposits } from "../../../gk";
+import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
+import { AddrOfTank } from "../../../common";
+import { totalDeposits } from "../../gk";
 
 export interface AssetsProps extends StatementProps {
   ethInflow: EthInflowSum[],

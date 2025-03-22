@@ -1,6 +1,6 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
-import { baseToDollar } from "../../../../common/toolsKit";
+import { baseToDollar } from "../../../common/toolsKit";
 import { CbpInflowSum } from "./Cashflow/CbpInflow";
 import { CbpOutflowSum } from "./Cashflow/CbpOutflow";
 import { AssetsProps, getArmotization, getEthOfComp } from "./Assets";
