@@ -8,6 +8,8 @@ import { Divider, Paper, TextField, Toolbar } from "@mui/material";
 import { longDataParser, longSnParser, toPercent } from "../common/toolsKit";
 import { useWalletClient } from "wagmi";
 
+import { LockersList } from "./components/Lockers/LockersList";
+import { HashLockerOfPoints } from "./components/Lockers/HashLockerOfPoints";
 import { CopyLongStrTF } from "../common/CopyLongStr";
 import { ActionsOfUser } from "./components/ActionsOfUser";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
@@ -15,8 +17,6 @@ import { balanceOfUsd } from "../usdc";
 import { UsdLockersList } from "./components/UsdLockers/UsdLockersList";
 import { HashLockerOfUsd } from "./components/UsdLockers/HashLockerOfUsd";
 import { defaultItemLocker, getUsdLockersList, ItemLocker } from "../cl";
-import { LockersList } from "./components/lockers/LockersList";
-import { HashLockerOfPoints } from "./components/lockers/HashLockerOfPoints";
 
 function UserInfo() {
 
