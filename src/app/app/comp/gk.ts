@@ -56,9 +56,11 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<=13; i++) {
+  let i = 1;
+  let addr = await getBook(gk, i);
+
+  while (addr != AddrZero) {
  
-    let addr = await getBook(gk, i);
     let owner = await getOwner(addr);
     let dk = i == 12 
         ? AddrZero
@@ -69,10 +71,15 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
       addr: addr,
       owner: owner,
       dk: dk,    
-    }
+    };
 
     books.push(item);
-  }
+
+    i++;
+    addr = await getBook(gk, i);
+
+  };
+
   return books;  
 }
 
@@ -87,9 +94,11 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
     dk: await getDK(gk),
   })
 
-  for (let i = 1; i<=15; i++) {
+  let i = 1;
+  let addr = await getKeeper(gk, i);
+
+  while (addr != AddrZero) {
  
-    let addr = await getKeeper(gk, i);
     let owner = await getOwner(addr);
     let dk = await getDK(addr);
  
@@ -101,7 +110,11 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
     }
 
     books.push(item);
+
+    i++;
+    addr = await getKeeper(gk, i);
   }
+
   return books;  
 }
 

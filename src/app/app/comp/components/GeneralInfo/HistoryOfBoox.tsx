@@ -24,8 +24,10 @@ export type RegBooxRecord = {
 export const titleOfBoox: string[] = [
   'GK', 'ROCKeeper', 'RODKeeper', 'BMMKeeper', 'ROMKeeper', 'GMMKeeper',
   'ROAKeeper', 'ROOKeeper', 'ROPKeeper', 'SHAKeeper', 'LOOKeeper', 
+  'UsdROMKeeper', 'UsdROAKeeper', 'UsdLOOKeeper', 'UsdROOKeeper', 'UsdKeeper',
   'ROC', 'ROD', 'BMM', 'ROM', 'GMM',
-  'ROA', 'ROO', 'ROP', 'ROS', 'LOO'
+  'ROA', 'ROO', 'ROP', 'ROS', 'LOO',
+  'Cashier', 'USDC'
 ]
 
 export function HistoryOfBoox() {
@@ -99,7 +101,7 @@ export function HistoryOfBoox() {
           blockNumber: blkNo,
           timestamp: blk.timestamp,
           transactionHash: log.transactionHash,
-          title: 10 + Number(log.args.title ?? 0n),
+          title: 15 + Number(log.args.title ?? 0n),
           address: HexParser(log.args.book ?? AddrZero),
           dk: HexParser(log.args.dk ?? AddrZero),
           headOfDoc: headOfDoc

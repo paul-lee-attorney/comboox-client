@@ -481,7 +481,7 @@ export function GeneralInfo() {
                 label='(GLee)'
                 inputProps={{
                   readOnly: true,
-                  style: {textAlign: 'right'},
+                  style: {textAlign: 'left'},
                 }}
                 color = "primary"
                 focused
