@@ -26,8 +26,8 @@ export const titleOfBoox: string[] = [
   'ROAKeeper', 'ROOKeeper', 'ROPKeeper', 'SHAKeeper', 'LOOKeeper', 
   'UsdROMKeeper', 'UsdROAKeeper', 'UsdLOOKeeper', 'UsdROOKeeper', 'UsdKeeper',
   'ROC', 'ROD', 'BMM', 'ROM', 'GMM',
-  'ROA', 'ROO', 'ROP', 'ROS', 'LOO',
-  'Cashier', 'USDC'
+  'ROA', 'ROO', 'ROP', 'ROS', 'LOE',
+  'Cashier', 'USDC', 'LOU'
 ]
 
 export function HistoryOfBoox() {
