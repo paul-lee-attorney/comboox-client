@@ -61,7 +61,10 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
 
   while (addr != AddrZero) {
  
-    let owner = await getOwner(addr);
+    let owner = i == 12
+        ? AddrZero
+        : await getOwner(addr);
+        
     let dk = i == 12 
         ? AddrZero
         : await getDK(addr);
