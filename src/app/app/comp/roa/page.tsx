@@ -26,6 +26,7 @@ import { refreshAfterTx } from "../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { SetBookAddr } from "../../components/SetBookAddr";
+import { counterOfVersions } from "../../rc";
 
 function RegisterOfAgreements() {
   const { gk, boox, setErrMsg } = useComBooxContext();
@@ -43,6 +44,12 @@ function RegisterOfAgreements() {
   const [ filesInfoList, setFilesInfoList ] = useState<InfoOfFile[]>();
 
   const [ version, setVersion ] = useState<string>('1');
+
+  useEffect(()=>{
+    counterOfVersions(21n).then(
+      vr => setVersion(vr.toString())
+    );
+  }, [time]);
 
   const {
     isLoading: createIaLoading, 
@@ -106,10 +113,11 @@ function RegisterOfAgreements() {
                       id="tfVersion" 
                       label="Version" 
                       variant="outlined"
-                      helperText="Integer <= 2^16 (e.g. '123')"
-                      onChange={(e) => 
-                        setVersion(e.target.value)
-                      }
+                      // helperText="Integer <= 2^16 (e.g. '123')"
+                      // onChange={(e) => 
+                      //   setVersion(e.target.value)
+                      // }
+                      inputProps={{readOnly:true}}
                       value = { version }
                       size='small'
                     />

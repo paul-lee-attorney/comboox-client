@@ -17,6 +17,7 @@ import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "
 
 import { useGeneralKeeperCreateSha } from "../../../../../generated";
 import { SetBookAddr } from "../../components/SetBookAddr";
+import { counterOfVersions } from "../../rc";
 
 function RegisterOfConstitution() {
   const { gk, boox, setErrMsg } = useComBooxContext();
@@ -33,6 +34,12 @@ function RegisterOfConstitution() {
   }
 
   const [ version, setVersion ] = useState<string>('1');
+
+  useEffect(()=>{
+    counterOfVersions(22n).then(
+      vr => setVersion(vr.toString())
+    );
+  }, [time]);
 
   const {
     isLoading: createShaLoading, 
@@ -98,13 +105,14 @@ function RegisterOfConstitution() {
                     id="tfVersion" 
                     label="Version" 
                     variant="outlined"
-                    error={ valid['Version']?.error }
-                    helperText={ valid['Version']?.helpTx ?? ' ' }
-                    onChange={(e) => {
-                      let input = e.target.value;
-                      onlyInt('Version', input, MaxPrice, setValid);
-                      setVersion(input);
-                    }}
+                    // error={ valid['Version']?.error }
+                    // helperText={ valid['Version']?.helpTx ?? ' ' }
+                    // onChange={(e) => {
+                    //   let input = e.target.value;
+                    //   onlyInt('Version', input, MaxPrice, setValid);
+                    //   setVersion(input);
+                    // }}
+                    inputProps={{readOnly:true}}
                     value = { version }
                     size='small'
                   />

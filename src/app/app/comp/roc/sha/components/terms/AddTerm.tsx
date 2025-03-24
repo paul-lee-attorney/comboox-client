@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 
 import { Stack, TextField } from "@mui/material";
 import { Delete, PlaylistAdd } from "@mui/icons-material";
@@ -11,7 +11,7 @@ import {
   useShareholdersAgreementRemoveTerm 
 } from "../../../../../../../../generated";
 
-import { getDocAddr } from "../../../../../rc";
+import { counterOfVersions, getDocAddr } from "../../../../../rc";
 
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../../common/toolsKit";
 import { useComBooxContext } from "../../../../../../_providers/ComBooxContextProvider";
@@ -30,6 +30,14 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
   const [ version, setVersion ] = useState<string>('1');
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
+
+  // uint typeOfDoc = title > 3 ? 21 + title : 22 + title;
+  useEffect(()=>{
+    let typeOfDoc = BigInt(title > 3 ? 21 + title : 22 + title);
+    counterOfVersions(typeOfDoc).then(
+      vr => setVersion(vr.toString())
+    )
+  }, [title]);
 
   const {
     isLoading: createTermLoading,
@@ -101,19 +109,20 @@ export function AddTerm({sha, title, setTerms, isCreated}: AddTermProps) {
             variant='outlined'
             label='Version'
             size='small'
-            error={ valid['Version']?.error }
-            helperText={ valid['Version']?.helpTx ?? ' ' }
+            // error={ valid['Version']?.error }
+            // helperText={ valid['Version']?.helpTx ?? ' ' }
             sx={{
               m:1,
               ml:3,
               minWidth: 218,
             }}
-            onChange={(e) => {
-              let input = e.target.value;
-              onlyInt('Version', input, MaxPrice, setValid);
-              setVersion(input);
-            }}
+            // onChange={(e) => {
+            //   let input = e.target.value;
+            //   onlyInt('Version', input, MaxPrice, setValid);
+            //   setVersion(input);
+            // }}
             value={ version }              
+            inputProps={{readOnly:true}}
           />
 
           <LoadingButton
