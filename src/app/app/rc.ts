@@ -233,7 +233,9 @@ export const typesOfDoc:string[] = [
   'ROCKeeper', 'RODKeeper', 'BMMKeeper', 'ROMKeeper', 'GMMKeeper', 'ROAKeeper',
   'ROOKeeper', 'ROPKeeper', 'SHAKeeper', 'LOOKeeper', 'ROC', 'ROD', 
   'MM', 'ROM', 'ROA', 'ROO', 'ROP', 'ROS', 'LOO', 'GK', 'IA', 'SHA',
-  'AntiDilution', 'LockUp', 'Alongs', 'Options', 'LOP'
+  'AntiDilution', 'LockUp', 'Alongs', 'Options', 'LOP', 
+  'Cashier', 'UsdLOO', 'USDKeeper', 'UsdROMKeeper', 'UsdROAKeeper',
+  'UsdLOOKeeper', 'UsdROOKeeper', 
 ]
 
 // ==== Options ====
