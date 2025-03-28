@@ -3397,8 +3397,22 @@ export const cashierABI = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
     ],
     name: 'CustodyUsd',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'DistributeUsd',
   },
   {
     type: 'event',
@@ -3407,8 +3421,39 @@ export const cashierABI = [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
     ],
     name: 'ForwardUsd',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'msgSender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'caller',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'PickupUsd',
   },
   {
     type: 'event',
@@ -3424,8 +3469,29 @@ export const cashierABI = [
     anonymous: false,
     inputs: [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+    ],
+    name: 'ReceiveUsd',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
     ],
     name: 'ReleaseUsd',
   },
@@ -3469,6 +3535,12 @@ export const cashierABI = [
     inputs: [
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
     ],
     name: 'TransferUsd',
   },
@@ -3478,6 +3550,31 @@ export const cashierABI = [
     inputs: [],
     name: 'balanceOfComp',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'auth',
+        internalType: 'struct ICashier.TransferAuth',
+        type: 'tuple',
+        components: [
+          { name: 'from', internalType: 'address', type: 'address' },
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'validAfter', internalType: 'uint256', type: 'uint256' },
+          { name: 'validBefore', internalType: 'uint256', type: 'uint256' },
+          { name: 'nonce', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+        ],
+      },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'collectUsd',
+    outputs: [],
   },
   {
     stateMutability: 'nonpayable',
@@ -3530,8 +3627,23 @@ export const cashierABI = [
           { name: 's', internalType: 'bytes32', type: 'bytes32' },
         ],
       },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'custodyUsd',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'user', internalType: 'uint256', type: 'uint256' }],
+    name: 'depositOfMine',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'distributeUsd',
     outputs: [],
   },
   {
@@ -3555,6 +3667,7 @@ export const cashierABI = [
         ],
       },
       { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'forwardUsd',
     outputs: [],
@@ -3603,10 +3716,18 @@ export const cashierABI = [
   {
     stateMutability: 'nonpayable',
     type: 'function',
+    inputs: [],
+    name: 'pickupUsd',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
     inputs: [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'releaseUsd',
     outputs: [],
@@ -3643,7 +3764,14 @@ export const cashierABI = [
     stateMutability: 'view',
     type: 'function',
     inputs: [],
-    name: 'totalCustody',
+    name: 'totalDeposits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'totalEscrow',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
@@ -3652,6 +3780,7 @@ export const cashierABI = [
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'transferUsd',
     outputs: [],
@@ -8603,8 +8732,22 @@ export const iCashierABI = [
     inputs: [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
     ],
     name: 'CustodyUsd',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'DistributeUsd',
   },
   {
     type: 'event',
@@ -8613,8 +8756,39 @@ export const iCashierABI = [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
     ],
     name: 'ForwardUsd',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'msgSender',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'caller',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'value',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'PickupUsd',
   },
   {
     type: 'event',
@@ -8630,8 +8804,29 @@ export const iCashierABI = [
     anonymous: false,
     inputs: [
       { name: 'from', internalType: 'address', type: 'address', indexed: true },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
+    ],
+    name: 'ReceiveUsd',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'from', internalType: 'address', type: 'address', indexed: true },
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: false,
+      },
     ],
     name: 'ReleaseUsd',
   },
@@ -8641,6 +8836,12 @@ export const iCashierABI = [
     inputs: [
       { name: 'to', internalType: 'address', type: 'address', indexed: true },
       { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+      {
+        name: 'remark',
+        internalType: 'bytes32',
+        type: 'bytes32',
+        indexed: true,
+      },
     ],
     name: 'TransferUsd',
   },
@@ -8650,6 +8851,31 @@ export const iCashierABI = [
     inputs: [],
     name: 'balanceOfComp',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'auth',
+        internalType: 'struct ICashier.TransferAuth',
+        type: 'tuple',
+        components: [
+          { name: 'from', internalType: 'address', type: 'address' },
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'validAfter', internalType: 'uint256', type: 'uint256' },
+          { name: 'validBefore', internalType: 'uint256', type: 'uint256' },
+          { name: 'nonce', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+        ],
+      },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
+    ],
+    name: 'collectUsd',
+    outputs: [],
   },
   {
     stateMutability: 'nonpayable',
@@ -8702,8 +8928,23 @@ export const iCashierABI = [
           { name: 's', internalType: 'bytes32', type: 'bytes32' },
         ],
       },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'custodyUsd',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [{ name: 'user', internalType: 'uint256', type: 'uint256' }],
+    name: 'depositOfMine',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'distributeUsd',
     outputs: [],
   },
   {
@@ -8727,8 +8968,16 @@ export const iCashierABI = [
         ],
       },
       { name: 'to', internalType: 'address', type: 'address' },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'forwardUsd',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [],
+    name: 'pickupUsd',
     outputs: [],
   },
   {
@@ -8738,6 +8987,7 @@ export const iCashierABI = [
       { name: 'from', internalType: 'address', type: 'address' },
       { name: 'to', internalType: 'address', type: 'address' },
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'releaseUsd',
     outputs: [],
@@ -8746,7 +8996,14 @@ export const iCashierABI = [
     stateMutability: 'view',
     type: 'function',
     inputs: [],
-    name: 'totalCustody',
+    name: 'totalDeposits',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'totalEscrow',
     outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
   },
   {
@@ -8755,6 +9012,7 @@ export const iCashierABI = [
     inputs: [
       { name: 'to', internalType: 'address', type: 'address' },
       { name: 'amt', internalType: 'uint256', type: 'uint256' },
+      { name: 'remark', internalType: 'bytes32', type: 'bytes32' },
     ],
     name: 'transferUsd',
     outputs: [],
@@ -21065,73 +21323,6 @@ export const iusdKeeperABI = [
 
 export const iUsdLooKeeperABI = [
   {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseBidAgainstInitOffer',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseBidAgainstOffer',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseInitOfferAgainstBid',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseOfferAgainstBid',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CustodyValueOfBidOrder',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'RefundBalanceOfBidOrder',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'RefundValueOfBidOrder',
-  },
-  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [
@@ -21785,44 +21976,6 @@ export const iUsdListOfOrdersABI = [
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const iUsdRoaKeeperABI = [
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'caller',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'valueOfDeal',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'PayOffCIDeal',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'caller',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'valueOfDeal',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'PayOffSTDeal',
-  },
   {
     stateMutability: 'nonpayable',
     type: 'function',
@@ -36517,73 +36670,6 @@ export const usdLooKeeperABI = [
     type: 'event',
     anonymous: false,
     inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseBidAgainstInitOffer',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseBidAgainstOffer',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseInitOfferAgainstBid',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CloseOfferAgainstBid',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'CustodyValueOfBidOrder',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'RefundBalanceOfBidOrder',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      { name: 'from', internalType: 'address', type: 'address', indexed: true },
-      { name: 'to', internalType: 'address', type: 'address', indexed: true },
-      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
-    ],
-    name: 'RefundValueOfBidOrder',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
       {
         name: 'keeper',
         internalType: 'address',
@@ -37466,44 +37552,6 @@ export const usdRoaKeeperABI = [
       },
     ],
     name: 'ChargeRoyalty',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'caller',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'valueOfDeal',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'PayOffCIDeal',
-  },
-  {
-    type: 'event',
-    anonymous: false,
-    inputs: [
-      {
-        name: 'caller',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-      {
-        name: 'valueOfDeal',
-        internalType: 'uint256',
-        type: 'uint256',
-        indexed: true,
-      },
-    ],
-    name: 'PayOffSTDeal',
   },
   {
     type: 'event',
@@ -47050,6 +47098,25 @@ export function useCashierCustodyOf<
 }
 
 /**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"depositOfMine"`.
+ */
+export function useCashierDepositOfMine<
+  TFunctionName extends 'depositOfMine',
+  TSelectData = ReadContractResult<typeof cashierABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof cashierABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: cashierABI,
+    functionName: 'depositOfMine',
+    ...config,
+  } as UseContractReadConfig<typeof cashierABI, TFunctionName, TSelectData>)
+}
+
+/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"getDK"`.
  */
 export function useCashierGetDk<
@@ -47107,10 +47174,10 @@ export function useCashierGetRegCenter<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"totalCustody"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"totalDeposits"`.
  */
-export function useCashierTotalCustody<
-  TFunctionName extends 'totalCustody',
+export function useCashierTotalDeposits<
+  TFunctionName extends 'totalDeposits',
   TSelectData = ReadContractResult<typeof cashierABI, TFunctionName>,
 >(
   config: Omit<
@@ -47120,7 +47187,26 @@ export function useCashierTotalCustody<
 ) {
   return useContractRead({
     abi: cashierABI,
-    functionName: 'totalCustody',
+    functionName: 'totalDeposits',
+    ...config,
+  } as UseContractReadConfig<typeof cashierABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"totalEscrow"`.
+ */
+export function useCashierTotalEscrow<
+  TFunctionName extends 'totalEscrow',
+  TSelectData = ReadContractResult<typeof cashierABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof cashierABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: cashierABI,
+    functionName: 'totalEscrow',
     ...config,
   } as UseContractReadConfig<typeof cashierABI, TFunctionName, TSelectData>)
 }
@@ -47203,6 +47289,33 @@ export function useCashierCustodyUsd<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"distributeUsd"`.
+ */
+export function useCashierDistributeUsd<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof cashierABI,
+          'distributeUsd'
+        >['request']['abi'],
+        'distributeUsd',
+        TMode
+      > & { functionName?: 'distributeUsd' }
+    : UseContractWriteConfig<typeof cashierABI, 'distributeUsd', TMode> & {
+        abi?: never
+        functionName?: 'distributeUsd'
+      } = {} as any,
+) {
+  return useContractWrite<typeof cashierABI, 'distributeUsd', TMode>({
+    abi: cashierABI,
+    functionName: 'distributeUsd',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"forwardUsd"`.
  */
 export function useCashierForwardUsd<
@@ -47274,6 +47387,33 @@ export function useCashierInitKeepers<
   return useContractWrite<typeof cashierABI, 'initKeepers', TMode>({
     abi: cashierABI,
     functionName: 'initKeepers',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"pickupUsd"`.
+ */
+export function useCashierPickupUsd<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof cashierABI,
+          'pickupUsd'
+        >['request']['abi'],
+        'pickupUsd',
+        TMode
+      > & { functionName?: 'pickupUsd' }
+    : UseContractWriteConfig<typeof cashierABI, 'pickupUsd', TMode> & {
+        abi?: never
+        functionName?: 'pickupUsd'
+      } = {} as any,
+) {
+  return useContractWrite<typeof cashierABI, 'pickupUsd', TMode>({
+    abi: cashierABI,
+    functionName: 'pickupUsd',
     ...config,
   } as any)
 }
@@ -47486,6 +47626,22 @@ export function usePrepareCashierCustodyUsd(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"distributeUsd"`.
+ */
+export function usePrepareCashierDistributeUsd(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof cashierABI, 'distributeUsd'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: cashierABI,
+    functionName: 'distributeUsd',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof cashierABI, 'distributeUsd'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"forwardUsd"`.
  */
 export function usePrepareCashierForwardUsd(
@@ -47531,6 +47687,22 @@ export function usePrepareCashierInitKeepers(
     functionName: 'initKeepers',
     ...config,
   } as UsePrepareContractWriteConfig<typeof cashierABI, 'initKeepers'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link cashierABI}__ and `functionName` set to `"pickupUsd"`.
+ */
+export function usePrepareCashierPickupUsd(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof cashierABI, 'pickupUsd'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: cashierABI,
+    functionName: 'pickupUsd',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof cashierABI, 'pickupUsd'>)
 }
 
 /**
@@ -47677,6 +47849,22 @@ export function useCashierCustodyUsdEvent(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link cashierABI}__ and `eventName` set to `"DistributeUsd"`.
+ */
+export function useCashierDistributeUsdEvent(
+  config: Omit<
+    UseContractEventConfig<typeof cashierABI, 'DistributeUsd'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: cashierABI,
+    eventName: 'DistributeUsd',
+    ...config,
+  } as UseContractEventConfig<typeof cashierABI, 'DistributeUsd'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link cashierABI}__ and `eventName` set to `"ForwardUsd"`.
  */
 export function useCashierForwardUsdEvent(
@@ -47690,6 +47878,22 @@ export function useCashierForwardUsdEvent(
     eventName: 'ForwardUsd',
     ...config,
   } as UseContractEventConfig<typeof cashierABI, 'ForwardUsd'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link cashierABI}__ and `eventName` set to `"PickupUsd"`.
+ */
+export function useCashierPickupUsdEvent(
+  config: Omit<
+    UseContractEventConfig<typeof cashierABI, 'PickupUsd'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: cashierABI,
+    eventName: 'PickupUsd',
+    ...config,
+  } as UseContractEventConfig<typeof cashierABI, 'PickupUsd'>)
 }
 
 /**
@@ -62046,10 +62250,10 @@ export function useICashierCustodyOf<
 }
 
 /**
- * Wraps __{@link useContractRead}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"totalCustody"`.
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"depositOfMine"`.
  */
-export function useICashierTotalCustody<
-  TFunctionName extends 'totalCustody',
+export function useICashierDepositOfMine<
+  TFunctionName extends 'depositOfMine',
   TSelectData = ReadContractResult<typeof iCashierABI, TFunctionName>,
 >(
   config: Omit<
@@ -62059,7 +62263,45 @@ export function useICashierTotalCustody<
 ) {
   return useContractRead({
     abi: iCashierABI,
-    functionName: 'totalCustody',
+    functionName: 'depositOfMine',
+    ...config,
+  } as UseContractReadConfig<typeof iCashierABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"totalDeposits"`.
+ */
+export function useICashierTotalDeposits<
+  TFunctionName extends 'totalDeposits',
+  TSelectData = ReadContractResult<typeof iCashierABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iCashierABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iCashierABI,
+    functionName: 'totalDeposits',
+    ...config,
+  } as UseContractReadConfig<typeof iCashierABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"totalEscrow"`.
+ */
+export function useICashierTotalEscrow<
+  TFunctionName extends 'totalEscrow',
+  TSelectData = ReadContractResult<typeof iCashierABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof iCashierABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: iCashierABI,
+    functionName: 'totalEscrow',
     ...config,
   } as UseContractReadConfig<typeof iCashierABI, TFunctionName, TSelectData>)
 }
@@ -62145,6 +62387,33 @@ export function useICashierCustodyUsd<
 }
 
 /**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"distributeUsd"`.
+ */
+export function useICashierDistributeUsd<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iCashierABI,
+          'distributeUsd'
+        >['request']['abi'],
+        'distributeUsd',
+        TMode
+      > & { functionName?: 'distributeUsd' }
+    : UseContractWriteConfig<typeof iCashierABI, 'distributeUsd', TMode> & {
+        abi?: never
+        functionName?: 'distributeUsd'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iCashierABI, 'distributeUsd', TMode>({
+    abi: iCashierABI,
+    functionName: 'distributeUsd',
+    ...config,
+  } as any)
+}
+
+/**
  * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"forwardUsd"`.
  */
 export function useICashierForwardUsd<
@@ -62167,6 +62436,33 @@ export function useICashierForwardUsd<
   return useContractWrite<typeof iCashierABI, 'forwardUsd', TMode>({
     abi: iCashierABI,
     functionName: 'forwardUsd',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"pickupUsd"`.
+ */
+export function useICashierPickupUsd<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof iCashierABI,
+          'pickupUsd'
+        >['request']['abi'],
+        'pickupUsd',
+        TMode
+      > & { functionName?: 'pickupUsd' }
+    : UseContractWriteConfig<typeof iCashierABI, 'pickupUsd', TMode> & {
+        abi?: never
+        functionName?: 'pickupUsd'
+      } = {} as any,
+) {
+  return useContractWrite<typeof iCashierABI, 'pickupUsd', TMode>({
+    abi: iCashierABI,
+    functionName: 'pickupUsd',
     ...config,
   } as any)
 }
@@ -62273,6 +62569,22 @@ export function usePrepareICashierCustodyUsd(
 }
 
 /**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"distributeUsd"`.
+ */
+export function usePrepareICashierDistributeUsd(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iCashierABI, 'distributeUsd'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iCashierABI,
+    functionName: 'distributeUsd',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iCashierABI, 'distributeUsd'>)
+}
+
+/**
  * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"forwardUsd"`.
  */
 export function usePrepareICashierForwardUsd(
@@ -62286,6 +62598,22 @@ export function usePrepareICashierForwardUsd(
     functionName: 'forwardUsd',
     ...config,
   } as UsePrepareContractWriteConfig<typeof iCashierABI, 'forwardUsd'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link iCashierABI}__ and `functionName` set to `"pickupUsd"`.
+ */
+export function usePrepareICashierPickupUsd(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof iCashierABI, 'pickupUsd'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: iCashierABI,
+    functionName: 'pickupUsd',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof iCashierABI, 'pickupUsd'>)
 }
 
 /**
@@ -62352,6 +62680,22 @@ export function useICashierCustodyUsdEvent(
 }
 
 /**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iCashierABI}__ and `eventName` set to `"DistributeUsd"`.
+ */
+export function useICashierDistributeUsdEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iCashierABI, 'DistributeUsd'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iCashierABI,
+    eventName: 'DistributeUsd',
+    ...config,
+  } as UseContractEventConfig<typeof iCashierABI, 'DistributeUsd'>)
+}
+
+/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iCashierABI}__ and `eventName` set to `"ForwardUsd"`.
  */
 export function useICashierForwardUsdEvent(
@@ -62365,6 +62709,22 @@ export function useICashierForwardUsdEvent(
     eventName: 'ForwardUsd',
     ...config,
   } as UseContractEventConfig<typeof iCashierABI, 'ForwardUsd'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iCashierABI}__ and `eventName` set to `"PickupUsd"`.
+ */
+export function useICashierPickupUsdEvent(
+  config: Omit<
+    UseContractEventConfig<typeof iCashierABI, 'PickupUsd'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: iCashierABI,
+    eventName: 'PickupUsd',
+    ...config,
+  } as UseContractEventConfig<typeof iCashierABI, 'PickupUsd'>)
 }
 
 /**
@@ -95299,145 +95659,6 @@ export function usePrepareIUsdLooKeeperWithdrawSellOrder(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__.
- */
-export function useIUsdLooKeeperEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    ...config,
-  } as UseContractEventConfig<typeof iUsdLooKeeperABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"CloseBidAgainstInitOffer"`.
- */
-export function useIUsdLooKeeperCloseBidAgainstInitOfferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'CloseBidAgainstInitOffer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'CloseBidAgainstInitOffer',
-    ...config,
-  } as UseContractEventConfig<
-    typeof iUsdLooKeeperABI,
-    'CloseBidAgainstInitOffer'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"CloseBidAgainstOffer"`.
- */
-export function useIUsdLooKeeperCloseBidAgainstOfferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'CloseBidAgainstOffer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'CloseBidAgainstOffer',
-    ...config,
-  } as UseContractEventConfig<typeof iUsdLooKeeperABI, 'CloseBidAgainstOffer'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"CloseInitOfferAgainstBid"`.
- */
-export function useIUsdLooKeeperCloseInitOfferAgainstBidEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'CloseInitOfferAgainstBid'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'CloseInitOfferAgainstBid',
-    ...config,
-  } as UseContractEventConfig<
-    typeof iUsdLooKeeperABI,
-    'CloseInitOfferAgainstBid'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"CloseOfferAgainstBid"`.
- */
-export function useIUsdLooKeeperCloseOfferAgainstBidEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'CloseOfferAgainstBid'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'CloseOfferAgainstBid',
-    ...config,
-  } as UseContractEventConfig<typeof iUsdLooKeeperABI, 'CloseOfferAgainstBid'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"CustodyValueOfBidOrder"`.
- */
-export function useIUsdLooKeeperCustodyValueOfBidOrderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'CustodyValueOfBidOrder'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'CustodyValueOfBidOrder',
-    ...config,
-  } as UseContractEventConfig<
-    typeof iUsdLooKeeperABI,
-    'CustodyValueOfBidOrder'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"RefundBalanceOfBidOrder"`.
- */
-export function useIUsdLooKeeperRefundBalanceOfBidOrderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'RefundBalanceOfBidOrder'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'RefundBalanceOfBidOrder',
-    ...config,
-  } as UseContractEventConfig<
-    typeof iUsdLooKeeperABI,
-    'RefundBalanceOfBidOrder'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdLooKeeperABI}__ and `eventName` set to `"RefundValueOfBidOrder"`.
- */
-export function useIUsdLooKeeperRefundValueOfBidOrderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdLooKeeperABI, 'RefundValueOfBidOrder'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdLooKeeperABI,
-    eventName: 'RefundValueOfBidOrder',
-    ...config,
-  } as UseContractEventConfig<typeof iUsdLooKeeperABI, 'RefundValueOfBidOrder'>)
-}
-
-/**
  * Wraps __{@link useContractRead}__ with `abi` set to __{@link iUsdListOfOrdersABI}__.
  */
 export function useIUsdListOfOrdersRead<
@@ -96101,53 +96322,6 @@ export function usePrepareIUsdRoaKeeperPayOffApprovedDeal(
     typeof iUsdRoaKeeperABI,
     'payOffApprovedDeal'
   >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdRoaKeeperABI}__.
- */
-export function useIUsdRoaKeeperEvent<TEventName extends string>(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdRoaKeeperABI, TEventName>,
-    'abi'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdRoaKeeperABI,
-    ...config,
-  } as UseContractEventConfig<typeof iUsdRoaKeeperABI, TEventName>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdRoaKeeperABI}__ and `eventName` set to `"PayOffCIDeal"`.
- */
-export function useIUsdRoaKeeperPayOffCiDealEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdRoaKeeperABI, 'PayOffCIDeal'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdRoaKeeperABI,
-    eventName: 'PayOffCIDeal',
-    ...config,
-  } as UseContractEventConfig<typeof iUsdRoaKeeperABI, 'PayOffCIDeal'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link iUsdRoaKeeperABI}__ and `eventName` set to `"PayOffSTDeal"`.
- */
-export function useIUsdRoaKeeperPayOffStDealEvent(
-  config: Omit<
-    UseContractEventConfig<typeof iUsdRoaKeeperABI, 'PayOffSTDeal'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: iUsdRoaKeeperABI,
-    eventName: 'PayOffSTDeal',
-    ...config,
-  } as UseContractEventConfig<typeof iUsdRoaKeeperABI, 'PayOffSTDeal'>)
 }
 
 /**
@@ -135120,127 +135294,6 @@ export function useUsdLooKeeperChargeRoyaltyEvent(
 }
 
 /**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"CloseBidAgainstInitOffer"`.
- */
-export function useUsdLooKeeperCloseBidAgainstInitOfferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'CloseBidAgainstInitOffer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'CloseBidAgainstInitOffer',
-    ...config,
-  } as UseContractEventConfig<
-    typeof usdLooKeeperABI,
-    'CloseBidAgainstInitOffer'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"CloseBidAgainstOffer"`.
- */
-export function useUsdLooKeeperCloseBidAgainstOfferEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'CloseBidAgainstOffer'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'CloseBidAgainstOffer',
-    ...config,
-  } as UseContractEventConfig<typeof usdLooKeeperABI, 'CloseBidAgainstOffer'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"CloseInitOfferAgainstBid"`.
- */
-export function useUsdLooKeeperCloseInitOfferAgainstBidEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'CloseInitOfferAgainstBid'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'CloseInitOfferAgainstBid',
-    ...config,
-  } as UseContractEventConfig<
-    typeof usdLooKeeperABI,
-    'CloseInitOfferAgainstBid'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"CloseOfferAgainstBid"`.
- */
-export function useUsdLooKeeperCloseOfferAgainstBidEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'CloseOfferAgainstBid'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'CloseOfferAgainstBid',
-    ...config,
-  } as UseContractEventConfig<typeof usdLooKeeperABI, 'CloseOfferAgainstBid'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"CustodyValueOfBidOrder"`.
- */
-export function useUsdLooKeeperCustodyValueOfBidOrderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'CustodyValueOfBidOrder'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'CustodyValueOfBidOrder',
-    ...config,
-  } as UseContractEventConfig<typeof usdLooKeeperABI, 'CustodyValueOfBidOrder'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"RefundBalanceOfBidOrder"`.
- */
-export function useUsdLooKeeperRefundBalanceOfBidOrderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'RefundBalanceOfBidOrder'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'RefundBalanceOfBidOrder',
-    ...config,
-  } as UseContractEventConfig<
-    typeof usdLooKeeperABI,
-    'RefundBalanceOfBidOrder'
-  >)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"RefundValueOfBidOrder"`.
- */
-export function useUsdLooKeeperRefundValueOfBidOrderEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdLooKeeperABI, 'RefundValueOfBidOrder'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdLooKeeperABI,
-    eventName: 'RefundValueOfBidOrder',
-    ...config,
-  } as UseContractEventConfig<typeof usdLooKeeperABI, 'RefundValueOfBidOrder'>)
-}
-
-/**
  * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdLooKeeperABI}__ and `eventName` set to `"SetDirectKeeper"`.
  */
 export function useUsdLooKeeperSetDirectKeeperEvent(
@@ -136737,38 +136790,6 @@ export function useUsdRoaKeeperChargeRoyaltyEvent(
     eventName: 'ChargeRoyalty',
     ...config,
   } as UseContractEventConfig<typeof usdRoaKeeperABI, 'ChargeRoyalty'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdRoaKeeperABI}__ and `eventName` set to `"PayOffCIDeal"`.
- */
-export function useUsdRoaKeeperPayOffCiDealEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdRoaKeeperABI, 'PayOffCIDeal'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdRoaKeeperABI,
-    eventName: 'PayOffCIDeal',
-    ...config,
-  } as UseContractEventConfig<typeof usdRoaKeeperABI, 'PayOffCIDeal'>)
-}
-
-/**
- * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdRoaKeeperABI}__ and `eventName` set to `"PayOffSTDeal"`.
- */
-export function useUsdRoaKeeperPayOffStDealEvent(
-  config: Omit<
-    UseContractEventConfig<typeof usdRoaKeeperABI, 'PayOffSTDeal'>,
-    'abi' | 'eventName'
-  > = {} as any,
-) {
-  return useContractEvent({
-    abi: usdRoaKeeperABI,
-    eventName: 'PayOffSTDeal',
-    ...config,
-  } as UseContractEventConfig<typeof usdRoaKeeperABI, 'PayOffSTDeal'>)
 }
 
 /**

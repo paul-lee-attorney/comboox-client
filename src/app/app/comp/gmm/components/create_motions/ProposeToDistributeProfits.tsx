@@ -1,20 +1,23 @@
 import { useState } from "react";
 
-import { HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
+import { booxMap, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 
-import { useGeneralKeeperProposeToDistributeProfits } from "../../../../../../../generated";
+import { cashierABI, useGeneralKeeperCreateActionOfGm, useGeneralKeeperProposeToDistributeProfits } from "../../../../../../../generated";
 
-import { Divider, Paper, Stack, TextField } from "@mui/material";
+import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { CreateMotionProps } from "../../../bmm/components/CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { encodeFunctionData, stringToHex } from "viem";
 
 export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
 
-  const { gk, setErrMsg } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
+
+  const [ typeOfCurrency, setTypeOfCurrency ] = useState(0);
 
   const [ amt, setAmt ] = useState('0');
   const [ expireDate, setExpireDate ] = useState(0);  
@@ -30,8 +33,8 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
   }
 
   const {
-    isLoading: proposeToDistributeProfitsLoading,
-    write: proposeToDistributeProfits
+    isLoading: proposeToDistributeEthLoading,
+    write: proposeToDistributeEth
   } = useGeneralKeeperProposeToDistributeProfits({
     address: gk,
     onError(err) {
@@ -44,15 +47,61 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
     }
   });
 
+  const {
+    isLoading: proposeToDistributeUsdLoading,
+    write: proposeToDistributeUsd
+  } = useGeneralKeeperCreateActionOfGm({
+    address: gk,
+    onError(err) {
+      setErrMsg(err.message);
+    },
+    onSuccess(data) {
+      setLoading(true);
+      let hash: HexType = data.hash;
+      refreshAfterTx(hash, updateResults);
+    }
+  });
+
   const handleClick = ()=> {
-    proposeToDistributeProfits({
-      args: [
-        strNumToBigInt(amt, 9) * 10n ** 9n, 
-        BigInt(expireDate), 
-        BigInt(seqOfVR), 
-        BigInt(executor)
-      ],
-    });
+
+    if (typeOfCurrency == 0) {
+      
+      proposeToDistributeEth({
+        args: [
+          strNumToBigInt(amt, 9) * 10n ** 9n, 
+          BigInt(expireDate), 
+          BigInt(seqOfVR), 
+          BigInt(executor)
+        ],
+      });
+
+    } else {
+
+      if (boox) {
+
+        const cashier = boox[booxMap.Cashier];
+        const amtOfUsd = strNumToBigInt(amt, 6);
+        const desHash = stringToHex("DistributeUSD", {size: 32});
+
+        const data = encodeFunctionData({
+          abi: cashierABI,
+          functionName: 'distributeUsd',
+          args: [amtOfUsd],
+        });
+          
+        proposeToDistributeUsd({
+          args: [
+            BigInt(seqOfVR),
+            [cashier],
+            [0n],
+            [data],
+            desHash,
+            BigInt(executor)
+          ],
+        });
+
+      }
+    }
   };
 
   return (
@@ -79,9 +128,24 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
               value={ seqOfVR }
             />
 
+            <FormControl variant="outlined" size="small" sx={{ m: 1, width: 101 }}>
+              <InputLabel id="symbolOfToken-label">Token</InputLabel>
+              <Select
+                labelId="symbolOfToken-label"
+                id="symbolOfToken-select"
+                label="Token"
+                value={ typeOfCurrency }
+                onChange={(e) => setTypeOfCurrency(Number(e.target.value))}
+              >
+                <MenuItem key={0} value={0} ><b>ETH</b></MenuItem>
+                <MenuItem key={1} value={1} ><b>USD</b></MenuItem>
+              </Select>
+              <FormHelperText>{' '}</FormHelperText>
+            </FormControl>
+
             <TextField 
               variant='outlined'
-              label='Amount (ETH)'
+              label= {typeOfCurrency == 0 ? 'Amount (ETH)' : 'Amount (USDC)'}
               size="small"
               error={ valid['Amount']?.error }
               helperText={ valid['Amount']?.helpTx ?? ' ' }
@@ -95,19 +159,6 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
                 setAmt(input);
               }}
               value={ amt }
-            />
-
-            <DateTimeField
-              label='ExpireDate'
-              size='small'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              helperText=' '
-              value={ stampToUtc( expireDate) }
-              onChange={(date) => setExpireDate( utcToStamp(date) )}
-              format='YYYY-MM-DD HH:mm:ss'
             />
 
             <TextField 
@@ -128,10 +179,25 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
               value={ executor }
             />
 
+            {typeOfCurrency == 0 && (
+              <DateTimeField
+                label='ExpireDate'
+                size='small'
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                helperText=' '
+                value={ stampToUtc( expireDate) }
+                onChange={(date) => setExpireDate( utcToStamp(date) )}
+                format='YYYY-MM-DD HH:mm:ss'
+              />            
+            )}
+
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
         <LoadingButton
-          disabled={ proposeToDistributeProfitsLoading || hasError(valid)}
+          disabled={ proposeToDistributeUsdLoading || proposeToDistributeEthLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           variant="contained"

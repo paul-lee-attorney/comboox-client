@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, Tooltip, Typography } from "@mui/material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { baseToDollar, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
+import { baseToDollar, bigIntToAddr, bigIntToStrNum, dateParser, longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
 import { Cashflow } from "../FinStatement";
 import { exportToExcel } from "../../../../api/dataTools";
@@ -50,23 +50,28 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
     {
       field: 'amount',
       headerName: 'Amount',
-      valueGetter: p => bigIntToStrNum(p.row.amt, 18),
+      valueGetter: p => bigIntToStrNum(p.row.amt, p.row.amt == p.row.usd ? 6 : 18),
       headerAlign: 'center',
       align: 'center',
       width: 218,
     },
     {
       field: 'ethPrice',
-      headerName: 'EthPrice',
-      valueGetter: p => bigIntToStrNum(p.row.ethPrice, 9),
+      headerName: 'EthPrice / From',
+      valueGetter: p => p.row.amt == p.row.usd ? bigIntToAddr(p.row.ethPrice) : bigIntToStrNum(p.row.ethPrice, 9),
       headerAlign: 'center',
       align: 'center',
-      width: 218,
+      width: 258,
+      renderCell: ({value}) => value.substring(0,2) == '0x'
+        ? (<CopyLongStrTF title="Addr" src={value} />)
+        : (value)
     },
     {
       field: 'usd',
       headerName: 'USD',
-      valueGetter: p => bigIntToStrNum(p.row.usd / 10n ** 9n, 9),
+      valueGetter: p => p.row.amt == p.row.usd 
+      ? bigIntToStrNum(p.row.usd, 6)
+      : bigIntToStrNum(p.row.usd / 10n ** 9n, 9),
       headerAlign: 'center',
       align: 'center',
       width: 218,
@@ -107,9 +112,9 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
       ...v,
       blockNumber: longSnParser(v.blockNumber.toString()),
       timestamp: dateParser(v.timestamp.toString()),
-      amt: bigIntToStrNum(v.amt, 18),
-      ethPrice: bigIntToStrNum(v.ethPrice, 9),
-      usd: bigIntToStrNum(v.usd / 10n ** 9n, 9),
+      amt: bigIntToStrNum(v.amt, v.amt == v.usd ? 6 : 18),
+      ethPrice: v.amt == v.usd ? bigIntToAddr(v.ethPrice) : bigIntToStrNum(v.ethPrice, 9),
+      usd: v.amt == v.usd ? bigIntToStrNum(v.usd, 6) : bigIntToStrNum(v.usd / 10n ** 9n, 9),
       acct: v.acct.toString(),
     }));
 

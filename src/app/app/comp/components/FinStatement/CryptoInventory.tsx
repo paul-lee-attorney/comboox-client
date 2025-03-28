@@ -8,14 +8,17 @@ import { DepositsSum } from "./Cashflow/Deposits";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { usePublicClient } from "wagmi";
 import { useEffect, useState } from "react";
-import { AddrOfTank } from "../../../common";
+import { AddrOfTank, booxMap } from "../../../common";
 import { totalDeposits } from "../../gk";
 import { balanceOf } from "../../../rc";
+import { UsdEscrowSum } from "./Cashflow/UsdEscrow";
+import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../../cashier";
 
 export interface CryptoInventoryProps extends IncomeStatementProps {
   ftCbpflow: FtCbpflowSum[],
   ftEthflow: FtEthflowSum[],
   deposits: DepositsSum[],
+  usdEscrow: UsdEscrowSum[]
 }
 
 interface Balance {
@@ -29,7 +32,7 @@ const defBala:Balance = {
 }
 
 
-export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, ftCbpflow, ftEthflow, deposits}: CryptoInventoryProps) {
+export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow, ftCbpflow, ftEthflow, deposits, usdEscrow}: CryptoInventoryProps) {
 
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
@@ -47,7 +50,15 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
 
-  const { gk } = useComBooxContext();
+  const microToWei = (usd:bigint) => {
+    return usd * centPrice / 10000n;
+  }
+
+  const microToDust = (usd:bigint) => {
+    return usd * 10n ** 12n;
+  }
+
+  const { gk, boox } = useComBooxContext();
   const client = usePublicClient();
 
   const [ ethOfGK, setEthOfGK ] = useState({...defBala});
@@ -139,7 +150,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
       res => setCbpOfGK(res)
     );
 
-  }, [opnBlkNo, rptBlkNo, gk, client]);
+  }, [opnBlkNo, rptBlkNo, gk]);
 
   const [ cbpOfFT, setCbpOfFT ] = useState({...defBala});
 
@@ -190,7 +201,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
       res => setDep(res)
     );
 
-  }, [opnBlkNo, rptBlkNo, gk, client]);
+  }, [opnBlkNo, rptBlkNo, gk]);
 
   const getMintToOthers = (type:number) => {
     const mintToOthers = cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
@@ -206,16 +217,81 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     return {inEth: inEth, inUsd: inUsd}
   }
 
+  const [ usdOfComp, setUsdOfComp ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getUsdOfComp = async ()=>{
+      if (!boox) return {...defBala};
+
+      const cashier = boox[booxMap.Cashier];
+
+      const opnBalaOfUsd = await balanceOfComp(cashier, opnBlkNo);
+      const endBalaOfUsd = await balanceOfComp(cashier, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnBalaOfUsd,
+        endAmt: endBalaOfUsd,
+      }
+
+      return output;
+    }
+
+    getUsdOfComp().then(
+      res => setUsdOfComp(res)
+    );
+
+  }, [opnBlkNo, rptBlkNo, boox]);
+
+  const [ esc, setEsc ] = useState({...defBala});
+  const [ depOfUsd, setDepOfUsd ] = useState({...defBala});
+
+  useEffect(()=>{
+    const getEscOfUsd = async ()=>{
+      if (!boox) return {...defBala};
+
+      const cashier = boox[booxMap.Cashier];
+
+      const opnEsc = await totalEscrow(cashier, opnBlkNo);
+      const endEsc = await totalEscrow(cashier, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnEsc,
+        endAmt: endEsc,
+      }
+
+      setEsc(output);
+    }
+
+    const getDepOfUsd = async ()=>{
+      if (!boox) return {...defBala};
+
+      const cashier = boox[booxMap.Cashier];
+
+      const opnDep = await totalUsdDeposits(cashier, opnBlkNo);
+      const endDep = await totalUsdDeposits(cashier, rptBlkNo);
+
+      const output:Balance = {
+        opnAmt: opnDep,
+        endAmt: endDep,
+      }
+
+      setDepOfUsd(output);
+    }
+
+    getEscOfUsd();
+    getDepOfUsd();
+
+  }, [opnBlkNo, rptBlkNo, boox]);
+
+  const usdEscInflow = usdEscrow[2].escrow;
+  const usdEscOutflow = usdEscrow[2].consideration + usdEscrow[2].balance;
+
+  const usdDepInflow = usdEscrow[2].distribution;
+  const usdDepOutflow = usdEscrow[2].pickup;
+
   return(
 
-    <Paper elevation={3}
-      sx={{
-        m:1, p:1, border:1, 
-        borderColor:'divider',
-        width: '100%' 
-      }} 
-    >
-
+    <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
 
       <Stack direction='row' sx={{ alignItems:'center' }} >
         <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
@@ -225,20 +301,13 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
 
       <Stack direction='row' >
 
-        <Paper elevation={3}
-          sx={{
-            m:1, p:1, border:1, 
-            borderColor:'divider',
-            width: '100%' 
-          }} 
-        >
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
 
-        <Stack direction='row' sx={{ alignItems:'center' }} >
-          <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
-            CBP
-          </Typography>
-        </Stack>
-
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+            <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
+              CBP
+            </Typography>
+          </Stack>
 
           <Stack direction='column' sx={{ alignItems:'end' }} >
             <Stack direction='row' width='100%' >
@@ -327,13 +396,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
 
         </Paper>
 
-        <Paper elevation={3}
-          sx={{
-            m:1, p:1, border:1, 
-            borderColor:'divider',
-            width: '100%' 
-          }} 
-        >
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
 
           <Stack direction='row' sx={{ alignItems:'center' }} >
             <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
@@ -424,7 +487,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
 
           <Stack direction='row' sx={{ alignItems:'center' }} >
             <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
-              Deposits
+              ETH Deposits
             </Typography>
           </Stack>
 
@@ -486,6 +549,175 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
         </Paper>
 
       </Stack>
+
+      <Stack direction='row' >
+
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
+  
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+            <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
+              USDC
+            </Typography>
+          </Stack>
+
+          <Stack direction='column' sx={{ alignItems:'end' }} >
+            <Stack direction='row' width='100%' >
+              <Button 
+                variant="outlined"
+                fullWidth
+                sx={{m:0.5, minWidth:288, justifyContent:'start'}}
+              >
+                <b>Beginning Value of USDC: ({ inETH
+                    ? weiToEth9Dec(microToWei(usdOfComp.opnAmt))
+                    : showUSD(microToDust(usdOfComp.opnAmt))})</b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' sx={{alignItems:'center'}} >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                +
+              </Typography>
+              <Button 
+                variant="outlined"
+                fullWidth
+                sx={{m:0.5, minWidth:288, justifyContent:'start'}}
+                onClick={()=>display[10](2)}
+              >
+                <b>USDC Inflow: ({ inETH
+                    ? weiToEth9Dec(microToWei(usdInflow[2].totalAmt)) 
+                    : showUSD(microToDust(usdInflow[2].totalAmt))})</b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                -
+              </Typography>
+              <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[11](2)} >
+                <b>USDC Outflow: ({inETH 
+                    ? weiToEth9Dec(microToWei(usdOutflow[2].totalAmt)) 
+                    : showUSD(microToDust(usdOutflow[2].totalAmt))}) </b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+              <Typography variant="h6" textAlign='center' width='20%'>
+                &nbsp;
+              </Typography>
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+                <b>USDC Of Comp: ({inETH 
+                  ? weiToEth9Dec(microToWei(usdOfComp.endAmt)) 
+                  : showUSD(microToDust(usdOfComp.endAmt))}) </b>
+              </Button>
+            </Stack>
+          </Stack>
+
+        </Paper>
+
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
+
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+            <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
+              USDC Escrow
+            </Typography>
+          </Stack>
+
+          <Stack direction='column' sx={{ alignItems:'end' }} >
+
+            <Stack direction='row' width='100%' >
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+                <b>Beginning Value of Escrow: ({inETH 
+                    ? weiToEth9Dec(microToWei(esc.opnAmt)) 
+                    : showUSD(microToDust(esc.opnAmt)) }) </b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                +
+              </Typography>
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[12](2)} >
+                <b>Escrow Inflow: ({inETH 
+                    ? weiToEth9Dec(microToWei(usdEscInflow)) 
+                    : showUSD(microToDust(usdEscInflow)) }) </b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                -
+              </Typography>
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[13](2)}  >
+                <b>Escrow Outflow: ({inETH 
+                    ? weiToEth9Dec(microToWei(usdEscOutflow)) 
+                    : showUSD(microToDust(usdEscOutflow)) }) </b>
+              </Button>
+            </Stack>
+
+
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>Escrow Balance: ({inETH 
+                  ? weiToEth9Dec(microToWei(esc.endAmt)) 
+                  : showUSD(microToDust(esc.endAmt)) }) </b>
+            </Button>
+
+          </Stack>
+
+        </Paper>
+
+        <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider', width:'100%' }}>
+          
+          <Stack direction='row' sx={{ alignItems:'center' }} >
+            <Typography variant='h6' sx={{ m:2, textDecoration:'underline'  }}  >
+              USDC Deposit
+            </Typography>
+          </Stack>
+
+          <Stack direction='column' sx={{ alignItems:'end' }} >
+
+            <Stack direction='row' width='100%' >
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
+                <b>Beginning Value of Deposit: ({inETH 
+                    ? weiToEth9Dec(microToWei(depOfUsd.opnAmt)) 
+                    : showUSD(microToDust(depOfUsd.opnAmt)) }) </b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                +
+              </Typography>
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[14](2)} >
+                <b>Deposit Inflow: ({inETH 
+                    ? weiToEth9Dec(microToWei(usdDepInflow)) 
+                    : showUSD(microToDust(usdDepInflow)) }) </b>
+              </Button>
+            </Stack>
+
+            <Stack direction='row' width='100%' >
+              <Typography variant="h6" textAlign='center' width='10%'>
+                -
+              </Typography>
+              <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[15](2)} >
+                <b>Deposit Outflow: ({inETH 
+                    ? weiToEth9Dec(microToWei(usdDepOutflow)) 
+                    : showUSD(microToDust(usdDepOutflow)) }) </b>
+              </Button>
+            </Stack>
+
+            <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+              <b>Deposit Balance: ({inETH 
+                  ? weiToEth9Dec(microToWei(dep.endAmt)) 
+                  : showUSD(microToDust(dep.endAmt)) }) </b>
+            </Button>
+
+          </Stack>
+
+        </Paper>
+
+      </Stack>
+
+      
 
     </Paper>
 

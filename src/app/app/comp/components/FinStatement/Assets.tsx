@@ -5,23 +5,30 @@ import { EthOutflowSum } from "./Cashflow/EthOutflow";
 import { usePublicClient } from "wagmi";
 import { useEffect, useState } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrOfTank } from "../../../common";
+import { AddrOfTank, booxMap } from "../../../common";
 import { totalDeposits } from "../../gk";
+import { UsdInflowSum } from "./Cashflow/UsdInflow";
+import { UsdOutflowSum } from "./Cashflow/UsdOutflow";
+import { balanceOfComp } from "../../cashier";
 
 export interface AssetsProps extends StatementProps {
   ethInflow: EthInflowSum[],
   ethOutflow: EthOutflowSum[],
+  usdInflow: UsdInflowSum[],
+  usdOutflow: UsdOutflowSum[],
 }
 
 export const setUpDate = Math.floor((new Date('2026-12-31T23:59:59Z')).getTime()/1000);
+export const iprValueA = 25n * 10n ** 8n;
+export const iprValueB = 5n * 10n ** 8n;
+
 const fullLifeHrs = 15n * 365n * 86400n;
-const iprValue = 30n * 10n ** 8n;
 
 export const getInitContribution = (type:number, startDate:number, endDate: number) => {
 
   return type > 1 
-      ? endDate >= setUpDate ? iprValue : 0n
-      : startDate >= setUpDate ? iprValue : 0n;
+      ? endDate >= setUpDate ? iprValueA + iprValueB : 0n
+      : startDate >= setUpDate ? iprValueA + iprValueB : 0n;
 }
 
 export const getArmotization = (type:number, startDate: number, endDate: number) => {
@@ -65,6 +72,15 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
   const baseToWei = (usd:bigint) => {
     return usd * centPrice / 100n;
   }
+
+  const microToWei = (usd:bigint) => {
+    return usd * centPrice / 10000n;
+  }
+
+  const microToDust = (usd:bigint) => {
+    return usd * 10n ** 12n;
+  }
+
   // ---- IPR ----
 
   const initContribution = getInitContribution(3, startDate, endDate);
@@ -82,7 +98,7 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
   const [ethOfComp, setEthOfComp] = useState(0n);
 
   const client = usePublicClient();
-  const {gk} = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   useEffect(()=>{
     const getEthOfComp = async ()=>{
@@ -111,9 +127,23 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
 
   }, [rptBlkNo, gk, client]);
 
+  const [usdOfComp, setUsdOfComp] = useState(0n);
+
+  useEffect(()=>{
+    const getUsdOfComp = async ()=>{
+      if (!boox) return 0n;
+
+      const res = await balanceOfComp(boox[booxMap.Cashier],rptBlkNo);
+      setUsdOfComp(res);      
+    }
+
+    getUsdOfComp();
+
+  }, [rptBlkNo, boox]);
+
   const totalAssets = ()=>{
-    const inEth = baseToWei(netValueOfIPR) + ethOfComp;
-    const inUsd = baseToDust(netValueOfIPR) + weiToDust(ethOfComp);
+    const inEth = baseToWei(netValueOfIPR) + ethOfComp + microToWei(usdOfComp);
+    const inUsd = baseToDust(netValueOfIPR) + weiToDust(ethOfComp) + microToDust(usdOfComp);
 
     return({inEth:inEth, inUsd:inUsd});
   }
@@ -168,6 +198,14 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
           <b>ETH Of Comp: ({ inETH 
             ? weiToEth9Dec(ethOfComp)
             : showUSD(weiToDust(ethOfComp)) }) </b>
+        </Button>
+      </Stack>
+
+      <Stack direction='row' width='100%' >
+        <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)}>
+          <b>USDC Of Comp: ({ inETH 
+            ? weiToEth9Dec(microToWei(usdOfComp))
+            : showUSD(microToDust(usdOfComp)) }) </b>
         </Button>
       </Stack>
 

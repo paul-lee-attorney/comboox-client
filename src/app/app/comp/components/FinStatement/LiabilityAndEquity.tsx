@@ -13,6 +13,8 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { balanceOf, getTotalSupply } from "../../../rc";
 import { AddrOfTank, booxMap, HexType } from "../../../common";
 import { capAtDate } from "../../rom/rom";
+import { UsdInflowSum } from "./Cashflow/UsdInflow";
+import { UsdOutflowSum } from "./Cashflow/UsdOutflow";
 
 
 export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
@@ -22,20 +24,36 @@ export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOut
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export const getOwnersEquity = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, baseToWei:(usd:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint ) => {
+export const getOwnersEquity = (
+  type:number, 
+  startDate:number,
+  endDate:number, 
+  centPrice:bigint, 
+  cbpInflow:CbpInflowSum[], 
+  cbpOutflow:CbpOutflowSum[], 
+  ethInflow:EthInflowSum[], 
+  ethOutflow:EthOutflowSum[], 
+  usdInflow:UsdInflowSum[],
+  usdOutflow:UsdOutflowSum[],
+  cbpToETH:(cbp:bigint)=>bigint, 
+  baseToWei:(usd:bigint)=>bigint, 
+  weiToDust:(eth:bigint)=>bigint,
+  microToWei:(usd:bigint)=>bigint,
+  microToDust:(usd:bigint)=>bigint
+) => {
 
   const initContribution = getInitContribution(type, startDate, endDate);
 
-  const retainedEarnings = getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const retainedEarnings = getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei,microToDust);
 
-  const inEth = baseToWei(initContribution) + ethInflow[type].capital + retainedEarnings.inEth;
+  const inEth = baseToWei(initContribution) + ethInflow[type].capital + ethInflow[type].premium + retainedEarnings.inEth + microToWei(usdInflow[type].totalAmt);
 
-  const inUsd = baseToDust(initContribution) + weiToDust(ethInflow[type].capital) + retainedEarnings.inUsd;
+  const inUsd = baseToDust(initContribution) + weiToDust(ethInflow[type].capital + ethInflow[type].premium) + retainedEarnings.inUsd + microToDust(usdInflow[type].totalAmt);
 
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, rptBlkNo, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow}: IncomeStatementProps) {
+export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, rptBlkNo, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
@@ -47,6 +65,14 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   const baseToWei = (base:bigint) => {
     return base * centPrice / 100n;
+  }
+
+  const microToWei = (usd:bigint) => {
+    return usd * centPrice / 10000n;
+  }
+
+  const microToDust = (usd:bigint) => {
+    return usd * 10n ** 12n;
   }
 
   // ==== Liabilities ====
@@ -102,11 +128,11 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   const initContribution = getInitContribution(3, startDate, endDate);
 
-  const retainedEarnings = getRetainedEarnings(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const retainedEarnings = getRetainedEarnings(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
   // ==== Owners Equity ====
 
-  const ownersEquity = getOwnersEquity(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, baseToWei, weiToDust);
+  const ownersEquity = getOwnersEquity(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow, cbpToETH, baseToWei, weiToDust, microToWei, microToDust);
 
   return(
     <Paper elevation={3} 
@@ -165,7 +191,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         <Typography variant="h6" textAlign='center' width='20%'>
           &nbsp;
         </Typography>
-        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>{}} >
+        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Paid In Capital: ({ inETH
             ? weiToEth9Dec(baseToWei(paidOfCap))
             : baseToDollar(paidOfCap.toString()) + 'USD'}) </b>
@@ -179,10 +205,10 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         <Typography variant="h6" textAlign='center' width='10%'>
           +
         </Typography>
-        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
+        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[2](3)} >
           <b>Additional Paid In Capital: ({ inETH
-            ? weiToEth9Dec(ethInflow[3].capital + baseToWei(initContribution - paidOfCap))
-            : showUSD(ethInflow[3].capitalInUsd + baseToDust(initContribution - paidOfCap))}) </b>
+            ? weiToEth9Dec(ethInflow[3].premium + microToWei(usdInflow[3].premium))
+            : showUSD(ethInflow[3].premiumInUsd + microToDust(usdInflow[3].premium))}) </b>
         </Button>
       </Stack>
 

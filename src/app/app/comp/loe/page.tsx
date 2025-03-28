@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Box, FormControl, IconButton, InputLabel, MenuItem, Paper, Select, Stack, Tooltip, Typography } from "@mui/material";
-
-import Link from "next/link";
+import { Box, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Tooltip, Typography } from "@mui/material";
 
 import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, booxMap } from "../../common";

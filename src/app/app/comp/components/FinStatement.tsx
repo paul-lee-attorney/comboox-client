@@ -1,5 +1,5 @@
 
-import { Paper, Stack, Typography, Divider, Button, Switch } from "@mui/material";
+import { Paper, Stack, Typography, Divider, Button, Switch, Tooltip } from "@mui/material";
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { rate } from "../../fuel_tank/ft";
@@ -26,6 +26,9 @@ import { TipsAndUpdates } from "@mui/icons-material";
 import { usePublicClient } from "wagmi";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { RoyaltySource } from "../../../api/getRoyaltySource";
+import { defUsdInflowSumArr, updateUsdInflowSum, UsdInflow, UsdInflowSum } from "./FinStatement/Cashflow/UsdInflow";
+import { defUsdOutflowSumArr, updateUsdOutflowSum, UsdOutflow, UsdOutflowSum } from "./FinStatement/Cashflow/UsdOutflow";
+import { defUsdEscrowSumArr, updateUsdEscrowSum, UsdEscrow, UsdEscrowSum } from "./FinStatement/Cashflow/UsdEscrow";
 
 export interface Cashflow extends RoyaltySource {
   seq: number,
@@ -104,6 +107,10 @@ export const baseToDust = (usd:bigint) => {
   return usd * 10n ** 14n;
 }
 
+export const microToDust = (usd:bigint) => {
+  return usd * 10n ** 12n;
+}
+
 export interface StatementProps {
   inETH: boolean,
   startDate: number,
@@ -146,8 +153,17 @@ export function FinStatement() {
   const [ ethOutflow, setEthOutflow ] = useState<EthOutflowSum[]>(defEthOutflowSumArr);
   const [ ethOutflowRecords, setEthOutflowRecords ] = useState<Cashflow[]>([]);
 
+  const [ usdInflow, setUsdInflow ] = useState<UsdInflowSum[]>(defUsdInflowSumArr);
+  const [ usdInflowRecords, setUsdInflowRecords ] = useState<Cashflow[]>([]);
+
+  const [ usdOutflow, setUsdOutflow ] = useState<UsdOutflowSum[]>(defUsdOutflowSumArr);
+  const [ usdOutflowRecords, setUsdOutflowRecords ] = useState<Cashflow[]>([]);
+
   const [ deposits, setDeposits ] = useState<DepositsSum[]>(defDepositsSumArr);
   const [ depositsRecords, setDepositsRecords ] = useState<Cashflow[]>([]);
+
+  const [ usdEscrow, setUsdEscrow ] = useState<UsdEscrowSum[]>(defUsdEscrowSumArr);
+  const [ usdEscrowRecords, setUsdEscrowRecords ] = useState<Cashflow[]>([]);
 
   const [ ftEthflow, setFtEthflow ] = useState<FtEthflowSum[]>(defFtEthflowSumArr);
   const [ ftEthflowRecords, setFtEthflowRecords] = useState<Cashflow[]>([]);
@@ -155,21 +171,30 @@ export function FinStatement() {
   const [ ftCbpflow, setFtCbpflow ] = useState<FtCbpflowSum[]>(defFtCbpflowSumArr);
   const [ ftCbpflowRecords, setFtCbpflowRecords] = useState<Cashflow[]>([]);
 
-  const [ flags, setFlags ] = useState<boolean[]>([false, false, false, false, false, false, false]);
+  const [ flags, setFlags ] = useState<boolean[]>([false, false, false, false, false, false, false, false, false, false]);
+
+  const tips = [
+    'cbpIn', 'cbpOut', 'ethIn', 'ethOut',
+    'usdIn', 'usdOut', 'ethDep', 'usdEsc',
+    'ftCbp', 'ftEth'
+  ]
 
   useEffect(()=>{
-    let len:boolean[] = [false, false, false, false, false, false, false];
+    let len:boolean[] = [false, false, false, false, false, false, false, false, false, false,];
     len[0] = cbpInflowRecords.length > 0;
     len[1] = cbpOutflowRecords.length > 0;
     len[2] = ethInflowRecords.length > 0;
     len[3] = ethOutflowRecords.length > 0;
-    len[4] = depositsRecords.length > 0;
-    len[5] = ftCbpflowRecords.length > 0;
-    len[6] = ftEthflowRecords.length > 0;
+    len[4] = usdInflowRecords.length > 0;
+    len[5] = usdOutflowRecords.length > 0;
+    len[6] = depositsRecords.length > 0;
+    len[7] = usdEscrowRecords.length > 0;
+    len[8] = ftCbpflowRecords.length > 0;
+    len[9] = ftEthflowRecords.length > 0;
 
     setFlags(len);
 
-  }, [cbpInflowRecords, cbpOutflowRecords, ethInflowRecords, ethOutflowRecords, depositsRecords, ftCbpflowRecords, ftEthflowRecords]);
+  }, [cbpInflowRecords, cbpOutflowRecords, ethInflowRecords, ethOutflowRecords, usdInflowRecords, usdOutflowRecords, depositsRecords, usdEscrowRecords, ftCbpflowRecords, ftEthflowRecords]);
 
   const [ inETH, setInETH ] = useState(false);
   const [ exRate, setExRate ] = useState(10000n);
@@ -205,10 +230,12 @@ export function FinStatement() {
     setCbpOutflow([...updateCbpOutflowSum(cbpOutflowRecords, startDate, endDate)]);
     setEthInflow([...updateEthInflowSum(ethInflowRecords, startDate, endDate)]);
     setEthOutflow([...updateEthOutflowSum(ethOutflowRecords, startDate, endDate)]);
+    setUsdInflow([...updateUsdInflowSum(usdInflowRecords, startDate, endDate)]);
+    setUsdOutflow([...updateUsdOutflowSum(usdOutflowRecords, startDate, endDate)]);
     setDeposits([...updateDepositsSum(depositsRecords, startDate, endDate)]);
+    setUsdEscrow([...updateUsdEscrowSum(usdEscrowRecords, startDate, endDate)]);
     setFtCbpflow([...updateFtCbpflowSum(ftCbpflowRecords, startDate, endDate)]);
     setFtEthflow([...updateFtEthflowSum(ftEthflowRecords, startDate, endDate)]);
-
 
     const findBlocknumberByTimestamp = async (targetTimestamp: bigint) => {
 
@@ -282,6 +309,10 @@ export function FinStatement() {
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
   }
+
+  const microToWei = (usd:bigint) => {
+    return usd * centPrice / 10000n;
+  }
    
   // ==== Breakdown Display ====
 
@@ -315,18 +346,109 @@ export function FinStatement() {
 
     let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
-    records = records.filter((v)=>v.typeOfIncome == 'PayInCap' ||
-        v.typeOfIncome == 'PayOffCIDeal' || 
-        v.typeOfIncome =='CloseBidAgainstInitOffer' ||
-        v.typeOfIncome == 'CloseInitOfferAgainstBid'
-    );
-
-    let curSumInUsd = weiToDust(ethInflow[type].capital);
+    records = records.filter((v)=>v.typeOfIncome == 'PayInCap');
     
     let arrSumInfo = inETH 
         ? [ {title: 'Paid In Cap - (ETH ', data: ethInflow[type].capital} ]
         : [ {title: 'Paid In Cap - (USD ', data: ethInflow[type].capitalInUsd},
-            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethInflow[type].capitalInUsd},
+            {title: 'Exchange Gain/Loss', data: weiToDust(ethInflow[type].capital) - ethInflow[type].capitalInUsd},
+          ];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
+
+  const showUsdPaidInCapRecords = (type:number) => {
+
+    let records = trimCashflow(usdInflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'PayInCap');
+    
+    let arrSumInfo = inETH 
+        ? [ {title: 'Paid In Cap - (ETH ', data: microToWei(usdInflow[type].capital)} ]
+        : [ {title: 'Paid In Cap - (USD ', data: microToDust(usdInflow[type].capital)},
+          ];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
+
+  const showPaidInPremiumRecords = (type:number) => {
+
+    let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'PayInPremium');
+    
+    let arrSumInfo = inETH 
+        ? [ {title: 'Paid In Premium - (ETH ', data: ethInflow[type].premium} ]
+        : [ {title: 'Paid In Premium - (USD ', data: ethInflow[type].premiumInUsd},
+            {title: 'Exchange Gain/Loss', data: weiToDust(ethInflow[type].premiumInUsd) - ethInflow[type].premiumInUsd},
+          ];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
+
+  const showUsdPaidInPremiumRecords = (type:number) => {
+
+    let records = trimCashflow(usdInflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'PayInPremium');
+    
+    let arrSumInfo = inETH 
+        ? [ {title: 'Paid In Premium - (ETH ', data: microToWei(usdInflow[type].premium)} ]
+        : [ {title: 'Paid In Premium - (USD ', data: microToDust(usdInflow[type].premium)},
+          ];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
+
+  const showUsdReimburseExpRecords = (type:number) => {
+
+    let records = trimCashflow(usdOutflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'ReimburseExp');
+    
+    let arrSumInfo = inETH 
+        ? [ {title: 'Reimburse Exp - (ETH ', data: microToWei(usdOutflow[type].reimburseExp)} ]
+        : [ {title: 'Reimburse Exp - (USD ', data: microToDust(usdOutflow[type].reimburseExp)},
+          ];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
+
+  const showUsdAdvanceExpRecords = (type:number) => {
+
+    let records = trimCashflow(usdOutflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'AdvanceExp');
+    
+    let arrSumInfo = inETH 
+        ? [ {title: 'Advance Exp - (ETH ', data: microToWei(usdOutflow[type].advanceExp)} ]
+        : [ {title: 'Advance Exp - (USD ', data: microToDust(usdOutflow[type].advanceExp)},
+          ];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
+
+  const showUsdDistributionRecords = (type:number) => {
+
+    let records = trimCashflow(usdOutflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'DistributedUsd');
+    
+    let arrSumInfo = inETH 
+        ? [ {title: 'Distributed USDC - (ETH ', data: microToWei(usdOutflow[type].distributeUsd)} ]
+        : [ {title: 'Distributed USDC - (USD ', data: microToDust(usdOutflow[type].distributeUsd)},
           ];
 
     setList(records);
@@ -425,10 +547,25 @@ export function FinStatement() {
       {simbol: ' ', title: 'ETH of Comp', amt: ethInflow[type].totalAmt - ethOutflow[type].totalAmt, amtInUsd: weiToDust(ethInflow[type].totalAmt - ethOutflow[type].totalAmt), show: ()=>{}},
       {simbol: '+', title: 'Gas Income', amt: ethInflow[type].gas, amtInUsd: weiToDust(ethInflow[type].gas), show: ()=>showGasIncomeRecords(type)},
       {simbol: '+', title: 'Paid In Cap', amt: ethInflow[type].capital, amtInUsd: weiToDust(ethInflow[type].capital), show: ()=>showPaidInCapRecords(type)},
+      {simbol: '+', title: 'Paid In Premium', amt: ethInflow[type].premium, amtInUsd: weiToDust(ethInflow[type].premiumInUsd), show: ()=>showPaidInPremiumRecords(type)},
       {simbol: '+', title: 'Transfer Income', amt: ethInflow[type].transfer, amtInUsd: weiToDust(ethInflow[type].transfer), show: ()=>showEthTransferIncomeRecords(type)},
       {simbol: '-', title: 'Gmm Payment', amt: ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense, amtInUsd: weiToDust(ethOutflow[type].gmmExpense + ethOutflow[type].gmmTransfer), show: ()=>showEthGmmPaymentRecords(type)},
       {simbol: '-', title: 'Bmm Payment', amt: ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense, amtInUsd: weiToDust(ethOutflow[type].bmmExpense + ethOutflow[type].bmmTransfer), show: ()=>showEthBmmPaymentRecords(type)},
       {simbol: '-', title: 'Distribution', amt: ethOutflow[type].distribution, amtInUsd: weiToDust(ethOutflow[type].distribution), show: ()=>showDistributionRecords(type)},
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
+
+  const displayUsdOfComp = (type:number) => {
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'USDC of Comp', amt: usdInflow[type].totalAmt - usdOutflow[type].totalAmt, amtInUsd: microToDust(usdInflow[type].totalAmt - usdOutflow[type].totalAmt), show: ()=>{}},
+      {simbol: '+', title: 'Paid In Cap', amt: usdInflow[type].capital, amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
+      {simbol: '+', title: 'Paid In Premium', amt: usdInflow[type].premium, amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},      
+      {simbol: '-', title: 'Reimburse Exp', amt: usdOutflow[type].reimburseExp, amtInUsd: microToDust(usdOutflow[type].reimburseExp), show: ()=>showUsdReimburseExpRecords(type)},
+      {simbol: '-', title: 'Advance Exp', amt: usdOutflow[type].advanceExp, amtInUsd: microToDust(usdOutflow[type].advanceExp), show: ()=>showUsdAdvanceExpRecords(type)},
+      {simbol: '-', title: 'Distribution', amt: usdOutflow[type].distributeUsd, amtInUsd: microToDust(usdOutflow[type].distributeUsd), show: ()=>showUsdDistributionRecords(type)},
     ];
 
     setItems(items);
@@ -504,6 +641,55 @@ export function FinStatement() {
       {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow[type].newUserAward), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(3)},
       {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow[type].startupCost), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(3)},
       {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpInflow[type].royalty), amtInUsd: weiToDust(cbpToETH(cbpInflow[type].royalty)), show: ()=>showRoyaltyRecords(3)},
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
+
+  // ==== Owners Equity ====
+
+  const displayPaidInCap = (type:number) => {
+
+    let paidInCap = ethInflow[type].capital + microToWei(usdInflow[type].capital);
+    let paidInCapUsd = weiToDust(paidInCap);
+
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Paid In Cap', amt: paidInCap, amtInUsd: paidInCapUsd, show: ()=>{}},
+      {simbol: '+', title: 'Paid Cap In ETH', amt: ethInflow[type].capital, amtInUsd: ethInflow[type].capitalInUsd, show: ()=>showPaidInCapRecords(type)},
+      {simbol: '+', title: 'Paid Cap In USDC', amt: microToWei(usdInflow[type].capital), amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
+
+  const displayPaidInPremium = (type:number) => {
+
+    let paidInCap = ethInflow[type].premium + microToWei(usdInflow[type].premium);
+    let paidInCapUsd = weiToDust(paidInCap);
+
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Paid In Premium', amt: paidInCap, amtInUsd: paidInCapUsd, show: ()=>{}},
+      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: ethInflow[type].premiumInUsd, show: ()=>showPaidInPremiumRecords(type)},
+      {simbol: '+', title: 'Paid Premium In USDC', amt: microToWei(usdInflow[type].premium), amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
+
+  const displayShareIssuanceProceeds = (type:number) => {
+
+    let proceeds = ethInflow[type].capital + ethInflow[type].premium + microToWei(usdInflow[type].capital + usdInflow[type].premium);
+    let proceedsUsd = weiToDust(proceeds);
+
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Share Issuance Proceeds', amt: proceeds, amtInUsd: proceedsUsd, show: ()=>{}},
+      {simbol: '+', title: 'Paid Cap In ETH', amt: ethInflow[type].capital, amtInUsd: ethInflow[type].capitalInUsd, show: ()=>showPaidInCapRecords(type)},      
+      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: ethInflow[type].premiumInUsd, show: ()=>showPaidInPremiumRecords(type)},
+      {simbol: '+', title: 'Paid Cap In USDC', amt: microToWei(usdInflow[type].capital), amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
+      {simbol: '+', title: 'Paid Premium In USDC', amt: microToWei(usdInflow[type].premium), amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
     ];
 
     setItems(items);
@@ -652,8 +838,9 @@ export function FinStatement() {
     let bmmExp = cbpToETH(cbpOutflow[type].bmmTransfer) + ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense;
     let bmmExpInUsd = cbpOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpense;
 
-    let sgNa = gmmExp + bmmExp + cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
-    let sgNaInUsd = gmmExpInUsd + bmmExpInUsd + cbpOutflow[type].newUserAwardInUsd + cbpOutflow[type].startupCostInUsd;
+
+    let sgNa = gmmExp + bmmExp + cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost) + microToWei(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
+    let sgNaInUsd = gmmExpInUsd + bmmExpInUsd + cbpOutflow[type].newUserAwardInUsd + cbpOutflow[type].startupCostInUsd + microToDust(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Sales, General & Administrative', amt: sgNa, amtInUsd: sgNaInUsd, show: ()=>{}},
@@ -661,6 +848,8 @@ export function FinStatement() {
       {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow[type].startupCost) , amtInUsd: cbpOutflow[type].startupCostInUsd, show: ()=>showStartupCostRecords(type)},
       {simbol: '+', title: 'GMM Approved Expense', amt:gmmExp , amtInUsd: gmmExpInUsd, show: ()=>showGmmExpRecords(type)},
       {simbol: '+', title: 'BMM Approved Expense', amt:bmmExp , amtInUsd: bmmExpInUsd, show: ()=>showBmmExpRecords(type)},
+      {simbol: '+', title: 'Reimbursed USDC Expense', amt:microToWei(usdOutflow[type].reimburseExp) , amtInUsd: microToDust(usdOutflow[type].reimburseExp), show: ()=>showUsdReimburseExpRecords(type)},
+      {simbol: '+', title: 'Advanced USDC Expense', amt:microToWei(usdOutflow[type].advanceExp) , amtInUsd: microToDust(usdOutflow[type].advanceExp), show: ()=>showUsdAdvanceExpRecords(type)},
     ];
 
     setItems(items);
@@ -687,6 +876,22 @@ export function FinStatement() {
     setItems(items);
     setShowSGNA(true);
   }
+
+  const displayDistribution = (type:number) => {
+
+    let distribution = ethOutflow[type].distribution + microToWei(usdOutflow[type].distributeUsd);
+    let distributionInUsd = weiToDust(ethOutflow[type].distribution) + microToDust(usdOutflow[type].distributeUsd);
+
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Distribution', amt: distribution, amtInUsd: distributionInUsd, show: ()=>{}},
+      {simbol: '+', title: 'Distribution In ETH', amt:ethOutflow[type].distribution, amtInUsd: ethOutflow[type].distributionInUsd, show: ()=>showDistributionRecords(type)},
+      {simbol: '+', title: 'Distribution In USDC', amt: microToWei(usdOutflow[type].distributeUsd) , amtInUsd:microToDust(usdOutflow[type].distributeUsd), show: ()=>showUsdDistributionRecords(type)},
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
+
 
   // ==== Crypto Inventory ====
 
@@ -923,14 +1128,138 @@ export function FinStatement() {
     setOpen(true);
   }
 
+  const showUsdInflow = (type:number) => {
+
+    let records = trimCashflow(usdInflowRecords, startDate, endDate, type);
+
+    let arrSumInfo = inETH
+        ? [ 
+            {title: 'USDC Inflow - (ETH ', data: microToWei(usdInflow[type].totalAmt)},
+            {title: 'Capital', data: microToWei(usdInflow[type].capital)},
+            {title: 'Premium', data: microToWei(usdInflow[type].premium)}, 
+          ]
+        : [ 
+            {title: 'USDC Inflow - (USD ', data: microToDust(usdInflow[type].totalAmt)},
+            {title: 'Capital', data: microToDust(usdInflow[type].capital)},
+            {title: 'Premium', data: microToDust(usdInflow[type].premium)},
+          ];
+
+    setSumInfo(arrSumInfo);
+    setList(records);
+    setOpen(true);
+  }
+
+  const showUsdOutflow = (type:number) => {
+
+    let records = trimCashflow(usdOutflowRecords, startDate, endDate, type);
+
+    let arrSumInfo = inETH
+        ? [ 
+            {title: 'USDC Outflow - (ETH ', data: microToWei(usdOutflow[type].totalAmt)},
+            {title: 'Reimbursed Expenses', data: microToWei(usdOutflow[type].reimburseExp)},
+            {title: 'Advanced Expenses', data: microToWei(usdOutflow[type].advanceExp)}, 
+            {title: 'Distribution', data: microToWei(usdOutflow[type].distributeUsd)}, 
+          ]
+        : [ 
+            {title: 'USDC Outflow - (USD ', data: microToDust(usdOutflow[type].totalAmt)},
+            {title: 'Reimbursed Expenses', data: microToDust(usdOutflow[type].reimburseExp)},
+            {title: 'Advanced Expenses', data: microToDust(usdOutflow[type].advanceExp)},
+            {title: 'Distribution', data: microToDust(usdOutflow[type].distributeUsd)},
+          ];
+
+    setSumInfo(arrSumInfo);
+    setList(records);
+    setOpen(true);
+  }
+
+  const showUsdEscOutflow = (type:number) => {
+
+    let records = trimCashflow(usdEscrowRecords, startDate, endDate, type);
+
+    records = records.filter(v => v.typeOfIncome == 'RefundValueOfBidOrder' ||
+      v.typeOfIncome == 'CloseBidAgainstOffer' || v.typeOfIncome == 'CloseOfferAgainstBid' ||
+      v.typeOfIncome == 'CloseInitOfferAgainstBid' || v.typeOfIncome == 'CloseBidAgainstInitOffer' ||
+      v.typeOfIncome == 'PayOffSwap' || v.typeOfIncome == 'PayOffRejectedDeal'
+    );
+
+    let sum = usdEscrow[type].balance + usdEscrow[type].consideration + usdEscrow[type].forward;
+
+    let arrSumInfo = inETH
+        ? [ 
+            {title: 'USDC Escrow Outflow - (ETH ', data: microToWei(sum)},
+            {title: 'Forward Payment', data: microToWei(usdEscrow[type].forward)},
+            {title: 'Consideration', data: microToWei(usdEscrow[type].consideration)}, 
+            {title: 'Refund Balance', data: microToWei(usdEscrow[type].balance)}, 
+          ]
+        : [ 
+            {title: 'USDC Escrow Outflow - (USD ', data: microToDust(sum)},
+            {title: 'Forward Payment', data: microToDust(usdEscrow[type].forward)},
+            {title: 'Consideration', data: microToDust(usdEscrow[type].consideration)},
+            {title: 'Refund Balance', data: microToDust(usdEscrow[type].balance)},
+          ];
+
+    setSumInfo(arrSumInfo);
+    setList(records);
+    setOpen(true);
+  }
+
+  const showUsdEscInflow = (type:number) => {
+
+    let records = trimCashflow(usdEscrowRecords, startDate, endDate, type);
+    records = records.filter(v => v.typeOfIncome == 'CustodyValueOfBid');
+
+    let arrSumInfo = inETH
+        ? [ 
+            {title: 'USDC Escrow Inflow - (ETH ', data: microToWei(usdEscrow[type].escrow)},
+          ]
+        : [ 
+            {title: 'USDC Escrow Inflow - (USD ', data: microToDust(usdEscrow[type].escrow)},
+          ];
+
+    setSumInfo(arrSumInfo);
+    setList(records);
+    setOpen(true);
+  }
+
+  const showUsdDepInflow = (type:number) => {
+
+    let records = trimCashflow(usdEscrowRecords, startDate, endDate, type);
+    records = records.filter(v => v.typeOfIncome == 'DistributeUsd');
+
+    let arrSumInfo = inETH
+        ? [ 
+            {title: 'USDC Deposit Inflow - (ETH ', data: microToWei(usdEscrow[type].distribution)},
+          ]
+        : [ 
+            {title: 'USDC Deposit Inflow - (USD ', data: microToDust(usdEscrow[type].distribution)},
+          ];
+
+    setSumInfo(arrSumInfo);
+    setList(records);
+    setOpen(true);
+  }
+
+  const showUsdDepOutflow = (type:number) => {
+
+    let records = trimCashflow(usdEscrowRecords, startDate, endDate, type);
+    records = records.filter(v => v.typeOfIncome == 'PickupUsd');
+
+    let arrSumInfo = inETH
+        ? [ 
+            {title: 'USDC Deposit Outflow - (ETH ', data: microToWei(usdEscrow[type].pickup)},
+          ]
+        : [ 
+            {title: 'USDC Deposit Outflow - (USD ', data: microToDust(usdEscrow[type].pickup)},
+          ];
+
+    setSumInfo(arrSumInfo);
+    setList(records);
+    setOpen(true);
+  }
+
   return (
-    <Paper elevation={3} 
-      sx={{
-        m:1, p:1, border:1,
-        borderColor:'divider',
-        width: '100%' 
-      }} 
-    >
+
+    <Paper elevation={3} sx={{m:1, p:1, border:1,borderColor:'divider'}} >
 
       <Stack direction='row' sx={{ alignItems:'center', justifyContent:'space-between' }} >
 
@@ -1005,12 +1334,16 @@ export function FinStatement() {
               size='small'
             />
 
-            <Button variant="contained" sx={{m:2, mt:0.8, mr:20, width:'128'}} onClick={()=>updateCashflowRange()} disabled={flags.findIndex(v => v==true) < 0 || startDate > endDate} >
+            <Button variant="contained" sx={{m:2, mt:0.8, mr:8, width:'128'}} onClick={()=>updateCashflowRange()} disabled={flags.findIndex(v => v==true) < 0 || startDate > endDate} >
               Update Period
             </Button>
 
             {flags.map((v, i)=>(
-              <TipsAndUpdates key={i} color={ v ? 'warning' : 'disabled'} sx={{m:1}} />
+              <Tooltip key={i} title={tips[i]} placement='top-end' arrow >
+                <span key={i}>
+                  <TipsAndUpdates key={i} color={ v ? 'warning' : 'disabled'} sx={{m:1}} />
+                </span>
+              </Tooltip>
             ))}
 
           </Stack>
@@ -1027,7 +1360,13 @@ export function FinStatement() {
 
       <EthOutflow exRate={exRate} setRecords={setEthOutflowRecords} />
 
+      <UsdInflow exRate={exRate} setRecords={setUsdInflowRecords} />
+
+      <UsdOutflow exRate={exRate} setRecords={setUsdOutflowRecords} />
+
       <Deposits exRate={exRate} setRecords={setDepositsRecords} />
+
+      <UsdEscrow exRate={exRate} setRecords={setUsdEscrowRecords} />
 
       <FtCbpflow exRate={exRate} setRecords={setFtCbpflowRecords} />
 
@@ -1039,31 +1378,29 @@ export function FinStatement() {
           
       <Stack direction='row' >
 
-        <Assets inETH={inETH} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>displayEthOfComp(3)]} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <Assets inETH={inETH} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>displayEthOfComp(3), ()=>displayUsdOfComp(3)]} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} />
 
-        <LiabilyAndEquity inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} opnBlkNo={opnBlkNo} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayDeferredRevenue(3), ()=>showPaidInCapRecords(3)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <LiabilyAndEquity inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} opnBlkNo={opnBlkNo} endDate={endDate} rptBlkNo={rptBlkNo} display={[()=>displayDeferredRevenue(3), ()=>displayPaidInCap(3), ()=>displayPaidInPremium(3)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} />
 
       </Stack>
       
       <Stack direction='row'>
 
-        <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2), ()=>displayExchangeGainLoss(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2), ()=>displayExchangeGainLoss(2), ()=>displayDistribution(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} />
  
-        <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>showCbpOutflow(2), ()=>showFtCbpflow(2), ()=>showEthInflow(2), ()=>showEthOutflow(2), ()=>showFtEthflow(3), ()=>showDepositsInflow(2), ()=>showCustody(2),  ()=>showDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
+        <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[ ()=>displayDeferredRevenue(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2), ()=>displayShareIssuanceProceeds(2), ()=>displayDistribution(2) ]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
 
       </Stack>
 
       <Stack direction='row'>
 
-        <EquityChangeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showPaidInCapRecords(2), ()=>showDistributionRecords(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} />
+        <EquityChangeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showPaidInCapRecords(2), ()=>showDistributionRecords(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} />
       
       </Stack>
-
-
 
       <Stack direction='row' >
 
-        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>showCbpOutflow(2), ()=>showFtCbpflow(2), ()=>showEthInflow(2), ()=>showEthOutflow(2), ()=>showFtEthflow(3), ()=>showDepositsInflow(2), ()=>showCustody(2),  ()=>showDepositsOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} />
+        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>showCbpOutflow(2), ()=>showFtCbpflow(2), ()=>showEthInflow(2), ()=>showEthOutflow(2), ()=>showFtEthflow(3), ()=>showDepositsInflow(2), ()=>showCustody(2), ()=>showDepositsOutflow(2), ()=>showUsdInflow(2), ()=>showUsdOutflow(2), ()=>showUsdEscInflow(2), ()=>showUsdEscOutflow(2), ()=>showUsdDepInflow(2), ()=>showUsdDepOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
 
       </Stack>
 

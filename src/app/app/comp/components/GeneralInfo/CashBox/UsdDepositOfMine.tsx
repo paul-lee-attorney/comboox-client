@@ -4,28 +4,26 @@ import { Close, HelpOutline, } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 
 
-import { depositOfMine } from "../../../gk";
+
 import { bigIntToStrNum, longSnParser } from "../../../../common/toolsKit";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { booxMap } from "../../../../common";
+import { depositOfMine } from "../../../cashier";
+import { DepositOfMineProps } from "./DepositOfMine";
 
-export interface DepositOfMineProps {
-  time: number;
-}
-
-
-export function DepositOfMine({time}:DepositOfMineProps) {
+export function UsdDepositOfMine({time}:DepositOfMineProps) {
   
-  const { gk, userNo } = useComBooxContext();
+  const { boox, userNo } = useComBooxContext();
 
   const [ deposit, setDeposit ] = useState<bigint>(0n);
 
   useEffect(()=>{
-    if (gk && userNo) {
-      depositOfMine(gk, userNo).then(
+    if (boox && userNo) {
+      depositOfMine(boox[booxMap.Cashier], BigInt(userNo)).then(
         res => setDeposit(res)
       );
     }
-  }, [ gk, userNo, time ]);
+  }, [ boox, userNo, time ]);
 
   const [ open, setOpen ] = useState(false);
 
@@ -38,8 +36,8 @@ export function DepositOfMine({time}:DepositOfMineProps) {
       <Stack direction='row' sx={{ alignItems:'center' }} >
 
         <Tooltip 
-          title='Get ETH Deposits' 
-          placement='top-end'
+          title='Get USDC Deposits' 
+          placement='top-end' 
           arrow 
         >
           <span>
@@ -47,7 +45,7 @@ export function DepositOfMine({time}:DepositOfMineProps) {
               sx={{mx:1, ml: 5}}
               size="large"
               onClick={handleClick}
-              color="success"
+              color="primary"
             >
               <HelpOutline />
             </IconButton>
@@ -59,7 +57,7 @@ export function DepositOfMine({time}:DepositOfMineProps) {
             action={
               <IconButton
                 aria-label="close"
-                color="success"
+                color="primary"
                 size="small"
                 onClick={() => {
                   setOpen(false);
@@ -69,10 +67,10 @@ export function DepositOfMine({time}:DepositOfMineProps) {
               </IconButton>
             }
             variant="outlined" 
-            severity='success' 
+            severity='info' 
             sx={{ height: 45, p:0.5 }} 
           >
-            Deposit of User ({longSnParser((userNo ?? 0).toString())}) : { bigIntToStrNum(deposit, 18) + ' (ETH)' }
+            Deposit of User ({longSnParser((userNo ?? 0).toString())}) : { bigIntToStrNum(deposit, 6) + ' (USDC)' }
           </Alert>          
         </Collapse>
 

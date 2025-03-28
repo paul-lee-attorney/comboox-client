@@ -6,18 +6,18 @@ import { SavingsOutlined } from "@mui/icons-material";
 
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 
-import { HexType } from "../../../../common";
+import { booxMap, HexType } from "../../../../common";
 import { refreshAfterTx } from "../../../../common/toolsKit";
 
-import { useGeneralKeeperPickupDeposit } from "../../../../../../../generated";
+import { useCashierPickupUsd } from "../../../../../../../generated";
 
 interface PickupDepositProps{
   refresh: ()=>void;
 }
 
-export function PickupDeposit({ refresh }:PickupDepositProps) {
+export function PickupUsdDeposit({ refresh }:PickupDepositProps) {
   
-  const { gk, setErrMsg } = useComBooxContext();
+  const { boox, setErrMsg } = useComBooxContext();
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{
@@ -28,8 +28,8 @@ export function PickupDeposit({ refresh }:PickupDepositProps) {
   const {
     isLoading: pickupDepositLoading,
     write: pickupDeposit,
-  } = useGeneralKeeperPickupDeposit({
-    address: gk,
+  } = useCashierPickupUsd({
+    address: boox && boox[booxMap.Cashier],
     onError(err) {
       setErrMsg(err.message);
     },
@@ -42,17 +42,17 @@ export function PickupDeposit({ refresh }:PickupDepositProps) {
 
   return(
     <Tooltip 
-      title='Pickup ETH Deposits' 
+      title='Pickup USDC Deposits' 
       placement='top-start' 
       arrow 
     >
       <span>
         <IconButton 
-          sx={{mx:1, ml:5}}
+          sx={{mx:1, ml:6}}
           size="large"
           disabled={ pickupDepositLoading || loading}
           onClick={()=>pickupDeposit?.()}
-          color="success"
+          color="primary"
         >
           <SavingsOutlined />
         </IconButton>

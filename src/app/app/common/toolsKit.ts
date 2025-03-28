@@ -448,3 +448,12 @@ export async function getReceipt(hash: HexType): Promise< any > {
   });
   return res;
 }
+
+export function addrToUint(addr: HexType): bigint {
+  let uintHex = HexParser(addr.substring(2).padStart(64, '0'));
+  return BigInt(uintHex);
+}
+
+export function bigIntToAddr(num:bigint): HexType {
+  return HexParser(num.toString(16).padStart(64, '0').substring(24));
+}

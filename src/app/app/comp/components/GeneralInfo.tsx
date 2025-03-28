@@ -28,7 +28,8 @@ import { FinStatement } from "./FinStatement";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { HistoryOfBoox } from "./GeneralInfo/HistoryOfBoox";
-import { balanceOfComp, totalCustody } from "../cashier";
+import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../cashier";
+import { CashBox } from "./GeneralInfo/CashBox";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
@@ -108,7 +109,8 @@ export function GeneralInfo() {
 
 
   const [ balanceOfUSD, setBalanceOfUSD ] = useState('0');
-  const [ custodyUSD, setCustodyUSD ] = useState('0');
+  const [ escrowUSD, setEscrowUSD ] = useState('0');
+  const [ depositUSD, setDepositUSD ] = useState('0');
 
   useEffect(()=>{
     if (gk) {
@@ -128,12 +130,18 @@ export function GeneralInfo() {
 
     if (boox) {
 
-      balanceOfComp(boox[booxMap.Cashier]).then(
+      const cashier = boox[booxMap.Cashier];
+
+      balanceOfComp(cashier, undefined).then(
         res => setBalanceOfUSD(res.toString())
       );
 
-      totalCustody(boox[booxMap.Cashier]).then(
-        res => setCustodyUSD(res.toString())
+      totalEscrow(cashier, undefined).then(
+        res => setEscrowUSD(res.toString())
+      );
+
+      totalUsdDeposits(cashier, undefined).then(
+        res => setDepositUSD(res.toString())
       );
 
     }
@@ -321,7 +329,9 @@ export function GeneralInfo() {
 
         </Grid>
 
-        <Paper elevation={3} sx={{m:1, p:1, }} >
+        <CashBox />
+
+        {/* <Paper elevation={3} sx={{m:1, p:1, }} >
 
           <Stack direction='row' sx={{ alignItems:'center' }} >
     
@@ -341,7 +351,7 @@ export function GeneralInfo() {
               <TextField
                 size="small"
                 variant='outlined'
-                label='(GUSD)'
+                label='(GUSDC)'
                 inputProps={{
                   readOnly: true,
                   style: {textAlign: 'right'},
@@ -361,7 +371,7 @@ export function GeneralInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='(USD)'
+                label='(USDC)'
                 inputProps={{
                   readOnly: true,
                   style: {textAlign: 'right'},
@@ -385,7 +395,7 @@ export function GeneralInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='(Micro-USD)'
+                label='(Micro-USDC)'
                 inputProps={{
                   readOnly: true,
                   style: {textAlign: 'left'},
@@ -521,7 +531,7 @@ export function GeneralInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='Escrow (GUSD)'
+                label='Escrow (GUSDC)'
                 inputProps={{
                   readOnly: true,
                   style: {textAlign: 'right'},
@@ -532,7 +542,7 @@ export function GeneralInfo() {
                   m:1,
                 }}
                 value = {longDataParser(
-                  custodyUSD.length > 15 ? custodyUSD.substring(0, custodyUSD.length - 15) : '0'
+                  escrowUSD.length > 15 ? escrowUSD.substring(0, escrowUSD.length - 15) : '0'
                 )}
                 fullWidth
               />
@@ -541,7 +551,7 @@ export function GeneralInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='Escrow (USD)'
+                label='Escrow (USDC)'
                 inputProps={{
                   readOnly: true,
                   style: {textAlign: 'right'},
@@ -552,10 +562,10 @@ export function GeneralInfo() {
                   m:1,
                 }}
                 value={ longDataParser(
-                  custodyUSD.length > 6 
-                    ? custodyUSD.length > 15
-                      ? custodyUSD.substring(custodyUSD.length - 15, custodyUSD.length - 6)
-                      : custodyUSD.substring(0, custodyUSD.length - 6) 
+                  escrowUSD.length > 6 
+                    ? escrowUSD.length > 15
+                      ? escrowUSD.substring(escrowUSD.length - 15, escrowUSD.length - 6)
+                      : escrowUSD.substring(0, escrowUSD.length - 6) 
                     : '0'
                 )}
                 fullWidth
@@ -565,7 +575,7 @@ export function GeneralInfo() {
               <TextField 
                 size="small"
                 variant='outlined'
-                label='Escrow (Micro-USD)'
+                label='Escrow (Micro-USDC)'
                 inputProps={{
                   readOnly: true,
                   style: {textAlign: 'left'},
@@ -576,9 +586,9 @@ export function GeneralInfo() {
                   m:1,
                 }}
                 value={ longDataParser(
-                  custodyUSD.length > 6
-                    ? custodyUSD.substring(custodyUSD.length - 6)
-                    : custodyUSD
+                  escrowUSD.length > 6
+                    ? escrowUSD.substring(escrowUSD.length - 6)
+                    : escrowUSD
                 )}
                 fullWidth
               />
@@ -636,9 +646,77 @@ export function GeneralInfo() {
               />     
             </Grid>
 
+            <Grid item xs={1.3} md={1.3} lg={1.3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposit (GUSDC)'
+                inputProps={{
+                  readOnly: true,
+                  style: {textAlign: 'right'},
+                }}
+                color = "primary"
+                focused
+                sx={{
+                  m:1,
+                }}
+                value = {longDataParser(
+                  depositUSD.length > 15 ? depositUSD.substring(0, depositUSD.length - 15) : '0'
+                )}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={1.3} md={1.3} lg={1.3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposit (USDC)'
+                inputProps={{
+                  readOnly: true,
+                  style: {textAlign: 'right'},
+                }}
+                color = "primary"
+                focused
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                  depositUSD.length > 6 
+                    ? depositUSD.length > 15
+                      ? depositUSD.substring(depositUSD.length - 15, depositUSD.length - 6)
+                      : depositUSD.substring(0, depositUSD.length - 6) 
+                    : '0'
+                )}
+                fullWidth
+              />
+            </Grid>
+            <Grid item xs={1.3} md={1.3} lg={1.3} >
+              <TextField 
+                size="small"
+                variant='outlined'
+                label='Deposit (Micro-USDC)'
+                inputProps={{
+                  readOnly: true,
+                  style: {textAlign: 'left'},
+                }}
+                color = "primary"
+                focused
+                sx={{
+                  m:1,
+                }}
+                value={ longDataParser(
+                  depositUSD.length > 6
+                    ? depositUSD.substring(depositUSD.length - 6)
+                    : depositUSD
+                )}
+                fullWidth
+              />
+            </Grid>
+
+
           </Grid>
 
-        </Paper>
+        </Paper> */}
 
         {compInfo?.regNum == 8 && (
           <FinStatement />

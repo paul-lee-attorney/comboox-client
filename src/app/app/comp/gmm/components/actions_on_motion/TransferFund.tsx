@@ -6,14 +6,14 @@ import { cashierABI, useGeneralKeeperExecActionOfGm, useGeneralKeeperTransferFun
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { PaymentOutlined } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyChars, onlyHex, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { LoadingButton } from "@mui/lab";
 
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { ParasOfTransfer, defaultParasOfTransfer, typesOfCurrency } from "../create_motions/ProposeToTransferFund";
-import { encodeFunctionData, keccak256, stringToBytes } from "viem";
+import { encodeFunctionData, stringToHex } from "viem";
 
 
 export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) {
@@ -23,6 +23,8 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
   const [ typeOfCurrency, setTypeOfCurrency ] = useState(0);
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
+
+  const [ remark, setRemark ] = useState('ReimburseExp');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -91,18 +93,13 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
 
         const cashier = boox[booxMap.Cashier];
         const amtOfUsd = strNumToBigInt(paras.amt, 6);
-        const desHash = keccak256(stringToBytes(
-          paras.to + 
-          amtOfUsd.toString(16).padStart(64, '0') +
-          paras.expireDate.toString(16).padStart(12, '0') + 
-          motion.votingRule.seqOfRule.toString(16).padStart(2, '0') +
-          userNo.toString(16).padStart(10, '0') 
-        ));
+
+        const desHash = stringToHex("TransferUSD", {size: 32});
 
         const data = encodeFunctionData({
           abi: cashierABI,
           functionName: 'transferUsd',
-          args: [paras.to, amtOfUsd],
+          args: [paras.to, amtOfUsd, stringToHex(remark, {size: 32})],
         });
 
         transferUsd({
@@ -192,21 +189,47 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
               value={ paras.amt.toString() }
             />
 
-            <DateTimeField
-              label='ExpireDate'
-              size='small'
-              sx={{
-                m:1,
-                minWidth: 218,
-              }}
-              helperText=' '
-              value={ stampToUtc(paras.expireDate) }
-              onChange={(date) => setParas((v) => ({
-                ...v,
-                expireDate: utcToStamp(date),
-              }))}
-              format='YYYY-MM-DD HH:mm:ss'
-            />
+            {typeOfCurrency > 0 && (
+
+              <DateTimeField
+                label='ExpireDate'
+                size='small'
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                helperText=' '
+                value={ stampToUtc(paras.expireDate) }
+                onChange={(date) => setParas((v) => ({
+                  ...v,
+                  expireDate: utcToStamp(date),
+                }))}
+                format='YYYY-MM-DD HH:mm:ss'
+              />
+
+            )} 
+            { typeOfCurrency == 0 && (
+
+              <TextField 
+                variant='outlined'
+                label='Remark'
+                size="small"
+                error={ valid['Remark']?.error }
+                helperText={ valid['Remark']?.helpTx ?? ' ' }
+                sx={{
+                  m:1,
+                  minWidth: 218,
+                }}
+                onChange={(e) => {
+                  let input = e.target.value;
+                  onlyChars('Remark', input, 32, setValid);
+                  setRemark(input);
+                }}
+                value={ remark }
+              />
+
+            )}
+
 
           </Stack>
 

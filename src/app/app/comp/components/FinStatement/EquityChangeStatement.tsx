@@ -6,10 +6,10 @@ import { capAtDate } from "../../rom/rom";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
-import {  getInitContribution, setUpDate } from "./Assets";
+import { iprValueA, iprValueB, setUpDate } from "./Assets";
 import { getOwnersEquity } from "./LiabilityAndEquity";
 
-export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow}: IncomeStatementProps) {
+export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
   const { boox } = useComBooxContext();
 
@@ -29,6 +29,15 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
     return usd * 10n ** 14n;
   }
 
+
+  const microToWei = (usd:bigint) => {
+    return usd * centPrice / 10000n;
+  }
+
+  const microToDust = (usd:bigint) => {
+    return usd * 10n ** 12n;
+  }
+
   // ---- Cap ----
 
   const [ opnClassA, setOpnClassA ] = useState(0n);
@@ -42,29 +51,27 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
     const getPaidCap = async () =>{
       if (!boox) return;
+      const rom = boox[booxMap.ROM];
 
       const blk = await client.getBlock();
       const curTime = Number(blk.timestamp);
 
       if (startDate > endDate || endDate > curTime) return;
 
-      const initClassA = 25n*10n**8n;
+      const opnCap = (await capAtDate(rom, startDate)).paid;
+      const endCap = (await capAtDate(rom, endDate)).paid;
 
-      const opnCap = await capAtDate(boox[booxMap.ROM], startDate);
-      const endCap = await capAtDate(boox[booxMap.ROM], endDate);
+      setOpnClassB(opnCap);
+      setEndClassB(endCap);
 
-      if (endDate < setUpDate) {
-        setOpnClassB(opnCap.paid);
-        setEndClassB(endCap.paid);
-      } else if (startDate < setUpDate && endDate >= setUpDate) {
-        setOpnClassB(opnCap.paid);
-        setEndClassA(initClassA);
-        setEndClassB(endCap.paid - initClassA);
-      } if (startDate >= setUpDate) {
-        setOpnClassA(initClassA);
-        setOpnClassB(opnCap.paid - initClassA);
-        setEndClassA(initClassA);
-        setEndClassB(endCap.paid - initClassA);
+      if (endDate > setUpDate) {
+        setEndClassB(iprValueB + endCap);
+        setEndClassA(iprValueA);
+      }
+
+      if (startDate > setUpDate) {
+        setOpnClassB(iprValueB + endCap);
+        setOpnClassA(iprValueA);        
       }
       
     }
@@ -75,34 +82,24 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
   // ---- Cap Premium ----
   
   const getCapPremium = (type:number)=> {
-    const paidCap = type == 1
-        ? (opnClassA + opnClassB)
-        : type == 2 
-            ? (endClassA + endClassB - opnClassA - opnClassB) 
-            : (endClassA + endClassB);
 
-    const initContribution = getInitContribution(type, startDate, endDate);
-
-    const inEth = ethInflow[type].capital + baseToWei(initContribution - paidCap);
-    const inUsd = ethInflow[type].capitalInUsd + baseToDust(initContribution - paidCap);
+    const inEth = ethInflow[type].premium + microToWei(usdInflow[type].premium);
+    const inUsd = ethInflow[type].premiumInUsd + microToDust(usdInflow[type].premium);
 
     return {inEth: inEth, inUsd: inUsd};
   }
 
   const getPaidInCap = (type:number)=> {
 
-    const initContribution = getInitContribution(type, startDate, endDate);
-
-    const inEth = ethInflow[type].capital + baseToWei(initContribution);
-    const inUsd = ethInflow[type].capitalInUsd + baseToDust(initContribution);
+    const inEth = ethInflow[type].capital +  microToWei(usdInflow[type].capital);
+    const inUsd = ethInflow[type].capitalInUsd + microToDust(usdInflow[type].capital);
 
     return {inEth: inEth, inUsd: inUsd};
   }
 
-  const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
-
-  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, baseToWei, weiToDust);
+  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow, cbpToETH, baseToWei, weiToDust, microToWei, microToDust);
 
   return(
 
@@ -282,16 +279,16 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   -{  inETH
-                      ? weiToEth9Dec(ethOutflow[2].distribution)
-                      : showUSD(ethOutflow[2].distributionInUsd) } 
+                      ? weiToEth9Dec(ethOutflow[2].distribution + microToWei(usdOutflow[2].distributeUsd))
+                      : showUSD(ethOutflow[2].distributionInUsd + microToDust(usdOutflow[2].distributeUsd)) } 
                 </Typography>
               </TableCell>
 
               <TableCell>
                 <Typography variant='body1'>
                   -{  inETH
-                      ? weiToEth9Dec(ethOutflow[2].distribution)
-                      : showUSD(ethOutflow[2].distributionInUsd) } 
+                      ? weiToEth9Dec(ethOutflow[2].distribution + microToWei(usdOutflow[2].distributeUsd))
+                      : showUSD(ethOutflow[2].distributionInUsd + microToWei(usdOutflow[2].distributeUsd)) } 
                 </Typography>
               </TableCell>
 
@@ -338,8 +335,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   { inETH
-                    ? weiToEth9Dec(getPaidInCap(2).inEth)
-                    : showUSD(getPaidInCap(2).inUsd)} 
+                    ? weiToEth9Dec(getPaidInCap(2).inEth + getCapPremium(2).inEth)
+                    : showUSD(getPaidInCap(2).inUsd + getCapPremium(2).inUsd)} 
                 </Typography>
               </TableCell>
 

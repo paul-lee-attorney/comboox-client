@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { balanceOf, balanceOfWei } from "../../../rc";
 import { totalDeposits } from "../../gk";
-import { balanceOfComp, totalCustody } from "../../cashier";
+import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../../cashier";
 import { booxMap } from "../../../common";
 import { Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material";
 
 import { getEthPart, getGWeiPart, getWeiPart, longDataParser } from "../../../common/toolsKit";
 import { PickupDeposit } from "./CashBox/PickupDeposit";
 import { DepositOfMine } from "./CashBox/DepositOfMine";
+import { PickupUsdDeposit } from "./CashBox/PickupUsdDeposit";
+import { UsdDepositOfMine } from "./CashBox/UsdDepositOfMine";
 
 export function CashBox() {
 
@@ -25,10 +27,8 @@ export function CashBox() {
   const [ balanceOfUSD, setBalanceOfUSD ] = useState('0');
 
   const [ depositsOfETH, setDepositsOfETH ] = useState(0n);
-  const [ custodyUSD, setCustodyUSD ] = useState(0n);
-  const [ lockedUSD, setLockedUSD ] = useState(0n);
-
-  let depositOfUSD = (custodyUSD + lockedUSD).toString();
+  const [ escrowUSD, setEscrowUSD ] = useState('0');
+  const [ depositUSD, setDepositUSD ] = useState('0');
 
   useEffect(()=>{
     if (gk) {
@@ -48,12 +48,18 @@ export function CashBox() {
 
     if (boox) {
 
-      balanceOfComp(boox[booxMap.Cashier]).then(
+      const cashier = boox[booxMap.Cashier];
+
+      balanceOfComp(cashier, undefined).then(
         res => setBalanceOfUSD(res.toString())
       );
 
-      totalCustody(boox[booxMap.Cashier]).then(
-        res => setCustodyUSD(res)
+      totalEscrow(cashier, undefined).then(
+        res => setEscrowUSD(res.toString())
+      );
+
+      totalUsdDeposits(cashier, undefined).then(
+        res => setDepositUSD(res.toString())
       );
 
     }
@@ -63,7 +69,7 @@ export function CashBox() {
 
   return(
 
-    <Paper elevation={3} sx={{m:2, p:1, border:1, borderColor:'divider', width:'fit-content' }} >
+    <Paper elevation={3} sx={{m:1, p:1, border:1, borderColor:'divider'}} >
 
       <Stack direction='row' sx={{ alignItems:'center' }} >
 
@@ -71,9 +77,13 @@ export function CashBox() {
           <b>Cash Box</b>
         </Typography>
 
+        <PickupUsdDeposit refresh={refresh} />
+
+        <UsdDepositOfMine time={time} />
+
         <PickupDeposit refresh={refresh} />
 
-        <DepositOfMine />
+        <DepositOfMine time={time} />
 
       </Stack>
 
@@ -83,7 +93,7 @@ export function CashBox() {
           <TextField
             size="small"
             variant='outlined'
-            label='(GUSD)'
+            label='(GUSDC)'
             inputProps={{
               readOnly: true,
               style: {textAlign: 'right'},
@@ -102,7 +112,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='(USD)'
+            label='(USDC)'
             inputProps={{
               readOnly: true,
               style: {textAlign: 'right'},
@@ -125,7 +135,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='(Micro-USD)'
+            label='(Micro-USDC)'
             inputProps={{
               readOnly: true,
               style: {textAlign: 'left'},
@@ -257,7 +267,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='Escrow (GUSD)'
+            label='Escrow (GUSDC)'
             inputProps={{
               readOnly: true,
               style: {textAlign: 'right'},
@@ -268,16 +278,15 @@ export function CashBox() {
               m:1,
             }}
             value = {longDataParser(
-              depositOfUSD.length > 15 ? depositOfUSD.substring(0, depositOfUSD.length - 15) : '0'
+              escrowUSD.length > 15 ? escrowUSD.substring(0, escrowUSD.length - 15) : '0'
             )}
           />
         </Grid>
-
         <Grid item xs={1.3} md={1.3} lg={1.3} >
           <TextField 
             size="small"
             variant='outlined'
-            label='Escrow (USD)'
+            label='Escrow (USDC)'
             inputProps={{
               readOnly: true,
               style: {textAlign: 'right'},
@@ -288,10 +297,10 @@ export function CashBox() {
               m:1,
             }}
             value={ longDataParser(
-              depositOfUSD.length > 6 
-                ? depositOfUSD.length > 15
-                  ? depositOfUSD.substring(depositOfUSD.length - 15, depositOfUSD.length - 6)
-                  : depositOfUSD.substring(0, depositOfUSD.length - 6) 
+              escrowUSD.length > 6 
+                ? escrowUSD.length > 15
+                  ? escrowUSD.substring(escrowUSD.length - 15, escrowUSD.length - 6)
+                  : escrowUSD.substring(0, escrowUSD.length - 6) 
                 : '0'
             )}
           />
@@ -300,7 +309,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='Escrow (Micro-USD)'
+            label='Escrow (Micro-USDC)'
             inputProps={{
               readOnly: true,
               style: {textAlign: 'left'},
@@ -311,9 +320,9 @@ export function CashBox() {
               m:1,
             }}
             value={ longDataParser(
-              depositOfUSD.length > 6
-                ? depositOfUSD.substring(depositOfUSD.length - 6)
-                : depositOfUSD
+              escrowUSD.length > 6
+                ? escrowUSD.substring(escrowUSD.length - 6)
+                : escrowUSD
             )}
           />
         </Grid>
@@ -322,7 +331,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='Escrow (ETH)'
+            label='Deposit (ETH)'
             inputProps={{
               readOnly: true,
               style: { textAlign: "right" },
@@ -339,7 +348,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='Escrow (GWei)'
+            label='Deposit (GWei)'
             inputProps={{
               readOnly: true,
               style: { textAlign: "right" },
@@ -356,7 +365,7 @@ export function CashBox() {
           <TextField 
             size="small"
             variant='outlined'
-            label='Escrow (Wei)'
+            label='Deposit (Wei)'
             inputProps={{
               readOnly: true,
               style: { textAlign: "left" },
@@ -369,6 +378,71 @@ export function CashBox() {
             value={ getWeiPart(depositsOfETH.toString()) }
           />              
         </Grid>
+
+        <Grid item xs={1.3} md={1.3} lg={1.3} >
+          <TextField 
+            size="small"
+            variant='outlined'
+            label='Deposit (GUSDC)'
+            inputProps={{
+              readOnly: true,
+              style: {textAlign: 'right'},
+            }}
+            color = "primary"
+            focused
+            sx={{
+              m:1,
+            }}
+            value = {longDataParser(
+              depositUSD.length > 15 ? depositUSD.substring(0, depositUSD.length - 15) : '0'
+            )}
+          />
+        </Grid>
+        <Grid item xs={1.3} md={1.3} lg={1.3} >
+          <TextField 
+            size="small"
+            variant='outlined'
+            label='Deposit (USDC)'
+            inputProps={{
+              readOnly: true,
+              style: {textAlign: 'right'},
+            }}
+            color = "primary"
+            focused
+            sx={{
+              m:1,
+            }}
+            value={ longDataParser(
+              depositUSD.length > 6 
+                ? depositUSD.length > 15
+                  ? depositUSD.substring(depositUSD.length - 15, depositUSD.length - 6)
+                  : depositUSD.substring(0, depositUSD.length - 6) 
+                : '0'
+            )}
+          />
+        </Grid>
+        <Grid item xs={1.3} md={1.3} lg={1.3} >
+          <TextField 
+            size="small"
+            variant='outlined'
+            label='Deposit (Micro-USDC)'
+            inputProps={{
+              readOnly: true,
+              style: {textAlign: 'left'},
+            }}
+            color = "primary"
+            focused
+            sx={{
+              m:1,
+            }}
+            value={ longDataParser(
+              depositUSD.length > 6
+                ? depositUSD.substring(depositUSD.length - 6)
+                : depositUSD
+            )}
+          />
+        </Grid>
+
 
       </Grid>
 

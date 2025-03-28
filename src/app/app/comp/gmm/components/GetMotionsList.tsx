@@ -22,7 +22,7 @@ export function GetMotionsList({ list, title, setMotion, setOpen }:GetMotionsLis
     {
       field: 'typeOfMotion',
       headerName: 'TypeOfMotion',
-      valueGetter: p =>  motionType[p.row.head.typeOfMotion - 1],
+      valueGetter: p => motionType[p.row.head.typeOfMotion - 1],
       width: 120,
       headerAlign: 'center',
       align: 'center',

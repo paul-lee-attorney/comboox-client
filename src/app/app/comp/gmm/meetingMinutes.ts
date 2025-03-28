@@ -323,7 +323,7 @@ export function getTypeOfMotion(motion: Motion): string {
 
 export const motionType = [
   'ElectOfficer', 'RemoveOfficer', 'ApproveDocument', 'ApproveAction',
-  'TransferFund', 'DistributeAssets', 'DeprecateGK'
+  'TransferFund', 'DistributeAssets', 'DeprecateGK', 'TransferUSD'
 ];
 
 export const statesOfMotion = [

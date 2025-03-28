@@ -7,17 +7,21 @@ import { AssetsProps, getArmotization, getEthOfComp } from "./Assets";
 import { getDeferredRevenue } from "./LiabilityAndEquity";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
 import { EthInflowSum } from "./Cashflow/EthInflow";
+import { UsdOutflowSum } from "./Cashflow/UsdOutflow";
 
 
-export const getSGNA = (type:number, ethOutflow:EthOutflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
+export const getSGNA = (type:number, ethOutflow:EthOutflowSum[], cbpOutflow:CbpOutflowSum[], usdOutflow:UsdOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, microToWei:(cbp:bigint)=>bigint, microToDust:(cbp:bigint)=>bigint) => {
   const ethExp = ethOutflow[type].totalAmt - ethOutflow[type].distribution;
   const ethExpInUsd = ethOutflow[type].sumInUsd - ethOutflow[type].distributionInUsd;
 
   const cbpExp = cbpToETH(cbpOutflow[type].totalAmt - cbpOutflow[type].fuelSold);
   const cbpExpInUsd = cbpOutflow[type].sumInUsd - cbpOutflow[type].fuelSoldInUsd;
+  
+  const usdExp = microToWei(usdOutflow[type].advanceExp + usdOutflow[type].reimburseExp);
+  const usdExpInUsd = microToDust(usdOutflow[type].advanceExp + usdOutflow[type].reimburseExp);
 
-  const inEth = ethExp + cbpExp;
-  const inUsd = ethExpInUsd + cbpExpInUsd;
+  const inEth = ethExp + cbpExp + usdExp;
+  const inUsd = ethExpInUsd + cbpExpInUsd + usdExpInUsd;
 
   return ({inEth:inEth, inUsd:inUsd});
 }
@@ -25,7 +29,7 @@ export const getSGNA = (type:number, ethOutflow:EthOutflowSum[], cbpOutflow:CbpO
 export const getOpExchangeGainLoss = (type:number, ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], weiToDust:(eht:bigint)=>bigint, cbpToETH:(cbp:bigint)=>bigint)=> {
 
   const ethOfComp = getEthOfComp(type, ethInflow, ethOutflow);
-  const ethGainLoss = weiToDust(ethOfComp.inEth - ethInflow[type].capital) - (ethOfComp.inUsd - ethInflow[type].capitalInUsd);
+  const ethGainLoss = weiToDust(ethOfComp.inEth - ethInflow[type].capital - ethInflow[type].premium) - (ethOfComp.inUsd - ethInflow[type].capitalInUsd - ethInflow[type].premiumInUsd);
 
   const deferredRevenue = getDeferredRevenue(type, cbpInflow, cbpOutflow, cbpToETH);
   const cbpGainLoss = weiToDust(deferredRevenue.inEth) - deferredRevenue.inUsd;
@@ -33,9 +37,9 @@ export const getOpExchangeGainLoss = (type:number, ethInflow:EthInflowSum[], eth
   return ethGainLoss - cbpGainLoss;
 }
 
-export const getEBITDA = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint)=>{
+export const getEBITDA = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], usdOutflow:UsdOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint, microToWei:(eth:bigint)=>bigint, microToDust:(eth:bigint)=>bigint)=>{
 
-  const sgNa = getSGNA(type, ethOutflow, cbpOutflow, cbpToETH);
+  const sgNa = getSGNA(type, ethOutflow, cbpOutflow, usdOutflow, cbpToETH, microToWei, microToDust);
   const exchangeGainLoss = getOpExchangeGainLoss(type, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
 
   const inEth = cbpToETH(cbpInflow[type].royalty) + ethInflow[type].transfer - sgNa.inEth;
@@ -44,11 +48,11 @@ export const getEBITDA = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpO
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export const getProfits = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint)=>{
+export const getProfits = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], usdOutflow:UsdOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint, microToWei:(eth:bigint)=>bigint, microToDust:(eth:bigint)=>bigint)=>{
 
   const armotization = getArmotization(type, startDate, endDate);
 
-  const ebitda = getEBITDA(type,cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const ebitda = getEBITDA(type,cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
   const inEth = ebitda.inEth - armotization;
   const inUsd = ebitda.inUsd - weiToDust(armotization);
@@ -56,12 +60,19 @@ export const getProfits = (type:number, startDate:number, endDate:number, centPr
   return({inEth:inEth, inUsd:inUsd});
 }
 
-export const getRetainedEarnings = (type:number, startDate:number, endDate:number, centPrice:bigint, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint) => {
+export const getRetainedEarnings = (
+  type:number, startDate:number, endDate:number, centPrice:bigint, 
+  cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], 
+  ethInflow:EthInflowSum[], ethOutflow:EthOutflowSum[], 
+  usdOutflow:UsdOutflowSum[],
+  cbpToETH:(cbp:bigint)=>bigint, weiToDust:(eth:bigint)=>bigint, 
+  microToWei:(usd:bigint)=>bigint, microToDust:(usd:bigint)=>bigint
+) => {
 
-  const profits = getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const profits = getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
-  const inEth = profits.inEth - ethOutflow[type].distribution;
-  const inUsd = profits.inUsd - weiToDust(ethOutflow[type].distribution);
+  const inEth = profits.inEth - ethOutflow[type].distribution - microToWei(usdOutflow[type].distributeUsd);
+  const inUsd = profits.inUsd - weiToDust(ethOutflow[type].distribution) - microToDust(usdOutflow[type].distributeUsd);
 
   return ({inEth:inEth, inUsd:inUsd});
 }
@@ -72,7 +83,7 @@ export interface IncomeStatementProps extends AssetsProps {
   cbpOutflow: CbpOutflowSum[],
 }
 
-export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow}: IncomeStatementProps) {
+export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
   const cbpToETH = (cbp:bigint) => {
     return cbp * 10000n / exRate;
@@ -90,16 +101,24 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
     return baseToDollar(weiToBP(eth).toString()) + ' USD';
   }
 
+  const microToWei = (usd:bigint) => {
+    return usd * centPrice / 10000n;
+  }
+
+  const microToDust = (usd:bigint) => {
+    return usd * 10n ** 12n;
+  }
+
   const armotization = getArmotization(2, startDate, endDate);
 
-  const sgNa = getSGNA(2, ethOutflow, cbpOutflow, cbpToETH);
+  const sgNa = getSGNA(2, ethOutflow, cbpOutflow, usdOutflow, cbpToETH, microToWei, microToDust);
   const exchangeGainLoss = getOpExchangeGainLoss(2, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
 
-  const ebitda = getEBITDA(2, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const ebitda = getEBITDA(2, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
-  const profits = getProfits(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const profits = getProfits(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
-  const retainedEarnings = getRetainedEarnings(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, cbpToETH, weiToDust);
+  const retainedEarnings = getRetainedEarnings(2, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
   return(
 
@@ -203,10 +222,10 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         <Typography variant="h6" textAlign='center' width='10%'>
           -
         </Typography>
-        <Button variant="outlined" sx={{width: '50%', m:0.5, justifyContent:'start'}} >
+        <Button variant="outlined" sx={{width: '50%', m:0.5, justifyContent:'start'}} onClick={()=>display[4](2)} >
           <b>Distribution: ({ inETH
-            ? weiToEth9Dec(ethOutflow[2].distribution)
-            : showUSD(weiToDust(ethOutflow[2].distribution)) }) </b>
+            ? weiToEth9Dec(ethOutflow[2].distribution + microToWei(usdOutflow[2].distributeUsd))
+            : showUSD(weiToDust(ethOutflow[2].distribution) + microToDust(usdOutflow[2].distributeUsd)) }) </b>
         </Button>
       </Stack>
 
