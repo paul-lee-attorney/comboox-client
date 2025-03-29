@@ -283,8 +283,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
 
   }, [opnBlkNo, rptBlkNo, boox]);
 
-  const usdEscInflow = usdEscrow[2].escrow;
-  const usdEscOutflow = usdEscrow[2].consideration + usdEscrow[2].balance;
+  const usdEscInflow = usdEscrow[2].escrow + usdEscrow[2].forward;
+  const usdEscOutflow = usdEscrow[2].consideration + usdEscrow[2].balance + usdEscrow[2].forward;
 
   const usdDepInflow = usdEscrow[2].distribution;
   const usdDepOutflow = usdEscrow[2].pickup;
@@ -707,8 +707,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
 
             <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
               <b>Deposit Balance: ({inETH 
-                  ? weiToEth9Dec(microToWei(dep.endAmt)) 
-                  : showUSD(microToDust(dep.endAmt)) }) </b>
+                  ? weiToEth9Dec(microToWei(depOfUsd.endAmt)) 
+                  : showUSD(microToDust(depOfUsd.endAmt)) }) </b>
             </Button>
 
           </Stack>

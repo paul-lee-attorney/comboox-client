@@ -120,7 +120,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       // console.log('lastItemOfCbpInflow: ', lastBlkNum);
 
-      if (logs) {
+      if (logs && client.chain.id == 42161) {
         let len = logs.length; 
         for (let i=0; i<len; i++) {
             const v = logs[i];
@@ -191,7 +191,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
                 tran.input.substring(0,10).toLowerCase() == '0xa9059cbb') 
           {  
             item.typeOfIncome = 'Transfer';
-          } else {
+          } else if (client.chain.id == 42161){
+
             const rs = await getRoyaltySource(item.transactionHash);
 
             if (rs.api != "") {

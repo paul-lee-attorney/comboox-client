@@ -115,17 +115,11 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
         let premium = log.amt - paid;
 
-        let itemOfPremium:Cashflow = { ...defaultCashflow,
-          seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.txHash,
+        let itemOfPremium:Cashflow = { ...itemOfCap,
           typeOfIncome: 'PayInPremium',
           amt: premium,
           ethPrice: addrToUint(log.from ?? AddrZero),
           usd: premium,
-          addr: log.from,
-          acct: 0n,
         };
 
         arr.push(itemOfCap);
@@ -161,8 +155,6 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           hash: log.transactionHash
         });
 
-        // console.log("receipt:", receipt);
-
         let usdRomKeeperLog = receipt.logs
           .filter(v => v.address === usdRomKeeper.toLowerCase())
           .map(v => {
@@ -179,14 +171,12 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           }).filter(Boolean)
           .find(v => v?.eventName == 'PayInCapital');
         
-        // console.log("usdRomKeeperLog:", usdRomKeeperLog);
-
         if (usdRomKeeperLog) {
           let paid = (usdRomKeeperLog?.args.paid ?? 0n) * 100n;
           let acct =  (await getShare(ros, (usdRomKeeperLog?.args.seqOfShare.toString() ?? '0')))
               .head.shareholder;
 
-          appendPayInCapLog(input, paid, acct);
+          await appendPayInCapLog(input, paid, acct);
         } 
 
         cnt++;
@@ -242,15 +232,71 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
             ).priceOfPaid) / 100n === log.args.amt
           );
 
-        if (rosLog) {
-          let paid = (rosLog?.args.paid ?? 0n) * 100n;
-          let acct = parseSnOfShare(rosLog?.args.shareNumber ?? Bytes32Zero)
-            .shareholder;
+        let paid = (rosLog?.args.paid ?? 0n) * 100n;
+        let acct = parseSnOfShare(rosLog?.args.shareNumber ?? Bytes32Zero)
+          .shareholder;
 
-          appendPayInCapLog(input, paid, acct);  
+        await appendPayInCapLog(input, paid, acct);  
+
+        cnt++;
+      }
+
+      let forwardUsdLogs = await client.getLogs({
+        address: cashier,
+        event: parseAbiItem('event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
+        args: {
+          to: cashier
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
+      });
+
+      forwardUsdLogs = forwardUsdLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('forwardUsdLogs: ', forwardUsdLogs);
+
+      len = forwardUsdLogs.length;
+      cnt = 0;
+
+      while (cnt < len) {
+
+        let log = forwardUsdLogs[cnt];
+
+        let input:ReleaseUsdLog = {
+          txHash: log.transactionHash,
+          blockNumber: log.blockNumber,
+          from: log.args.from ?? Bytes32Zero,
+          amt: log.args.amt ?? 0n
         }
 
-      
+        let receipt = await client.getTransactionReceipt({
+          hash: log.transactionHash
+        });
+
+        let rosLog = receipt.logs
+          .filter(v => v.address === ros.toLowerCase())
+          .map(v => {
+            try {
+              return decodeEventLog({
+                abi: registerOfSharesABI,
+                eventName: 'IssueShare',
+                data: v.data,
+                topics: v.topics,
+              });
+            } catch {
+              return null;
+            }
+          }).filter(Boolean)
+          .find(v => v && v.eventName == 'IssueShare' &&
+            v.args.paid * BigInt(parseSnOfShare(
+              v.args.shareNumber
+            ).priceOfPaid) / 100n === log.args.amt
+          );
+
+        let paid = (rosLog?.args.paid ?? 0n) * 100n;
+        let acct = parseSnOfShare(rosLog?.args.shareNumber ?? Bytes32Zero)
+          .shareholder;
+
+        await appendPayInCapLog(input, paid, acct);  
+
         cnt++;
       }
 

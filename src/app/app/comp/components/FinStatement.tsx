@@ -1178,8 +1178,10 @@ export function FinStatement() {
 
     records = records.filter(v => v.typeOfIncome == 'RefundValueOfBidOrder' ||
       v.typeOfIncome == 'CloseBidAgainstOffer' || v.typeOfIncome == 'CloseOfferAgainstBid' ||
-      v.typeOfIncome == 'CloseInitOfferAgainstBid' || v.typeOfIncome == 'CloseBidAgainstInitOffer' ||
-      v.typeOfIncome == 'PayOffSwap' || v.typeOfIncome == 'PayOffRejectedDeal'
+      v.typeOfIncome == 'PayOffSwap' || v.typeOfIncome == 'PayOffRejectedDeal' ||
+      v.typeOfIncome == 'PayOffShareTransferDeal' || v.typeOfIncome == 'RefundBalanceOfBidOrder' ||
+      v.typeOfIncome == 'PayOffCapIncreaseDeal' || v.typeOfIncome == 'CloseBidAgainstInitOffer' ||
+      v.typeOfIncome == 'CloseInitOfferAgainstBid'
     );
 
     let sum = usdEscrow[type].balance + usdEscrow[type].consideration + usdEscrow[type].forward;
@@ -1189,13 +1191,13 @@ export function FinStatement() {
             {title: 'USDC Escrow Outflow - (ETH ', data: microToWei(sum)},
             {title: 'Forward Payment', data: microToWei(usdEscrow[type].forward)},
             {title: 'Consideration', data: microToWei(usdEscrow[type].consideration)}, 
-            {title: 'Refund Balance', data: microToWei(usdEscrow[type].balance)}, 
+            {title: 'Bid Refund', data: microToWei(usdEscrow[type].balance)}, 
           ]
         : [ 
             {title: 'USDC Escrow Outflow - (USD ', data: microToDust(sum)},
             {title: 'Forward Payment', data: microToDust(usdEscrow[type].forward)},
             {title: 'Consideration', data: microToDust(usdEscrow[type].consideration)},
-            {title: 'Refund Balance', data: microToDust(usdEscrow[type].balance)},
+            {title: 'Bid Refund', data: microToDust(usdEscrow[type].balance)},
           ];
 
     setSumInfo(arrSumInfo);
@@ -1206,14 +1208,22 @@ export function FinStatement() {
   const showUsdEscInflow = (type:number) => {
 
     let records = trimCashflow(usdEscrowRecords, startDate, endDate, type);
-    records = records.filter(v => v.typeOfIncome == 'CustodyValueOfBid');
+    records = records.filter(v => v.typeOfIncome == 'CustodyValueOfBid' ||
+      v.typeOfIncome == 'PayOffSwap' || v.typeOfIncome == 'PayOffRejectedDeal' ||
+      v.typeOfIncome == 'PayOffShareTransferDeal' || 
+      v.typeOfIncome == 'PayOffCapIncreaseDeal'
+    );
 
     let arrSumInfo = inETH
         ? [ 
-            {title: 'USDC Escrow Inflow - (ETH ', data: microToWei(usdEscrow[type].escrow)},
+            {title: 'USDC Escrow Inflow - (ETH ', data: microToWei(usdEscrow[type].escrow + usdEscrow[type].forward)},
+            {title: 'Bid Margin', data: microToWei(usdEscrow[type].escrow)},
+            {title: 'Forward Payment', data: microToWei(usdEscrow[type].forward)},
           ]
         : [ 
-            {title: 'USDC Escrow Inflow - (USD ', data: microToDust(usdEscrow[type].escrow)},
+            {title: 'USDC Escrow Inflow - (USD ', data: microToDust(usdEscrow[type].escrow + usdEscrow[type].forward)},
+            {title: 'Bid Margin', data: microToDust(usdEscrow[type].escrow)},
+            {title: 'Forward Payment', data: microToDust(usdEscrow[type].forward)},
           ];
 
     setSumInfo(arrSumInfo);

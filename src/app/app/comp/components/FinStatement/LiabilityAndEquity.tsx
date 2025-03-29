@@ -114,7 +114,14 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       
       if (!boox || boox.length == 0) return;
       const rom = boox[booxMap.ROM];
-      const capital = await capAtDate(rom, endDate);
+
+      const blk = await client.getBlock();
+      const curTime = Number(blk.timestamp);
+
+      const endTime = endDate > curTime
+          ? curTime : endDate;
+
+      const capital = await capAtDate(rom, endTime);
 
       setParOfCap(capital.par);
       setPaidOfCap(capital.paid);
@@ -122,7 +129,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
     getCapital();
 
-  }, [boox, endDate]);
+  }, [boox, endDate, client]);
 
   // ==== Profits & Loss ====
 

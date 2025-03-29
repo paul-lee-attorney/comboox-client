@@ -46,12 +46,14 @@ export const sumArrayOfUsdEscrow = (arr: Cashflow[]) => {
           break;
         case 'PayOffSwap': 
         case 'PayOffRejectedDeal':
+        case 'PayOffShareTransferDeal':
+        case 'PayOffCapIncreaseDeal':
           sum.forward += v.amt;
           break;
         case 'CloseBidAgainstOffer':
         case 'CloseOfferAgainstBid': 
-        case 'CloseInitOfferAgainstBid':
         case 'CloseBidAgainstInitOffer':
+        case 'CloseInitOfferAgainstBid':
           sum.totalAmt -= v.amt;
           sum.consideration += v.amt;
           break;
@@ -60,6 +62,7 @@ export const sumArrayOfUsdEscrow = (arr: Cashflow[]) => {
           sum.escrow += v.amt;
           break;
         case 'RefundValueOfBidOrder':
+        case 'RefundBalanceOfBidOrder':
           sum.totalAmt -= v.amt;
           sum.balance += v.amt;
           break;
@@ -119,6 +122,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
       });
 
       forwardUsdLogs = forwardUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
+
       console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       let len = forwardUsdLogs.length;
@@ -154,8 +158,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
 
-      releaseUsdLogs = releaseUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
-      console.log('releaseUsdLogs: ', releaseUsdLogs);
+      releaseUsdLogs = releaseUsdLogs.filter(v => v.blockNumber > lastBlkNum);
+      // console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
       cnt = 0;
