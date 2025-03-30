@@ -347,6 +347,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           acct: 0n,
         };
 
+        arr.push(item);
+
         cnt++;
       }      
 
