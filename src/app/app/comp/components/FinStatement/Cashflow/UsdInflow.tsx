@@ -44,7 +44,7 @@ export const sumArrayOfUsdInflow = (arr: Cashflow[]) => {
     arr.forEach(v => {
       sum.totalAmt += v.amt;
   
-      switch (v.typeOfIncome.trimEnd()) {
+      switch (v.typeOfIncome) {
         case 'PayInCap':
           sum.capital += v.amt;
           break;

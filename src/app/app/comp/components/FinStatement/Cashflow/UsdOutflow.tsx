@@ -37,7 +37,7 @@ export const sumArrayOfUsdOutflow = (arr: Cashflow[]) => {
     arr.forEach(v => {
       sum.totalAmt += v.amt;
   
-      switch (v.typeOfIncome.trimEnd()) {
+      switch (v.typeOfIncome) {
         case 'ReimburseExp':
           sum.reimburseExp += v.amt;
           break;
@@ -116,7 +116,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
           blockNumber: blkNo,
           timestamp: Number(blk.timestamp),
           transactionHash: log.transactionHash,
-          typeOfIncome: hexToString(log.args.remark ?? Bytes32Zero),
+          typeOfIncome: hexToString(log.args.remark ?? Bytes32Zero, {size:32}),
           amt: log.args.amt ?? 0n,
           ethPrice: addrToUint(cashier),
           usd: log.args.amt ?? 0n,
