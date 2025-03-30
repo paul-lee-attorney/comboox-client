@@ -350,7 +350,7 @@ export function FinStatement() {
     
     let arrSumInfo = inETH 
         ? [ {title: 'Paid In Cap - (ETH ', data: ethInflow[type].capital} ]
-        : [ {title: 'Paid In Cap - (USD ', data: ethInflow[type].capitalInUsd},
+        : [ {title: 'Paid In Cap - (USD ', data: weiToDust(ethInflow[type].capital)},
             {title: 'Exchange Gain/Loss', data: weiToDust(ethInflow[type].capital) - ethInflow[type].capitalInUsd},
           ];
 
@@ -656,7 +656,7 @@ export function FinStatement() {
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Paid In Cap', amt: paidInCap, amtInUsd: paidInCapUsd, show: ()=>{}},
-      {simbol: '+', title: 'Paid Cap In ETH', amt: ethInflow[type].capital, amtInUsd: ethInflow[type].capitalInUsd, show: ()=>showPaidInCapRecords(type)},
+      {simbol: '+', title: 'Paid Cap In ETH', amt: ethInflow[type].capital, amtInUsd: weiToDust(ethInflow[type].capital), show: ()=>showPaidInCapRecords(type)},
       {simbol: '+', title: 'Paid Cap In USDC', amt: microToWei(usdInflow[type].capital), amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
     ];
 

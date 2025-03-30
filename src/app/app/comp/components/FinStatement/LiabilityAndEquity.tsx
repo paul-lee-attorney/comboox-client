@@ -226,7 +226,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         <Typography variant="h6" textAlign='center' width='10%'>
           +
         </Typography>
-        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[2](3)} >
+        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
           <b>Investment Crypto Exchange Gain/Loss: ({ inETH
             ? '0'
             : showUSD( weiToDust(ethInflow[3].capital + ethInflow[3].premium) - ethInflow[3].capitalInUsd - ethInflow[3].premiumInUsd)}) </b>
