@@ -62,16 +62,11 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
       const opnCap = (await capAtDate(rom, startDate)).paid;
       const endCap = (await capAtDate(rom, endTime)).paid;
 
-      setOpnClassB(opnCap);
-      setEndClassB(endCap);
-
       if (endTime > setUpDate) {
-        setEndClassB(iprValueB + endCap);
         setEndClassA(iprValueA);
       }
 
       if (startDate > setUpDate) {
-        setOpnClassB(iprValueB + endCap);
         setOpnClassA(iprValueA);        
       }
       
