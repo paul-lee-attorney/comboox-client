@@ -104,7 +104,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
   const getPaidInCap = (type:number)=> {
 
     const inEth = ethInflow[type].capital +  microToWei(usdInflow[type].capital);
-    const inUsd = weiToDust(ethInflow[type].capital) + microToDust(usdInflow[type].capital);
+    const inUsd = ethInflow[type].capitalInUsd + microToDust(usdInflow[type].capital);
 
     return {inEth: inEth, inUsd: inUsd};
   }
@@ -159,7 +159,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               </TableCell>
               <TableCell>
                 <Typography variant='body1'>
-                  <b>Crypto Gain/Loss In Equity</b>
+                  <b>ETH Gain/Loss In Equity</b>
                 </Typography>
               </TableCell>
               <TableCell>
@@ -196,8 +196,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                 { inETH
-                    ? weiToEth9Dec(baseToWei(opnClassB))
-                    : showUSD(baseToDust(opnClassB)) }
+                    ? weiToEth9Dec( getPaidInCap(1).inEth )
+                    : showUSD( getPaidInCap(1).inUsd ) }
                 </Typography>
               </TableCell>
 
@@ -385,7 +385,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
                 <Typography variant='body1'>
                   { inETH
                     ? weiToEth9Dec(getPaidInCap(2).inEth + getCapPremium(2).inEth)
-                    : showUSD(getPaidInCap(2).inUsd + getCapPremium(2).inUsd)} 
+                    : showUSD(getPaidInCap(2).inUsd + getCapPremium(2).inUsd + ethGNL(2).inUsd)} 
                 </Typography>
               </TableCell>
 

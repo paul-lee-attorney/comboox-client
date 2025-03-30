@@ -209,7 +209,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
           +
         </Typography>
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-          <b>Crypto Gain/Loss In Equity: ({ inETH
+          <b>Eth Gain/Loss In Equity: ({ inETH
             ? ethGNL.inEth
             : showUSD( ethGNL.inUsd ) })</b>
         </Button>

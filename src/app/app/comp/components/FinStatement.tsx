@@ -351,6 +351,7 @@ export function FinStatement() {
     let arrSumInfo = inETH 
         ? [ {title: 'Paid In Cap - (ETH ', data: ethInflow[type].capital} ]
         : [ {title: 'Paid In Cap - (USD ', data: weiToDust(ethInflow[type].capital)},
+            {title: 'Original Paid In ETH Value', data: ethInflow[type].capitalInUsd},
             {title: 'Exchange Gain/Loss', data: weiToDust(ethInflow[type].capital) - ethInflow[type].capitalInUsd},
           ];
 
