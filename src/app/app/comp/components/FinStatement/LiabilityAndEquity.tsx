@@ -46,9 +46,9 @@ export const getOwnersEquity = (
 
   const retainedEarnings = getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei,microToDust);
 
-  const inEth = baseToWei(initContribution) + ethInflow[type].capital + ethInflow[type].premium + retainedEarnings.inEth + microToWei(usdInflow[type].totalAmt);
+  const inEth = baseToWei(initContribution) + ethInflow[type].capital + ethInflow[type].premium + retainedEarnings.inEth + microToWei(usdInflow[type].capital + usdInflow[type].premium);
 
-  const inUsd = baseToDust(initContribution) + weiToDust(ethInflow[type].capital + ethInflow[type].premium) + retainedEarnings.inUsd + microToDust(usdInflow[type].totalAmt);
+  const inUsd = baseToDust(initContribution) + weiToDust(ethInflow[type].capital + ethInflow[type].premium) + retainedEarnings.inUsd + microToDust(usdInflow[type].capital + usdInflow[type].premium);
 
   return ({inEth:inEth, inUsd:inUsd});
 }
@@ -200,8 +200,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Paid In Capital: ({ inETH
-            ? weiToEth9Dec(baseToWei(paidOfCap))
-            : baseToDollar(paidOfCap.toString()) + 'USD'}) </b>
+            ? weiToEth9Dec(ethInflow[3].capital + microToWei(usdInflow[3].capital))
+            : showUSD(weiToDust(ethInflow[3].capital) + microToDust(usdInflow[3].capital)) }) </b>
         </Button>
       </Stack>
 
@@ -216,6 +216,20 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
           <b>Additional Paid In Capital: ({ inETH
             ? weiToEth9Dec(ethInflow[3].premium + microToWei(usdInflow[3].premium))
             : showUSD(ethInflow[3].premiumInUsd + microToDust(usdInflow[3].premium))}) </b>
+        </Button>
+      </Stack>
+
+      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+        <Typography variant="h6" textAlign='center' width='10%'>
+          &nbsp;
+        </Typography>
+        <Typography variant="h6" textAlign='center' width='10%'>
+          +
+        </Typography>
+        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[2](3)} >
+          <b>Investment Crypto Exchange Gain/Loss: ({ inETH
+            ? '0'
+            : showUSD( weiToDust(ethInflow[3].capital + ethInflow[3].premium) - ethInflow[3].capitalInUsd - ethInflow[3].premiumInUsd)}) </b>
         </Button>
       </Stack>
 
