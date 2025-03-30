@@ -82,6 +82,15 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
     getPaidCap();
   }, [startDate, endDate, client, boox]);
 
+
+  const getCapPaidIn = (type:number)=> {
+
+    const inEth = ethInflow[type].capital + microToWei(usdInflow[type].capital);
+    const inUsd = weiToDust(ethInflow[type].capital) + microToDust(usdInflow[type].capital);
+
+    return {inEth: inEth, inUsd: inUsd};
+  }
+
   // ---- Cap Premium ----
   
   const getCapPremium = (type:number)=> {
@@ -401,8 +410,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   { inETH
-                    ? weiToEth9Dec(baseToWei(endClassB))
-                    : showUSD(baseToDust(endClassB)) }
+                    ? weiToEth9Dec( getCapPaidIn(3).inEth )
+                    : showUSD( getCapPaidIn(3).inUsd ) }
                 </Typography>
               </TableCell>
 
