@@ -24,6 +24,13 @@ export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOut
   return ({inEth:inEth, inUsd:inUsd});
 }
 
+export const getEthGainAndLossInEquity = (type:number, ethInflow:EthInflowSum[], weiToDust:(eth:bigint)=>bigint) =>{
+  const inEth = '0';
+  const inUsd = weiToDust(ethInflow[type].capital + ethInflow[type].premium) - (ethInflow[type].capitalInUsd + ethInflow[type].premiumInUsd);
+
+  return({inEth:inEth, inUsd:inUsd});
+}
+
 export const getOwnersEquity = (
   type:number, 
   startDate:number,
@@ -139,7 +146,10 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   // ==== Owners Equity ====
 
+  const ethGNL = getEthGainAndLossInEquity(3, ethInflow, weiToDust);
+
   const ownersEquity = getOwnersEquity(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow, cbpToETH, baseToWei, weiToDust, microToWei, microToDust);
+
 
   return(
     <Paper elevation={3} 
@@ -195,6 +205,17 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       </Stack>
 
       <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+        <Typography variant="h6" textAlign='center' width='10%'>
+          +
+        </Typography>
+        <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
+          <b>Crypto Gain/Loss In Equity: ({ inETH
+            ? ethGNL.inEth
+            : showUSD( ethGNL.inUsd ) })</b>
+        </Button>
+      </Stack>
+
+      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
         <Typography variant="h6" textAlign='center' width='20%'>
           &nbsp;
         </Typography>
@@ -216,20 +237,6 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
           <b>Additional Paid In Capital: ({ inETH
             ? weiToEth9Dec(ethInflow[3].premium + microToWei(usdInflow[3].premium))
             : showUSD(ethInflow[3].premiumInUsd + microToDust(usdInflow[3].premium))}) </b>
-        </Button>
-      </Stack>
-
-      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-        <Typography variant="h6" textAlign='center' width='10%'>
-          &nbsp;
-        </Typography>
-        <Typography variant="h6" textAlign='center' width='10%'>
-          +
-        </Typography>
-        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
-          <b>Investment Crypto Exchange Gain/Loss: ({ inETH
-            ? '0'
-            : showUSD( weiToDust(ethInflow[3].capital + ethInflow[3].premium) - ethInflow[3].capitalInUsd - ethInflow[3].premiumInUsd)}) </b>
         </Button>
       </Stack>
 

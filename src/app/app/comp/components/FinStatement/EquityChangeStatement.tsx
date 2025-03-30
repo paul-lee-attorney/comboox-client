@@ -7,7 +7,7 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { iprValueA, iprValueB, setUpDate } from "./Assets";
-import { getOwnersEquity } from "./LiabilityAndEquity";
+import { getEthGainAndLossInEquity, getOwnersEquity } from "./LiabilityAndEquity";
 
 export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
@@ -87,7 +87,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
   const getCapPremium = (type:number)=> {
 
     const inEth = ethInflow[type].premium + microToWei(usdInflow[type].premium);
-    const inUsd = ethInflow[type].premiumInUsd + microToDust(usdInflow[type].premium);
+    const inUsd = weiToDust(ethInflow[type].premium) + microToDust(usdInflow[type].premium);
 
     return {inEth: inEth, inUsd: inUsd};
   }
@@ -95,7 +95,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
   const getPaidInCap = (type:number)=> {
 
     const inEth = ethInflow[type].capital +  microToWei(usdInflow[type].capital);
-    const inUsd = ethInflow[type].capitalInUsd + microToDust(usdInflow[type].capital);
+    const inUsd = weiToDust(ethInflow[type].capital) + microToDust(usdInflow[type].capital);
 
     return {inEth: inEth, inUsd: inUsd};
   }
@@ -103,6 +103,8 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
   const netIncome = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
 
   const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
+
+  const ethGNL = (type:number) => getEthGainAndLossInEquity(type, ethInflow, weiToDust);
 
   const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow, cbpToETH, baseToWei, weiToDust, microToWei, microToDust);
 
@@ -144,6 +146,11 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   <b>Additional Paid In Capital</b>
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography variant='body1'>
+                  <b>Crypto Gain/Loss In Equity</b>
                 </Typography>
               </TableCell>
               <TableCell>
@@ -196,6 +203,14 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   { inETH
+                    ? ethGNL(1).inEth
+                    : showUSD( ethGNL(1).inUsd ) }
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                  { inETH
                     ? weiToEth9Dec(retainedEarnings(1).inEth)
                     : showUSD(retainedEarnings(1).inUsd) }
                 </Typography>
@@ -216,6 +231,12 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   <b>Net Income</b>  
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                  -
                 </Typography>
               </TableCell>
 
@@ -260,6 +281,12 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
               <TableCell>
                 <Typography variant='body1'>
                   <b>Dividends Paid</b>
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                  -
                 </Typography>
               </TableCell>
 
@@ -333,6 +360,14 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
               <TableCell>
                 <Typography variant='body1'>
+                { inETH
+                  ? ethGNL(2).inEth
+                  : showUSD( ethGNL(2).inUsd ) } 
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
                   -
                 </Typography>
               </TableCell>
@@ -376,6 +411,14 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
                   { inETH
                     ? weiToEth9Dec(getCapPremium(3).inEth)
                     : showUSD(getCapPremium(3).inUsd)}
+                </Typography>
+              </TableCell>
+
+              <TableCell>
+                <Typography variant='body1'>
+                { inETH
+                  ? ethGNL(3).inEth
+                  : showUSD( ethGNL(3).inUsd ) } 
                 </Typography>
               </TableCell>
 
