@@ -7,10 +7,11 @@ import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatem
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { registerOfSharesABI, usdRomKeeperABI } from "../../../../../../../generated";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
-import { addrToUint } from "../../../../common/toolsKit";
+import { addrToUint, HexParser } from "../../../../common/toolsKit";
 
 export type UsdInflowSum = {
   totalAmt: bigint;
+  upgradeCashier: bigint;
   capital: bigint;
   premium: bigint;
   flag: boolean;
@@ -18,6 +19,7 @@ export type UsdInflowSum = {
 
 export const defUsdInflowSum: UsdInflowSum = {
   totalAmt: 0n,
+  upgradeCashier: 0n,
   capital: 0n,
   premium: 0n,
   flag: false,
@@ -42,12 +44,15 @@ export const sumArrayOfUsdInflow = (arr: Cashflow[]) => {
     arr.forEach(v => {
       sum.totalAmt += v.amt;
   
-      switch (v.typeOfIncome) {
+      switch (v.typeOfIncome.trimEnd()) {
         case 'PayInCap':
           sum.capital += v.amt;
           break;
         case 'PayInPremium': 
           sum.premium += v.amt;
+          break;
+        case 'UpgradeCashier':
+          sum.upgradeCashier += v.amt;
           break;
       }
     }); 
@@ -84,6 +89,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       if (!gk || !boox || !keepers) return;
 
+      const usdc = boox[booxMap.USDC];
       const cashier = boox[booxMap.Cashier];
       const usdRomKeeper = keepers[keepersMap.UsdROMKeeper];
       const ros = boox[booxMap.ROS];
@@ -113,17 +119,21 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           acct: BigInt(acct),
         };
 
+        arr.push(itemOfCap);
+
         let premium = log.amt - paid;
 
-        let itemOfPremium:Cashflow = { ...itemOfCap,
-          typeOfIncome: 'PayInPremium',
-          amt: premium,
-          ethPrice: addrToUint(log.from ?? AddrZero),
-          usd: premium,
-        };
+        if (premium > 0n) {
 
-        arr.push(itemOfCap);
-        arr.push(itemOfPremium);
+          let itemOfPremium:Cashflow = { ...itemOfCap,
+            typeOfIncome: 'PayInPremium',
+            amt: premium,
+            ethPrice: addrToUint(log.from ?? AddrZero),
+            usd: premium,
+          };
+  
+          arr.push(itemOfPremium);
+        } 
       }
 
       let payInCapLogs = await client.getLogs({
@@ -299,6 +309,46 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
         cnt++;
       }
+
+      let preCashier = HexParser("0x8871e3Bb5Ac263E10e293Bee88cce82f336Cb20a");
+
+      let upgradeLogs = await client.getLogs({
+        address: preCashier,
+        event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt)'),
+        args: {
+          to: cashier
+        },
+        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
+      });
+
+      upgradeLogs = upgradeLogs.filter(v => v.blockNumber > lastBlkNum);
+      console.log('upgradeLogs: ', upgradeLogs);
+
+      len = upgradeLogs.length;
+      cnt = 0;
+
+      while (cnt < len) {
+
+        let log = upgradeLogs[cnt];
+
+        let blkNo = log.blockNumber;
+        let blk = await client.getBlock({blockNumber: blkNo});
+
+        let item:Cashflow = { ...defaultCashflow,
+          seq: 0,
+          blockNumber: blkNo,
+          timestamp: Number(blk.timestamp),
+          transactionHash: log.transactionHash,
+          typeOfIncome: 'UpgradeCashier',
+          amt: log.args.amt ?? 0n,
+          ethPrice: addrToUint(preCashier),
+          usd: log.args.amt ?? 0n,
+          addr: preCashier,
+          acct: 0n,
+        };
+
+        cnt++;
+      }      
 
       console.log('arr in usdInflow:', arr);
 

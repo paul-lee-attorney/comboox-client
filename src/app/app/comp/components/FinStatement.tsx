@@ -562,7 +562,7 @@ export function FinStatement() {
     let items:BtnProps[] = [
       {simbol: ' ', title: 'USDC of Comp', amt: usdInflow[type].totalAmt - usdOutflow[type].totalAmt, amtInUsd: microToDust(usdInflow[type].totalAmt - usdOutflow[type].totalAmt), show: ()=>{}},
       {simbol: '+', title: 'Paid In Cap', amt: usdInflow[type].capital, amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
-      {simbol: '+', title: 'Paid In Premium', amt: usdInflow[type].premium, amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},      
+      {simbol: '+', title: 'Paid In Premium', amt: usdInflow[type].premium, amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
       {simbol: '-', title: 'Reimburse Exp', amt: usdOutflow[type].reimburseExp, amtInUsd: microToDust(usdOutflow[type].reimburseExp), show: ()=>showUsdReimburseExpRecords(type)},
       {simbol: '-', title: 'Advance Exp', amt: usdOutflow[type].advanceExp, amtInUsd: microToDust(usdOutflow[type].advanceExp), show: ()=>showUsdAdvanceExpRecords(type)},
       {simbol: '-', title: 'Distribution', amt: usdOutflow[type].distributeUsd, amtInUsd: microToDust(usdOutflow[type].distributeUsd), show: ()=>showUsdDistributionRecords(type)},
@@ -1137,11 +1137,13 @@ export function FinStatement() {
             {title: 'USDC Inflow - (ETH ', data: microToWei(usdInflow[type].totalAmt)},
             {title: 'Capital', data: microToWei(usdInflow[type].capital)},
             {title: 'Premium', data: microToWei(usdInflow[type].premium)}, 
+            {title: 'UpgradeCashier', data: microToWei(usdInflow[type].upgradeCashier)}, 
           ]
         : [ 
             {title: 'USDC Inflow - (USD ', data: microToDust(usdInflow[type].totalAmt)},
             {title: 'Capital', data: microToDust(usdInflow[type].capital)},
             {title: 'Premium', data: microToDust(usdInflow[type].premium)},
+            {title: 'UpgradeCashier', data: microToDust(usdInflow[type].upgradeCashier)},
           ];
 
     setSumInfo(arrSumInfo);
@@ -1159,12 +1161,14 @@ export function FinStatement() {
             {title: 'Reimbursed Expenses', data: microToWei(usdOutflow[type].reimburseExp)},
             {title: 'Advanced Expenses', data: microToWei(usdOutflow[type].advanceExp)}, 
             {title: 'Distribution', data: microToWei(usdOutflow[type].distributeUsd)}, 
+            {title: 'UpgradeCashier', data: microToWei(usdOutflow[type].upgradeCashier)}, 
           ]
         : [ 
             {title: 'USDC Outflow - (USD ', data: microToDust(usdOutflow[type].totalAmt)},
             {title: 'Reimbursed Expenses', data: microToDust(usdOutflow[type].reimburseExp)},
             {title: 'Advanced Expenses', data: microToDust(usdOutflow[type].advanceExp)},
             {title: 'Distribution', data: microToDust(usdOutflow[type].distributeUsd)},
+            {title: 'UpgradeCashier', data: microToDust(usdOutflow[type].upgradeCashier)},
           ];
 
     setSumInfo(arrSumInfo);

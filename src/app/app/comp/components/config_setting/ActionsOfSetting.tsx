@@ -28,7 +28,8 @@ export function ActionsOfSetting({ title, addr, setTitle, setAddr, setOpen, setT
   const [ typeOfAction, setTypeOfAction ] = useState<string>('0');
 
   const actionsOfSetting = [
-    'SetCompInfo', 'SetOwner', 'SetDK', 'TakeBackKeys', 'RegKeeper', 'RegBook',  'InitKeepers', 'SetNewGK' 
+    'SetCompInfo', 'SetOwner', 'SetDK', 'TakeBackKeys', 
+    'RegKeeper', 'RegBook',  'InitKeepers', 'SetNewGK' 
   ]
 
   const compsOfSetting = [
