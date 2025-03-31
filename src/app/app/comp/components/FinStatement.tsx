@@ -21,7 +21,7 @@ import { LiabilyAndEquity,  } from "./FinStatement/LiabilityAndEquity";
 import { getOpExchangeGainLoss, IncomeStatement } from "./FinStatement/IncomeStatement";
 import { EquityChangeStatement } from "./FinStatement/EquityChangeStatement";
 import { CryptoInventory } from "./FinStatement/CryptoInventory";
-import { EthflowStatement } from "./FinStatement/EthflowStatement";
+import { CryptosFlowStatement } from "./FinStatement/CryptosFlowStatement";
 import { TipsAndUpdates } from "@mui/icons-material";
 import { usePublicClient } from "wagmi";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
@@ -332,7 +332,9 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Gas Income - (ETH ', data: ethInflow[type].gas}]
-        : [ {title: 'Gas Income - (USD ', data: ethInflow[type].gasInUsd},
+        : [ 
+            {title: 'Gas Income - (USD ', data: curSumInUsd},
+            {title: 'Original Income', data: ethInflow[type].gasInUsd},
             {title: 'Exchange Gain/Loss', data: curSumInUsd - ethInflow[type].gasInUsd},
           ];
 
@@ -368,7 +370,8 @@ export function FinStatement() {
     
     let arrSumInfo = inETH 
         ? [ {title: 'Paid In Cap - (ETH ', data: microToWei(usdInflow[type].capital)} ]
-        : [ {title: 'Paid In Cap - (USD ', data: microToDust(usdInflow[type].capital)},
+        : [ 
+            {title: 'Paid In Cap - (USD ', data: microToDust(usdInflow[type].capital)},
           ];
 
     setList(records);
@@ -381,11 +384,14 @@ export function FinStatement() {
     let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
     records = records.filter((v)=>v.typeOfIncome == 'PayInPremium');
-    
+    let curSumInUsd = weiToDust(ethInflow[type].premium);
+
     let arrSumInfo = inETH 
         ? [ {title: 'Paid In Premium - (ETH ', data: ethInflow[type].premium} ]
-        : [ {title: 'Paid In Premium - (USD ', data: ethInflow[type].premiumInUsd},
-            {title: 'Exchange Gain/Loss', data: weiToDust(ethInflow[type].premiumInUsd) - ethInflow[type].premiumInUsd},
+        : [ 
+            {title: 'Paid In Premium - (USD ', data: curSumInUsd},
+            {title: 'Original Paid In Premium', data: ethInflow[type].premiumInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethInflow[type].premiumInUsd},
           ];
 
     setList(records);
@@ -466,7 +472,9 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'ETH Transfer - (ETH ', data: ethInflow[type].transfer} ]
-        : [ {title: 'ETH Transfer - (USD ', data: ethInflow[type].transferInUsd},
+        : [ 
+            {title: 'ETH Transfer - (USD ', data: curSumInUsd},
+            {title: 'Original ETH Transfer', data: ethInflow[type].transferInUsd},
             {title: 'Exchange Gain/Loss', data: curSumInUsd - ethInflow[type].transferInUsd},
           ];
 
@@ -489,8 +497,10 @@ export function FinStatement() {
             {title: 'Gmm Transfer', data: ethOutflow[type].gmmTransfer},
             {title: 'Gmm Expense', data: ethOutflow[type].gmmExpense},
           ]
-        : [ {title: 'Gmm Payment - (USD ', data: ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd},
-            {title: 'Exchange Gain/Loss', data: (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd) - curSumInUsd},
+        : [ 
+            {title: 'Gmm Payment - (USD ', data: curSumInUsd},
+            {title: 'Original Gmm Payment', data: ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd)},
             {title: 'Gmm Transfer', data: ethOutflow[type].gmmTransferInUsd},
             {title: 'Gmm Expense', data: ethOutflow[type].gmmExpenseInUsd},
           ];
@@ -514,8 +524,10 @@ export function FinStatement() {
             {title: 'Bmm Transfer', data: ethOutflow[type].bmmTransfer},
             {title: 'Bmm Expense', data: ethOutflow[type].bmmExpense},
           ]
-        : [ {title: 'Bmm Payment - (USD ', data: ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd},
-            {title: 'Exchange Gain/Loss', data: (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd) - curSumInUsd},
+        : [ 
+            {title: 'Bmm Payment - (USD ', data: curSumInUsd},
+            {title: 'Original Bmm Payment', data: ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd},              
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd)},
             {title: 'Bmm Transfer', data: ethOutflow[type].bmmTransferInUsd},
             {title: 'Bmm Expense', data: ethOutflow[type].bmmExpenseInUsd},
           ];
@@ -534,8 +546,10 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Distribution - (ETH ', data: ethOutflow[type].distribution} ]
-        : [ {title: 'Distribution - (USD ', data: ethOutflow[type].distributionInUsd},
-            {title: 'Exchange Gain/Loss', data: ethOutflow[type].distributionInUsd - curSumInUsd},
+        : [
+            {title: 'Distribution - (USD ', data: curSumInUsd},
+            {title: 'Original Distribution', data: ethOutflow[type].distributionInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - ethOutflow[type].distributionInUsd},
           ];
 
     setList(records);
@@ -584,8 +598,10 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Fuel Sold - (ETH ', data: cbpToETH(cbpOutflow[type].fuelSold)} ]
-        : [ {title: 'Fuel Sold - (USD ', data: cbpOutflow[type].fuelSoldInUsd},
-            {title: 'Exchange Gain/Loss', data: cbpOutflow[type].fuelSoldInUsd - curSumInUsd},
+        : [ 
+            {title: 'Fuel Sold - (USD ', data: curSumInUsd},
+            {title: 'Original Fuel Sold', data: cbpOutflow[type].fuelSoldInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpOutflow[type].fuelSoldInUsd},
           ];
 
     setList(records);
@@ -602,8 +618,10 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Gmm CBP Payment - (ETH ', data: cbpToETH(cbpOutflow[type].gmmTransfer)} ]
-        : [ {title: 'Gmm CBP Payment - (USD ', data: cbpOutflow[type].gmmTransferInUsd},
-            {title: 'Exchange Gain/Loss', data: cbpOutflow[type].gmmTransferInUsd - curSumInUsd},
+        : [ 
+            {title: 'Gmm CBP Payment - (USD ', data: curSumInUsd},
+            {title: 'Original Gmm CBP Payment', data: cbpOutflow[type].gmmTransferInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpOutflow[type].gmmTransferInUsd},
           ];
 
     setList(records);
@@ -620,8 +638,10 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Bmm CBP Payment - (ETH ', data: cbpToETH(cbpOutflow[type].bmmTransfer)} ]
-        : [ {title: 'Bmm CBP Payment - (USD ', data: cbpOutflow[type].bmmTransferInUsd},
-            {title: 'Exchange Gain/Loss', data: cbpOutflow[type].bmmTransferInUsd - curSumInUsd},
+        : [ 
+            {title: 'Bmm CBP Payment - (USD ', data: curSumInUsd},          
+            {title: 'Original Bmm CBP Payment', data: cbpOutflow[type].bmmTransferInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpOutflow[type].bmmTransferInUsd},
           ];
 
     setList(records);
@@ -636,12 +656,12 @@ export function FinStatement() {
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Deferred Revenue', amt: deferredRevenue, amtInUsd: deferredRevenueInUsd, show: ()=>{}},
-      {simbol: '+', title: 'Fuel Sold', amt: cbpToETH(cbpOutflow[type].fuelSold), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].fuelSold)), show: ()=>showFuelSoldRecords(3)},
-      {simbol: '+', title: 'Gmm CBP Payment', amt: cbpToETH(cbpOutflow[type].gmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer)), show: ()=>showGmmCbpPaymentRecords(3)},
-      {simbol: '+', title: 'Bmm CBP Payment', amt: cbpToETH(cbpOutflow[type].bmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer)), show: ()=>showBmmCbpPaymentRecords(3)},
-      {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow[type].newUserAward), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(3)},
-      {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow[type].startupCost), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(3)},
-      {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpInflow[type].royalty), amtInUsd: weiToDust(cbpToETH(cbpInflow[type].royalty)), show: ()=>showRoyaltyRecords(3)},
+      {simbol: '+', title: 'Fuel Sold', amt: cbpToETH(cbpOutflow[type].fuelSold), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].fuelSold)), show: ()=>showFuelSoldRecords(type)},
+      {simbol: '+', title: 'Gmm CBP Payment', amt: cbpToETH(cbpOutflow[type].gmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer)), show: ()=>showGmmCbpPaymentRecords(type)},
+      {simbol: '+', title: 'Bmm CBP Payment', amt: cbpToETH(cbpOutflow[type].bmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer)), show: ()=>showBmmCbpPaymentRecords(type)},
+      {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow[type].newUserAward), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(type)},
+      {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow[type].startupCost), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(type)},
+      {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpInflow[type].royalty), amtInUsd: weiToDust(cbpToETH(cbpInflow[type].royalty)), show: ()=>showRoyaltyRecords(type)},
     ];
 
     setItems(items);
@@ -709,7 +729,9 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Royalty Income - (ETH ', data: cbpInflow[type].royalty * 10000n / exRate} ]
-        : [ {title: 'Royalty Income - (USD ', data: cbpInflow[type].royaltyInUsd},
+        : [ 
+            {title: 'Royalty Income - (USD ', data: curSumInUsd},
+            {title: 'Original Royalty Income', data: cbpInflow[type].royaltyInUsd},
             {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpInflow[type].royaltyInUsd},
           ];
 
@@ -728,7 +750,9 @@ export function FinStatement() {
 
     let arrSumInfo = inETH
         ? [ {title: 'Other Income (ETH ', data: ethInflow[type].transfer} ]
-        : [ {title: 'Other Income - (USD ', data: ethInflow[type].transferInUsd},
+        : [ 
+            {title: 'Other Income - (USD ', data: curSumInUsd},
+            {title: 'Original Other Income', data: ethInflow[type].transferInUsd},
             {title: 'Exchange Gain/Loss', data: curSumInUsd - ethInflow[type].transferInUsd},
           ];
 
@@ -737,56 +761,55 @@ export function FinStatement() {
     setOpen(true);
   }
 
-  const showGmmExpRecords = (type:number) => {
+  const showGmmEthPaymentRecords = (type:number) => {
 
     let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
-    records = records.concat(trimCashflow(cbpOutflowRecords, startDate, endDate, type));
 
     records = records.filter((v) => v.typeOfIncome == 'GmmTransfer' ||
         v.typeOfIncome == 'GmmExpense');
 
     records = records.sort((a, b)=>Number(a.timestamp - b.timestamp));
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer) + ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense);
+    let curSumInUsd = weiToDust(ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense);
 
     let arrSumInfo = inETH
-        ? [ {title: 'GMM Expense - (ETH ', data: (ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense + cbpOutflow[type].gmmTransfer * 10000n /exRate)},
-          {title: 'CBP Transfer', data: cbpOutflow[type].gmmTransfer * 10000n / exRate},
-          {title: 'ETH Transfer', data: ethOutflow[type].gmmTransfer},
-          {title: 'ETH Action Expense', data: ethOutflow[type].gmmExpense}]
-        : [ {title: 'GMM Expense - (USD ', data: (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd + cbpOutflow[type].gmmTransferInUsd)},
-          {title: 'Exchange Gain/Loss', data: cbpOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd - curSumInUsd },          
-          {title: 'CBP Transfer', data: cbpOutflow[type].gmmTransferInUsd},
-          {title: 'ETH Transfer', data: ethOutflow[type].gmmTransferInUsd},
-          {title: 'ETH Action Expense', data: ethOutflow[type].gmmExpenseInUsd}];
+        ? [ {title: 'GMM Expense - (ETH ', data: (ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense)},
+            {title: 'ETH Transfer', data: ethOutflow[type].gmmTransfer},
+            {title: 'ETH Action Expense', data: ethOutflow[type].gmmExpense}]
+        : [ 
+            {title: 'GMM Expense - (USD ', data: curSumInUsd },
+            {title: 'Original GMM Expense', data: (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd)},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd) },
+            {title: 'ETH Transfer', data: ethOutflow[type].gmmTransferInUsd},
+            {title: 'ETH Action Expense', data: ethOutflow[type].gmmExpenseInUsd}
+        ];
 
     setList(records);
     setSumInfo(arrSumInfo);
     setOpen(true);
-
   } 
 
-  const showBmmExpRecords = (type:number) => {
+  const showBmmEthPaymentRecords = (type:number) => {
 
     let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
-    records = records.concat(trimCashflow(cbpOutflowRecords, startDate, endDate, type));
 
     records = records.filter((v) => v.typeOfIncome == 'BmmTransfer' || v.typeOfIncome == 'BmmExpense');
 
     records = records.sort((a, b) => Number(a.timestamp - b.timestamp));
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer) + ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense);
+    let curSumInUsd = weiToDust(ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense);
 
     let arrSumInfo = inETH
-        ? [ {title: 'BMM Expense (ETH ', data: (ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense + cbpOutflow[type].bmmTransfer * 10000n /exRate)},
-          {title: 'CBP Transfer', data: cbpOutflow[type].bmmTransfer * 10000n / exRate},
+        ? [ {title: 'BMM Expense (ETH ', data: (ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense)},
           {title: 'ETH Transfer', data: ethOutflow[type].bmmTransfer},
           {title: 'ETH Action Expense', data: ethOutflow[type].bmmExpense} ]
-        : [ {title: 'BMM Expense - (USD ', data: (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd + cbpOutflow[type].bmmTransferInUsd)},
-          {title: 'Exchange Gain/Loss', data: cbpOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd - curSumInUsd },          
-          {title: 'CBP Transfer', data: cbpOutflow[type].bmmTransferInUsd},
-          {title: 'ETH Transfer', data: ethOutflow[type].bmmTransferInUsd},
-          {title: 'ETH Action Expense', data: ethOutflow[type].bmmExpenseInUsd} ];
+        : [
+            {title: 'BMM Expense - (USD ', data: curSumInUsd},
+            {title: 'Original BMM Expense', data: (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd)},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd) },
+            {title: 'ETH Transfer', data: ethOutflow[type].bmmTransferInUsd},
+            {title: 'ETH Action Expense', data: ethOutflow[type].bmmExpenseInUsd} 
+          ];
 
     setList(records);
     setSumInfo(arrSumInfo);
@@ -803,8 +826,10 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'New User Award (ETH ', data: cbpOutflow[type].newUserAward * 10000n / exRate }]
-        : [ {title: 'New User Award (USD ', data: cbpOutflow[type].newUserAwardInUsd}, 
-            {title: 'Exchange Gain/Loss', data: cbpOutflow[type].newUserAwardInUsd - curSumInUsd},
+        : [ 
+            {title: 'New User Award (USD ', data: curSumInUsd}, 
+            {title: 'Original New User Award', data: cbpOutflow[type].newUserAwardInUsd}, 
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpOutflow[type].newUserAwardInUsd},
           ];
 
     setList(records);
@@ -821,8 +846,10 @@ export function FinStatement() {
 
     let arrSumInfo = inETH 
         ? [ {title: 'Startup Cost (ETH ', data: cbpOutflow[type].startupCost * 10000n / exRate }]
-        : [ {title: 'Startup Cost (USD ', data: cbpOutflow[type].startupCostInUsd },
-            {title: 'Exchange Gain/Loss', data: cbpOutflow[type].startupCostInUsd - curSumInUsd },
+        : [
+            {title: 'Startup Cost (USD ', data: curSumInUsd},
+            {title: 'Original Startup Cost', data: cbpOutflow[type].startupCostInUsd },
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpOutflow[type].startupCostInUsd },
           ];
 
     setList(records);
@@ -833,22 +860,28 @@ export function FinStatement() {
 
   const displaySGNA = (type:number) => {
 
-    let gmmExp = cbpToETH(cbpOutflow[type].gmmTransfer) + ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense;
-    let gmmExpInUsd = cbpOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpense;
+    let gmmCbpExp = cbpToETH(cbpOutflow[type].gmmTransfer);
+    let gmmEthExp = ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense;
+    let gmmCbpExpInUsd = weiToDust(gmmCbpExp);
+    let gmmEthExpInUsd = weiToDust(gmmEthExp);
 
-    let bmmExp = cbpToETH(cbpOutflow[type].bmmTransfer) + ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense;
-    let bmmExpInUsd = cbpOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpense;
+    let bmmCbpExp = cbpToETH(cbpOutflow[type].bmmTransfer);
+    let bmmEthExp = ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense;
+    let bmmCbpExpInUsd = weiToDust(bmmCbpExp);
+    let bmmEthExpInUsd = weiToDust(bmmEthExp);
 
+    let sgNa = gmmCbpExp + gmmEthExp + bmmCbpExp + bmmEthExp + cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost) + microToWei(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
 
-    let sgNa = gmmExp + bmmExp + cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost) + microToWei(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
-    let sgNaInUsd = gmmExpInUsd + bmmExpInUsd + cbpOutflow[type].newUserAwardInUsd + cbpOutflow[type].startupCostInUsd + microToDust(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
+    let sgNaInUsd = gmmCbpExpInUsd + gmmEthExpInUsd + bmmCbpExpInUsd + bmmEthExpInUsd + weiToDust(cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost)) + microToDust(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Sales, General & Administrative', amt: sgNa, amtInUsd: sgNaInUsd, show: ()=>{}},
       {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow[type].newUserAward) , amtInUsd: cbpOutflow[type].newUserAwardInUsd, show: ()=>showNewUserAwardRecords(type)},
       {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow[type].startupCost) , amtInUsd: cbpOutflow[type].startupCostInUsd, show: ()=>showStartupCostRecords(type)},
-      {simbol: '+', title: 'GMM Approved Expense', amt:gmmExp , amtInUsd: gmmExpInUsd, show: ()=>showGmmExpRecords(type)},
-      {simbol: '+', title: 'BMM Approved Expense', amt:bmmExp , amtInUsd: bmmExpInUsd, show: ()=>showBmmExpRecords(type)},
+      {simbol: '+', title: 'GMM Approved Cbp Expense', amt:gmmCbpExp , amtInUsd: gmmCbpExpInUsd, show: ()=>showGmmCbpPaymentRecords(type)},
+      {simbol: '+', title: 'GMM Approved Eth Expense', amt:gmmEthExp , amtInUsd: gmmEthExpInUsd, show: ()=>showGmmEthPaymentRecords(type)},
+      {simbol: '+', title: 'BMM Approved Cbp Expense', amt:bmmCbpExp , amtInUsd: bmmCbpExpInUsd, show: ()=>showBmmCbpPaymentRecords(type)},
+      {simbol: '+', title: 'BMM Approved Eth Expense', amt:bmmEthExp , amtInUsd: bmmEthExpInUsd, show: ()=>showBmmEthPaymentRecords(type)},
       {simbol: '+', title: 'Reimbursed USDC Expense', amt:microToWei(usdOutflow[type].reimburseExp) , amtInUsd: microToDust(usdOutflow[type].reimburseExp), show: ()=>showUsdReimburseExpRecords(type)},
       {simbol: '+', title: 'Advanced USDC Expense', amt:microToWei(usdOutflow[type].advanceExp) , amtInUsd: microToDust(usdOutflow[type].advanceExp), show: ()=>showUsdAdvanceExpRecords(type)},
     ];
@@ -885,7 +918,7 @@ export function FinStatement() {
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Distribution', amt: distribution, amtInUsd: distributionInUsd, show: ()=>{}},
-      {simbol: '+', title: 'Distribution In ETH', amt:ethOutflow[type].distribution, amtInUsd: ethOutflow[type].distributionInUsd, show: ()=>showDistributionRecords(type)},
+      {simbol: '+', title: 'Distribution In ETH', amt:ethOutflow[type].distribution, amtInUsd: weiToDust(ethOutflow[type].distribution), show: ()=>showDistributionRecords(type)},
       {simbol: '+', title: 'Distribution In USDC', amt: microToWei(usdOutflow[type].distributeUsd) , amtInUsd:microToDust(usdOutflow[type].distributeUsd), show: ()=>showUsdDistributionRecords(type)},
     ];
 
@@ -893,18 +926,45 @@ export function FinStatement() {
     setShowSGNA(true);
   }
 
+  // ==== Crypto Flow ====
+
+  const displayCryptoOutflowInSGNA = (type:number) => {
+
+    let gmmEthExp = ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense;
+    let gmmEthExpInUsd = weiToDust(gmmEthExp);
+
+    let bmmEthExp = ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense;
+    let bmmEthExpInUsd = weiToDust(bmmEthExp);
+
+    let sgNa = gmmEthExp + bmmEthExp + microToWei(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
+
+    let sgNaInUsd = gmmEthExpInUsd + bmmEthExpInUsd + microToDust(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
+
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Sales, General & Administrative', amt: sgNa, amtInUsd: sgNaInUsd, show: ()=>{}},
+      {simbol: '+', title: 'GMM Approved Eth Expense', amt:gmmEthExp , amtInUsd: gmmEthExpInUsd, show: ()=>showGmmEthPaymentRecords(type)},
+      {simbol: '+', title: 'BMM Approved Eth Expense', amt:bmmEthExp , amtInUsd: bmmEthExpInUsd, show: ()=>showBmmEthPaymentRecords(type)},
+      {simbol: '+', title: 'Reimbursed USDC Expense', amt:microToWei(usdOutflow[type].reimburseExp) , amtInUsd: microToDust(usdOutflow[type].reimburseExp), show: ()=>showUsdReimburseExpRecords(type)},
+      {simbol: '+', title: 'Advanced USDC Expense', amt:microToWei(usdOutflow[type].advanceExp) , amtInUsd: microToDust(usdOutflow[type].advanceExp), show: ()=>showUsdAdvanceExpRecords(type)},
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
+
+
 
   // ==== Crypto Inventory ====
 
   const displayCbpMintToOthers = (type:number) => {
 
     let cbpMintOut = cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
-    let cbpMintOutInUsd = cbpOutflow[type].newUserAwardInUsd + cbpOutflow[type].startupCostInUsd;
+    let cbpMintOutInUsd = weiToDust(cbpMintOut);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'CBP Mint To Others', amt: cbpMintOut, amtInUsd: cbpMintOutInUsd, show: ()=>{}},
-      {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow[type].newUserAward) , amtInUsd: cbpOutflow[type].newUserAwardInUsd, show: ()=>showNewUserAwardRecords(type)},
-      {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow[type].startupCost) , amtInUsd: cbpOutflow[type].startupCostInUsd, show: ()=>showStartupCostRecords(type)},
+      {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow[type].newUserAward) , amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(type)},
+      {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow[type].startupCost) , amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(type)},
     ];
 
     setItems(items);
@@ -915,7 +975,7 @@ export function FinStatement() {
 
     let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
 
-    let curSumInUsd = ethInflow[type].totalAmt * 10n ** 16n / centPrice;
+    let curSumInUsd = weiToDust(ethInflow[type].totalAmt);
 
     let arrSumInfo = inETH
       ? [ {title: 'ETH Income - (ETH ', data: ethInflow[type].totalAmt},
@@ -923,7 +983,9 @@ export function FinStatement() {
           {title: 'PayInCap', data: ethInflow[type].capital},
           {title: 'TransferIncome', data: ethInflow[type].transfer} 
         ]
-      : [ {title: 'ETH Income - (USD ', data: ethInflow[type].sumInUsd},
+      : [ 
+          {title: 'ETH Income - (USD ', data: curSumInUsd},
+          {title: 'Original ETH Income', data: ethInflow[type].sumInUsd},
           {title: 'Exchange Gain/Loss', data: curSumInUsd - ethInflow[type].sumInUsd},
           {title: 'GasIncome', data: ethInflow[type].gasInUsd},
           {title: 'PayInCap', data: ethInflow[type].capitalInUsd},
@@ -939,7 +1001,7 @@ export function FinStatement() {
 
     let records = trimCashflow(ethOutflowRecords, startDate, endDate, type);
 
-    let curSumInUsd = ethOutflow[type].totalAmt * 10n ** 16n / centPrice;
+    let curSumInUsd = weiToDust(ethOutflow[type].totalAmt);
 
     let arrSumInfo = inETH
       ? [ {title: 'ETH Outflow - (ETH ', data: ethOutflow[type].totalAmt},
@@ -949,8 +1011,10 @@ export function FinStatement() {
           {title: 'BMM Transfer', data: ethOutflow[type].bmmTransfer},
           {title: 'BMM Expense', data: ethOutflow[type].bmmExpense},
         ]
-      : [ {title: 'ETH Outflow - (USD ', data: ethOutflow[type].sumInUsd},
-          {title: 'Exchange Gain/Loss', data: ethOutflow[type].sumInUsd - curSumInUsd},
+      : [ 
+          {title: 'ETH Outflow - (USD ', data: curSumInUsd},
+          {title: 'Original ETH Outflow', data: ethOutflow[type].sumInUsd},
+          {title: 'Exchange Gain/Loss', data: curSumInUsd - ethOutflow[type].sumInUsd},
           {title: 'Distribution', data: ethOutflow[type].distributionInUsd},
           {title: 'GMM Transfer', data: ethOutflow[type].gmmTransferInUsd},
           {title: 'GMM Expense', data: ethOutflow[type].gmmExpenseInUsd},
@@ -974,7 +1038,9 @@ export function FinStatement() {
             {title: 'Royalty', data: cbpInflow[type].royalty},
             {title: 'Transfer', data: cbpInflow[type].transfer}, 
             {title: 'Mint', data: cbpInflow[type].mint}]
-        : [ {title: 'CBP Income - (USD ', data: cbpInflow[type].sumInUsd},
+        : [ 
+            {title: 'CBP Income - (USD ', data: curSumInUsd},
+            {title: 'Original CBP Income', data: cbpInflow[type].sumInUsd},
             {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpInflow[type].sumInUsd},
             {title: 'Royalty', data: cbpInflow[type].royaltyInUsd},
             {title: 'Transfer', data: cbpInflow[type].transferInUsd},
@@ -999,8 +1065,10 @@ export function FinStatement() {
             {title: 'GMM Transfer', data: cbpOutflow[type].gmmTransfer},
             {title: 'BMM Transfer', data: cbpOutflow[type].bmmTransfer} 
           ]
-        : [ {title: 'CBP Outflow - (USD ', data: cbpOutflow[type].sumInUsd},
-            {title: 'Exchange Gain/Loss', data: cbpOutflow[type].sumInUsd - curSumInUsd},
+        : [ 
+            {title: 'CBP Outflow - (USD ', data: curSumInUsd},
+            {title: 'OriginalCBP Outflow', data: cbpOutflow[type].sumInUsd},
+            {title: 'Exchange Gain/Loss', data: curSumInUsd - cbpOutflow[type].sumInUsd},
             {title: 'New User Award', data: cbpOutflow[type].newUserAward},
             {title: 'Startup Cost', data: cbpOutflow[type].startupCostInUsd},
             {title: 'Fuel Sold', data: cbpOutflow[type].fuelSoldInUsd},
@@ -1023,8 +1091,8 @@ export function FinStatement() {
 
     let inEth = deposits[type].balance + deposits[type].consideration + deposits[type].distribution;
     let inUsd = deposits[type].balanceInUsd + deposits[type].considerationInUsd + deposits[type].distributionInUsd;
-    let exChangeGainLoss = weiToDust(inEth) - inUsd;
-
+    let curSumInUsd = weiToDust(inEth);
+    let exChangeGainLoss = curSumInUsd - inUsd;
 
     let arrSumInfo = inETH
       ? [ {title: 'Deposits Inflow - (ETH ', data: inEth},
@@ -1032,7 +1100,9 @@ export function FinStatement() {
           {title: 'Distribution', data: deposits[type].distribution},
           {title: 'Balance', data: deposits[type].balance} 
         ]
-      : [ {title: 'Deposits Inflow - (USD ', data: inUsd},
+      : [ 
+          {title: 'Deposits Inflow - (USD ', data: curSumInUsd},
+          {title: 'Original Deposits Inflow', data: inUsd},
           {title: 'Exchange Gain/Loss', data: exChangeGainLoss},
           {title: 'Consideration', data: deposits[type].considerationInUsd},
           {title: 'Distribution', data: deposits[type].distributionInUsd},
@@ -1051,12 +1121,15 @@ export function FinStatement() {
         v.typeOfIncome == 'RefundValueOfBidOrder' || v.typeOfIncome == 'CloseInitOfferAgainstBid'
     )
 
-    let exchangeGainLoss = weiToDust(deposits[type].custody) - deposits[type].custodyInUsd;
+    let curSumInUsd = weiToDust(deposits[type].custody);
+    let exchangeGainLoss = curSumInUsd - deposits[type].custodyInUsd;
 
     let arrSumInfo = inETH
       ? [ {title: 'Custody - (ETH ', data: deposits[type].custody},
         ]
-      : [ {title: 'Custody - (USD ', data: deposits[type].custodyInUsd},
+      : [
+          {title: 'Custody - (USD ', data: curSumInUsd},
+          {title: 'Original Custody', data: deposits[type].custodyInUsd},
           {title: 'Exchange Gain/Loss', data: exchangeGainLoss},
         ];
 
@@ -1069,13 +1142,16 @@ export function FinStatement() {
     let records = trimCashflow(depositsRecords, startDate, endDate, type);
 
     records = records.filter(v => v.typeOfIncome == 'Pickup');
-    let exchangeGainLoss = weiToDust(deposits[type].pickup) - deposits[type].pickupInUsd;
+    let curSumInUsd = weiToDust(deposits[type].pickup);
+    let exchangeGainLoss =  curSumInUsd - deposits[type].pickupInUsd;
 
     let arrSumInfo = inETH
       ? [ {title: 'Deposits Outflow - (ETH ', data: deposits[type].pickup},
           {title: 'Pickup', data: deposits[type].pickup},
         ]
-      : [ {title: 'Deposits Outflow - (USD ', data: deposits[type].pickupInUsd},
+      : [ 
+          {title: 'Deposits Outflow - (USD ', data: curSumInUsd},
+          {title: 'Original Deposits Outflow', data: deposits[type].pickupInUsd},
           {title: 'Exchange Gain/Loss', data: exchangeGainLoss},
           {title: 'Pickup', data: deposits[type].pickupInUsd},
         ];
@@ -1088,7 +1164,7 @@ export function FinStatement() {
   const showFtCbpflow = (type:number) => {
     let records = trimCashflow(ftCbpflowRecords, startDate, endDate, type);
 
-    let curSumCbpInUsd =  ftCbpflow[type].totalCbp * 10000n / exRate * 10n ** 16n / centPrice;
+    let curSumInUsd = weiToDust(cbpToETH(ftCbpflow[type].totalCbp));
 
     let arrSumInfo = inETH
       ? [ {title: 'CBP Balance in FT - (CBP ', data: ftCbpflow[type].totalCbp},
@@ -1096,8 +1172,10 @@ export function FinStatement() {
           {title: '- Fuel Sold', data: ftCbpflow[type].refuelCbp},
           {title: '- Fuel Withdrawn', data: ftCbpflow[type].withdrawCbp}
         ]
-      : [ {title: 'CBP Balance in FT - (USD ', data: ftCbpflow[type].totalCbpInUsd},
-          {title: 'Exchange Gain/Loss', data: curSumCbpInUsd - ftCbpflow[type].totalCbpInUsd},
+      : [ 
+          {title: 'CBP Balance in FT - (USD ', data: curSumInUsd},
+          {title: 'Original CBP Balance in FT', data: ftCbpflow[type].totalCbpInUsd},
+          {title: 'Exchange Gain/Loss', data: curSumInUsd - ftCbpflow[type].totalCbpInUsd},
           {title: '+ Add Fuel', data: ftCbpflow[type].addCbpInUsd},
           {title: '- Fuel Sold', data: ftCbpflow[type].refuelCbpInUsd},
           {title: '- Fuel Withdrawn', data: ftCbpflow[type].withdrawCbpInUsd}
@@ -1118,7 +1196,9 @@ export function FinStatement() {
           {title: 'Gas Income', data: ftEthflow[type].refuelEth},
           {title: 'Income Pickup', data: ftEthflow[type].withdrawEth},
         ]
-      : [ {title: 'Eth Balance in FT - (USD ', data: ftEthflow[type].totalEthInUsd},
+      : [ 
+          {title: 'Eth Balance in FT - (USD ', data: curSumInUsd},
+          {title: 'Original Eth Balance in FT', data: ftEthflow[type].totalEthInUsd},
           {title: 'Exchange Gain/Loss', data: curSumInUsd - ftEthflow[type].totalEthInUsd},
           {title: 'Gas Income', data: ftEthflow[type].refuelEthInUsd},
           {title: 'Income Pickup', data: ftEthflow[type].withdrawEthInUsd},
@@ -1403,7 +1483,7 @@ export function FinStatement() {
 
         <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2), ()=>displayExchangeGainLoss(2), ()=>displayDistribution(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} />
  
-        <EthflowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[ ()=>displayDeferredRevenue(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2), ()=>displayShareIssuanceProceeds(2), ()=>displayDistribution(2) ]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
+        <CryptosFlowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[ ()=>showGasIncomeRecords(2), ()=>showOtherIncomeRecords(2), ()=>displayCryptoOutflowInSGNA(2), ()=>displayShareIssuanceProceeds(2), ()=>displayDistribution(2) ]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
 
       </Stack>
 

@@ -14,8 +14,12 @@ export interface CryptoflowStatementProps extends IncomeStatementProps {
 }
 
 
-export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow, ftCbpflow, ftEthflow, deposits, usdEscrow}: CryptoflowStatementProps) {
+export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow, ftCbpflow, ftEthflow, deposits, usdEscrow}: CryptoflowStatementProps) {
   
+  const weiToDust = (eth:bigint) => {
+    return eth * 10n ** 16n / centPrice;
+  }
+
   const microToWei = (usd:bigint) => {
     return usd * centPrice / 10000n;
   }
@@ -28,7 +32,7 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
 
   const getEthPayment = () => {
     const inEth = ethOutflow[2].bmmTransfer + ethOutflow[2].gmmTransfer + ethOutflow[2].bmmExpense + ethOutflow[2].gmmExpense;
-    const inUsd = ethOutflow[2].gmmTransferInUsd + ethOutflow[2].gmmTransferInUsd + ethOutflow[2].gmmExpenseInUsd + ethOutflow[2].gmmExpenseInUsd;
+    const inUsd = weiToDust(inEth);
 
     return({inEth: inEth, inUsd: inUsd});
   }
@@ -42,7 +46,7 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
 
   const getEthInflowFromOperating = () => {
     const inEth = ethInflow[2].gas + ethInflow[2].transfer;
-    const inUsd = ethInflow[2].gasInUsd + ethInflow[2].transferInUsd;
+    const inUsd = weiToDust(inEth);
 
     return ({inEth: inEth, inUsd: inUsd});
   }
@@ -51,14 +55,14 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
 
   const getNetEthOfFinancing = () => {
     const inEth = ethInflow[2].capital + ethInflow[2].premium - ethOutflow[2].distribution;
-    const inUsd = ethInflow[2].capitalInUsd + ethInflow[2].premiumInUsd - ethOutflow[2].distributionInUsd;
+    const inUsd = weiToDust(inEth);
 
     return ({inEth: inEth, inUsd:inUsd});
   }
 
   const getNetUsdOfFinancing = () => {
-    const inEth = microToWei(usdInflow[2].totalAmt - usdOutflow[2].distributeUsd);
-    const inUsd = microToDust(usdInflow[2].totalAmt - usdOutflow[2].distributeUsd);
+    const inEth = microToWei(usdInflow[2].capital + usdInflow[2].premium - usdOutflow[2].distributeUsd);
+    const inUsd = microToDust(usdInflow[2].capital + usdInflow[2].premium - usdOutflow[2].distributeUsd);
     
     return ({inEth: inEth, inUsd: inUsd});
   };
@@ -102,9 +106,9 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
             +
           </Typography>
           <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](2)}>
-            <b>Increased Deferred Revenue: ({inETH 
+            <b>Deferred Revenue From CBP Sales: ({inETH 
                 ? weiToEth9Dec(ethInflow[2].gas) 
-                : showUSD(ethInflow[2].gasInUsd)}) </b>
+                : showUSD(weiToDust(ethInflow[2].gas))}) </b>
           </Button>
         </Stack>
 
@@ -115,7 +119,7 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
           <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](2)} >
             <b>Other Income: ({inETH 
                 ? weiToEth9Dec(ethInflow[2].transfer) 
-                : showUSD(ethInflow[2].transferInUsd)}) </b>
+                : showUSD(weiToDust(ethInflow[2].transfer))}) </b>
           </Button>
         </Stack>
 
@@ -181,8 +185,8 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
           </Typography>
           <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[3](2)} >
             <b>Proceeds from Share Issuance: ({inETH 
-                ? weiToEth9Dec(ethInflow[2].capital + ethInflow[2].premium + microToWei(usdInflow[2].totalAmt) ) 
-                : showUSD(ethInflow[2].capitalInUsd + ethInflow[2].premiumInUsd + microToDust(usdInflow[2].totalAmt))}) </b>
+                ? weiToEth9Dec(ethInflow[2].capital + ethInflow[2].premium + microToWei(usdInflow[2].capital + usdInflow[2].premium) ) 
+                : showUSD(weiToDust(ethInflow[2].capital + ethInflow[2].premium) + microToDust(usdInflow[2].capital + usdInflow[2].premium))}) </b>
           </Button>
         </Stack>
 
@@ -193,7 +197,7 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
           <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[4](2)} >
             <b>Distribution: ({inETH 
                 ? weiToEth9Dec(ethOutflow[2].distribution + microToWei(usdOutflow[2].distributeUsd)) 
-                : showUSD(ethOutflow[2].distributionInUsd + microToDust(usdOutflow[2].distributeUsd))}) </b>
+                : showUSD(weiToDust(ethOutflow[2].distribution) + microToDust(usdOutflow[2].distributeUsd))}) </b>
           </Button>
         </Stack>
 
@@ -204,7 +208,7 @@ export function EthflowStatement({inETH, exRate, centPrice, startDate, endDate, 
           <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
             <b>Net Inflow from Financing Activities: ({inETH 
                 ? weiToEth9Dec(getNetEthOfFinancing().inEth + getNetUsdOfFinancing().inEth) 
-                : showUSD(getNetEthOfFinancing().inUsd + getNetUsdOfFinancing().inEth)}) </b>
+                : showUSD(getNetEthOfFinancing().inUsd + getNetUsdOfFinancing().inUsd)}) </b>
           </Button>
         </Stack>
 
