@@ -139,9 +139,9 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
             &nbsp;
           </Typography>
           <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
-            <b>Net Inflow from Operating Activities: ({inETH 
-                ? weiToEth9Dec(getEthInflowFromOperating().inEth - getUsdPayment().inEth) 
-                : showUSD(getEthInflowFromOperating().inUsd - getUsdPayment().inUsd)}) </b>
+            <b>Net Inflow From Operating Activities: ({inETH 
+                ? weiToEth9Dec(getEthInflowFromOperating().inEth - (getEthPayment().inEth + getUsdPayment().inEth)) 
+                : showUSD(getEthInflowFromOperating().inUsd - (getEthPayment().inUsd + getUsdPayment().inUsd))}) </b>
           </Button>
         </Stack>
 
