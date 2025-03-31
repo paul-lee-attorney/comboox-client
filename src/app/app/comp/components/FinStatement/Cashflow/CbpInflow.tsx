@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero } from "../../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
+import { decodeFunctionData, hexToString, parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { getRoyaltySource } from "../../../../../api/getRoyaltySource";
+import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -84,7 +85,7 @@ export const updateCbpInflowSum = (arr: Cashflow[], startDate:number, endDate:nu
 
 
 export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
-  const { gk } = useComBooxContext();
+  const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
 
@@ -96,21 +97,48 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
     const getCbpInflow = async () => {
 
-      if (!gk) return;
+      if (!gk || !keepers ) return;
+
+      const usdKeeper = keepers[keepersMap.UsdKeeper];
 
       const updateRoyaltyInfo = async (item:Cashflow) => {
         
-        const rs = await getRoyaltySource(item.transactionHash);
+        // const rs = await getRoyaltySource(item.transactionHash);
         
-        if (rs.api != "") {
-          item.input = rs.input;
-          item.api = rs.api;
-          item.target = rs.target;
-          item.typeOfDoc = rs.typeOfDoc;
-          item.version = rs.version;
+        // if (rs.api != "") {
+        //   item.input = rs.input;
+        //   item.api = rs.api;
+        //   item.target = rs.target;
+        //   item.typeOfDoc = rs.typeOfDoc;
+        //   item.version = rs.version;
   
-          const monthLab = getMonthLableByTimestamp(item.timestamp);
+        //   const monthLab = getMonthLableByTimestamp(item.timestamp);
   
+        //   await updateRoyaltyByItem(gk, monthLab, item);
+        // }
+
+        let tran = await client.getTransaction({hash: item.transactionHash});
+                    
+        if (tran.to?.toLowerCase() == gk.toLowerCase()) {
+
+          item.input = tran.input;
+          item.api = decodeFunctionData({
+            abi: generalKeeperABI,
+            data: tran.input,
+          }).functionName;
+
+        } else if (tran.to?.toLowerCase() == usdKeeper.toLowerCase()) {
+
+          item.input = tran.input;
+          item.api = decodeFunctionData({
+            abi: usdKeeperABI,
+            data: tran.input,
+          }).functionName;
+
+        }
+
+        if (item.api) {
+          const monthLab = getMonthLableByTimestamp(item.timestamp);  
           await updateRoyaltyByItem(gk, monthLab, item);
         }
 
@@ -191,19 +219,39 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
                 tran.input.substring(0,10).toLowerCase() == '0xa9059cbb') 
           {  
             item.typeOfIncome = 'Transfer';
-          } else if (client.chain.id == 42161){
+          // } else if (client.chain.id == 42161){
 
-            const rs = await getRoyaltySource(item.transactionHash);
+          //   const rs = await getRoyaltySource(item.transactionHash);
 
-            if (rs.api != "") {
-              item.input = rs.input;
-              item.api = rs.api;
-              item.target = rs.target;
-              item.typeOfDoc = rs.typeOfDoc;
-              item.version = rs.version;
-            }
+          //   if (rs.api != "") {
+          //     item.input = rs.input;
+          //     item.api = rs.api;
+          //     item.target = rs.target;
+          //     item.typeOfDoc = rs.typeOfDoc;
+          //     item.version = rs.version;
+          //   }
             
+          } else if (tran.to?.toLowerCase() == gk.toLowerCase()) {
+
+            item.input = tran.input;
+            item.api = decodeFunctionData({
+              abi: generalKeeperABI,
+              data: tran.input,
+            }).functionName;
+            // item.target = tran.from; 
+
+
+
+          } else if (tran.to?.toLowerCase() == usdKeeper.toLowerCase()) {
+
+            item.input = tran.input;
+            item.api = decodeFunctionData({
+              abi: usdKeeperABI,
+              data: tran.input,
+            }).functionName;
+
           }
+
         }
 
         if (cnt == 0) {
@@ -243,7 +291,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
     if (gk && client) getCbpInflow();
 
-  },[client, gk, exRate, setRecords]);
+  },[client, gk, keepers, exRate, setRecords]);
 
   return (
     <></>
