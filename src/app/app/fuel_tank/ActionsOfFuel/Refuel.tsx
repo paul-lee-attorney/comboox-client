@@ -130,7 +130,7 @@ export function Refuel({ refresh }: ActionOfFuelProps) {
             severity='info'
             sx={{ height: 45, p:0.5 }}
           >
-            Add { bigIntToStrNum(BigInt(receipt?.amt ?? '0') / (10n**9n), 9) + ' CBP' } to Account ({ '0x' + receipt?.to.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
+            Add { bigIntToStrNum(BigInt(receipt?.amt ?? '0') / (10n**9n), 9) + ' CBP' } to Account ({ '0x' + receipt?.from.substring(26, 30) + '...' + receipt?.to.substring(62, 66)})
           </Alert>
         </Collapse>
 
