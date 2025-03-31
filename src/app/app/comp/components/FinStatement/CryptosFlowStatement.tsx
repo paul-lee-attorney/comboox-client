@@ -51,6 +51,13 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
     return ({inEth: inEth, inUsd: inUsd});
   }
 
+  const getNetEthOfOperating = () => {
+    const inEth = getEthInflowFromOperating().inEth - getEthPayment().inEth;
+    const inUsd = weiToDust(inEth);
+
+    return ({inEth: inEth, inUsd: inUsd});
+  }
+
   // ---- Financing ----
 
   const getNetEthOfFinancing = () => {
@@ -70,8 +77,8 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
   // ==== Sum ====
 
   const getNetIncreaseOfEth = () => {
-    const inEth = getEthInflowFromOperating().inEth + getNetEthOfFinancing().inEth;
-    const inUsd = getEthInflowFromOperating().inUsd + getNetEthOfFinancing().inUsd;
+    const inEth = getNetEthOfOperating().inEth + getNetEthOfFinancing().inEth;
+    const inUsd = getNetEthOfOperating().inUsd + getNetEthOfFinancing().inUsd;
 
     return ({inEth: inEth, inUsd: inUsd});
   }

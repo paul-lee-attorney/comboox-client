@@ -692,7 +692,7 @@ export function FinStatement() {
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Paid In Premium', amt: paidInCap, amtInUsd: paidInCapUsd, show: ()=>{}},
-      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: ethInflow[type].premiumInUsd, show: ()=>showPaidInPremiumRecords(type)},
+      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: weiToDust(ethInflow[type].premium), show: ()=>showPaidInPremiumRecords(type)},
       {simbol: '+', title: 'Paid Premium In USDC', amt: microToWei(usdInflow[type].premium), amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
     ];
 
@@ -707,8 +707,8 @@ export function FinStatement() {
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Share Issuance Proceeds', amt: proceeds, amtInUsd: proceedsUsd, show: ()=>{}},
-      {simbol: '+', title: 'Paid Cap In ETH', amt: ethInflow[type].capital, amtInUsd: ethInflow[type].capitalInUsd, show: ()=>showPaidInCapRecords(type)},      
-      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: ethInflow[type].premiumInUsd, show: ()=>showPaidInPremiumRecords(type)},
+      {simbol: '+', title: 'Paid Cap In ETH', amt: ethInflow[type].capital, amtInUsd: weiToDust(ethInflow[type].capital), show: ()=>showPaidInCapRecords(type)},      
+      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: weiToDust(ethInflow[type].premium), show: ()=>showPaidInPremiumRecords(type)},
       {simbol: '+', title: 'Paid Cap In USDC', amt: microToWei(usdInflow[type].capital), amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
       {simbol: '+', title: 'Paid Premium In USDC', amt: microToWei(usdInflow[type].premium), amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
     ];
