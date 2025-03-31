@@ -69,18 +69,19 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
 
     if (typeOfCurrency > 0) {
 
-      if (typeOfCurrency == 2) {
-        setParas(v => ({
-          ...v,
-          isCBP: true,
-        }));
-      }
+      // if (typeOfCurrency == 2) {
+      //   setParas(v => ({
+      //     ...v,
+      //     isCBP: true,
+      //   }));
+      // }
 
       transferFund({
         args: [
           false, 
-          paras.to, 
-          paras.isCBP, 
+          paras.to,
+          typeOfCurrency == 2, 
+          // paras.isCBP, 
           strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
           BigInt(paras.expireDate), 
           BigInt(motion.head.seqOfMotion)
