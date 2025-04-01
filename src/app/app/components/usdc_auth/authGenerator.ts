@@ -31,10 +31,10 @@ export const generateAuthData = async (
 
   let out = {
     from: signer?.account?.address as HexType, // 自动获取地址
-    to: addrOfCashier, // 环境变量注入
+    to: addrOfCashier, 
     value,
     validAfter: currentTime - 1n,
-    validBefore: currentTime + 3600n, // 有效期1小时
+    validBefore: currentTime + 600n, // 有效期10分钟
     nonce: HexParser(randomBytes (32).toString('hex')) // 安全随机数
   };
 
