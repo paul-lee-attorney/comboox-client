@@ -423,7 +423,7 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
             endIcon={<Camera />} 
             sx={{ m:2, minWidth: 218, height: 40 }} 
             LinkComponent={ Link }
-            href='/app/comp/loo/face_recognition'
+            href='/app/comp/roi/face_recognition'
           >
             Photo ID Verify
           </Button>
