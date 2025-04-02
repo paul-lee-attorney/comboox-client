@@ -180,13 +180,13 @@ export default function FaceRecognition() {
 	
   const router = useRouter();
 
-  const backToLoo = ()=>{
+  const backToRoi = ()=>{
     if (videoStream) {
       stopVideo(videoStream);
       setVideoStream(null);
     }
 
-    router.push('/app/comp/loo')
+    router.push('/app/comp/roi')
   }
 
 
@@ -235,9 +235,9 @@ export default function FaceRecognition() {
             color='success'
             endIcon={<ArrowBack />} 
             sx={{ m: 2, minWidth: 218, height: 40 }} 
-            onClick={()=>backToLoo()}
+            onClick={()=>backToRoi()}
           >
-            Back To LOO
+            Back To ROI
           </Button>
 
         </Stack>
