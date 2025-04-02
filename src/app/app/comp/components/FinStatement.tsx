@@ -1495,7 +1495,7 @@ export function FinStatement() {
 
       <Stack direction='row' >
 
-        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>showCbpOutflow(2), ()=>showFtCbpflow(2), ()=>showEthInflow(2), ()=>showEthOutflow(2), ()=>showFtEthflow(3), ()=>showDepositsInflow(2), ()=>showCustody(2), ()=>showDepositsOutflow(2), ()=>showUsdInflow(2), ()=>showUsdOutflow(2), ()=>showUsdEscInflow(2), ()=>showUsdEscOutflow(2), ()=>showUsdDepInflow(2), ()=>showUsdDepOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
+        <CryptoInventory inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showCbpInflow(2), ()=>displayCbpMintToOthers(2), ()=>showCbpOutflow(2), ()=>showFtCbpflow(3), ()=>showEthInflow(2), ()=>showEthOutflow(2), ()=>showFtEthflow(3), ()=>showDepositsInflow(2), ()=>showCustody(2), ()=>showDepositsOutflow(2), ()=>showUsdInflow(2), ()=>showUsdOutflow(2), ()=>showUsdEscInflow(2), ()=>showUsdEscOutflow(2), ()=>showUsdDepInflow(2), ()=>showUsdDepOutflow(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
 
       </Stack>
 

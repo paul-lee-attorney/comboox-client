@@ -1,7 +1,7 @@
 import { Button, Paper, Stack, Typography } from "@mui/material";
 import { showUSD, weiToEth9Dec } from "../FinStatement";
 import { baseToDollar } from "../../../common/toolsKit";
-import { FtCbpflowSum } from "./Cashflow/FtCbpflow";
+import { FtCbpflowSum, ftHis } from "./Cashflow/FtCbpflow";
 import { IncomeStatementProps } from "./IncomeStatement";
 import { FtEthflowSum } from "./Cashflow/FtEthflow";
 import { DepositsSum } from "./Cashflow/Deposits";
@@ -158,8 +158,17 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     const getCbpOfFT = async ()=>{
       if (!gk) return {...defBala};
 
-      const opnBalaOfFT = await balanceOf(AddrOfTank, opnBlkNo);
-      const endBalaOfFT = await balanceOf(AddrOfTank, rptBlkNo);
+      const opnBalaOfFtHis0 = await balanceOf(ftHis[0], opnBlkNo);
+      const opnBalaOfFtHis1 = await balanceOf(ftHis[1], opnBlkNo);
+      const opnBalaOfFtHis2 = await balanceOf(ftHis[2], opnBlkNo);
+
+      const opnBalaOfFT = opnBalaOfFtHis0 + opnBalaOfFtHis1 + opnBalaOfFtHis2;
+
+      const endBalaOfFtHis0 = await balanceOf(ftHis[0], rptBlkNo);
+      const endBalaOfFtHis1 = await balanceOf(ftHis[1], rptBlkNo);
+      const endBalaOfFtHis2 = await balanceOf(ftHis[2], rptBlkNo);
+
+      const endBalaOfFT = endBalaOfFtHis0 + endBalaOfFtHis1 + endBalaOfFtHis2;
 
       const output:Balance = {
         opnAmt: opnBalaOfFT,
@@ -379,7 +388,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
               <Typography variant="h6" textAlign='center' width='10%'>
                 -
               </Typography>
-              <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[3](2)} >
+              <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[3](3)} >
                 <b>CBP In Fuel Tank: ({inETH 
                     ? weiToEth9Dec(cbpOfFT.endAmt) 
                     : showUSD(weiToDust(cbpOfFT.endAmt))}) </b>

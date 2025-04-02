@@ -1,6 +1,6 @@
 import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { baseToDust, showUSD, weiToEth9Dec } from "../FinStatement";
-import { baseToDollar } from "../../../common/toolsKit";
+import { baseToDollar, HexParser } from "../../../common/toolsKit";
 import { getRetainedEarnings, IncomeStatementProps } from "./IncomeStatement";
 import { getInitContribution } from "./Assets";
 import { CbpOutflowSum } from "./Cashflow/CbpOutflow";
@@ -15,6 +15,7 @@ import { AddrOfTank, booxMap, HexType } from "../../../common";
 import { capAtDate } from "../../rom/rom";
 import { UsdInflowSum } from "./Cashflow/UsdInflow";
 import { UsdOutflowSum } from "./Cashflow/UsdOutflow";
+import { ftHis } from "./Cashflow/FtCbpflow";
 
 
 export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], cbpToETH:(cbp:bigint)=>bigint) => {
@@ -95,8 +96,12 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
       const cbpSupply = await getTotalSupply();
       const cbpOfGK = await balanceOf(gk, rptBlkNo);
-      const cbpOfFT = await balanceOf(AddrOfTank, rptBlkNo);
-      const cbpOfComp = cbpOfGK + cbpOfFT;
+
+      const cbpOfFT = await balanceOf(ftHis[0], rptBlkNo);
+      const cbpOfFTHis1 = await balanceOf(ftHis[1], rptBlkNo);
+      const cbpOfFTHis2 = await balanceOf(ftHis[2], rptBlkNo);
+
+      const cbpOfComp = cbpOfGK + cbpOfFT + cbpOfFTHis1 + cbpOfFTHis2;
 
       const output = cbpSupply - cbpOfComp;
 

@@ -79,6 +79,12 @@ export const sumArrayOfFtCbpflow = (arr: Cashflow[]) => {
   return sum;
 }
 
+export const ftHis = [
+  AddrOfTank,
+  HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
+  HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")
+];
+
 export const updateFtCbpflowSum = (arr: Cashflow[], startDate:number, endDate:number) => {
   
   let sum: FtCbpflowSum[] = [...defFtCbpflowSumArr];
@@ -139,9 +145,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
         args: {
           from: gk,
-          to: [ HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7"),
-                HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
-              AddrOfTank],
+          to: ftHis,
         },
         fromBlock: lastBlkNum ? lastBlkNum + 1n : 'earliest',
       });
@@ -180,9 +184,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let withdrawCbpLogs = await client.getLogs({
-        address: [  AddrOfTank, 
-                    HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
-                    HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
+        address: ftHis,
         event: parseAbiItem('event WithdrawFuel(address indexed owner, uint indexed amt)'),
         fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });
@@ -266,7 +268,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let refuelLogs = await client.getLogs({
-        address: [AddrOfTank, HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
+        address: ftHis,
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
         fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });

@@ -6,6 +6,7 @@ import { parseAbiItem, hexToString } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { addrToUint, HexParser } from "../../../../common/toolsKit";
+import { csHis } from "./UsdInflow";
 
 export type UsdOutflowSum = {
   totalAmt: bigint;
@@ -166,10 +167,8 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
       
-      let preCashier = HexParser("0x8871e3Bb5Ac263E10e293Bee88cce82f336Cb20a");
-
       let upgradeLogs = await client.getLogs({
-        address: preCashier,
+        address: csHis[0],
         event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt)'),
         args: {
           to: cashier
@@ -197,9 +196,9 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
           transactionHash: log.transactionHash,
           typeOfIncome: 'UpgradeCashier',
           amt: log.args.amt ?? 0n,
-          ethPrice: addrToUint(preCashier),
+          ethPrice: addrToUint(csHis[0]),
           usd: log.args.amt ?? 0n,
-          addr: preCashier,
+          addr: csHis[0],
           acct: 0n,
         };
 
