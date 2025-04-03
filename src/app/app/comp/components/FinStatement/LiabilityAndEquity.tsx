@@ -235,7 +235,10 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       </Stack>
 
       <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-        <Typography variant="h6" textAlign='center' width='20%'>
+        <Typography variant="h6" textAlign='center' width='10%'>
+          &nbsp;
+        </Typography>
+        <Typography variant="h6" textAlign='center' width='10%'>
           +
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >

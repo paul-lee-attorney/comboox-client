@@ -80,7 +80,7 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
   const getCapPremium = (type:number)=> {
 
     const inEth = ethInflow[type].premium + microToWei(usdInflow[type].premium);
-    const inUsd = weiToDust(ethInflow[type].premium) + microToDust(usdInflow[type].premium);
+    const inUsd = ethInflow[type].premiumInUsd + microToDust(usdInflow[type].premium);
 
     return {inEth: inEth, inUsd: inUsd};
   }

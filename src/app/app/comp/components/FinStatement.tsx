@@ -687,11 +687,11 @@ export function FinStatement() {
   const displayPaidInPremium = (type:number) => {
 
     let paidInCap = ethInflow[type].premium + microToWei(usdInflow[type].premium);
-    let paidInCapUsd = weiToDust(paidInCap);
+    let paidInCapUsd = ethInflow[type].premiumInUsd + microToDust(usdInflow[type].premium);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Paid In Premium', amt: paidInCap, amtInUsd: paidInCapUsd, show: ()=>{}},
-      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: weiToDust(ethInflow[type].premium), show: ()=>showPaidInPremiumRecords(type)},
+      {simbol: '+', title: 'Paid Premium In ETH', amt: ethInflow[type].premium, amtInUsd: ethInflow[type].premiumInUsd, show: ()=>showPaidInPremiumRecords(type)},
       {simbol: '+', title: 'Paid Premium In USDC', amt: microToWei(usdInflow[type].premium), amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
     ];
 
