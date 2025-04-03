@@ -10,6 +10,7 @@ import { HexParser } from "../../../../common/toolsKit";
 import { listOfOrdersABI, registerOfSharesABI } from "../../../../../../../generated";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
 import { briefParser } from "../../../loe/loe";
+import { ftHis } from "./FtCbpflow";
 
 export type EthInflowSum = {
   totalAmt: bigint;
@@ -175,9 +176,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       });
     
       recievedCashLogs = recievedCashLogs.filter(v => (v.blockNumber > lastBlkNum) &&
-          (v.args.from?.toLowerCase() != AddrOfTank.toLowerCase()) && 
-          (v.args.from?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase()) && 
-          (v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase()));
+          (v.args.from?.toLowerCase() != ftHis[0].toLowerCase() ) && 
+          (v.args.from?.toLowerCase() != ftHis[1].toLowerCase()) && 
+          (v.args.from?.toLowerCase() != ftHis[2].toLowerCase()));
       // console.log('recievedCashLogs: ', recievedCashLogs);
 
       let len = recievedCashLogs.length;
@@ -211,9 +212,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let gasIncomeLogs = await client.getLogs({
-        address: [  AddrOfTank, 
-                    HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
-                    HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
+        address: ftHis,
         event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
         fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
       });

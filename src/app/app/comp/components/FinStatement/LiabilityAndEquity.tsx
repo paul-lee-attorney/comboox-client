@@ -210,24 +210,13 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       </Stack>
 
       <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
-        <Typography variant="h6" textAlign='center' width='10%'>
-          +
-        </Typography>
-        <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} >
-          <b>Eth Gain/Loss In Equity: ({ inETH
-            ? ethGNL.inEth
-            : showUSD( ethGNL.inUsd ) })</b>
-        </Button>
-      </Stack>
-
-      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
         <Typography variant="h6" textAlign='center' width='20%'>
           &nbsp;
         </Typography>
         <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](3)} >
           <b>Paid In Capital: ({ inETH
             ? weiToEth9Dec(ethInflow[3].capital + microToWei(usdInflow[3].capital))
-            : showUSD(weiToDust(ethInflow[3].capital) + microToDust(usdInflow[3].capital)) }) </b>
+            : showUSD(ethInflow[3].capitalInUsd + microToDust(usdInflow[3].capital)) }) </b>
         </Button>
       </Stack>
 
@@ -242,6 +231,17 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
           <b>Additional Paid In Capital: ({ inETH
             ? weiToEth9Dec(ethInflow[3].premium + microToWei(usdInflow[3].premium))
             : showUSD(ethInflow[3].premiumInUsd + microToDust(usdInflow[3].premium))}) </b>
+        </Button>
+      </Stack>
+
+      <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+        <Typography variant="h6" textAlign='center' width='20%'>
+          +
+        </Typography>
+        <Button variant="outlined" sx={{width: '80%', m:0.5, justifyContent:'start'}} >
+          <b>Eth Gain/Loss In Equity: ({ inETH
+            ? ethGNL.inEth
+            : showUSD( ethGNL.inUsd ) })</b>
         </Button>
       </Stack>
 
