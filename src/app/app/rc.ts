@@ -483,7 +483,7 @@ export async function getTempsList(): Promise<DocItem[]>{
   let out: DocItem[] = [];
   let i = 1;
 
-  while (i < 34) {
+  while (i < 35) {
     let v = await counterOfVersions(BigInt(i));
     let snOfDoc = HexParser(i.toString(16).padStart(8, '0') +  v.toString(16).padStart(8, '0') + '0'.padEnd(48, '0'));
 
