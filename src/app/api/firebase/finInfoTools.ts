@@ -1,7 +1,7 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { HexType } from '../../app/common';
-import { Cashflow } from '../../app/comp/components/GeneralInfo/FinStatement';
+import { Cashflow } from '../../app/comp/components/FinStatement';
 import { HexParser } from '../../app/common/toolsKit';
 
 
@@ -131,7 +131,7 @@ export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:st
     }
 
     await setDoc(docRef, {records: cashflowDataToString(data)});
-    console.log('successfully setDoc');
+    // console.log('successfully setDoc');
     
     return true;
   } catch (error: any) {
@@ -170,7 +170,7 @@ export async function updateRoyaltyByItem(gk: HexType, month:string, item:Cashfl
     }
 
     await setDoc(docRef, {records: cashflowDataToString(list)});
-    console.log('successfully updateRoyaltyByItem');
+    // console.log('successfully updateRoyaltyByItem');
     
     return true;
 
@@ -220,8 +220,8 @@ export async function setFinData(gk: HexType, typeOfInfo:string, data:Cashflow[]
     if (Object.hasOwnProperty.call(groupedByMonth, key)) {
 
       const dataForMonth = groupedByMonth[key];
-      console.log('key', key);
-      console.log('dataForMonth: ', dataForMonth);
+      // console.log('key', key);
+      // console.log('dataForMonth: ', dataForMonth);
 
       promises.push(setFinDataByMonth(gk, typeOfInfo, key, dataForMonth));
 

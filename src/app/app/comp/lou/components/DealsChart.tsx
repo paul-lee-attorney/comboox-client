@@ -10,6 +10,7 @@ import { parseAbiItem } from "viem";
 import { Refresh } from "@mui/icons-material";
 import { Deal } from "../../loe/loe";
 import { dealParser } from "../lou";
+import { DealLog, getDealLogs, setDealLogs } from "../../../../api/firebase/dealInfoTools";
 
 interface DealChartProps {
   classOfShare: number;
@@ -26,7 +27,7 @@ interface ChartItem {
 
 export function DealsChart({classOfShare, time, refresh}: DealChartProps) {
 
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
   const client = usePublicClient();
   const [line, setLine] = useState<ChartItem[]>([]);
 
@@ -34,28 +35,82 @@ useEffect(()=>{
 
   const getEvents = async () => {
 
-    if (!boox || boox[booxMap.UsdLOO] == AddrZero) return;
+    if (!gk || !boox || boox[booxMap.UsdLOO] == AddrZero) return;
 
     const addrUsdLOO = boox[booxMap.UsdLOO];
 
-    let dealLogs = await client.getLogs({
-      address: addrUsdLOO,
-      event: parseAbiItem('event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)'),
-      fromBlock: 1n,
-    });
+    let logs = await getDealLogs(gk, 'usdc');
 
-    let cnt = dealLogs.length;
+    const fromBlkNum = logs ? BigInt(logs[logs.length - 1].blockNumber) : 0n;
+    const toBlkNum = await client.getBlockNumber();
+
+    let startBlkNum = fromBlkNum;
+    let dealLogs:DealLog[] = [];
+
+    while(startBlkNum <= toBlkNum) {
+      const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+      try{
+        let dealClosedLogs = await client.getLogs({
+          address: addrUsdLOO,
+          event: parseAbiItem('event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)'),
+          fromBlock: startBlkNum,
+          toBlock: endBlkNum,
+        });
+
+        let tLogs = dealClosedLogs.map(v => ({
+          seq: v.logIndex,
+          blockNumber: v.blockNumber.toString(),
+          timestamp: 0,
+          fromSn: v.args.fromSn || Bytes32Zero,
+          toSn: v.args.toSn || Bytes32Zero,
+          qtySn: v.args.qtySn || Bytes32Zero,
+          consideration: (v.args.consideration ?? 0n).toString(),
+        }));
+        
+        dealLogs = [...dealLogs, ...tLogs];
+        startBlkNum = endBlkNum + 1n;
+      }catch(error){
+        console.error("Error fetching dealLogs:", error);
+        break;
+      }
+    }
+    
+    const blkNums = [... new Set(dealLogs.map(log => log.blockNumber))];
+
+    const blks = await Promise.all(
+      blkNums.map(blkNum => client.getBlock({ blockNumber: BigInt(blkNum) }))
+    );
+
+    const blkTimestampMap = blks.reduce((map:{[key:string]:number}, blk) => {
+      map[blk.number.toString()] = Number(blk.timestamp);
+      return map;
+    }, {} as {[key:string]:number});
+
+    if (dealLogs.length > 0) {
+      dealLogs = dealLogs.sort((a, b) => a.timestamp - b.timestamp || a.seq - b.seq);
+
+      await setDealLogs(gk, 'usdc', dealLogs);
+
+      if (logs) {
+        logs = logs.concat(dealLogs);
+      } else {
+        logs = dealLogs;
+      }
+
+    } 
+
+    if (!logs) return;
+
+    let cnt = logs.length;
+
     let arr:ChartItem[] = [];
     let i = 0;
     let len = 0;
  
     while (i<cnt && len<1800) {
 
-      let log = dealLogs[i];
-      let deal:Deal = dealParser(
-        log.args.fromSn ?? Bytes32Zero, log.args.toSn ?? Bytes32Zero, log.args.qtySn ?? Bytes32Zero 
-      );
-      let blk = await client.getBlock({blockNumber: log.blockNumber});
+      let log = logs[i];
+      let deal:Deal = dealParser(log.fromSn, log.toSn, log.qtySn);
 
       if (classOfShare != Number(deal.classOfShare)) {
         i++;
@@ -63,7 +118,7 @@ useEffect(()=>{
       }
 
       let item:ChartItem = {
-        timestamp: blk.timestamp,
+        timestamp: BigInt(log.timestamp),
         volumn: deal.paid,
         high: deal.price,
         low: deal.price,
@@ -95,7 +150,7 @@ useEffect(()=>{
 
   getEvents();
 
-},[boox, client, classOfShare, time, setLine]);
+},[gk, boox, client, classOfShare, time, setLine]);
 
   const series = [
     {

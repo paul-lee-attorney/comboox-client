@@ -1,19 +1,18 @@
 import { useEffect, useState } from "react";
 
-import { Paper, TextField, Stack, Grid, Typography, Divider } from "@mui/material";
+import { Paper, TextField, Stack, Grid, Typography } from "@mui/material";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
 import { AddrZero, booxMap, currencies } from "../../common";
-import { baseToDollar, dateParser, getEthPart, getGEthPart, 
-  getGWeiPart, getWeiPart, longDataParser, longSnParser 
+import { baseToDollar, dateParser, longSnParser 
 } from "../../common/toolsKit";
 import { CopyLongStrTF } from "../../common/CopyLongStr";
 
 import { CompInfo, getCompInfo, totalDeposits } from "../gk";
 import { getDK } from "../common/draftControl";
 
-import { balanceOf, balanceOfWei } from "../../rc";
+import { balanceOfWei } from "../../rc";
 
 import { Position, getDirectorsFullPosInfo } from "../rod/rod";
 import { GetOfficersList } from "../rod/components/GetOfficersList";
@@ -22,13 +21,10 @@ import { getControllor, getOwnersEquity, votesOfGroup } from "../rom/rom";
 import { InvHistoryOfMember } from "../rom/components/InvHistoryOfMember";
 
 import { ConfigSetting } from "./config_setting/ConfigSetting";
-import { PickupDeposit } from "./GeneralInfo/CashBox/PickupDeposit";
-import { DepositOfMine } from "./GeneralInfo/CashBox/DepositOfMine";
 import { FinStatement } from "./FinStatement";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
 import { HistoryOfBoox } from "./GeneralInfo/HistoryOfBoox";
-import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../cashier";
 import { CashBox } from "./GeneralInfo/CashBox";
 
 export function GeneralInfo() {
@@ -103,14 +99,8 @@ export function GeneralInfo() {
     }
   }, [boox]); 
 
-  const [ balanceOfCBP, setBalanceOfCBP ] = useState<string>('0');
   const [ balanceOfETH, setBalanceOfETH ] = useState(0n);
   const [ depositsOfETH, setDepositsOfETH ] = useState(0n);
-
-
-  const [ balanceOfUSD, setBalanceOfUSD ] = useState('0');
-  const [ escrowUSD, setEscrowUSD ] = useState('0');
-  const [ depositUSD, setDepositUSD ] = useState('0');
 
   useEffect(()=>{
     if (gk) {
@@ -118,32 +108,10 @@ export function GeneralInfo() {
       balanceOfWei(gk).then(
         res => setBalanceOfETH(res)
       )
-
-      balanceOf(gk, undefined).then(
-        res => setBalanceOfCBP(res.toString())        
-      )
     
       totalDeposits(gk, undefined).then(
         res => setDepositsOfETH(res)
       )
-    }
-
-    if (boox) {
-
-      const cashier = boox[booxMap.Cashier];
-
-      balanceOfComp(cashier, undefined).then(
-        res => setBalanceOfUSD(res.toString())
-      );
-
-      totalEscrow(cashier, undefined).then(
-        res => setEscrowUSD(res.toString())
-      );
-
-      totalUsdDeposits(cashier, undefined).then(
-        res => setDepositUSD(res.toString())
-      );
-
     }
 
   }, [ gk, boox, time ]);
@@ -330,393 +298,6 @@ export function GeneralInfo() {
         </Grid>
 
         <CashBox />
-
-        {/* <Paper elevation={3} sx={{m:1, p:1, }} >
-
-          <Stack direction='row' sx={{ alignItems:'center' }} >
-    
-            <Typography variant='h5' sx={{ m:2, textDecoration:'underline'  }}  >
-              <b>Cash Box</b>
-            </Typography>
-
-            <PickupDeposit refresh={refresh} />
-
-            <DepositOfMine />
-
-          </Stack>
-
-          <Grid container direction='row' spacing={1} sx={{width:'100%'}} >
-
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField
-                size="small"
-                variant='outlined'
-                label='(GUSDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value = {longDataParser(
-                  balanceOfUSD.length > 15 ? balanceOfUSD.substring(0, balanceOfUSD.length - 15) : '0'
-                )}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(USDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                  balanceOfUSD.length > 6 
-                    ? balanceOfUSD.length > 15
-                      ? balanceOfUSD.substring(balanceOfUSD.length - 15, balanceOfUSD.length - 6)
-                      : balanceOfUSD.substring(0, balanceOfUSD.length - 6) 
-                    : '0'
-                )}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(Micro-USDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'left'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                  balanceOfUSD.length > 6
-                    ? balanceOfUSD.substring(balanceOfUSD.length - 6)
-                    : balanceOfUSD
-                )}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(ETH)'
-                inputProps={{
-                  readOnly: true,
-                  style: { textAlign: "right" },
-                }}
-                color = "success"
-                sx={{
-                  m:1,
-                }}
-                value={ getEthPart(cap) }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(GWei)'
-                inputProps={{
-                  readOnly: true,
-                  style: { textAlign: "left" },
-                }}
-                color = "success"
-                sx={{
-                  m:1,
-                }}
-                value={ getGWeiPart(cap) }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(Wei)'
-                inputProps={{
-                  readOnly: true,
-                  style: { textAlign: "left" },
-                }}
-                color = "success"
-                sx={{
-                  m:1,
-                }}
-                value={ getWeiPart(cap) }
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(CBP)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ getEthPart(balanceOfCBP) }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(GLee)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'left'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ getGWeiPart(balanceOfCBP) }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='(Lee)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'left'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ getWeiPart(balanceOfCBP)}
-                fullWidth
-              />
-            </Grid>
-
-          </Grid>
-      
-          <Divider orientation="horizontal" flexItem sx={{ m:1 }} />
-
-          <Grid container direction='row' spacing={1} sx={{width:'100%'}} >
-
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Escrow (GUSDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value = {longDataParser(
-                  escrowUSD.length > 15 ? escrowUSD.substring(0, escrowUSD.length - 15) : '0'
-                )}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Escrow (USDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                  escrowUSD.length > 6 
-                    ? escrowUSD.length > 15
-                      ? escrowUSD.substring(escrowUSD.length - 15, escrowUSD.length - 6)
-                      : escrowUSD.substring(0, escrowUSD.length - 6) 
-                    : '0'
-                )}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Escrow (Micro-USDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'left'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                  escrowUSD.length > 6
-                    ? escrowUSD.substring(escrowUSD.length - 6)
-                    : escrowUSD
-                )}
-                fullWidth
-              />
-            </Grid>
-
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Escrow (ETH)'
-                inputProps={{
-                  readOnly: true,
-                  style: { textAlign: "right" },
-                }}
-                color = "success"
-                sx={{
-                  m:1,
-                }}
-                value={ getEthPart(depositsOfETH.toString()) }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Escrow (GWei)'
-                inputProps={{
-                  readOnly: true,
-                  style: { textAlign: "left" },
-                }}
-                color = "success"
-                sx={{
-                  m:1,
-                }}
-                value={ getGWeiPart(depositsOfETH.toString()) }
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Escrow (Wei)'
-                inputProps={{
-                  readOnly: true,
-                  style: { textAlign: "left" },
-                }}
-                color = "success"
-                sx={{
-                  m:1,
-                }}
-                value={ getWeiPart(depositsOfETH.toString()) }
-                fullWidth
-              />     
-            </Grid>
-
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Deposit (GUSDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value = {longDataParser(
-                  depositUSD.length > 15 ? depositUSD.substring(0, depositUSD.length - 15) : '0'
-                )}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Deposit (USDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'right'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                  depositUSD.length > 6 
-                    ? depositUSD.length > 15
-                      ? depositUSD.substring(depositUSD.length - 15, depositUSD.length - 6)
-                      : depositUSD.substring(0, depositUSD.length - 6) 
-                    : '0'
-                )}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={1.3} md={1.3} lg={1.3} >
-              <TextField 
-                size="small"
-                variant='outlined'
-                label='Deposit (Micro-USDC)'
-                inputProps={{
-                  readOnly: true,
-                  style: {textAlign: 'left'},
-                }}
-                color = "primary"
-                focused
-                sx={{
-                  m:1,
-                }}
-                value={ longDataParser(
-                  depositUSD.length > 6
-                    ? depositUSD.substring(depositUSD.length - 6)
-                    : depositUSD
-                )}
-                fullWidth
-              />
-            </Grid>
-
-
-          </Grid>
-
-        </Paper> */}
 
         {compInfo?.regNum == 8 && (
           <FinStatement />
