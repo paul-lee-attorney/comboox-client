@@ -69,7 +69,7 @@ export const sumArrayOfEthInflow = (arr: Cashflow[]): EthInflowSum => {
           sum.premiumInUsd += v.usd;
           break;
       }  
-    });  
+    });
   }
 
   sum.flag = true;
@@ -185,7 +185,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           recievedCashLogs = [...recievedCashLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
         }catch(error){
-          console.error("Error fetching receievedCashLogs:", error);
+          console.error("Error fetching recievedCashLogs:", error);
           break;
         }
       }

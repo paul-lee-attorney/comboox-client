@@ -114,7 +114,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       if ( !gk || !keepers ) return;
 
       let logs = await getFinData(gk, 'cbpOutflow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
+
       // console.log('lastItemOfCbpOutflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
@@ -137,16 +139,31 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let newUserAwardLogs = await client.getLogs({
-        address: AddrOfRegCenter,
-        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        args: {
-          from: AddrZero,
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let newUserAwardLogs:any = [];
+
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: AddrOfRegCenter,
+            event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+            args: {
+              from: AddrZero,
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          newUserAwardLogs = [...newUserAwardLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching newUserAwardLogs:", error);
+          break;
+        }
+      }
     
-      newUserAwardLogs = newUserAwardLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+      newUserAwardLogs = newUserAwardLogs.filter(v => (v.blockNumber > fromBlkNum) &&
           v.args.to?.toLowerCase() != gk.toLowerCase());
       // console.log('newUserAwardlogs: ', newUserAwardLogs);
 
@@ -185,13 +202,28 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let fuelSoldLogs = await client.getLogs({
-        address: [AddrOfTank, HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
-        event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let fuelSoldLogs:any = [];
 
-      fuelSoldLogs = fuelSoldLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: [AddrOfTank, HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
+            event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          fuelSoldLogs = [...fuelSoldLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching fuelSoldLogs:", error);
+          break;
+        }
+      }
+
+      fuelSoldLogs = fuelSoldLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('fuelSoldLogs: ')
     
       len = fuelSoldLogs.length;
@@ -224,16 +256,31 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let gmmTransferLogs = await client.getLogs({
-        address: keepers[keepersMap.GMMKeeper],
-        event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        args: {
-          isCBP: true
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let gmmTransferLogs:any = [];
+
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: keepers[keepersMap.GMMKeeper],
+            event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
+            args: {
+              isCBP: true
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          gmmTransferLogs = [...gmmTransferLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching gmmTransferLogs:", error);
+          break;
+        }
+      }
     
-      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > fromBlkNum) &&
           v.args.isCBP == true &&
           v.args.to?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.to?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
@@ -271,16 +318,31 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let bmmTransferLogs = await client.getLogs({
-        address: keepers[keepersMap.BMMKeeper],
-        event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        args:{
-          isCBP: true
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let bmmTransferLogs:any = [];
 
-      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: keepers[keepersMap.BMMKeeper],
+            event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
+            args:{
+              isCBP: true
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          bmmTransferLogs = [...bmmTransferLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching bmmTransferLogs:", error);
+          break;
+        }
+      }
+
+      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
 
       len = bmmTransferLogs.length;

@@ -109,7 +109,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       if (!gk || !keepers ) return;
 
       let logs = await getFinData(gk, 'ethOutflow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
       // console.log('lastItemOfEthOutflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
@@ -132,16 +133,31 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let gmmTransferLogs = await client.getLogs({
-        address: keepers[keepersMap.GMMKeeper],
-        event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        args: {
-          isCBP: false
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let gmmTransferLogs:any = [];
 
-      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: keepers[keepersMap.GMMKeeper],
+            event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
+            args: {
+              isCBP: false
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          gmmTransferLogs = [...gmmTransferLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching gmmTransferLogs:", error);
+          break;
+        }
+      }
+
+      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > fromBlkNum) &&
           (v.args.isCBP == false));
 
       // console.log('gmmTransferEthLogs: ', gmmTransferLogs);
@@ -178,13 +194,28 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let gmmExpenseLogs = await client.getLogs({
-        address: keepers[keepersMap.GMMKeeper],
-        event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let gmmExpenseLogs:any = [];
 
-      gmmExpenseLogs = gmmExpenseLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: keepers[keepersMap.GMMKeeper],
+            event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          gmmExpenseLogs = [...gmmExpenseLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching gmmExpenseLogs:", error);
+          break;
+        }
+      }
+
+      gmmExpenseLogs = gmmExpenseLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('gmmEthExpLogs: ', gmmExpenseLogs);
       
       len = gmmExpenseLogs.length;
@@ -218,16 +249,31 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let bmmTransferLogs = await client.getLogs({
-        address: keepers[keepersMap.BMMKeeper],
-        event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-        args: {
-          isCBP: false
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let bmmTransferLogs:any = [];
 
-      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: keepers[keepersMap.BMMKeeper],
+            event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
+            args: {
+              isCBP: false
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          bmmTransferLogs = [...bmmTransferLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching bmmTransferLogs:", error);
+          break;
+        }
+      }
+
+      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('bmmEthTransferLogs:', bmmTransferLogs);
 
       len = bmmTransferLogs.length;
@@ -261,13 +307,28 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let bmmExpenseLogs = await client.getLogs({
-        address: keepers[keepersMap.BMMKeeper],
-        event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let bmmExpenseLogs:any = [];
 
-      bmmExpenseLogs = bmmExpenseLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: keepers[keepersMap.BMMKeeper],
+            event: parseAbiItem('event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          bmmExpenseLogs = [...bmmExpenseLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching bmmExpenseLogs:", error);
+          break;
+        }
+      }
+
+      bmmExpenseLogs = bmmExpenseLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('bmmEthExpLogs: ', bmmExpenseLogs);
 
       len = bmmExpenseLogs.length;
@@ -301,16 +362,31 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let distributionLogs = await client.getLogs({
-        address: gk,
-        event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
-        args: {
-          reason: HexParser(ethers.encodeBytes32String("DistributeProfits"))
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let distributionLogs:any = [];
 
-      distributionLogs = distributionLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: gk,
+            event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
+            args: {
+              reason: HexParser(ethers.encodeBytes32String("DistributeProfits"))
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          distributionLogs = [...distributionLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching distributionLogs:", error);
+          break;
+        }
+      }
+
+      distributionLogs = distributionLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('distributionLogs: ', distributionLogs);
 
       len = distributionLogs.length;

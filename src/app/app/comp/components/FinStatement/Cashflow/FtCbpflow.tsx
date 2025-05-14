@@ -112,7 +112,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       if (!gk || !keepers) return;
 
       let logs = await getFinData(gk, 'ftCbpflow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
       // console.log('lastItemOfFtCbpflow: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
@@ -140,17 +141,32 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let addCbpLogs = await client.getLogs({
-        address: AddrOfRegCenter,
-        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        args: {
-          from: gk,
-          to: ftHis,
-        },
-        fromBlock: lastBlkNum ? lastBlkNum + 1n : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let addCbpLogs:any = [];
 
-      addCbpLogs = addCbpLogs.filter( v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: AddrOfRegCenter,
+            event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+            args: {
+              from: gk,
+              to: ftHis,
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          addCbpLogs = [...addCbpLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching addCbpLogs:", error);
+          break;
+        }
+      }
+
+      addCbpLogs = addCbpLogs.filter( v => v.blockNumber > fromBlkNum);
       // console.log('addCbpLogs: ', addCbpLogs);
     
       let len = addCbpLogs.length;
@@ -183,13 +199,28 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let withdrawCbpLogs = await client.getLogs({
-        address: ftHis,
-        event: parseAbiItem('event WithdrawFuel(address indexed owner, uint indexed amt)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let withdrawCbpLogs:any = [];
 
-      withdrawCbpLogs = withdrawCbpLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: ftHis,
+            event: parseAbiItem('event WithdrawFuel(address indexed owner, uint indexed amt)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          withdrawCbpLogs = [...withdrawCbpLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching withdrawCbpLogs:", error);
+          break;
+        }
+      }
+
+      withdrawCbpLogs = withdrawCbpLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('withdrawCbpLogs: ', withdrawCbpLogs);
 
       len = withdrawCbpLogs.length;
@@ -224,17 +255,32 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let deprecateLogs = await client.getLogs({
-        address: AddrOfRegCenter,
-        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        args: {
-          from: `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`,
-          to: gk,
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let deprecateLogs:any = [];
+
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: AddrOfRegCenter,
+            event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+            args: {
+              from: `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`,
+              to: gk,
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          deprecateLogs = [...deprecateLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching deprecateLogs:", error);
+          break;
+        }
+      }
     
-      deprecateLogs = deprecateLogs.filter(v => v.blockNumber > lastBlkNum);
+      deprecateLogs = deprecateLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('deprecateLogs: ', deprecateLogs);
 
       len = deprecateLogs.length;
@@ -267,13 +313,28 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let refuelLogs = await client.getLogs({
-        address: ftHis,
-        event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let refuelLogs:any = [];
 
-      refuelLogs = refuelLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: ftHis,
+            event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          refuelLogs = [...refuelLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching refuelLogs:", error);
+          break;
+        }
+      }
+
+      refuelLogs = refuelLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('refuelLogs: ', refuelLogs);
 
       len = refuelLogs.length;

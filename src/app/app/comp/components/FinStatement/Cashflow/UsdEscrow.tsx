@@ -106,24 +106,38 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
       if (!gk || !boox || !keepers) return;
 
       const cashier = boox[booxMap.Cashier];
-      const ros = boox[booxMap.ROS];
 
       let logs = await getFinData(gk, 'usdEscrow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
 
-      console.log('obtained usdEscrow logs:', logs);
+      // console.log('obtained usdEscrow logs:', logs);
 
       let arr: Cashflow[] = [];
 
-      let forwardUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let forwardUsdLogs:any = [];
 
-      forwardUsdLogs = forwardUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          forwardUsdLogs = [...forwardUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching forwardUsdLogs:", error);
+          break;
+        }
+      }
 
-      console.log('forwardUsdLogs: ', forwardUsdLogs);
+      forwardUsdLogs = forwardUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      // console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       let len = forwardUsdLogs.length;
       let cnt = 0;
@@ -152,13 +166,28 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let releaseUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let releaseUsdLogs:any = [];
 
-      releaseUsdLogs = releaseUsdLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          releaseUsdLogs = [...releaseUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching releaseUsdLogs:", error);
+          break;
+        }
+      }
+
+      releaseUsdLogs = releaseUsdLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
@@ -188,14 +217,29 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let custodyUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event CustodyUsd(address indexed from, uint indexed amt, bytes32 indexed remark)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let custodyUsdLogs:any = [];
 
-      custodyUsdLogs = custodyUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
-      console.log('custodyUsdLogs: ', custodyUsdLogs);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event CustodyUsd(address indexed from, uint indexed amt, bytes32 indexed remark)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          custodyUsdLogs = [...custodyUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching custodyUsdLogs:", error);
+          break;
+        }
+      }
+
+      custodyUsdLogs = custodyUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      // console.log('custodyUsdLogs: ', custodyUsdLogs);
 
       len = custodyUsdLogs.length;
       cnt = 0;
@@ -225,14 +269,29 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
       
-      let distributeUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event DistributeUsd(uint indexed amt)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let distributeUsdLogs:any = [];
 
-      distributeUsdLogs = distributeUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
-      console.log('distributeUsdLogs: ', distributeUsdLogs);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event DistributeUsd(uint indexed amt)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          distributeUsdLogs = [...distributeUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching distributeUsdLogs:", error);
+          break;
+        }
+      }
+
+      distributeUsdLogs = distributeUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      // console.log('distributeUsdLogs: ', distributeUsdLogs);
 
       len = distributeUsdLogs.length;
       cnt = 0;
@@ -262,14 +321,29 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let pickupUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let pickupUsdLogs:any = [];
 
-      pickupUsdLogs = pickupUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
-      console.log('pickupUsdLogs: ', pickupUsdLogs);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          pickupUsdLogs = [...pickupUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching pickupUsdLogs:", error);
+          break;
+        }
+      }
+
+      pickupUsdLogs = pickupUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      // console.log('pickupUsdLogs: ', pickupUsdLogs);
 
       len = pickupUsdLogs.length;
       cnt = 0;

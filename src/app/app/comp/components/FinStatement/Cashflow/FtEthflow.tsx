@@ -91,7 +91,8 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       if (!gk || !keepers) return;
 
       let logs = await getFinData(gk, 'ftEthflow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
       // console.log('lastItemOfEthOutflow: ', lastBlkNum);
 
       let arr:Cashflow[] = [];
@@ -116,15 +117,30 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
 
       } 
 
-      let refuelLogs = await client.getLogs({
-        address: [  AddrOfTank, 
-                    HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
-                    HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
-        event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let refuelLogs:any = [];
 
-      refuelLogs = refuelLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: [  AddrOfTank, 
+              HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
+              HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
+            event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          refuelLogs = [...refuelLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching refuelLogs:", error);
+          break;
+        }
+      }
+
+      refuelLogs = refuelLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('refuelLogs: ', refuelLogs);
 
       let len = refuelLogs.length;
@@ -158,15 +174,30 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let withdrawEthLogs = await client.getLogs({
-        address: [  AddrOfTank, 
-                    HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
-                    HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
-        event: parseAbiItem('event WithdrawIncome(address indexed owner, uint indexed amt)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let withdrawEthLogs:any = [];
 
-      withdrawEthLogs = withdrawEthLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: [  AddrOfTank, 
+              HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
+              HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
+            event: parseAbiItem('event WithdrawIncome(address indexed owner, uint indexed amt)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          withdrawEthLogs = [...withdrawEthLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching withdrawEthLogs:", error);
+          break;
+        }
+      }
+
+      withdrawEthLogs = withdrawEthLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('withdrawEthLogs: ', withdrawEthLogs);
       
       len = withdrawEthLogs.length;

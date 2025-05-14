@@ -144,7 +144,9 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       let logs = await getFinData(gk, 'cbpInflow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
+
       // console.log('lastItemOfCbpInflow: ', lastBlkNum);
 
       if (logs && client.chain.id == 42161) {
@@ -171,16 +173,31 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       } 
 
-      let transferLogs = await client.getLogs({
-        address: AddrOfRegCenter,
-        event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-        args: {
-          to: gk,
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let transferLogs:any = [];
 
-      transferLogs = transferLogs.filter(v => (v.blockNumber > lastBlkNum) &&
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: AddrOfRegCenter,
+            event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+            args: {
+              to: gk,
+            },
+            fromBlock: startBlkNum,
+            toBlock:endBlkNum,
+          });
+              
+          transferLogs = [...transferLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching transferLogs:", error);
+          break;
+        }
+      }
+
+      transferLogs = transferLogs.filter(v => (v.blockNumber > fromBlkNum) &&
           v.args.from?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
           v.args.from?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase());

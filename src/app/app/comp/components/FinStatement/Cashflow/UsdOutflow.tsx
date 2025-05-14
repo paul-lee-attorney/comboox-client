@@ -87,21 +87,36 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
       if (!gk || !boox || !keepers) return;
 
       const cashier = boox[booxMap.Cashier];
-      const ros = boox[booxMap.ROS];
 
       let logs = await getFinData(gk, 'usdOutflow');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
 
       let arr: Cashflow[] = [];
 
-      let transferUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt, bytes32 indexed remark)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let transferUsdLogs:any = [];
 
-      transferUsdLogs = transferUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
-      console.log('transferUsdLogs: ', transferUsdLogs);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt, bytes32 indexed remark)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          transferUsdLogs = [...transferUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching transferUsdLogs:", error);
+          break;
+        }
+      }
+
+      transferUsdLogs = transferUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      // console.log('transferUsdLogs: ', transferUsdLogs);
 
       let len = transferUsdLogs.length;
       let cnt = 0;
@@ -130,14 +145,29 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let distributeUsdLogs = await client.getLogs({
-        address: cashier,
-        event: parseAbiItem('event DistributeUsd(uint indexed amt)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let distributeUsdLogs:any = [];
 
-      distributeUsdLogs = distributeUsdLogs.filter(v => (v.blockNumber > lastBlkNum));
-      console.log('distributeUsdLogs: ', distributeUsdLogs);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: cashier,
+            event: parseAbiItem('event DistributeUsd(uint indexed amt)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          distributeUsdLogs = [...distributeUsdLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching distributeUsdLogs:", error);
+          break;
+        }
+      }
+
+      distributeUsdLogs = distributeUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      // console.log('distributeUsdLogs: ', distributeUsdLogs);
 
       len = distributeUsdLogs.length;
       cnt = 0;
@@ -166,18 +196,33 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
 
         cnt++;
       }
-      
-      let upgradeLogs = await client.getLogs({
-        address: csHis[0],
-        event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt)'),
-        args: {
-          to: cashier
-        },
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
 
-      upgradeLogs = upgradeLogs.filter(v => v.blockNumber > lastBlkNum);
-      console.log('upgradeLogs: ', upgradeLogs);
+      startBlkNum = fromBlkNum;
+      let upgradeLogs:any = [];
+
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: csHis[0],
+            event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt)'),
+            args: {
+              to: cashier
+            },
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          upgradeLogs = [...upgradeLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching upgradeLogs:", error);
+          break;
+        }
+      }      
+
+      upgradeLogs = upgradeLogs.filter(v => v.blockNumber > fromBlkNum);
+      // console.log('upgradeLogs: ', upgradeLogs);
 
       len = upgradeLogs.length;
       cnt = 0;

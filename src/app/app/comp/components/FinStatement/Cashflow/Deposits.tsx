@@ -143,7 +143,8 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       if (!gk) return;
 
       let logs = await getFinData(gk, 'deposits');
-      let lastBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      const toBlkNum = await client.getBlockNumber();
       // console.log('latestBlkOfDeposits: ', lastBlkNum);
 
       let arr: Cashflow[] = [];
@@ -166,13 +167,28 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let pickupLogs = await client.getLogs({
-        address: gk,
-        event: parseAbiItem('event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      let startBlkNum = fromBlkNum;
+      let pickupLogs:any = [];
 
-      pickupLogs = pickupLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: gk,
+            event: parseAbiItem('event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          pickupLogs = [...pickupLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching pickupLogs:", error);
+          break;
+        }
+      }
+
+      pickupLogs = pickupLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('pickupLogs: ', pickupLogs);
 
       let len = pickupLogs.length;
@@ -206,13 +222,28 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let depositLogs = await client.getLogs({
-        address: gk,
-        event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let depositLogs:any = [];
 
-      depositLogs = depositLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: gk,
+            event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          depositLogs = [...depositLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching depositLogs:", error);
+          break;
+        }
+      }
+
+      depositLogs = depositLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('depositLogs: ', depositLogs);
 
       len = depositLogs.length;
@@ -246,13 +277,28 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let custodyLogs = await client.getLogs({
-        address: gk,
-        event: parseAbiItem('event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)'),
-        fromBlock: lastBlkNum > 0n ? (lastBlkNum + 1n) : 'earliest',
-      });
+      startBlkNum = fromBlkNum;
+      let custodyLogs:any = [];
 
-      custodyLogs = custodyLogs.filter(v => v.blockNumber > lastBlkNum);
+      while(startBlkNum <= toBlkNum) {
+        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        try{
+          let logs = await client.getLogs({
+            address: gk,
+            event: parseAbiItem('event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)'),
+            fromBlock: startBlkNum,
+            toBlock: endBlkNum,
+          });
+          
+          custodyLogs = [...custodyLogs, ...logs];
+          startBlkNum = endBlkNum + 1n;
+        }catch(error){
+          console.error("Error fetching custodyLogs:", error);
+          break;
+        }
+      }
+
+      custodyLogs = custodyLogs.filter(v => v.blockNumber > fromBlkNum);
       // console.log('custodyLogs: ', custodyLogs);
 
       len = custodyLogs.length;
