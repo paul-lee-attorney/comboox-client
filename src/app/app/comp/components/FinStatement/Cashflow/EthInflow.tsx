@@ -173,7 +173,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let recievedCashLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: gk,
@@ -230,7 +230,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let gasIncomeLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: ftHis,
@@ -285,7 +285,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let payInCapLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.ROMKeeper],
@@ -343,7 +343,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let payOffCIDealLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.ROAKeeper],
@@ -414,7 +414,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let closeBidAgainstInitOfferLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.LOOKeeper],
@@ -488,7 +488,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let closeInitOfferAgainstBidLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
 
           let logs = await client.getLogs({

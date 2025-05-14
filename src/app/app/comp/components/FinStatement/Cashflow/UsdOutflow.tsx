@@ -98,7 +98,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
       let transferUsdLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: cashier,
@@ -149,7 +149,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
       let distributeUsdLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: cashier,
@@ -201,7 +201,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
       let upgradeLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: csHis[0],

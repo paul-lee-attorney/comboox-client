@@ -145,7 +145,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       let addCbpLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: AddrOfRegCenter,
@@ -203,7 +203,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       let withdrawCbpLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: ftHis,
@@ -259,7 +259,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       let deprecateLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: AddrOfRegCenter,
@@ -317,7 +317,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       let refuelLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: ftHis,

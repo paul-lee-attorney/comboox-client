@@ -137,7 +137,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       let gmmTransferLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.GMMKeeper],
@@ -198,7 +198,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       let gmmExpenseLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.GMMKeeper],
@@ -253,7 +253,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       let bmmTransferLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.BMMKeeper],
@@ -311,7 +311,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       let bmmExpenseLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.BMMKeeper],
@@ -366,7 +366,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       let distributionLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: gk,

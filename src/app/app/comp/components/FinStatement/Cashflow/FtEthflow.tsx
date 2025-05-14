@@ -121,7 +121,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       let refuelLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: [  AddrOfTank, 
@@ -178,7 +178,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       let withdrawEthLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: [  AddrOfTank, 

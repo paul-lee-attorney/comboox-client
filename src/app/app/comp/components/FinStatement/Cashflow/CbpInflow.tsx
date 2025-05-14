@@ -177,7 +177,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       let transferLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: AddrOfRegCenter,

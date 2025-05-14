@@ -143,7 +143,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       let newUserAwardLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: AddrOfRegCenter,
@@ -206,7 +206,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       let fuelSoldLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: [AddrOfTank, HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
@@ -260,7 +260,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       let gmmTransferLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.GMMKeeper],
@@ -322,7 +322,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       let bmmTransferLogs:any = [];
 
       while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
+        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
         try{
           let logs = await client.getLogs({
             address: keepers[keepersMap.BMMKeeper],
