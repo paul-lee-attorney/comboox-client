@@ -19,7 +19,7 @@ type WagmiProviderType = {
 }
 
 export const { chains, publicClient, webSocketPublicClient } = configureChains(
-  [ hardhat, arbitrumSepolia, arbitrum,  mainnet ],
+  [ arbitrumSepolia, arbitrum ],
   // [ hardhat ],
   [
     alchemyProvider({
