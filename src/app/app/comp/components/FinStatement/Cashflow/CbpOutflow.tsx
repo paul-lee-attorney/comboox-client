@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrOfRegCenter, AddrOfTank, AddrZero, FirstUser, keepersMap, SecondUser } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { delay, HexParser } from "../../../../common/toolsKit";
+import { HexParser } from "../../../../common/toolsKit";
+import { fetchLogs } from "../../../../common/getLogs";
 
 export type CbpOutflowSum = {
   totalAmt: bigint;
@@ -114,10 +114,14 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       if ( !gk || !keepers ) return;
 
       let logs = await getFinData(gk, 'cbpOutflow');
-      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      const toBlkNum = await client.getBlockNumber();
 
-      console.log('lastItemOfCbpOutflow: ', fromBlkNum);
+      let fromBlkNum = await getFinDataTopBlk(gk, 'cbpInflow');
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      }
+      console.log('topBlk Of CbpOutflow: ', fromBlkNum);
+      
+      let toBlkNum = await client.getBlockNumber();
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -139,38 +143,19 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let startBlkNum = fromBlkNum;
-      let newUserAwardLogs:any = [];
-
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: AddrOfRegCenter,
-            event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-            args: {
-              from: AddrZero,
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-        
-          console.log("obtained logs:", logs);
-
-          newUserAwardLogs = [...newUserAwardLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching newUserAwardLogs:", error);
-          break;
-        }
-      }
+      let newUserAwardLogs = await fetchLogs({
+        address: AddrOfRegCenter,
+        eventAbiString: 'event Transfer(address indexed from, address indexed to, uint256 indexed value)',
+        args: {
+          from: AddrZero,
+        },
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
     
-      newUserAwardLogs = newUserAwardLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
-          v.args.to?.toLowerCase() != gk.toLowerCase());
-      // console.log('newUserAwardlogs: ', newUserAwardLogs);
+      newUserAwardLogs = newUserAwardLogs.filter((v:any) => v.args.to?.toLowerCase() != gk.toLowerCase());
+      console.log('newUserAwardlogs: ', newUserAwardLogs);
 
       let len = newUserAwardLogs.length;
       let cnt = 0;
@@ -207,34 +192,16 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let fuelSoldLogs:any = [];
+      let fuelSoldLogs = await fetchLogs({
+        address: [AddrOfTank, HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });          
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: [AddrOfTank, HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")],
-            event: parseAbiItem('event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-
-          console.log("obtained logs:", logs);
-          
-          fuelSoldLogs = [...fuelSoldLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching fuelSoldLogs:", error);
-          break;
-        }
-      }
-
-      fuelSoldLogs = fuelSoldLogs.filter((v:any) => v.blockNumber > fromBlkNum);
-      // console.log('fuelSoldLogs: ')
+      // fuelSoldLogs = fuelSoldLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('fuelSoldLogs: ', fuelSoldLogs);
     
       len = fuelSoldLogs.length;
       cnt = 0;
@@ -266,42 +233,24 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let gmmTransferLogs:any = [];
-
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: keepers[keepersMap.GMMKeeper],
-            event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-            args: {
-              isCBP: true
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-
-          console.log("obtained logs:", logs);
-          
-          gmmTransferLogs = [...gmmTransferLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching gmmTransferLogs:", error);
-          break;
-        }
-      }
+      let gmmTransferLogs = await fetchLogs({
+        address: keepers[keepersMap.GMMKeeper],
+        eventAbiString: 'event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)',
+        args: {
+          isCBP: true
+        },
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
     
-      gmmTransferLogs = gmmTransferLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
+      gmmTransferLogs = gmmTransferLogs.filter((v:any) => 
           v.args.isCBP == true &&
           v.args.to?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.to?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
           v.args.to?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase() );
 
-      // console.log('gmmTransferCbpLogs: ', gmmTransferLogs);
+      console.log('gmmTransferCbpLogs: ', gmmTransferLogs);
 
       len = gmmTransferLogs.length;
       cnt = 0;
@@ -333,36 +282,18 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let bmmTransferLogs:any = [];
+      let bmmTransferLogs = await fetchLogs({
+        address: keepers[keepersMap.BMMKeeper],
+        eventAbiString: 'event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)',
+        args:{
+          isCBP: true
+        },
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: keepers[keepersMap.BMMKeeper],
-            event: parseAbiItem('event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)'),
-            args:{
-              isCBP: true
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          
-          console.log("obtained logs:", logs);
-
-          bmmTransferLogs = [...bmmTransferLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-        }catch(error){
-          console.error("Error fetching bmmTransferLogs:", error);
-          break;
-        }
-      }
-
-      bmmTransferLogs = bmmTransferLogs.filter((v:any) => v.blockNumber > fromBlkNum);
-      // console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
+      console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
 
       len = bmmTransferLogs.length;
       cnt = 0;
@@ -394,6 +325,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         appendItem(item, ethPrices);
         cnt++;
       }
+
+      await setFinDataTopBlk(gk, 'cbpOutflow', toBlkNum);
+      console.log('updated topBlk Of CbpOutflow: ', toBlkNum);
 
       if (arr.length > 0) {
 

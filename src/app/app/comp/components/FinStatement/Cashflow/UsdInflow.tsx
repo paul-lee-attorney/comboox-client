@@ -2,12 +2,13 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrZero, booxMap, Bytes32Zero, HexType, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem, decodeEventLog } from "viem";
+import { decodeEventLog } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
 import { registerOfSharesABI, usdRomKeeperABI } from "../../../../../../../generated";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
-import { addrToUint, delay, HexParser } from "../../../../common/toolsKit";
+import { addrToUint, HexParser } from "../../../../common/toolsKit";
+import { fetchLogs } from "../../../../common/getLogs";
 
 export type UsdInflowSum = {
   totalAmt: bigint;
@@ -98,10 +99,14 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
       const ros = boox[booxMap.ROS];
 
       let logs = await getFinData(gk, 'usdInflow');
-      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      const toBlkNum = await client.getBlockNumber();
 
-      console.log('obtained usdInflow logs:', logs);
+      let fromBlkNum = await getFinDataTopBlk(gk, 'usdInflow');
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      };
+
+      console.log('topBlk of usdInflow: ', fromBlkNum);
+      let toBlkNum = await client.getBlockNumber();
 
       let arr: Cashflow[] = [];
 
@@ -140,32 +145,14 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         } 
       }
 
-      let startBlkNum = fromBlkNum;
-      let payInCapLogs:any = [];
+      let payInCapLogs = await fetchLogs({
+        address: [cashier, csHis[0]],
+        eventAbiString: 'event ReceiveUsd(address indexed from, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: [cashier, csHis[0]],
-            event: parseAbiItem('event ReceiveUsd(address indexed from, uint indexed amt)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          payInCapLogs = [...payInCapLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching payInCapLogs:", error);
-          break;
-        }
-      }
-
-      payInCapLogs = payInCapLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('payInCapLogs: ', payInCapLogs);
 
       let len = payInCapLogs.length;
@@ -212,36 +199,17 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let releaseUsdLogs:any = [];
+      let releaseUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
+        args: {
+          to: cashier
+        },        
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
-            args: {
-              to: cashier
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-
-          console.log("obtained logs:", logs);
-          
-          releaseUsdLogs = [...releaseUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching releaseUsdLogs:", error);
-          break;
-        }
-      }
-
-      releaseUsdLogs = releaseUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
@@ -291,35 +259,17 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let forwardUsdLogs:any = [];
+      let forwardUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
+        args: {
+          to: cashier
+        },        
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
-            args: {
-              to: cashier
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          forwardUsdLogs = [...forwardUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching forwardUsdLogs:", error);
-          break;
-        }
-      }
-
-      forwardUsdLogs = forwardUsdLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       len = forwardUsdLogs.length;
@@ -369,35 +319,17 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let upgradeLogs:any = [];
+      let upgradeLogs = await fetchLogs({
+        address: csHis[0],
+        eventAbiString: 'event TransferUsd(address indexed to, uint indexed amt)',
+        args: {
+          to: cashier
+        },        
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: csHis[0],
-            event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt)'),
-            args: {
-              to: cashier
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          upgradeLogs = [...upgradeLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching upgradeLogs:", error);
-          break;
-        }
-      }
-
-      upgradeLogs = upgradeLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       console.log('upgradeLogs: ', upgradeLogs);
 
       len = upgradeLogs.length;
@@ -428,7 +360,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }      
 
-      console.log('arr in usdInflow:', arr);
+      await setFinDataTopBlk(gk, 'usdInflow', toBlkNum);
+      console.log('updated topBlk Of usdInflow: ', toBlkNum);
 
       if (arr.length > 0) {
         

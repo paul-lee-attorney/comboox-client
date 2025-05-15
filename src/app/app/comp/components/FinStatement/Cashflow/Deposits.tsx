@@ -2,12 +2,11 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrZero, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { delay } from "../../../../common/toolsKit";
+import { fetchLogs } from "../../../../common/getLogs";
 
 export type DepositsSum = {
   totalAmt: bigint;
@@ -144,9 +143,14 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       if (!gk) return;
 
       let logs = await getFinData(gk, 'deposits');
-      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      const toBlkNum = await client.getBlockNumber();
-      // console.log('latestBlkOfDeposits: ', lastBlkNum);
+
+      let fromBlkNum = await getFinDataTopBlk(gk, 'deposits');
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      }
+      console.log('topBlk Of deposits: ', fromBlkNum);
+      
+      let toBlkNum = await client.getBlockNumber();
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -168,34 +172,15 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let startBlkNum = fromBlkNum;
-      let pickupLogs:any = [];
+      let pickupLogs = await fetchLogs({
+        address: gk,
+        eventAbiString: 'event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: gk,
-            event: parseAbiItem('event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-
-          console.log("obtained logs:", logs);
-          
-          pickupLogs = [...pickupLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-          
-        }catch(error){
-          console.error("Error fetching pickupLogs:", error);
-          break;
-        }
-      }
-
-      pickupLogs = pickupLogs.filter((v:any) => v.blockNumber > fromBlkNum);
-      // console.log('pickupLogs: ', pickupLogs);
+      console.log('pickupLogs: ', pickupLogs);
 
       let len = pickupLogs.length;
       let cnt = 0;
@@ -228,34 +213,15 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let depositLogs:any = [];
+      let depositLogs = await fetchLogs({
+        address: gk,
+        eventAbiString: 'event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: gk,
-            event: parseAbiItem('event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-
-          console.log("obtained logs:", logs);
-          
-          depositLogs = [...depositLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-          
-        }catch(error){
-          console.error("Error fetching depositLogs:", error);
-          break;
-        }
-      }
-
-      depositLogs = depositLogs.filter((v:any) => v.blockNumber > fromBlkNum);
-      // console.log('depositLogs: ', depositLogs);
+      console.log('depositLogs: ', depositLogs);
 
       len = depositLogs.length;
       cnt = 0;
@@ -288,34 +254,15 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let custodyLogs:any = [];
+      let custodyLogs = await fetchLogs({
+        address: gk,
+        eventAbiString: 'event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: gk,
-            event: parseAbiItem('event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-
-          console.log("obtained logs:", logs);
-          
-          custodyLogs = [...custodyLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching custodyLogs:", error);
-          break;
-        }
-      }
-
-      custodyLogs = custodyLogs.filter((v:any) => v.blockNumber > fromBlkNum);
-      // console.log('custodyLogs: ', custodyLogs);
+      console.log('custodyLogs: ', custodyLogs);
 
       len = custodyLogs.length;
       cnt = 0;
@@ -347,6 +294,9 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         appendItem(item, ethPrices);
         cnt++;
       }
+
+      await setFinDataTopBlk(gk, 'deposits', toBlkNum);
+      console.log('updated topBlk Of deposits: ', toBlkNum);
 
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));

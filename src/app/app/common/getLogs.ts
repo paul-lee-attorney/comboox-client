@@ -1,15 +1,15 @@
 
-import { parseAbiItem} from "viem";
+import { parseAbiItem } from "viem";
 import { HexType } from ".";
 import { delay } from "./toolsKit";
 import { PublicClient } from "wagmi";
 
 
 interface FetchLogsParams {
-  address: HexType;
+  address: HexType | HexType[];
   eventAbiString: string;
   args?: Record<string, any>;
-  startBlkNum: bigint;
+  fromBlkNum: bigint;
   toBlkNum: bigint;
   client: PublicClient;
 };
@@ -18,13 +18,13 @@ export const fetchLogs = async ({
   address,
   eventAbiString,
   args = {},
-  startBlkNum,
+  fromBlkNum,
   toBlkNum,
   client,
-}:FetchLogsParams): Promise<any[] | undefined> => {
+}:FetchLogsParams): Promise<any[]> => {
   
   let allLogs:any[] = [];
-  let currentBlk = startBlkNum;
+  let currentBlk = fromBlkNum;
   
   const eventFilter = parseAbiItem(eventAbiString);
 
@@ -46,6 +46,8 @@ export const fetchLogs = async ({
           fromBlock: currentBlk,
           toBlock: endBlk,
         });
+
+        console.log('obtained logs:', logs);
 
         allLogs = [...allLogs, ...logs];
         currentBlk = endBlk + 1n;

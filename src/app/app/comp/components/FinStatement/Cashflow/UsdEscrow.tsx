@@ -1,11 +1,12 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrZero, booxMap, Bytes32Zero, HexType } from "../../../../common";
+import { AddrZero, booxMap, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem, hexToString } from "viem";
+import { hexToString } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { addrToUint, delay } from "../../../../common/toolsKit";
+import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { addrToUint } from "../../../../common/toolsKit";
+import { fetchLogs } from "../../../../common/getLogs";
 
 export type UsdEscrowSum = {
   totalAmt: bigint;
@@ -108,39 +109,25 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
       const cashier = boox[booxMap.Cashier];
 
       let logs = await getFinData(gk, 'usdEscrow');
-      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      const toBlkNum = await client.getBlockNumber();
 
-      console.log('obtained usdEscrow logs:', logs);
+      let fromBlkNum = await getFinDataTopBlk(gk, 'usdEscrow');
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      };
+
+      console.log('topBlk of usdEscrow: ', fromBlkNum);
+      let toBlkNum = await client.getBlockNumber();
 
       let arr: Cashflow[] = [];
 
-      let startBlkNum = fromBlkNum;
-      let forwardUsdLogs:any = [];
+      let forwardUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          forwardUsdLogs = [...forwardUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-          
-        }catch(error){
-          console.error("Error fetching forwardUsdLogs:", error);
-          break;
-        }
-      }
-
-      forwardUsdLogs = forwardUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       let len = forwardUsdLogs.length;
@@ -170,32 +157,14 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let releaseUsdLogs:any = [];
+      let releaseUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          releaseUsdLogs = [...releaseUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching releaseUsdLogs:", error);
-          break;
-        }
-      }
-
-      releaseUsdLogs = releaseUsdLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
@@ -225,32 +194,14 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let custodyUsdLogs:any = [];
+      let custodyUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event CustodyUsd(address indexed from, uint indexed amt, bytes32 indexed remark)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event CustodyUsd(address indexed from, uint indexed amt, bytes32 indexed remark)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          custodyUsdLogs = [...custodyUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching custodyUsdLogs:", error);
-          break;
-        }
-      }
-
-      custodyUsdLogs = custodyUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('custodyUsdLogs: ', custodyUsdLogs);
 
       len = custodyUsdLogs.length;
@@ -280,33 +231,15 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
         cnt++;
       }
-      
-      startBlkNum = fromBlkNum;
-      let distributeUsdLogs:any = [];
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event DistributeUsd(uint indexed amt)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          distributeUsdLogs = [...distributeUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
+      let distributeUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString:'event DistributeUsd(uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching distributeUsdLogs:", error);
-          break;
-        }
-      }
-
-      distributeUsdLogs = distributeUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('distributeUsdLogs: ', distributeUsdLogs);
 
       len = distributeUsdLogs.length;
@@ -337,32 +270,14 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let pickupUsdLogs:any = [];
+      let pickupUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString:'event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          pickupUsdLogs = [...pickupUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching pickupUsdLogs:", error);
-          break;
-        }
-      }
-
-      pickupUsdLogs = pickupUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('pickupUsdLogs: ', pickupUsdLogs);
 
       len = pickupUsdLogs.length;
@@ -393,7 +308,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      console.log('arr in usdEscrow:', arr);
+      await setFinDataTopBlk(gk, 'usdEscrow', toBlkNum);
+      console.log('updated topBlk Of usdEscrow: ', toBlkNum);
 
       if (arr.length > 0) {
         

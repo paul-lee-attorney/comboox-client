@@ -2,12 +2,11 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrOfRegCenter, AddrOfTank, AddrZero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { decodeFunctionData, parseAbiItem } from "viem";
+import { decodeFunctionData } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, getFinDataTopBlk, getMonthLableByTimestamp, setFinData, setFinDataTopBlk, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
-import { delay } from "../../../../common/toolsKit";
 import { fetchLogs } from "../../../../common/getLogs";
 
 export type CbpInflowSum = {
@@ -146,8 +145,13 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       let logs = await getFinData(gk, 'cbpInflow');
-      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      const toBlkNum = await client.getBlockNumber();
+      let fromBlkNum = await getFinDataTopBlk(gk, 'cbpInflow');
+      
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      }
+      
+      let toBlkNum = await client.getBlockNumber();
 
       console.log('lastItemOfCbpInflow: ', fromBlkNum);
       console.log('current blkNum: ', toBlkNum);
@@ -176,46 +180,14 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       } 
 
-      // let startBlkNum = fromBlkNum;
-
       let transferLogs = await fetchLogs({
         address: AddrOfRegCenter, 
         eventAbiString: 'event Transfer(address indexed from, address indexed to, uint256 indexed value)',
         args: {to: gk},
-        startBlkNum: fromBlkNum,
+        fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
-
-      // while(startBlkNum <= toBlkNum) {
-      //   const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-      //   try{
-      //     let logs = await client.getLogs({
-      //       address: AddrOfRegCenter,
-      //       event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-      //       args: {
-      //         to: gk,
-      //       },
-      //       fromBlock: startBlkNum,
-      //       toBlock:endBlkNum,
-      //     });
-              
-      //     console.log("obtained logs of cbpTransferLogs:", logs);
-
-      //     transferLogs = [...transferLogs, ...logs];
-      //     startBlkNum = endBlkNum + 1n;
-
-      //     await delay(500);
-
-      //   }catch(error){
-      //     console.error("Error fetching transferLogs:", error);
-      //     break;
-      //   }
-
-
-      // }
-
-      if (!transferLogs) return;
 
       transferLogs = transferLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           v.args.from?.toLowerCase() != AddrOfTank.toLowerCase() &&
@@ -224,7 +196,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       console.log('transferLogs: ', transferLogs);
 
-      let len = transferLogs?.length;
+      let len = transferLogs.length;
       let cnt = 0;
 
       while (cnt < len) {
@@ -299,6 +271,9 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       console.log('arr in cbpInflow:', arr);
+
+      await setFinDataTopBlk(gk, 'cbpInflow', toBlkNum);
+      console.log('updated topBlk Of CbpInflow: ', toBlkNum);
 
       if (arr.length > 0) {
         

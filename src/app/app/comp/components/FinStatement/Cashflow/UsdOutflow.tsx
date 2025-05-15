@@ -1,12 +1,13 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrZero, booxMap, Bytes32Zero, HexType } from "../../../../common";
+import { AddrZero, booxMap, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem, hexToString } from "viem";
+import { hexToString } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { addrToUint, delay, HexParser } from "../../../../common/toolsKit";
+import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { addrToUint } from "../../../../common/toolsKit";
 import { csHis } from "./UsdInflow";
+import { fetchLogs } from "../../../../common/getLogs";
 
 export type UsdOutflowSum = {
   totalAmt: bigint;
@@ -89,41 +90,26 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
       const cashier = boox[booxMap.Cashier];
 
       let logs = await getFinData(gk, 'usdOutflow');
-      const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      const toBlkNum = await client.getBlockNumber();
 
-      console.log("obtained usdOutflow Logs:", logs);
+      let fromBlkNum = await getFinDataTopBlk(gk, 'usdOutflow');
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      };
 
+      console.log('topBlk of usdOutflow: ', fromBlkNum);
+      let toBlkNum = await client.getBlockNumber();
 
       let arr: Cashflow[] = [];
 
-      let startBlkNum = fromBlkNum;
-      let transferUsdLogs:any = [];
+      let transferUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event TransferUsd(address indexed to, uint indexed amt, bytes32 indexed remark)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt, bytes32 indexed remark)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          transferUsdLogs = [...transferUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching transferUsdLogs:", error);
-          break;
-        }
-      }
-
-      transferUsdLogs = transferUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
-      // console.log('transferUsdLogs: ', transferUsdLogs);
+      console.log('transferUsdLogs: ', transferUsdLogs);
 
       let len = transferUsdLogs.length;
       let cnt = 0;
@@ -152,31 +138,14 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let distributeUsdLogs:any = [];
+      let distributeUsdLogs = await fetchLogs({
+        address: cashier,
+        eventAbiString: 'event DistributeUsd(uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: cashier,
-            event: parseAbiItem('event DistributeUsd(uint indexed amt)'),
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          
-          distributeUsdLogs = [...distributeUsdLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching distributeUsdLogs:", error);
-          break;
-        }
-      }
-
-      distributeUsdLogs = distributeUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       console.log('distributeUsdLogs: ', distributeUsdLogs);
 
       len = distributeUsdLogs.length;
@@ -207,35 +176,17 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      startBlkNum = fromBlkNum;
-      let upgradeLogs:any = [];
+      let upgradeLogs = await fetchLogs({
+        address: csHis[0],
+        eventAbiString: 'event TransferUsd(address indexed to, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        args: {
+          to: cashier
+        },
+        toBlkNum: toBlkNum,
+        client: client,
+      });
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: csHis[0],
-            event: parseAbiItem('event TransferUsd(address indexed to, uint indexed amt)'),
-            args: {
-              to: cashier
-            },
-            fromBlock: startBlkNum,
-            toBlock: endBlkNum,
-          });
-          console.log("obtained logs:", logs);
-          
-          upgradeLogs = [...upgradeLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
-
-          await delay(500);
-
-        }catch(error){
-          console.error("Error fetching upgradeLogs:", error);
-          break;
-        }
-      }      
-
-      upgradeLogs = upgradeLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       console.log('upgradeLogs: ', upgradeLogs);
 
       len = upgradeLogs.length;
@@ -264,9 +215,10 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         arr.push(item);
 
         cnt++;
-      }      
+      }
 
-      console.log('arr in usdOutflow:', arr);
+      await setFinDataTopBlk(gk, 'usdOutflow', toBlkNum);
+      console.log('updated topBlk Of usdOutflow: ', toBlkNum);
 
       if (arr.length > 0) {
         

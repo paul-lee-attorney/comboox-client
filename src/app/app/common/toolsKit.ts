@@ -1,6 +1,5 @@
 import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
-import { keccak256, toHex } from "viem";
 import { HexType } from ".";
 import { waitForTransaction } from "@wagmi/core";
 import { Dispatch, SetStateAction } from "react";

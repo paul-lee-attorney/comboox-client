@@ -67,6 +67,22 @@ export function cashflowStringToData(input:CashflowStrProps[]): Cashflow[] {
   return output;
 }
 
+export async function getFinDataTopBlk(gk: HexType, typeOfInfo:string): Promise<bigint | undefined> {
+
+  // 获取特定文档
+  const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, 'topBlk');
+  const docSnap = await getDoc(docRef);
+
+  if (docSnap.exists()) {
+    let res = docSnap.data();
+    return BigInt(res.blockNumber);
+  } else {
+    console.log("no financial data found!");
+    return undefined;
+  }
+
+}
+
 export async function getFinDataByMonth(gk: HexType, typeOfInfo:string, month:string): Promise<Cashflow[] | undefined> {
 
   // 获取特定文档
@@ -111,6 +127,21 @@ export async function getFinData(gk: HexType, typeOfInfo: string): Promise<Cashf
     console.error("Error fetching financial data: ", error);
     return undefined;
   }
+}
+
+export async function setFinDataTopBlk(gk: HexType, typeOfInfo:string, blkNum:bigint): Promise<boolean> {
+
+  // 创建一个文档引用
+  const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, 'topBlk');
+
+  try {
+    await setDoc(docRef, {blockNumber: blkNum.toString()});
+    return true;
+  } catch (error: any) {
+    console.error("Error set financial data: ", error);
+    return false;
+  }
+
 }
 
 export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:string, data:Cashflow[]): Promise<boolean> {
