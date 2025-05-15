@@ -8,6 +8,7 @@ import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem }
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
 import { delay } from "../../../../common/toolsKit";
+import { fetchLogs } from "../../../../common/getLogs";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -175,36 +176,46 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       } 
 
-      let startBlkNum = fromBlkNum;
-      let transferLogs:any = [];
+      // let startBlkNum = fromBlkNum;
 
-      while(startBlkNum <= toBlkNum) {
-        const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
-        try{
-          let logs = await client.getLogs({
-            address: AddrOfRegCenter,
-            event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
-            args: {
-              to: gk,
-            },
-            fromBlock: startBlkNum,
-            toBlock:endBlkNum,
-          });
+      let transferLogs = await fetchLogs({
+        address: AddrOfRegCenter, 
+        eventAbiString: 'event Transfer(address indexed from, address indexed to, uint256 indexed value)',
+        args: {to: gk},
+        startBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      });
+
+      // while(startBlkNum <= toBlkNum) {
+      //   const endBlkNum = startBlkNum + 499n > toBlkNum ? toBlkNum : startBlkNum + 499n;
+      //   try{
+      //     let logs = await client.getLogs({
+      //       address: AddrOfRegCenter,
+      //       event: parseAbiItem('event Transfer(address indexed from, address indexed to, uint256 indexed value)'),
+      //       args: {
+      //         to: gk,
+      //       },
+      //       fromBlock: startBlkNum,
+      //       toBlock:endBlkNum,
+      //     });
               
-          console.log("obtained logs of cbpTransferLogs:", logs);
+      //     console.log("obtained logs of cbpTransferLogs:", logs);
 
-          transferLogs = [...transferLogs, ...logs];
-          startBlkNum = endBlkNum + 1n;
+      //     transferLogs = [...transferLogs, ...logs];
+      //     startBlkNum = endBlkNum + 1n;
 
-          await delay(500);
+      //     await delay(500);
 
-        }catch(error){
-          console.error("Error fetching transferLogs:", error);
-          break;
-        }
+      //   }catch(error){
+      //     console.error("Error fetching transferLogs:", error);
+      //     break;
+      //   }
 
 
-      }
+      // }
+
+      if (!transferLogs) return;
 
       transferLogs = transferLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           v.args.from?.toLowerCase() != AddrOfTank.toLowerCase() &&
@@ -213,7 +224,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       console.log('transferLogs: ', transferLogs);
 
-      let len = transferLogs.length;
+      let len = transferLogs?.length;
       let cnt = 0;
 
       while (cnt < len) {
