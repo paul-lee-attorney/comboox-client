@@ -208,7 +208,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
           v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
           v.args.from?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase());
 
-      // console.log('transferLogs: ', transferLogs);
+      console.log('transferLogs: ', transferLogs);
 
       let len = transferLogs.length;
       let cnt = 0;
@@ -286,7 +286,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      // console.log('arr in cbpInflow:', arr);
+      console.log('arr in cbpInflow:', arr);
 
       if (arr.length > 0) {
         
@@ -306,7 +306,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       if (logs && logs.length > 0) {
         logs = logs.map((v,i) => ({...v, seq:i}));
         setRecords(logs);
-        // console.log('logs in cbpInflow:', logs);
+        console.log('logs in cbpInflow:', logs);
       }
       
     }
