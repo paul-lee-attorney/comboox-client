@@ -119,7 +119,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       let logs = await getFinData(gk, 'ethInflow');
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
-      // console.log('lastItemOfEthInflow: ', lastBlkNum);
+      console.log('lastItemOfEthInflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -182,6 +182,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           recievedCashLogs = [...recievedCashLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -194,7 +196,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
     
-      recievedCashLogs = recievedCashLogs.filter(v => (v.blockNumber > fromBlkNum) &&
+      recievedCashLogs = recievedCashLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           (v.args.from?.toLowerCase() != ftHis[0].toLowerCase() ) && 
           (v.args.from?.toLowerCase() != ftHis[1].toLowerCase()) && 
           (v.args.from?.toLowerCase() != ftHis[2].toLowerCase()));
@@ -242,6 +244,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
               
           gasIncomeLogs = [...gasIncomeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -254,8 +258,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      gasIncomeLogs = gasIncomeLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('gasIncomeLogs: ', gasIncomeLogs);
+      gasIncomeLogs = gasIncomeLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('gasIncomeLogs: ', gasIncomeLogs);
     
       len = gasIncomeLogs.length;
       cnt = 0;
@@ -299,7 +303,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
-                  
+
+          console.log("obtained logs:", logs);
+          
           payInCapLogs = [...payInCapLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
@@ -311,8 +317,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      payInCapLogs = payInCapLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('payInCapLogs: ', payInCapLogs);
+      payInCapLogs = payInCapLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('payInCapLogs: ', payInCapLogs);
 
       len = payInCapLogs.length;
       cnt = 0;
@@ -359,7 +365,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
-                      
+
+          console.log("obtained logs:", logs);
+          
           payOffCIDealLogs = [...payOffCIDealLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
@@ -371,8 +379,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      payOffCIDealLogs = payOffCIDealLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('payOffCIDealLogs: ', payOffCIDealLogs);
+      payOffCIDealLogs = payOffCIDealLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('payOffCIDealLogs: ', payOffCIDealLogs);
 
       len = payOffCIDealLogs.length;
       cnt = 0;
@@ -432,7 +440,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
-                          
+
+          console.log("obtained logs:", logs);
+          
           closeBidAgainstInitOfferLogs = [...closeBidAgainstInitOfferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
@@ -444,8 +454,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      closeBidAgainstInitOfferLogs = closeBidAgainstInitOfferLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('closeBidAgainstInitOfferLogs: ', closeBidAgainstInitOfferLogs);
+      closeBidAgainstInitOfferLogs = closeBidAgainstInitOfferLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('closeBidAgainstInitOfferLogs: ', closeBidAgainstInitOfferLogs);
 
       len = closeBidAgainstInitOfferLogs.length;
       cnt = 0;
@@ -509,6 +519,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
                               
           closeInitOfferAgainstBidLogs = [...closeInitOfferAgainstBidLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -521,9 +532,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      closeInitOfferAgainstBidLogs = closeInitOfferAgainstBidLogs.filter(v => (v.blockNumber > fromBlkNum) &&
+      closeInitOfferAgainstBidLogs = closeInitOfferAgainstBidLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           (v.args.reason == '0x436c6f7365496e69744f66666572416761696e73744269640000000000000000'));
-      // console.log('CloseInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
+      console.log('CloseInitOfferAgainstBidLogs: ', closeInitOfferAgainstBidLogs);
 
       len = closeInitOfferAgainstBidLogs.length;
       cnt = 0;

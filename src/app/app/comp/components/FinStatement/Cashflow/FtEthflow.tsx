@@ -93,7 +93,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       let logs = await getFinData(gk, 'ftEthflow');
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
-      // console.log('lastItemOfEthOutflow: ', lastBlkNum);
+      console.log('lastItemOfEthOutflow: ', fromBlkNum);
 
       let arr:Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -131,6 +131,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           refuelLogs = [...refuelLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -143,8 +144,8 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
         }
       }
 
-      refuelLogs = refuelLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('refuelLogs: ', refuelLogs);
+      refuelLogs = refuelLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('refuelLogs: ', refuelLogs);
 
       let len = refuelLogs.length;
       let cnt = 0;
@@ -191,6 +192,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           withdrawEthLogs = [...withdrawEthLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -203,8 +205,8 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
         }
       }
 
-      withdrawEthLogs = withdrawEthLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('withdrawEthLogs: ', withdrawEthLogs);
+      withdrawEthLogs = withdrawEthLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('withdrawEthLogs: ', withdrawEthLogs);
       
       len = withdrawEthLogs.length;
       cnt = 0;

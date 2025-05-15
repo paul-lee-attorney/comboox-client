@@ -111,7 +111,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
 
-      // console.log('obtained usdEscrow logs:', logs);
+      console.log('obtained usdEscrow logs:', logs);
 
       let arr: Cashflow[] = [];
 
@@ -127,6 +127,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           forwardUsdLogs = [...forwardUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -139,8 +140,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      forwardUsdLogs = forwardUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('forwardUsdLogs: ', forwardUsdLogs);
+      forwardUsdLogs = forwardUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       let len = forwardUsdLogs.length;
       let cnt = 0;
@@ -181,6 +182,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           releaseUsdLogs = [...releaseUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -193,8 +195,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      releaseUsdLogs = releaseUsdLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('releaseUsdLogs: ', releaseUsdLogs);
+      releaseUsdLogs = releaseUsdLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
       cnt = 0;
@@ -235,6 +237,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           custodyUsdLogs = [...custodyUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -247,8 +250,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      custodyUsdLogs = custodyUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('custodyUsdLogs: ', custodyUsdLogs);
+      custodyUsdLogs = custodyUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('custodyUsdLogs: ', custodyUsdLogs);
 
       len = custodyUsdLogs.length;
       cnt = 0;
@@ -290,6 +293,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           distributeUsdLogs = [...distributeUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -302,8 +306,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      distributeUsdLogs = distributeUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('distributeUsdLogs: ', distributeUsdLogs);
+      distributeUsdLogs = distributeUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('distributeUsdLogs: ', distributeUsdLogs);
 
       len = distributeUsdLogs.length;
       cnt = 0;
@@ -345,6 +349,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           pickupUsdLogs = [...pickupUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -357,8 +362,8 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      pickupUsdLogs = pickupUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('pickupUsdLogs: ', pickupUsdLogs);
+      pickupUsdLogs = pickupUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('pickupUsdLogs: ', pickupUsdLogs);
 
       len = pickupUsdLogs.length;
       cnt = 0;

@@ -154,7 +154,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
-          
+        
+          console.log("obtained logs:", logs);
+
           newUserAwardLogs = [...newUserAwardLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
@@ -166,7 +168,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
     
-      newUserAwardLogs = newUserAwardLogs.filter(v => (v.blockNumber > fromBlkNum) &&
+      newUserAwardLogs = newUserAwardLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           v.args.to?.toLowerCase() != gk.toLowerCase());
       // console.log('newUserAwardlogs: ', newUserAwardLogs);
 
@@ -217,6 +219,8 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           fuelSoldLogs = [...fuelSoldLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -229,7 +233,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      fuelSoldLogs = fuelSoldLogs.filter(v => v.blockNumber > fromBlkNum);
+      fuelSoldLogs = fuelSoldLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       // console.log('fuelSoldLogs: ')
     
       len = fuelSoldLogs.length;
@@ -277,6 +281,8 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           gmmTransferLogs = [...gmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -289,7 +295,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
     
-      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > fromBlkNum) &&
+      gmmTransferLogs = gmmTransferLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           v.args.isCBP == true &&
           v.args.to?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.to?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
@@ -343,7 +349,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
             toBlock: endBlkNum,
           });
           
-          console.log("obtained bmmTransferLogs:", logs);
+          console.log("obtained logs:", logs);
 
           bmmTransferLogs = [...bmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -355,7 +361,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > fromBlkNum);
+      bmmTransferLogs = bmmTransferLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       // console.log('bmmTransferCbpLogs: ', bmmTransferLogs);
 
       len = bmmTransferLogs.length;

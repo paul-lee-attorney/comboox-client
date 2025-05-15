@@ -180,6 +180,8 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           pickupLogs = [...pickupLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -192,7 +194,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      pickupLogs = pickupLogs.filter(v => v.blockNumber > fromBlkNum);
+      pickupLogs = pickupLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       // console.log('pickupLogs: ', pickupLogs);
 
       let len = pickupLogs.length;
@@ -238,6 +240,8 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           depositLogs = [...depositLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -250,7 +254,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      depositLogs = depositLogs.filter(v => v.blockNumber > fromBlkNum);
+      depositLogs = depositLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       // console.log('depositLogs: ', depositLogs);
 
       len = depositLogs.length;
@@ -296,6 +300,8 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           custodyLogs = [...custodyLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -308,7 +314,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      custodyLogs = custodyLogs.filter(v => v.blockNumber > fromBlkNum);
+      custodyLogs = custodyLogs.filter((v:any) => v.blockNumber > fromBlkNum);
       // console.log('custodyLogs: ', custodyLogs);
 
       len = custodyLogs.length;

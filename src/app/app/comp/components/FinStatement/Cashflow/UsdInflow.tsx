@@ -101,7 +101,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
 
-      // console.log('obtained usdInflow logs:', logs);
+      console.log('obtained usdInflow logs:', logs);
 
       let arr: Cashflow[] = [];
 
@@ -152,6 +152,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           payInCapLogs = [...payInCapLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -164,8 +165,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      payInCapLogs = payInCapLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('payInCapLogs: ', payInCapLogs);
+      payInCapLogs = payInCapLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('payInCapLogs: ', payInCapLogs);
 
       let len = payInCapLogs.length;
       let cnt = 0;
@@ -226,6 +227,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           releaseUsdLogs = [...releaseUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -238,8 +241,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      releaseUsdLogs = releaseUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('releaseUsdLogs: ', releaseUsdLogs);
+      releaseUsdLogs = releaseUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
       cnt = 0;
@@ -303,6 +306,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           forwardUsdLogs = [...forwardUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -315,8 +319,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      forwardUsdLogs = forwardUsdLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('forwardUsdLogs: ', forwardUsdLogs);
+      forwardUsdLogs = forwardUsdLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       len = forwardUsdLogs.length;
       cnt = 0;
@@ -380,6 +384,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           upgradeLogs = [...upgradeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -392,8 +397,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      upgradeLogs = upgradeLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('upgradeLogs: ', upgradeLogs);
+      upgradeLogs = upgradeLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('upgradeLogs: ', upgradeLogs);
 
       len = upgradeLogs.length;
       cnt = 0;

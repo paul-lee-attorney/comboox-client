@@ -111,7 +111,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       let logs = await getFinData(gk, 'ethOutflow');
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
-      // console.log('lastItemOfEthOutflow: ', lastBlkNum);
+      console.log('lastItemOfEthOutflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -148,6 +148,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+
+          console.log("obtained logs:", logs);
           
           gmmTransferLogs = [...gmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -160,10 +162,10 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      gmmTransferLogs = gmmTransferLogs.filter(v => (v.blockNumber > fromBlkNum) &&
+      gmmTransferLogs = gmmTransferLogs.filter((v:any) => (v.blockNumber > fromBlkNum) &&
           (v.args.isCBP == false));
 
-      // console.log('gmmTransferEthLogs: ', gmmTransferLogs);
+      console.log('gmmTransferEthLogs: ', gmmTransferLogs);
 
       let len = gmmTransferLogs.length;
       let cnt = 0;
@@ -209,6 +211,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           gmmExpenseLogs = [...gmmExpenseLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -221,8 +224,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      gmmExpenseLogs = gmmExpenseLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('gmmEthExpLogs: ', gmmExpenseLogs);
+      gmmExpenseLogs = gmmExpenseLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('gmmEthExpLogs: ', gmmExpenseLogs);
       
       len = gmmExpenseLogs.length;
       cnt = 0;
@@ -270,6 +273,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           bmmTransferLogs = [...bmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -282,8 +286,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      bmmTransferLogs = bmmTransferLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('bmmEthTransferLogs:', bmmTransferLogs);
+      bmmTransferLogs = bmmTransferLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('bmmEthTransferLogs:', bmmTransferLogs);
 
       len = bmmTransferLogs.length;
       cnt = 0;
@@ -328,6 +332,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           bmmExpenseLogs = [...bmmExpenseLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -340,8 +345,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      bmmExpenseLogs = bmmExpenseLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('bmmEthExpLogs: ', bmmExpenseLogs);
+      bmmExpenseLogs = bmmExpenseLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('bmmEthExpLogs: ', bmmExpenseLogs);
 
       len = bmmExpenseLogs.length;
       cnt = 0;
@@ -389,6 +394,7 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           distributionLogs = [...distributionLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -401,8 +407,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      distributionLogs = distributionLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('distributionLogs: ', distributionLogs);
+      distributionLogs = distributionLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('distributionLogs: ', distributionLogs);
 
       len = distributionLogs.length;
       cnt = 0;

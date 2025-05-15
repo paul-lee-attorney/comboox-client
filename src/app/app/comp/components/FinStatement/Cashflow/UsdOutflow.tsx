@@ -92,6 +92,9 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
 
+      console.log("obtained usdOutflow Logs:", logs);
+
+
       let arr: Cashflow[] = [];
 
       let startBlkNum = fromBlkNum;
@@ -106,6 +109,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           transferUsdLogs = [...transferUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -118,7 +122,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      transferUsdLogs = transferUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
+      transferUsdLogs = transferUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
       // console.log('transferUsdLogs: ', transferUsdLogs);
 
       let len = transferUsdLogs.length;
@@ -172,8 +176,8 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }
 
-      distributeUsdLogs = distributeUsdLogs.filter(v => (v.blockNumber > fromBlkNum));
-      // console.log('distributeUsdLogs: ', distributeUsdLogs);
+      distributeUsdLogs = distributeUsdLogs.filter((v:any) => (v.blockNumber > fromBlkNum));
+      console.log('distributeUsdLogs: ', distributeUsdLogs);
 
       len = distributeUsdLogs.length;
       cnt = 0;
@@ -218,6 +222,7 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           upgradeLogs = [...upgradeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -230,8 +235,8 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       }      
 
-      upgradeLogs = upgradeLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('upgradeLogs: ', upgradeLogs);
+      upgradeLogs = upgradeLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('upgradeLogs: ', upgradeLogs);
 
       len = upgradeLogs.length;
       cnt = 0;

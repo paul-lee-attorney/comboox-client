@@ -114,7 +114,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       let logs = await getFinData(gk, 'ftCbpflow');
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
-      // console.log('lastItemOfFtCbpflow: ', lastBlkNum);
+      console.log('lastItemOfFtCbpflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -157,6 +157,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           addCbpLogs = [...addCbpLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -169,8 +170,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      addCbpLogs = addCbpLogs.filter( v => v.blockNumber > fromBlkNum);
-      // console.log('addCbpLogs: ', addCbpLogs);
+      addCbpLogs = addCbpLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('addCbpLogs: ', addCbpLogs);
     
       let len = addCbpLogs.length;
       let cnt = 0;
@@ -214,6 +215,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           withdrawCbpLogs = [...withdrawCbpLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -226,8 +228,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      withdrawCbpLogs = withdrawCbpLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('withdrawCbpLogs: ', withdrawCbpLogs);
+      withdrawCbpLogs = withdrawCbpLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('withdrawCbpLogs: ', withdrawCbpLogs);
 
       len = withdrawCbpLogs.length;
       cnt = 0;
@@ -277,6 +279,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           deprecateLogs = [...deprecateLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -289,8 +292,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
     
-      deprecateLogs = deprecateLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('deprecateLogs: ', deprecateLogs);
+      deprecateLogs = deprecateLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('deprecateLogs: ', deprecateLogs);
 
       len = deprecateLogs.length;
       cnt = 0;
@@ -334,6 +337,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
             fromBlock: startBlkNum,
             toBlock: endBlkNum,
           });
+          console.log("obtained logs:", logs);
           
           refuelLogs = [...refuelLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
@@ -346,8 +350,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       }
 
-      refuelLogs = refuelLogs.filter(v => v.blockNumber > fromBlkNum);
-      // console.log('refuelLogs: ', refuelLogs);
+      refuelLogs = refuelLogs.filter((v:any) => v.blockNumber > fromBlkNum);
+      console.log('refuelLogs: ', refuelLogs);
 
       len = refuelLogs.length;
       cnt = 0;
