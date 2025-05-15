@@ -149,6 +149,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       const toBlkNum = await client.getBlockNumber();
 
       console.log('lastItemOfCbpInflow: ', fromBlkNum);
+      console.log('current blkNum: ', toBlkNum);
 
       if (logs && client.chain.id == 42161) {
         let len = logs.length; 
@@ -190,6 +191,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
             toBlock:endBlkNum,
           });
               
+          console.log("obtained logs of cbpTransferLogs:", logs);
+
           transferLogs = [...transferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
@@ -261,8 +264,6 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
               data: tran.input,
             }).functionName;
             // item.target = tran.from; 
-
-
 
           } else if (tran.to?.toLowerCase() == usdKeeper.toLowerCase()) {
 

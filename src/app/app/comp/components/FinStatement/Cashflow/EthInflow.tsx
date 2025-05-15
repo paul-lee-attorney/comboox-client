@@ -186,7 +186,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           recievedCashLogs = [...recievedCashLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
           
         }catch(error){
           console.error("Error fetching recievedCashLogs:", error);
@@ -246,7 +246,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           gasIncomeLogs = [...gasIncomeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching gasIncomeLogs:", error);
@@ -303,7 +303,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           payInCapLogs = [...payInCapLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching payInCapLogs:", error);
@@ -363,7 +363,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           payOffCIDealLogs = [...payOffCIDealLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching payOffCIDealLogs:", error);
@@ -436,7 +436,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           closeBidAgainstInitOfferLogs = [...closeBidAgainstInitOfferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching closeBidAgainstInitOfferLogs:", error);
@@ -513,7 +513,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           closeInitOfferAgainstBidLogs = [...closeInitOfferAgainstBidLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching closeInitOfferAgainstBidLogs:", error);

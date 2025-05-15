@@ -135,7 +135,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
           refuelLogs = [...refuelLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching refuelLogs:", error);
@@ -195,7 +195,7 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
           withdrawEthLogs = [...withdrawEthLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching withdrawEthLogs:", error);

@@ -131,7 +131,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           forwardUsdLogs = [...forwardUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
           
         }catch(error){
           console.error("Error fetching forwardUsdLogs:", error);
@@ -185,7 +185,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           releaseUsdLogs = [...releaseUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching releaseUsdLogs:", error);
@@ -239,7 +239,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           custodyUsdLogs = [...custodyUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching custodyUsdLogs:", error);
@@ -294,7 +294,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           distributeUsdLogs = [...distributeUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching distributeUsdLogs:", error);
@@ -349,7 +349,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           pickupUsdLogs = [...pickupUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching pickupUsdLogs:", error);

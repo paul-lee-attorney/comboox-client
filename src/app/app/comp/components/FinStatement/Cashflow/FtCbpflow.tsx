@@ -161,7 +161,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           addCbpLogs = [...addCbpLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching addCbpLogs:", error);
@@ -218,7 +218,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           withdrawCbpLogs = [...withdrawCbpLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching withdrawCbpLogs:", error);
@@ -281,7 +281,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           deprecateLogs = [...deprecateLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching deprecateLogs:", error);
@@ -338,7 +338,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           refuelLogs = [...refuelLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching refuelLogs:", error);

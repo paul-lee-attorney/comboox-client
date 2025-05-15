@@ -184,7 +184,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           pickupLogs = [...pickupLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
           
         }catch(error){
           console.error("Error fetching pickupLogs:", error);
@@ -242,7 +242,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           depositLogs = [...depositLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
           
         }catch(error){
           console.error("Error fetching depositLogs:", error);
@@ -300,7 +300,7 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           custodyLogs = [...custodyLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching custodyLogs:", error);

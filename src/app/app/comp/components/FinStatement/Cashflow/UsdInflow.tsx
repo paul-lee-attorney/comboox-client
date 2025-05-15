@@ -156,7 +156,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           payInCapLogs = [...payInCapLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching payInCapLogs:", error);
@@ -230,7 +230,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           releaseUsdLogs = [...releaseUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching releaseUsdLogs:", error);
@@ -307,7 +307,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           forwardUsdLogs = [...forwardUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching forwardUsdLogs:", error);
@@ -384,7 +384,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           upgradeLogs = [...upgradeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching upgradeLogs:", error);

@@ -158,7 +158,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           newUserAwardLogs = [...newUserAwardLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching newUserAwardLogs:", error);
@@ -221,7 +221,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           fuelSoldLogs = [...fuelSoldLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching fuelSoldLogs:", error);
@@ -281,7 +281,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           gmmTransferLogs = [...gmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
 
         }catch(error){
           console.error("Error fetching gmmTransferLogs:", error);
@@ -343,10 +343,12 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
             toBlock: endBlkNum,
           });
           
+          console.log("obtained bmmTransferLogs:", logs);
+
           bmmTransferLogs = [...bmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
-          await delay(3000);
+          await delay(500);
         }catch(error){
           console.error("Error fetching bmmTransferLogs:", error);
           break;
