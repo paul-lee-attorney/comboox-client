@@ -1,12 +1,12 @@
 import { useEffect, } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrOfTank, AddrZero, } from "../../../../common";
+import { AddrZero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { HexParser } from "../../../../common/toolsKit";
 import { fetchLogs } from "../../../../common/getLogs";
+import { ftHis } from "./FtCbpflow";
 
 export type FtEthflowSum = {
   totalEth: bigint;
@@ -123,14 +123,28 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       } 
 
       let refuelLogs = await fetchLogs({
-        address: [  AddrOfTank, 
-          HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
-          HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
+        address: ftHis[0],
         eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
+
+      refuelLogs = [...refuelLogs, ...(await fetchLogs({
+        address: ftHis[1],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
+
+      refuelLogs = [...refuelLogs, ...(await fetchLogs({
+        address: ftHis[2],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
 
       console.log('refuelLogs: ', refuelLogs);
 
@@ -166,14 +180,28 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
       }
 
       let withdrawEthLogs = await fetchLogs({
-        address: [  AddrOfTank, 
-          HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
-          HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7") ],
+        address: ftHis[0],
         eventAbiString: 'event WithdrawIncome(address indexed owner, uint indexed amt)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
+
+      withdrawEthLogs = [...withdrawEthLogs, ...(await fetchLogs({
+        address: ftHis[1],
+        eventAbiString: 'event WithdrawIncome(address indexed owner, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
+
+      withdrawEthLogs = [...withdrawEthLogs, ...(await fetchLogs({
+        address: ftHis[2],
+        eventAbiString: 'event WithdrawIncome(address indexed owner, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
 
       console.log('withdrawEthLogs: ', withdrawEthLogs);
       

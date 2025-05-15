@@ -219,12 +219,28 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let gasIncomeLogs = await fetchLogs({
-        address: ftHis,
+        address: ftHis[0],
         eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
+
+      gasIncomeLogs = [...gasIncomeLogs, ...(await fetchLogs({
+        address: ftHis[1],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
+
+      gasIncomeLogs = [...gasIncomeLogs, ...(await fetchLogs({
+        address: ftHis[2],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
 
       console.log('gasIncomeLogs: ', gasIncomeLogs);
     

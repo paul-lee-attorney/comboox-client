@@ -191,12 +191,28 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let withdrawCbpLogs = await fetchLogs({
-        address: ftHis,
+        address: ftHis[0],
         eventAbiString: 'event WithdrawFuel(address indexed owner, uint indexed amt)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
+
+      withdrawCbpLogs = [...withdrawCbpLogs, ...(await fetchLogs({
+        address: ftHis[1],
+        eventAbiString: 'event WithdrawFuel(address indexed owner, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
+
+      withdrawCbpLogs = [...withdrawCbpLogs, ...(await fetchLogs({
+        address: ftHis[2],
+        eventAbiString: 'event WithdrawFuel(address indexed owner, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
 
       console.log('withdrawCbpLogs: ', withdrawCbpLogs);
 
@@ -277,12 +293,28 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let refuelLogs = await fetchLogs({
-        address: ftHis,
+        address: ftHis[0],
         eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
+
+      refuelLogs = [...refuelLogs, ...(await fetchLogs({
+        address: ftHis[1],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
+
+      refuelLogs = [...refuelLogs, ...(await fetchLogs({
+        address: ftHis[2],
+        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
 
       console.log('refuelLogs: ', refuelLogs);
 

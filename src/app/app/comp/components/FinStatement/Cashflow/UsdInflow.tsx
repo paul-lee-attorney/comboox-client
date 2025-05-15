@@ -146,12 +146,20 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       let payInCapLogs = await fetchLogs({
-        address: [cashier, csHis[0]],
+        address: cashier,
         eventAbiString: 'event ReceiveUsd(address indexed from, uint indexed amt)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
         client: client,
       });
+
+      payInCapLogs = [...payInCapLogs, ...(await fetchLogs({
+        address: csHis[0],
+        eventAbiString: 'event ReceiveUsd(address indexed from, uint indexed amt)',
+        fromBlkNum: fromBlkNum,
+        toBlkNum: toBlkNum,
+        client: client,
+      }))];
 
       console.log('payInCapLogs: ', payInCapLogs);
 

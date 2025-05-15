@@ -6,11 +6,11 @@ import { useEffect, useState } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { AddrZero, booxMap, Bytes32Zero } from "../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { Refresh } from "@mui/icons-material";
 import { Deal } from "../../loe/loe";
 import { dealParser } from "../lou";
-import { DealLog, getDealLogs, setDealLogs } from "../../../../api/firebase/dealInfoTools";
+import { getLogs, getLogsTopBlk } from "../../../../api/firebase/logInfoTools";
+import { fetchLogs } from "../../../common/getLogs";
 
 interface DealChartProps {
   classOfShare: number;
@@ -37,45 +37,45 @@ useEffect(()=>{
 
     if (!gk || !boox || boox[booxMap.UsdLOO] == AddrZero) return;
 
-    const addrUsdLOO = boox[booxMap.UsdLOO];
+    const addr = boox[booxMap.UsdLOO];
 
-    let logs = await getDealLogs(gk, 'usdc');
-
-    const fromBlkNum = logs ? BigInt(logs[logs.length - 1].blockNumber) : 0n;
-    const toBlkNum = await client.getBlockNumber();
-
-    let startBlkNum = fromBlkNum;
-    let dealLogs:DealLog[] = [];
-
-    while(startBlkNum <= toBlkNum) {
-      const endBlkNum = startBlkNum + 500n > toBlkNum ? toBlkNum : startBlkNum + 500n;
-      try{
-        let dealClosedLogs = await client.getLogs({
-          address: addrUsdLOO,
-          event: parseAbiItem('event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)'),
-          fromBlock: startBlkNum,
-          toBlock: endBlkNum,
-        });
-
-        let tLogs = dealClosedLogs.map(v => ({
-          seq: v.logIndex,
-          blockNumber: v.blockNumber.toString(),
-          timestamp: 0,
-          fromSn: v.args.fromSn || Bytes32Zero,
-          toSn: v.args.toSn || Bytes32Zero,
-          qtySn: v.args.qtySn || Bytes32Zero,
-          consideration: (v.args.consideration ?? 0n).toString(),
-        }));
-        
-        dealLogs = [...dealLogs, ...tLogs];
-        startBlkNum = endBlkNum + 1n;
-      }catch(error){
-        console.error("Error fetching dealLogs:", error);
-        break;
-      }
+    let logs = await getLogs(addr, 'DealClosed');
+    let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
+    
+    if (!fromBlkNum) {
+      fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
     }
     
-    const blkNums = [... new Set(dealLogs.map(log => log.blockNumber))];
+    let toBlkNum = await client.getBlockNumber();
+
+    console.log('top blk of DealClosed: ', fromBlkNum);
+    console.log('current blkNum: ', toBlkNum);
+
+    let dealLogs = await fetchLogs({
+      address: addr, 
+      eventAbiString: 'event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)',
+      fromBlkNum: (fromBlkNum ?? 0n) + 1n,
+      toBlkNum: toBlkNum,
+      client: client,
+    });
+
+    if (logs && logs.length > 0) {
+      dealLogs = [...logs, ...dealLogs];
+    }
+
+    if (!dealLogs || dealLogs.length == 0) return;
+
+    let tLogs = dealLogs.map(v => ({
+      seq: v.logIndex,
+      blockNumber: v.blockNumber.toString(),
+      timestamp: 0,
+      fromSn: v.args.fromSn || Bytes32Zero,
+      toSn: v.args.toSn || Bytes32Zero,
+      qtySn: v.args.qtySn || Bytes32Zero,
+      consideration: (v.args.consideration ?? 0n).toString(),
+    }));
+    
+    const blkNums = [... new Set(tLogs.map(log => log.blockNumber))];
 
     const blks = await Promise.all(
       blkNums.map(blkNum => client.getBlock({ blockNumber: BigInt(blkNum) }))
@@ -89,19 +89,19 @@ useEffect(()=>{
     if (dealLogs.length > 0) {
       dealLogs = dealLogs.sort((a, b) => a.timestamp - b.timestamp || a.seq - b.seq);
 
-      await setDealLogs(gk, 'usdc', dealLogs);
+      // await setDealLogs(gk, 'usdc', dealLogs);
 
-      if (logs) {
-        logs = logs.concat(dealLogs);
-      } else {
-        logs = dealLogs;
-      }
+      // if (logs) {
+      //   logs = logs.concat(dealLogs);
+      // } else {
+      //   logs = dealLogs;
+      // }
 
     } 
 
-    if (!logs) return;
+    if (!dealLogs) return;
 
-    let cnt = logs.length;
+    let cnt = dealLogs.length;
 
     let arr:ChartItem[] = [];
     let i = 0;
@@ -109,7 +109,7 @@ useEffect(()=>{
  
     while (i<cnt && len<1800) {
 
-      let log = logs[i];
+      let log = dealLogs[i];
       let deal:Deal = dealParser(log.fromSn, log.toSn, log.qtySn);
 
       if (classOfShare != Number(deal.classOfShare)) {
@@ -118,7 +118,7 @@ useEffect(()=>{
       }
 
       let item:ChartItem = {
-        timestamp: BigInt(log.timestamp),
+        timestamp: BigInt(blkTimestampMap[log.blockNumber]),
         volumn: deal.paid,
         high: deal.price,
         low: deal.price,

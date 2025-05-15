@@ -9,6 +9,8 @@ import { getHeadByBody, HeadOfDoc } from "../../../rc";
 import { HistoryEduOutlined } from "@mui/icons-material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
+import { getLogs, getLogsTopBlk } from "../../../../api/firebase/logInfoTools";
+import { fetchLogs } from "../../../common/getLogs";
 
 export type RegBooxRecord = {
   seq: number,
@@ -43,14 +45,32 @@ export function HistoryOfBoox() {
 
       if (!gk) return;
 
+      let logs = await getLogs(gk, 'RegKeeper');
+      let fromBlkNum = await getLogsTopBlk(gk, 'RegKeeper');
+      
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      }
+      
+      let toBlkNum = await client.getBlockNumber();
+
+      console.log('top blk of RegKeeper: ', fromBlkNum);
+      console.log('current blkNum: ', toBlkNum);
+
       let arr: RegBooxRecord[] = [];
       let counter = 0;
 
-      let keepersLogs = await client.getLogs({
-        address: gk,
-        event: parseAbiItem('event RegKeeper(uint indexed title, address indexed keeper, address indexed dk)'),
-        fromBlock: 1n,
+      let keepersLogs = await fetchLogs({
+        address: gk, 
+        eventAbiString: 'event RegKeeper(uint indexed title, address indexed keeper, address indexed dk)',
+        fromBlkNum: (fromBlkNum ?? 0n) + 1n,
+        toBlkNum: toBlkNum,
+        client: client,
       });
+
+      if (logs && logs.length > 0) {
+        keepersLogs = [...logs, ...keepersLogs];
+      }
 
       let cnt = keepersLogs.length;
 
@@ -79,11 +99,26 @@ export function HistoryOfBoox() {
         cnt--;
       }
 
-      let booxLogs = await client.getLogs({
-        address: gk,
-        event: parseAbiItem('event RegBook(uint indexed title, address indexed book, address indexed dk)'),
-        fromBlock: 1n,
+      logs = await getLogs(gk, 'RegBook');
+      fromBlkNum = await getLogsTopBlk(gk, 'RegBook');
+
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      }
+      
+      console.log('top blk of RegKeeper: ', fromBlkNum);
+
+      let booxLogs = await fetchLogs({
+        address: gk, 
+        eventAbiString: 'event RegBook(uint indexed title, address indexed book, address indexed dk)',
+        fromBlkNum: (fromBlkNum ?? 1n) + 1n,
+        toBlkNum: toBlkNum,
+        client: client,
       });
+
+      if (logs && logs.length > 0) {
+        booxLogs = [...logs, ...booxLogs];
+      }
 
       cnt = booxLogs.length;
 

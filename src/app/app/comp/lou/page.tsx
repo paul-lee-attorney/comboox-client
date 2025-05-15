@@ -21,6 +21,8 @@ import { DealsChart } from "./components/DealsChart";
 import { SetBookAddr } from "../../components/SetBookAddr";
 import { Deal, defaultOrder, Order } from "../loe/loe";
 import { dealParser, DealProps, getOrders } from "./lou";
+import { getLogs, getLogsTopBlk } from "../../../api/firebase/logInfoTools";
+import { fetchLogs } from "../../common/getLogs";
 
 function UsdListOfOrders() {
 
@@ -82,11 +84,29 @@ function UsdListOfOrders() {
 
       if (addr.toLowerCase() == AddrZero.toLowerCase()) return;
 
-      let dealLogs = await client.getLogs({
-        address: addr,
-        event: parseAbiItem('event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)'),
-        fromBlock: 'earliest',
+      let logs = await getLogs(addr, 'DealClosed');
+      let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
+      
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
+      }
+      
+      let toBlkNum = await client.getBlockNumber();
+
+      console.log('top blk of DealClosed: ', fromBlkNum);
+      console.log('current blkNum: ', toBlkNum);
+
+      let dealLogs = await fetchLogs({
+        address: addr, 
+        eventAbiString: 'event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)',
+        fromBlkNum: (fromBlkNum ?? 0n) + 1n,
+        toBlkNum: toBlkNum,
+        client: client,
       });
+
+      if (logs && logs.length > 0) {
+        dealLogs = [...logs, ...dealLogs];
+      }
 
       let cnt = dealLogs.length;
 

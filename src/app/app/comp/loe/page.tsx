@@ -14,7 +14,6 @@ import { counterOfClasses } from "../ros/ros";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { DealsList } from "./components/DealsList";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { baseToDollar, longSnParser } from "../../common/toolsKit";
 import { BillOfOrder } from "./components/BillOfOrder";
 import { BillOfDeal } from "./components/BillOfDeal";
@@ -22,6 +21,8 @@ import { DealsChart } from "./components/DealsChart";
 import { SetBookAddr } from "../../components/SetBookAddr";
 import { AutoStoriesOutlined, MenuBook, VideoCameraBack, VideoCameraBackOutlined, VideoCameraFront } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
+import { getLogs, getLogsTopBlk } from "../../../api/firebase/logInfoTools";
+import { fetchLogs } from "../../common/getLogs";
 
 function ListOfOrders() {
 
@@ -84,11 +85,29 @@ function ListOfOrders() {
 
       if (addr.toLowerCase() == AddrZero.toLowerCase()) return;
 
-      let dealLogs = await client.getLogs({
-        address: addr,
-        event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
-        fromBlock: 'earliest',
+      let logs = await getLogs(addr, 'DealClosed');
+      let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
+      
+      if (!fromBlkNum) {
+        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
+      }
+      
+      let toBlkNum = await client.getBlockNumber();
+
+      console.log('top blk of DealClosed: ', fromBlkNum);
+      console.log('current blkNum: ', toBlkNum);
+
+      let dealLogs = await fetchLogs({
+        address: addr, 
+        eventAbiString: 'event DealClosed(bytes32 indexed deal, uint indexed consideration)',
+        fromBlkNum: (fromBlkNum ?? 0n) + 1n,
+        toBlkNum: toBlkNum,
+        client: client,
       });
+
+      if (logs && logs.length > 0) {
+        dealLogs = [...logs, ...dealLogs];
+      }
 
       let cnt = dealLogs.length;
 

@@ -47,16 +47,16 @@ export function GeneralInfo() {
         res => {
           // console.log('compInfo: ', res);
           if (res.state > 0) {
-            client.getLogs({
-              address: gk,
-              event: parseAbiItem('event DeprecateGK(address indexed receiver, uint indexed balanceOfCBP, uint indexed balanceOfETH)'),
-              fromBlock: 1n
-            }).then(
-              logs => {
-                res.name = 'moved to new Address: ' + (logs[0].args.receiver?.toString() ?? '');
+            // client.getLogs({
+            //   address: gk,
+            //   event: parseAbiItem('event DeprecateGK(address indexed receiver, uint indexed balanceOfCBP, uint indexed balanceOfETH)'),
+            //   fromBlock: 1n
+            // }).then(
+              // logs => {
+                res.name = 'Deprecated GK';
                 setCompInfo(res);
-              }
-            )
+            //   }
+            // )
           } else setCompInfo(res);
         }
       )      

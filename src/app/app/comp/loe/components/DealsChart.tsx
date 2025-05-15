@@ -7,8 +7,9 @@ import { useEffect, useState } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { AddrZero, booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { Refresh } from "@mui/icons-material";
+import { getLogs, getLogsTopBlk } from "../../../../api/firebase/logInfoTools";
+import { fetchLogs } from "../../../common/getLogs";
 
 interface DealChartProps {
   classOfShare: number;
@@ -35,13 +36,31 @@ useEffect(()=>{
 
     if (!boox || boox[booxMap.LOO] == AddrZero) return;
 
-    const addrLOO = boox[booxMap.LOO];
+    const addr = boox[booxMap.LOO];
 
-    let dealLogs = await client.getLogs({
-      address: addrLOO,
-      event: parseAbiItem('event DealClosed(bytes32 indexed deal, uint indexed consideration)'),
-      fromBlock: 1n,
+    let logs = await getLogs(addr, 'DealClosed');
+    let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
+    
+    if (!fromBlkNum) {
+      fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
+    }
+    
+    let toBlkNum = await client.getBlockNumber();
+
+    console.log('top blk of DealClosed: ', fromBlkNum);
+    console.log('current blkNum: ', toBlkNum);
+
+    let dealLogs = await fetchLogs({
+      address: addr, 
+      eventAbiString: 'event DealClosed(bytes32 indexed deal, uint indexed consideration)',
+      fromBlkNum: (fromBlkNum ?? 0n) + 1n,
+      toBlkNum: toBlkNum,
+      client: client,
     });
+
+    if (logs && logs.length > 0) {
+      dealLogs = [...logs, ...dealLogs];
+    }
 
     let cnt = dealLogs.length;
     let arr:ChartItem[] = [];

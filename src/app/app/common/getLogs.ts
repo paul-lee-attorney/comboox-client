@@ -3,10 +3,11 @@ import { parseAbiItem } from "viem";
 import { HexType } from ".";
 import { delay } from "./toolsKit";
 import { PublicClient } from "wagmi";
+import { getLogsTopBlk, setLogs, setLogsTopBlk, getLogs } from "../../api/firebase/logInfoTools";
 
 
 interface FetchLogsParams {
-  address: HexType | HexType[];
+  address: HexType;
   eventAbiString: string;
   args?: Record<string, any>;
   fromBlkNum: bigint;
@@ -32,6 +33,17 @@ export const fetchLogs = async ({
     throw new Error("Provided ABI is not an event.");
   }
 
+  let topBlk = await getLogsTopBlk(address, eventFilter.name);
+
+  if (topBlk && topBlk >= currentBlk) {
+    let logs = await getLogs(address, eventFilter.name);
+    if (logs && logs.length >0) {
+      console.log("obtained logs from firebase:", logs.length);
+      allLogs = [...allLogs, ...logs];
+    }
+    currentBlk = topBlk;
+  }
+
   while (currentBlk <= toBlkNum) {
     const endBlk = currentBlk + 499n > toBlkNum ? toBlkNum : currentBlk + 499n;
     let retries = 0;
@@ -47,9 +59,13 @@ export const fetchLogs = async ({
           toBlock: endBlk,
         });
 
-        console.log('obtained logs:', logs);
+        if (logs && logs.length > 0) {
+          console.log('obtained logs from chain:', logs);
+          setLogs(address, eventFilter.name, logs);
+          setLogsTopBlk(address, eventFilter.name, logs[logs.length - 1].blockNumber);
+          allLogs = [...allLogs, ...logs];
+        } 
 
-        allLogs = [...allLogs, ...logs];
         currentBlk = endBlk + 1n;
         success = true;
         
