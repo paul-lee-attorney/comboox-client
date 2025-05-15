@@ -457,3 +457,5 @@ export function addrToUint(addr: HexType): bigint {
 export function bigIntToAddr(num:bigint): HexType {
   return HexParser(num.toString(16).padStart(64, '0').substring(24));
 }
+
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));

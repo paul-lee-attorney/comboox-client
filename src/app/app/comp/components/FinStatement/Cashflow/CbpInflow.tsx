@@ -7,6 +7,7 @@ import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatem
 import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
+import { delay } from "../../../../common/toolsKit";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -147,7 +148,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
 
-      // console.log('lastItemOfCbpInflow: ', lastBlkNum);
+      console.log('lastItemOfCbpInflow: ', fromBlkNum);
 
       if (logs && client.chain.id == 42161) {
         let len = logs.length; 
@@ -191,10 +192,15 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
               
           transferLogs = [...transferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching transferLogs:", error);
           break;
         }
+
+
       }
 
       transferLogs = transferLogs.filter(v => (v.blockNumber > fromBlkNum) &&

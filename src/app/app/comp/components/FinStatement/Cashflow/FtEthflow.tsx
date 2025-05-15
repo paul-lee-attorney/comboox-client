@@ -6,7 +6,7 @@ import { parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { HexParser } from "../../../../common/toolsKit";
+import { delay, HexParser } from "../../../../common/toolsKit";
 
 export type FtEthflowSum = {
   totalEth: bigint;
@@ -134,6 +134,9 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
           
           refuelLogs = [...refuelLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching refuelLogs:", error);
           break;
@@ -191,6 +194,9 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
           
           withdrawEthLogs = [...withdrawEthLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching withdrawEthLogs:", error);
           break;

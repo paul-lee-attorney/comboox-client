@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { parseAbiItem, hexToString } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { addrToUint } from "../../../../common/toolsKit";
+import { addrToUint, delay } from "../../../../common/toolsKit";
 
 export type UsdEscrowSum = {
   totalAmt: bigint;
@@ -130,6 +130,9 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           
           forwardUsdLogs = [...forwardUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+          
         }catch(error){
           console.error("Error fetching forwardUsdLogs:", error);
           break;
@@ -181,6 +184,9 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           
           releaseUsdLogs = [...releaseUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching releaseUsdLogs:", error);
           break;
@@ -232,6 +238,9 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           
           custodyUsdLogs = [...custodyUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching custodyUsdLogs:", error);
           break;
@@ -284,6 +293,9 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           
           distributeUsdLogs = [...distributeUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching distributeUsdLogs:", error);
           break;
@@ -336,6 +348,9 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
           
           pickupUsdLogs = [...pickupUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching pickupUsdLogs:", error);
           break;

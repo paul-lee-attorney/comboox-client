@@ -10,6 +10,7 @@ import { listOfOrdersABI, registerOfSharesABI } from "../../../../../../../gener
 import { getShare, parseSnOfShare } from "../../../ros/ros";
 import { briefParser } from "../../../loe/loe";
 import { ftHis } from "./FtCbpflow";
+import { delay } from "../../../../common/toolsKit";
 
 export type EthInflowSum = {
   totalAmt: bigint;
@@ -184,6 +185,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           recievedCashLogs = [...recievedCashLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+          
         }catch(error){
           console.error("Error fetching recievedCashLogs:", error);
           break;
@@ -242,6 +246,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
           gasIncomeLogs = [...gasIncomeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
 
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching gasIncomeLogs:", error);
           break;
@@ -296,6 +302,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
                   
           payInCapLogs = [...payInCapLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
 
         }catch(error){
           console.error("Error fetching payInCapLogs:", error);
@@ -354,6 +362,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
                       
           payOffCIDealLogs = [...payOffCIDealLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
 
         }catch(error){
           console.error("Error fetching payOffCIDealLogs:", error);
@@ -425,6 +435,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
                           
           closeBidAgainstInitOfferLogs = [...closeBidAgainstInitOfferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
 
         }catch(error){
           console.error("Error fetching closeBidAgainstInitOfferLogs:", error);
@@ -500,6 +512,8 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
                               
           closeInitOfferAgainstBidLogs = [...closeInitOfferAgainstBidLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
 
         }catch(error){
           console.error("Error fetching closeInitOfferAgainstBidLogs:", error);

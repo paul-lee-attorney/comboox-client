@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { parseAbiItem, hexToString } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { addrToUint, HexParser } from "../../../../common/toolsKit";
+import { addrToUint, delay, HexParser } from "../../../../common/toolsKit";
 import { csHis } from "./UsdInflow";
 
 export type UsdOutflowSum = {
@@ -109,6 +109,9 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
           
           transferUsdLogs = [...transferUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching transferUsdLogs:", error);
           break;
@@ -160,6 +163,9 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
           
           distributeUsdLogs = [...distributeUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching distributeUsdLogs:", error);
           break;
@@ -215,6 +221,9 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
           
           upgradeLogs = [...upgradeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching upgradeLogs:", error);
           break;

@@ -3,9 +3,9 @@ import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvi
 import { AddrZero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { HexParser, } from "../../../../common/toolsKit";
+import { delay, HexParser, } from "../../../../common/toolsKit";
 import { ethers } from "ethers";
-import { Cashflow, CashflowRange, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
+import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 
@@ -151,6 +151,9 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
           
           gmmTransferLogs = [...gmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching gmmTransferLogs:", error);
           break;
@@ -209,6 +212,9 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
           
           gmmExpenseLogs = [...gmmExpenseLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching gmmExpenseLogs:", error);
           break;
@@ -267,6 +273,9 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
           
           bmmTransferLogs = [...bmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching bmmTransferLogs:", error);
           break;
@@ -322,6 +331,9 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
           
           bmmExpenseLogs = [...bmmExpenseLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching bmmExpenseLogs:", error);
           break;
@@ -380,6 +392,9 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
           
           distributionLogs = [...distributionLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching distributionLogs:", error);
           break;

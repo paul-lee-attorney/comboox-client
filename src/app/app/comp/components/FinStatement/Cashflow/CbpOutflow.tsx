@@ -6,7 +6,7 @@ import { parseAbiItem } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { HexParser } from "../../../../common/toolsKit";
+import { delay, HexParser } from "../../../../common/toolsKit";
 
 export type CbpOutflowSum = {
   totalAmt: bigint;
@@ -117,7 +117,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       const fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
       const toBlkNum = await client.getBlockNumber();
 
-      // console.log('lastItemOfCbpOutflow: ', lastBlkNum);
+      console.log('lastItemOfCbpOutflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -157,6 +157,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           newUserAwardLogs = [...newUserAwardLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching newUserAwardLogs:", error);
           break;
@@ -217,6 +220,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           fuelSoldLogs = [...fuelSoldLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching fuelSoldLogs:", error);
           break;
@@ -274,6 +280,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           gmmTransferLogs = [...gmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching gmmTransferLogs:", error);
           break;
@@ -336,6 +345,8 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           bmmTransferLogs = [...bmmTransferLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
         }catch(error){
           console.error("Error fetching bmmTransferLogs:", error);
           break;

@@ -3,7 +3,7 @@ import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvi
 import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { parseAbiItem } from "viem";
-import { HexParser } from "../../../../common/toolsKit";
+import { delay, HexParser } from "../../../../common/toolsKit";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
@@ -160,6 +160,9 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           addCbpLogs = [...addCbpLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching addCbpLogs:", error);
           break;
@@ -214,6 +217,9 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           withdrawCbpLogs = [...withdrawCbpLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching withdrawCbpLogs:", error);
           break;
@@ -274,6 +280,9 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           deprecateLogs = [...deprecateLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching deprecateLogs:", error);
           break;
@@ -328,6 +337,9 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           
           refuelLogs = [...refuelLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching refuelLogs:", error);
           break;

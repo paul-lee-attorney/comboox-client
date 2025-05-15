@@ -7,7 +7,7 @@ import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatem
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { registerOfSharesABI, usdRomKeeperABI } from "../../../../../../../generated";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
-import { addrToUint, HexParser } from "../../../../common/toolsKit";
+import { addrToUint, delay, HexParser } from "../../../../common/toolsKit";
 
 export type UsdInflowSum = {
   totalAmt: bigint;
@@ -155,6 +155,9 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           
           payInCapLogs = [...payInCapLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching payInCapLogs:", error);
           break;
@@ -226,6 +229,9 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           
           releaseUsdLogs = [...releaseUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching releaseUsdLogs:", error);
           break;
@@ -300,6 +306,9 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           
           forwardUsdLogs = [...forwardUsdLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching forwardUsdLogs:", error);
           break;
@@ -374,6 +383,9 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
           
           upgradeLogs = [...upgradeLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching upgradeLogs:", error);
           break;

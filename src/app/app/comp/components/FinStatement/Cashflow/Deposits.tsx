@@ -7,6 +7,7 @@ import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { delay } from "../../../../common/toolsKit";
 
 export type DepositsSum = {
   totalAmt: bigint;
@@ -182,6 +183,9 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           
           pickupLogs = [...pickupLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+          
         }catch(error){
           console.error("Error fetching pickupLogs:", error);
           break;
@@ -237,6 +241,9 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           
           depositLogs = [...depositLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+          
         }catch(error){
           console.error("Error fetching depositLogs:", error);
           break;
@@ -292,6 +299,9 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
           
           custodyLogs = [...custodyLogs, ...logs];
           startBlkNum = endBlkNum + 1n;
+
+          await delay(3000);
+
         }catch(error){
           console.error("Error fetching custodyLogs:", error);
           break;
