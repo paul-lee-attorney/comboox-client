@@ -123,12 +123,12 @@ export const fetchLogs = async ({
         currentBlk = endBlk + 1n;
         success = true;
         
-        await delay(800);
+        await delay(500);
 
       } catch (error:any) {
         if (retries < 10) {
           console.warn(`Rate limited. Retrying in 500 ms...`);
-          await delay(500);
+          await delay((retries + 1) * 500);
           retries++;
           continue;
         } else {
