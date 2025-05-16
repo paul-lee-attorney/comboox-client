@@ -123,7 +123,7 @@ export const fetchLogs = async ({
         currentBlk = endBlk + 1n;
         success = true;
         
-        await delay(500);
+        await delay(800);
 
       } catch (error:any) {
         if (retries < 10) {
