@@ -43,17 +43,8 @@ export function HistoryOfBoox() {
     const getBooxHistory = async () => {
 
       if (!gk) return;
-
-      // let logs = await getLogs(gk, 'RegKeeper');
-      // let fromBlkNum = await getLogsTopBlk(gk, 'RegKeeper');
-      
-      // if (!fromBlkNum) {
-      //   fromBlkNum = logs ? BigInt(logs[logs.length - 1].blockNumber) : 0n;
-      // }
       
       let toBlkNum = await client.getBlockNumber();
-
-      // console.log('top blk of RegKeeper: ', fromBlkNum);
       console.log('current blkNum: ', toBlkNum);
 
       let arr: RegBooxRecord[] = [];
@@ -66,10 +57,6 @@ export function HistoryOfBoox() {
         toBlkNum: toBlkNum,
         client: client,
       });
-
-      // if (logs && logs.length > 0) {
-      //   keepersLogs = [...logs, ...keepersLogs];
-      // }
 
       let cnt = keepersLogs.length;
 
@@ -98,15 +85,6 @@ export function HistoryOfBoox() {
         cnt--;
       }
 
-      // logs = await getLogs(gk, 'RegBook');
-      // fromBlkNum = await getLogsTopBlk(gk, 'RegBook');
-
-      // if (!fromBlkNum) {
-      //   fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      // }
-      
-      // console.log('top blk of RegKeeper: ', fromBlkNum);
-
       let booxLogs = await fetchLogs({
         address: gk, 
         eventAbiString: 'event RegBook(uint indexed title, address indexed book, address indexed dk)',
@@ -114,10 +92,6 @@ export function HistoryOfBoox() {
         toBlkNum: toBlkNum,
         client: client,
       });
-
-      // if (logs && logs.length > 0) {
-      //   booxLogs = [...logs, ...booxLogs];
-      // }
 
       cnt = booxLogs.length;
 

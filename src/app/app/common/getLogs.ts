@@ -76,6 +76,7 @@ export const fetchLogs = async ({
   }
 
   let topBlk = await getLogsTopBlk(address, eventFilter.name);
+  let cnt = 0;
 
   if (topBlk && topBlk <= toBlkNum) {
 
@@ -95,11 +96,12 @@ export const fetchLogs = async ({
   }
 
   while (currentBlk <= toBlkNum) {
+
     const endBlk = currentBlk + 499n > toBlkNum ? toBlkNum : currentBlk + 499n;
     let retries = 0;
     let success = false;
 
-    while (!success && retries <= 5) {
+    while (!success && retries < 10) {
       try {
         const logs = await client.getLogs({
           address,
@@ -118,10 +120,13 @@ export const fetchLogs = async ({
           allLogs = [...allLogs, ...logs];
         } 
 
-        setLogsTopBlk(address, eventFilter.name, endBlk);
-
         currentBlk = endBlk + 1n;
         success = true;
+        cnt++;
+
+        // if (cnt % 1200 == 0 || endBlk == toBlkNum) {
+        //   setLogsTopBlk(address, eventFilter.name, endBlk);
+        // }
         
         await delay(500);
 
@@ -138,8 +143,9 @@ export const fetchLogs = async ({
     }
 
     if (!success) {
-      throw new Error(`Block range ${currentBlk}-${endBlk} failed after ${5} retries`);
-    }
+      throw new Error(`Block range ${currentBlk}-${endBlk} failed after ${10} retries`);
+    }    
+
   }
 
   return allLogs;
