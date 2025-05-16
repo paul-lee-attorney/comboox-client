@@ -1,7 +1,13 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { HexType } from '../../app/common';
+import { Log } from 'viem';
 
+
+export interface FirebaseLog extends Omit<Log, 'args' | 'blockNumber'> {
+  blockNumber: string;
+  args?: never; // 确保没有 args 字段
+}
 
 export async function getLogsTopBlk(addr: HexType, nameOfEvent:string): Promise<bigint | undefined> {
 
@@ -19,14 +25,14 @@ export async function getLogsTopBlk(addr: HexType, nameOfEvent:string): Promise<
 
 }
 
-export async function getLogsByTenMillion(addr: HexType, nameOfEvent:string, tenM:string): Promise<any[] | undefined> {
+export async function getLogsByTenMillion(addr: HexType, nameOfEvent:string, tenM:string): Promise<FirebaseLog[] | undefined> {
 
   // 获取特定文档
   const docRef = doc(db, 'logInfo', addr.toLowerCase(), nameOfEvent, tenM);
   const docSnap = await getDoc(docRef);
 
   if (docSnap.exists()) {
-    let res = docSnap.data()?.logs as any[];
+    let res = docSnap.data()?.logs as FirebaseLog[];
     return res;
   } else {
     console.log("no log data found!");
@@ -34,8 +40,8 @@ export async function getLogsByTenMillion(addr: HexType, nameOfEvent:string, ten
   }
 }
 
-export async function getLogs(addr: HexType, nameOfEvent: string): Promise<any[] | undefined> {
-  let output: any[] = [];
+export async function getLogs(addr: HexType, nameOfEvent: string): Promise<FirebaseLog[] | undefined> {
+  let output: FirebaseLog[] = [];
 
   try {
     const monthCollRef = collection(db, 'logInfo', addr.toLowerCase(), nameOfEvent);
@@ -82,7 +88,7 @@ export async function setLogsTopBlk(addr: HexType, nameOfEvent:string, blkNum:bi
 
 }
 
-export async function setLogsByTenMillion(addr: HexType, nameOfEvent:string, tenM:string, data:any[]): Promise<boolean> {
+export async function setLogsByTenMillion(addr: HexType, nameOfEvent:string, tenM:string, data:FirebaseLog[]): Promise<boolean> {
 
   // 创建一个文档引用
   const docRef = doc(db, 'logInfo', addr.toLowerCase(), nameOfEvent, tenM);
@@ -109,11 +115,11 @@ export async function setLogsByTenMillion(addr: HexType, nameOfEvent:string, ten
 
 }
 
-export function getTenMillionLableByBlkNum(num:bigint):string {
-  return (num/10n ** 7n).toString(); 
+export function getTenMillionLableByBlkNum(blkNum:string):string {
+  return (BigInt(blkNum)/10n ** 7n).toString(); 
 }
 
-export async function setLogs(addr: HexType, nameOfEvent:string, data:any[]): Promise<boolean> {
+export async function setLogs(addr: HexType, nameOfEvent:string, data:FirebaseLog[]): Promise<boolean> {
 
   if (!data || data.length === 0) {
     console.log("No logs data to process.");
@@ -121,7 +127,7 @@ export async function setLogs(addr: HexType, nameOfEvent:string, data:any[]): Pr
   }
 
   // Group the data by blockNumber
-  const groupedByBlockNumber:{[key:string]:any[]} = {};
+  const groupedByBlockNumber:{[key:string]:FirebaseLog[]} = {};
 
   data.forEach(v => {
     const key = getTenMillionLableByBlkNum(v.blockNumber);

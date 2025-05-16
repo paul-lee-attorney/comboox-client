@@ -1,9 +1,9 @@
 
-import { parseAbiItem } from "viem";
+import { parseAbiItem, decodeEventLog, Log, Hex } from "viem";
 import { HexType } from ".";
 import { delay } from "./toolsKit";
 import { PublicClient } from "wagmi";
-import { getLogsTopBlk, setLogs, setLogsTopBlk, getLogs } from "../../api/firebase/logInfoTools";
+import { getLogsTopBlk, setLogs, setLogsTopBlk, getLogs, FirebaseLog } from "../../api/firebase/logInfoTools";
 
 
 interface FetchLogsParams {
@@ -14,6 +14,48 @@ interface FetchLogsParams {
   toBlkNum: bigint;
   client: PublicClient;
 };
+
+// 转换函数（BigInt → String + 保留原始 data）
+const convertForFirebase = (log: Log) => ({
+  ...log,
+  blockNumber: log.blockNumber?.toString() ?? '0',
+  // 删除 args 字段避免存储
+  args: undefined 
+});
+
+const decodeFirebaseLog = (
+  log: FirebaseLog,
+  eventAbiString:string,
+) => {
+
+  const eventFilter = parseAbiItem(eventAbiString);
+
+  if (eventFilter.type !== "event") {
+    throw new Error("Provided ABI is not an event.");
+  }
+
+  try {
+    const { eventName, args } = decodeEventLog({
+      abi: [eventFilter],
+      data: log.data,
+      topics: log.topics as [Hex, ...Hex[]]
+    })
+    
+    return {
+      ...log,
+      eventName,
+      blockNumber: BigInt(log.blockNumber),
+      args: args as Record<string, unknown>,
+    }
+  } catch (error) {
+    console.error('Log decoding failed:', {
+      blockNumber: log.blockNumber,
+      data: log.data,
+      error
+    })
+    return null
+  }
+}
 
 export const fetchLogs = async ({
   address,
@@ -35,13 +77,21 @@ export const fetchLogs = async ({
 
   let topBlk = await getLogsTopBlk(address, eventFilter.name);
 
-  if (topBlk && topBlk >= currentBlk) {
+  if (topBlk && topBlk <= toBlkNum) {
+
     let logs = await getLogs(address, eventFilter.name);
+
     if (logs && logs.length >0) {
       console.log("obtained logs from firebase:", logs.length);
-      allLogs = [...allLogs, ...logs];
+
+      const decodedFirebaseLogs = logs.map((firebaseLog) => 
+        decodeFirebaseLog(firebaseLog, eventAbiString)
+      );
+
+      allLogs = [...allLogs, ...decodedFirebaseLogs];
     }
-    currentBlk = topBlk;
+    currentBlk = topBlk + 1n;
+  
   }
 
   while (currentBlk <= toBlkNum) {
@@ -61,10 +111,14 @@ export const fetchLogs = async ({
 
         if (logs && logs.length > 0) {
           console.log('obtained logs from chain:', logs);
-          setLogs(address, eventFilter.name, logs);
-          setLogsTopBlk(address, eventFilter.name, logs[logs.length - 1].blockNumber);
+
+          const firebaseLogs = logs.map(convertForFirebase);
+
+          setLogs(address, eventFilter.name, firebaseLogs);
           allLogs = [...allLogs, ...logs];
         } 
+
+        setLogsTopBlk(address, eventFilter.name, endBlk);
 
         currentBlk = endBlk + 1n;
         success = true;
@@ -72,7 +126,7 @@ export const fetchLogs = async ({
         await delay(500);
 
       } catch (error:any) {
-        if (retries < 5) {
+        if (retries < 10) {
           console.warn(`Rate limited. Retrying in 500 ms...`);
           await delay(500);
           retries++;
