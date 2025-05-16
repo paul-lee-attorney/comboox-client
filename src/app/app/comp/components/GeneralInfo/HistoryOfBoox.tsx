@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, Tooltip } from "@mui/material";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { AddrZero, HexType } from "../../../common";
 import { dateParser, HexParser, longSnParser } from "../../../common/toolsKit";
@@ -45,16 +44,16 @@ export function HistoryOfBoox() {
 
       if (!gk) return;
 
-      let logs = await getLogs(gk, 'RegKeeper');
-      let fromBlkNum = await getLogsTopBlk(gk, 'RegKeeper');
+      // let logs = await getLogs(gk, 'RegKeeper');
+      // let fromBlkNum = await getLogsTopBlk(gk, 'RegKeeper');
       
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      }
+      // if (!fromBlkNum) {
+      //   fromBlkNum = logs ? BigInt(logs[logs.length - 1].blockNumber) : 0n;
+      // }
       
       let toBlkNum = await client.getBlockNumber();
 
-      console.log('top blk of RegKeeper: ', fromBlkNum);
+      // console.log('top blk of RegKeeper: ', fromBlkNum);
       console.log('current blkNum: ', toBlkNum);
 
       let arr: RegBooxRecord[] = [];
@@ -63,14 +62,14 @@ export function HistoryOfBoox() {
       let keepersLogs = await fetchLogs({
         address: gk, 
         eventAbiString: 'event RegKeeper(uint indexed title, address indexed keeper, address indexed dk)',
-        fromBlkNum: (fromBlkNum ?? 0n) + 1n,
+        fromBlkNum: 1n,
         toBlkNum: toBlkNum,
         client: client,
       });
 
-      if (logs && logs.length > 0) {
-        keepersLogs = [...logs, ...keepersLogs];
-      }
+      // if (logs && logs.length > 0) {
+      //   keepersLogs = [...logs, ...keepersLogs];
+      // }
 
       let cnt = keepersLogs.length;
 
@@ -99,26 +98,26 @@ export function HistoryOfBoox() {
         cnt--;
       }
 
-      logs = await getLogs(gk, 'RegBook');
-      fromBlkNum = await getLogsTopBlk(gk, 'RegBook');
+      // logs = await getLogs(gk, 'RegBook');
+      // fromBlkNum = await getLogsTopBlk(gk, 'RegBook');
 
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      }
+      // if (!fromBlkNum) {
+      //   fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
+      // }
       
-      console.log('top blk of RegKeeper: ', fromBlkNum);
+      // console.log('top blk of RegKeeper: ', fromBlkNum);
 
       let booxLogs = await fetchLogs({
         address: gk, 
         eventAbiString: 'event RegBook(uint indexed title, address indexed book, address indexed dk)',
-        fromBlkNum: (fromBlkNum ?? 1n) + 1n,
+        fromBlkNum: 1n,
         toBlkNum: toBlkNum,
         client: client,
       });
 
-      if (logs && logs.length > 0) {
-        booxLogs = [...logs, ...booxLogs];
-      }
+      // if (logs && logs.length > 0) {
+      //   booxLogs = [...logs, ...booxLogs];
+      // }
 
       cnt = booxLogs.length;
 
