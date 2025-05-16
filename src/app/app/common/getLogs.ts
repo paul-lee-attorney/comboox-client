@@ -19,8 +19,8 @@ interface FetchLogsParams {
 const convertForFirebase = (log: Log) => ({
   ...log,
   blockNumber: log.blockNumber?.toString() ?? '0',
-  // 删除 args 字段避免存储
-  args: undefined 
+  // args 字段变为空字符串.
+  args: '',
 });
 
 const decodeFirebaseLog = (
