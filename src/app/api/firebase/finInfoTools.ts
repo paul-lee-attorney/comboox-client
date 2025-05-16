@@ -114,6 +114,8 @@ export async function getFinData(gk: HexType, typeOfInfo: string): Promise<Cashf
 
     // Use `for...of` to ensure proper async handling in loops
     for (const month of months) {
+      if (month == 'topBlk') continue;
+
       const queryData = await getFinDataByMonth(gk, typeOfInfo, month);
 
       if (queryData && queryData.length > 0) {
