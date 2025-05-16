@@ -6,7 +6,7 @@ import { Log } from 'viem';
 
 export interface FirebaseLog extends Omit<Log, 'args' | 'blockNumber'> {
   blockNumber: string;
-  args?: never; // 确保没有 args 字段
+  args?: string; // 确保没有 args 字段
 }
 
 export async function getLogsTopBlk(addr: HexType, nameOfEvent:string): Promise<bigint | undefined> {
