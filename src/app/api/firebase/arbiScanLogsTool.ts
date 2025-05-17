@@ -518,28 +518,28 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
                 let width = info.name.length;
 
                 while(width > 0) {
-                    const name = info.name[width - 1];
-                    const topic0 = getEventSelector(info.abiStr[width - 1]);
+                    let name = info.name[width - 1];
+                    let topic0 = getEventSelector(info.abiStr[width - 1]);
                     
-                    const events = logs.filter((v) => {
-                        return v.topics[0] == topic0;
+                    let events = logs.filter((v) => {
+                        console.log('topics[0] of Log:', v.topics[0]?.toLowerCase());
+                        console.log('topic0 from abi parser:', topic0.toLowerCase());
+                        return v.topics[0]?.toLowerCase() == topic0.toLowerCase();
                     });
 
                     if (events.length > 0) {
 
-                        console.log('filtered', events.length, ' events of', info.name); 
+                        console.log('filtered', events.length, ' events of ', name); 
 
-                        const flag = await setLogs(gk, info.title, info.address, name, events);
-                        if (!flag) return false;
+                        await setLogs(gk, info.title, info.address, name, events);                        
                     }
 
                     width--;
                 }
             }
 
-            const flag = await setTopBlkOf(gk, info.address, toBlk);
-            if (!flag) return false;
-
+            await setTopBlkOf(gk, info.address, toBlk);
+            
         }
 
         await delay(500);
