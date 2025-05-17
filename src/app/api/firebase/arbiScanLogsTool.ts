@@ -3,7 +3,7 @@ import fetch from 'node-fetch';
 import { Hex, Log, getEventSelector } from 'viem';
 import { db } from './firebase';
 import { getMonthLableByTimestamp } from './finInfoTools';
-import { HexParser } from '../../app/common/toolsKit';
+import { delay, HexParser } from '../../app/common/toolsKit';
 
 interface ArbiscanLog extends Omit<Log, 'blockNumber'|'logIndex'|'transactionIndex'> {
   timeStamp: string;          // 时间戳的十六进制表示
@@ -542,6 +542,8 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
             if (!flag) return false;
 
         }
+
+        await delay(500);
 
         len--;
     }
