@@ -8,7 +8,6 @@ import { getHeadByBody, HeadOfDoc } from "../../../rc";
 import { HistoryEduOutlined } from "@mui/icons-material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { getLogs, getLogsTopBlk } from "../../../../api/firebase/logInfoTools";
 import { fetchLogs } from "../../../common/getLogs";
 
 export type RegBooxRecord = {

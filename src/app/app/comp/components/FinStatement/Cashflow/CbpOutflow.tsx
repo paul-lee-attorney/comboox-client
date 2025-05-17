@@ -5,8 +5,8 @@ import { usePublicClient } from "wagmi";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { HexParser } from "../../../../common/toolsKit";
 import { fetchLogs } from "../../../../common/getLogs";
+import { ftHis } from "./FtCbpflow";
 
 export type CbpOutflowSum = {
   totalAmt: bigint;
@@ -193,7 +193,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let fuelSoldLogs = await fetchLogs({
-        address: AddrOfTank,
+        address: ftHis[0],
         eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
@@ -201,7 +201,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       });          
 
       fuelSoldLogs = [...fuelSoldLogs, ...(await fetchLogs({
-        address: HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
+        address: ftHis[1], 
         eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,
@@ -209,7 +209,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       }))];          
 
       fuelSoldLogs = [...fuelSoldLogs, ...(await fetchLogs({
-        address: HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7"),
+        address: ftHis[2],
         eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
         fromBlkNum: fromBlkNum,
         toBlkNum: toBlkNum,

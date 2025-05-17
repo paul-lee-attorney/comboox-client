@@ -23,12 +23,14 @@ import { InvHistoryOfMember } from "../rom/components/InvHistoryOfMember";
 import { ConfigSetting } from "./config_setting/ConfigSetting";
 import { FinStatement } from "./FinStatement";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { HistoryOfBoox } from "./GeneralInfo/HistoryOfBoox";
 import { CashBox } from "./GeneralInfo/CashBox";
+import { autoUpdateLogs } from "../../../api/firebase/arbiScanLogsTool";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
+
+  const client = usePublicClient();
 
   const [ time, setTime ] = useState<number>(0);
 
@@ -36,10 +38,20 @@ export function GeneralInfo() {
     setTime(Date.now());
   }
 
+  useEffect(()=>{
+
+    const updateLogs = async ()=>{
+      if (!gk) return;
+      const blk = await client.getBlock();
+      autoUpdateLogs(gk, blk.number);
+    }
+
+    updateLogs();
+
+  }, [gk]);
+
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
   const [ dk, setDK ] = useState<string>('');
-
-  const client = usePublicClient();
 
   useEffect(()=>{
     if (gk) {
