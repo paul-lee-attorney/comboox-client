@@ -1,6 +1,6 @@
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import fetch from 'node-fetch';
-import { Hex, Log, getEventSelector } from 'viem';
+import { Hex, Log, getEventSelector, parseAbiItem} from 'viem';
 import { db } from './firebase';
 import { getMonthLableByTimestamp } from './finInfoTools';
 import { delay, HexParser } from '../../app/common/toolsKit';
@@ -519,7 +519,13 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
 
                 while(width > 0) {
                     let name = info.name[width - 1];
-                    let topic0 = getEventSelector(info.abiStr[width - 1]);
+                    let eventFilter = parseAbiItem(info.abiStr[width - 1]);
+
+                    if (eventFilter.type !== "event") {
+                        throw new Error("Provided ABI is not an event.");
+                    }
+
+                    let topic0 = getEventSelector(eventFilter);
                     
                     let events = logs.filter((v) => {
                         console.log('topics[0] of Log:', v.topics[0]?.toLowerCase());
