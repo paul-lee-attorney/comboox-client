@@ -520,7 +520,7 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
                     const name = info.name[width - 1];
                     const topic0 = getEventSelector(info.abiStr[width - 1]);
                     
-                    const events = logs.filter((v)=>v.topics[0] == topic0);
+                    const events = logs.filter(v => v.topics[0] == topic0);
 
                     if (events.length > 0) {
                         const flag = await setLogs(gk, info.title, info.address, name, events);
