@@ -43,6 +43,8 @@ export function GeneralInfo() {
     const updateLogs = async ()=>{
       if (!gk) return;
       const blk = await client.getBlock();
+      
+      console.log('triggered autoUpdateLogs');
       autoUpdateLogs(gk, blk.number);
     }
 

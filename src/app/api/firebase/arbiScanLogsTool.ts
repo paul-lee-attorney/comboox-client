@@ -504,6 +504,7 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
         let info = menu[len-1];
 
         let fromBlk = await getTopBlkOf(gk, info.address);
+        console.log('obtained fromBlk of:', info.address, ' is:', fromBlk);
 
         if (fromBlk == 1n) return;
         else fromBlk++;
@@ -512,6 +513,7 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
         
         if (data) {
             let logs = data.result;
+            console.log('get logs:', logs);
 
             if (logs.length > 0) {
                 let width = info.name.length;
@@ -520,9 +522,14 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
                     const name = info.name[width - 1];
                     const topic0 = getEventSelector(info.abiStr[width - 1]);
                     
-                    const events = logs.filter(v => v.topics[0] == topic0);
+                    const events = logs.filter((v) => {
+                        return v.topics[0] == topic0;
+                    });
 
                     if (events.length > 0) {
+
+                        console.log('filtered', events.length, ' events of', info.name); 
+
                         const flag = await setLogs(gk, info.title, info.address, name, events);
                         if (!flag) return false;
                     }
