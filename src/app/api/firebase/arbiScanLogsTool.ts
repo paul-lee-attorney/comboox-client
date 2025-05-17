@@ -250,7 +250,7 @@ export async function fetchArbiscanData(
 
 export async function getTopBlkOf(
     gk:Hex, 
-    title:string,
+    address:string,
 ): Promise<bigint> {
 
     const docRef = doc(db, gk.toLowerCase(), 'topBlkOf');
@@ -259,13 +259,12 @@ export async function getTopBlkOf(
         const docSnap = await getDoc(docRef);
         const records = {...docSnap.data()} as Record<string, string>;
 
-        const top = records[title];
-        const out = BigInt(top);
-        console.log(`get topBlkOf ${title}:`, out);
+        const top = records[address];
+        console.log(`get topBlkOf ${address}:`, top);
 
-        return BigInt(out);
+        return BigInt(top);
     } catch (error) {
-        console.error(`Error fetching TopBlkOf ${title}:`, error);
+        console.error(`Error fetching TopBlkOf ${address}:`, error);
         return 1n;
     }
 
@@ -286,7 +285,7 @@ export async function setTopBlkOf(
     console.log(`previous topBlkOf ${address}:`, topBlk);
 
     topBlk = blkNum.toString();
-    records.address = topBlk;
+    records[address] = topBlk;
 
     await setDoc(docRef, records);
     console.log(`updated topBlkOf ${address}:`, topBlk);
