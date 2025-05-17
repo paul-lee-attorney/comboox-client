@@ -273,7 +273,7 @@ export async function getTopBlkOf(
 
 export async function setTopBlkOf(
     gk:Hex, 
-    title:string, 
+    address:string, 
     blkNum:bigint,
 ): Promise<boolean> {
 
@@ -282,18 +282,18 @@ export async function setTopBlkOf(
   try {
     const docSnap = await getDoc(docRef);
     let records = {...docSnap.data()} as Record<string, string>;
-    let topBlk = records[title];
-    console.log(`previous topBlkOf ${title}:`, topBlk);
+    let topBlk = records[address];
+    console.log(`previous topBlkOf ${address}:`, topBlk);
 
     topBlk = blkNum.toString();
-    records = {...records, title: topBlk};
+    records.address = topBlk;
 
     await setDoc(docRef, records);
-    console.log(`updated topBlkOf ${title}:`, topBlk);
+    console.log(`updated topBlkOf ${address}:`, topBlk);
 
     return true;
   } catch (error: any) {
-    console.error(`Error set topBlkOf ${title}:`, error);
+    console.error(`Error set topBlkOf ${address}:`, error);
     return false;
   }
 
