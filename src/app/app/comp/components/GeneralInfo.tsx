@@ -38,14 +38,18 @@ export function GeneralInfo() {
     setTime(Date.now());
   }
 
+  const [ logsReady, setLogsReady ] = useState(false);
+
   useEffect(()=>{
 
     const updateLogs = async ()=>{
       if (!gk) return;
       const blk = await client.getBlock();
       
-      console.log('triggered autoUpdateLogs');
-      autoUpdateLogs(gk, blk.number);
+      // console.log('triggered autoUpdateLogs');
+      let flag = await autoUpdateLogs(gk, blk.number);
+      if (flag) setLogsReady(true);
+
     }
 
     updateLogs();
@@ -313,7 +317,7 @@ export function GeneralInfo() {
 
         <CashBox />
 
-        {compInfo?.regNum == 8 && (
+        {compInfo?.regNum == 8 && logsReady && (
           <FinStatement />
         )}
 

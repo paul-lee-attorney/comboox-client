@@ -24,13 +24,10 @@ interface ArbiscanData {
 
 export async function fetchArbiscanData(
     address:Hex,
-    // eventAbiString:string,
     fromBlock:bigint, 
     toBlock:bigint,
 ): Promise<ArbiscanData | undefined>  {
   
-    // const topic0 = getEventSelector(eventAbiString);
-
     let url = `https://api.arbiscan.io/api?` + 
         `module=logs&` + 
         `action=getLogs&` +
@@ -249,8 +246,7 @@ export async function fetchArbiscanData(
 // ];
 
 export async function getTopBlkOf(
-    gk:Hex, 
-    address:string,
+    gk:Hex, address:string,
 ): Promise<bigint> {
 
     const docRef = doc(db, gk.toLowerCase(), 'topBlkOf');
@@ -271,9 +267,7 @@ export async function getTopBlkOf(
 }
 
 export async function setTopBlkOf(
-    gk:Hex, 
-    address:string, 
-    blkNum:bigint,
+    gk:Hex, address:string, blkNum:bigint,
 ): Promise<boolean> {
 
   const docRef = doc(db, gk.toLowerCase(), 'topBlkOf');
@@ -323,51 +317,14 @@ export async function getMenuOfLogs(
 
 }
 
-// export async function updateMenuOfLogs(
-//     gk:Hex, 
-//     index:number, 
-//     title:string, 
-//     address:Hex,
-//     name:string, 
-//     abiStr:string,
-// ): Promise<boolean> {
-
-//     const item: EventInfo = {title, address, name, abiStr};
-//     const docRef = doc(db, gk.toLowerCase(), 'menuOfLogs');
-
-//     try {
-//         // 获取特定文档
-//         const docSnap = await getDoc(docRef);
-
-//         let menu = docSnap.data()?.list as EventInfo[];
-
-//         const len = menu.length;
-//         if (index >= len) {
-//             menu.push(item);
-//         } else {
-//             menu[index] = item;
-//         }
-
-//         await setDoc(docRef, menu);
-//         console.log("updated item of menuOfLogs:", item);
-        
-//         return true;
-//     } catch (error) {
-//         console.error("Error update menuOfLogs: ", error);
-//         return false;   
-//     }
-
-// }
-
 // ==== Contents of Logs ====
 
-export async function getLogsByMonthsFromDB(
-  gk:Hex, title:string, address:Hex, name:string, month:string
+export async function getLogsByMillion(
+  gk:Hex, titleOfSM:string, address:Hex, name:string, million:string
 ): Promise<ArbiscanLog[] | undefined> {
 
-    const docRef = doc(db, gk.toLowerCase(), 'logInfo', title, address.toLowerCase(), name, month);
+    const docRef = doc(db, gk.toLowerCase(), 'logInfo', titleOfSM, address.toLowerCase(), name, million);
     try {
-        // 获取特定文档
         const docSnap = await getDoc(docRef);
 
         if (docSnap.exists()) {
@@ -376,7 +333,6 @@ export async function getLogsByMonthsFromDB(
             console.log("no Logs found!");
             return undefined;
         }
-
     } catch (error) {
         console.error("Error fetching financial data: ", error);
         return undefined;   
@@ -384,24 +340,24 @@ export async function getLogsByMonthsFromDB(
 
 }
 
-export async function getLogsFromDB(
-    gk:Hex, title:string, address:Hex, name:string,
+export async function getAllLogs(
+    gk:Hex, titleOfSM:string, address:Hex, name:string,
 ): Promise<ArbiscanLog[] | undefined> {
   let output: ArbiscanLog[] = [];
 
   try {
-    const monthCollRef = collection(db, gk.toLowerCase(), 'logInfo', title, address.toLowerCase(), name);
-    const monthDocsSnap = await getDocs(monthCollRef);
+    const millionCollRef = collection(db, gk.toLowerCase(), 'logInfo', titleOfSM, address.toLowerCase(), name);
+    const millionDocsSnap = await getDocs(millionCollRef);
 
-    if (monthDocsSnap.empty) {
-      console.log('No month data exists');
+    if (millionDocsSnap.empty) {
+      console.log('No million data exists');
       return undefined;
     }
 
-    const months = monthDocsSnap.docs.map(coll => coll.id).sort();
+    const millions = millionDocsSnap.docs.map(coll => coll.id).sort();
 
-    for (const month of months) {
-      const queryData = await getLogsByMonthsFromDB(gk, title, address, name, month);
+    for (const million of millions) {
+      const queryData = await getLogsByMillion(gk, titleOfSM, address, name, million);
       if (queryData && queryData.length > 0) {
         output = output.concat(queryData);
       }
@@ -410,7 +366,40 @@ export async function getLogsFromDB(
     return output.length > 0 ? output : undefined;
 
   } catch (error) {
-    console.error("Error fetching logs: ", error);
+    console.error("Error fetching all logs: ", error);
+    return undefined;
+  }
+}
+
+export async function getNewLogs(
+    gk:Hex, titleOfSM:string, address:Hex, name:string, fromBlk:string
+): Promise<ArbiscanLog[] | undefined> {
+  let output: ArbiscanLog[] = [];
+  let fromMillion = Number(BigInt(fromBlk) / 10n ** 6n); 
+
+  try {
+    const millionCollRef = collection(db, gk.toLowerCase(), 'logInfo', titleOfSM, address.toLowerCase(), name);
+    const millionDocsSnap = await getDocs(millionCollRef);
+
+    if (millionDocsSnap.empty) {
+      console.log('No million data exists');
+      return undefined;
+    }
+
+    let millions = millionDocsSnap.docs.map(coll => Number(coll.id)).sort();
+    millions = millions.filter(v => v >= fromMillion);
+
+    for (const million of millions) {
+      const queryData = await getLogsByMillion(gk, titleOfSM, address, name, million.toString());
+      if (queryData && queryData.length > 0) {
+        output = output.concat(queryData);
+      }
+    }
+
+    return output.length > 0 ? output : undefined;
+
+  } catch (error) {
+    console.error("Error fetching new logs: ", error);
     return undefined;
   }
 }
@@ -430,23 +419,22 @@ const mergeAndSort = (a: ArbiscanLog[], b: ArbiscanLog[]): ArbiscanLog[] => {
   });
 }
 
-export async function setLogsByMonth(
+export async function setLogsByMillion(
   gk:Hex, title:string, address:Hex, 
-  name:string, month:string, data:ArbiscanLog[],
+  name:string, million:string, data:ArbiscanLog[],
 ): Promise<boolean> {
 
-  // 创建一个文档引用
-  const docRef = doc(db, gk.toLowerCase(), 'logInfo', title, address.toLowerCase(), name, month);
+  const docRef = doc(db, gk.toLowerCase(), 'logInfo', title, address.toLowerCase(), name, million);
 
   try {
-    let prevData = await getLogsByMonthsFromDB(gk, title, address, name, month);
+    let prevData = await getLogsByMillion(gk, title, address, name, million);
     if (prevData && prevData.length > 0) 
         data = mergeAndSort(prevData, data);
 
     await setDoc(docRef, {records: data});    
     return true;
   } catch (error: any) {
-    console.error("Error set Logs by months: ", error);
+    console.error("Error set Logs by million: ", error);
     return false;
   }
 
@@ -461,26 +449,26 @@ export async function setLogs(
     return false;
   }
 
-  const groupedByMonth:{[key:string]:ArbiscanLog[]} = {};
+  const groupedByMillion:{[key:string]:ArbiscanLog[]} = {};
 
   data.forEach(v => {
-    const key = getMonthLableByTimestamp(Number(v.timeStamp));
+    const key = (BigInt(v.blockNumber) / 10n ** 6n).toString();
 
-    if (!groupedByMonth[key]) {
-      groupedByMonth[key] = [];
+    if (!groupedByMillion[key]) {
+      groupedByMillion[key] = [];
     }
 
-    groupedByMonth[key].push(v);
+    groupedByMillion[key].push(v);
   });
 
-  console.log('ArbiscanLogs grouped by Month: ', groupedByMonth);
+  console.log('ArbiscanLogs grouped by Million: ', groupedByMillion);
 
   const promises: Promise<boolean>[] = [];
 
-  for (const key in groupedByMonth) {
-    if (Object.hasOwnProperty.call(groupedByMonth, key)) {
-      const dataForMonth = groupedByMonth[key];
-      promises.push(setLogsByMonth(gk, title, address, name, key, dataForMonth));
+  for (const key in groupedByMillion) {
+    if (Object.hasOwnProperty.call(groupedByMillion, key)) {
+      const dataForMonth = groupedByMillion[key];
+      promises.push(setLogsByMillion(gk, title, address, name, key, dataForMonth));
     }
   }
 
@@ -491,11 +479,11 @@ export async function setLogs(
 
 // ==== Auto Update ====
 
-export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
+export async function autoUpdateLogs(gk:Hex, toBlk:bigint):Promise<boolean> {
 
     let menu = await getMenuOfLogs(gk);
 
-    if (!menu) return;
+    if (!menu) return false;
 
     let len = menu.length;
 
@@ -503,16 +491,15 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
         let info = menu[len-1];
 
         let fromBlk = await getTopBlkOf(gk, info.address);
-        console.log('obtained fromBlk of:', info.address, ' is:', fromBlk);
 
-        if (fromBlk == 1n) return;
+        if (fromBlk == 1n || fromBlk >= toBlk) return false;
         else fromBlk++;
 
         let data = await fetchArbiscanData(info.address, fromBlk, toBlk);
         
         if (data) {
             let logs = data.result;
-            console.log('get logs:', logs);
+            // console.log('get logs:', logs);
 
             if (logs.length > 0) {
                 let width = info.name.length;
@@ -522,23 +509,21 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
                     let topic0 = keccak256(toHex(info.abiStr[width - 1]));
                     
                     let events = logs.filter((v) => {
-                        console.log('topics[0] of Log:', v.topics[0]?.toLowerCase());
-                        console.log('topic0 from abi parser:', topic0.toLowerCase());
                         return v.topics[0]?.toLowerCase() == topic0.toLowerCase();
                     });
 
                     if (events.length > 0) {
-
-                        console.log('filtered', events.length, ' events of ', name); 
-
-                        await setLogs(gk, info.title, info.address, name, events);                        
+                        let flag = await setLogs(gk, info.title, info.address, name, events);   
+                        if (flag) console.log('appended', events.length, ' events of ', name);
+                        else return false;
                     }
 
                     width--;
                 }
             }
 
-            await setTopBlkOf(gk, info.address, toBlk);
+           let flag = await setTopBlkOf(gk, info.address, toBlk);
+           if (!flag) return false;
             
         }
 
@@ -546,6 +531,8 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint) {
 
         len--;
     }
+
+    return true;
 }
 
 

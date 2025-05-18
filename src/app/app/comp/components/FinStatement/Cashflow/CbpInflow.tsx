@@ -4,10 +4,11 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, keepersMap } from "../../../../c
 import { usePublicClient } from "wagmi";
 import { decodeFunctionData } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, getMonthLableByTimestamp, setFinData, setFinDataTopBlk, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
 import { fetchLogs } from "../../../../common/getLogs";
+import { getTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -145,7 +146,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       let logs = await getFinData(gk, 'cbpInflow');
-      let fromBlkNum = await getFinDataTopBlk(gk, 'cbpInflow');
+      
+      let fromBlkNum = await getTopBlkOf(gk, 'cbpInflow');
       
       if (!fromBlkNum) {
         fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;

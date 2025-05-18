@@ -67,21 +67,21 @@ export function cashflowStringToData(input:CashflowStrProps[]): Cashflow[] {
   return output;
 }
 
-export async function getFinDataTopBlk(gk: HexType, typeOfInfo:string): Promise<bigint | undefined> {
+// export async function getFinDataTopBlk(gk: HexType, typeOfInfo:string): Promise<bigint | undefined> {
 
-  // 获取特定文档
-  const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, 'topBlk');
-  const docSnap = await getDoc(docRef);
+//   // 获取特定文档
+//   const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, 'topBlk');
+//   const docSnap = await getDoc(docRef);
 
-  if (docSnap.exists()) {
-    let res = docSnap.data();
-    return BigInt(res.blockNumber);
-  } else {
-    console.log("no financial data found!");
-    return undefined;
-  }
+//   if (docSnap.exists()) {
+//     let res = docSnap.data();
+//     return BigInt(res.blockNumber);
+//   } else {
+//     console.log("no financial data found!");
+//     return undefined;
+//   }
 
-}
+// }
 
 export async function getFinDataByMonth(gk: HexType, typeOfInfo:string, month:string): Promise<Cashflow[] | undefined> {
 
@@ -131,19 +131,32 @@ export async function getFinData(gk: HexType, typeOfInfo: string): Promise<Cashf
   }
 }
 
-export async function setFinDataTopBlk(gk: HexType, typeOfInfo:string, blkNum:bigint): Promise<boolean> {
+// export async function setFinDataTopBlk(gk: HexType, typeOfInfo:string, blkNum:bigint): Promise<boolean> {
 
-  // 创建一个文档引用
-  const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, 'topBlk');
+//   // 创建一个文档引用
+//   const docRef = doc(db, gk.toLowerCase(), 'finInfo', typeOfInfo, 'topBlk');
 
-  try {
-    await setDoc(docRef, {blockNumber: blkNum.toString()});
-    return true;
-  } catch (error: any) {
-    console.error("Error set financial data: ", error);
-    return false;
-  }
+//   try {
+//     await setDoc(docRef, {blockNumber: blkNum.toString()});
+//     return true;
+//   } catch (error: any) {
+//     console.error("Error set financial data: ", error);
+//     return false;
+//   }
 
+// }
+
+const mergeAndSort = (a: Cashflow[], b: Cashflow[]): Cashflow[] => {
+  const mergedMap = new Map<string, Cashflow>();
+  [...a, ...b].forEach(item => {
+    mergedMap.set(item.transactionHash.toLowerCase(), item);
+  });
+
+  return Array.from(mergedMap.values()).sort((x, y) => {
+    if (x.blockNumber > y.blockNumber) return 1;
+    if (x.blockNumber < y.blockNumber) return -1;
+    return Number(x.amt) - Number(y.amt);
+  });
 }
 
 export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:string, data:Cashflow[]): Promise<boolean> {
@@ -156,11 +169,7 @@ export async function setFinDataByMonth(gk: HexType, typeOfInfo:string, month:st
     let prevData = await getFinDataByMonth(gk, typeOfInfo, month);
 
     if (prevData && prevData.length > 0) {
-      if (prevData[prevData.length - 1].timestamp < data[0].timestamp) {
-          data = prevData.concat(data);
-      } else {
-          return true;
-      }
+      data = mergeAndSort(prevData, data);
     }
 
     await setDoc(docRef, {records: cashflowDataToString(data)});
