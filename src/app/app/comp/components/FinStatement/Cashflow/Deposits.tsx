@@ -4,9 +4,10 @@ import { AddrZero, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { fetchLogs } from "../../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
+import { Hex } from "viem";
 
 export type DepositsSum = {
   totalAmt: bigint;
@@ -126,8 +127,6 @@ export const updateDepositsSum = (arr: Cashflow[], startDate:number, endDate:num
     sum[3] = sumArrayOfDeposits(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  // console.log('deposits range:', startDate, endDate);
-  // console.log('deposits:', sum);
   return sum;
 }
 
@@ -144,14 +143,9 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'deposits');
 
-      let fromBlkNum = await getFinDataTopBlk(gk, 'deposits');
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      }
-      console.log('topBlk Of deposits: ', fromBlkNum);
+      let fromBlkNum = (await getTopBlkOf(gk, 'deposits')) + 1n;
+      console.log('fromBlk of deposits: ', fromBlkNum);
       
-      let toBlkNum = await client.getBlockNumber();
-
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
 
@@ -172,14 +166,20 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let pickupLogs = await fetchLogs({
-        address: gk,
-        eventAbiString: 'event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getNewLogs(gk, 'GeneralKeeper', gk, 'PickupDeposit', fromBlkNum);
 
+      let abiStr = 'event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)';
+
+      type TypeOfPickupDepositLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          to: Hex,
+          caller: bigint,
+          amt: bigint
+        }
+      }
+
+      let pickupLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfPickupDepositLog);
       console.log('pickupLogs: ', pickupLogs);
 
       let len = pickupLogs.length;
@@ -188,14 +188,12 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = pickupLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-     
+
         let item:Cashflow = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'Pickup',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
@@ -213,13 +211,20 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let depositLogs = await fetchLogs({
-        address: gk,
-        eventAbiString: 'event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'GeneralKeeper', gk, 'SaveToCoffer', fromBlkNum);
+
+      abiStr = 'event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)';
+
+      type TypeOfSaveToCofferLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          acct: bigint,
+          value: bigint,
+          reason: Hex,
+        }
+      }
+
+      let depositLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfSaveToCofferLog);
 
       console.log('depositLogs: ', depositLogs);
 
@@ -229,14 +234,12 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = depositLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-     
+
         let item:Cashflow = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: ethers.decodeBytes32String(log.args.reason ?? Bytes32Zero),
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
@@ -254,14 +257,21 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let custodyLogs = await fetchLogs({
-        address: gk,
-        eventAbiString: 'event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'GeneralKeeper', gk, 'ReleaseCustody', fromBlkNum);
 
+      abiStr = 'event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)';
+
+      type TypeOfReleaseCustodyLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: bigint,
+          to: bigint,
+          amt: bigint,
+          reason: Hex,
+        }
+      }
+
+      let custodyLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfReleaseCustodyLog);
       console.log('custodyLogs: ', custodyLogs);
 
       len = custodyLogs.length;
@@ -270,14 +280,12 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = custodyLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
      
         let item:Cashflow = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: ethers.decodeBytes32String(log.args.reason ?? Bytes32Zero),
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
@@ -295,8 +303,12 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      await setFinDataTopBlk(gk, 'deposits', toBlkNum);
-      console.log('updated topBlk Of deposits: ', toBlkNum);
+      console.log('arr in deposits:', arr);
+
+      let toBlkNum = await getTopBlkOf(gk, gk);
+
+      await setTopBlkOf(gk, 'deposits', toBlkNum);
+      console.log('updated topBlk Of Deposits:', toBlkNum);
 
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));

@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, keepersMap } from "../../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, Bytes32Zero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { decodeFunctionData } from "viem";
+import { decodeFunctionData, Hex, } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
-import { fetchLogs } from "../../../../common/getLogs";
-import { getTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -147,16 +146,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       let logs = await getFinData(gk, 'cbpInflow');
       
-      let fromBlkNum = await getTopBlkOf(gk, 'cbpInflow');
-      
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      }
-      
-      let toBlkNum = await client.getBlockNumber();
-
-      console.log('lastItemOfCbpInflow: ', fromBlkNum);
-      console.log('current blkNum: ', toBlkNum);
+      let fromBlkNum = (await getTopBlkOf(gk, 'cbpInflow')) + 1n;
+      console.log('fromBlk of CbpInflow: ', fromBlkNum);
 
       if (logs && client.chain.id == 42161) {
         let len = logs.length; 
@@ -182,16 +173,23 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         }
       } 
 
-      let transferLogs = await fetchLogs({
-        address: AddrOfRegCenter, 
-        eventAbiString: 'event Transfer(address indexed from, address indexed to, uint256 indexed value)',
-        args: {to: gk},
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getNewLogs(gk, 'RegCenter', AddrOfRegCenter, 'Transfer', fromBlkNum);
 
-      transferLogs = transferLogs.filter((v:any) => 
+      let abiStr = 'event Transfer(address indexed from, address indexed to, uint256 indexed value)';
+
+      type TypeOfTransferLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: Hex,
+          to: Hex,
+          value: bigint
+        }
+      }
+
+      let transferLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferLog);
+
+      transferLogs = transferLogs?.filter((v) => 
+          v.args.to.toLowerCase() == gk.toLowerCase() &&
           v.args.from?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
           v.args.from?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase());
@@ -204,14 +202,11 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       while (cnt < len) {
         let log = transferLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'Royalty',
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
@@ -274,7 +269,9 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       console.log('arr in cbpInflow:', arr);
 
-      await setFinDataTopBlk(gk, 'cbpInflow', toBlkNum);
+      let toBlkNum = await getTopBlkOf(gk, AddrOfRegCenter);
+
+      await setTopBlkOf(gk, 'cbpInflow', toBlkNum);
       console.log('updated topBlk Of CbpInflow: ', toBlkNum);
 
       if (arr.length > 0) {

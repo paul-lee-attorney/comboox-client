@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrZero, booxMap, Bytes32Zero, HexType, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { decodeEventLog } from "viem";
+import { decodeEventLog, Hex } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, setFinData, } from "../../../../../api/firebase/finInfoTools";
 import { registerOfSharesABI, usdRomKeeperABI } from "../../../../../../../generated";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
 import { addrToUint, HexParser } from "../../../../common/toolsKit";
-import { fetchLogs } from "../../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 
 export type UsdInflowSum = {
   totalAmt: bigint;
@@ -100,13 +100,8 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       let logs = await getFinData(gk, 'usdInflow');
 
-      let fromBlkNum = await getFinDataTopBlk(gk, 'usdInflow');
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      };
-
-      console.log('topBlk of usdInflow: ', fromBlkNum);
-      let toBlkNum = await client.getBlockNumber();
+      let fromBlkNum = (await getTopBlkOf(gk, 'usdInflow')) + 1n;
+      console.log('fromBlk of usdInflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
 
@@ -145,21 +140,22 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         } 
       }
 
-      let payInCapLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString: 'event ReceiveUsd(address indexed from, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ReceiveUsd', fromBlkNum);
 
-      payInCapLogs = [...payInCapLogs, ...(await fetchLogs({
-        address: csHis[0],
-        eventAbiString: 'event ReceiveUsd(address indexed from, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
+      let abiStr = 'event ReceiveUsd(address indexed from, uint indexed amt)';
+
+      type TypeOfReceiveUsdLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: Hex,
+          amt: bigint
+        }
+      }
+
+      let payInCapLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfReceiveUsdLog);
+
+      rawLogs = await getNewLogs(gk, 'Cashier', csHis[0], 'ReceiveUsd', fromBlkNum);
+      payInCapLogs = [...payInCapLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfReceiveUsdLog)];
 
       console.log('payInCapLogs: ', payInCapLogs);
 
@@ -170,14 +166,14 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         let log = payInCapLogs[cnt];
 
         let input:ReleaseUsdLog = {
-          txHash: log.transactionHash,
-          blockNumber: log.blockNumber,
+          txHash: log.transactionHash ?? Bytes32Zero,
+          blockNumber: BigInt(log.blockNumber),
           from: log.args.from ?? Bytes32Zero,
           amt: log.args.amt ?? 0n
         }
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let usdRomKeeperLog = receipt.logs
@@ -207,16 +203,22 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let releaseUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString: 'event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ReleaseUsd', fromBlkNum);
+
+      abiStr = 'event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)';
+
+      type TypeOfUsdLog = ArbiscanLog & {
+        eventName: string, 
         args: {
-          to: cashier
-        },        
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+          from: Hex,
+          to: Hex,
+          amt: bigint,
+          remark: Hex,
+        }
+      }
+
+      let releaseUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfUsdLog);
+      releaseUsdLogs = releaseUsdLogs.filter(v => v.args.to.toLowerCase() == cashier.toLowerCase());
 
       console.log('releaseUsdLogs: ', releaseUsdLogs);
 
@@ -228,14 +230,14 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         let log = releaseUsdLogs[cnt];
 
         let input:ReleaseUsdLog = {
-          txHash: log.transactionHash,
-          blockNumber: log.blockNumber,
+          txHash: log.transactionHash ?? Bytes32Zero,
+          blockNumber: BigInt(log.blockNumber),
           from: log.args.from ?? Bytes32Zero,
           amt: log.args.amt ?? 0n
         }
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let rosLog = receipt.logs
@@ -267,16 +269,12 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let forwardUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString: 'event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
-        args: {
-          to: cashier
-        },        
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ForwardUsd', fromBlkNum);
+
+      abiStr = 'event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)';
+
+      let forwardUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfUsdLog);
+      releaseUsdLogs = releaseUsdLogs.filter(v => v.args.to.toLowerCase() == cashier.toLowerCase());
 
       console.log('forwardUsdLogs: ', forwardUsdLogs);
 
@@ -288,14 +286,14 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         let log = forwardUsdLogs[cnt];
 
         let input:ReleaseUsdLog = {
-          txHash: log.transactionHash,
-          blockNumber: log.blockNumber,
+          txHash: log.transactionHash ?? Bytes32Zero,
+          blockNumber: BigInt(log.blockNumber),
           from: log.args.from ?? Bytes32Zero,
           amt: log.args.amt ?? 0n
         }
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let rosLog = receipt.logs
@@ -327,16 +325,20 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let upgradeLogs = await fetchLogs({
-        address: csHis[0],
-        eventAbiString: 'event TransferUsd(address indexed to, uint indexed amt)',
+      rawLogs = await getNewLogs(gk, 'Cashier', csHis[0], 'TransferUsd', fromBlkNum);
+
+      abiStr = 'event TransferUsd(address indexed to, uint indexed amt)';
+
+      type TypeOfTransferUsdLog = ArbiscanLog & {
+        eventName: string, 
         args: {
-          to: cashier
-        },        
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+          to: Hex,
+          amt: bigint,
+        }
+      }
+
+      let upgradeLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferUsdLog);
+      releaseUsdLogs = releaseUsdLogs.filter(v => v.args.to.toLowerCase() == cashier.toLowerCase());
 
       console.log('upgradeLogs: ', upgradeLogs);
 
@@ -347,14 +349,11 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
         let log = upgradeLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'UpgradeCashier',
           amt: log.args.amt ?? 0n,
           ethPrice: addrToUint(csHis[0]),
@@ -368,7 +367,11 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }      
 
-      await setFinDataTopBlk(gk, 'usdInflow', toBlkNum);
+      console.log('arr in usdInflow:', arr);
+
+      let toBlkNum = await getTopBlkOf(gk, cashier);
+
+      await setTopBlkOf(gk, 'usdInflow', toBlkNum);
       console.log('updated topBlk Of usdInflow: ', toBlkNum);
 
       if (arr.length > 0) {

@@ -1,11 +1,10 @@
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import fetch from 'node-fetch';
-import { Hex, keccak256, Log, toHex} from 'viem';
+import { decodeEventLog, Hex, keccak256, Log, parseAbiItem, toHex} from 'viem';
 import { db } from './firebase';
-import { getMonthLableByTimestamp } from './finInfoTools';
 import { delay, HexParser } from '../../app/common/toolsKit';
 
-interface ArbiscanLog extends Omit<Log, 'blockNumber'|'logIndex'|'transactionIndex'> {
+export interface ArbiscanLog extends Omit<Log, 'blockNumber'|'logIndex'|'transactionIndex'> {
   timeStamp: string;          // 时间戳的十六进制表示
   gasPrice: string;           // Gas价格的十六进制值
   gasUsed: string;            // 消耗Gas的十六进制值
@@ -372,10 +371,10 @@ export async function getAllLogs(
 }
 
 export async function getNewLogs(
-    gk:Hex, titleOfSM:string, address:Hex, name:string, fromBlk:string
-): Promise<ArbiscanLog[] | undefined> {
+    gk:Hex, titleOfSM:string, address:Hex, name:string, fromBlk:bigint
+): Promise<ArbiscanLog[]> {
   let output: ArbiscanLog[] = [];
-  let fromMillion = Number(BigInt(fromBlk) / 10n ** 6n); 
+  let fromMillion = Number(fromBlk / 10n ** 6n); 
 
   try {
     const millionCollRef = collection(db, gk.toLowerCase(), 'logInfo', titleOfSM, address.toLowerCase(), name);
@@ -383,7 +382,7 @@ export async function getNewLogs(
 
     if (millionDocsSnap.empty) {
       console.log('No million data exists');
-      return undefined;
+      return output;
     }
 
     let millions = millionDocsSnap.docs.map(coll => Number(coll.id)).sort();
@@ -396,11 +395,13 @@ export async function getNewLogs(
       }
     }
 
-    return output.length > 0 ? output : undefined;
+    return output.length > 0 
+        ? output.filter(v => BigInt(v.blockNumber) >= fromBlk) 
+        : output;
 
   } catch (error) {
     console.error("Error fetching new logs: ", error);
-    return undefined;
+    return [];
   }
 }
 
@@ -535,6 +536,18 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint):Promise<boolean> {
     return true;
 }
 
+// ==== Decode Arbiscan Log ====
 
+export function decodeArbiscanLog(log:ArbiscanLog, abiStr:string) {
+    const eventAbi = parseAbiItem(abiStr);
+
+    const {eventName, args} = decodeEventLog({
+    abi: [eventAbi],
+    data: log.data,
+    topics: log.topics,
+    });
+
+    return {...log, eventName, args};
+}
 
 

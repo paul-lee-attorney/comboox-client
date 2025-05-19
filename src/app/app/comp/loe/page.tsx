@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Box, FormControl, InputLabel, MenuItem, Paper, Select, Stack, Tooltip, Typography } from "@mui/material";
 
 import { CopyLongStrTF } from "../../common/CopyLongStr";
-import { AddrZero, booxMap } from "../../common";
+import { AddrZero, booxMap, Bytes32Zero } from "../../common";
 
 import { ActionsOfOrder } from "./components/ActionsOfOrder";
 import { Order, defaultOrder, getOrders, briefParser, Brief, BriefProps } from "./loe";
@@ -21,12 +21,13 @@ import { DealsChart } from "./components/DealsChart";
 import { SetBookAddr } from "../../components/SetBookAddr";
 import { AutoStoriesOutlined, MenuBook, VideoCameraBack, VideoCameraBackOutlined, VideoCameraFront } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
-import { getLogs, getLogsTopBlk } from "../../../api/firebase/logInfoTools";
-import { fetchLogs } from "../../common/getLogs";
+
+import { ArbiscanLog, decodeArbiscanLog, getAllLogs } from "../../../api/firebase/arbiScanLogsTool";
+import { Hex } from "viem";
 
 function ListOfOrders() {
 
-  const { boox } = useComBooxContext();
+  const {gk, boox } = useComBooxContext();
 
   const [addr, setAddr] = useState(boox ? boox[booxMap.LOO] : AddrZero );
 
@@ -83,31 +84,21 @@ function ListOfOrders() {
 
     const getEvents = async () => {
 
-      if (addr.toLowerCase() == AddrZero.toLowerCase()) return;
+      if (!gk || addr.toLowerCase() == AddrZero.toLowerCase()) return;
 
-      let logs = await getLogs(addr, 'DealClosed');
-      let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
-      
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
+      let rawLogs = await getAllLogs(gk, 'LOE', addr, 'DealClosed');
+
+      let abiStr = 'event DealClosed(bytes32 indexed deal, uint indexed consideration)';
+
+      type TypeOfDealClosedLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          deal: Hex,
+          consideration:bigint,
+        }
       }
-      
-      let toBlkNum = await client.getBlockNumber();
 
-      console.log('top blk of DealClosed: ', fromBlkNum);
-      console.log('current blkNum: ', toBlkNum);
-
-      let dealLogs = await fetchLogs({
-        address: addr, 
-        eventAbiString: 'event DealClosed(bytes32 indexed deal, uint indexed consideration)',
-        fromBlkNum: (fromBlkNum ?? 0n) + 1n,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
-
-      if (logs && logs.length > 0) {
-        dealLogs = [...logs, ...dealLogs];
-      }
+      let dealLogs = rawLogs?.map(log => decodeArbiscanLog(log, abiStr) as TypeOfDealClosedLog) ?? [];
 
       let cnt = dealLogs.length;
 
@@ -119,11 +110,9 @@ function ListOfOrders() {
       while (cnt > 0) {
 
         let log = dealLogs[cnt-1];
-        let deal:Brief = briefParser(log.args.deal ?? '0x00');
-        let consideration: bigint = log.args.consideration ?? 0n;
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
+        let deal:Brief = briefParser(log.args.deal ?? '0x00');
+        let consideration: bigint = log.args.consideration;
 
         let classOfOrder = Number(deal.classOfShare);
 
@@ -133,9 +122,9 @@ function ListOfOrders() {
         }
 
         let item:BriefProps = {
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: BigInt(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           seqOfDeal: counter,
           classOfShare: longSnParser(classOfShare.toString()),
           seqOfShare: longSnParser(deal.seqOfShare),
@@ -164,7 +153,7 @@ function ListOfOrders() {
 
     getEvents();
 
-  },[addr, client, classOfShare, setQty, setAmt, time]);  
+  },[gk, addr, client, classOfShare, setQty, setAmt, time]);  
 
   const [ deal, setDeal ] = useState<BriefProps | undefined>();
   const [ show, setShow ] = useState<boolean>(false);

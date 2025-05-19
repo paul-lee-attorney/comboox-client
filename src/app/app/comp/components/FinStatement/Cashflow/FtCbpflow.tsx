@@ -1,12 +1,14 @@
 import { useEffect, } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrOfTank, AddrZero, } from "../../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, Bytes32Zero, } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { HexParser } from "../../../../common/toolsKit";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { getFinData,  setFinData, } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { fetchLogs } from "../../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
+import { Hex } from "viem";
 
 export type FtCbpflowSum = {
   totalCbp: bigint;
@@ -113,13 +115,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'ftCbpflow');
 
-      let fromBlkNum = await getFinDataTopBlk(gk, 'ftCbpflow');
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      };
-
-      console.log('topBlk of ftCbpflow: ', fromBlkNum);
-      let toBlkNum = await client.getBlockNumber();
+      let fromBlkNum = (await getTopBlkOf(gk, 'ftCbpflow')) + 1n;
+      console.log('fromBlk of FtCbpflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -146,17 +143,27 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let addCbpLogs = await fetchLogs({
-        address: AddrOfRegCenter,
-        eventAbiString: 'event Transfer(address indexed from, address indexed to, uint256 indexed value)',
+      let rawLogs = await getNewLogs(gk, 'RegCenter', AddrOfRegCenter, 'Transfer', fromBlkNum);
+
+      let abiStr = 'event Transfer(address indexed from, address indexed to, uint256 indexed value)';
+
+      type TypeOfTransferLog = ArbiscanLog & {
+        eventName: string, 
         args: {
-          from: gk,
-          to: ftHis,
-        },
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+          from: Hex,
+          to: Hex,
+          value: bigint
+        }
+      }
+
+      let addCbpLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferLog);
+
+      addCbpLogs = addCbpLogs?.filter((v) => 
+          v.args.from.toLowerCase() == gk.toLowerCase() &&
+          (v.args.to?.toLowerCase() == ftHis[0].toLowerCase() ||
+          v.args.to?.toLowerCase() == ftHis[1].toLowerCase() ||
+          v.args.to?.toLowerCase() == ftHis[2].toLowerCase())
+      );
 
       console.log('addCbpLogs: ', addCbpLogs);
     
@@ -165,14 +172,12 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
     
       while (cnt < len) {
         let log = addCbpLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
     
         let item:Cashflow = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'AddCbp',
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
@@ -190,75 +195,12 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let withdrawCbpLogs = await fetchLogs({
-        address: ftHis[0],
-        eventAbiString: 'event WithdrawFuel(address indexed owner, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let deprecateLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferLog);
 
-      withdrawCbpLogs = [...withdrawCbpLogs, ...(await fetchLogs({
-        address: ftHis[1],
-        eventAbiString: 'event WithdrawFuel(address indexed owner, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
-
-      withdrawCbpLogs = [...withdrawCbpLogs, ...(await fetchLogs({
-        address: ftHis[2],
-        eventAbiString: 'event WithdrawFuel(address indexed owner, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
-
-      console.log('withdrawCbpLogs: ', withdrawCbpLogs);
-
-      len = withdrawCbpLogs.length;
-      cnt = 0;
-
-      while(cnt < len) {
-
-        let log = withdrawCbpLogs[cnt];
-
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-    
-        let item:Cashflow = {...defaultCashflow,
-          seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
-          typeOfIncome: 'WithdrawCbp',
-          amt: log.args.amt ?? 0n,
-          ethPrice: 0n,
-          usd: 0n,          
-          addr: log.args.owner ?? AddrZero,
-          acct: 0n,
-        }
-    
-        if (cnt == 0) {
-          ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
-
-        appendItem(item, ethPrices);
-        cnt++;
-      }
-
-      let deprecateLogs = await fetchLogs({
-        address: AddrOfRegCenter,
-        eventAbiString: 'event Transfer(address indexed from, address indexed to, uint256 indexed value)',
-        args: {
-          from: `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`,
-          to: gk,
-        },
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      deprecateLogs = deprecateLogs?.filter((v) => 
+          v.args.from.toLowerCase() == `0x${'FE8b7e87bb5431793d2a98D3b8ae796796403fA7'}`.toLowerCase() &&
+          v.args.to?.toLowerCase() == gk.toLowerCase()
+      );
     
       console.log('deprecateLogs: ', deprecateLogs);
 
@@ -267,14 +209,12 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
     
       while (cnt < len) {
         let log = deprecateLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
     
         let item:Cashflow = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'WithdrawCbp',
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
@@ -292,29 +232,77 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let refuelLogs = await fetchLogs({
-        address: ftHis[0],
-        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'WithdrawFuel', fromBlkNum);
 
-      refuelLogs = [...refuelLogs, ...(await fetchLogs({
-        address: ftHis[1],
-        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
+      abiStr = 'event WithdrawFuel(address indexed owner, uint indexed amt)';
 
-      refuelLogs = [...refuelLogs, ...(await fetchLogs({
-        address: ftHis[2],
-        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
+      type TypeOfWithdrawFuelLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          owner: Hex,
+          amt: bigint
+        }
+      }
+
+      let withdrawCbpLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfWithdrawFuelLog);
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[1], 'WithdrawFuel', fromBlkNum);
+      withdrawCbpLogs = [...withdrawCbpLogs, ... rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfWithdrawFuelLog)];
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[2], 'WithdrawFuel', fromBlkNum);
+      withdrawCbpLogs = [...withdrawCbpLogs, ... rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfWithdrawFuelLog)];
+
+      console.log('withdrawCbpLogs: ', withdrawCbpLogs);
+
+      len = withdrawCbpLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = withdrawCbpLogs[cnt];
+    
+        let item:Cashflow = {...defaultCashflow,
+          seq:0,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
+          typeOfIncome: 'WithdrawCbp',
+          amt: log.args.amt ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
+          addr: log.args.owner ?? AddrZero,
+          acct: 0n,
+        }
+    
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
+      }
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'Refuel', fromBlkNum);
+
+      abiStr = 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)';
+
+      type TypeOfRefuelLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          buyer: Hex,
+          amtOfEth: bigint,
+          amtOfCbp: bigint
+        }
+      }
+
+      let refuelLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog);
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[1], 'Refuel', fromBlkNum);
+      refuelLogs = [...refuelLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[2], 'Refuel', fromBlkNum);
+      refuelLogs = [...refuelLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
 
       console.log('refuelLogs: ', refuelLogs);
 
@@ -324,14 +312,12 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = refuelLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
      
         let item = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'RefuelCbp',
           amt: log.args.amtOfCbp ?? 0n,
           ethPrice: 0n,
@@ -349,8 +335,12 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      await setFinDataTopBlk(gk, 'ftCbpflow', toBlkNum);
-      console.log('updated topBlk Of ftCbpflow: ', toBlkNum);
+      console.log('arr in ftCbpflow:', arr);
+
+      let toBlkNum = await getTopBlkOf(gk, AddrOfRegCenter);
+
+      await setTopBlkOf(gk, 'ftCbpflow', toBlkNum);
+      console.log('updated topBlk Of CbpInflow: ', toBlkNum);
 
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));

@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Paper, Stack, Tooltip } from "@mui/material";
 import { usePublicClient } from "wagmi";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { AddrZero, HexType } from "../../../common";
+import { AddrZero, Bytes32Zero, HexType } from "../../../common";
 import { dateParser, HexParser, longSnParser } from "../../../common/toolsKit";
 import { getHeadByBody, HeadOfDoc } from "../../../rc";
 import { HistoryEduOutlined } from "@mui/icons-material";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { CopyLongStrTF } from "../../../common/CopyLongStr";
-import { fetchLogs } from "../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getAllLogs } from "../../../../api/firebase/arbiScanLogsTool";
+import { Hex } from "viem";
 
 export type RegBooxRecord = {
   seq: number,
@@ -43,35 +44,35 @@ export function HistoryOfBoox() {
 
       if (!gk) return;
       
-      let toBlkNum = await client.getBlockNumber();
-      console.log('current blkNum: ', toBlkNum);
 
       let arr: RegBooxRecord[] = [];
       let counter = 0;
 
-      let keepersLogs = await fetchLogs({
-        address: gk, 
-        eventAbiString: 'event RegKeeper(uint indexed title, address indexed keeper, address indexed dk)',
-        fromBlkNum: 1n,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getAllLogs(gk, 'GeneralKeeper', gk, 'RegKeeper');
+      let abiStr = 'event RegKeeper(uint indexed title, address indexed keeper, address indexed dk)';
+      type TypeOfRegKeeperLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          title: bigint,
+          keeper: Hex,
+          dk: Hex,
+        }
+      }
+
+      let keepersLogs = rawLogs?.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRegKeeperLog) ?? [];
 
       let cnt = keepersLogs.length;
 
       while (cnt > 0) {
         let log = keepersLogs[cnt-1];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let headOfDoc = await getHeadByBody(log.args.keeper ?? AddrZero);
 
         let item:RegBooxRecord = {
           seq: counter,
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: BigInt(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           title: Number(log.args.title ?? 0n),
           address: HexParser(log.args.keeper ?? AddrZero),
           dk: HexParser(log.args.dk ?? AddrZero),
@@ -84,13 +85,18 @@ export function HistoryOfBoox() {
         cnt--;
       }
 
-      let booxLogs = await fetchLogs({
-        address: gk, 
-        eventAbiString: 'event RegBook(uint indexed title, address indexed book, address indexed dk)',
-        fromBlkNum: 1n,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getAllLogs(gk, 'GeneralKeeper', gk, 'RegBook');
+      abiStr = 'event RegBook(uint indexed title, address indexed book, address indexed dk)';
+      type TypeOfRegBookLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          title: bigint,
+          book: Hex,
+          dk: Hex,
+        }
+      }
+
+      let booxLogs = rawLogs?.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRegBookLog) ?? [];
 
       cnt = booxLogs.length;
 
@@ -98,16 +104,13 @@ export function HistoryOfBoox() {
 
         let log = booxLogs[cnt-1];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let headOfDoc = await getHeadByBody(log.args.book ?? AddrZero);
 
         let item:RegBooxRecord = {
           seq: counter,
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: BigInt(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           title: 15 + Number(log.args.title ?? 0n),
           address: HexParser(log.args.book ?? AddrZero),
           dk: HexParser(log.args.dk ?? AddrZero),

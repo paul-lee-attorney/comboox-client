@@ -8,8 +8,8 @@ import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider
 import { AddrZero, booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
 import { Refresh } from "@mui/icons-material";
-import { getLogs, getLogsTopBlk } from "../../../../api/firebase/logInfoTools";
-import { fetchLogs } from "../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getAllLogs } from "../../../../api/firebase/arbiScanLogsTool";
+import { Hex } from "viem";
 
 interface DealChartProps {
   classOfShare: number;
@@ -26,7 +26,7 @@ interface ChartItem {
 
 export function DealsChart({classOfShare, time, refresh}: DealChartProps) {
 
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
   const client = usePublicClient();
   const [line, setLine] = useState<ChartItem[]>([]);
 
@@ -34,44 +34,39 @@ useEffect(()=>{
 
   const getEvents = async () => {
 
-    if (!boox || boox[booxMap.LOO] == AddrZero) return;
+    if (!gk || !boox || boox[booxMap.LOO] == AddrZero) return;
 
     const addr = boox[booxMap.LOO];
 
-    let logs = await getLogs(addr, 'DealClosed');
-    let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
-    
-    if (!fromBlkNum) {
-      fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
+    let rawLogs = await getAllLogs(gk, 'LOE', addr, 'DealClosed');
+
+    let abiStr = 'event DealClosed(bytes32 indexed deal, uint indexed consideration)';
+
+    type TypeOfDealClosedLog = ArbiscanLog & {
+      eventName: string, 
+      args: {
+        deal: Hex,
+        consideration:bigint,
+      }
     }
-    
-    let toBlkNum = await client.getBlockNumber();
 
-    console.log('top blk of DealClosed: ', fromBlkNum);
-    console.log('current blkNum: ', toBlkNum);
+    let dealLogs = rawLogs?.map(log => decodeArbiscanLog(log, abiStr) as TypeOfDealClosedLog) ?? [];
 
-    let dealLogs = await fetchLogs({
-      address: addr, 
-      eventAbiString: 'event DealClosed(bytes32 indexed deal, uint indexed consideration)',
-      fromBlkNum: (fromBlkNum ?? 0n) + 1n,
-      toBlkNum: toBlkNum,
-      client: client,
+    dealLogs = dealLogs.sort((a, b)=> {
+      if (BigInt(a.blockNumber) > BigInt(b.blockNumber)) return 1;
+      if (BigInt(a.blockNumber) < BigInt(b.blockNumber)) return -1;
+      return Number(a.logIndex) - Number(b.logIndex);
     });
-
-    if (logs && logs.length > 0) {
-      dealLogs = [...logs, ...dealLogs];
-    }
 
     let cnt = dealLogs.length;
     let arr:ChartItem[] = [];
-    let i = 0;
+    let i = cnt > 1800 ? cnt - 1800 : 0;
     let len = 0;
  
-    while (i<cnt && len<1800) {
+    while ( i < cnt ) {
 
       let log = dealLogs[i];
       let deal:Brief = briefParser(log.args.deal ?? '0x00');
-      let blk = await client.getBlock({blockNumber: log.blockNumber});
 
       if (classOfShare != Number(deal.classOfShare)) {
         i++;
@@ -79,7 +74,7 @@ useEffect(()=>{
       }
 
       let item:ChartItem = {
-        timestamp: blk.timestamp,
+        timestamp: BigInt(log.timeStamp),
         volumn: deal.paid,
         high: deal.price,
         low: deal.price,
@@ -111,7 +106,7 @@ useEffect(()=>{
 
   getEvents();
 
-},[boox, client, classOfShare, time, setLine]);
+},[gk, boox, client, classOfShare, time, setLine]);
 
   const series = [
     {

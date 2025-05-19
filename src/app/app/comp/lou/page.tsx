@@ -13,7 +13,6 @@ import { counterOfClasses } from "../ros/ros";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { DealsList } from "./components/DealsList";
 import { usePublicClient } from "wagmi";
-import { parseAbiItem } from "viem";
 import { baseToDollar, longSnParser } from "../../common/toolsKit";
 import { BillOfOrder } from "./components/BillOfOrder";
 import { BillOfDeal } from "./components/BillOfDeal";
@@ -21,12 +20,13 @@ import { DealsChart } from "./components/DealsChart";
 import { SetBookAddr } from "../../components/SetBookAddr";
 import { Deal, defaultOrder, Order } from "../loe/loe";
 import { dealParser, DealProps, getOrders } from "./lou";
-import { getLogs, getLogsTopBlk } from "../../../api/firebase/logInfoTools";
-import { fetchLogs } from "../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getAllLogs } from "../../../api/firebase/arbiScanLogsTool";
+
+import { Hex } from "viem";
 
 function UsdListOfOrders() {
 
-  const { boox } = useComBooxContext();
+  const {gk, boox } = useComBooxContext();
 
   const [addr, setAddr] = useState(boox ? boox[booxMap.UsdLOO] : AddrZero );
 
@@ -82,31 +82,23 @@ function UsdListOfOrders() {
 
     const getEvents = async () => {
 
-      if (addr.toLowerCase() == AddrZero.toLowerCase()) return;
+      if (!gk || addr.toLowerCase() == AddrZero.toLowerCase()) return;
 
-      let logs = await getLogs(addr, 'DealClosed');
-      let fromBlkNum = await getLogsTopBlk(addr, 'DealClosed');
-      
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 1n;
+      let rawLogs = await getAllLogs(gk, 'LOU', addr, 'DealClosed');
+
+      let abiStr = 'event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)';
+
+      type TypeOfDealClosedLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          fromSn: Hex,
+          toSn: Hex,
+          qtySn: Hex,
+          consideration:bigint,
+        }
       }
-      
-      let toBlkNum = await client.getBlockNumber();
 
-      console.log('top blk of DealClosed: ', fromBlkNum);
-      console.log('current blkNum: ', toBlkNum);
-
-      let dealLogs = await fetchLogs({
-        address: addr, 
-        eventAbiString: 'event DealClosed(bytes32 indexed fromSn, bytes32 indexed toSn, bytes32 qtySn, uint indexed consideration)',
-        fromBlkNum: (fromBlkNum ?? 0n) + 1n,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
-
-      if (logs && logs.length > 0) {
-        dealLogs = [...logs, ...dealLogs];
-      }
+      let dealLogs = rawLogs?.map(log => decodeArbiscanLog(log, abiStr) as TypeOfDealClosedLog) ?? [];
 
       let cnt = dealLogs.length;
 
@@ -124,9 +116,6 @@ function UsdListOfOrders() {
 
         let consideration: bigint = log.args.consideration ?? 0n;
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let classOfOrder = Number(deal.classOfShare);
 
         if (classOfShare != classOfOrder) {
@@ -137,9 +126,9 @@ function UsdListOfOrders() {
         let item:DealProps = {
           ...deal,
 
-          blockNumber: blkNo,
-          timestamp: blk.timestamp,
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: BigInt(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
 
           seqOfDeal: counter,          
           consideration: consideration,
@@ -165,7 +154,7 @@ function UsdListOfOrders() {
 
     getEvents();
 
-  },[addr, client, classOfShare, setQty, setAmt, time]);  
+  },[gk, addr, client, classOfShare, setQty, setAmt, time]);  
 
   const [ deal, setDeal ] = useState<DealProps | undefined>();
   const [ show, setShow ] = useState<boolean>(false);

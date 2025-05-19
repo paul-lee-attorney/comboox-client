@@ -2,11 +2,11 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrZero, booxMap, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { hexToString } from "viem";
+import { Hex, hexToString } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, setFinData, } from "../../../../../api/firebase/finInfoTools";
 import { addrToUint } from "../../../../common/toolsKit";
-import { fetchLogs } from "../../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 
 export type UsdEscrowSum = {
   totalAmt: bigint;
@@ -110,24 +110,26 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
       let logs = await getFinData(gk, 'usdEscrow');
 
-      let fromBlkNum = await getFinDataTopBlk(gk, 'usdEscrow');
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      };
-
-      console.log('topBlk of usdEscrow: ', fromBlkNum);
-      let toBlkNum = await client.getBlockNumber();
+      let fromBlkNum = (await getTopBlkOf(gk, 'usdEscrow')) + 1n;
+      console.log('fromBlk of usdEscrow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
 
-      let forwardUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString: 'event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ForwardUsd', fromBlkNum);
 
+      let abiStr = 'event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)';
+
+      type TypeOfCashierLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: Hex,
+          to: Hex,
+          amt: bigint,
+          remark: Hex
+        }
+      }
+
+      let forwardUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfCashierLog);
       console.log('forwardUsdLogs: ', forwardUsdLogs);
 
       let len = forwardUsdLogs.length;
@@ -136,14 +138,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
       while (cnt < len) {
         let log = forwardUsdLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: hexToString(log.args.remark ?? Bytes32Zero, {size:32}),
           amt: log.args.amt ?? 0n,
           ethPrice: addrToUint(log.args.from ?? AddrZero),
@@ -157,14 +156,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let releaseUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString: 'event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ReleaseUsd', fromBlkNum);
 
+      abiStr = 'event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)';
+
+      let releaseUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfCashierLog);
       console.log('releaseUsdLogs: ', releaseUsdLogs);
 
       len = releaseUsdLogs.length;
@@ -173,14 +169,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
       while (cnt < len) {
         let log = releaseUsdLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: hexToString(log.args.remark ?? Bytes32Zero, {size:32}),
           amt: log.args.amt ?? 0n,
           ethPrice: addrToUint(log.args.from ?? AddrZero),
@@ -194,13 +187,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let custodyUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString: 'event CustodyUsd(address indexed from, uint indexed amt, bytes32 indexed remark)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'CustodyUsd', fromBlkNum);
+
+      abiStr = 'event CustodyUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)';
+
+      let custodyUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfCashierLog);
 
       console.log('custodyUsdLogs: ', custodyUsdLogs);
 
@@ -211,14 +202,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
         let log = custodyUsdLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: hexToString(log.args.remark ?? Bytes32Zero, {size:32}),
           amt: log.args.amt ?? 0n,
           ethPrice: addrToUint(log.args.from ?? AddrZero),
@@ -232,13 +220,18 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let distributeUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString:'event DistributeUsd(uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'DistributeUsd', fromBlkNum);
+
+      abiStr = 'event DistributeUsd(uint indexed amt)';
+
+      type TypeOfDistributeUsdLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          amt: bigint
+        }
+      }
+
+      let distributeUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfDistributeUsdLog);
 
       console.log('distributeUsdLogs: ', distributeUsdLogs);
 
@@ -249,14 +242,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
         let log = distributeUsdLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'DistributeUsd',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
@@ -270,13 +260,20 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      let pickupUsdLogs = await fetchLogs({
-        address: cashier,
-        eventAbiString:'event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'PickupUsd', fromBlkNum);
+
+      abiStr = 'event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)';
+
+      type TypeOfPickupUsdLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          msgSender: Hex,
+          caller: bigint,
+          value: bigint
+        }
+      }
+
+      let pickupUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfPickupUsdLog);
 
       console.log('pickupUsdLogs: ', pickupUsdLogs);
 
@@ -287,14 +284,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
         let log = pickupUsdLogs[cnt];
 
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-
         let item:Cashflow = { ...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'PickupUsd',
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
@@ -308,7 +302,11 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         cnt++;
       }
 
-      await setFinDataTopBlk(gk, 'usdEscrow', toBlkNum);
+      console.log('arr in usdEscrow:', arr);
+
+      let toBlkNum = await getTopBlkOf(gk, cashier);
+
+      await setTopBlkOf(gk, 'usdEscrow', toBlkNum);
       console.log('updated topBlk Of usdEscrow: ', toBlkNum);
 
       if (arr.length > 0) {

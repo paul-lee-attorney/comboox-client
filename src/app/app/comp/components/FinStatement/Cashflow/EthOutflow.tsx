@@ -1,13 +1,14 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrZero, keepersMap } from "../../../../common";
+import { AddrZero, Bytes32Zero, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { HexParser, } from "../../../../common/toolsKit";
 import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, setFinData, } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { fetchLogs } from "../../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
+import { Hex } from "viem";
 
 export type EthOutflowSum = {
   totalAmt: bigint;
@@ -110,13 +111,8 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
 
       let logs = await getFinData(gk, 'ethOutflow');
 
-      let fromBlkNum = await getFinDataTopBlk(gk, 'ethOutflow');
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      };
-
-      console.log('topBlk of EthOutflow: ', fromBlkNum);
-      let toBlkNum = await client.getBlockNumber();
+      let fromBlkNum = (await getTopBlkOf(gk, 'ethOutflow')) + 1n;
+      console.log('fromBlk of EthOutflow: ', fromBlkNum);
       
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -138,18 +134,24 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         }
       } 
 
-      let gmmTransferLogs = await fetchLogs({
-        address: keepers[keepersMap.GMMKeeper],
-        eventAbiString: 'event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)',
-        args: {
-          isCBP: false
-        },
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getNewLogs(gk, 'GMMKeeper', keepers[keepersMap.GMMKeeper], 'TransferFund', fromBlkNum);
 
-      gmmTransferLogs = gmmTransferLogs.filter((v:any) => v.args.isCBP == false);
+      let abiStr = 'event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)';
+
+      type TypeOfTransferFundLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          to: Hex,
+          isCBP: boolean,
+          amt: bigint,
+          seqOfMotion: bigint,
+          caller: bigint,
+        }
+      }
+
+      let gmmTransferLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferFundLog);
+
+      gmmTransferLogs = gmmTransferLogs.filter(v => v.args.isCBP == false );
       console.log('gmmTransferEthLogs: ', gmmTransferLogs);
 
       let len = gmmTransferLogs.length;
@@ -158,15 +160,12 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = gmmTransferLogs[cnt];
-
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
     
         let item:Cashflow = {...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'GmmTransfer',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
@@ -184,57 +183,12 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let gmmExpenseLogs = await fetchLogs({
-        address: keepers[keepersMap.GMMKeeper],
-        eventAbiString: 'event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'BMMKeeper', keepers[keepersMap.BMMKeeper], 'TransferFund', fromBlkNum);
 
-      console.log('gmmEthExpLogs: ', gmmExpenseLogs);
-      
-      len = gmmExpenseLogs.length;
-      cnt = 0;
+      let bmmTransferLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferFundLog);
 
-      while(cnt < len) {
-
-        let log = gmmExpenseLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
-     
-        let item:Cashflow = {...defaultCashflow,
-          seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
-          typeOfIncome: 'GmmExpense',
-          amt: log.args.values ?? 0n,
-          ethPrice: 0n,
-          usd: 0n,
-          addr: log.args.targets ?? AddrZero,
-          acct: 0n,
-        }
-
-        if (cnt == 0) {
-          ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
-
-        appendItem(item, ethPrices);    
-        cnt++;
-      }
-
-      let bmmTransferLogs = await fetchLogs({
-        address: keepers[keepersMap.BMMKeeper],
-        eventAbiString: 'event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)',
-        args: {
-          isCBP: false
-        },        
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      bmmTransferLogs = bmmTransferLogs?.filter(v => v.args.isCBP == false);
+      console.log('bmmTransferEthLogs: ', bmmTransferLogs);
 
       console.log('bmmEthTransferLogs:', bmmTransferLogs);
 
@@ -244,14 +198,12 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = bmmTransferLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
      
         let item:Cashflow = {...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'BmmTransfer',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
@@ -269,14 +221,55 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let bmmExpenseLogs = await fetchLogs({
-        address: keepers[keepersMap.BMMKeeper],
-        eventAbiString: 'event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'GMMKeeper', keepers[keepersMap.GMMKeeper], 'ExecAction', fromBlkNum);
+      abiStr = 'event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)';
 
+      type TypeOfExecActionLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          targets: Hex,
+          values: bigint,
+          params: Hex,
+          seqOfMotion: bigint,
+          caller: bigint,
+        }
+      }
+
+      let gmmExpenseLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfExecActionLog);
+      console.log('gmmEthExpLogs: ', gmmExpenseLogs);
+      
+      len = gmmExpenseLogs.length;
+      cnt = 0;
+
+      while(cnt < len) {
+
+        let log = gmmExpenseLogs[cnt];
+     
+        let item:Cashflow = {...defaultCashflow,
+          seq: 0,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
+          typeOfIncome: 'GmmExpense',
+          amt: log.args.values ?? 0n,
+          ethPrice: 0n,
+          usd: 0n,
+          addr: log.args.targets ?? AddrZero,
+          acct: 0n,
+        }
+
+        if (cnt == 0) {
+          ethPrices = await getEthPrices(item.timestamp);
+          if (ethPrices.length == 0) return;
+        }
+
+        appendItem(item, ethPrices);
+        cnt++;
+      }
+
+      rawLogs = await getNewLogs(gk, 'BMMKeeper', keepers[keepersMap.BMMKeeper], 'ExecAction', fromBlkNum);
+
+      let bmmExpenseLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfExecActionLog);
       console.log('bmmEthExpLogs: ', bmmExpenseLogs);
 
       len = bmmExpenseLogs.length;
@@ -285,14 +278,12 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = bmmExpenseLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
      
         let item:Cashflow = {...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'BmmExpense',
           amt: log.args.values ?? 0n,
           ethPrice: 0n,
@@ -310,16 +301,23 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let distributionLogs = await fetchLogs({
-        address: gk,
-        eventAbiString: 'event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)',
+      rawLogs = await getNewLogs(gk, 'GeneralKeeper', gk, 'SaveToCoffer', fromBlkNum);
+      abiStr = 'event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)';
+
+      type TypeOfSaveToCofferLog = ArbiscanLog & {
+        eventName: string, 
         args: {
-          reason: HexParser(ethers.encodeBytes32String("DistributeProfits"))
-        },
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+          acct: bigint,
+          value: bigint,
+          reason: Hex,
+        }
+      }
+
+      let distributionLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfSaveToCofferLog);
+
+      distributionLogs = distributionLogs.filter(v => 
+        v.args.reason.toLowerCase() == HexParser(ethers.encodeBytes32String("DistributeProfits")).toLowerCase()
+      )
 
       console.log('distributionLogs: ', distributionLogs);
 
@@ -329,14 +327,12 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       while(cnt < len) {
 
         let log = distributionLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
      
         let item:Cashflow = {...defaultCashflow,
           seq: 0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: "Distribution",
           amt: log.args.value ?? 0n,
           ethPrice: 0n,
@@ -354,8 +350,11 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      await setFinDataTopBlk(gk, 'ethOutflow', toBlkNum);
-      console.log('updated topBlk Of ethOutflow: ', toBlkNum);
+      console.log('arr in ethOutflow:', arr);
+      let toBlkNum = await getTopBlkOf(gk, gk);
+
+      await setTopBlkOf(gk, 'ethOutflow', toBlkNum);
+      console.log('updated topBlk Of EthOutflow: ', toBlkNum);
 
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));

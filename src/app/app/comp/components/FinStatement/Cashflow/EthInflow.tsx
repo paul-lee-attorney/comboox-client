@@ -2,15 +2,15 @@ import { useEffect, } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { AddrZero, booxMap, Bytes32Zero, HexType, keepersMap } from "../../../../common";
 import { usePublicClient } from "wagmi";
-import { decodeEventLog } from "viem";
+import { decodeEventLog, Hex } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
-import { getFinData, getFinDataTopBlk, setFinData, setFinDataTopBlk } from "../../../../../api/firebase/finInfoTools";
+import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { listOfOrdersABI, registerOfSharesABI } from "../../../../../../../generated";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
 import { briefParser } from "../../../loe/loe";
 import { ftHis } from "./FtCbpflow";
-import { fetchLogs } from "../../../../common/getLogs";
+import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 
 export type EthInflowSum = {
   totalAmt: bigint;
@@ -93,6 +93,7 @@ export const updateEthInflowSum = (arr: Cashflow[], startDate:number, endDate:nu
 
 interface CapLog {
   blockNumber: bigint;
+  timeStamp: number;
   txHash: HexType;
   addr: HexType;
   acct: bigint;
@@ -117,13 +118,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       const loo = boox[booxMap.LOO];
 
       let logs = await getFinData(gk, 'ethInflow');
-      let fromBlkNum = await getFinDataTopBlk(gk, 'ethInflow');
-      if (!fromBlkNum) {
-        fromBlkNum = logs ? logs[logs.length - 1].blockNumber : 0n;
-      };
 
-      console.log('topBlk of EthInflow: ', fromBlkNum);
-      let toBlkNum = await client.getBlockNumber();
+      let fromBlkNum = (await getTopBlkOf(gk, 'ethInflow')) + 1n;
+      console.log('fromBlk of ethInflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
       let ethPrices: EthPrice[] = [];
@@ -146,11 +143,10 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
       } 
      
       const appendCapItems = async (capLog:CapLog) => {
-        let blk = await client.getBlock({blockNumber: capLog.blockNumber});
      
         let itemCap:Cashflow = {...defaultCashflow,
           blockNumber: capLog.blockNumber,
-          timestamp: Number(blk.timestamp),
+          timestamp: capLog.timeStamp,
           transactionHash: capLog.txHash,
           typeOfIncome: 'PayInCap',
           usd: capLog.paid * 10n ** 14n,
@@ -174,15 +170,22 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         arr.push(itemPremium);
       }
 
-      let recievedCashLogs = await fetchLogs({
-        address: gk,
-        eventAbiString: 'event ReceivedCash(address indexed from, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      let rawLogs = await getNewLogs(gk, 'GeneralKeeper', gk, 'ReceivedCash', fromBlkNum);
+
+      let abiStr = 'event ReceivedCash(address indexed from, uint indexed amt)';
+
+      type TypeOfReceivedCashLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: Hex,
+          amt: bigint
+        }
+      }
+
+      let recievedCashLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfReceivedCashLog);
+      console.log('recievedCashLogs: ', recievedCashLogs);
     
-      recievedCashLogs = recievedCashLogs.filter((v:any) => 
+      recievedCashLogs = recievedCashLogs.filter(v => 
           (v.args.from?.toLowerCase() != ftHis[0].toLowerCase()) && 
           (v.args.from?.toLowerCase() != ftHis[1].toLowerCase()) && 
           (v.args.from?.toLowerCase() != ftHis[2].toLowerCase()));
@@ -193,14 +196,12 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       while (cnt < len) {
         let log = recievedCashLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
     
         let item:Cashflow = { ...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
           typeOfIncome: 'TransferIncome',
           amt: log.args.amt ?? 0n,
           ethPrice: 0n,
@@ -218,29 +219,28 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let gasIncomeLogs = await fetchLogs({
-        address: ftHis[0],
-        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'Refuel', fromBlkNum);
 
-      gasIncomeLogs = [...gasIncomeLogs, ...(await fetchLogs({
-        address: ftHis[1],
-        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
+      abiStr = 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)';
 
-      gasIncomeLogs = [...gasIncomeLogs, ...(await fetchLogs({
-        address: ftHis[2],
-        eventAbiString: 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      }))];
+      type TypeOfRefuelLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          buyer: Hex,
+          amtOfEth: bigint,
+          amtOfCbp: bigint
+        }
+      }
+
+      let gasIncomeLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog);
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[1], 'Refuel', fromBlkNum);
+
+      gasIncomeLogs = [...gasIncomeLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[2], 'Refuel', fromBlkNum);
+
+      gasIncomeLogs = [...gasIncomeLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
 
       console.log('gasIncomeLogs: ', gasIncomeLogs);
     
@@ -249,14 +249,12 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       while (cnt < len) {
         let log = gasIncomeLogs[cnt];
-        let blkNo = log.blockNumber;
-        let blk = await client.getBlock({blockNumber: blkNo});
     
         let item:Cashflow = {...defaultCashflow,
           seq:0,
-          blockNumber: blkNo,
-          timestamp: Number(blk.timestamp),
-          transactionHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero, 
           typeOfIncome: 'GasIncome',
           amt: log.args.amtOfEth ?? 0n,
           ethPrice: 0n,
@@ -274,14 +272,20 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let payInCapLogs = await fetchLogs({
-        address: keepers[keepersMap.ROMKeeper],
-        eventAbiString: 'event PayInCapital(uint indexed seqOfShare, uint indexed amt, uint indexed valueOfDeal)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'ROMKeeper', keepers[keepersMap.ROMKeeper], 'PayInCapital', fromBlkNum);
 
+      abiStr = 'event PayInCapital(uint indexed seqOfShare, uint indexed amt, uint indexed valueOfDeal)';
+
+      type TypeOfPayInCapitalLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          seqOfShare: bigint,
+          amt: bigint,
+          valueOfDeal: bigint
+        }
+      }
+
+      let payInCapLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfPayInCapitalLog);
       console.log('payInCapLogs: ', payInCapLogs);
 
       len = payInCapLogs.length;
@@ -292,7 +296,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let log = payInCapLogs[cnt];
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let share = await getShare(ros, (log?.args?.seqOfShare ?? 0n).toString());
@@ -303,8 +307,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let acct = BigInt(share.head.shareholder);  
 
         let capLog:CapLog = {
-          blockNumber: log.blockNumber,
-          txHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timeStamp: Number(log.timeStamp),
+          txHash: log.transactionHash ?? Bytes32Zero,
           addr: receipt.from,
           acct: acct,
           value: log.args.valueOfDeal ?? 0n,
@@ -317,14 +322,19 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let payOffCIDealLogs = await fetchLogs({
-        address: keepers[keepersMap.ROAKeeper],
-        eventAbiString: 'event PayOffCIDeal(uint indexed caller, uint indexed valueOfDeal)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'ROAKeeper', keepers[keepersMap.ROAKeeper], 'PayOffCIDeal', fromBlkNum);
 
+      abiStr = 'event PayOffCIDeal(uint indexed caller, uint indexed valueOfDeal)';
+
+      type TypeOfPayOffCIDealLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          caller: bigint,
+          valueOfDeal: bigint,
+        }
+      }
+
+      let payOffCIDealLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfPayOffCIDealLog);
       console.log('payOffCIDealLogs: ', payOffCIDealLogs);
 
       len = payOffCIDealLogs.length;
@@ -335,7 +345,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let log = payOffCIDealLogs[cnt];
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let rosLog = receipt.logs
@@ -359,8 +369,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let premium = BigInt(headOfShare.priceOfPaid - 10000) * paid / 10000n;
 
         let capLog:CapLog = {
-          blockNumber: log.blockNumber,
-          txHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timeStamp: Number(log.timeStamp),
+          txHash: log.transactionHash ?? Bytes32Zero,
           addr: receipt.from,
           acct: log.args.caller ?? 0n,
           value: log.args.valueOfDeal ?? 0n,
@@ -373,13 +384,19 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let closeBidAgainstInitOfferLogs = await fetchLogs({
-        address: keepers[keepersMap.LOOKeeper],
-        eventAbiString: 'event CloseBidAgainstInitOffer(uint indexed buyer, uint indexed amt)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'LOOKeeper', keepers[keepersMap.LOOKeeper], 'CloseBidAgainstInitOffer', fromBlkNum);
+
+      abiStr = 'event CloseBidAgainstInitOffer(uint indexed buyer, uint indexed amt)';
+
+      type TypeOfCloseBidAgainstInitOfferLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          buyer: bigint,
+          amt: bigint
+        }
+      }
+
+      let closeBidAgainstInitOfferLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfCloseBidAgainstInitOfferLog);
 
       console.log('closeBidAgainstInitOfferLogs: ', closeBidAgainstInitOfferLogs);
 
@@ -391,7 +408,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let log = closeBidAgainstInitOfferLogs[cnt];
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let looLog = receipt.logs
@@ -418,8 +435,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let premium = (dealBrief.price - 10000n) * paid / 10000n;
 
         let capLog:CapLog = {
-          blockNumber: log.blockNumber,
-          txHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timeStamp: Number(log.timeStamp),
+          txHash: log.transactionHash ?? Bytes32Zero,
           addr: receipt.from,
           acct: log.args.buyer ?? 0n,
           value: log.args.amt ?? 0n,
@@ -432,13 +450,21 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      let closeInitOfferAgainstBidLogs = await fetchLogs({
-        address: gk,
-        eventAbiString: 'event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)',
-        fromBlkNum: fromBlkNum,
-        toBlkNum: toBlkNum,
-        client: client,
-      });
+      rawLogs = await getNewLogs(gk, 'GeneralKeeper', gk, 'ReleaseCustody', fromBlkNum);
+
+      abiStr = 'event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)';
+
+      type TypeOfReleaseCustodyLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: bigint,
+          to: bigint,
+          amt: bigint,
+          reason: Hex,
+        }
+      }
+
+      let closeInitOfferAgainstBidLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfReleaseCustodyLog);      
 
       closeInitOfferAgainstBidLogs = closeInitOfferAgainstBidLogs.filter((v:any) => 
           (v.args.reason == '0x436c6f7365496e69744f66666572416761696e73744269640000000000000000'));
@@ -452,7 +478,7 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let log = closeInitOfferAgainstBidLogs[cnt];
 
         let receipt = await client.getTransactionReceipt({
-          hash: log.transactionHash
+          hash: log.transactionHash ?? Bytes32Zero
         });
 
         let looLog = receipt.logs
@@ -479,8 +505,9 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         let premium = (dealBrief.price - 10000n) * paid / 10000n;
 
         let capLog:CapLog = {
-          blockNumber: log.blockNumber,
-          txHash: log.transactionHash,
+          blockNumber: BigInt(log.blockNumber),
+          timeStamp: Number(log.timeStamp),
+          txHash: log.transactionHash ?? Bytes32Zero,
           addr: receipt.from,
           acct: log.args.from ?? 0n,
           value: log.args.amt ?? 0n,
@@ -493,8 +520,12 @@ export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       } 
 
-      await setFinDataTopBlk(gk, 'ethInflow', toBlkNum);
-      console.log('updated topBlk Of ethInflow: ', toBlkNum);
+      console.log('arr in ethInflow:', arr);
+
+      let toBlkNum = await getTopBlkOf(gk, gk);
+
+      await setTopBlkOf(gk, 'ethInflow', toBlkNum);
+      console.log('updated topBlk Of Deposits:', toBlkNum);
       
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
