@@ -269,11 +269,6 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       console.log('arr in cbpInflow:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, AddrOfRegCenter);
-
-      await setTopBlkOf(gk, 'cbpInflow', toBlkNum);
-      console.log('updated topBlk Of CbpInflow: ', toBlkNum);
-
       if (arr.length > 0) {
         
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
@@ -281,6 +276,10 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         console.log('add arr into cbpInflow:', arr);
 
         await setFinData(gk, 'cbpInflow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'cbpInflow', toBlkNum);
+        console.log('updated topBlk Of cbpInflow: ', toBlkNum);        
         
         if (logs) {
           logs = logs.concat(arr);

@@ -223,17 +223,16 @@ export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
 
       console.log('arr in ftEthflow:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, ftHis[0]);
-
-      await setTopBlkOf(gk, 'ftEthflow', toBlkNum);
-      console.log('updated topBlk Of ftEthflow: ', toBlkNum);
-
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
         console.log('arr added into FtEthflow:', arr);
 
         await setFinData(gk, 'ftEthflow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'ftEthflow', toBlkNum);
+        console.log('updated topBlk Of ftEthflow: ', toBlkNum);        
 
         if (logs) {
           logs = logs.concat(arr);

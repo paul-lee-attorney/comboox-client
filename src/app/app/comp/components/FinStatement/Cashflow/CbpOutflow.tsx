@@ -335,11 +335,6 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       console.log('arr in cbpOutflow:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, keepers[keepersMap.GMMKeeper]);
-
-      await setTopBlkOf(gk, 'cbpOutflow', toBlkNum);
-      console.log('updated topBlk Of CbpOutflow: ', toBlkNum);
-
       if (arr.length > 0) {
 
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
@@ -347,6 +342,10 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         console.log('arr added into cbpOutflow:', arr);
 
         await setFinData(gk, 'cbpOutflow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'cbpOutflow', toBlkNum);
+        console.log('updated topBlk Of cbpOutflow: ', toBlkNum);        
 
         if (logs) {
           logs = logs.concat(arr);

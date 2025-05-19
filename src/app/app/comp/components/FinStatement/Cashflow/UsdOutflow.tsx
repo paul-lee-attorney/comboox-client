@@ -211,11 +211,6 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
 
       console.log('arr in usdOutflow:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, cashier);
-
-      await setTopBlkOf(gk, 'usdOutflow', toBlkNum);
-      console.log('updated topBlk Of usdOutflow: ', toBlkNum);
-
       if (arr.length > 0) {
         
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
@@ -223,6 +218,10 @@ export function UsdOutflow({exRate, setRecords}:CashflowRecordsProps) {
         console.log('add arr into usdOutflow:', arr);
 
         await setFinData(gk, 'usdOutflow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'usdOutflow', toBlkNum);
+        console.log('updated topBlk Of usdOutflow: ', toBlkNum);        
         
         if (logs) {
           logs = logs.concat(arr);

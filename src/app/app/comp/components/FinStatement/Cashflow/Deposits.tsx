@@ -305,17 +305,16 @@ export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
 
       console.log('arr in deposits:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, gk);
-
-      await setTopBlkOf(gk, 'deposits', toBlkNum);
-      console.log('updated topBlk Of Deposits:', toBlkNum);
-
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
         console.log('arr added into Deposits:', arr);
 
         await setFinData(gk, 'deposits', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'deposits', toBlkNum);
+        console.log('updated topBlk Of deposits: ', toBlkNum);
 
         if (logs) {
           logs = logs.concat(arr);

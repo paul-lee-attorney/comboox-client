@@ -304,11 +304,6 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
       console.log('arr in usdEscrow:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, cashier);
-
-      await setTopBlkOf(gk, 'usdEscrow', toBlkNum);
-      console.log('updated topBlk Of usdEscrow: ', toBlkNum);
-
       if (arr.length > 0) {
         
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
@@ -316,6 +311,10 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
         console.log('add arr into usdEscrow:', arr);
 
         await setFinData(gk, 'usdEscrow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'usdEscrow', toBlkNum);
+        console.log('updated topBlk Of usdEscrow: ', toBlkNum);        
         
         if (logs) {
           logs = logs.concat(arr);

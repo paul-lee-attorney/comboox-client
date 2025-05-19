@@ -337,17 +337,16 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       console.log('arr in ftCbpflow:', arr);
 
-      let toBlkNum = await getTopBlkOf(gk, AddrOfRegCenter);
-
-      await setTopBlkOf(gk, 'ftCbpflow', toBlkNum);
-      console.log('updated topBlk Of CbpInflow: ', toBlkNum);
-
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq:i}));
         console.log('arr added into FtCbpflow:', arr);
 
         await setFinData(gk, 'ftCbpflow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'ftCbpflow', toBlkNum);
+        console.log('updated topBlk Of ftCbpflow: ', toBlkNum);        
 
         if (logs) {
           logs = logs.concat(arr);

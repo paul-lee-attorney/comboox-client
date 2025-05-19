@@ -351,10 +351,6 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       console.log('arr in ethOutflow:', arr);
-      let toBlkNum = await getTopBlkOf(gk, gk);
-
-      await setTopBlkOf(gk, 'ethOutflow', toBlkNum);
-      console.log('updated topBlk Of EthOutflow: ', toBlkNum);
 
       if (arr.length > 0) {
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
@@ -362,6 +358,11 @@ export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
         console.log('arr added into EthOutflow:', arr);
 
         await setFinData(gk, 'ethOutflow', arr);
+
+        let toBlkNum = arr[arr.length - 1].blockNumber;
+        await setTopBlkOf(gk, 'ethOutflow', toBlkNum);
+        console.log('updated topBlk Of ethOutflow: ', toBlkNum);        
+
 
         if (logs) {
           logs = logs.concat(arr);
