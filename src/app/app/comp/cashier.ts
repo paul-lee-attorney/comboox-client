@@ -16,7 +16,7 @@ export async function custodyOf(addr:HexType, acct:HexType): Promise<bigint> {
 }
 
 
-export async function totalEscrow(addr:HexType, blk: bigint | undefined): Promise<bigint> {
+export async function totalEscrow(addr:HexType, blk?: bigint): Promise<bigint> {
 
   let res = await readContract({
      address: addr,
@@ -28,7 +28,7 @@ export async function totalEscrow(addr:HexType, blk: bigint | undefined): Promis
    return res; 
 }
 
-export async function totalUsdDeposits(addr:HexType, blk: bigint | undefined): Promise<bigint> {
+export async function totalUsdDeposits(addr:HexType, blk?: bigint): Promise<bigint> {
 
   let res = await readContract({
      address: addr,
@@ -52,7 +52,7 @@ export async function depositOfMine(addr:HexType, acct:bigint): Promise<bigint> 
    return res; 
 }
 
-export async function balanceOfComp(addr:HexType, blk: bigint | undefined): Promise<bigint> {
+export async function balanceOfComp(addr:HexType, blk?: bigint): Promise<bigint> {
 
   let res = await readContract({
      address: addr,

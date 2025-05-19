@@ -41,7 +41,7 @@ export function CashBox() {
         res => setBalanceOfCBP(res.toString())        
       );
       
-      totalDeposits(gk, undefined).then(
+      totalDeposits(gk).then(
         res => setDepositsOfETH(res)
       );
     }
@@ -50,15 +50,15 @@ export function CashBox() {
 
       const cashier = boox[booxMap.Cashier];
 
-      balanceOfComp(cashier, undefined).then(
+      balanceOfComp(cashier).then(
         res => setBalanceOfUSD(res.toString())
       );
 
-      totalEscrow(cashier, undefined).then(
+      totalEscrow(cashier).then(
         res => setEscrowUSD(res.toString())
       );
 
-      totalUsdDeposits(cashier, undefined).then(
+      totalUsdDeposits(cashier).then(
         res => setDepositUSD(res.toString())
       );
 

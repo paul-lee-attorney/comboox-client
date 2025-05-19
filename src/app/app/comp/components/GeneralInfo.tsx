@@ -127,7 +127,7 @@ export function GeneralInfo() {
         res => setBalanceOfETH(res)
       )
     
-      totalDeposits(gk, undefined).then(
+      totalDeposits(gk).then(
         res => setDepositsOfETH(res)
       )
     }
