@@ -45,16 +45,17 @@ export function GeneralInfo() {
     const updateLogs = async ()=>{
       if (!gk) return;
       const blk = await client.getBlock();
+      let chainId = await client.getChainId();
       
       // console.log('triggered autoUpdateLogs');
-      let flag = await autoUpdateLogs(gk, blk.number);
+      let flag = await autoUpdateLogs(chainId, gk, blk.number);
       if (flag) setLogsReady(true);
 
     }
 
     updateLogs();
 
-  }, [gk]);
+  }, [gk, client]);
 
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
   const [ dk, setDK ] = useState<string>('');

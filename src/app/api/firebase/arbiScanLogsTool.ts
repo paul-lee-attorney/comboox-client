@@ -22,12 +22,17 @@ interface ArbiscanData {
 // ===== Get Arbiscan Logs ====
 
 export async function fetchArbiscanData(
+    chainId: number,
     address:Hex,
     fromBlock:bigint, 
     toBlock:bigint,
 ): Promise<ArbiscanData | undefined>  {
+
+    const url = chainId == 42161 
+        ? `https://api.arbiscan.io/api?`
+        : `https://api-sepolia.arbiscan.io/api?`;
   
-    let url = `https://api.arbiscan.io/api?` + 
+    const api = url + 
         `module=logs&` + 
         `action=getLogs&` +
         `address=${address}&` +
@@ -36,7 +41,7 @@ export async function fetchArbiscanData(
         // `topic0=${topic0}&` +
         `apikey=${process.env.NEXT_PUBLIC_ARBISCAN_API_KEY}`;
 
-  const response = await fetch(url);
+  const response = await fetch(api);
   
   if (!response.ok) {
       throw new Error(`Error fetching Logs: ${response.statusText}`);
@@ -480,7 +485,7 @@ export async function setLogs(
 
 // ==== Auto Update ====
 
-export async function autoUpdateLogs(gk:Hex, toBlk:bigint):Promise<boolean> {
+export async function autoUpdateLogs(chainId:number, gk:Hex, toBlk:bigint):Promise<boolean> {
 
     let menu = await getMenuOfLogs(gk);
 
@@ -496,7 +501,7 @@ export async function autoUpdateLogs(gk:Hex, toBlk:bigint):Promise<boolean> {
         if (fromBlk == 1n || fromBlk >= toBlk) return false;
         else fromBlk++;
 
-        let data = await fetchArbiscanData(info.address, fromBlk, toBlk);
+        let data = await fetchArbiscanData(chainId, info.address, fromBlk, toBlk);
         
         if (data) {
             let logs = data.result;
