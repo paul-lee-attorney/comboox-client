@@ -71,8 +71,10 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
 
       verifyAuthorization(provider, acct, auth).then(
         verified => {
+          console.log('UsdKeeper:', keepers && keepers[keepersMap.UsdKeeper]);
           console.log('verified?', verified);
           console.log('order:', order);
+          console.log('class:', classOfShare);
           if (verified) {
             placeBuyOrder({
               args: [
