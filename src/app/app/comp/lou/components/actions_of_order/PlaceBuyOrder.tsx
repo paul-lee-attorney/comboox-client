@@ -82,7 +82,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
                 BigInt(classOfShare),
                 strNumToBigInt(order.paid, 4),
                 strNumToBigInt(order.price, 4),
-                strNumToBigInt(order.execHours, 0)
+                BigInt(order.execHours)
               ]
             });
           } else {
