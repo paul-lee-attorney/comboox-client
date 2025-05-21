@@ -62,9 +62,17 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const handleClick = ()=>{
 
     if (auth && signer) {
+
       let acct = signer.account.address;
+
+      console.log('acct:', acct);
+      console.log('auth:', auth);
+      console.log('provider:', provider);
+
       verifyAuthorization(provider, acct, auth).then(
         verified => {
+          console.log('verified?', verified);
+          console.log('order:', order);
           if (verified) {
             placeBuyOrder({
               args: [
