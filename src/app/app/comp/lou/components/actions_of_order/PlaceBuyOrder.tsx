@@ -17,6 +17,7 @@ import { AuthSig } from "../../../../components/usdc_auth/typedData";
 import { usePublicClient, useWalletClient } from "wagmi";
 import { verifyAuthorization } from "../../../../components/usdc_auth/authVerifier";
 import { GenerateAuth } from "../../../../components/usdc_auth/GenerateAuth";
+import { parseGwei } from "viem";
 
 export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const { keepers, boox, setErrMsg } = useComBooxContext();
@@ -49,6 +50,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     write:placeBuyOrder,
   } = useUsdKeeperPlaceBuyOrder({
     address: keepers && keepers[keepersMap.UsdKeeper],
+    gas: parseGwei('100'),
     onError(err) {
       setErrMsg(err.message);
     },
