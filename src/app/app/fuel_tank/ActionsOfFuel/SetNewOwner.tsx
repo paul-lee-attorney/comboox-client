@@ -1,7 +1,7 @@
 
 import { Paper, Stack, TextField } from '@mui/material';
 
-import { useFuelTankSetNewOwner } from '../../../../../generated';
+import { useUsdFuelTankSetNewOwner } from '../../../../../generated';
 
 import { AddrOfTank, AddrZero, HexType } from '../../common';
 import { ManageAccountsOutlined } from '@mui/icons-material';
@@ -29,7 +29,7 @@ export function SetNewOwner({ refresh }: ActionOfFuelProps) {
   const {
     isLoading: setOwnerLoading,
     write: setOwner
-  } = useFuelTankSetNewOwner({
+  } = useUsdFuelTankSetNewOwner({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);

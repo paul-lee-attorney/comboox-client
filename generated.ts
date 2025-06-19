@@ -36635,6 +36635,197 @@ export const usdKeeperABI = [
 ] as const
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// UsdFuelTank
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+export const usdFuelTankABI = [
+  {
+    stateMutability: 'nonpayable',
+    type: 'constructor',
+    inputs: [
+      { name: 'rc', internalType: 'address', type: 'address' },
+      { name: '_rate', internalType: 'uint256', type: 'uint256' },
+    ],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'buyer',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      {
+        name: 'amtOfUSDC',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+      {
+        name: 'amtOfCbp',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'Refuel',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newCashier',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetCashier',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+    ],
+    name: 'SetNewOwner',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'newRate',
+        internalType: 'uint256',
+        type: 'uint256',
+        indexed: true,
+      },
+    ],
+    name: 'SetRate',
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      {
+        name: 'owner',
+        internalType: 'address',
+        type: 'address',
+        indexed: true,
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256', indexed: true },
+    ],
+    name: 'WithdrawFuel',
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'cashier',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getOwner',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'getRegCenter',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      { name: 'owner', internalType: 'address', type: 'address' },
+      { name: 'regCenter', internalType: 'address', type: 'address' },
+    ],
+    name: 'init',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'rate',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [
+      {
+        name: 'auth',
+        internalType: 'struct ICashier.TransferAuth',
+        type: 'tuple',
+        components: [
+          { name: 'from', internalType: 'address', type: 'address' },
+          { name: 'to', internalType: 'address', type: 'address' },
+          { name: 'value', internalType: 'uint256', type: 'uint256' },
+          { name: 'validAfter', internalType: 'uint256', type: 'uint256' },
+          { name: 'validBefore', internalType: 'uint256', type: 'uint256' },
+          { name: 'nonce', internalType: 'bytes32', type: 'bytes32' },
+          { name: 'v', internalType: 'uint8', type: 'uint8' },
+          { name: 'r', internalType: 'bytes32', type: 'bytes32' },
+          { name: 's', internalType: 'bytes32', type: 'bytes32' },
+        ],
+      },
+      { name: 'amt', internalType: 'uint256', type: 'uint256' },
+    ],
+    name: 'refuel',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newCashier', internalType: 'address', type: 'address' }],
+    name: 'setCashier',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'acct', internalType: 'address', type: 'address' }],
+    name: 'setNewOwner',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'newRate', internalType: 'uint256', type: 'uint256' }],
+    name: 'setRate',
+    outputs: [],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'sum',
+    outputs: [{ name: '', internalType: 'uint256', type: 'uint256' }],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: 'amt', internalType: 'uint256', type: 'uint256' }],
+    name: 'withdrawFuel',
+    outputs: [],
+  },
+] as const
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // UsdLOOKeeper
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -134514,6 +134705,511 @@ export function useUsdKeeperSetNewOwnerEvent(
     eventName: 'SetNewOwner',
     ...config,
   } as UseContractEventConfig<typeof usdKeeperABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link usdFuelTankABI}__.
+ */
+export function useUsdFuelTankRead<
+  TFunctionName extends string,
+  TSelectData = ReadContractResult<typeof usdFuelTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: usdFuelTankABI,
+    ...config,
+  } as UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"cashier"`.
+ */
+export function useUsdFuelTankCashier<
+  TFunctionName extends 'cashier',
+  TSelectData = ReadContractResult<typeof usdFuelTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: usdFuelTankABI,
+    functionName: 'cashier',
+    ...config,
+  } as UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"getOwner"`.
+ */
+export function useUsdFuelTankGetOwner<
+  TFunctionName extends 'getOwner',
+  TSelectData = ReadContractResult<typeof usdFuelTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: usdFuelTankABI,
+    functionName: 'getOwner',
+    ...config,
+  } as UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"getRegCenter"`.
+ */
+export function useUsdFuelTankGetRegCenter<
+  TFunctionName extends 'getRegCenter',
+  TSelectData = ReadContractResult<typeof usdFuelTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: usdFuelTankABI,
+    functionName: 'getRegCenter',
+    ...config,
+  } as UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"rate"`.
+ */
+export function useUsdFuelTankRate<
+  TFunctionName extends 'rate',
+  TSelectData = ReadContractResult<typeof usdFuelTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: usdFuelTankABI,
+    functionName: 'rate',
+    ...config,
+  } as UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractRead}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"sum"`.
+ */
+export function useUsdFuelTankSum<
+  TFunctionName extends 'sum',
+  TSelectData = ReadContractResult<typeof usdFuelTankABI, TFunctionName>,
+>(
+  config: Omit<
+    UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return useContractRead({
+    abi: usdFuelTankABI,
+    functionName: 'sum',
+    ...config,
+  } as UseContractReadConfig<typeof usdFuelTankABI, TFunctionName, TSelectData>)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__.
+ */
+export function useUsdFuelTankWrite<
+  TFunctionName extends string,
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          string
+        >['request']['abi'],
+        TFunctionName,
+        TMode
+      >
+    : UseContractWriteConfig<typeof usdFuelTankABI, TFunctionName, TMode> & {
+        abi?: never
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, TFunctionName, TMode>({
+    abi: usdFuelTankABI,
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"init"`.
+ */
+export function useUsdFuelTankInit<TMode extends WriteContractMode = undefined>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          'init'
+        >['request']['abi'],
+        'init',
+        TMode
+      > & { functionName?: 'init' }
+    : UseContractWriteConfig<typeof usdFuelTankABI, 'init', TMode> & {
+        abi?: never
+        functionName?: 'init'
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, 'init', TMode>({
+    abi: usdFuelTankABI,
+    functionName: 'init',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"refuel"`.
+ */
+export function useUsdFuelTankRefuel<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          'refuel'
+        >['request']['abi'],
+        'refuel',
+        TMode
+      > & { functionName?: 'refuel' }
+    : UseContractWriteConfig<typeof usdFuelTankABI, 'refuel', TMode> & {
+        abi?: never
+        functionName?: 'refuel'
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, 'refuel', TMode>({
+    abi: usdFuelTankABI,
+    functionName: 'refuel',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"setCashier"`.
+ */
+export function useUsdFuelTankSetCashier<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          'setCashier'
+        >['request']['abi'],
+        'setCashier',
+        TMode
+      > & { functionName?: 'setCashier' }
+    : UseContractWriteConfig<typeof usdFuelTankABI, 'setCashier', TMode> & {
+        abi?: never
+        functionName?: 'setCashier'
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, 'setCashier', TMode>({
+    abi: usdFuelTankABI,
+    functionName: 'setCashier',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function useUsdFuelTankSetNewOwner<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          'setNewOwner'
+        >['request']['abi'],
+        'setNewOwner',
+        TMode
+      > & { functionName?: 'setNewOwner' }
+    : UseContractWriteConfig<typeof usdFuelTankABI, 'setNewOwner', TMode> & {
+        abi?: never
+        functionName?: 'setNewOwner'
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, 'setNewOwner', TMode>({
+    abi: usdFuelTankABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"setRate"`.
+ */
+export function useUsdFuelTankSetRate<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          'setRate'
+        >['request']['abi'],
+        'setRate',
+        TMode
+      > & { functionName?: 'setRate' }
+    : UseContractWriteConfig<typeof usdFuelTankABI, 'setRate', TMode> & {
+        abi?: never
+        functionName?: 'setRate'
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, 'setRate', TMode>({
+    abi: usdFuelTankABI,
+    functionName: 'setRate',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link useContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"withdrawFuel"`.
+ */
+export function useUsdFuelTankWithdrawFuel<
+  TMode extends WriteContractMode = undefined,
+>(
+  config: TMode extends 'prepared'
+    ? UseContractWriteConfig<
+        PrepareWriteContractResult<
+          typeof usdFuelTankABI,
+          'withdrawFuel'
+        >['request']['abi'],
+        'withdrawFuel',
+        TMode
+      > & { functionName?: 'withdrawFuel' }
+    : UseContractWriteConfig<typeof usdFuelTankABI, 'withdrawFuel', TMode> & {
+        abi?: never
+        functionName?: 'withdrawFuel'
+      } = {} as any,
+) {
+  return useContractWrite<typeof usdFuelTankABI, 'withdrawFuel', TMode>({
+    abi: usdFuelTankABI,
+    functionName: 'withdrawFuel',
+    ...config,
+  } as any)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__.
+ */
+export function usePrepareUsdFuelTankWrite<TFunctionName extends string>(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, TFunctionName>,
+    'abi'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, TFunctionName>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"init"`.
+ */
+export function usePrepareUsdFuelTankInit(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'init'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    functionName: 'init',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'init'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"refuel"`.
+ */
+export function usePrepareUsdFuelTankRefuel(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'refuel'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    functionName: 'refuel',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'refuel'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"setCashier"`.
+ */
+export function usePrepareUsdFuelTankSetCashier(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'setCashier'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    functionName: 'setCashier',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'setCashier'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"setNewOwner"`.
+ */
+export function usePrepareUsdFuelTankSetNewOwner(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'setNewOwner'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    functionName: 'setNewOwner',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'setNewOwner'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"setRate"`.
+ */
+export function usePrepareUsdFuelTankSetRate(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'setRate'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    functionName: 'setRate',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'setRate'>)
+}
+
+/**
+ * Wraps __{@link usePrepareContractWrite}__ with `abi` set to __{@link usdFuelTankABI}__ and `functionName` set to `"withdrawFuel"`.
+ */
+export function usePrepareUsdFuelTankWithdrawFuel(
+  config: Omit<
+    UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'withdrawFuel'>,
+    'abi' | 'functionName'
+  > = {} as any,
+) {
+  return usePrepareContractWrite({
+    abi: usdFuelTankABI,
+    functionName: 'withdrawFuel',
+    ...config,
+  } as UsePrepareContractWriteConfig<typeof usdFuelTankABI, 'withdrawFuel'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdFuelTankABI}__.
+ */
+export function useUsdFuelTankEvent<TEventName extends string>(
+  config: Omit<
+    UseContractEventConfig<typeof usdFuelTankABI, TEventName>,
+    'abi'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: usdFuelTankABI,
+    ...config,
+  } as UseContractEventConfig<typeof usdFuelTankABI, TEventName>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdFuelTankABI}__ and `eventName` set to `"Refuel"`.
+ */
+export function useUsdFuelTankRefuelEvent(
+  config: Omit<
+    UseContractEventConfig<typeof usdFuelTankABI, 'Refuel'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: usdFuelTankABI,
+    eventName: 'Refuel',
+    ...config,
+  } as UseContractEventConfig<typeof usdFuelTankABI, 'Refuel'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdFuelTankABI}__ and `eventName` set to `"SetCashier"`.
+ */
+export function useUsdFuelTankSetCashierEvent(
+  config: Omit<
+    UseContractEventConfig<typeof usdFuelTankABI, 'SetCashier'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: usdFuelTankABI,
+    eventName: 'SetCashier',
+    ...config,
+  } as UseContractEventConfig<typeof usdFuelTankABI, 'SetCashier'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdFuelTankABI}__ and `eventName` set to `"SetNewOwner"`.
+ */
+export function useUsdFuelTankSetNewOwnerEvent(
+  config: Omit<
+    UseContractEventConfig<typeof usdFuelTankABI, 'SetNewOwner'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: usdFuelTankABI,
+    eventName: 'SetNewOwner',
+    ...config,
+  } as UseContractEventConfig<typeof usdFuelTankABI, 'SetNewOwner'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdFuelTankABI}__ and `eventName` set to `"SetRate"`.
+ */
+export function useUsdFuelTankSetRateEvent(
+  config: Omit<
+    UseContractEventConfig<typeof usdFuelTankABI, 'SetRate'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: usdFuelTankABI,
+    eventName: 'SetRate',
+    ...config,
+  } as UseContractEventConfig<typeof usdFuelTankABI, 'SetRate'>)
+}
+
+/**
+ * Wraps __{@link useContractEvent}__ with `abi` set to __{@link usdFuelTankABI}__ and `eventName` set to `"WithdrawFuel"`.
+ */
+export function useUsdFuelTankWithdrawFuelEvent(
+  config: Omit<
+    UseContractEventConfig<typeof usdFuelTankABI, 'WithdrawFuel'>,
+    'abi' | 'eventName'
+  > = {} as any,
+) {
+  return useContractEvent({
+    abi: usdFuelTankABI,
+    eventName: 'WithdrawFuel',
+    ...config,
+  } as UseContractEventConfig<typeof usdFuelTankABI, 'WithdrawFuel'>)
 }
 
 /**

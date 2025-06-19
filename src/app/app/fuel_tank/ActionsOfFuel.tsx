@@ -11,11 +11,10 @@ import {
 
 import { useState } from "react";
 import { AddrZero, HexType } from "../common";
-import { Refuel } from "./ActionsOfFuel/Refuel";
 import { FillTank } from "./ActionsOfFuel/FillTank";
-import { WithdrawIncome } from "./ActionsOfFuel/WithdrawIncome";
 import { SetRate } from "./ActionsOfFuel/SetRate";
 import { SetNewOwner } from "./ActionsOfFuel/SetNewOwner";
+import { RefuelUsd } from "./ActionsOfFuel/RefuelUsd";
 
 export interface ActionsOfFuelProps{
   user: HexType;
@@ -37,11 +36,10 @@ export function ActionsOfFuel({ user, isOwner, getFinInfo, getSetting }: Actions
   ]
 
   const compsOfAction = [
-    <Refuel key={0} refresh={ getFinInfo } />,
+    <RefuelUsd key={0} refresh={ getFinInfo } />,
     <FillTank key={1} refresh={ getFinInfo } />,
-    <WithdrawIncome key={2} refresh={ getFinInfo } />,
-    <SetRate key={3} refresh={ getSetting } />,
-    <SetNewOwner key={4} refresh={ getSetting } />,
+    <SetRate key={2} refresh={ getSetting } />,
+    <SetNewOwner key={3} refresh={ getSetting } />,
    ]
 
   return( 

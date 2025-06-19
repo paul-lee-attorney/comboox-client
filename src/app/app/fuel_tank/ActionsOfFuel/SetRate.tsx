@@ -1,7 +1,7 @@
 
 import { Paper, Stack, TextField } from '@mui/material';
 
-import { useFuelTankSetRate } from '../../../../../generated';
+import { useFuelTankSetRate, useUsdFuelTankSetRate } from '../../../../../generated';
 
 import { AddrOfTank, HexType } from '../../common';
 import { Settings } from '@mui/icons-material';
@@ -29,7 +29,7 @@ export function SetRate({ refresh }: ActionOfFuelProps) {
   const {
     isLoading: setNewRateLoading,
     write: setNewRate
-  } = useFuelTankSetRate({
+  } = useUsdFuelTankSetRate({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
