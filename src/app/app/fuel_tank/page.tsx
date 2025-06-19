@@ -2,17 +2,17 @@
 
 import { useState } from "react";
 import { AddrOfRegCenter, AddrOfTank, AddrZero, HexType } from "../common";
-import { balanceOfWei } from "../rc";
 import { Divider, Paper, Stack, TextField, Toolbar } from "@mui/material";
-import { bigIntToStrNum, getEthPart, getGWeiPart, getWeiPart, } from "../common/toolsKit";
+import { bigIntToStrNum, getEthPart, getGWeiPart, getWeiPart, longDataParser, } from "../common/toolsKit";
 
-import { useFuelTankGetOwner, useFuelTankRate, useFuelTankGetRegCenter, useFuelTankSum, useRegCenterBalanceOf, } from "../../../../generated";
+import { useUsdFuelTankGetOwner, useRegCenterBalanceOf, useUsdFuelTankRate, useUsdFuelTankCashier, useUsdFuelTankSum, useUsdFuelTankGetRegCenter } from "../../../../generated";
 
 import { useWalletClient } from "wagmi";
 
 import { CopyLongStrSpan, CopyLongStrTF } from "../common/CopyLongStr";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 import { ActionsOfFuel } from "./ActionsOfFuel";
+import { balanceOfUsd } from "../usdc";
 
 function FuelTank() {
 
@@ -23,7 +23,7 @@ function FuelTank() {
   const { data: signer } = useWalletClient();
   const {
     refetch: getOwner
-  } = useFuelTankGetOwner ({
+  } = useUsdFuelTankGetOwner ({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -39,7 +39,7 @@ function FuelTank() {
   const [ regCenter, setRegCenter ] = useState<HexType>(AddrZero);
   const {
     refetch: getRegCenter
-  } = useFuelTankGetRegCenter ({
+  } = useUsdFuelTankGetRegCenter({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -49,22 +49,36 @@ function FuelTank() {
     },
   })
 
-  const [ rate, setRate ] = useState<string>('0');
+  const [ cashier, setCashier ] = useState<HexType>(AddrZero);
   const {
-    refetch: getRate
-  } = useFuelTankRate ({
+    refetch: getCashier
+  } = useUsdFuelTankCashier({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
     },
     onSuccess(res) {
-      setRate(bigIntToStrNum(res, 4));
+      setCashier(res);
+    },
+  })
+
+  const [ rate, setRate ] = useState<string>('0');
+  const {
+    refetch: getRate
+  } = useUsdFuelTankRate({
+    address: AddrOfTank,
+    onError(err) {
+      setErrMsg(err.message);
+    },
+    onSuccess(res) {
+      setRate(longDataParser(bigIntToStrNum(res, 6)));
     },
   })
 
   const getSetting = ()=> {
     getOwner();
     getRegCenter();
+    getCashier();
     getRate();
   }
 
@@ -82,18 +96,10 @@ function FuelTank() {
     }
   })
 
-  const [ ethOfTank, setEthOfTank ] = useState<string>('0');
-  const getEthOfTank = ()=>{
-    balanceOfWei(AddrOfTank).then(
-      wei => setEthOfTank( bigIntToStrNum(wei/(10n**9n), 9) )
-    )
-  }
-  getEthOfTank();
-
   const [ sum, setSum ] = useState<string>('0');
   const {
     refetch: getSum
-  } = useFuelTankSum ({
+  } = useUsdFuelTankSum({
     address: AddrOfTank,
     onError(err) {
       setErrMsg(err.message);
@@ -117,22 +123,21 @@ function FuelTank() {
     }
   })
 
-  const [ ethOfUser, setEthOfUser ] = useState<string>('0');
-  const getEthOfUser = ()=>{
+  const [ usdcOfUser, setUsdcOfUser ] = useState<string>('0');
+  const getUsdcOfUser = ()=>{
     if (signer) {
-      balanceOfWei(signer.account.address).then(
-        wei => setEthOfUser(wei.toString())
+      balanceOfUsd(signer.account.address).then(
+        res => setUsdcOfUser(res.toString())
       )
     }    
   }
-  getEthOfUser();
+  getUsdcOfUser();
 
   const getFinInfo = ()=>{
     getCbpOfTank();
-    getEthOfTank();
     getSum();
     getCbpOfUser();
-    getEthOfUser();
+    getUsdcOfUser();
   }
 
   const [ open, setOpen ] = useState(false);
@@ -163,18 +168,7 @@ function FuelTank() {
                 <CopyLongStrTF title='RegCenter' src={regCenter.toLowerCase() ?? '-'} />
               </td>
               <td>
-                <TextField 
-                  size="small"
-                  variant='outlined'
-                  label='Rate (CBP/ETH)'
-                  inputProps={{readOnly: true}}
-                  fullWidth
-                  sx={{
-                    m:1,
-                    minWidth: 218,
-                  }}
-                  value={ rate }
-                />
+                <CopyLongStrTF title='Cashier' src={cashier.toLowerCase() ?? '-'} />
               </td>
             </tr>
 
@@ -211,14 +205,14 @@ function FuelTank() {
                 <TextField 
                   size="small"
                   variant='outlined'
-                  label='BalanceOfCash (ETH)'
+                  label='Price (USD/CBP)'
                   inputProps={{readOnly: true}}
                   fullWidth
                   sx={{
                     m:1,
                     minWidth: 218,
                   }}
-                  value={ ethOfTank }
+                  value={ rate }
                 />
               </td>
             </tr>
@@ -276,39 +270,51 @@ function FuelTank() {
                 <TextField 
                   size="small"
                   variant='outlined'
-                  label='EthOfUser (ETH)'
+                  label='UsdOfUser (Giga-USD)'
                   inputProps={{readOnly: true}}
                   fullWidth
                   sx={{
                     m:1,
                   }}
-                  value={ getEthPart(ethOfUser) }
+                  value = {longDataParser(
+                    usdcOfUser.length > 15 ? usdcOfUser.substring(0, usdcOfUser.length - 15) : '0'
+                  )}
                 />
               </td>
               <td>
                 <TextField 
                   size="small"
                   variant='outlined'
-                  label='EthOfUser (GWei)'
+                  label='UsdOfUser (USD)'
                   inputProps={{readOnly: true}}
                   fullWidth
                   sx={{
                     m:1,
                   }}
-                  value={ getGWeiPart(ethOfUser) }
+                  value={ longDataParser(
+                    usdcOfUser.length > 6 
+                      ? usdcOfUser.length > 15
+                        ? usdcOfUser.substring(usdcOfUser.length - 15, usdcOfUser.length - 6)
+                        : usdcOfUser.substring(0, usdcOfUser.length - 6) 
+                      : '0'
+                  )}
                 />
               </td>
               <td>
                 <TextField 
                   size="small"
                   variant='outlined'
-                  label='EthOfUser (Wei)'
+                  label='UsdOfUser (Micro-USD)'
                   inputProps={{readOnly: true}}
                   fullWidth
                   sx={{
                     m:1,
                   }}
-                  value={ getWeiPart(ethOfUser) }
+                  value={ longDataParser(
+                    usdcOfUser.length > 6
+                  ? usdcOfUser.substring(usdcOfUser.length - 6)
+                  : usdcOfUser
+                  )}
                 />
               </td>
             </tr>

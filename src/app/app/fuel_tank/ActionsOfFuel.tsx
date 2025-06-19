@@ -32,7 +32,7 @@ export function ActionsOfFuel({ user, isOwner, getFinInfo, getSetting }: Actions
   const [ typeOfAction, setTypeOfAction ] = useState<string>('');
   
   const actionsOfUser = [
-    'Refuel', 'Fill Tank', 'Withdraw Income', 'Set Rate', 'Set Owner',
+    'Refuel', 'Fill Tank', 'Set Rate', 'Set Owner',
   ]
 
   const compsOfAction = [

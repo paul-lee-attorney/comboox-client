@@ -35,7 +35,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
   const actionsOnMotion = [
     'Propose Motion', 'Upload File', 'Cast Vote', 'Count Results', 'Take Seat', 
     'Remove Director', 'Exec Actions', 'Transfer Fund', 'Distribute Profits',
-    'Deprecate GK', 'Mint CBP', 'Pickup FuelIncome', 'Withdraw CBP from Tank'
+    'Deprecate GK', 'Mint CBP', 'Withdraw CBP from Tank'
   ]
 
   const compsOfAction = [
@@ -50,8 +50,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
     <DistributeProfits key={8} motion={motion} setOpen = {setOpen} refresh={refresh} />,  
     <DeprecateGK key={9} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
     <MintCBP key={10} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
-    <PickupFuelIncome key={11} motion={motion} setOpen = {setOpen} refresh={refresh} />, 
-    <WithdrawCBP key={12} motion={motion} setOpen={setOpen} refresh={refresh} />
+    <WithdrawCBP key={11} motion={motion} setOpen={setOpen} refresh={refresh} />
   ]
 
   return (
@@ -77,7 +76,7 @@ export function ActionsOnMotion({motion, voteIsEnd, setOpen, refresh}:ActionsOnM
               else if (motion.body.state == 2 && voteIsEnd && i != 3) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 1 && i != 4) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 2 && i != 5) return null;
-              else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && (i != 6 && i != 7 && i != 8 && i != 10 && i != 11 && i != 12)) return null;
+              else if (motion.body.state == 3 && motion.head.typeOfMotion == 4 && (i != 6 && i != 7 && i != 8 && i != 10 && i != 11)) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 5 && i != 7) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 6 && i != 8) return null;
               else if (motion.body.state == 3 && motion.head.typeOfMotion == 7 && i != 9) return null;
