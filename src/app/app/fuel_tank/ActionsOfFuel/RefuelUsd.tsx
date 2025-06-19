@@ -163,7 +163,7 @@ export function RefuelUsd({ refresh }: ActionOfFuelProps) {
         <GenerateAuth value={value} escrowAcct={escrow} setAuth={setAuth} />
 
         <LoadingButton 
-          disabled={ refuelLoading || hasError(valid) } 
+          disabled={ refuelLoading || hasError(valid) || !auth } 
           loading={loading}
           loadingPosition='end'
           onClick={ refuelClick }
