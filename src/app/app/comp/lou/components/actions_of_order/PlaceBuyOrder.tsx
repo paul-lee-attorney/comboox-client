@@ -50,7 +50,6 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     write:placeBuyOrder,
   } = useUsdKeeperPlaceBuyOrder({
     address: keepers && keepers[keepersMap.UsdKeeper],
-    gas: parseGwei('100'),
     onError(err) {
       setErrMsg(err.message);
     },
