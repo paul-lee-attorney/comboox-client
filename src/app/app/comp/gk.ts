@@ -14,7 +14,8 @@ export const nameOfBooks = [
 export const titleOfKeepers = [
   'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 'GmmKeeper', 
   'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper', 'LooKeeper',
-  'UsdRomKeeper', 'UsdRoaKeeper', 'UsdLooKeeper', 'UsdRooKeeper', 'UsdKeeper'
+  'UsdRomKeeper', 'UsdRoaKeeper', 'UsdLooKeeper', 'UsdRooKeeper', 'UsdKeeper',
+  'UsdFuelTank'
 ]
 
 export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
@@ -103,7 +104,9 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
   while (addr != AddrZero) {
  
     let owner = await getOwner(addr);
-    let dk = await getDK(addr);
+    let dk = AddrZero;
+    
+    if (i != 16) dk = await getDK(addr);
  
     let item: BookInfo = {
       title: i,
