@@ -22,8 +22,8 @@ import { SetBookAddr } from "../../components/SetBookAddr";
 import { AutoStoriesOutlined, MenuBook, VideoCameraBack, VideoCameraBackOutlined, VideoCameraFront } from "@mui/icons-material";
 import { blue } from "@mui/material/colors";
 
-import { ArbiscanLog, decodeArbiscanLog, getAllLogs } from "../../../api/firebase/arbiScanLogsTool";
-import { Hex } from "viem";
+import { ArbiscanLog, decodeArbiscanLog, fetchArbiscanData, getAllLogs, getTopBlkOf, setLogs, setTopBlkOf } from "../../../api/firebase/arbiScanLogsTool";
+import { Hex, keccak256, toHex } from "viem";
 
 function ListOfOrders() {
 
@@ -54,9 +54,50 @@ function ListOfOrders() {
   const [ offers, setOffers ] = useState<readonly Order[]>([]);
   const [ bids, setBids ] = useState<readonly Order[]>([]);
 
+
+  const provider = usePublicClient();
+
+  const updateDealClosedLogs = async ()=>{
+    if (!gk || !boox) return;
+    const blk = await provider.getBlock();
+    const toBlk = blk.number;
+    let chainId = await provider.getChainId();
+    let loo = boox[booxMap.LOO];
+
+    let fromBlk = await getTopBlkOf(gk, loo);
+
+    if (fromBlk == 1n || fromBlk >= toBlk) return false;
+    else fromBlk++;
+
+    let data = await fetchArbiscanData(chainId, loo, fromBlk, toBlk);
+      
+    if (data) {
+      let logs = data.result;
+
+      if (logs.length > 0) {
+        let name = "DealClosed";
+        let topic0 = keccak256(toHex("DealClosed(bytes32,uint256)"));
+        
+        let events = logs.filter((v) => {
+          return v.topics[0]?.toLowerCase() == topic0.toLowerCase();
+        });
+
+        if (events.length > 0) {
+            let flag = await setLogs(gk, 'LOE', loo, "DealClosed", events);   
+            if (flag) console.log('appended', events.length, ' events of ', name);
+            else return false;
+        }
+      }
+    }
+
+    let flag = await setTopBlkOf(gk, loo, toBlk);
+    if (!flag) return false;
+  }
+
   const [ time, setTime ] = useState<number>(0);
 
   const refresh = ()=>{
+    updateDealClosedLogs();
     setTime(Date.now());
   }
 
