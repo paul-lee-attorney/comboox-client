@@ -46,8 +46,6 @@ export function GeneralInfo() {
       if (!gk) return;
       const blk = await client.getBlock();
       let chainId = await client.getChainId();
-      
-      // console.log('triggered autoUpdateLogs');
       let flag = await autoUpdateLogs(chainId, gk, blk.number);
       if (flag) setLogsReady(true);
 
@@ -64,18 +62,9 @@ export function GeneralInfo() {
     if (gk) {
       getCompInfo(gk).then(
         res => {
-          // console.log('compInfo: ', res);
           if (res.state > 0) {
-            // client.getLogs({
-            //   address: gk,
-            //   event: parseAbiItem('event DeprecateGK(address indexed receiver, uint indexed balanceOfCBP, uint indexed balanceOfETH)'),
-            //   fromBlock: 1n
-            // }).then(
-              // logs => {
                 res.name = 'Deprecated GK';
                 setCompInfo(res);
-            //   }
-            // )
           } else setCompInfo(res);
         }
       )      

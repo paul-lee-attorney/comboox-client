@@ -9,7 +9,7 @@ import { ActionsOfOrderProps } from "../ActionsOfOrder";
 
 import { FormResults, bigIntToStrNum, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 
-import { AddrOfCL, AddrZero, booxMap, HexType, keepersMap, MaxData, MaxPrice, MaxSeqNo } from "../../../../common";
+import { AddrZero, booxMap, HexType, keepersMap, MaxData, MaxPrice, MaxSeqNo } from "../../../../common";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { defaultOffer, InitOffer } from "../../../loe/loe";
@@ -17,11 +17,12 @@ import { AuthSig } from "../../../../components/usdc_auth/typedData";
 import { usePublicClient, useWalletClient } from "wagmi";
 import { verifyAuthorization } from "../../../../components/usdc_auth/authVerifier";
 import { GenerateAuth } from "../../../../components/usdc_auth/GenerateAuth";
-import { parseGwei } from "viem";
 
 export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
   const { keepers, boox, setErrMsg } = useComBooxContext();
 
+  const provider = usePublicClient();
+  
   const [ order, setOrder ] = useState<InitOffer>(defaultOffer);
   const [ value, setValue ] = useState(0n);
 
@@ -42,7 +43,6 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
     }
   }, [boox]);
 
-  const provider = usePublicClient();
   const {data: signer} = useWalletClient();
 
   const {

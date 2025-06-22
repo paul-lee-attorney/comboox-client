@@ -20,9 +20,9 @@ import { DealsChart } from "./components/DealsChart";
 import { SetBookAddr } from "../../components/SetBookAddr";
 import { Deal, defaultOrder, Order } from "../loe/loe";
 import { dealParser, DealProps, getOrders } from "./lou";
-import { ArbiscanLog, decodeArbiscanLog, getAllLogs } from "../../../api/firebase/arbiScanLogsTool";
+import { ArbiscanLog, decodeArbiscanLog, fetchArbiscanData, getAllLogs, getTopBlkOf, setLogs, setTopBlkOf } from "../../../api/firebase/arbiScanLogsTool";
 
-import { Hex } from "viem";
+import { Hex, keccak256, toHex } from "viem";
 
 function UsdListOfOrders() {
 
@@ -53,9 +53,50 @@ function UsdListOfOrders() {
   const [ offers, setOffers ] = useState<readonly Order[]>([]);
   const [ bids, setBids ] = useState<readonly Order[]>([]);
 
+  const provider = usePublicClient();
+
+  const updateDealClosedLogs = async ()=>{
+    if (!gk || !boox) return;
+    const blk = await provider.getBlock();
+    const toBlk = blk.number;
+    let chainId = await provider.getChainId();
+    let lou = boox[booxMap.UsdLOO];
+
+    let fromBlk = await getTopBlkOf(gk, lou);
+
+    if (fromBlk == 1n || fromBlk >= toBlk) return false;
+    else fromBlk++;
+
+    let data = await fetchArbiscanData(chainId, lou, fromBlk, toBlk);
+      
+    if (data) {
+      let logs = data.result;
+
+      if (logs.length > 0) {
+        let name = "DealClosed";
+        let topic0 = keccak256(toHex("DealClosed(bytes32,bytes32,bytes32,uint256)"));
+        
+        let events = logs.filter((v) => {
+          return v.topics[0]?.toLowerCase() == topic0.toLowerCase();
+        });
+
+        if (events.length > 0) {
+            let flag = await setLogs(gk, 'LOU', lou, "DealClosed", events);   
+            if (flag) console.log('appended', events.length, ' events of ', name);
+            else return false;
+        }
+      }
+    }
+
+    let flag = await setTopBlkOf(gk, lou, toBlk);
+    if (!flag) return false;
+  }
+
+
   const [ time, setTime ] = useState<number>(0);
 
   const refresh = ()=>{
+    updateDealClosedLogs();
     setTime(Date.now());
   }
 
