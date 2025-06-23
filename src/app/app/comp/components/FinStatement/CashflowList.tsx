@@ -57,7 +57,7 @@ export function CashFlowList({inETH, arrSum, records, open, setOpen}:CashflowLis
     },
     {
       field: 'ethPrice',
-      headerName: 'EthPrice / From',
+      headerName: 'Price / From',
       valueGetter: p => p.row.amt == p.row.usd ? bigIntToAddr(p.row.ethPrice) : bigIntToStrNum(p.row.ethPrice, 9),
       headerAlign: 'center',
       align: 'center',

@@ -91,9 +91,9 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
   useEffect(()=>{
 
-    const cbpToETH = (cbp:bigint) => {
-      return cbp * 10000n / exRate;
-    }
+    // const cbpToETH = (cbp:bigint) => {
+    //   return cbp * 10000n / exRate;
+    // }
 
     const getCbpInflow = async () => {
 
@@ -166,9 +166,17 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         if (newItem.amt > 0n && refPrices.length > 0) {
 
           const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-          newItem.ethPrice = 10n ** 25n / mark.centPrice;
-          newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
-           
+          
+          //348950001 
+
+          if (newItem.blockNumber > 348950001n) {
+            newItem.ethPrice = exRate * 10n ** 3n;
+            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
+          } else {
+            newItem.ethPrice = 10n ** 25n / mark.centPrice;
+            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+          }
+          
           arr.push(newItem);
         }
       } 
