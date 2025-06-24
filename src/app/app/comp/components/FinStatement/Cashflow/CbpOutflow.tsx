@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { AddrOfRegCenter, AddrZero, Bytes32Zero, FirstUser, keepersMap, SecondUser } from "../../../../common";
+import { AddrOfRegCenter, AddrOfTank, AddrZero, Bytes32Zero, FirstUser, keepersMap, SecondUser } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData, } from "../../../../../api/firebase/finInfoTools";
@@ -104,9 +104,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
  
   useEffect(()=>{
 
-    const cbpToETH = (cbp:bigint) => {
-      return cbp * 10000n / exRate;
-    }
+    // const cbpToETH = (cbp:bigint) => {
+    //   return cbp * 10000n / exRate;
+    // }
 
     const getEthOutflow = async ()=>{
 
@@ -128,11 +128,17 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
 
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
+          const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
+          //348950001 
 
-          let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-          newItem.ethPrice = 10n ** 25n / mark.centPrice;
-          newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
-            
+          if (newItem.blockNumber > 348950001n) {
+            newItem.ethPrice = exRate * 10n ** 3n;
+            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
+          } else {
+            newItem.ethPrice = 10n ** 25n / mark.centPrice;
+            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+          }
+          
           arr.push(newItem);
         }
       }
@@ -194,7 +200,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'Refuel', fromBlkNum);
+      rawLogs = await getNewLogs(gk, 'FuelTank', AddrOfTank, 'Refuel', fromBlkNum);
 
       abiStr = 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)';
 
@@ -208,6 +214,9 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let fuelSoldLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog);
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'Refuel', fromBlkNum);
+      fuelSoldLogs = [...fuelSoldLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
 
       rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[1], 'Refuel', fromBlkNum);
       fuelSoldLogs = [...fuelSoldLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
@@ -263,6 +272,7 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
     
       gmmTransferLogs = gmmTransferLogs.filter(v => 
           v.args.isCBP == true &&
+          v.args.to?.toLowerCase() != AddrOfTank.toLowerCase() &&
           v.args.to?.toLowerCase() != ftHis[0].toLowerCase() &&
           v.args.to?.toLowerCase() != ftHis[1].toLowerCase() &&
           v.args.to?.toLowerCase() != ftHis[2].toLowerCase() );

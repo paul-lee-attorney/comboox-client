@@ -51,9 +51,23 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
     return ({inEth: inEth, inUsd: inUsd});
   }
 
+  const getUsdInflowFromOperating = () => {
+    const inEth = microToWei(usdInflow[2].gas);
+    const inUsd = weiToDust(inEth);
+
+    return ({inEth: inEth, inUsd: inUsd});
+  }
+
   const getNetEthOfOperating = () => {
     const inEth = getEthInflowFromOperating().inEth - getEthPayment().inEth;
     const inUsd = weiToDust(inEth);
+
+    return ({inEth: inEth, inUsd: inUsd});
+  }
+
+  const getNetUsdOfOperating = () => {
+    const inEth = getUsdInflowFromOperating().inEth - getUsdPayment().inEth;
+    const inUsd = getUsdInflowFromOperating().inUsd - getUsdPayment().inUsd;
 
     return ({inEth: inEth, inUsd: inUsd});
   }
@@ -84,8 +98,8 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
   }
 
   const getNetIncreaseOfUsd = () => {
-    const inEth = getNetUsdOfFinancing().inEth - getUsdPayment().inEth;
-    const inUsd = getNetUsdOfFinancing().inUsd - getUsdPayment().inUsd;
+    const inEth = getNetUsdOfOperating().inEth + getNetUsdOfFinancing().inEth;
+    const inUsd = getNetUsdOfOperating().inEth + getNetUsdOfFinancing().inUsd;
 
     return ({inEth: inEth, inUsd: inUsd});
   }
@@ -114,8 +128,8 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
           </Typography>
           <Button variant="outlined" sx={{width:'100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](2)}>
             <b>Deferred Revenue From CBP Sales: ({inETH 
-                ? weiToEth9Dec(ethInflow[2].gas) 
-                : showUSD(weiToDust(ethInflow[2].gas))}) </b>
+                ? weiToEth9Dec(ethInflow[2].gas + microToWei(usdInflow[2].gas))
+                : showUSD(weiToDust(ethInflow[2].gas) + microToDust(usdInflow[2].gas))}) </b>
           </Button>
         </Stack>
 
@@ -147,8 +161,8 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
           </Typography>
           <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
             <b>Net Inflow From Operating Activities: ({inETH 
-                ? weiToEth9Dec(getEthInflowFromOperating().inEth - (getEthPayment().inEth + getUsdPayment().inEth)) 
-                : showUSD(getEthInflowFromOperating().inUsd - (getEthPayment().inUsd + getUsdPayment().inUsd))}) </b>
+                ? weiToEth9Dec(getNetEthOfOperating().inEth + getNetUsdOfOperating().inEth) 
+                : showUSD(getNetEthOfOperating().inUsd + getNetUsdOfOperating().inUsd)}) </b>
           </Button>
         </Stack>
 

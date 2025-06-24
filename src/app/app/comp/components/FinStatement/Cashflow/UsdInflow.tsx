@@ -9,12 +9,14 @@ import { registerOfSharesABI, usdRomKeeperABI } from "../../../../../../../gener
 import { getShare, parseSnOfShare } from "../../../ros/ros";
 import { addrToUint, HexParser } from "../../../../common/toolsKit";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
+import { ethers } from "ethers";
 
 export type UsdInflowSum = {
   totalAmt: bigint;
   upgradeCashier: bigint;
   capital: bigint;
   premium: bigint;
+  gas: bigint;
   flag: boolean;
 }
 
@@ -23,6 +25,7 @@ export const defUsdInflowSum: UsdInflowSum = {
   upgradeCashier: 0n,
   capital: 0n,
   premium: 0n,
+  gas:0n,
   flag: false,
 }
 
@@ -54,6 +57,9 @@ export const sumArrayOfUsdInflow = (arr: Cashflow[]) => {
           break;
         case 'UpgradeCashier':
           sum.upgradeCashier += v.amt;
+          break;
+        case 'GasIncome':
+          sum.gas += v.amt;
           break;
       }
     }); 
@@ -202,6 +208,48 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
         cnt++;
       }
+
+      rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ReceiveUsdWithRemark', fromBlkNum);
+
+      abiStr = 'ReceiveUsd(address indexed from, uint256 indexed amt, bytes32 indexed remark)';
+
+      type TypeOfGasIncomeUsdLog = ArbiscanLog & {
+        eventName: string, 
+        args: {
+          from: Hex,
+          amt: bigint,
+          remark: Hex,
+        }
+      }
+
+      let gasIncomeUsdLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfGasIncomeUsdLog);
+      gasIncomeUsdLogs = gasIncomeUsdLogs.filter(v => ethers.decodeBytes32String(v.args.remark) == "CollectUSDCForRefuelCBP");
+
+      console.log('gasIncomeUsdLogs: ', gasIncomeUsdLogs);
+
+      len = gasIncomeUsdLogs.length;
+      cnt = 0;
+
+      while (cnt < len) {
+
+        let log = gasIncomeUsdLogs[cnt];
+
+        let item:Cashflow = { ...defaultCashflow,
+          seq: 0,
+          blockNumber: BigInt(log.blockNumber),
+          timestamp: Number(log.timeStamp),
+          transactionHash: log.transactionHash ?? Bytes32Zero,
+          typeOfIncome: 'GasIncome',
+          amt: log.args.amt ?? 0n,
+          ethPrice: addrToUint(log.args.from),
+          usd: log.args.amt ?? 0n,
+          addr: log.args.from,
+          acct: 0n,
+        };
+
+        arr.push(item);
+      }
+
 
       rawLogs = await getNewLogs(gk, 'Cashier', cashier, 'ReleaseUsd', fromBlkNum);
 

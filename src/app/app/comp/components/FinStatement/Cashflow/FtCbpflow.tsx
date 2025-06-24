@@ -6,7 +6,6 @@ import { HexParser } from "../../../../common/toolsKit";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData,  setFinData, } from "../../../../../api/firebase/finInfoTools";
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
-import { fetchLogs } from "../../../../common/getLogs";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { Hex } from "viem";
 
@@ -82,9 +81,9 @@ export const sumArrayOfFtCbpflow = (arr: Cashflow[]) => {
 }
 
 export const ftHis = [
-  AddrOfTank,
   HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"), 
-  HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7")
+  HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7"),
+  HexParser("0xCf7E78D11d579f9E1a5704fAB8769844cD8C8e6b"),
 ];
 
 export const updateFtCbpflowSum = (arr: Cashflow[], startDate:number, endDate:number) => {
@@ -97,8 +96,6 @@ export const updateFtCbpflowSum = (arr: Cashflow[], startDate:number, endDate:nu
     sum[3] = sumArrayOfFtCbpflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  // console.log('ftCbpflow range:', startDate, endDate);
-  // console.log('ftCbpflow:', sum);
   return sum;
 }
 
@@ -127,17 +124,24 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         else return prices;
       }
 
-      const cbpToETH = (cbp:bigint) => {
-        return cbp * 10000n / exRate;
-      }    
+      // const cbpToETH = (cbp:bigint) => {
+      //   return cbp * 10000n / exRate;
+      // }
   
-
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
 
           let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-          newItem.ethPrice = 10n ** 25n / mark.centPrice;
-          newItem.usd = cbpToETH(newItem.amt) * newItem.ethPrice / 10n ** 9n;
+
+          //348950001 
+
+          if (newItem.blockNumber > 348950001n) {
+            newItem.ethPrice = exRate * 10n ** 3n;
+            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
+          } else {
+            newItem.ethPrice = 10n ** 25n / mark.centPrice;
+            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+          }
   
           arr.push(newItem);
         }
@@ -162,7 +166,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
           v.args.from.toLowerCase() == gk.toLowerCase() &&
           (v.args.to?.toLowerCase() == ftHis[0].toLowerCase() ||
           v.args.to?.toLowerCase() == ftHis[1].toLowerCase() ||
-          v.args.to?.toLowerCase() == ftHis[2].toLowerCase())
+          v.args.to?.toLowerCase() == ftHis[2].toLowerCase() ||
+          v.args.to?.toLowerCase() == AddrOfTank)
       );
 
       console.log('addCbpLogs: ', addCbpLogs);
@@ -232,7 +237,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'WithdrawFuel', fromBlkNum);
+      rawLogs = await getNewLogs(gk, 'FuelTank', AddrOfTank, 'WithdrawFuel', fromBlkNum);
 
       abiStr = 'event WithdrawFuel(address indexed owner, uint indexed amt)';
 
@@ -245,6 +250,9 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let withdrawCbpLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfWithdrawFuelLog);
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'WithdrawFuel', fromBlkNum);
+      withdrawCbpLogs = [...withdrawCbpLogs, ... rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfWithdrawFuelLog)];
 
       rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[1], 'WithdrawFuel', fromBlkNum);
       withdrawCbpLogs = [...withdrawCbpLogs, ... rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfWithdrawFuelLog)];
@@ -283,7 +291,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         cnt++;
       }
 
-      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'Refuel', fromBlkNum);
+      rawLogs = await getNewLogs(gk, 'FuelTank', AddrOfTank, 'Refuel', fromBlkNum);
 
       abiStr = 'event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)';
 
@@ -297,6 +305,9 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
       }
 
       let refuelLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog);
+
+      rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[0], 'Refuel', fromBlkNum);
+      refuelLogs = [...refuelLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];
 
       rawLogs = await getNewLogs(gk, 'FuelTank', ftHis[1], 'Refuel', fromBlkNum);
       refuelLogs = [...refuelLogs, ...rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfRefuelLog)];

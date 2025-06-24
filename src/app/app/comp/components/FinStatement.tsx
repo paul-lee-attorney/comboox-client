@@ -197,7 +197,7 @@ export function FinStatement() {
   }, [cbpInflowRecords, cbpOutflowRecords, ethInflowRecords, ethOutflowRecords, usdInflowRecords, usdOutflowRecords, depositsRecords, usdEscrowRecords, ftCbpflowRecords, ftEthflowRecords]);
 
   const [ inETH, setInETH ] = useState(false);
-  const [ exRate, setExRate ] = useState(10000n);
+  const [ exRate, setExRate ] = useState(2816150000n);
 
   useEffect(()=>{
     const getRate = async ()=> {
@@ -241,7 +241,7 @@ export function FinStatement() {
 
       const latestBlock = await client.getBlock();
       let high = latestBlock.number;
-      let low = 0n; 
+      let low = 0n;
       let output = high;
     
       while (low <= high) {
@@ -306,12 +306,20 @@ export function FinStatement() {
     return eth * 10n ** 16n / centPrice;
   }
 
-  const cbpToETH = (cbp:bigint) => {
-    return cbp * 10000n / exRate;
+  const leeToDust = (cbp:bigint) => {
+    return cbp * exRate / 10n ** 6n;
   }
+
+  // const cbpToETH = (cbp:bigint) => {
+  //   return cbp * 10000n / exRate;
+  // }
 
   const microToWei = (usd:bigint) => {
     return usd * centPrice / 10000n;
+  }
+
+  const leeToWei = (cbp:bigint) => {
+    return cbp * exRate * centPrice / 10n ** 22n;
   }
    
   // ==== Breakdown Display ====
@@ -322,6 +330,22 @@ export function FinStatement() {
   const [ list, setList ] = useState<Cashflow[]>([]);
   const [ open, setOpen ] = useState(false);
   const [ sumInfo, setSumInfo ] = useState<SumInfo[]>([]);
+
+  const showUsdGasIncomeRecords = (type:number) => {
+    let records = trimCashflow(usdInflowRecords, startDate, endDate, type);
+
+    records = records.filter((v)=>v.typeOfIncome == 'GasIncome');
+
+    let curSumInUsd = microToDust(usdInflow[type].gas);
+
+    let arrSumInfo = inETH 
+        ? [ {title: 'Gas Income - (ETH ', data: microToWei(usdInflow[type].gas)}]
+        : [ {title: 'Gas Income - (USD ', data: curSumInUsd}];
+
+    setList(records);
+    setSumInfo(arrSumInfo);
+    setOpen(true);
+  }
 
   const showGasIncomeRecords = (type:number) => {
     let records = trimCashflow(ethInflowRecords, startDate, endDate, type);
@@ -559,7 +583,7 @@ export function FinStatement() {
   const displayEthOfComp = (type:number) => {
     let items:BtnProps[] = [
       {simbol: ' ', title: 'ETH of Comp', amt: ethInflow[type].totalAmt - ethOutflow[type].totalAmt, amtInUsd: weiToDust(ethInflow[type].totalAmt - ethOutflow[type].totalAmt), show: ()=>{}},
-      {simbol: '+', title: 'Gas Income', amt: ethInflow[type].gas, amtInUsd: weiToDust(ethInflow[type].gas), show: ()=>showGasIncomeRecords(type)},
+      {simbol: '+', title: 'Gas Income (ETH)', amt: ethInflow[type].gas, amtInUsd: weiToDust(ethInflow[type].gas), show: ()=>showGasIncomeRecords(type)},
       {simbol: '+', title: 'Paid In Cap', amt: ethInflow[type].capital, amtInUsd: weiToDust(ethInflow[type].capital), show: ()=>showPaidInCapRecords(type)},
       {simbol: '+', title: 'Paid In Premium', amt: ethInflow[type].premium, amtInUsd: weiToDust(ethInflow[type].premiumInUsd), show: ()=>showPaidInPremiumRecords(type)},
       {simbol: '+', title: 'Transfer Income', amt: ethInflow[type].transfer, amtInUsd: weiToDust(ethInflow[type].transfer), show: ()=>showEthTransferIncomeRecords(type)},
@@ -575,6 +599,7 @@ export function FinStatement() {
   const displayUsdOfComp = (type:number) => {
     let items:BtnProps[] = [
       {simbol: ' ', title: 'USDC of Comp', amt: usdInflow[type].totalAmt - usdOutflow[type].totalAmt, amtInUsd: microToDust(usdInflow[type].totalAmt - usdOutflow[type].totalAmt), show: ()=>{}},
+      {simbol: '+', title: 'Gas Income', amt: usdInflow[type].gas, amtInUsd: microToDust(usdInflow[type].gas), show: ()=>showUsdGasIncomeRecords(type)},
       {simbol: '+', title: 'Paid In Cap', amt: usdInflow[type].capital, amtInUsd: microToDust(usdInflow[type].capital), show: ()=>showUsdPaidInCapRecords(type)},
       {simbol: '+', title: 'Paid In Premium', amt: usdInflow[type].premium, amtInUsd: microToDust(usdInflow[type].premium), show: ()=>showUsdPaidInPremiumRecords(type)},
       {simbol: '-', title: 'Reimburse Exp', amt: usdOutflow[type].reimburseExp, amtInUsd: microToDust(usdOutflow[type].reimburseExp), show: ()=>showUsdReimburseExpRecords(type)},
@@ -593,10 +618,10 @@ export function FinStatement() {
 
     records = records.filter((v)=>v.typeOfIncome == 'FuelSold');
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].fuelSold));
+    let curSumInUsd = leeToDust(cbpOutflow[type].fuelSold);
 
     let arrSumInfo = inETH 
-        ? [ {title: 'Fuel Sold - (ETH ', data: cbpToETH(cbpOutflow[type].fuelSold)} ]
+        ? [ {title: 'Fuel Sold - (ETH ', data: leeToWei(cbpOutflow[type].fuelSold)} ]
         : [ 
             {title: 'Fuel Sold - (USD ', data: curSumInUsd},
             {title: 'Original Fuel Sold', data: cbpOutflow[type].fuelSoldInUsd},
@@ -613,10 +638,10 @@ export function FinStatement() {
 
     records = records.filter((v)=>v.typeOfIncome == 'GmmTransfer');
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer));
+    let curSumInUsd = leeToDust(cbpOutflow[type].gmmTransfer);
 
     let arrSumInfo = inETH 
-        ? [ {title: 'Gmm CBP Payment - (ETH ', data: cbpToETH(cbpOutflow[type].gmmTransfer)} ]
+        ? [ {title: 'Gmm CBP Payment - (ETH ', data: leeToWei(cbpOutflow[type].gmmTransfer)} ]
         : [ 
             {title: 'Gmm CBP Payment - (USD ', data: curSumInUsd},
             {title: 'Original Gmm CBP Payment', data: cbpOutflow[type].gmmTransferInUsd},
@@ -633,10 +658,10 @@ export function FinStatement() {
 
     records = records.filter((v)=>v.typeOfIncome == 'BmmTransfer');
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer));
+    let curSumInUsd = leeToDust(cbpOutflow[type].bmmTransfer);
 
     let arrSumInfo = inETH 
-        ? [ {title: 'Bmm CBP Payment - (ETH ', data: cbpToETH(cbpOutflow[type].bmmTransfer)} ]
+        ? [ {title: 'Bmm CBP Payment - (ETH ', data: leeToWei(cbpOutflow[type].bmmTransfer)} ]
         : [ 
             {title: 'Bmm CBP Payment - (USD ', data: curSumInUsd},          
             {title: 'Original Bmm CBP Payment', data: cbpOutflow[type].bmmTransferInUsd},
@@ -650,17 +675,17 @@ export function FinStatement() {
 
   const displayDeferredRevenue = (type:number) => {
 
-    let deferredRevenue = cbpToETH(cbpOutflow[type].totalAmt - cbpInflow[type].totalAmt + cbpInflow[type].mint);
+    let deferredRevenue = leeToWei(cbpOutflow[type].totalAmt - cbpInflow[type].totalAmt + cbpInflow[type].mint);
     let deferredRevenueInUsd = weiToDust(deferredRevenue);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Deferred Revenue', amt: deferredRevenue, amtInUsd: deferredRevenueInUsd, show: ()=>{}},
-      {simbol: '+', title: 'Fuel Sold', amt: cbpToETH(cbpOutflow[type].fuelSold), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].fuelSold)), show: ()=>showFuelSoldRecords(type)},
-      {simbol: '+', title: 'Gmm CBP Payment', amt: cbpToETH(cbpOutflow[type].gmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer)), show: ()=>showGmmCbpPaymentRecords(type)},
-      {simbol: '+', title: 'Bmm CBP Payment', amt: cbpToETH(cbpOutflow[type].bmmTransfer), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer)), show: ()=>showBmmCbpPaymentRecords(type)},
-      {simbol: '+', title: 'New User Awards', amt: cbpToETH(cbpOutflow[type].newUserAward), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(type)},
-      {simbol: '+', title: 'Startup Cost', amt: cbpToETH(cbpOutflow[type].startupCost), amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(type)},
-      {simbol: '-', title: 'Royalty Income', amt: cbpToETH(cbpInflow[type].royalty), amtInUsd: weiToDust(cbpToETH(cbpInflow[type].royalty)), show: ()=>showRoyaltyRecords(type)},
+      {simbol: '+', title: 'Fuel Sold', amt: leeToWei(cbpOutflow[type].fuelSold), amtInUsd: leeToDust(cbpOutflow[type].fuelSold), show: ()=>showFuelSoldRecords(type)},
+      {simbol: '+', title: 'Gmm CBP Payment', amt: leeToWei(cbpOutflow[type].gmmTransfer), amtInUsd: weiToDust(leeToWei(cbpOutflow[type].gmmTransfer)), show: ()=>showGmmCbpPaymentRecords(type)},
+      {simbol: '+', title: 'Bmm CBP Payment', amt: leeToWei(cbpOutflow[type].bmmTransfer), amtInUsd: weiToDust(leeToWei(cbpOutflow[type].bmmTransfer)), show: ()=>showBmmCbpPaymentRecords(type)},
+      {simbol: '+', title: 'New User Awards', amt: leeToWei(cbpOutflow[type].newUserAward), amtInUsd: weiToDust(leeToWei(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(type)},
+      {simbol: '+', title: 'Startup Cost', amt: leeToWei(cbpOutflow[type].startupCost), amtInUsd: weiToDust(leeToWei(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(type)},
+      {simbol: '-', title: 'Royalty Income', amt: leeToWei(cbpInflow[type].royalty), amtInUsd: weiToDust(leeToWei(cbpInflow[type].royalty)), show: ()=>showRoyaltyRecords(type)},
     ];
 
     setItems(items);
@@ -725,11 +750,11 @@ export function FinStatement() {
     records = records.filter((v)=>v.typeOfIncome == 'Royalty');
 
     let arrSumInfo = inETH 
-        ? [ {title: 'Royalty Income - (ETH ', data: cbpInflow[type].royalty * 10000n / exRate} ]
+        ? [ {title: 'Royalty Income - (ETH ', data: leeToWei(cbpInflow[type].royalty)} ]
         : [ 
             {title: 'Royalty Income - (USD ', data: cbpInflow[type].royaltyInUsd},
-            {title: 'Current Value of Royalty Income', data: weiToDust(cbpToETH(cbpInflow[type].royalty))},
-            {title: 'Exchange Gain/Loss', data: weiToDust(cbpToETH(cbpInflow[type].royalty)) - cbpInflow[type].royaltyInUsd},
+            {title: 'Current Value of Royalty Income', data: leeToDust(cbpInflow[type].royalty)},
+            {title: 'Exchange Gain/Loss', data: leeToDust(cbpInflow[type].royalty) - cbpInflow[type].royaltyInUsd},
           ];
 
     setList(records);
@@ -819,7 +844,7 @@ export function FinStatement() {
 
     records = records.filter((v) => v.typeOfIncome == 'NewUserAward');
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].newUserAward));
+    let curSumInUsd = leeToDust(cbpOutflow[type].newUserAward);
 
     let arrSumInfo = inETH 
         ? [ {title: 'New User Award (ETH ', data: cbpOutflow[type].newUserAward * 10000n / exRate }]
@@ -839,10 +864,10 @@ export function FinStatement() {
 
     records = records.filter((v) => v.typeOfIncome == 'StartupCost');
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].startupCost));
+    let curSumInUsd = leeToDust(cbpOutflow[type].startupCost);
 
     let arrSumInfo = inETH 
-        ? [ {title: 'Startup Cost (ETH ', data: cbpOutflow[type].startupCost * 10000n / exRate }]
+        ? [ {title: 'Startup Cost (ETH ', data: leeToWei(cbpOutflow[type].startupCost)}]
         : [
             {title: 'Startup Cost (USD ', data: cbpOutflow[type].startupCostInUsd },
             {title: 'Current Value of Startup Cost', data: curSumInUsd },
@@ -857,24 +882,24 @@ export function FinStatement() {
 
   const displaySGNA = (type:number) => {
 
-    let gmmCbpExp = cbpToETH(cbpOutflow[type].gmmTransfer);
+    let gmmCbpExp = leeToWei(cbpOutflow[type].gmmTransfer);
     let gmmEthExp = ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense;
     let gmmCbpExpInUsd = cbpOutflow[type].gmmTransferInUsd;
     let gmmEthExpInUsd = ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd;
 
-    let bmmCbpExp = cbpToETH(cbpOutflow[type].bmmTransfer);
+    let bmmCbpExp = leeToWei(cbpOutflow[type].bmmTransfer);
     let bmmEthExp = ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense;
     let bmmCbpExpInUsd = cbpOutflow[type].bmmTransferInUsd;
     let bmmEthExpInUsd = ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd;
 
-    let sgNa = gmmCbpExp + gmmEthExp + bmmCbpExp + bmmEthExp + cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost) + microToWei(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
+    let sgNa = gmmCbpExp + gmmEthExp + bmmCbpExp + bmmEthExp + leeToWei(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost) + microToWei(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
 
     let sgNaInUsd = gmmCbpExpInUsd + gmmEthExpInUsd + bmmCbpExpInUsd + bmmEthExpInUsd + cbpOutflow[type].newUserAwardInUsd + cbpOutflow[type].startupCostInUsd + microToDust(usdOutflow[type].reimburseExp + usdOutflow[type].advanceExp);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Sales, General & Administrative', amt: sgNa, amtInUsd: sgNaInUsd, show: ()=>{}},
-      {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow[type].newUserAward) , amtInUsd: cbpOutflow[type].newUserAwardInUsd, show: ()=>showNewUserAwardRecords(type)},
-      {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow[type].startupCost) , amtInUsd: cbpOutflow[type].startupCostInUsd, show: ()=>showStartupCostRecords(type)},
+      {simbol: '+', title: 'New User Awards', amt:leeToWei(cbpOutflow[type].newUserAward) , amtInUsd: cbpOutflow[type].newUserAwardInUsd, show: ()=>showNewUserAwardRecords(type)},
+      {simbol: '+', title: 'Startup Cost', amt:leeToWei(cbpOutflow[type].startupCost) , amtInUsd: cbpOutflow[type].startupCostInUsd, show: ()=>showStartupCostRecords(type)},
       {simbol: '+', title: 'GMM Approved Cbp Expense', amt:gmmCbpExp , amtInUsd: gmmCbpExpInUsd, show: ()=>showGmmCbpPaymentRecords(type)},
       {simbol: '+', title: 'GMM Approved Eth Expense', amt:gmmEthExp , amtInUsd: gmmEthExpInUsd, show: ()=>showGmmEthPaymentRecords(type)},
       {simbol: '+', title: 'BMM Approved Cbp Expense', amt:bmmCbpExp , amtInUsd: bmmCbpExpInUsd, show: ()=>showBmmCbpPaymentRecords(type)},
@@ -889,18 +914,18 @@ export function FinStatement() {
 
   const displayExchangeGainLoss = (type:number) => {
 
-    let gl = getOpExchangeGainLoss(type, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, cbpToETH);
+    let gl = getOpExchangeGainLoss(type, ethInflow, ethOutflow, cbpInflow, cbpOutflow, weiToDust, leeToWei);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Operational Exchange Gain (Loss)', amt: 0n, amtInUsd: gl, show: ()=>{}},
       {simbol: '+', title: 'ETH Transfer Income - G/L', amt:0n, amtInUsd: (weiToDust(ethInflow[type].transfer) - ethInflow[type].transferInUsd), show: ()=>{}},
       {simbol: '-', title: 'ETH GMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(ethOutflow[type].gmmTransfer + ethOutflow[type].gmmExpense) - (ethOutflow[type].gmmTransferInUsd + ethOutflow[type].gmmExpenseInUsd)), show: ()=>{}},
       {simbol: '-', title: 'ETH BMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(ethOutflow[type].bmmTransfer + ethOutflow[type].bmmExpense) - (ethOutflow[type].bmmTransferInUsd + ethOutflow[type].bmmExpenseInUsd)), show: ()=>{}},
-      {simbol: '+', title: 'CBP Royalty Income - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpInflow[type].royalty)) - cbpInflow[type].royaltyInUsd), show: ()=>{}},
-      {simbol: '-', title: 'CBP New User Awards - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].newUserAward)) - cbpOutflow[type].newUserAwardInUsd), show: ()=>{}},
-      {simbol: '-', title: 'CBP Startup Cost - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].startupCost)) - cbpOutflow[type].startupCostInUsd), show: ()=>{}},
-      {simbol: '-', title: 'CBP GMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].gmmTransfer)) - cbpOutflow[type].gmmTransferInUsd), show: ()=>{}},
-      {simbol: '-', title: 'CBP BMM Payment - G/L', amt:0n, amtInUsd: (weiToDust(cbpToETH(cbpOutflow[type].bmmTransfer)) - cbpOutflow[type].bmmTransferInUsd), show: ()=>{}},
+      {simbol: '+', title: 'CBP Royalty Income - G/L', amt:0n, amtInUsd: (leeToDust(cbpInflow[type].royalty) - cbpInflow[type].royaltyInUsd), show: ()=>{}},
+      {simbol: '-', title: 'CBP New User Awards - G/L', amt:0n, amtInUsd: (leeToDust(cbpOutflow[type].newUserAward) - cbpOutflow[type].newUserAwardInUsd), show: ()=>{}},
+      {simbol: '-', title: 'CBP Startup Cost - G/L', amt:0n, amtInUsd: (leeToDust(cbpOutflow[type].startupCost) - cbpOutflow[type].startupCostInUsd), show: ()=>{}},
+      {simbol: '-', title: 'CBP GMM Payment - G/L', amt:0n, amtInUsd: (leeToDust(cbpOutflow[type].gmmTransfer) - cbpOutflow[type].gmmTransferInUsd), show: ()=>{}},
+      {simbol: '-', title: 'CBP BMM Payment - G/L', amt:0n, amtInUsd: (leeToDust(cbpOutflow[type].bmmTransfer) - cbpOutflow[type].bmmTransferInUsd), show: ()=>{}},
 
     ];
 
@@ -924,6 +949,22 @@ export function FinStatement() {
   }
 
   // ==== Crypto Flow ====
+
+  const displayGasIncome = (type:number) => {
+
+    let gasIncomeInEth = microToWei(usdInflow[type].gas) + ethInflow[type].gas;
+
+    let gasIncomeInUsd = microToDust(usdInflow[type].gas) + weiToDust(ethInflow[type].gas);
+
+    let items:BtnProps[] = [
+      {simbol: ' ', title: 'Gas Income', amt: gasIncomeInEth, amtInUsd: gasIncomeInUsd, show: ()=>{}},
+      {simbol: '+', title: 'Gas Income (USDC)', amt: microToWei(usdInflow[type].gas), amtInUsd: microToDust(usdInflow[type].gas), show: ()=>showUsdGasIncomeRecords(type)},
+      {simbol: '+', title: 'Gas Income (ETH)', amt:ethInflow[type].gas, amtInUsd: weiToDust(ethInflow[type].gas), show: ()=>showGasIncomeRecords(type)}
+    ];
+
+    setItems(items);
+    setShowSGNA(true);
+  }
 
   const displayCryptoOutflowInSGNA = (type:number) => {
 
@@ -955,13 +996,13 @@ export function FinStatement() {
 
   const displayCbpMintToOthers = (type:number) => {
 
-    let cbpMintOut = cbpToETH(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
-    let cbpMintOutInUsd = weiToDust(cbpMintOut);
+    let cbpMintOut = leeToWei(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
+    let cbpMintOutInUsd = leeToDust(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
 
     let items:BtnProps[] = [
       {simbol: ' ', title: 'CBP Mint To Others', amt: cbpMintOut, amtInUsd: cbpMintOutInUsd, show: ()=>{}},
-      {simbol: '+', title: 'New User Awards', amt:cbpToETH(cbpOutflow[type].newUserAward) , amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].newUserAward)), show: ()=>showNewUserAwardRecords(type)},
-      {simbol: '+', title: 'Startup Cost', amt:cbpToETH(cbpOutflow[type].startupCost) , amtInUsd: weiToDust(cbpToETH(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(type)},
+      {simbol: '+', title: 'New User Awards', amt:leeToWei(cbpOutflow[type].newUserAward) , amtInUsd: leeToDust(cbpOutflow[type].newUserAward), show: ()=>showNewUserAwardRecords(type)},
+      {simbol: '+', title: 'Startup Cost', amt:leeToWei(cbpOutflow[type].startupCost) , amtInUsd: weiToDust(leeToWei(cbpOutflow[type].startupCost)), show: ()=>showStartupCostRecords(type)},
     ];
 
     setItems(items);
@@ -1028,7 +1069,7 @@ export function FinStatement() {
 
     let records = trimCashflow(cbpInflowRecords, startDate, endDate, type);
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpInflow[type].totalAmt));
+    let curSumInUsd = leeToDust(cbpInflow[type].totalAmt);
 
     let arrSumInfo = inETH
         ? [ {title: 'CBP Income - (CBP ', data: cbpInflow[type].totalAmt},
@@ -1052,7 +1093,7 @@ export function FinStatement() {
 
     let records = trimCashflow(cbpOutflowRecords, startDate, endDate, type);
 
-    let curSumInUsd = weiToDust(cbpToETH(cbpOutflow[type].totalAmt));
+    let curSumInUsd = leeToDust(cbpOutflow[type].totalAmt);
 
     let arrSumInfo = inETH
         ? [ {title: 'CBP Outflow - (CBP ', data: cbpOutflow[type].totalAmt},
@@ -1161,7 +1202,7 @@ export function FinStatement() {
   const showFtCbpflow = (type:number) => {
     let records = trimCashflow(ftCbpflowRecords, startDate, endDate, type);
 
-    let curSumInUsd = weiToDust(cbpToETH(ftCbpflow[type].totalCbp));
+    let curSumInUsd = leeToDust(ftCbpflow[type].totalCbp);
 
     let arrSumInfo = inETH
       ? [ {title: 'CBP Balance in FT - (CBP ', data: ftCbpflow[type].totalCbp},
@@ -1215,12 +1256,14 @@ export function FinStatement() {
             {title: 'USDC Inflow - (ETH ', data: microToWei(usdInflow[type].totalAmt)},
             {title: 'Capital', data: microToWei(usdInflow[type].capital)},
             {title: 'Premium', data: microToWei(usdInflow[type].premium)}, 
+            {title: 'GasIncome', data: microToWei(usdInflow[type].gas)},
             {title: 'UpgradeCashier', data: microToWei(usdInflow[type].upgradeCashier)}, 
           ]
         : [ 
             {title: 'USDC Inflow - (USD ', data: microToDust(usdInflow[type].totalAmt)},
             {title: 'Capital', data: microToDust(usdInflow[type].capital)},
             {title: 'Premium', data: microToDust(usdInflow[type].premium)},
+            {title: 'GasIncome', data: microToDust(usdInflow[type].gas)},
             {title: 'UpgradeCashier', data: microToDust(usdInflow[type].upgradeCashier)},
           ];
 
@@ -1480,7 +1523,7 @@ export function FinStatement() {
 
         <IncomeStatement inETH={inETH} centPrice={centPrice} exRate={exRate} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[()=>showRoyaltyRecords(2), ()=>showOtherIncomeRecords(2), ()=>displaySGNA(2), ()=>displayExchangeGainLoss(2), ()=>displayDistribution(2)]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} />
  
-        <CryptosFlowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[ ()=>showGasIncomeRecords(2), ()=>showOtherIncomeRecords(2), ()=>displayCryptoOutflowInSGNA(2), ()=>displayShareIssuanceProceeds(2), ()=>displayDistribution(2) ]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
+        <CryptosFlowStatement inETH={inETH} exRate={exRate} centPrice={centPrice} startDate={startDate} endDate={endDate} opnBlkNo={opnBlkNo} rptBlkNo={rptBlkNo} display={[ ()=>displayGasIncome(2), ()=>showOtherIncomeRecords(2), ()=>displayCryptoOutflowInSGNA(2), ()=>displayShareIssuanceProceeds(2), ()=>displayDistribution(2) ]} cbpInflow={cbpInflow} cbpOutflow={cbpOutflow} ethInflow={ethInflow} ethOutflow={ethOutflow} usdInflow={usdInflow} usdOutflow={usdOutflow} ftCbpflow={ftCbpflow} ftEthflow={ftEthflow} deposits={deposits} usdEscrow={usdEscrow} />
 
       </Stack>
 

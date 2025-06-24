@@ -13,8 +13,12 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
 
   const { boox } = useComBooxContext();
 
-  const cbpToETH = (cbp:bigint) => {
-    return cbp * 10000n / exRate;
+  // const cbpToETH = (cbp:bigint) => {
+  //   return cbp * 10000n / exRate;
+  // }
+
+  const leeToWei = (cbp:bigint) => {
+    return cbp * exRate * centPrice / 10n ** 22n;
   }
 
   const weiToDust = (eth:bigint) => {
@@ -93,13 +97,13 @@ export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endD
     return {inEth: inEth, inUsd: inUsd};
   }
 
-  const netIncome = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
+  const netIncome = (type:number) => getProfits(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, leeToWei, weiToDust, microToWei, microToDust);
 
-  const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, cbpToETH, weiToDust, microToWei, microToDust);
+  const retainedEarnings = (type:number) => getRetainedEarnings(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, leeToWei, weiToDust, microToWei, microToDust);
 
   const ethGNL = (type:number) => getEthGainAndLossInEquity(type, ethInflow, weiToDust);
 
-  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow, cbpToETH, baseToWei, weiToDust, microToWei, microToDust);
+  const ownersEquity = (type:number) => getOwnersEquity(type, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow, leeToWei, baseToWei, weiToDust, microToWei, microToDust);
 
   return(
 

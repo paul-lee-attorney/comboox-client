@@ -109,14 +109,14 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
         blockNumber: rptBlkNo,
       });
 
-      const balaOfFT = await client.getBalance({
-        address: AddrOfTank,
-        blockNumber: rptBlkNo,
-      });
+      // const balaOfFT = await client.getBalance({
+      //   address: AddrOfTank,
+      //   blockNumber: rptBlkNo,
+      // });
 
       const balaOfDeposits = await totalDeposits(gk, rptBlkNo);
 
-      const output = balaOfGK + balaOfFT - balaOfDeposits;
+      const output = balaOfGK - balaOfDeposits;
 
       return output;
     }

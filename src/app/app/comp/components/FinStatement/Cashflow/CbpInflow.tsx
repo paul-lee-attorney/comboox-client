@@ -8,6 +8,7 @@ import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem }
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
+import { ftHis } from "./FtCbpflow";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -199,8 +200,9 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       transferLogs = transferLogs?.filter((v) => 
           v.args.to.toLowerCase() == gk.toLowerCase() &&
           v.args.from?.toLowerCase() != AddrOfTank.toLowerCase() &&
-          v.args.from?.toLowerCase() != "0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7".toLowerCase() &&
-          v.args.from?.toLowerCase() != "0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0".toLowerCase());
+          v.args.from?.toLowerCase() != ftHis[0].toLowerCase() &&
+          v.args.from?.toLowerCase() != ftHis[1].toLowerCase() &&
+          v.args.from?.toLowerCase() != ftHis[2].toLowerCase());
 
       console.log('transferLogs: ', transferLogs);
 
