@@ -471,25 +471,25 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
               </Button>
             </Stack>
 
-            <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
+            {/* <Stack direction='row' width='100%' sx={{alignItems:'center'}}  >
               <Typography variant="h6" textAlign='center' width='20%'>
                 &nbsp;
               </Typography>
-              {/* <Typography variant="h6" textAlign='center' width='10%'>
+              <Typography variant="h6" textAlign='center' width='10%'>
                 -
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[6](3)} >
                 <b>ETH In Fuel Tank: ({inETH 
                     ? weiToEth9Dec(ethOfFT.endAmt) 
                     : showUSD(weiToDust(ethOfFT.endAmt))}) </b>
-              </Button> */}
+              </Button>
             </Stack>
 
             <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>ETH in GK: ({ inETH 
                   ? weiToEth9Dec(ethOfGK.endAmt) 
                   : showUSD(weiToDust(ethOfGK.endAmt)) }) </b>
-            </Button>
+            </Button> */}
 
           </Stack>
 

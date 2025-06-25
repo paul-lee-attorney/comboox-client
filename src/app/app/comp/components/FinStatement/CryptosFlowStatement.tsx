@@ -99,7 +99,7 @@ export function CryptosFlowStatement({inETH, exRate, centPrice, startDate, endDa
 
   const getNetIncreaseOfUsd = () => {
     const inEth = getNetUsdOfOperating().inEth + getNetUsdOfFinancing().inEth;
-    const inUsd = getNetUsdOfOperating().inEth + getNetUsdOfFinancing().inUsd;
+    const inUsd = getNetUsdOfOperating().inUsd + getNetUsdOfFinancing().inUsd;
 
     return ({inEth: inEth, inUsd: inUsd});
   }

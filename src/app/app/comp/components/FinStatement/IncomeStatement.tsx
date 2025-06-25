@@ -148,7 +148,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](2)} >
           <b>Royalty Income: ({ inETH
             ? weiToEth9Dec(leeToWei(cbpInflow[2].royalty))
-            : showUSD(leeToDust(cbpInflow[2].royalty))}) </b>
+            : showUSD(cbpInflow[2].royaltyInUsd)}) </b>
         </Button>
       </Stack>
 
@@ -159,7 +159,7 @@ export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, d
         <Button variant="outlined" sx={{width: '90%', m:0.5, justifyContent:'start'}} onClick={()=>display[1](2)} >
           <b>Other Income: ({ inETH
             ? weiToEth9Dec(ethInflow[2].transfer)
-            : showUSD(weiToDust(ethInflow[2].transfer))}) </b>
+            : showUSD(ethInflow[2].transferInUsd)}) </b>
         </Button>
       </Stack>
 
