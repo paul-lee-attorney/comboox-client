@@ -95,37 +95,39 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
 
   const netValueOfIPR = beginValueOfIPR - armotization;
 
-  const [ethOfComp, setEthOfComp] = useState(0n);
+  // const [ethOfComp, setEthOfComp] = useState(0n);
 
   const client = usePublicClient();
   const { gk, boox } = useComBooxContext();
 
-  useEffect(()=>{
-    const getEthOfComp = async ()=>{
-      if (!gk) return 0n;
+  // useEffect(()=>{
+  //   const getEthOfComp = async ()=>{
+  //     if (!gk) return 0n;
 
-      const balaOfGK = await client.getBalance({
-        address: gk,
-        blockNumber: rptBlkNo,
-      });
+  //     const balaOfGK = await client.getBalance({
+  //       address: gk,
+  //       blockNumber: rptBlkNo,
+  //     });
 
-      // const balaOfFT = await client.getBalance({
-      //   address: AddrOfTank,
-      //   blockNumber: rptBlkNo,
-      // });
+  //     // const balaOfFT = await client.getBalance({
+  //     //   address: AddrOfTank,
+  //     //   blockNumber: rptBlkNo,
+  //     // });
 
-      const balaOfDeposits = await totalDeposits(gk, rptBlkNo);
+  //     const balaOfDeposits = await totalDeposits(gk, rptBlkNo);
 
-      const output = balaOfGK - balaOfDeposits;
+  //     const output = balaOfGK - balaOfDeposits;
 
-      return output;
-    }
+  //     return output;
+  //   }
 
-    getEthOfComp().then(
-      res => setEthOfComp(res)
-    );
+  //   getEthOfComp().then(
+  //     res => setEthOfComp(res)
+  //   );
 
-  }, [rptBlkNo, gk, client]);
+  // }, [rptBlkNo, gk, client]);
+
+  let ethOfComp = getEthOfComp(3, ethInflow, ethOutflow);
 
   const [usdOfComp, setUsdOfComp] = useState(0n);
 
@@ -142,8 +144,8 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
   }, [rptBlkNo, boox]);
 
   const totalAssets = ()=>{
-    const inEth = baseToWei(netValueOfIPR) + ethOfComp + microToWei(usdOfComp);
-    const inUsd = baseToDust(netValueOfIPR) + weiToDust(ethOfComp) + microToDust(usdOfComp);
+    const inEth = baseToWei(netValueOfIPR) + ethOfComp.inEth + microToWei(usdOfComp);
+    const inUsd = baseToDust(netValueOfIPR) + weiToDust(ethOfComp.inEth) + microToDust(usdOfComp);
 
     return({inEth:inEth, inUsd:inUsd});
   }
@@ -196,8 +198,8 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](3)}>
           <b>ETH Of Comp: ({ inETH 
-            ? weiToEth9Dec(ethOfComp)
-            : showUSD(weiToDust(ethOfComp)) }) </b>
+            ? weiToEth9Dec(ethOfComp.inEth)
+            : showUSD(weiToDust(ethOfComp.inEth)) }) </b>
         </Button>
       </Stack>
 
