@@ -93,35 +93,37 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
 
   // ==== Liabilities ====
 
-  const [ deferredRevenue, setDeferredRevenue] = useState(0n);
+  // const [ deferredRevenue, setDeferredRevenue] = useState(0n);
 
   const client = usePublicClient();
-  const {gk} = useComBooxContext();
+  // const {gk} = useComBooxContext();
 
-  useEffect(()=>{
-    const getDeferredRevenue = async ()=>{
-      if (!gk) return 0n;
+  // useEffect(()=>{
+  //   const getDeferredRevenue = async ()=>{
+  //     if (!gk) return 0n;
 
-      const cbpSupply = await getTotalSupply();
-      const cbpOfGK = await balanceOf(gk, rptBlkNo);
+  //     const cbpSupply = await getTotalSupply();
+  //     const cbpOfGK = await balanceOf(gk, rptBlkNo);
 
-      const cbpOfFT = await balanceOf(AddrOfTank, rptBlkNo);
-      // const cbpOfFTHis1 = await balanceOf(ftHis[1], rptBlkNo);
-      // const cbpOfFTHis2 = await balanceOf(ftHis[2], rptBlkNo);
+  //     const cbpOfFT = await balanceOf(AddrOfTank, rptBlkNo);
+  //     // const cbpOfFTHis1 = await balanceOf(ftHis[1], rptBlkNo);
+  //     // const cbpOfFTHis2 = await balanceOf(ftHis[2], rptBlkNo);
 
-      const cbpOfComp = cbpOfGK + cbpOfFT;
+  //     const cbpOfComp = cbpOfGK + cbpOfFT;
 
-      const output = cbpSupply - cbpOfComp;
+  //     const output = cbpSupply - cbpOfComp;
 
-      return output;
-    }
+  //     return output;
+  //   }
 
-    getDeferredRevenue().then(
-      res => setDeferredRevenue(res)
-    );
+  //   getDeferredRevenue().then(
+  //     res => setDeferredRevenue(res)
+  //   );
 
-  }, [rptBlkNo, gk, client]);
-  
+  // }, [rptBlkNo, gk, client]);
+
+  let deferredRevenue = getDeferredRevenue(3, cbpInflow, cbpOutflow, leeToWei);
+
   // ==== Capital ====
 
   const {boox} = useComBooxContext();
@@ -182,8 +184,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
       <Stack direction='row' width='100%' >
         <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} onClick={()=>display[0](3)}  >
           <b>Deferred Revenue: ({ inETH
-            ? weiToEth9Dec(leeToWei(deferredRevenue))
-            : showUSD(leeToDust(deferredRevenue))}) </b>
+            ? weiToEth9Dec(deferredRevenue.inEth)
+            : showUSD(weiToDust(deferredRevenue.inEth))}) </b>
         </Button>
       </Stack>
 
@@ -193,8 +195,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
           <b>Total Liabilities: ({ inETH
-            ? weiToEth9Dec(leeToWei(deferredRevenue))
-            : showUSD(leeToDust(deferredRevenue))}) </b>
+            ? weiToEth9Dec(deferredRevenue.inEth)
+            : showUSD(weiToDust(deferredRevenue.inEth))}) </b>
         </Button>
       </Stack>
 
@@ -289,8 +291,8 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
         </Typography>
         <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
           <b>Total Liabilities & Owners Equity: ({ inETH
-            ? weiToEth9Dec(leeToWei(deferredRevenue) + ownersEquity.inEth)
-            : showUSD(leeToDust(deferredRevenue) + ownersEquity.inUsd)}) </b>
+            ? weiToEth9Dec(deferredRevenue.inEth + ownersEquity.inEth)
+            : showUSD(weiToDust(deferredRevenue.inEth) + ownersEquity.inUsd)}) </b>
         </Button>
       </Stack>
 
