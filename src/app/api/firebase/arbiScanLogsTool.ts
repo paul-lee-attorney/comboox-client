@@ -399,10 +399,12 @@ export async function getNewLogs(
         output = output.concat(queryData);
       }
     }
+    output = output.length > 0 
+      ? output.sort((a,b) => Number(a.blockNumber) - Number(b.blockNumber)).
+        filter(v => BigInt(v.blockNumber) >= fromBlk)
+      : output;
 
-    return output.length > 0 
-        ? output.filter(v => BigInt(v.blockNumber) >= fromBlk) 
-        : output;
+    return output;
 
   } catch (error) {
     console.error("Error fetching new logs: ", error);
