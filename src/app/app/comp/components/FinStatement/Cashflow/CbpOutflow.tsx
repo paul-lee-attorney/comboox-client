@@ -129,9 +129,11 @@ export function CbpOutflow({exRate, setRecords}:CashflowRecordsProps ) {
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
           const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-          //348950001 
 
-          if (newItem.blockNumber > 348950001n) {
+          let fixRateBlk = client.chain.id == 42161
+            ? 348998163n : 165090995n;
+
+          if (newItem.blockNumber > fixRateBlk) {
             newItem.ethPrice = exRate * 10n ** 3n;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
           } else {

@@ -133,9 +133,10 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
 
           let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
 
-          //348950001 
+          let fixRateBlk = client.chain.id == 42161
+            ? 348998163n : 165090995n;
 
-          if (newItem.blockNumber > 348950001n) {
+          if (newItem.blockNumber > fixRateBlk) {
             newItem.ethPrice = exRate * 10n ** 3n;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
           } else {
