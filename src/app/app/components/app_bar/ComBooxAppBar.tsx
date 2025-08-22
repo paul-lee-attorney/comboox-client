@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { 
   Box, 
@@ -36,19 +36,12 @@ import {
   Diversity1Outlined,
   QuizOutlined,
   ChevronLeft,
-  CurrencyExchange,
   LocalGasStationOutlined,
-  Hub,
-  HubOutlined,
-  AutoModeOutlined,
-  CurrencyBitcoinOutlined,
   CurrencyExchangeOutlined,
   ReduceCapacityOutlined,
-  PublishedWithChangesOutlined
+  RedeemOutlined,
+  WaterfallChart,
 }  from '@mui/icons-material';
-
-// import Image from 'next/image';
-// import Logo from '/public/assets/Symbol_white_xs.png';
 
 import MenuIcon from '@mui/icons-material/Menu';
 import { GetTimestamp } from './components/GetTimestamp';
@@ -57,6 +50,7 @@ import { LogIn } from './components/LogIn';
 import { ErrMsg } from './components/ErrMsg';
 import Link from 'next/link';
 import { DocsSetting } from '../docs_setting/DocsSetting';
+import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -112,6 +106,24 @@ type ComBooxAppBarType = {
 
 export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     
+  const { compInfo } = useComBooxContext();
+
+  const [typeOfEntity, setTypeOfEntity] = useState(0);
+
+  useEffect(()=>{
+    if (compInfo?.typeOfEntity) {
+      setTypeOfEntity(compInfo.typeOfEntity);      
+    }
+  }, [compInfo?.typeOfEntity]);
+
+  const [isDAO, setIsDAO] = useState(false);
+
+  useEffect(()=>{
+    if (compInfo?.regNum) {
+      setIsDAO(compInfo.regNum == 8);      
+    }
+  }, [compInfo?.regNum]);
+
   const [appBarOpen, setAppBarOpen] = useState(false);
 
   const handleDrawerOpen = () => {
@@ -126,20 +138,20 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const items = [
     {href: '/app', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
     {href: '/app/fuel_tank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
-    {href: '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
-    {href: '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
-    {href: '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
-    {href: '/app/comp/rod', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
-    {href: '/app/comp/bmm', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    {href: '/app/comp/rom', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
-    {href: '/app/comp/gmm', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    {href: '/app/comp/ros', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
-    {href: '/app/comp/rop', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: false},
-    {href: '/app/comp/roo', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: true},
-    {href: '/app/comp/roi', label: 'ROI', tip:'Register of Investors', icon: <ReduceCapacityOutlined />, divider: false},
-    {href: '/app/comp/loe', label: 'LOE', tip:'List of Orders (ETH)', icon: <PublishedWithChangesOutlined />, divider: false},
-    {href: '/app/comp/lou', label: 'LOU', tip:'List of Orders (USD)', icon: <CurrencyExchangeOutlined />, divider: true},
-    {href: '/app/comp/lop', label: 'LOP', tip:'List of Projects', icon: <HubOutlined />, divider: false},
+    {href: isDAO ? '/app/compV1' : '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
+    {href: isDAO ? '/app/compV1/roc' : '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
+    {href: isDAO ? '/app/compV1/roa' : '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
+    {href: isDAO ? '/app/compV1/rod' : '/app/comp/rod', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
+    {href: isDAO ? '/app/compV1/bmm' : '/app/comp/bmm', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: isDAO ? '/app/compV1/rom' : '/app/comp/rom', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
+    {href: isDAO ? '/app/compV1/gmm' : '/app/comp/gmm', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+    {href: isDAO ? '/app/compV1/ros' : '/app/comp/ros', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
+    {href: isDAO ? '/app/compV1/roo' : '/app/comp/roo', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: false},
+    {href: isDAO ? '/app/compV1/rop' : '/app/comp/rop', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: true},
+    {href: isDAO ? '/app/compV1' : '/app/comp/ror', label: 'ROR', tip:'Register of Redemptions', icon: <RedeemOutlined />, divider: false},
+    {href: isDAO ? '/app/compV1' : '/app/comp/wtf', label: 'WTF', tip:'Distribution Waterfalls', icon: <WaterfallChart />, divider: true},
+    {href: isDAO ? '/app/compV1/roi' : '/app/comp/roi', label: 'ROI', tip:'Register of Investors', icon: <ReduceCapacityOutlined />, divider: false},
+    {href: isDAO ? '/app/compV1/loo' : '/app/comp/loo', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchangeOutlined />, divider: true},
   ]
 
   return (
@@ -163,8 +175,6 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
                   <MenuIcon />
                 </IconButton>
               
-                {/* <Image src={Logo} alt='ComBoox Symbol' /> */}
-
                 <DocsSetting />
 
                 <Typography variant="h6" component="div" sx={{ flexGrow: 1, ml:2}}>
@@ -200,6 +210,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         anchor="left"
         open={ appBarOpen }
       >
+
         <DrawerHeader sx={{ height: 72 }}>
           <IconButton onClick={handleDrawerClose}>
             <ChevronLeft />
@@ -210,8 +221,48 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
         <List>
 
-          {items.map((v, i)=>(
-            <div key={i}>
+          <ListItem disablePadding >
+            <Tooltip title={items[0].tip} placement='right' arrow >
+              <ListItemButton 
+                LinkComponent={ Link }
+                href={items[0].href}
+              >
+                <ListItemIcon>
+                  {items[0].icon}
+                </ListItemIcon>
+                <ListItemText primary={items[0].label} />
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+          {items[0].divider && (
+            <Divider flexItem />
+          )}          
+
+          <ListItem disablePadding >
+            <Tooltip title={items[1].tip} placement='right' arrow >
+              <ListItemButton 
+                LinkComponent={ Link }
+                href={items[1].href}
+              >
+                <ListItemIcon>
+                  {items[1].icon}
+                </ListItemIcon>
+                <ListItemText primary={items[1].label} />
+              </ListItemButton>
+            </Tooltip>
+          </ListItem>
+          {items[1].divider && (
+            <Divider flexItem />
+          )}
+
+          {typeOfEntity > 0 && items.map((v, i)=>{
+            if (i < 2) return null;
+            if (typeOfEntity != 2 && typeOfEntity != 4 && i == 10) return null; 
+            if (typeOfEntity != 3 && typeOfEntity != 4 && typeOfEntity != 6 &&
+                typeOfEntity != 8 && typeOfEntity != 9 && i == 15) return null;
+            if (typeOfEntity < 7  && i == 12) return null;
+
+            return (<div key={i}>
               <ListItem disablePadding >
                 <Tooltip title={v.tip} placement='right' arrow >
                   <ListItemButton 
@@ -228,8 +279,8 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
               {v.divider && (
                 <Divider flexItem />
               )}
-            </div>
-          ))}
+            </div>)
+          })}
 
         </List>
 

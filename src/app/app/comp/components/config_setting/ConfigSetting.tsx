@@ -31,8 +31,6 @@ export function ConfigSetting({companyName, symbol, time, setTime}:ConfigSetting
   const [ keepers, setKeepers ] = useState<BookInfo[]>();
   const [ books, setBooks ] = useState<BookInfo[]>();
 
-  // const [ time, setTime ] = useState<number>(0);
-
   useEffect(() => {
     if (gk) {
       getKeepers(gk).then(

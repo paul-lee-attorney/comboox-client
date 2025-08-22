@@ -17,7 +17,7 @@ function RegisterOfInvestors() {
 
   const { boox } = useComBooxContext();
 
-  const [addr, setAddr] = useState(boox ? boox[booxMap.LOO] : AddrZero );
+  const [addr, setAddr] = useState(boox ? boox[booxMap.ROI] : AddrZero );
 
   const [ invList, setInvList ] = useState<readonly Investor[]>([]);
   const [ time, setTime ] = useState<number>(0);

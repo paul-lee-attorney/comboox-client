@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { balanceOf, balanceOfWei } from "../../../rc";
-import { totalDeposits } from "../../gk";
+// import { totalDeposits } from "../../gk";
 import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../../cashier";
 import { booxMap } from "../../../common";
 import { Divider, Grid, Paper, Stack, TextField, Typography } from "@mui/material";
 
 import { getEthPart, getGWeiPart, getWeiPart, longDataParser } from "../../../common/toolsKit";
-import { PickupDeposit } from "./CashBox/PickupDeposit";
-import { DepositOfMine } from "./CashBox/DepositOfMine";
+// import { PickupDeposit } from "./CashBox/PickupDeposit";
+// import { DepositOfMine } from "./CashBox/DepositOfMine";
 import { PickupUsdDeposit } from "./CashBox/PickupUsdDeposit";
 import { UsdDepositOfMine } from "./CashBox/UsdDepositOfMine";
 
@@ -23,27 +23,27 @@ export function CashBox() {
   }
 
   const [ balanceOfCBP, setBalanceOfCBP ] = useState<string>('0');
-  const [ balanceOfETH, setBalanceOfETH ] = useState(0n);
+  // const [ balanceOfETH, setBalanceOfETH ] = useState(0n);
   const [ balanceOfUSD, setBalanceOfUSD ] = useState('0');
 
-  const [ depositsOfETH, setDepositsOfETH ] = useState(0n);
+  // const [ depositsOfETH, setDepositsOfETH ] = useState(0n);
   const [ escrowUSD, setEscrowUSD ] = useState('0');
   const [ depositUSD, setDepositUSD ] = useState('0');
 
   useEffect(()=>{
     if (gk) {
 
-      balanceOfWei(gk).then(
-        res => setBalanceOfETH(res)
-      );
+      // balanceOfWei(gk).then(
+      //   res => setBalanceOfETH(res)
+      // );
 
       balanceOf(gk, undefined).then(
         res => setBalanceOfCBP(res.toString())        
       );
       
-      totalDeposits(gk).then(
-        res => setDepositsOfETH(res)
-      );
+      // totalDeposits(gk).then(
+      //   res => setDepositsOfETH(res)
+      // );
     }
 
     if (boox) {
@@ -65,7 +65,7 @@ export function CashBox() {
     }
   }, [ gk, time, boox ]);
 
-  let cap = (balanceOfETH - depositsOfETH).toString();
+  // let cap = balanceOfETH.toString();
 
   return(
 
@@ -81,9 +81,9 @@ export function CashBox() {
 
         <UsdDepositOfMine time={time} />
 
-        <PickupDeposit refresh={refresh} />
+        {/* <PickupDeposit refresh={refresh} />
 
-        <DepositOfMine time={time} />
+        <DepositOfMine time={time} /> */}
 
       </Stack>
 
@@ -153,7 +153,7 @@ export function CashBox() {
           />
         </Grid>
 
-        <Grid item xs={1.3} md={1.3} lg={1.3} >
+        {/* <Grid item xs={1.3} md={1.3} lg={1.3} >
           <TextField 
             size="small"
             variant='outlined'
@@ -203,7 +203,7 @@ export function CashBox() {
             }}
             value={ getWeiPart(cap) }
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={1.3} md={1.3} lg={1.3} >
           <TextField 
@@ -214,7 +214,7 @@ export function CashBox() {
               readOnly: true,
               style: {textAlign: 'right'},
             }}
-            color = "primary"
+            color = "success"
             focused
             sx={{
               m:1,
@@ -231,7 +231,7 @@ export function CashBox() {
               readOnly: true,
               style: {textAlign: 'right'},
             }}
-            color = "primary"
+            color = "success"
             focused
             sx={{
               m:1,
@@ -248,7 +248,7 @@ export function CashBox() {
               readOnly: true,
               style: {textAlign: 'left'},
             }}
-            color = "primary"
+            color = "success"
             focused
             sx={{
               m:1,
@@ -272,7 +272,7 @@ export function CashBox() {
               readOnly: true,
               style: {textAlign: 'right'},
             }}
-            color = "primary"
+            color = "success"
             focused
             sx={{
               m:1,
@@ -291,7 +291,7 @@ export function CashBox() {
               readOnly: true,
               style: {textAlign: 'right'},
             }}
-            color = "primary"
+            color = "success"
             focused
             sx={{
               m:1,
@@ -314,7 +314,7 @@ export function CashBox() {
               readOnly: true,
               style: {textAlign: 'left'},
             }}
-            color = "primary"
+            color = "success"
             focused
             sx={{
               m:1,
@@ -327,7 +327,7 @@ export function CashBox() {
           />
         </Grid>
 
-        <Grid item xs={1.3} md={1.3} lg={1.3} >
+        {/* <Grid item xs={1.3} md={1.3} lg={1.3} >
           <TextField 
             size="small"
             variant='outlined'
@@ -377,7 +377,7 @@ export function CashBox() {
             }}
             value={ getWeiPart(depositsOfETH.toString()) }
           />              
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={1.3} md={1.3} lg={1.3} >
           <TextField 

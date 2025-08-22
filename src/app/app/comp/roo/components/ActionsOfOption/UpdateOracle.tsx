@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ActionsOfOptionProps } from "../ActionsOfOption";
-import { useGeneralKeeperUpdateOracle } from "../../../../../../../generated";
+import { useCompKeeperUpdateOracle } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Update } from "@mui/icons-material";
 import { HexType, MaxData } from "../../../../common";
@@ -37,7 +37,7 @@ export function UpdateOracle({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) 
   const {
     isLoading: updateOracleLoading,
     write: updateOracle,
-  } = useGeneralKeeperUpdateOracle({
+  } = useCompKeeperUpdateOracle({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

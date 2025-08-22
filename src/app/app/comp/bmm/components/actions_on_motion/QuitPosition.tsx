@@ -7,7 +7,7 @@ import { refreshAfterTx } from "../../../../common/toolsKit";
 
 import { LoadingButton } from "@mui/lab";
 
-import { useGeneralKeeperQuitPosition } from "../../../../../../../generated";
+import { useCompKeeperQuitPosition } from "../../../../../../../generated";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 
 
@@ -31,7 +31,7 @@ export function QuitPosition({seq, setOpen, refresh}: QuitPositionProps) {
   const {
     isLoading: quitPositionLoading,
     write: quitPosition,
-  } = useGeneralKeeperQuitPosition({
+  } = useCompKeeperQuitPosition({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

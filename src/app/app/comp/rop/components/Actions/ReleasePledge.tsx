@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useGeneralKeeperReleasePledge } from "../../../../../../../generated";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { useCompKeeperReleasePledge } from "../../../../../../../generated";
+import { Paper, Stack, TextField } from "@mui/material";
 import { Key } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType } from "../../../../common";
@@ -24,7 +24,7 @@ export function ReleasePledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const {
     isLoading: releasePledgeLoading,
     write: releasePledge,
-  } = useGeneralKeeperReleasePledge({
+  } = useCompKeeperReleasePledge({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

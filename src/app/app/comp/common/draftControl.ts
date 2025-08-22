@@ -1,6 +1,7 @@
 import { readContract } from "@wagmi/core";
 import { HexType } from "../../common";
 import { draftControlABI } from "../../../../../generated";
+import { accessControlABI } from "../../../../../generated-v1";
 
 export const ATTORNEYS:HexType = `0x${'4174746f726e657973' + '0'.padEnd(46, '0')}`;
 
@@ -29,7 +30,7 @@ export async function isFinalized(addr: HexType): Promise<boolean>{
 export async function getDK(addr: HexType): Promise<HexType>{
   let keeper: HexType = await readContract({
     address: addr,
-    abi: draftControlABI,
+    abi: accessControlABI,
     functionName: 'getDK',
   })
 

@@ -19,7 +19,6 @@ export function UploadMotionFile({ motion, setOpen, refresh }:ActionsOnMotionPro
       console.log('UserNo Not Retrieved!');
       return false;
     }
-    // console.log('myNo: ', myNo);
 
     if (myNo == motion.body.proposer) return true;
     else {

@@ -8,7 +8,7 @@ import { LoadingButton } from "@mui/lab";
 import { AddrZero, HexType } from "../../../common";
 import { refreshAfterTx } from "../../../common/toolsKit";
 
-import { useGeneralKeeperCreateCorpSeal } from "../../../../../../generated";
+import { useGeneralKeeperCreateCorpSeal } from "../../../../../../generated-v1";
 import { CreateDocProps } from "./CreateDoc";
 
 export function CreateCorpSeal({typeOfDoc, version, addr, setOpen, setTime}:CreateDocProps) {

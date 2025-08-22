@@ -9,7 +9,10 @@ import { bigIntToStrNum, longSnParser } from "../../../../common/toolsKit";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../../common";
 import { depositOfMine } from "../../../cashier";
-import { DepositOfMineProps } from "./DepositOfMine";
+
+export interface DepositOfMineProps {
+  time: number;
+}
 
 export function UsdDepositOfMine({time}:DepositOfMineProps) {
   

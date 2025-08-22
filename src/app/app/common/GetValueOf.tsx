@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { getCentPrice } from "../comp/gk";
+import { getCentPrice } from "../compV1/gk";
 import { strNumToBigInt } from "./toolsKit";
 import { ShowValueOf } from "./ShowValueOf";
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";

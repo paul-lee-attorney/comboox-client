@@ -1,18 +1,17 @@
 import { useState } from "react";
 
 
-import { AddrZero, booxMap, Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
+import { AddrZero, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 
-import { cashierABI, useGeneralKeeperCreateActionOfGm, useGeneralKeeperProposeToTransferFund } from "../../../../../../../generated";
+import { useCompKeeperProposeToTransferFund } from "../../../../../../../generated";
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyChars, onlyHex, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { CreateMotionProps } from "../../../bmm/components/CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
-import { encodeFunctionData, keccak256, stringToBytes, stringToHex } from "viem";
 
 export interface ParasOfTransfer {
   toBMM: boolean;
@@ -30,21 +29,17 @@ export const defaultParasOfTransfer: ParasOfTransfer = {
   expireDate: 0,
 }
 
-export const typesOfCurrency: string[] = [
-  'USD', 'ETH', 'CBP'
-]
+export const typesOfCurrency: string[] = ['USD', 'CBP'];
 
 export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
-  const { gk, boox, setErrMsg } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ typeOfCurrency, setTypeOfCurrency ] = useState(0);
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
   const [ seqOfVR, setSeqOfVR ] = useState<string>('9');
   const [ executor, setExecutor ] = useState<string>('0');
-
-  const [ remark, setRemark ] = useState('ReimburseExp');
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -57,22 +52,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
   const {
     isLoading: proposeToTransferFundLoading,
     write: proposeToTransferFund
-  } = useGeneralKeeperProposeToTransferFund({
-    address: gk,
-    onError(err) {
-      setErrMsg(err.message);
-    },
-    onSuccess(data) {
-      setLoading(true);
-      let hash: HexType = data.hash;
-      refreshAfterTx(hash, updateResults);
-    }
-  });
-
-  const {
-    isLoading: proposeToTransferUsdLoading,
-    write: proposeToTransferUsd
-  } = useGeneralKeeperCreateActionOfGm({
+  } = useCompKeeperProposeToTransferFund({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -85,21 +65,12 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
   });
 
   const handleClick = ()=> {
-    if (typeOfCurrency > 0) {
-
-      // if (typeOfCurrency == 2) {
-      //   setParas(v => ({
-      //     ...v,
-      //     isCBP: true,
-      //   }));
-      // } 
 
       proposeToTransferFund({
         args: [
           false, 
           paras.to, 
-          typeOfCurrency == 2,
-          // paras.isCBP, 
+          typeOfCurrency == typeOfCurrency,
           strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
           BigInt(paras.expireDate), 
           BigInt(seqOfVR), 
@@ -107,33 +78,6 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         ],
       });
 
-    } else {
-
-      if (boox) {
-
-        const cashier = boox[booxMap.Cashier];
-        const amtOfUsd = strNumToBigInt(paras.amt, 6);
-
-        const desHash = stringToHex("TransferUSD", {size: 32});
-
-        const data = encodeFunctionData({
-          abi: cashierABI,
-          functionName: 'transferUsd',
-          args: [paras.to, amtOfUsd, stringToHex(remark, {size: 32})],
-        });
-
-        proposeToTransferUsd({
-          args: [
-            BigInt(seqOfVR),
-            [cashier],
-            [0n],
-            [data],
-            desHash, 
-            BigInt(executor)
-          ],
-        });
-      }
-    }
   };
 
   return (
@@ -246,43 +190,21 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
               value={ executor }
             />
 
-            {typeOfCurrency > 0 && (
-              <DateTimeField
-                label='ExpireDate'
-                size='small'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                helperText=' '
-                value={ stampToUtc(paras.expireDate) }
-                onChange={(date) => setParas((v) => ({
-                  ...v,
-                  expireDate: utcToStamp(date),
-                }))}
-                format='YYYY-MM-DD HH:mm:ss'
-              />
-            )}
-
-            {typeOfCurrency == 0 && (
-              <TextField 
-                variant='outlined'
-                label='Remark'
-                size="small"
-                error={ valid['Remark']?.error }
-                helperText={ valid['Remark']?.helpTx ?? ' ' }
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => {
-                  let input = e.target.value;
-                  onlyChars('Remark', input, 32, setValid);
-                  setRemark(input);
-                }}
-                value={ remark }
-              />
-            )}
+            <DateTimeField
+              label='ExpireDate'
+              size='small'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              helperText=' '
+              value={ stampToUtc(paras.expireDate) }
+              onChange={(date) => setParas((v) => ({
+                ...v,
+                expireDate: utcToStamp(date),
+              }))}
+              format='YYYY-MM-DD HH:mm:ss'
+            />
 
           </Stack>
 
@@ -291,7 +213,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
         <LoadingButton
-          disabled={ proposeToTransferFundLoading || proposeToTransferUsdLoading || hasError(valid)}
+          disabled={ proposeToTransferFundLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           variant="contained"

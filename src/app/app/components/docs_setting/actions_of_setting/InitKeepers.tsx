@@ -13,7 +13,7 @@ import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfter
 import { useAccessControlInitKeepers } from "../../../../../../generated";
 import { CreateDocProps } from "./CreateDoc";
 
-export function InitKeepers({typeOfDoc, version, addr, setOpen, setTime}:CreateDocProps) {
+export function InitKeepers({addr, setOpen, setTime}:CreateDocProps) {
 
   const { setErrMsg } = useComBooxContext();
 

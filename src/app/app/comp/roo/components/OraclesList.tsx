@@ -104,8 +104,8 @@ export function OraclesList({ list, seqOfOpt }: OraclesListProps) {
           fontWeight="xl"
           color="primary"
         >        
-          p3: {bigIntToStrNum((oracle?.cleanPaid ?? 0n), 4)}
-        </Typography>            
+          p3: {bigIntToStrNum((oracle?.points ?? 0n), 4)}
+        </Typography>
 
       </Button>
 

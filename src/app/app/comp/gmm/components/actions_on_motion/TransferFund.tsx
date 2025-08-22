@@ -1,30 +1,27 @@
 import { useState } from "react";
 
-import { booxMap, HexType } from "../../../../common";
+import { HexType } from "../../../../common";
 
-import { cashierABI, useGeneralKeeperExecActionOfGm, useGeneralKeeperTransferFund } from "../../../../../../../generated";
+import { useCompKeeperTransferFund } from "../../../../../../../generated";
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { PaymentOutlined } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyChars, onlyHex, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx, stampToUtc, strNumToBigInt, utcToStamp } from "../../../../common/toolsKit";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { LoadingButton } from "@mui/lab";
 
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { ParasOfTransfer, defaultParasOfTransfer, typesOfCurrency } from "../create_motions/ProposeToTransferFund";
-import { encodeFunctionData, stringToHex } from "viem";
 
 
 export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) {
 
-  const { gk, boox, userNo, setErrMsg } = useComBooxContext();
-
-  const [ typeOfCurrency, setTypeOfCurrency ] = useState(0);
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ paras, setParas ] = useState<ParasOfTransfer>(defaultParasOfTransfer);
 
-  const [ remark, setRemark ] = useState('ReimburseExp');
+  const [ typeOfCurrency, setTypeOfCurrency ] = useState(0);
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -38,7 +35,7 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
   const {
     isLoading: transferFundLoading,
     write: transferFund
-  } = useGeneralKeeperTransferFund({
+  } = useCompKeeperTransferFund({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -50,71 +47,20 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
     }
   });
 
-  const {
-    isLoading: transferUsdLoading,
-    write: transferUsd,
-  } = useGeneralKeeperExecActionOfGm({
-    address: gk,
-    onError(err) {
-      setErrMsg(err.message);
-    },
-    onSuccess(data) {
-      setLoading(true);
-      let hash: HexType = data.hash;
-      refreshAfterTx(hash, updateResults);
-    }
-  });
 
   const handleClick = ()=> {
-
-    if (typeOfCurrency > 0) {
-
-      // if (typeOfCurrency == 2) {
-      //   setParas(v => ({
-      //     ...v,
-      //     isCBP: true,
-      //   }));
-      // }
 
       transferFund({
         args: [
           false, 
           paras.to,
-          typeOfCurrency == 2, 
-          // paras.isCBP, 
+          typeOfCurrency == typeOfCurrency, 
           strNumToBigInt(paras.amt, 9) * 10n ** 9n, 
           BigInt(paras.expireDate), 
           BigInt(motion.head.seqOfMotion)
         ],
       });
 
-    } else {
-
-      if (boox && userNo) {
-
-        const cashier = boox[booxMap.Cashier];
-        const amtOfUsd = strNumToBigInt(paras.amt, 6);
-
-        const desHash = stringToHex("TransferUSD", {size: 32});
-
-        const data = encodeFunctionData({
-          abi: cashierABI,
-          functionName: 'transferUsd',
-          args: [paras.to, amtOfUsd, stringToHex(remark, {size: 32})],
-        });
-
-        transferUsd({
-          args: [
-            BigInt(motion.votingRule.seqOfRule),
-            [cashier],
-            [0n],
-            [data],
-            desHash,
-            motion.head.seqOfMotion
-          ],
-        });
-      }
-    }
   };
 
   return (
@@ -190,47 +136,21 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
               value={ paras.amt.toString() }
             />
 
-            {typeOfCurrency > 0 && (
-
-              <DateTimeField
-                label='ExpireDate'
-                size='small'
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                helperText=' '
-                value={ stampToUtc(paras.expireDate) }
-                onChange={(date) => setParas((v) => ({
-                  ...v,
-                  expireDate: utcToStamp(date),
-                }))}
-                format='YYYY-MM-DD HH:mm:ss'
-              />
-
-            )} 
-            { typeOfCurrency == 0 && (
-
-              <TextField 
-                variant='outlined'
-                label='Remark'
-                size="small"
-                error={ valid['Remark']?.error }
-                helperText={ valid['Remark']?.helpTx ?? ' ' }
-                sx={{
-                  m:1,
-                  minWidth: 218,
-                }}
-                onChange={(e) => {
-                  let input = e.target.value;
-                  onlyChars('Remark', input, 32, setValid);
-                  setRemark(input);
-                }}
-                value={ remark }
-              />
-
-            )}
-
+            <DateTimeField
+              label='ExpireDate'
+              size='small'
+              sx={{
+                m:1,
+                minWidth: 218,
+              }}
+              helperText=' '
+              value={ stampToUtc(paras.expireDate) }
+              onChange={(date) => setParas((v) => ({
+                ...v,
+                expireDate: utcToStamp(date),
+              }))}
+              format='YYYY-MM-DD HH:mm:ss'
+            />
 
           </Stack>
 
@@ -239,7 +159,7 @@ export function TransferFund({ motion, setOpen, refresh }:ActionsOnMotionProps) 
         <Divider orientation="vertical" flexItem sx={{m:1}} />
 
         <LoadingButton
-          disabled={ transferFundLoading || transferUsdLoading || hasError(valid)}
+          disabled={ transferFundLoading || hasError(valid)}
           loading={loading}
           loadingPosition="end"
           variant="contained"

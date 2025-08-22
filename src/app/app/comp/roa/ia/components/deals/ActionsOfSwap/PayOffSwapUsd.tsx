@@ -1,7 +1,7 @@
 
 import { Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
-import { useUsdKeeperPayOffRejectedDeal } from "../../../../../../../../../generated";
+import { useCompKeeperPayOffRejectedDeal } from "../../../../../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { AddrZero, booxMap, HexType, keepersMap } from "../../../../../../common";
 import { FormResults, HexParser, bigIntToStrNum, defFormResults, onlyHex, refreshAfterTx, strNumToBigInt } from "../../../../../../common/toolsKit";
@@ -17,7 +17,7 @@ import { GenerateAuth } from "../../../../../../components/usdc_auth/GenerateAut
 
 export function PayOffSwapUsd({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: ActionsOfSwapProps) {
 
-  const { keepers, boox, setErrMsg } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -54,8 +54,8 @@ export function PayOffSwapUsd({ia, seqOfDeal, seqOfSwap, setOpen, refresh}: Acti
   const {
     isLoading: payOffSwapLoading,
     write: payOffSwap,
-  } = useUsdKeeperPayOffRejectedDeal({
-    address: keepers && keepers[keepersMap.UsdKeeper],
+  } = useCompKeeperPayOffRejectedDeal({
+    address: gk,
     onError(err) {
       setErrMsg(err.message);
     },

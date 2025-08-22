@@ -3,7 +3,7 @@ import { FormControl, FormHelperText, InputLabel, MenuItem,
   Select, Stack, TextField } from "@mui/material";
 
 import { 
-  useGeneralKeeperCastVoteOfGm,
+  useCompKeeperCastVoteOfGm,
 } from "../../../../../../../generated";
 
 import { Bytes32Zero, HexType, booxMap } from "../../../../common";
@@ -43,7 +43,7 @@ export function VoteForDocOfGm( { seqOfMotion }: VoteForDocOfGMProps ) {
   const {
     isLoading: castVoteLoading,
     write: castVote,
-  } = useGeneralKeeperCastVoteOfGm({
+  } = useCompKeeperCastVoteOfGm({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

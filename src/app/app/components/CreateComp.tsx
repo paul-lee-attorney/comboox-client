@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
@@ -10,7 +10,9 @@ import {
   IconButton, 
   InputAdornment, 
   InputLabel, 
+  MenuItem, 
   OutlinedInput, 
+  Select, 
   Stack, 
   Tooltip 
 } from '@mui/material';
@@ -20,8 +22,8 @@ import { waitForTransaction } from '@wagmi/core';
 
 import { useComBooxContext } from '../../_providers/ComBooxContextProvider';
 
-import { AddrOfCNC, HexType } from '../common';
-import { getDocAddr } from '../rc';
+import { AddrZero, HexType } from '../common';
+import { counterOfVersions, getDoc, getDocAddr, typesOfEntity } from '../rc';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex } from '../common/toolsKit';
 
 import { useCreateNewCompCreateComp } from '../../../../generated';
@@ -30,16 +32,30 @@ export function CreateComp() {
   const { setGK, setErrMsg } = useComBooxContext();
   const router = useRouter();
 
+  const [compFactory, setCompFactory] = useState(AddrZero);
+
+  useEffect(()=>{
+    const retrieveCNC = async () => {
+      let ver = await counterOfVersions(46n);
+      let snOfDoc = HexParser(('0x0000002e' + ver.toString().padStart(8, '0')).padEnd(66, '0'));
+      let res = await getDoc(snOfDoc);
+      setCompFactory(res.body);
+    }
+
+    retrieveCNC();
+  })
+
+  const [ typeOfEntity, setTypeOfEntity ] = useState('');
   const [ dk, setDK ] = useState<HexType>();
-  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   
+  const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
 
   const {
     isLoading: createCompLoading, 
     write: createComp,
   } = useCreateNewCompCreateComp({
-    address: AddrOfCNC,
+    address: compFactory,
     onError(err) {
       setErrMsg(err.message);
     },
@@ -62,16 +78,34 @@ export function CreateComp() {
   })
 
   const createCompClick = ()=>{
-    if (dk) 
-      createComp({
-        args: [dk], 
-      });
+    if (dk) {
+        createComp({
+          args: [BigInt(typeOfEntity), dk], 
+        });
+    }
   }
 
   return (
     <Stack direction='row' sx={{alignItems:'center', justifyContent:'start'}} >
 
-      <FormControl size='small' sx={{ m: 1, width: 488 }} variant="outlined">
+      <FormControl variant="outlined" size="small" sx={{ m:1, mr:3, width: 218 }}>
+        <InputLabel id="typeOfEntity-label">TypeOfEntity</InputLabel>
+        <Select
+          labelId="typeOfEntity-label"
+          id="typeOfEntity-select"
+          label="TypeOfEntity"
+          value={ typeOfEntity }
+          sx={{ height:40 }}
+          onChange={(e) => setTypeOfEntity(e.target.value)}
+        >
+          {typesOfEntity.map((v,i) => (
+            <MenuItem key={v} value={ i+1 } > <b>{v}</b> </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText>{' '}</FormHelperText>
+      </FormControl>
+
+      <FormControl size='small' sx={{ m:1, ml:3, width: 218 }} variant="outlined">
         <InputLabel size='small' htmlFor="setBookeeper-input" >PrimeKey Of Secretary</InputLabel>
         <OutlinedInput
           size='small'
@@ -82,10 +116,11 @@ export function CreateComp() {
           sx={{ height:40 }}
           endAdornment={
             <InputAdornment position="end">
-              <Tooltip title={"Register My Company"} placement='right' arrow >
+              <Tooltip title={"Create Boox"} placement='right' arrow >
                 <span>
                   <IconButton
-                    disabled={ createCompLoading || hasError(valid) || loading}
+                    disabled={ createCompLoading || hasError(valid) || 
+                      loading || compFactory == AddrZero }
                     color='primary'
                     onClick={ createCompClick }
                     edge="end"

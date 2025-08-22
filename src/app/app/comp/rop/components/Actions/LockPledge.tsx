@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGeneralKeeperLockPledge } from "../../../../../../../generated";
+import { useCompKeeperLockPledge } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { LockOutlined } from "@mui/icons-material";
 import { Bytes32Zero, HexType } from "../../../../common";
@@ -26,7 +26,7 @@ export function LockPledge({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const {
     isLoading: lockPledgeLoading,
     write: lockPledge,
-  } = useGeneralKeeperLockPledge({
+  } = useCompKeeperLockPledge({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

@@ -553,17 +553,17 @@ export async function getAllOraclesOfOption(addr: HexType, seqOfOpt: number): Pr
 
 // ==== Value ====
 
-export async function checkValueOfSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<bigint>{
+// export async function checkValueOfSwap(addr: HexType, seqOfOpt: number, seqOfSwap: number): Promise<bigint>{
 
-  let res = await readContract({
-    address: addr,
-    abi: registerOfOptionsABI,
-    functionName: 'checkValueOfSwap',
-    args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
-  })
+//   let res = await readContract({
+//     address: addr,
+//     abi: registerOfOptionsABI,
+//     functionName: 'checkValueOfSwap',
+//     args: [ BigInt(seqOfOpt), BigInt(seqOfSwap) ],
+//   })
 
-  return res;
-}
+//   return res;
+// }
 
 // ==== Special Funcs ====
 

@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { 
-  useGeneralKeeperCreateMotionToRemoveDirector, 
-  useGeneralKeeperNominateDirector, 
+  useCompKeeperCreateMotionToRemoveDirector, 
+  useCompKeeperNominateDirector, 
 } from "../../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
@@ -30,7 +30,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
   const {
     isLoading: addDirectorLoading,
     write: addDirector,
-  } = useGeneralKeeperNominateDirector({
+  } = useCompKeeperNominateDirector({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -62,7 +62,7 @@ export function CreateMotionForBoardSeats({ refresh }:CreateMotionProps ) {
   const{
     isLoading: removeDirectorLoading,
     write: removeDirector
-  } = useGeneralKeeperCreateMotionToRemoveDirector({
+  } = useCompKeeperCreateMotionToRemoveDirector({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

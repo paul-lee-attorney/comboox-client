@@ -294,25 +294,25 @@ export async function allSwapsClosed(ia: HexType, seqOfDeal: number): Promise<bo
   return res;
 }
 
-export async function checkValueOfSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number): Promise<bigint> {
-  let res = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'checkValueOfSwap',
-    args: [BigInt(seqOfDeal), BigInt(seqOfSwap)],
-  });
+// export async function checkValueOfSwap(ia: HexType, seqOfDeal: number, seqOfSwap: number): Promise<bigint> {
+//   let res = await readContract({
+//     address: ia,
+//     abi: investmentAgreementABI,
+//     functionName: 'checkValueOfSwap',
+//     args: [BigInt(seqOfDeal), BigInt(seqOfSwap)],
+//   });
 
-  return res;
-}
+//   return res;
+// }
 
-export async function checkValueOfDeal(ia: HexType, seqOfDeal: number): Promise<bigint> {
-  let res = await readContract({
-    address: ia,
-    abi: investmentAgreementABI,
-    functionName: 'checkValueOfDeal',
-    args: [BigInt(seqOfDeal)],
-  });
+// export async function checkValueOfDeal(ia: HexType, seqOfDeal: number): Promise<bigint> {
+//   let res = await readContract({
+//     address: ia,
+//     abi: investmentAgreementABI,
+//     functionName: 'checkValueOfDeal',
+//     args: [BigInt(seqOfDeal)],
+//   });
 
-  return res;
-}
+//   return res;
+// }
 

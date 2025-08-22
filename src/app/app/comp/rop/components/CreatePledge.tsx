@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useGeneralKeeperCreatePledge } from "../../../../../../generated";
+import { useCompKeeperCreatePledge } from "../../../../../../generated";
 import { StrBody, StrHead, codifyHeadOfPledge, defaultStrBody, defaultStrHead } from "../rop";
 import { Divider, Paper, Stack, TextField, Toolbar, Typography } from "@mui/material";
 import { getShare } from "../../ros/ros";
@@ -36,7 +36,7 @@ export function CreatePledge({refresh}:CreatePledgeProps) {
   const {
     isLoading: createPledgeLoading,
     write: createPledge,
-  } = useGeneralKeeperCreatePledge({
+  } = useCompKeeperCreatePledge({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

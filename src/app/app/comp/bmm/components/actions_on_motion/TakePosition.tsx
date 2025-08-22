@@ -1,5 +1,5 @@
 
-import { useGeneralKeeperTakePosition } from "../../../../../../../generated";
+import { useCompKeeperTakePosition } from "../../../../../../../generated";
 
 import { Paper } from "@mui/material";
 import { Chair } from "@mui/icons-material";
@@ -24,7 +24,7 @@ export function TakePosition({motion, setOpen, refresh}:ActionsOnMotionProps) {
   const {
     isLoading: takePositionLoading,
     write: takePosition,
-  } = useGeneralKeeperTakePosition({
+  } = useCompKeeperTakePosition({
     address: gk,
     args: [motion.head.seqOfMotion, motion.contents],
     onError(err) {

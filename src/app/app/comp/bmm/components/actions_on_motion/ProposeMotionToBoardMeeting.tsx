@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useState } from "react";
 
-import { useGeneralKeeperProposeMotionToBoard } from "../../../../../../../generated";
+import { useCompKeeperProposeMotionToBoard } from "../../../../../../../generated";
 
 import { Box, Collapse, Paper, Stack, Switch, Toolbar, Typography } from "@mui/material";
 import { EmojiPeople, } from "@mui/icons-material";
@@ -30,7 +30,7 @@ export function ProposeMotionToBoardMeeting({ seqOfMotion, setOpen, refresh }: P
   const {
     isLoading: proposeMotionToBoardLoading,
     write: proposeMotionToBoard,
-  } = useGeneralKeeperProposeMotionToBoard({
+  } = useCompKeeperProposeMotionToBoard({
     address: gk,
     args: [ seqOfMotion ],
     onError(err) {

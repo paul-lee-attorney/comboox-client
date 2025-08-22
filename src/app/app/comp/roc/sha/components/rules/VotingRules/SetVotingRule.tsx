@@ -80,7 +80,7 @@ export function vrParser(hexVr: HexType):VotingRule {
     votingDays: parseInt(hexVr.substring(38, 40), 16).toString(),
     execDaysForPutOpt: parseInt(hexVr.substring(40, 42), 16).toString(),
     vetoers: [parseInt(hexVr.substring(42, 52), 16).toString(), parseInt(hexVr.substring(52, 62), 16).toString()],
-    para: '0',    
+    para: parseInt(hexVr.substring(62, 66), 16).toString(),
   }
   return rule;
 }
@@ -106,7 +106,7 @@ export function vrCodifier(objVr: VotingRule, seq: number ): HexType {
     (Number(objVr.execDaysForPutOpt).toString(16).padStart(2, '0')) +
     (Number(objVr.vetoers[0]).toString(16).padStart(10, '0')) +
     (Number(objVr.vetoers[1]).toString(16).padStart(10, '0')) +
-    '0000' 
+    (Number(objVr.para).toString(16).padStart(4, '0')) 
   }`;
   return hexVr;
 }
@@ -305,6 +305,28 @@ export function SetVotingRule({ sha, seq, isFinalized, time, refresh }: RulesEdi
                     }));
                   }}
                   value={ objVR.execDaysForPutOpt}                                        
+                />
+
+                <TextField 
+                  variant='outlined'
+                  size='small'
+                  label='Class'
+                  error={ valid['Class']?.error }
+                  helperText={ valid['Class']?.helpTx ?? ' '}
+                  inputProps={{readOnly: isFinalized}}
+                  sx={{
+                    m:1,
+                    minWidth: 218,
+                  }}
+                  onChange={(e) => {
+                    let input = e.target.value;
+                    onlyInt('Class', input, MaxSeqNo, setValid);
+                    setObjVR((v) => ({
+                      ...v,
+                      para: input,
+                    }));
+                  }}
+                  value={ objVR.para } 
                 />
 
               </Stack>

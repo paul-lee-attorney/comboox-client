@@ -2,6 +2,7 @@ import { readContract } from "@wagmi/core";
 import { HexType } from "../common";
 import { cashierABI } from "../../../../generated";
 
+// ==== Balances ====
 
 export async function custodyOf(addr:HexType, acct:HexType): Promise<bigint> {
 

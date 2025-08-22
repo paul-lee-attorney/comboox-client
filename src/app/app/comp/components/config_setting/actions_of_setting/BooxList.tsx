@@ -99,10 +99,9 @@ export function BooxList({ title, list, names, setTitle, setAddr }:BooxListProps
         <DataGrid
           initialState={{pagination:{paginationModel:{pageSize: 15}}}} 
           pageSizeOptions={[5, 10, 15, 20]} 
-          rows={ list.map((v) => ({
-            ...v,
-            name: names[v.title],
-          })) } 
+          rows={ list.filter(v => names[v.title] != 'Blank').
+            map((v) => ({...v,name: names[v.title],}))
+          } 
           columns={ columns }
           getRowId={ (row:BookInfo) => (row.title) } 
           disableRowSelectionOnClick

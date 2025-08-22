@@ -7,7 +7,7 @@ import { Box, Paper, Stack, Typography } from "@mui/material";
 import { Position, getDirectorsFullPosInfo, getManagersFullPosInfo, } from "./rod";
 
 import { GetOfficersList } from "./components/GetOfficersList";
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, booxMap } from "../../common";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { SetBookAddr } from "../../components/SetBookAddr";

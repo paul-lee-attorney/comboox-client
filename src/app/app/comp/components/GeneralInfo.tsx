@@ -9,7 +9,7 @@ import { baseToDollar, dateParser, longSnParser
 } from "../../common/toolsKit";
 import { CopyLongStrTF } from "../../common/CopyLongStr";
 
-import { CompInfo, getCompInfo, totalDeposits } from "../gk";
+import { CompInfo, getCompInfo } from "../gk";
 import { getDK } from "../common/draftControl";
 
 import { balanceOfWei } from "../../rc";
@@ -21,11 +21,10 @@ import { getControllor, getOwnersEquity, votesOfGroup } from "../rom/rom";
 import { InvHistoryOfMember } from "../rom/components/InvHistoryOfMember";
 
 import { ConfigSetting } from "./config_setting/ConfigSetting";
-import { FinStatement } from "./FinStatement";
 import { usePublicClient } from "wagmi";
 import { HistoryOfBoox } from "./GeneralInfo/HistoryOfBoox";
 import { CashBox } from "./GeneralInfo/CashBox";
-import { autoUpdateLogs } from "../../../api/firebase/arbiScanLogsTool";
+// import { autoUpdateLogs } from "../../../api/firebase/arbiScanLogsTool";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();
@@ -33,27 +32,6 @@ export function GeneralInfo() {
   const client = usePublicClient();
 
   const [ time, setTime ] = useState<number>(0);
-
-  const refresh = () => {
-    setTime(Date.now());
-  }
-
-  const [ logsReady, setLogsReady ] = useState(false);
-
-  useEffect(()=>{
-
-    const updateLogs = async ()=>{
-      if (!gk) return;
-      const blk = await client.getBlock();
-      let chainId = await client.getChainId();
-      let flag = await autoUpdateLogs(chainId, gk, blk.number);
-      if (flag) setLogsReady(true);
-
-    }
-
-    updateLogs();
-
-  }, [gk, client]);
 
   const [ compInfo, setCompInfo ] = useState<CompInfo>();
   const [ dk, setDK ] = useState<string>('');
@@ -108,23 +86,17 @@ export function GeneralInfo() {
   }, [boox]); 
 
   const [ balanceOfETH, setBalanceOfETH ] = useState(0n);
-  const [ depositsOfETH, setDepositsOfETH ] = useState(0n);
 
   useEffect(()=>{
     if (gk) {
-
       balanceOfWei(gk).then(
         res => setBalanceOfETH(res)
-      )
-    
-      totalDeposits(gk).then(
-        res => setDepositsOfETH(res)
       )
     }
 
   }, [ gk, boox, time ]);
 
-  let cap = (balanceOfETH - depositsOfETH).toString();
+  let cap = balanceOfETH.toString();
 
   const [ acct, setAcct ] = useState<number>(0);
   const [ open, setOpen ] = useState(false);
@@ -157,7 +129,7 @@ export function GeneralInfo() {
 
           <Grid container direction='row' spacing={2} >
 
-            <Grid item xs={6} md={6} lg={6} >
+            <Grid item xs={3} md={3} lg={3} >
               <TextField 
                 value={ compInfo?.name ?? ' '} 
                 variant='outlined'
@@ -170,32 +142,6 @@ export function GeneralInfo() {
                 fullWidth
               />
             </Grid>            
-            <Grid item xs={3} md={3} lg={3} >
-              <TextField 
-                value={ currencies[ compInfo?.currency ?? 0 ] } 
-                variant='outlined'
-                size='small' 
-                label="BookingCurrency" 
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                }}
-                fullWidth
-              />
-            </Grid>
-            <Grid item xs={3} md={3} lg={3} >
-              <TextField 
-                value={ dateParser(compInfo?.regDate.toString() ?? '0') } 
-                variant='outlined'
-                size='small' 
-                label="RegDate" 
-                inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                }}
-                fullWidth
-              />
-            </Grid>
 
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
@@ -225,8 +171,41 @@ export function GeneralInfo() {
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
-              <CopyLongStrTF title="AddressOfCompany" src={gk ?? AddrZero} />
+              <CopyLongStrTF title="AddrOfCompany" src={gk ?? AddrZero} />
             </Grid>
+
+            <Grid item xs={3} md={3} lg={3} >
+              <CopyLongStrTF title="AddrOfCashier" src={boox ? boox[booxMap.Cashier] : AddrZero} />
+            </Grid>            
+
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ currencies[ compInfo?.currency ?? 0 ] } 
+                variant='outlined'
+                size='small' 
+                label="BookingCurrency" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
+
+            <Grid item xs={3} md={3} lg={3} >
+              <TextField 
+                value={ dateParser(compInfo?.regDate.toString() ?? '0') } 
+                variant='outlined'
+                size='small' 
+                label="RegDate" 
+                inputProps={{readOnly: true}}
+                sx={{
+                  m:1,
+                }}
+                fullWidth
+              />
+            </Grid>
+
             <Grid item xs={3} md={3} lg={3} >
               <CopyLongStrTF title="Secretary" src={dk ?? AddrZero} />
             </Grid>
@@ -238,15 +217,13 @@ export function GeneralInfo() {
                 size='small' 
                 label="ActualControllor" 
                 inputProps={{readOnly: true}}
-                sx={{
-                  m:1,
-                }}
+                sx={{ m:1 }}
                 fullWidth
               />
             </Grid>
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
-                value={ baseToDollar(votesOfController ?? '0') } 
+                value={ baseToDollar(votesOfController ?? '0')} 
                 variant='outlined'
                 size='small' 
                 label="VotesOfController" 
@@ -306,10 +283,6 @@ export function GeneralInfo() {
         </Grid>
 
         <CashBox />
-
-        {compInfo?.regNum == 8 && logsReady && (
-          <FinStatement />
-        )}
 
       </Paper>
     </>

@@ -1,5 +1,5 @@
 import { Divider, Stack, TextField } from "@mui/material";
-import { useGeneralKeeperCirculateIa } from "../../../../../../../generated";
+import { useCompKeeperCirculateIa } from "../../../../../../../generated";
 import { Bytes32Zero, HexType, } from "../../../../common";
 import { Recycling } from "@mui/icons-material";
 import { useState } from "react";
@@ -33,7 +33,7 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
   const {
     isLoading,
     write
-  } = useGeneralKeeperCirculateIa({
+  } = useCompKeeperCirculateIa({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -65,7 +65,6 @@ export function CirculateIa({ addr, setNextStep }: FileHistoryProps) {
       console.log('UserNo Not Detected!');      
       return false;
     }
-    // console.log('myNo: ', myNo);
 
     let flag = await isParty(addr, BigInt(myNo));
     if (flag) return true;

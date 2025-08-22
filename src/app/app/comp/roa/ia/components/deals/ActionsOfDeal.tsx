@@ -13,7 +13,6 @@ import { ExecTagAlong } from "./ActionsOfDeal/ExecTagAlong";
 import { ExecAntiDilution } from "./ActionsOfDeal/ExecAntiDilution";
 import { ExecFirstRefusal } from "./ActionsOfDeal/ExecFirstRefusal";
 import { TakeGiftShares } from "./ActionsOfDeal/TakeGiftShares";
-import { PayOffInEth } from "./ActionsOfDeal/PayOffInEth";
 import { PayOffInUsd } from "./ActionsOfDeal/PayOffInUsd";
 import { RequestToBuy } from "./ActionsOfDeal/RequestToBuy";
 
@@ -36,8 +35,8 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
 
   const actionsOfDeal = [
     'FirstRefusal', 'AntiDilution', 'DragAlong', 'TagAlong', 'PushToCoffer',
-    'IssueShare', 'TransferShare', 'PayOffInEth', 'PayOffInUsd', 'RequestToBuy', 
-    'PickupShare', 'TerminateDeal', 'TakeGift',
+    'IssueShare', 'TransferShare', 'PayOffInUsd', 'RequestToBuy', 'PickupShare', 
+    'TerminateDeal', 'TakeGift',
   ]
 
   const compsOfAction = [
@@ -48,12 +47,11 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
     <PushToCoffer key={4} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
     <IssueShare key={5} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
     <TransferShare key={6} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <PayOffInEth key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <PayOffInUsd key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <RequestToBuy key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <PickupShare key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <TerminateDeal key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
-    <TakeGiftShares key={12} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PayOffInUsd key={7} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <RequestToBuy key={8} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <PickupShare key={9} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TerminateDeal key={10} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
+    <TakeGiftShares key={11} addr={addr} deal={deal} setOpen={setOpen} setDeal={setDeal} refresh={refresh} />,
   ]
 
   let activeSteps:number[] = [];
@@ -74,7 +72,7 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
       else activeSteps = [];
 
   } else if ( timeline.stateOfFile < 3 ) {
-      activeSteps = [ 10 ];
+      activeSteps = [ 9 ];
 
   } else if ( timestamp < timeline.closingDeadline ) {
 
@@ -82,9 +80,9 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
         
         if (deal.body.state == 1) {
 
-          if (deal.head.typeOfDeal == 1) activeSteps = [ 4, 5, 7, 8 ];
-          else if (deal.head.typeOfDeal == 8) activeSteps = [ 11 ];
-          else activeSteps = [ 4, 6, 7, 8 ];
+          if (deal.head.typeOfDeal == 1) activeSteps = [ 4, 5, 7 ];
+          else if (deal.head.typeOfDeal == 8) activeSteps = [ 10 ];
+          else activeSteps = [ 4, 6, 7 ];
 
         } else if (deal.body.state == 2) {
 
@@ -94,14 +92,14 @@ export function ActionsOfDeal({addr, deal, setOpen, setDeal, refresh, timeline, 
         } else activeSteps = [];
 
       } else if (timeline.stateOfFile >= 5) {
-        activeSteps = [ 10 ];
+        activeSteps = [ 9 ];
         if (deal.head.typeOfDeal == 2 || deal.head.typeOfDeal == 3) 
-          activeSteps = [ 10, 8 ];
+          activeSteps = [ 9, 7 ];
       } 
 
   } else if ( timestamp >= timeline.closingDeadline && timeline.stateOfFile > 1 ) {
-    activeSteps = [10];
-    if (deal.head.typeOfDeal == 8) activeSteps.push(11);
+    activeSteps = [9];
+    if (deal.head.typeOfDeal == 8) activeSteps.push(10);
   } 
   
   return(

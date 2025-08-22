@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
-import { useGeneralKeeperProposeDocOfGm } from "../../../../../../../generated";
+import { useCompKeeperProposeDocOfGm } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
@@ -28,7 +28,7 @@ export function CreateMotionForDoc({refresh}:CreateMotionProps) {
   const {
     isLoading: proposeDocOfGmLoading,
     write: proposeDocOfGm,
-  } = useGeneralKeeperProposeDocOfGm({
+  } = useCompKeeperProposeDocOfGm({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

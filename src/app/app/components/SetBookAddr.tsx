@@ -8,7 +8,6 @@ import {
   IconButton, 
   Input, 
   InputAdornment, 
-  Stack, 
   Tooltip 
 } from '@mui/material';
 import { ChangeCircleOutlined } from '@mui/icons-material';

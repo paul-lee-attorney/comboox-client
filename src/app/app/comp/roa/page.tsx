@@ -13,7 +13,7 @@ import {
 
 import { Create } from "@mui/icons-material";
 
-import { useGeneralKeeperCreateIa } from "../../../../../generated";
+import { useCompKeeperCreateIa } from "../../../../../generated";
 
 import { InfoOfFile, getFilesListWithInfo } from "../roc/components/filesFolder";
 
@@ -54,7 +54,7 @@ function RegisterOfAgreements() {
   const {
     isLoading: createIaLoading, 
     write: createIa,
-  } = useGeneralKeeperCreateIa({
+  } = useCompKeeperCreateIa({
     address: gk,
     onError(err){
       setErrMsg(err.message);

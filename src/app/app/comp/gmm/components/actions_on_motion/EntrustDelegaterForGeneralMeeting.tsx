@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import { 
-  useGeneralKeeperEntrustDelegaterForGeneralMeeting, 
+  useCompKeeperEntrustDelegaterForGeneralMeeting, 
 } from "../../../../../../../generated";
 
 import { Alert, Collapse, IconButton, Stack, TextField, } from "@mui/material";
@@ -9,7 +9,7 @@ import { Close, HandshakeOutlined, } from "@mui/icons-material";
 import { LoadingButton } from "@mui/lab";
 
 import { HexType, MaxUserNo } from "../../../../common";
-import { FormResults, defFormResults, getReceipt, hasError, longSnParser, onlyInt, refreshAfterTx } from "../../../../common/toolsKit";
+import { FormResults, defFormResults, getReceipt, hasError, longSnParser, onlyInt } from "../../../../common/toolsKit";
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { EntrustEvent, defaultEvt } from "../../../bmm/components/actions_on_motion/EntrustDelegaterForBoardMeeting";
@@ -33,7 +33,7 @@ export function EntrustDelegaterForGeneralMeeting({ motion, setOpen, refresh }: 
   const {
     isLoading: entrustDelegaterOfMemberLoading,
     write: entrustDelegaterOfMember,
-  } = useGeneralKeeperEntrustDelegaterForGeneralMeeting({
+  } = useCompKeeperEntrustDelegaterForGeneralMeeting({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

@@ -8,7 +8,7 @@ import { LoadingButton } from '@mui/lab';
 import { Update, ArrowUpward, ArrowDownward }  from '@mui/icons-material';
 
 import { 
-  useGeneralKeeperSetCompInfo,
+  useCompKeeperSetCompInfo,
 } from '../../../../../generated';
 
 import { CompInfo, getCompInfo } from '../gk';
@@ -16,12 +16,15 @@ import { HexType, currencies } from '../../common';
 import { dateParser, longDataParser, refreshAfterTx, toAscii, } from '../../common/toolsKit';
 
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
+import { typesOfEntity } from '../../rc';
 
 export const defaultInfo: CompInfo = {
   regNum: 0,
   regDate: 0,
+  typeOfEntity: 0,
   currency: 0,
   symbol: '',
+  state: 0,
   name: '',
 };
 
@@ -47,7 +50,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
   const {
     isLoading: setInfoLoading,
     write: setInfo, 
-   } = useGeneralKeeperSetCompInfo({
+   } = useCompKeeperSetCompInfo({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -63,7 +66,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
     setInfo({
       args: [ 
         compInfo.currency, 
-        `0x${toAscii(compInfo.symbol).padEnd(38,'0')}`, 
+        `0x${toAscii(compInfo.symbol).padEnd(36,'0')}`, 
         compInfo.name 
       ],
     });
@@ -128,6 +131,9 @@ export function SetCompInfo({nextStep}: InitCompProps) {
               <Typography variant="body1" sx={{ m:1 }} >
                 RegDate: {  dateParser(newInfo.regDate.toString()) }
               </Typography>
+              <Typography variant="body1" sx={{ m:1 }} >
+                TypeOfEntity: { typesOfEntity[newInfo.typeOfEntity - 1] }
+              </Typography>              
               <Typography variant="body1" sx={{ m:1 }} >
                 Name: { newInfo.name }
               </Typography>

@@ -102,7 +102,7 @@ interface SharesListProps {
   setOpen: (flag:boolean)=>void,
 }
 
-export function SharesList({ list, setShare, setOpen }:SharesListProps ) {
+export function SharesList({list,setShare, setOpen }:SharesListProps ) {
 
   const handleRowClick: GridEventListener<'rowClick'> = (p) => {
     setShare({head: p.row.head, body: p.row.body});

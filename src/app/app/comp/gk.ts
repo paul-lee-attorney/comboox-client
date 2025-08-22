@@ -1,27 +1,27 @@
 import { readContract } from "@wagmi/core";
 import { AddrZero, HexType } from "../common";
-import { generalKeeperABI } from "../../../../generated";
+import { baseKeeperABI } from "../../../../generated";
 import { getDK } from "./common/draftControl";
 import { toStr } from "../common/toolsKit";
 import { getOwner } from "../common/ownable";
 
 export const nameOfBooks = [
   'GK', 'ROC', 'ROD', 'BMM', 'ROM', 'GMM', 
-  'ROA', 'ROO', 'ROP', 'ROS', 'LOE', 
-  'Cashier', 'USDC', 'LOU'
+  'ROA', 'ROO', 'ROP', 'ROS', 'LOO', 'ROI',
+  'Bank', 'Blank', 'Blank', 'Cashier', 'ROR'
 ]
 
 export const titleOfKeepers = [
-  'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 'GmmKeeper', 
-  'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper', 'LooKeeper',
-  'UsdRomKeeper', 'UsdRoaKeeper', 'UsdLooKeeper', 'UsdRooKeeper', 'UsdKeeper',
-  'UsdFuelTank'
+  'GK', 'RocKeeper', 'RodKeeper', 'BmmKeeper', 'RomKeeper', 
+  'GmmKeeper', 'RoaKeeer', 'RooKeeper', 'RopKeeper', 'ShaKeeper', 
+  'LooKeeper', 'RoiKeeper', 'Accountant', 'Blank', 'Blank', 
+  'Blank', 'RorKeeper'
 ]
 
 export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
   let keeper: HexType = await readContract({
     address: addr,
-    abi: generalKeeperABI,
+    abi: baseKeeperABI,
     functionName: 'getKeeper',
     args: [BigInt(title)]
   })
@@ -32,7 +32,7 @@ export async function getKeeper(addr: HexType, title: number):Promise<HexType> {
 export async function getBook(addr: HexType, title: number):Promise<HexType> {
   let keeper: HexType = await readContract({
     address: addr,
-    abi: generalKeeperABI,
+    abi: baseKeeperABI,
     functionName: 'getBook',
     args: [BigInt(title)]
   })
@@ -58,15 +58,16 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
   })
 
   let i = 1;
-  let addr = await getBook(gk, i);
 
-  while (addr != AddrZero) {
- 
-    let owner = i == 12
+  while (i <= 16) {
+
+    let addr = await getBook(gk, i);
+    
+    let owner = i == 12 || nameOfBooks[i] == 'Blank' || addr == AddrZero
         ? AddrZero
         : await getOwner(addr);
         
-    let dk = i == 12 
+    let dk = i == 12 || nameOfBooks[i] == 'Blank' || addr == AddrZero
         ? AddrZero
         : await getDK(addr);
      
@@ -80,8 +81,6 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
     books.push(item);
 
     i++;
-    addr = await getBook(gk, i);
-
   };
 
   return books;  
@@ -99,14 +98,16 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
   })
 
   let i = 1;
-  let addr = await getKeeper(gk, i);
+  while (i <= 16) {
 
-  while (addr != AddrZero) {
- 
-    let owner = await getOwner(addr);
-    let dk = AddrZero;
-    
-    if (i != 16) dk = await getDK(addr);
+    let addr = await getKeeper(gk, i);
+    let owner = titleOfKeepers[i] == 'Blank' || addr == AddrZero
+      ? AddrZero
+      : await getOwner(addr);
+
+    let dk = titleOfKeepers[i] == 'Blank' || addr == AddrZero
+      ? AddrZero
+      : await getDK(addr);
  
     let item: BookInfo = {
       title: i,
@@ -118,7 +119,6 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
     books.push(item);
 
     i++;
-    addr = await getKeeper(gk, i);
   }
 
   return books;  
@@ -127,7 +127,7 @@ export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
 export async function getSHA(gk: HexType):Promise<HexType>{
   return await readContract({
     address: gk,
-    abi: generalKeeperABI,
+    abi: baseKeeperABI,
     functionName: 'getSHA'
   });
 }
@@ -135,6 +135,7 @@ export async function getSHA(gk: HexType):Promise<HexType>{
 export interface CompInfo {
   regNum: number;
   regDate: number;
+  typeOfEntity: number;
   currency: number;
   state: number;
   symbol: string;
@@ -145,13 +146,14 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
 
   let res = await readContract({
     address: gk,
-    abi: generalKeeperABI,
+    abi: baseKeeperABI,
     functionName: 'getCompInfo',
   })
 
   let info:CompInfo = {
     regNum: res.regNum,
     regDate: res.regDate,
+    typeOfEntity: res.typeOfEntity,
     currency: res.currency,
     symbol: toStr(res.symbol),
     name: res.name,
@@ -161,34 +163,3 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
   return info;
 }
 
-export async function getCentPrice(gk: HexType):Promise<bigint>{
-  let res = await readContract({
-    address: gk,
-    abi: generalKeeperABI,
-    functionName: 'getCentPrice',
-  })
-
-  return res;
-}
-
-export async function totalDeposits(gk: HexType, blk?: bigint): Promise<bigint>{
-  let res = await readContract({
-    address: gk,
-    abi: generalKeeperABI,
-    functionName: 'totalDeposits',
-    blockNumber: blk,
-  })
-
-  return res;
-}
-
-export async function depositOfMine(gk: HexType, acct: number): Promise<bigint>{
-  let res = await readContract({
-    address: gk,
-    abi: generalKeeperABI,
-    functionName: 'depositOfMine',
-    args: [ BigInt(acct) ]
-  })
-
-  return res;
-}

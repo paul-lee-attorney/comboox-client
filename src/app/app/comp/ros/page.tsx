@@ -7,14 +7,15 @@ import { Search } from "@mui/icons-material";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 import { AddrZero, MaxPrice, booxMap } from "../../common";
 import { FormResults, defFormResults, hasError, onlyInt } from "../../common/toolsKit";
 
-import { Share, getShare, getSharesList } from "./ros";
+import { Share, getListOfClassInfo, getShare, getSharesList } from "./ros";
 import { SharesList } from "./components/SharesList";
 import { CertificateOfContribution } from "./components/CertificateOfContribution";
 import { SetBookAddr } from "../../components/SetBookAddr";
+import { ClassesList } from "./components/ClassesList";
 
 function RegisterOfShares() {
   const { boox } = useComBooxContext();
@@ -50,6 +51,16 @@ function RegisterOfShares() {
       );
     }
   }
+
+  const [classList, setClassList ] = useState<Share[]>([]);
+
+  useEffect(()=>{
+    if (addr) {
+      getListOfClassInfo(addr).then(
+        res => setClassList(res)
+      )
+    }
+  })
 
   return (
     <>
@@ -108,6 +119,20 @@ function RegisterOfShares() {
                 </Stack>
               </td>
               <td colSpan={2} >
+              </td>
+            </tr>
+
+            <tr>
+              <td colSpan={4}>
+
+                {classList && (
+                  <ClassesList 
+                    list={ classList }  
+                    setShare={ setShare }
+                    setOpen={ setOpen }
+                  />
+                )}
+
               </td>
             </tr>
 

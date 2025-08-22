@@ -3,10 +3,10 @@ import { useState } from "react";
 import { Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 
 import { 
-  useGeneralKeeperCreateActionOfGm, 
+  useCompKeeperCreateActionOfGm, 
 } from "../../../../../../../generated";
 
-import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { Action, defaultAction } from "../../meetingMinutes";
@@ -38,7 +38,7 @@ export function CreateMotionForAction({refresh}:CreateMotionProps) {
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
-  } = useGeneralKeeperCreateActionOfGm({
+  } = useCompKeeperCreateActionOfGm({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

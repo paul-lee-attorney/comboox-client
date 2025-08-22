@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { Paper, Stack } from "@mui/material";
 import { defaultDeal } from "../../../ia";
-import { useGeneralKeeperTakeGiftShares } from "../../../../../../../../../generated";
+import { useCompKeeperTakeGiftShares } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HandshakeOutlined } from "@mui/icons-material";
 import { HexType } from "../../../../../../common";
@@ -25,7 +25,7 @@ export function TakeGiftShares({ addr, deal, setOpen, setDeal, refresh}: Actions
   const {
     isLoading: takeGiftShareLoading,
     write: takeGiftShare
-  } = useGeneralKeeperTakeGiftShares({
+  } = useCompKeeperTakeGiftShares({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
     onError(err) {

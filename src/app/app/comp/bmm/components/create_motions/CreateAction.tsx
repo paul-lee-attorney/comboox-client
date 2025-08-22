@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 
-import { useGeneralKeeperCreateAction } from "../../../../../../../generated";
+import { useCompKeeperCreateAction } from "../../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { AddCircle, EmojiPeople, RemoveCircle } from "@mui/icons-material";
@@ -35,7 +35,7 @@ export function CreateAction({refresh}:CreateMotionProps) {
   const {
     isLoading: proposeActionLoading,
     write: proposeAction,
-  } = useGeneralKeeperCreateAction({
+  } = useCompKeeperCreateAction({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

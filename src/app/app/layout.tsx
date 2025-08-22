@@ -19,11 +19,11 @@ export default function AppLayout({children}: AppLayoutProps) {
   return (
     <>
       {mounted && (
-        <Providers>
+        // <Providers>
           <ComBooxAppBar>
             { children }
           </ComBooxAppBar>
-        </Providers>
+        // </Providers>
       )}
     </>
   )

@@ -15,7 +15,7 @@ import { IndexCard } from "./components/IndexCard";
 import { AddrZero, HexType, MaxPrice, booxMap } from "../../common";
 import { FormResults, defFormResults, hasError, onlyInt, refreshAfterTx } from "../../common/toolsKit";
 
-import { useGeneralKeeperCreateSha } from "../../../../../generated";
+import { useCompKeeperCreateSha } from "../../../../../generated";
 import { SetBookAddr } from "../../components/SetBookAddr";
 import { counterOfVersions } from "../../rc";
 
@@ -44,7 +44,7 @@ function RegisterOfConstitution() {
   const {
     isLoading: createShaLoading, 
     write: createSha,
-  } = useGeneralKeeperCreateSha({
+  } = useCompKeeperCreateSha({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

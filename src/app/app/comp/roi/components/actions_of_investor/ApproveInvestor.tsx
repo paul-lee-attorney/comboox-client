@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Paper, Stack, TextField, } from "@mui/material";
 import { PersonAddAlt } from "@mui/icons-material";
 
-import { useGeneralKeeperApproveInvestor } from "../../../../../../../generated";
+import { useCompKeeperApproveInvestor } from "../../../../../../../generated";
 
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 
@@ -31,7 +31,7 @@ export function ApproveInvestor({acct, refresh }: ActionsOfInvestorProps) {
   const {
     isLoading: approveInvestorLoading,
     write:approveInvestor,
-  } = useGeneralKeeperApproveInvestor({
+  } = useCompKeeperApproveInvestor({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

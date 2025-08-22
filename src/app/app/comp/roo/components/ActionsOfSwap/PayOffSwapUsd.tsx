@@ -1,4 +1,4 @@
-import { useUsdKeeperPayOffSwap } from "../../../../../../../generated";
+import { useCompKeeperPayOffSwap } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { Payment } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -15,7 +15,7 @@ import { GenerateAuth } from "../../../../components/usdc_auth/GenerateAuth";
 
 export function PayOffSwapUsd({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfSwapProps) {
 
-  const { keepers, boox, setErrMsg } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
   const [ loading, setLoading ] = useState(false);
@@ -55,8 +55,8 @@ export function PayOffSwapUsd({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfS
   const {
     isLoading: payOffSwapUsdLoading,
     write: payOffSwapUsd,
-  } = useUsdKeeperPayOffSwap({
-    address: keepers && keepers[keepersMap.UsdKeeper],
+  } = useCompKeeperPayOffSwap({
+    address: gk,
     onError(err) {
       setErrMsg(err.message);
     },

@@ -5,7 +5,7 @@ import { Box, Button, Divider, FormControl, FormHelperText, InputLabel, MenuItem
 import { BorderColor, Camera, UploadOutlined } from "@mui/icons-material";
 
 import { FormResults, HexParser, defFormResults, hasError, longSnParser, onlyChars, onlyEmail, onlyHex, onlyInt, onlyNumOrChar, refreshAfterTx, stampToUtc, utcToStamp } from "../../../../common/toolsKit";
-import { useUsdKeeperRegInvestor } from "../../../../../../../generated";
+import { useCompKeeperRegInvestor } from "../../../../../../../generated";
 import { ActionsOfInvestorProps } from "../ActionsOfInvestor";
 import { AddrZero, Bytes32Zero, HexType, keepersMap, MaxUserNo } from "../../../../common";
 import { LoadingButton } from "@mui/lab";
@@ -21,7 +21,7 @@ import Link from "next/link";
 import { getMyUserNo } from "../../../../rc";
 
 export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
-  const { keepers, gk, setErrMsg } = useComBooxContext();
+  const { gk, setErrMsg } = useComBooxContext();
 
   const [ groupRep, setGroupRep ] = useState<string>('0');
   const [ idHash, setIdHash ] = useState<HexType>(Bytes32Zero);
@@ -100,8 +100,8 @@ export function RegInvestor({ refresh }: ActionsOfInvestorProps) {
   const {
     isLoading: regInvestorLoading,
     write:regInvestor,
-  } = useUsdKeeperRegInvestor({
-    address: keepers && keepers[keepersMap.UsdKeeper],
+  } = useCompKeeperRegInvestor({
+    address: gk,
     onError(err) {
       setErrMsg(err.message);
     },

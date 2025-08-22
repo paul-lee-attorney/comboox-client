@@ -2,7 +2,7 @@ import { useState } from "react";
 
 import { AddrZero, HexType } from "../../../../common";
 
-import { useGeneralKeeperProposeToDeprecateGk } from "../../../../../../../generated";
+import { useCompKeeperProposeToDeprecateGk } from "../../../../../../../generated";
 
 import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
@@ -28,7 +28,7 @@ export function ProposeToDeprecateGK({ refresh }:CreateMotionProps) {
   const {
     isLoading: proposeToDeprecateGKLoading,
     write: proposeToDeprecateGK
-  } = useGeneralKeeperProposeToDeprecateGk({
+  } = useCompKeeperProposeToDeprecateGk({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

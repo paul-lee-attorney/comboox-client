@@ -3,7 +3,7 @@ import { useState } from "react";
 
 import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { defaultDeal } from "../../../ia";
-import { useGeneralKeeperExecDragAlong } from "../../../../../../../../../generated";
+import { useCompKeeperExecDragAlong } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import {  AgricultureOutlined } from "@mui/icons-material";
 import { TargetShare, defaultTargetShare } from "./ExecTagAlong";
@@ -31,7 +31,7 @@ export function ExecDragAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsO
   const {
     isLoading: execDragAlongLoading,
     write: execDragAlong,
-  } = useGeneralKeeperExecDragAlong({
+  } = useCompKeeperExecDragAlong({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

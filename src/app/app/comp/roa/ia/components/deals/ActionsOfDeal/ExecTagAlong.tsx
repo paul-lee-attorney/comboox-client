@@ -1,6 +1,6 @@
 import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { defaultDeal } from "../../../ia";
-import { useGeneralKeeperExecTagAlong } from "../../../../../../../../../generated";
+import { useCompKeeperExecTagAlong } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { SurfingOutlined } from "@mui/icons-material";
 import { useState } from "react";
@@ -40,7 +40,7 @@ export function ExecTagAlong({ addr, deal, setOpen, setDeal, refresh}: ActionsOf
   const {
     isLoading: execTagAlongLoading,
     write: execTagAlong,
-  } = useGeneralKeeperExecTagAlong({
+  } = useCompKeeperExecTagAlong({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

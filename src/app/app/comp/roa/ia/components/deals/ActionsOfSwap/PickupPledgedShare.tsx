@@ -1,6 +1,6 @@
 import { Paper, Stack, TextField } from "@mui/material";
 import { LockOpen } from "@mui/icons-material";
-import { useGeneralKeeperPickupPledgedShare } from "../../../../../../../../../generated";
+import { useCompKeeperPickupPledgedShare } from "../../../../../../../../../generated";
 import { ActionsOfSwapProps } from "../ActionsOfSwap";
 import { HexType } from "../../../../../../common";
 import { refreshAfterTx } from "../../../../../../common/toolsKit";
@@ -22,7 +22,7 @@ export function PickUpPledgedShare({ia, seqOfDeal, seqOfSwap, setOpen, refresh}:
   const {
     isLoading: pickupPledgedShareLoading,
     write: pickupPledgedShare,
-  } = useGeneralKeeperPickupPledgedShare({
+  } = useCompKeeperPickupPledgedShare({
     address: gk,
     args: [ia, BigInt(seqOfDeal), BigInt(seqOfSwap)],
     onError(err) {

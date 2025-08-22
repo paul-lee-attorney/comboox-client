@@ -1,11 +1,11 @@
 import { useState } from "react";
 
 import { 
-  useGeneralKeeperEntrustDelegaterForBoardMeeting,
+  useCompKeeperEntrustDelegaterForBoardMeeting,
 } from "../../../../../../../generated";
 
 import { Alert, Collapse, IconButton, Stack, TextField, } from "@mui/material";
-import { Close, HandshakeOutlined, LoginSharp, } from "@mui/icons-material";
+import { Close, HandshakeOutlined, } from "@mui/icons-material";
 import { ProposeMotionProps } from "./ProposeMotionToBoardMeeting";
 import { HexType, MaxUserNo } from "../../../../common";
 import { FormResults, defFormResults, getReceipt, hasError, longSnParser, onlyInt } from "../../../../common/toolsKit";
@@ -45,7 +45,7 @@ export function EntrustDelegaterForBoardMeeting({ seqOfMotion, setOpen, refresh 
   const {
     isLoading: entrustDelegaterForBmLoading,
     write: entrustDelegaterForBm,
-  } = useGeneralKeeperEntrustDelegaterForBoardMeeting({
+  } = useCompKeeperEntrustDelegaterForBoardMeeting({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

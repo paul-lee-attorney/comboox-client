@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 import { Paper, Stack, TextField } from "@mui/material";
 import { defaultDeal } from "../../../ia";
-import { useUsdKeeperPayOffApprovedDeal } from "../../../../../../../../../generated";
+import { useCompKeeperPayOffApprovedDeal } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { Payment } from "@mui/icons-material";
 import { FormResults, HexParser, bigIntToStrNum, defFormResults, hasError, longDataParser, onlyHex, refreshAfterTx } from "../../../../../../common/toolsKit";
@@ -17,7 +17,7 @@ import { GenerateAuth } from "../../../../../../components/usdc_auth/GenerateAut
 
 
 export function PayOffInUsd({ addr, deal, setOpen, setDeal, refresh}: ActionsOfDealProps ) {
-  const { keepers, boox, setErrMsg } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ auth, setAuth ] = useState<AuthSig | undefined>();
   const [ escrow, setEscrow ] = useState(AddrZero);
@@ -54,8 +54,8 @@ export function PayOffInUsd({ addr, deal, setOpen, setDeal, refresh}: ActionsOfD
   const {
     isLoading: payOffInUsdLoading,
     write: payOffInUsd
-  } = useUsdKeeperPayOffApprovedDeal({
-    address: keepers && keepers[keepersMap.UsdKeeper],
+  } = useCompKeeperPayOffApprovedDeal({
+    address: gk,
     onError(err) {
       setErrMsg(err.message);
     },

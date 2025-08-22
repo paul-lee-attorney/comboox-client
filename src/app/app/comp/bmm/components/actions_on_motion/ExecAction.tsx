@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../common";
 
-import { useGeneralKeeperExecAction } from "../../../../../../../generated";
+import { useCompKeeperExecAction } from "../../../../../../../generated";
 
-import { IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
 
 import { FormResults, HexParser, defFormResults, hasError, 
-  onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+  onlyHex, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 
 import { Action, defaultAction } from "../../../gmm/meetingMinutes";
 import { LoadingButton } from "@mui/lab";
@@ -36,7 +36,7 @@ export function ExecAction({motion, setOpen, refresh}:ActionsOnMotionProps) {
   const {
     isLoading: execActionLoading,
     write: execAction,
-  } = useGeneralKeeperExecAction({
+  } = useCompKeeperExecAction({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

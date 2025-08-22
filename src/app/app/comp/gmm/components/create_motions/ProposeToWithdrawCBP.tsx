@@ -3,14 +3,13 @@ import { useState } from "react";
 
 import { AddrOfTank, Bytes32Zero, HexType, MaxSeqNo, MaxUserNo } from "../../../../common";
 
-import { useGeneralKeeperCreateActionOfGm } from "../../../../../../../generated";
-
 import { Divider,  Paper, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
 import { FormResults, HexParser, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { CreateMotionProps } from "../../../bmm/components/CreateMotionOfBoardMeeting";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
+import { useCompKeeperCreateAction } from "../../../../../../../generated";
 
 export function ProposeToWithdrawCBP({ refresh }:CreateMotionProps) {
 
@@ -31,7 +30,7 @@ export function ProposeToWithdrawCBP({ refresh }:CreateMotionProps) {
   const {
     isLoading: proposeToWithdrawCBPLoading,
     write: proposeToWithdrawCBP,
-  } = useGeneralKeeperCreateActionOfGm({
+  } = useCompKeeperCreateAction({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

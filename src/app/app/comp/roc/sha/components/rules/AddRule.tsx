@@ -1,13 +1,13 @@
 
 import { Dispatch, SetStateAction, useState } from 'react';
 
-import { Stack } from '@mui/material';
+import { Stack, TextField } from '@mui/material';
 import { EditNote }  from '@mui/icons-material';
 import { LoadingButton } from '@mui/lab';
 
 import { useShareholdersAgreementAddRule } from '../../../../../../../../generated';
-import { HexType } from '../../../../../common';
-import { FormResults, hasError, refreshAfterTx } from '../../../../../common/toolsKit';
+import { HexType, MaxPrice, MaxSeqNo } from '../../../../../common';
+import { defFormResults, FormResults, hasError, onlyInt, refreshAfterTx } from '../../../../../common/toolsKit';
 import { useComBooxContext } from '../../../../../../_providers/ComBooxContextProvider';
 
 interface AddRuleProps {
@@ -22,7 +22,6 @@ interface AddRuleProps {
 export function AddRule({ sha, rule, isFinalized, valid, refresh, setOpen }: AddRuleProps) {
 
   const { setErrMsg } = useComBooxContext();
-
   const [ loading, setLoading ] = useState(false);
 
   const updateResults = ()=>{

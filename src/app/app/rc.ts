@@ -7,6 +7,12 @@ import { regCenterABI } from "../../../generated";
 import { HexParser, strNumToBigInt } from "./common/toolsKit";
 import { WalletClient } from "viem";
 
+export const typesOfEntity = [
+  'PrivateCompany', 'GrowingCompany', 'ListedCompany', 'FullFuncCompany',
+  'CloseFund', 'ListedCloseFund', 'OpenFund', 'ListedOpenFund',
+  'FullFuncFund'
+]
+
 // ==== StrLocker === 
 
 export interface StrHeadOfLocker {
@@ -230,12 +236,17 @@ export interface DocItem {
 }
 
 export const typesOfDoc:string[] = [
-  'ROCKeeper', 'RODKeeper', 'BMMKeeper', 'ROMKeeper', 'GMMKeeper', 'ROAKeeper',
-  'ROOKeeper', 'ROPKeeper', 'SHAKeeper', 'LOOKeeper', 'ROC', 'ROD', 
-  'MM', 'ROM', 'ROA', 'ROO', 'ROP', 'ROS', 'LOO', 'GK', 'IA', 'SHA',
-  'AntiDilution', 'LockUp', 'Alongs', 'Options', 'LOP', 
-  'Cashier', 'UsdLOO', 'USDKeeper', 'UsdROMKeeper', 'UsdROAKeeper',
-  'UsdLOOKeeper', 'UsdROOKeeper', 
+  'ROCK', 'RODK', 'BMMK', 'ROMK', 'GMMK', 
+  'ROAK', 'ROOK', 'ROPK', 'SHAK', 'LOOK', 
+  'ROC', 'ROD', 'MM', 'ROM', 'ROA', 
+  'ROO', 'ROP', 'ROS', 'LOO', 'GK', 
+  'IA', 'SHA', 'AntiDilution', 'LockUp', 'Alongs', 
+  'Options', 'LOP', 'Cashier', 'UsdLOO', 'USDK', 
+  'UsdROMK', 'UsdROAK', 'UsdLOOK', 'UsdROOK', 'ROIK', 
+  'ROI', 'ATNT', 'RORK', 'ROR', 'FundK', 
+  'FundATNT', 'FundGMMK', 'FundLOOK', 'FundROCK','FundROIK', 
+  'CNC', 'PrivCompK', 'GrowingCompK', 'ListedCompK','LPFK', 
+  'ListedLPFK', 'OpenFK', 'ListedOpenFK',
 ]
 
 // ==== Options ====

@@ -16,11 +16,12 @@ import { PositionAllocateRules } from "./rules/PositionAllocationRules/PositionA
 import { FirstRefusalRules } from "./rules/FirstRefusalRules/FirstRefusalRules";
 import { GroupUpdateOrders } from "./rules/GroupingRules/GroupUpdateOrders";
 import { ListingRules } from "./rules/ListingRules/ListingRules";
+import { DistrRules } from "./rules/DistrRules/DistrRules";
 
 export async function groupingRules(bigRules: readonly bigint[]): Promise<number[][]>{
 
   let arrRules = bigRules.map(v => Number(v));
-  let rules:number[][] = Array.from(Array(6), ()=>new Array<number>());
+  let rules:number[][] = Array.from(Array(7), ()=>new Array<number>());
 
   arrRules.forEach( v => {
       if (v == 0) rules[0].push(v);
@@ -29,6 +30,7 @@ export async function groupingRules(bigRules: readonly bigint[]): Promise<number
       else if (v < 768) rules[3].push(v);
       else if (v < 1024) rules[4].push(v);
       else if (v < 1280) rules[5].push(v);
+      else if (v < 1536) rules[6].push(v);
   })
 
   return rules;
@@ -47,6 +49,7 @@ export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
   const [ frLs, setFrLs ] = useState<number[]>();
   const [ guoLs, setGuoLs ] = useState<number[]>();
   const [ lrLs, setLrLs ] = useState<number[]>();
+  const [ drLs, setDrLs ] = useState<number[]>();
 
   const [ time, setTime ] = useState<number>(0);
 
@@ -64,6 +67,7 @@ export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
           setFrLs(rules[3]);
           setGuoLs(rules[4]);
           setLrLs(rules[5]);
+          setDrLs(rules[6]);
         }
       )
     )
@@ -109,6 +113,10 @@ export function ShaBodyTerms({sha, finalized}: ShaBodyTermsProps) {
           <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
             {(!finalized || (finalized && guoLs)) && (<GroupUpdateOrders sha={ sha } initSeqList={ guoLs } isFinalized={finalized} time={time} refresh={ refresh } />)}
             <ListingRules sha={ sha } initSeqList={ lrLs } isFinalized={ finalized } time={time} refresh={ refresh } />
+          </Stack>
+
+          <Stack direction="row" sx={{m:1, p:1, alignItems:'center'}}>
+            <DistrRules sha={ sha } initSeqList={ drLs } isFinalized={ finalized } time={time} refresh={ refresh } />
           </Stack>
 
         </Paper>

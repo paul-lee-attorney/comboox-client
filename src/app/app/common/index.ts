@@ -10,7 +10,7 @@
 
 export const AddrOfRegCenter:HexType = `0x${process.env.NEXT_PUBLIC_RC_ADDR?.substring(2) ?? '0'}`;
 export const AddrOfTank:HexType = `0x${process.env.NEXT_PUBLIC_FT_ADDR?.substring(2) ?? '0'}`;
-export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
+// export const AddrOfCNC:HexType = `0x${process.env.NEXT_PUBLIC_CNC_ADDR?.substring(2) ?? '0'}`;
 export const AddrOfUSDC:HexType = `0x${process.env.NEXT_PUBLIC_USDC_ADDR?.substring(2) ?? '0'}`;
 export const AddrOfCL:HexType = `0x${process.env.NEXT_PUBLIC_CL_ADDR?.substring(2) ?? '0'}`;
 
@@ -47,9 +47,12 @@ interface BooxMap {
   ROP: number;
   ROS: number;
   LOO: number;
+  ROI: number;
+  WTF: number;
   Cashier: number;
   USDC: number;
   UsdLOO: number;
+  ROR: number;
 }
 
 export const booxMap:BooxMap = {
@@ -63,9 +66,12 @@ export const booxMap:BooxMap = {
   ROP: 8,
   ROS: 9,
   LOO: 10,
-  Cashier: 11,
+  ROI: 11,
   USDC: 12,
   UsdLOO: 13,
+  WTF: 14,
+  Cashier: 15,
+  ROR: 16,
 }
 
 interface KeepersMap {
@@ -84,6 +90,10 @@ interface KeepersMap {
   UsdLOOKeeper: number;
   UsdROOKeeper: number;
   UsdKeeper: number;
+  ROIKeeper: number;
+  WTFKeeper: number;
+  Accountant: number;
+  RORKeeper: number;
 }
 
 export const keepersMap:KeepersMap = {
@@ -102,6 +112,10 @@ export const keepersMap:KeepersMap = {
   UsdLOOKeeper: 13,
   UsdROOKeeper: 14,
   UsdKeeper: 15,
+  ROIKeeper: 11,
+  WTFKeeper: 14,
+  Accountant: 12,
+  RORKeeper: 16,
 }
 
 export const currencies:string[] = [

@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 
-import { useGeneralKeeperProposeToTransferFund } from "../../../../../../../generated";
+import { useCompKeeperProposeToTransferFund } from "../../../../../../../generated";
 
 import { Divider, FormControl, FormHelperText, InputLabel, MenuItem, Paper, Select, Stack, TextField } from "@mui/material";
 import { EmojiPeople } from "@mui/icons-material";
@@ -32,7 +32,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
   const {
     isLoading: proposeToTransferFundLoading,
     write: proposeToTransferFund
-  } = useGeneralKeeperProposeToTransferFund({
+  } = useCompKeeperProposeToTransferFund({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

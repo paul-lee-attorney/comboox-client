@@ -1,8 +1,8 @@
 import { useState } from "react";
 
 import { 
-  useGeneralKeeperCreateMotionToRemoveOfficer, 
-  useGeneralKeeperNominateOfficer, 
+  useCompKeeperCreateMotionToRemoveOfficer, 
+  useCompKeeperNominateOfficer, 
 } from "../../../../../../../generated";
 
 import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
@@ -30,7 +30,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
   const {
     isLoading: addOfficerLoading,
     write: addOfficer,
-  } = useGeneralKeeperNominateOfficer({
+  } = useCompKeeperNominateOfficer({
     address: gk,
     onError(err) {
       setErrMsg(err.message);
@@ -63,7 +63,7 @@ export function CreateMotionForOfficer({ refresh }:CreateMotionProps ) {
   const{
     isLoading: removeOfficerLoading,
     write: removeOfficer
-  } = useGeneralKeeperCreateMotionToRemoveOfficer({
+  } = useCompKeeperCreateMotionToRemoveOfficer({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

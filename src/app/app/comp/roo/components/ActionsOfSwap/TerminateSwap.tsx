@@ -1,4 +1,4 @@
-import { useGeneralKeeperTerminateSwap } from "../../../../../../../generated";
+import { useCompKeeperTerminateSwap } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
 import { CancelOutlined } from "@mui/icons-material";
 import { useState } from "react";
@@ -23,7 +23,7 @@ export function TerminateSwap({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfS
   const {
     isLoading: terminateSwapLoading,
     write: terminateSwap,
-  } = useGeneralKeeperTerminateSwap({
+  } = useCompKeeperTerminateSwap({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

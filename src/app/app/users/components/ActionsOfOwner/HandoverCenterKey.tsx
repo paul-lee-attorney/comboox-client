@@ -7,9 +7,10 @@ import { AddrOfRegCenter, AddrZero, HexType } from '../../../common';
 import { BorderColor, } from '@mui/icons-material';
 import { useState } from 'react';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex, refreshAfterTx } from '../../../common/toolsKit';
-import { ActionsOfOwnerProps } from '.';
+
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
+import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 export function HandoverCenterKey({refresh}:ActionsOfOwnerProps) {
 

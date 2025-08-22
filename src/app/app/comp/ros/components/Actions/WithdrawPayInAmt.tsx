@@ -2,7 +2,7 @@ import { useState } from "react";
 import { HexType, booxMap } from "../../../../common";
 
 import { 
-  useGeneralKeeperWithdrawPayInAmt,
+  useCompKeeperWithdrawPayInAmt,
   useRegisterOfSharesGetLocker, 
 } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
@@ -55,7 +55,7 @@ export function WithdrawPayInAmt({ share, setDialogOpen, refresh }: ActionsOfCap
   const {
     isLoading: withdrawPayInAmtLoading,
     write: withdrawPayInAmt,     
-  } = useGeneralKeeperWithdrawPayInAmt({
+  } = useCompKeeperWithdrawPayInAmt({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

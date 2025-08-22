@@ -1,6 +1,6 @@
 import { ActionsOfOptionProps } from "../ActionsOfOption";
-import { useGeneralKeeperCreateSwap } from "../../../../../../../generated";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { useCompKeeperCreateSwap } from "../../../../../../../generated";
+import { Paper, Stack, TextField } from "@mui/material";
 import { SwapHorizOutlined } from "@mui/icons-material";
 import { useState } from "react";
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
@@ -28,7 +28,7 @@ export function CreateSwap({seqOfOpt, setOpen, refresh}:ActionsOfOptionProps) {
   const {
     isLoading: createSwapLoading,
     write: createSwap,
-  } = useGeneralKeeperCreateSwap({
+  } = useCompKeeperCreateSwap({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

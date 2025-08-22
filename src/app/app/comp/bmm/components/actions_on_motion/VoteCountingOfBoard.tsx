@@ -1,6 +1,6 @@
 
 import { Paper } from "@mui/material";
-import { useGeneralKeeperVoteCounting } from "../../../../../../../generated";
+import { useCompKeeperVoteCounting } from "../../../../../../../generated";
 
 import { Calculate } from "@mui/icons-material";
 import { HexType } from "../../../../common";
@@ -24,7 +24,7 @@ export function VoteCountingOfBoard({ seqOfMotion, setOpen, refresh }: ProposeMo
   const {
     isLoading: voteCountingLoading,
     write: voteCounting,
-  } = useGeneralKeeperVoteCounting({
+  } = useCompKeeperVoteCounting({
     address: gk,
     args: [ seqOfMotion ],
     onError(err) {

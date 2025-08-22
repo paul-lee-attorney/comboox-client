@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { Bytes32Zero, HexType } from "../../../../common";
 
-import { useGeneralKeeperExecActionOfGm } from "../../../../../../../generated";
+import { useCompKeeperExecActionOfGm } from "../../../../../../../generated";
 
-import { Divider, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { IconButton, Paper, Stack, TextField, Tooltip } from "@mui/material";
 import { AddCircle, RemoveCircle, Surfing } from "@mui/icons-material";
-import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+import { FormResults, HexParser, defFormResults, hasError, onlyHex, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 
 import { Action, defaultAction } from "../../meetingMinutes";
 
@@ -34,7 +34,7 @@ export function ExecActionOfGm({motion, setOpen, refresh}:ActionsOnMotionProps) 
   const {
     isLoading: execActionLoading,
     write: execAction,
-  } = useGeneralKeeperExecActionOfGm({
+  } = useCompKeeperExecActionOfGm({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

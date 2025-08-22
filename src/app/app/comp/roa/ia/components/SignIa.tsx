@@ -1,5 +1,5 @@
 import { Alert, Box, Stack, TextField, } from "@mui/material";
-import { useGeneralKeeperSignIa } from "../../../../../../../generated";
+import { useCompKeeperSignIa } from "../../../../../../../generated";
 import { Bytes32Zero, HexType, } from "../../../../common";
 import { DriveFileRenameOutline } from "@mui/icons-material";
 import { useEffect, useState } from "react";
@@ -29,7 +29,7 @@ export function SignIa({ addr, setNextStep }: FileHistoryProps) {
   const {
     isLoading: signIaLoading,
     write: signIa
-  } = useGeneralKeeperSignIa({
+  } = useCompKeeperSignIa({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

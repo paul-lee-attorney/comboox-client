@@ -5,7 +5,7 @@ import {
   Chip,
 } from '@mui/material';
 import { longSnParser, splitStrArr } from '../../../../../../common/toolsKit';
-import { LinkRule } from './LinkRule';
+import { LinkRuleEditor } from './LinkRuleEditor';
 import { AlongLink } from './da';
 
 interface AlongLinksProps {
@@ -32,7 +32,7 @@ export function AlongLinks({ link }: AlongLinksProps) {
           sx={{ m:1, minWidth:128 }} 
         />
 
-        <LinkRule rule={link.linkRule} />
+        <LinkRuleEditor rule={link.linkRule} />
 
         <TextField 
           variant='outlined'

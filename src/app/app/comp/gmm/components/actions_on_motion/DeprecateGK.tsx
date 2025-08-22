@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { AddrZero, HexType } from "../../../../common";
 
-import { useGeneralKeeperDeprecateGk } from "../../../../../../../generated";
+import { useCompKeeperDeprecateGk } from "../../../../../../../generated";
 
 import { Divider, Paper, Stack, TextField } from "@mui/material";
 import { FolderZipOutlined } from "@mui/icons-material";
@@ -32,7 +32,7 @@ export function DeprecateGK({ motion, setOpen, refresh }:ActionsOnMotionProps) {
   const {
     isLoading: proposeToDeprecateGKLoading,
     write: proposeToDeprecateGK
-  } = useGeneralKeeperDeprecateGk({
+  } = useCompKeeperDeprecateGk({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

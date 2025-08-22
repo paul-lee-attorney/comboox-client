@@ -1,7 +1,7 @@
 import { Paper, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 import { defaultDeal } from "../../../ia";
-import { useGeneralKeeperCloseDeal } from "../../../../../../../../../generated";
+import { useCompKeeperCloseDeal } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { LockOpen } from "@mui/icons-material";
 import { HexType } from "../../../../../../common";
@@ -25,7 +25,7 @@ export function PickupShare({ addr, deal, setOpen, setDeal, refresh}: ActionsOfD
   const {
     isLoading: closeDealLoading,
     write: closeDeal
-  } = useGeneralKeeperCloseDeal({
+  } = useCompKeeperCloseDeal({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

@@ -260,12 +260,12 @@ export async function getSeqListOfClass(ros: HexType, classOfShare: string): Pro
   return res;
 }
 
-export async function getInfoOfClass(ros: HexType, classOfShare: string): Promise<Share> {
+export async function getInfoOfClass(ros: HexType, classOfShare: bigint): Promise<Share> {
   let res = await readContract({
     address: ros,
     abi: registerOfSharesABI,
     functionName: 'getInfoOfClass',
-    args: [ BigInt(classOfShare) ]
+    args: [ classOfShare ]
   })
 
   return res;
@@ -294,7 +294,19 @@ export async function getPremium(ros: HexType): Promise<bigint>{
   return res;
 }
 
+export async function getListOfClassInfo(ros: HexType): Promise<Share[]> {
+  const len = await counterOfClasses(ros);
+  let list:Share[] = [];
+  let i = 1;
 
+  while(i <= len) {
+    let info:Share = await getInfoOfClass(ros, BigInt(i));
+    list.push(info);
+    i++;
+  }
+  
+  return list;
+}
 
 // ==== PayInCap ====
 

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Paper, Stack, TextField } from "@mui/material";
 import { PanToolOutlined } from "@mui/icons-material";
-import { useGeneralKeeperRequestToBuy } from "../../../../../../../../../generated";
+import { useCompKeeperRequestToBuy } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { HexType, MaxData, MaxPrice } from "../../../../../../common";
 import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../../../common/toolsKit";
@@ -27,7 +27,7 @@ export function RequestToBuy({addr, deal, setOpen, refresh}:ActionsOfDealProps) 
   const {
     isLoading: requestToBuyLoading,
     write: requestToBuy,
-  } = useGeneralKeeperRequestToBuy({
+  } = useCompKeeperRequestToBuy({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

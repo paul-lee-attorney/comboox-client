@@ -3,7 +3,6 @@ import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 
 import { HexType } from '../../common';
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
-import { longSnParser } from '../../common/toolsKit';
 
 import FileUploader, { CheckFilerFunc } from './FileUploader';
 

@@ -13,6 +13,7 @@ import { Doc, getDocByUserNo, getHeadByBody, HeadOfDoc } from '../rc';
 import { useComBooxContext } from '../../_providers/ComBooxContextProvider';
 
 import { CenterInfo } from './center_info/CenterInfo';
+import { getCompInfo } from '../comp/gk';
 
 export function GetComp() {
 
@@ -38,15 +39,22 @@ export function GetComp() {
       let body = HexParser(regNum);
       getHeadByBody(body).then(
         (head: HeadOfDoc) => {
-          console.log("head: ", head);
-          console.log("body: ", body);
-          if (head.typeOfDoc != 20) {
+          if (head.typeOfDoc == 20 || head.typeOfDoc == 40 || 
+            (head.typeOfDoc > 46 && head.typeOfDoc < 54)
+          ) {
+            getCompInfo(body).then(
+              info => {
+                if (info.regNum > 0) {
+                  setRegNum(info.regNum.toString());
+                  setOpen(false);
+                  setGK(body);
+                  setDoc({head: head, body: body});
+                }
+              }
+            );
+          } else {
             setDoc(undefined);
             setOpen(true);
-          } else {
-            setOpen(false);
-            setGK(body);
-            setDoc({head: head, body: body});            
           }
         }
       )
@@ -54,9 +62,9 @@ export function GetComp() {
       getDocByUserNo(BigInt(regNum)).then(
         (doc:Doc) => {
           if (doc.body != AddrZero) {
-            setOpen(false);
             setGK(doc.body);
-            setDoc(doc);
+            setDoc({head:doc.head, body:doc.body});
+            setOpen(false);
           } else {
             setDoc(undefined);
             setOpen(true);
@@ -106,11 +114,12 @@ export function GetComp() {
         
         <Link
           href={{
-            pathname: `/app/comp`,
+            pathname: regNum == '8' ? `/app/compV1` : '/app/comp',
           }}
         >
           <Button variant='outlined' sx={{m:1, width: 488, height:40}} endIcon={<DriveFileMove />} >
             SN: { '0x' +
+                  doc?.head.typeOfDoc.toString(16).padStart(4, '0') +
                   doc?.head.version.toString(16).padStart(4, '0') +
                   doc?.head.seqOfDoc.toString(16).padStart(16, '0')
                 }

@@ -1,6 +1,6 @@
 import { Paper, Stack } from "@mui/material";
 import { defaultDeal } from "../../../ia";
-import { useGeneralKeeperTransferTargetShare } from "../../../../../../../../../generated";
+import { useCompKeeperTransferTargetShare } from "../../../../../../../../../generated";
 import { ActionsOfDealProps } from "../ActionsOfDeal";
 import { CurrencyExchange } from "@mui/icons-material";
 import { HexType } from "../../../../../../common";
@@ -25,7 +25,7 @@ export function TransferShare({ addr, deal, setOpen, setDeal, refresh}: ActionsO
   const {
     isLoading: transferTargetShareLoading,
     write: transferTargetShare
-  } = useGeneralKeeperTransferTargetShare({
+  } = useCompKeeperTransferTargetShare({
     address: gk,
     args: [addr, BigInt(deal.head.seqOfDeal)],
     onError(err) {

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { HexType, booxMap } from "../../../../common";
 
 import { 
-  useGeneralKeeperRequestPaidInCapital,
+  useCompKeeperRequestPaidInCapital,
   useRegisterOfSharesGetLocker, 
 } from "../../../../../../../generated";
 import { Paper, Stack, TextField } from "@mui/material";
@@ -57,7 +57,7 @@ export function RequestPaidInCap({ share, setDialogOpen, refresh }: ActionsOfCap
   const {
     isLoading: requestPaidInCapitalLoading,
     write: requestPaidInCapital,
-  } = useGeneralKeeperRequestPaidInCapital({
+  } = useCompKeeperRequestPaidInCapital({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

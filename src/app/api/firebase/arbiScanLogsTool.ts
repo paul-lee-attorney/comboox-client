@@ -1,4 +1,4 @@
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc, updateDoc} from 'firebase/firestore';
 import fetch from 'node-fetch';
 import { decodeEventLog, Hex, keccak256, Log, parseAbiItem, toHex} from 'viem';
 import { db } from './firebase';
@@ -54,201 +54,6 @@ export async function fetchArbiscanData(
 
 // ==== TopBlk and Menue of Logs ====
 
-// const list = [
-//     {
-//         title: "RegCenter",
-//         address: HexParser("0x18F7AE56d1e04B95A2C50AFd528aC3FCb6F23f91"),
-//         name: "Transfer",
-//         abiStr:"event Transfer(address indexed from, address indexed to, uint256 indexed value)",
-//     }, // RC 252801290
-//     {
-//         title: "FuelTank",
-//         address: HexParser("0xCf7E78D11d579f9E1a5704fAB8769844cD8C8e6b"),
-//         name: "Refuel",
-//         abiStr: "event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)",
-//     }, // FT_0 --
-//     {
-//         title: "FuelTank",
-//         address: HexParser("0xCf7E78D11d579f9E1a5704fAB8769844cD8C8e6b"),
-//         name: "WithdrawFuel",
-//         abiStr: "event WithdrawFuel(address indexed owner, uint indexed amt)",
-//     }, // FT_0 --
-//     {
-//         title: "FuelTank",
-//         address: HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
-//         name: "Refuel",
-//         abiStr: "event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)",
-//     }, // FT_1  --
-//     {
-//         title: "FuelTank",
-//         address: HexParser("0x1ACCB0C9A87714c99Bed5Ed93e96Dc0E67cC92c0"),
-//         name: "WithdrawFuel",
-//         abiStr: "event WithdrawFuel(address indexed owner, uint indexed amt)",
-//     }, // FT_1  --  
-//     {
-//         title: "FuelTank",
-//         address: HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7"),
-//         name: "Refuel",
-//         abiStr: "event Refuel(address indexed buyer, uint indexed amtOfEth, uint indexed amtOfCbp)",
-//     }, // FT_2 --
-//     {
-//         title: "FuelTank",        
-//         address: HexParser("0xFE8b7e87bb5431793d2a98D3b8ae796796403fA7"),
-//         name: "WithdrawFuel",
-//         abiStr: "event WithdrawFuel(address indexed owner, uint indexed amt)",
-//     }, // FT_2 --
-//     {
-//         title: "GMMKeeper",        
-//         address: HexParser("0x7256b47ff39997355ecEC2deFB7C7B332FcFDd42"),
-//         name: "TransferFund",
-//         abiStr: "event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)"
-//     }, // GMMKeeper --
-//     {
-//         title: "GMMKeeper",        
-//         address: HexParser("0x7256b47ff39997355ecEC2deFB7C7B332FcFDd42"),
-//         name: "ExecAction",
-//         abiStr: "event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)"
-//     }, // GMMKeeper --
-//     {
-//         title: "BMMKeeper",        
-//         address: HexParser("0x9bf877a0950934aa53cfee14e5a1e205c6e1b3c9"),
-//         name: "TransferFund",
-//         abiStr: "event TransferFund(address indexed to, bool indexed isCBP, uint indexed amt, uint seqOfMotion, uint caller)"
-//     }, // BMMKeeper
-//     {
-//         title: "BMMKeeper",        
-//         address: HexParser("0x9bf877a0950934aa53cfee14e5a1e205c6e1b3c9"),
-//         name: "ExecAction",
-//         abiStr: "event ExecAction(address indexed targets, uint indexed values, bytes indexed params, uint seqOfMotion, uint caller)"
-//     }, // BMMKeeper --
-//     {
-//         title: "GeneralKeeper",        
-//         address: HexParser("0x68233e877575e8c7e057e83ef0d16ffa7f98984d"),
-//         name: "PickupDeposit",
-//         abiStr: "event PickupDeposit(address indexed to, uint indexed caller, uint indexed amt)",
-//     }, // GK
-//     {
-//         title: "GeneralKeeper",        
-//         address: HexParser("0x68233e877575e8c7e057e83ef0d16ffa7f98984d"),
-//         name: "SaveToCoffer",
-//         abiStr: "event SaveToCoffer(uint indexed acct, uint256 indexed value, bytes32 indexed reason)",
-//     }, // GK
-//     {
-//         title: "GeneralKeeper",        
-//         address: HexParser("0x68233e877575e8c7e057e83ef0d16ffa7f98984d"),
-//         name: "ReleaseCustody",
-//         abiStr: "event ReleaseCustody(uint indexed from, uint indexed to, uint indexed amt, bytes32 reason)",
-//     }, // GK
-//     {
-//         title: "GeneralKeeper",        
-//         address: HexParser("0x68233e877575e8c7e057e83ef0d16ffa7f98984d"),
-//         name: "ReceivedCash",
-//         abiStr: "event ReceivedCash(address indexed from, uint indexed amt)",
-//     }, // GK
-//     {
-//         title: "GeneralKeeper",        
-//         address: HexParser("0x68233e877575e8c7e057e83ef0d16ffa7f98984d"),
-//         name: "RegKeeper",
-//         abiStr: "event RegKeeper(uint indexed title, address indexed keeper, address indexed dk)",
-//     }, // GK
-//     {
-//         title: "GeneralKeeper",        
-//         address: HexParser("0x68233e877575e8c7e057e83ef0d16ffa7f98984d"),
-//         name: "RegBook",
-//         abiStr: "event RegBook(uint indexed title, address indexed book, address indexed dk)",
-//     }, // GK
-//     {
-//         title: "ROMKeeper", 
-//         address: HexParser("0xEC20588b8d51C66c2BFaD4FB9A79673d92F6A5b0"),
-//         name: "PayInCapital",
-//         abiStr: "event PayInCapital(uint indexed seqOfShare, uint indexed amt, uint indexed valueOfDeal)",
-//     }, // ROMKeeper --
-//     {
-//         title: "ROAKeeper",        
-//         address: HexParser("0x883Ac1f45936bB4830FfAf8f3e0F604cB41d31D9"),
-//         name: "PayOffCIDeal",
-//         abiStr: "event PayOffCIDeal(uint indexed caller, uint indexed valueOfDeal)",
-//     }, // ROAKeeper --
-//     {
-//         title: "LOOKeeper",        
-//         address: HexParser("0xf7A272E6509A3c8b52e805249117d62719f55b0b"),
-//         name: "CloseBidAgainstInitOffer",
-//         abiStr: "event CloseBidAgainstInitOffer(uint indexed buyer, uint indexed amt)",
-//     }, // LOOKeeper --
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "ForwardUsd",
-//         abiStr: "event ForwardUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "ReleaseUsd",
-//         abiStr: "event ReleaseUsd(address indexed from, address indexed to, uint indexed amt, bytes32 remark)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "CustodyUsd",
-//         abiStr: "event CustodyUsd(address indexed from, uint indexed amt, bytes32 indexed remark)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "DistributeUsd",
-//         abiStr: "event DistributeUsd(uint indexed amt)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "PickupUsd",
-//         abiStr: "event PickupUsd(address indexed msgSender, uint indexed caller, uint indexed value)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "ReceiveUsd",
-//         abiStr: "event ReceiveUsd(address indexed from, uint indexed amt)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x8871e3Bb5Ac263E10e293Bee88cce82f336Cb20a"),
-//         name: "ReceiveUsd",
-//         abiStr: "event ReceiveUsd(address indexed from, uint indexed amt)",
-//     }, // Cashier_1
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x17d9A82Cdd2471ca26f9B5D603bE808aEa41e6F1"),
-//         name: "TransferUsd",
-//         abiStr: "event TransferUsd(address indexed to, uint indexed amt)",
-//     }, // Cashier
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x8871e3Bb5Ac263E10e293Bee88cce82f336Cb20a"),
-//         name: "TransferUsd",
-//         abiStr: "event TransferUsd(address indexed to, uint indexed amt)",
-//     }, // Cashier_1
-//     {
-//         title: "Cashier",        
-//         address: HexParser("0x8871e3Bb5Ac263E10e293Bee88cce82f336Cb20a"),
-//         name: "DistributeUsd",
-//         abiStr: "event DistributeUsd(uint indexed amt)",
-//     }, // Cashier_1
-//     {
-//         title: "LOU",        
-//         address: HexParser("0x124FdFbEca97877B340d94924a0c068b56251A38"),
-//         name: "DealClosed",
-//         abiStr: "event DealClosed(bytes32 indexed deal, uint indexed consideration)",
-//     }, // LOU
-//     {
-//         title: "LOE",        
-//         address: HexParser("0xC9CB65Fa5A541456b0571734ddd413eb787A1250"),
-//         name: "DealClosed",
-//         abiStr: "event DealClosed(bytes32 indexed deal, uint indexed consideration)",
-//     }, // LOE
-// ];
-
 export async function getTopBlkOf(
     gk:Hex, address:string,
 ): Promise<bigint> {
@@ -259,7 +64,8 @@ export async function getTopBlkOf(
         const docSnap = await getDoc(docRef);
         const records = {...docSnap.data()} as Record<string, string>;
 
-        const top = records[address];
+        let top = records[address];
+        if (!top) top = '1';
         console.log(`get topBlkOf ${address}:`, top);
 
         return BigInt(top);
@@ -278,15 +84,16 @@ export async function setTopBlkOf(
 
   try {
     const docSnap = await getDoc(docRef);
-    let records = {...docSnap.data()} as Record<string, string>;
-    let topBlk = records[address];
-    console.log(`previous topBlkOf ${address}:`, topBlk);
 
-    topBlk = blkNum.toString();
-    records[address] = topBlk;
+    // 初始化records对象，如果文档不存在则创建空对象
+    const records = docSnap.exists() ? {...docSnap.data()} as Record<string, string> : {};
+    
+    // 无论address是否存在，直接更新或添加该地址的区块号
+    const newBlkNum = blkNum.toString();
+    records[address] = newBlkNum;
 
     await setDoc(docRef, records);
-    console.log(`updated topBlkOf ${address}:`, topBlk);
+    console.log(`updated topBlkOf ${address}:`, newBlkNum);
 
     return true;
   } catch (error: any) {
@@ -312,13 +119,76 @@ export async function getMenuOfLogs(
 
     try {
         const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists()) {
+            // 不存在则创建一个空的 menuOfLogs
+          await setDoc(docRef, { list: [] });
+          return [];
+        }
+
         let out = docSnap.data()?.list as EventInfo[];
         return out.map(v => ({...v, address: HexParser(v.address)}));
     } catch (error) {
         console.error("Error fetching financial data: ", error);
         return undefined;
     }
+}
 
+export async function upsertMenuOfLogs(
+    gk: Hex,
+    title: string,
+    address: Hex,
+    name: string,
+    abiStr: string
+): Promise<void> {
+    const docRef = doc(db, gk.toLowerCase(), "menuOfLogs");
+
+    try {
+        const docSnap = await getDoc(docRef);
+
+        let list: EventInfo[] = [];
+
+        if (docSnap.exists()) {
+            list = docSnap.data()?.list || [];
+        }
+
+        // 查找是否存在相同 title + address 的 EventInfo
+        let eventInfo = list.find(
+            (v) => v.title === title && v.address.toLowerCase() === address.toLowerCase()
+        );
+
+        if (!eventInfo) {
+            // 不存在则新建
+            eventInfo = {
+                title,
+                address,
+                name: [name],
+                abiStr: [abiStr],
+            };
+            list.push(eventInfo);
+        } else {
+            // 已存在，检查 name
+            const idx = eventInfo.name.findIndex((n) => n === name);
+            if (idx >= 0) {
+                // name 已存在 → 更新对应 abiStr
+                eventInfo.abiStr[idx] = abiStr;
+            } else {
+                // name 不存在 → 新增
+                eventInfo.name.push(name);
+                eventInfo.abiStr.push(abiStr);
+            }
+        }
+
+        // 更新或创建文档
+        if (docSnap.exists()) {
+            await updateDoc(docRef, { list });
+        } else {
+            await setDoc(docRef, { list });
+        }
+
+    } catch (error) {
+        console.error("Error updating menuOfLogs: ", error);
+    }
 }
 
 // ==== Contents of Logs ====

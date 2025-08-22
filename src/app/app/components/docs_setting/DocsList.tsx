@@ -8,7 +8,7 @@ import { DataGrid, GridColDef, GridRowParams } from '@mui/x-data-grid';
 import { CopyLongStrSpan } from '../../common/CopyLongStr';
 
 import { DocItem, typesOfDoc } from '../../rc';
-import { dateParser, defFormResults, FormResults, HexParser, longSnParser, onlyInt } from '../../common/toolsKit';
+import { dateParser, defFormResults, FormResults, longSnParser, onlyInt } from '../../common/toolsKit';
 import { HexType, MaxData, MaxPrice } from '../../common';
 
 interface DocsListProps {

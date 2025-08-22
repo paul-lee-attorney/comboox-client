@@ -1,4 +1,4 @@
-import { useGeneralKeeperRemoveDirector } from "../../../../../../../generated";
+import { useCompKeeperRemoveDirector } from "../../../../../../../generated";
 import { Paper } from "@mui/material";
 import { FollowTheSigns } from "@mui/icons-material";
 import { HexType } from "../../../../common";
@@ -23,7 +23,7 @@ export function RemoveDirector({motion, setOpen, refresh}:ActionsOnMotionProps) 
   const {
     isLoading: removeDirectorLoading,
     write: removeDirector,
-  } = useGeneralKeeperRemoveDirector({
+  } = useCompKeeperRemoveDirector({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

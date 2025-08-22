@@ -9,10 +9,10 @@ import { AddrOfRegCenter, HexType, MaxUserNo } from '../../../common';
 import { BorderColor } from '@mui/icons-material';
 import { useState } from 'react';
 import { StrRule, codifyPlatformStrRule, defaultStrRule } from '../../../rc';
-import { ActionsOfOwnerProps } from '.';
 import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx } from '../../../common/toolsKit';
 import { LoadingButton } from '@mui/lab';
 import { useComBooxContext } from '../../../../_providers/ComBooxContextProvider';
+import { ActionsOfOwnerProps } from '../ActionsOfOwner';
 
 export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
 
@@ -39,12 +39,6 @@ export function SetPlatformRule({ refresh }:ActionsOfOwnerProps) {
     onSuccess(data) {
       setLoading(true);
       let hash: HexType = data.hash;
-      // waitForTransaction({hash}).then(
-      //   res => {
-      //     console.log("Receipt: ", res);
-      //     updateResults();
-      //   }
-      // )
       refreshAfterTx(hash, updateResults);
     }
   })

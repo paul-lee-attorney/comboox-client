@@ -2,13 +2,13 @@
 
 import { useEffect, useState } from "react";
 
-import { Box, Paper, Stack, Toolbar, Typography } from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { GetMotionsList } from "../gmm/components/GetMotionsList";
 import { Motion, getMotionsList } from "../gmm/meetingMinutes";
 import { CreateMotionOfBoardMeeting } from "./components/CreateMotionOfBoardMeeting";
 import { ApprovalFormOfBoardMotion } from "./components/ApprovalFormOfBoardMotion";
 
-import { CopyLongStrSpan, CopyLongStrTF } from "../../common/CopyLongStr";
+import { CopyLongStrTF } from "../../common/CopyLongStr";
 
 import { AddrZero, booxMap } from "../../common";
 

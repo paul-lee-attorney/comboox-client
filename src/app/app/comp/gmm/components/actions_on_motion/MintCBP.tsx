@@ -3,7 +3,6 @@ import { useState } from "react";
 
 import { AddrOfRegCenter, Bytes32Zero, HexType, MaxSeqNo } from "../../../../common";
 
-import { useGeneralKeeperExecActionOfGm } from "../../../../../../../generated";
 
 import { Divider,  Paper, Stack, TextField } from "@mui/material";
 import { Star } from "@mui/icons-material";
@@ -11,6 +10,7 @@ import { FormResults, HexParser, defFormResults, hasError, onlyInt, onlyNum, ref
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 import { ActionsOnMotionProps } from "../ActionsOnMotion";
+import { useCompKeeperExecActionOfGm } from "../../../../../../../generated";
 
 export function MintCBP({motion, setOpen, refresh}:ActionsOnMotionProps) {
 
@@ -33,7 +33,7 @@ export function MintCBP({motion, setOpen, refresh}:ActionsOnMotionProps) {
   const {
     isLoading: mintCBPLoading,
     write: mintCBP,
-  } = useGeneralKeeperExecActionOfGm({
+  } = useCompKeeperExecActionOfGm ({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

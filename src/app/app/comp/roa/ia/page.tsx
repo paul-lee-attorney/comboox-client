@@ -20,10 +20,9 @@ import { isFinalized } from "../../common/draftControl";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { useSearchParams } from "next/navigation";
 import AgreementDownloader from "../../../components/file_storage/AgreementDownloader";
-// import Bookmark from "../../roc/components/Bookmark";
 
 function Ia() {
-  const { boox } = useComBooxContext();
+  const { gk, boox } = useComBooxContext();
 
   const [ index, setIndex ] = useState<number>(0);
 

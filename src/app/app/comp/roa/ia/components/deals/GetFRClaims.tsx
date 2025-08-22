@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Stack, Toolbar } from "@mui/material";
 import { Calculate, ListAltOutlined } from "@mui/icons-material";
-import { useGeneralKeeperComputeFirstRefusal } from "../../../../../../../../generated";
+import { useCompKeeperComputeFirstRefusal } from "../../../../../../../../generated";
 import { baseToDollar, dateParser, longSnParser, refreshAfterTx, toPercent } from "../../../../../common/toolsKit";
 import { ActionsOfDealCenterProps } from "./ActionsOfDeal";
 import { FRClaim, getFRClaimsOfDeal, hasFRClaims } from "../../../roa";
@@ -102,7 +102,7 @@ export function GetFRClaims({addr, deal, setOpen, setDeal, refresh, timeline, ti
   const {
     isLoading: computeFirstRefusalLoading,
     write: computeFirstRefusal,
-  } = useGeneralKeeperComputeFirstRefusal({
+  } = useCompKeeperComputeFirstRefusal({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

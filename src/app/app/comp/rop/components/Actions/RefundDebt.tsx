@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { useGeneralKeeperRefundDebt } from "../../../../../../../generated";
-import { Button, Paper, Stack, TextField } from "@mui/material";
+import { useCompKeeperRefundDebt } from "../../../../../../../generated";
+import { Paper, Stack, TextField } from "@mui/material";
 import { VolunteerActivismOutlined } from "@mui/icons-material";
 import { ActionsOfPledgeProps } from "../ActionsOfPledge";
 import { HexType, MaxData } from "../../../../common";
-import { FormResults, defFormResults, hasError, onlyInt, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
+import { FormResults, defFormResults, hasError, onlyNum, refreshAfterTx, strNumToBigInt } from "../../../../common/toolsKit";
 import { LoadingButton } from "@mui/lab";
 import { useComBooxContext } from "../../../../../_providers/ComBooxContextProvider";
 
@@ -26,7 +26,7 @@ export function RefundDebt({pld, setOpen, refresh}:ActionsOfPledgeProps) {
   const {
     isLoading: refundDebtLoading,
     write: refundDebt,
-  } = useGeneralKeeperRefundDebt({
+  } = useCompKeeperRefundDebt({
     address: gk,
     onError(err) {
       setErrMsg(err.message);

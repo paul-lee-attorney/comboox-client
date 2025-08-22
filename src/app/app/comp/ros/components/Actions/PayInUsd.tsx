@@ -21,7 +21,7 @@ import {
 import { ActionsOfCapProps } from "../ActionsOfCap";
 
 
-import { useUsdKeeperPayInCapital } from "../../../../../../../generated";
+import { useCompKeeperPayInCapital } from "../../../../../../../generated";
 import { GenerateAuth } from "../../../../components/usdc_auth/GenerateAuth";
 import { usePublicClient, useWalletClient } from "wagmi";
 import { AuthSig } from "../../../../components/usdc_auth/typedData";
@@ -29,7 +29,7 @@ import { verifyAuthorization } from "../../../../components/usdc_auth/authVerifi
 
 export function PayInUsd({ share, setDialogOpen, refresh }: ActionsOfCapProps ) {
 
-  const { keepers, boox, setErrMsg } = useComBooxContext();
+  const { gk, boox, setErrMsg } = useComBooxContext();
 
   const [ auth, setAuth ] = useState<AuthSig | undefined>();
   const [ escrow, setEscrow ] = useState(AddrZero);
@@ -63,8 +63,8 @@ export function PayInUsd({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
   const {
     isLoading: payInUsdLoading,
     write: payInUsd,
-  } = useUsdKeeperPayInCapital({
-    address: keepers && keepers[keepersMap.UsdKeeper],
+  } = useCompKeeperPayInCapital({
+    address: gk,
     onError(err) {
       setErrMsg(err.message);
     },
