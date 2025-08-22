@@ -236,17 +236,18 @@ export interface DocItem {
 }
 
 export const typesOfDoc:string[] = [
-  'ROCK', 'RODK', 'BMMK', 'ROMK', 'GMMK', 
-  'ROAK', 'ROOK', 'ROPK', 'SHAK', 'LOOK', 
+  'ROCKeeper', 'RODKeeper', 'BMMKeeper', 'ROMKeeper', 'GMMKeeper', 
+  'ROAKeeper', 'ROOKeeper', 'ROPKeeper', 'SHAKeeper', 'LOOKeeper', 
   'ROC', 'ROD', 'MM', 'ROM', 'ROA', 
-  'ROO', 'ROP', 'ROS', 'LOO', 'GK', 
+  'ROO', 'ROP', 'ROS', 'LOO', 'GeneralKeeper', 
   'IA', 'SHA', 'AntiDilution', 'LockUp', 'Alongs', 
-  'Options', 'LOP', 'Cashier', 'UsdLOO', 'USDK', 
-  'UsdROMK', 'UsdROAK', 'UsdLOOK', 'UsdROOK', 'ROIK', 
-  'ROI', 'ATNT', 'RORK', 'ROR', 'FundK', 
-  'FundATNT', 'FundGMMK', 'FundLOOK', 'FundROCK','FundROIK', 
-  'CNC', 'PrivCompK', 'GrowingCompK', 'ListedCompK','LPFK', 
-  'ListedLPFK', 'OpenFK', 'ListedOpenFK',
+  'Options', 'LOP', 'Cashier', 'UsdLOO', 'USDKeeper', 
+  'UsdROMKeeper', 'UsdROAKeeper', 'UsdLOOKeeper', 'UsdROOKeeper', 'ROIKeeper', 
+  'ROI', 'ATNT', 'RORKeeper', 'ROR', 'FundKeeper', 
+  'FundATNT', 'FundGMMKeeper', 'FundLOOKeeper', 'FundROCKeeper','FundROIKeeper', 
+  'CNC', 'PrivCompKeeper', 'GrowingCompKeeper', 'ListedCompKeeper','LPFKeeper', 
+  'ListedLPFKeeper', 'OpenFKeeper', 'ListedOpenFKeeper', 'WTFKeeper',
+  'WTF', 'FundWTFKeeper',
 ]
 
 // ==== Options ====
