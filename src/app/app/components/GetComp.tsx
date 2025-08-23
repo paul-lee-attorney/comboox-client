@@ -14,6 +14,7 @@ import { useComBooxContext } from '../../_providers/ComBooxContextProvider';
 
 import { CenterInfo } from './center_info/CenterInfo';
 import { getCompInfo } from '../comp/gk';
+import { getOldCompInfo } from '../compV1/gk';
 
 export function GetComp() {
 
@@ -42,16 +43,29 @@ export function GetComp() {
           if (head.typeOfDoc == 20 || head.typeOfDoc == 40 || 
             (head.typeOfDoc > 46 && head.typeOfDoc < 54)
           ) {
-            getCompInfo(body).then(
-              info => {
-                if (info.regNum > 0) {
-                  setRegNum(info.regNum.toString());
-                  setOpen(false);
-                  setGK(body);
-                  setDoc({head: head, body: body});
+            if (head.typeOfDoc == 20 && head.version == 1) {
+              getOldCompInfo(body).then(
+                info => {
+                  if (info.regNum > 0) {
+                    setRegNum(info.regNum.toString());
+                    setOpen(false);
+                    setGK(body);
+                    setDoc({head: head, body: body});
+                  }
                 }
-              }
-            );
+              )
+            } else {
+              getCompInfo(body).then(
+                info => {
+                  if (info.regNum > 0) {
+                    setRegNum(info.regNum.toString());
+                    setOpen(false);
+                    setGK(body);
+                    setDoc({head: head, body: body});
+                  }
+                }
+              );
+            }
           } else {
             setDoc(undefined);
             setOpen(true);

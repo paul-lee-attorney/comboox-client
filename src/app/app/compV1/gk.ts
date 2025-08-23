@@ -135,13 +135,14 @@ export async function getSHA(gk: HexType):Promise<HexType>{
 export interface CompInfo {
   regNum: number;
   regDate: number;
+  typeOfEntity: number;
   currency: number;
   state: number;
   symbol: string;
   name: string;
 }
 
-export async function getCompInfo(gk: HexType):Promise<CompInfo>{
+export async function getOldCompInfo(gk: HexType):Promise<CompInfo>{
 
   let res = await readContract({
     address: gk,
@@ -152,6 +153,7 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
   let info:CompInfo = {
     regNum: res.regNum,
     regDate: res.regDate,
+    typeOfEntity: 4,
     currency: res.currency,
     symbol: toStr(res.symbol),
     name: res.name,

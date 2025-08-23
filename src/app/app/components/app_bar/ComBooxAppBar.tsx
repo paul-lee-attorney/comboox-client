@@ -18,7 +18,6 @@ import {
   ListItemText,
   Tooltip,
   Stack,
-  SvgIconTypeMap,
 } from '@mui/material';
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -52,9 +51,6 @@ import { ErrMsg } from './components/ErrMsg';
 import Link from 'next/link';
 import { DocsSetting } from '../docs_setting/DocsSetting';
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-import { arrayBuffer } from 'stream/consumers';
-import { isDataView } from 'util/types';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -176,7 +172,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
       ]);
       return arr;
     });
-  }, [compInfo, isDAO]);
+  }, [compInfo, compInfo?.regNum, isDAO]);
 
   return (
     <Box sx={{ display: 'flex' }}>
