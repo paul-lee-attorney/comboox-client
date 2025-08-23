@@ -81,6 +81,15 @@ export function GetComp() {
             setGK(doc.body);
             setDoc({head:doc.head, body:doc.body});
             setOpen(false);
+            if (Number(regNum) == 8) {
+              getOldCompInfo(doc.body).then(
+                info => setCompInfo(info)
+              );
+            } else {
+              getCompInfo(doc.body).then(
+                info => setCompInfo(info)
+              );
+            }
           } else {
             setDoc(undefined);
             setOpen(true);
