@@ -130,7 +130,7 @@ export function GeneralInfo() {
             
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
-                value={ compInfo?.name } 
+                value={ compInfo?.name ?? ' ' } 
                 variant='outlined'
                 size='small' 
                 label="NameOfCompany" 
@@ -159,7 +159,7 @@ export function GeneralInfo() {
 
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
-                value={compInfo?.symbol} 
+                value={compInfo?.symbol ?? ' '} 
                 variant='outlined'
                 size='small' 
                 label="SymbolOfCompany" 
