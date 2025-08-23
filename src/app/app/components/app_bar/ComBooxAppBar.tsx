@@ -153,8 +153,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
     ];
 
     setItems(() => {
-      let arr = [...defaultItems];
-      arr.concat([
+      let arr = [...defaultItems,
         {href: isDAO ? '/app/compV1' : '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
         {href: isDAO ? '/app/compV1/roc' : '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
         {href: isDAO ? '/app/compV1/roa' : '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
@@ -169,7 +168,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
         {href: isDAO ? '/app/compV1' : '/app/comp/wtf', label: 'WTF', tip:'Distribution Waterfalls', icon: <WaterfallChart />, divider: true},
         {href: isDAO ? '/app/compV1/roi' : '/app/comp/roi', label: 'ROI', tip:'Register of Investors', icon: <ReduceCapacityOutlined />, divider: false},
         {href: isDAO ? '/app/compV1/loo' : '/app/comp/loo', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchangeOutlined />, divider: true},
-      ]);
+      ];
       return arr;
     });
   }, [compInfo, compInfo?.regNum, isDAO]);
