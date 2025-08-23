@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 
 import { 
   Box, 
@@ -18,6 +18,7 @@ import {
   ListItemText,
   Tooltip,
   Stack,
+  SvgIconTypeMap,
 } from '@mui/material';
 
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
@@ -51,6 +52,9 @@ import { ErrMsg } from './components/ErrMsg';
 import Link from 'next/link';
 import { DocsSetting } from '../docs_setting/DocsSetting';
 import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
+import { OverridableComponent } from '@mui/material/OverridableComponent';
+import { arrayBuffer } from 'stream/consumers';
+import { isDataView } from 'util/types';
 
 const Main = styled('main', { shouldForwardProp: (prop) => prop !== 'open' })<{
   open?: boolean;
@@ -120,9 +124,9 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
   useEffect(()=>{
     if (compInfo?.regNum) {
-      setIsDAO(compInfo.regNum == 8);      
+      setIsDAO(compInfo.regNum == 8);
     }
-  }, [compInfo?.regNum]);
+  }, [compInfo]);
 
   const [appBarOpen, setAppBarOpen] = useState(false);
 
@@ -135,24 +139,44 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
   const theme = useTheme();
 
-  const items = [
-    {href: '/app', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
-    {href: '/app/fuel_tank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
-    {href: isDAO ? '/app/compV1' : '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
-    {href: isDAO ? '/app/compV1/roc' : '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
-    {href: isDAO ? '/app/compV1/roa' : '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
-    {href: isDAO ? '/app/compV1/rod' : '/app/comp/rod', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
-    {href: isDAO ? '/app/compV1/bmm' : '/app/comp/bmm', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    {href: isDAO ? '/app/compV1/rom' : '/app/comp/rom', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
-    {href: isDAO ? '/app/compV1/gmm' : '/app/comp/gmm', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
-    {href: isDAO ? '/app/compV1/ros' : '/app/comp/ros', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
-    {href: isDAO ? '/app/compV1/roo' : '/app/comp/roo', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: false},
-    {href: isDAO ? '/app/compV1/rop' : '/app/comp/rop', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: true},
-    {href: isDAO ? '/app/compV1' : '/app/comp/ror', label: 'ROR', tip:'Register of Redemptions', icon: <RedeemOutlined />, divider: false},
-    {href: isDAO ? '/app/compV1' : '/app/comp/wtf', label: 'WTF', tip:'Distribution Waterfalls', icon: <WaterfallChart />, divider: true},
-    {href: isDAO ? '/app/compV1/roi' : '/app/comp/roi', label: 'ROI', tip:'Register of Investors', icon: <ReduceCapacityOutlined />, divider: false},
-    {href: isDAO ? '/app/compV1/loo' : '/app/comp/loo', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchangeOutlined />, divider: true},
-  ]
+  interface ItemOfList {
+    href: string,
+    label: string,
+    tip: string,
+    icon: ReactNode,
+    divider: boolean,
+  }
+
+
+  const [ items, setItems ] = useState<ItemOfList[]>();
+
+  useEffect(()=>{
+    const defaultItems:ItemOfList[] = [
+      {href: '/app', label: 'RegCenter', tip: 'Registration Center', icon: <AssuredWorkload />, divider: false},
+      {href: '/app/fuel_tank', label: 'GasStation', tip: 'Gas Station', icon: <LocalGasStationOutlined />, divider: true},
+    ];
+
+    setItems(() => {
+      let arr = [...defaultItems];
+      arr.concat([
+        {href: isDAO ? '/app/compV1' : '/app/comp', label: 'Home', tip: 'Homepage of Target Company', icon: <HomeOutlined />, divider: true},
+        {href: isDAO ? '/app/compV1/roc' : '/app/comp/roc', label: 'ROC', tip: 'Register of Constitution', icon: <ListAlt />, divider: false},
+        {href: isDAO ? '/app/compV1/roa' : '/app/comp/roa', label: 'ROA', tip:'Rigister of Agreements', icon: <ContentCopyOutlined />, divider: true},
+        {href: isDAO ? '/app/compV1/rod' : '/app/comp/rod', label: 'ROD', tip:'Register of Directors', icon: <BadgeOutlined />, divider: false},  
+        {href: isDAO ? '/app/compV1/bmm' : '/app/comp/bmm', label: 'BMM', tip:'Board Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+        {href: isDAO ? '/app/compV1/rom' : '/app/comp/rom', label: 'ROM', tip:'Register of Members', icon: <Diversity1Outlined />, divider: false},  
+        {href: isDAO ? '/app/compV1/gmm' : '/app/comp/gmm', label: 'GMM', tip:'General Meeting Minutes', icon: <LibraryBooksOutlined />, divider: true},  
+        {href: isDAO ? '/app/compV1/ros' : '/app/comp/ros', label: 'ROS', tip:'Register of Shares', icon: <PaymentsOutlined />, divider: false},
+        {href: isDAO ? '/app/compV1/roo' : '/app/comp/roo', label: 'ROO', tip:'Register of Options', icon: <QuizOutlined />, divider: false},
+        {href: isDAO ? '/app/compV1/rop' : '/app/comp/rop', label: 'ROP', tip:'Register of Pledges', icon: <CollectionsBookmarkOutlined />, divider: true},
+        {href: isDAO ? '/app/compV1' : '/app/comp/ror', label: 'ROR', tip:'Register of Redemptions', icon: <RedeemOutlined />, divider: false},
+        {href: isDAO ? '/app/compV1' : '/app/comp/wtf', label: 'WTF', tip:'Distribution Waterfalls', icon: <WaterfallChart />, divider: true},
+        {href: isDAO ? '/app/compV1/roi' : '/app/comp/roi', label: 'ROI', tip:'Register of Investors', icon: <ReduceCapacityOutlined />, divider: false},
+        {href: isDAO ? '/app/compV1/loo' : '/app/comp/loo', label: 'LOO', tip:'List of Orders', icon: <CurrencyExchangeOutlined />, divider: true},
+      ]);
+      return arr;
+    });
+  }, [isDAO]);
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -221,66 +245,36 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
         <List>
 
-          <ListItem disablePadding >
-            <Tooltip title={items[0].tip} placement='right' arrow >
-              <ListItemButton 
-                LinkComponent={ Link }
-                href={items[0].href}
-              >
-                <ListItemIcon>
-                  {items[0].icon}
-                </ListItemIcon>
-                <ListItemText primary={items[0].label} />
-              </ListItemButton>
-            </Tooltip>
-          </ListItem>
-          {items[0].divider && (
-            <Divider flexItem />
-          )}          
+          {items && items.length > 2 &&  (
 
-          <ListItem disablePadding >
-            <Tooltip title={items[1].tip} placement='right' arrow >
-              <ListItemButton 
-                LinkComponent={ Link }
-                href={items[1].href}
-              >
-                <ListItemIcon>
-                  {items[1].icon}
-                </ListItemIcon>
-                <ListItemText primary={items[1].label} />
-              </ListItemButton>
-            </Tooltip>
-          </ListItem>
-          {items[1].divider && (
-            <Divider flexItem />
+            items.map((v, i)=>{
+              if (typeOfEntity == 0 && i > 1) return null;
+              if (typeOfEntity != 2 && typeOfEntity != 4 && i == 10) return null; 
+              if (typeOfEntity != 3 && typeOfEntity != 4 && typeOfEntity != 6 &&
+                  typeOfEntity != 8 && typeOfEntity != 9 && i == 15) return null;
+              if (typeOfEntity < 7  && i == 12) return null;
+
+              return (<div key={i}>
+                <ListItem disablePadding >
+                  <Tooltip title={v.tip} placement='right' arrow >
+                    <ListItemButton 
+                      LinkComponent={ Link }
+                      href={v.href}
+                    >
+                      <ListItemIcon>
+                        {v.icon}
+                      </ListItemIcon>
+                      <ListItemText primary={v.label} />
+                    </ListItemButton>
+                  </Tooltip>
+                </ListItem>
+                {v.divider && (
+                  <Divider flexItem />
+                )}
+              </div>)
+            })
+
           )}
-
-          {typeOfEntity > 0 && items.map((v, i)=>{
-            if (i < 2) return null;
-            if (typeOfEntity != 2 && typeOfEntity != 4 && i == 10) return null; 
-            if (typeOfEntity != 3 && typeOfEntity != 4 && typeOfEntity != 6 &&
-                typeOfEntity != 8 && typeOfEntity != 9 && i == 15) return null;
-            if (typeOfEntity < 7  && i == 12) return null;
-
-            return (<div key={i}>
-              <ListItem disablePadding >
-                <Tooltip title={v.tip} placement='right' arrow >
-                  <ListItemButton 
-                    LinkComponent={ Link }
-                    href={v.href}
-                  >
-                    <ListItemIcon>
-                      {v.icon}
-                    </ListItemIcon>
-                    <ListItemText primary={v.label} />
-                  </ListItemButton>
-                </Tooltip>
-              </ListItem>
-              {v.divider && (
-                <Divider flexItem />
-              )}
-            </div>)
-          })}
 
         </List>
 
