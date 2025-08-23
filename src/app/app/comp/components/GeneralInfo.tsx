@@ -128,10 +128,10 @@ export function GeneralInfo() {
           </Stack>
 
           <Grid container direction='row' spacing={2} >
-
+            
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
-                value={ compInfo?.name ?? ' '} 
+                value={ compInfo?.name } 
                 variant='outlined'
                 size='small' 
                 label="NameOfCompany" 
@@ -140,7 +140,7 @@ export function GeneralInfo() {
                   m:1,
                 }}
                 fullWidth
-              />
+              />            
             </Grid>            
 
             <Grid item xs={3} md={3} lg={3} >
@@ -157,9 +157,10 @@ export function GeneralInfo() {
                 fullWidth
               />
             </Grid>
+
             <Grid item xs={3} md={3} lg={3} >
               <TextField 
-                value={compInfo?.symbol ?? ' '} 
+                value={compInfo?.symbol} 
                 variant='outlined'
                 size='small' 
                 label="SymbolOfCompany" 
@@ -170,6 +171,7 @@ export function GeneralInfo() {
                 fullWidth
               />
             </Grid>
+
             <Grid item xs={3} md={3} lg={3} >
               <CopyLongStrTF title="AddrOfCompany" src={gk ?? AddrZero} />
             </Grid>

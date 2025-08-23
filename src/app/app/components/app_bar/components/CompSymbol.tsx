@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { getBoox, getKeepers } from "../../../comp/gk";
 import { Stack, Typography } from "@mui/material";
-import { longSnParser } from "../../../common/toolsKit";
+import { HexParser, longSnParser, toStr } from "../../../common/toolsKit";
 import { CopyLongStrSpan } from "../../../common/CopyLongStr";
 import { basedOnPar } from "../../../comp/rom/rom";
 import { booxMap } from "../../../common";
@@ -54,7 +54,7 @@ export function CompSymbol() {
 
       {gk && compInfo && (
         <Typography variant="h6" component="div" sx={{ mx:1 }} >
-          {compInfo.symbol}
+          {toStr(HexParser(compInfo.symbol))}
         </Typography>
       )}
 
