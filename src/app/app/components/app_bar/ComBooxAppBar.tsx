@@ -245,7 +245,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
 
         <List>
 
-          {items && items.length > 2 &&  (
+          {items && (
 
             items.map((v, i)=>{
               if (typeOfEntity == 0 && i > 1) return null;
