@@ -153,7 +153,7 @@ export async function getCompInfo(gk: HexType):Promise<CompInfo>{
   let info:CompInfo = {
     regNum: res.regNum,
     regDate: res.regDate,
-    typeOfEntity: res.typeOfEntity,
+    typeOfEntity: res?.typeOfEntity ?? 4,
     currency: res.currency,
     symbol: toStr(res.symbol),
     name: res.name,
