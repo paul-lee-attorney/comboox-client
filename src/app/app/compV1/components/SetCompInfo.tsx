@@ -11,7 +11,7 @@ import {
   useGeneralKeeperSetCompInfo,
 } from '../../../../../generated-v1';
 
-import { CompInfo, getCompInfo } from '../gk';
+import { CompInfo, getOldCompInfo } from '../gk';
 import { HexType, currencies } from '../../common';
 import { dateParser, longDataParser, refreshAfterTx, toAscii, } from '../../common/toolsKit';
 
@@ -20,6 +20,7 @@ import { useComBooxContext } from '../../../_providers/ComBooxContextProvider';
 export const defaultInfo: CompInfo = {
   regNum: 0,
   regDate: 0,
+  typeOfEntity: 0,
   currency: 0,
   symbol: '',
   name: '',
@@ -72,7 +73,7 @@ export function SetCompInfo({nextStep}: InitCompProps) {
 
   useEffect(()=>{
     if (gk) {
-      getCompInfo(gk).then(
+      getOldCompInfo(gk).then(
         info => setNewInfo(info)
       )
     }

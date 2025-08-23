@@ -9,7 +9,7 @@ import { baseToDollar, dateParser, longSnParser
 } from "../../common/toolsKit";
 import { CopyLongStrTF } from "../../common/CopyLongStr";
 
-import { CompInfo, getCompInfo, totalDeposits } from "../gk";
+import { CompInfo, getOldCompInfo, totalDeposits } from "../gk";
 import { getDK } from "../common/draftControl";
 
 import { balanceOfWei } from "../../rc";
@@ -60,7 +60,7 @@ export function GeneralInfo() {
 
   useEffect(()=>{
     if (gk) {
-      getCompInfo(gk).then(
+      getOldCompInfo(gk).then(
         res => {
           if (res.state > 0) {
                 res.name = 'Deprecated GK';
