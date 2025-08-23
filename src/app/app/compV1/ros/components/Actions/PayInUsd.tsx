@@ -36,7 +36,7 @@ export function PayInUsd({ share, setDialogOpen, refresh }: ActionsOfCapProps ) 
 
   useEffect(()=>{
     if (boox) {
-      setEscrow(boox[booxMap.Cashier]);
+      setEscrow(boox[booxMap.ROI]);
     }
   }, [boox]);
 

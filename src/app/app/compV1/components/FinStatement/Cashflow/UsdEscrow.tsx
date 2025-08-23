@@ -106,7 +106,7 @@ export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
 
       if (!gk || !boox || !keepers) return;
 
-      const cashier = boox[booxMap.Cashier];
+      const cashier = boox[booxMap.ROI];
 
       let logs = await getFinData(gk, 'usdEscrow');
 

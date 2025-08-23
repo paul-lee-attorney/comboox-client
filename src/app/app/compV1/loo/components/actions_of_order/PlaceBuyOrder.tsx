@@ -39,7 +39,7 @@ export function PlaceBuyOrder({ classOfShare, refresh }: ActionsOfOrderProps) {
 
   useEffect(()=>{
     if (boox) {
-      setEscrow(boox[booxMap.Cashier]);
+      setEscrow(boox[booxMap.ROI]);
     }
   }, [boox]);
 

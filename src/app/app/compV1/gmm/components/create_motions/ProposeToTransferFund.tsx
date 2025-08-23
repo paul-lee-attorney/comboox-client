@@ -111,7 +111,7 @@ export function ProposeToTransferFund({ refresh }:CreateMotionProps) {
 
       if (boox) {
 
-        const cashier = boox[booxMap.Cashier];
+        const cashier = boox[booxMap.ROI];
         const amtOfUsd = strNumToBigInt(paras.amt, 6);
 
         const desHash = stringToHex("TransferUSD", {size: 32});

@@ -29,7 +29,7 @@ export function PickupUsdDeposit({ refresh }:PickupDepositProps) {
     isLoading: pickupDepositLoading,
     write: pickupDeposit,
   } = useCashierPickupUsd({
-    address: boox && boox[booxMap.Cashier],
+    address: boox && boox[booxMap.ROI],
     onError(err) {
       setErrMsg(err.message);
     },

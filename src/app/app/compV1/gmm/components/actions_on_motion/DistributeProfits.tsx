@@ -79,7 +79,7 @@ export function DistributeProfits({ motion, setOpen, refresh }:ActionsOnMotionPr
 
       if (boox && userNo) {
 
-        const cashier = boox[booxMap.Cashier];
+        const cashier = boox[booxMap.ROI];
         const amtOfUsd = strNumToBigInt(amt, 6);
         const desHash = stringToHex("DistributeUSD", {size: 32});
 

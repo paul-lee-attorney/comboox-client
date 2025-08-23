@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Paper, Stack, Box, Stepper, Step, StepLabel, StepContent } from "@mui/material";
+import { Paper, Stepper, Step, StepLabel, StepContent } from "@mui/material";
 
 import { useComBooxContext } from "../../_providers/ComBooxContextProvider";
 

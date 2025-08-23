@@ -48,7 +48,7 @@ export function CashBox() {
 
     if (boox) {
 
-      const cashier = boox[booxMap.Cashier];
+      const cashier = boox[booxMap.ROI];
 
       balanceOfComp(cashier).then(
         res => setBalanceOfUSD(res.toString())

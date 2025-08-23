@@ -134,7 +134,7 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
     const getUsdOfComp = async ()=>{
       if (!boox) return 0n;
 
-      const res = await balanceOfComp(boox[booxMap.Cashier],rptBlkNo);
+      const res = await balanceOfComp(boox[booxMap.ROI],rptBlkNo);
       setUsdOfComp(res);      
     }
 

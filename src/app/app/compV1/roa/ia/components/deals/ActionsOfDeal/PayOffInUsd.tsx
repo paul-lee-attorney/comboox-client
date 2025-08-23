@@ -24,7 +24,7 @@ export function PayOffInUsd({ addr, deal, setOpen, setDeal, refresh}: ActionsOfD
 
   useEffect(()=>{
     if (boox) {
-      setEscrow(boox[booxMap.Cashier]);
+      setEscrow(boox[booxMap.ROI]);
     }
   }, [boox]);
 

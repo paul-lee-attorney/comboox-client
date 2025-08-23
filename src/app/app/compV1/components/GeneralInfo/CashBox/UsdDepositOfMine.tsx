@@ -19,7 +19,7 @@ export function UsdDepositOfMine({time}:DepositOfMineProps) {
 
   useEffect(()=>{
     if (boox && userNo) {
-      depositOfMine(boox[booxMap.Cashier], BigInt(userNo)).then(
+      depositOfMine(boox[booxMap.ROI], BigInt(userNo)).then(
         res => setDeposit(res)
       );
     }

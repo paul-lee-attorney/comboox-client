@@ -100,7 +100,7 @@ export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
 
       if (!gk || !boox || !keepers) return;
 
-      const cashier = boox[booxMap.Cashier];
+      const cashier = boox[booxMap.ROI];
       const usdRomKeeper = keepers[keepersMap.UsdROMKeeper];
       const ros = boox[booxMap.ROS];
 

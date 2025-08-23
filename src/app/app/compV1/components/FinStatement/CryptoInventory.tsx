@@ -241,7 +241,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     const getUsdOfComp = async ()=>{
       if (!boox) return {...defBala};
 
-      const cashier = boox[booxMap.Cashier];
+      const cashier = boox[booxMap.ROI];
 
       const opnBalaOfUsd = await balanceOfComp(cashier, opnBlkNo);
       const endBalaOfUsd = await balanceOfComp(cashier, rptBlkNo);
@@ -267,7 +267,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     const getEscOfUsd = async ()=>{
       if (!boox) return {...defBala};
 
-      const cashier = boox[booxMap.Cashier];
+      const cashier = boox[booxMap.ROI];
 
       const opnEsc = await totalEscrow(cashier, opnBlkNo);
       const endEsc = await totalEscrow(cashier, rptBlkNo);
@@ -283,7 +283,7 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     const getDepOfUsd = async ()=>{
       if (!boox) return {...defBala};
 
-      const cashier = boox[booxMap.Cashier];
+      const cashier = boox[booxMap.ROI];
 
       const opnDep = await totalUsdDeposits(cashier, opnBlkNo);
       const endDep = await totalUsdDeposits(cashier, rptBlkNo);

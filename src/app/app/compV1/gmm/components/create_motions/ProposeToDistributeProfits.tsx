@@ -79,7 +79,7 @@ export function ProposeToDistributeProfits({ refresh }:CreateMotionProps) {
 
       if (boox) {
 
-        const cashier = boox[booxMap.Cashier];
+        const cashier = boox[booxMap.ROI];
         const amtOfUsd = strNumToBigInt(amt, 6);
         const desHash = stringToHex("DistributeUSD", {size: 32});
 

@@ -32,7 +32,7 @@ export function PayOffSwapUsd({seqOfOpt, seqOfSwap, setOpen, refresh}:ActionsOfS
 
   useEffect(()=>{
     if (boox) {
-      setEscrow(boox[booxMap.Cashier]);
+      setEscrow(boox[booxMap.ROI]);
     }
   }, [boox]);
 
