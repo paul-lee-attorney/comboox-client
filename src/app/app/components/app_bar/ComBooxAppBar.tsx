@@ -123,10 +123,10 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
   const [isDAO, setIsDAO] = useState(false);
 
   useEffect(()=>{
-    if (compInfo?.regNum) {
+    if (compInfo && compInfo.regNum) {
       setIsDAO(compInfo.regNum == 8);
     }
-  }, [compInfo]);
+  }, [compInfo, compInfo?.regNum]);
 
   const [appBarOpen, setAppBarOpen] = useState(false);
 
@@ -176,7 +176,7 @@ export function ComBooxAppBar({ children }: ComBooxAppBarType) {
       ]);
       return arr;
     });
-  }, [isDAO]);
+  }, [compInfo, isDAO]);
 
   return (
     <Box sx={{ display: 'flex' }}>
