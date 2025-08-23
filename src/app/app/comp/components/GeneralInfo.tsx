@@ -24,7 +24,6 @@ import { ConfigSetting } from "./config_setting/ConfigSetting";
 import { usePublicClient } from "wagmi";
 import { HistoryOfBoox } from "./GeneralInfo/HistoryOfBoox";
 import { CashBox } from "./GeneralInfo/CashBox";
-// import { autoUpdateLogs } from "../../../api/firebase/arbiScanLogsTool";
 
 export function GeneralInfo() {
   const { gk, boox } = useComBooxContext();

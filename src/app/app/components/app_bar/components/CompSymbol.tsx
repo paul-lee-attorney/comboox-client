@@ -1,13 +1,11 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { getBoox, getKeepers } from "../../../comp/gk";
+import { getBoox, getCompInfo, getKeepers } from "../../../comp/gk";
 import { Stack, Typography } from "@mui/material";
-import { HexParser, longSnParser, toStr } from "../../../common/toolsKit";
+import { longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrSpan } from "../../../common/CopyLongStr";
 import { basedOnPar } from "../../../comp/rom/rom";
 import { booxMap } from "../../../common";
-import { useCompKeeperGetCompInfo } from "../../../../../../generated";
-import { getOldCompInfo } from "../../../compV1/gk";
 
 export function CompSymbol() {
 
@@ -28,33 +26,24 @@ export function CompSymbol() {
           setKeepers(res.map(v=>(v.addr)));
         }
       );
+      if (!compInfo) {
+        getCompInfo(gk).then(
+          info => setCompInfo(info)
+        );
+      }
     } else {
       setBoox(undefined);
       setOnPar(undefined);
       setCompInfo(undefined);
     }
-  }, [gk,setBoox, setKeepers, setOnPar, setCompInfo]);
-
-  useCompKeeperGetCompInfo({
-    address: gk,
-    onError(err) {
-      if (gk) {
-        getOldCompInfo(gk).then(
-          info => setCompInfo(info)
-        );
-      }
-    },
-    onSuccess(data) {
-      setCompInfo(data)
-    }
-  })
+  }, [gk, compInfo, setBoox, setKeepers, setOnPar, setCompInfo]);
 
   return (
     <Stack direction='row' sx={{ alignItems:'center', justifyContent:'center', flexGrow:5 }} >
 
       {gk && compInfo && (
         <Typography variant="h6" component="div" sx={{ mx:1 }} >
-          {toStr(HexParser(compInfo.symbol))}
+          {compInfo.symbol}
         </Typography>
       )}
 

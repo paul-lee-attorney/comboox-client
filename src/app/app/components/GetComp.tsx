@@ -51,6 +51,7 @@ export function GetComp() {
                     setOpen(false);
                     setGK(body);
                     setDoc({head: head, body: body});
+                    setCompInfo(info);
                   }
                 }
               )
@@ -62,6 +63,7 @@ export function GetComp() {
                     setOpen(false);
                     setGK(body);
                     setDoc({head: head, body: body});
+                    setCompInfo(info);
                   }
                 }
               );
