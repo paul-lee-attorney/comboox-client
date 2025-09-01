@@ -1,7 +1,7 @@
 import { db } from './firebase';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { HexType } from '../../app/common';
-import { Cashflow } from '../../app/comp/components/FinStatement';
+import { Cashflow } from '../../app/compV1/components/FinStatement';
 import { HexParser } from '../../app/common/toolsKit';
 
 
