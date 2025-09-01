@@ -146,6 +146,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       let logs = await getFinData(gk, 'cbpInflow');
+      console.log('obtained cbpInflow logs:', logs);
       
       let fromBlkNum = (await getTopBlkOf(gk, 'cbpInflow')) + 1n;
       console.log('fromBlk of CbpInflow: ', fromBlkNum);
