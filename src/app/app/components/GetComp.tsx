@@ -15,10 +15,13 @@ import { useComBooxContext } from '../../_providers/ComBooxContextProvider';
 import { CenterInfo } from './center_info/CenterInfo';
 import { getCompInfo } from '../comp/gk';
 import { getOldCompInfo } from '../compV1/gk';
+import { useAccount } from 'wagmi';
 
 export function GetComp() {
 
   const { setGK, setBoox, setOnPar, setCompInfo } = useComBooxContext();
+
+  const { isConnected } = useAccount();
 
   const [ regNum, setRegNum ] = useState<string>();
   const [ valid, setValid ] = useState<FormResults>(defFormResults);
@@ -124,7 +127,7 @@ export function GetComp() {
         />
 
         <Button 
-          disabled={ hasError(valid) }
+          disabled={ hasError(valid) || !isConnected }
           sx={{ m:1, ml:3, width: 218, height: 40 }} 
           variant="outlined" 
           endIcon={ <Search /> }

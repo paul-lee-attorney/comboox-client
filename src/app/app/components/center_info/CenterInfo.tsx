@@ -6,7 +6,7 @@ import {
 } from "@mui/material";
 import { Close, Refresh, Settings } from "@mui/icons-material";
 
-import { useWalletClient } from "wagmi";
+import { useAccount, useWalletClient } from "wagmi";
 
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 
@@ -27,6 +27,8 @@ import { ActionsOfOwner } from "./ActionsOfOwner";
 export function CenterInfo() {
 
   const { setErrMsg } = useComBooxContext();
+
+  const { isConnected } = useAccount();
 
   const { data:signer } = useWalletClient();
 
@@ -129,6 +131,7 @@ export function CenterInfo() {
   return(
     <>
       <Button
+        disabled={ !isConnected }
         variant="outlined"
         startIcon={<Settings />}
         sx={{ m:1, width:488, height:40 }}

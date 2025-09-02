@@ -27,12 +27,15 @@ import { counterOfVersions, getDoc, getDocAddr, typesOfEntity } from '../rc';
 import { FormResults, HexParser, defFormResults, hasError, onlyHex } from '../common/toolsKit';
 
 import { useCreateNewCompCreateComp } from '../../../../generated';
+import { useAccount } from 'wagmi';
 
 export function CreateComp() {
   const { setGK, setErrMsg } = useComBooxContext();
   const router = useRouter();
 
   const [compFactory, setCompFactory] = useState(AddrZero);
+
+  const { isConnected } = useAccount();
 
   useEffect(()=>{
     const retrieveCNC = async () => {
@@ -120,7 +123,7 @@ export function CreateComp() {
                 <span>
                   <IconButton
                     disabled={ createCompLoading || hasError(valid) || 
-                      loading || compFactory == AddrZero }
+                      loading || compFactory == AddrZero || !isConnected }
                     color='primary'
                     onClick={ createCompClick }
                     edge="end"
