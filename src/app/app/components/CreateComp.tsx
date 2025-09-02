@@ -119,7 +119,6 @@ export function CreateComp() {
           sx={{ 
             height:40,
             '&.Mui-disabled': {
-              backgroundColor:'primary.main',
               color: 'primary.main',
             },
           }}

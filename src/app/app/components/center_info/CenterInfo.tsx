@@ -137,7 +137,6 @@ export function CenterInfo() {
         sx={{ 
           m:1, width:488, height:40,
           '&.Mui-disabled': {
-            backgroundColor:'primary.main',
             color: 'primary.main',
           },
         }}

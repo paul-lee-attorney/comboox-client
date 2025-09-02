@@ -131,7 +131,6 @@ export function GetComp() {
           sx={{ 
             m:1, ml:3, width: 218, height: 40,                      
             '&.Mui-disabled': {
-              backgroundColor:'primary.main',
               color: 'primary.main',
             },
           }}
