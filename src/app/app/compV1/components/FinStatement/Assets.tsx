@@ -2,13 +2,8 @@ import { Button, Divider, Paper, Stack, Typography } from "@mui/material";
 import { baseToDust, showUSD, StatementProps, weiToEth9Dec } from "../FinStatement";
 import { EthInflowSum } from "./Cashflow/EthInflow";
 import { EthOutflowSum } from "./Cashflow/EthOutflow";
-import { usePublicClient } from "wagmi";
-import { useEffect, useState } from "react";
-import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { booxMap } from "../../../common";
 import { UsdInflowSum } from "./Cashflow/UsdInflow";
 import { UsdOutflowSum } from "./Cashflow/UsdOutflow";
-import { balanceOfComp } from "../../cashier";
 
 export interface AssetsProps extends StatementProps {
   ethInflow: EthInflowSum[],
@@ -62,7 +57,12 @@ export const getEthOfComp = (type:number, ethInflow:EthInflowSum[], ethOutflow:E
   return ({inEth:inEth, inUsd:inUsd});
 }
 
-export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display, ethInflow, ethOutflow}: AssetsProps) {
+export const getUsdOfComp = (type:number, usdInflow:UsdInflowSum[], usdOutflow:UsdOutflowSum[]) => {
+  const inUsd = usdInflow[type].totalAmt - usdOutflow[type].totalAmt;
+  return inUsd;
+}
+
+export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display, ethInflow, ethOutflow, usdInflow, usdOutflow}: AssetsProps) {
 
   const weiToDust = (eth:bigint) => {
     return eth * 10n ** 16n / centPrice;
@@ -94,53 +94,9 @@ export function Assets({inETH, centPrice, startDate, endDate, rptBlkNo, display,
 
   const netValueOfIPR = beginValueOfIPR - armotization;
 
-  // const [ethOfComp, setEthOfComp] = useState(0n);
-
-  const client = usePublicClient();
-  const { gk, boox } = useComBooxContext();
-
-  // useEffect(()=>{
-  //   const getEthOfComp = async ()=>{
-  //     if (!gk) return 0n;
-
-  //     const balaOfGK = await client.getBalance({
-  //       address: gk,
-  //       blockNumber: rptBlkNo,
-  //     });
-
-  //     // const balaOfFT = await client.getBalance({
-  //     //   address: AddrOfTank,
-  //     //   blockNumber: rptBlkNo,
-  //     // });
-
-  //     const balaOfDeposits = await totalDeposits(gk, rptBlkNo);
-
-  //     const output = balaOfGK - balaOfDeposits;
-
-  //     return output;
-  //   }
-
-  //   getEthOfComp().then(
-  //     res => setEthOfComp(res)
-  //   );
-
-  // }, [rptBlkNo, gk, client]);
-
   let ethOfComp = getEthOfComp(3, ethInflow, ethOutflow);
 
-  const [usdOfComp, setUsdOfComp] = useState(0n);
-
-  useEffect(()=>{
-    const getUsdOfComp = async ()=>{
-      if (!boox) return 0n;
-
-      const res = await balanceOfComp(boox[booxMap.ROI],rptBlkNo);
-      setUsdOfComp(res);      
-    }
-
-    getUsdOfComp();
-
-  }, [rptBlkNo, boox]);
+  let usdOfComp = getUsdOfComp(3, usdInflow, usdOutflow);
 
   const totalAssets = ()=>{
     const inEth = baseToWei(netValueOfIPR) + ethOfComp.inEth + microToWei(usdOfComp);

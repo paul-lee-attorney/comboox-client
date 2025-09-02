@@ -13,6 +13,7 @@ import { totalDeposits } from "../../gk";
 import { balanceOf } from "../../../rc";
 import { UsdEscrowSum } from "./Cashflow/UsdEscrow";
 import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../../cashier";
+import { getUsdOfComp } from "./Assets";
 
 export interface CryptoInventoryProps extends IncomeStatementProps {
   ftCbpflow: FtCbpflowSum[],
@@ -235,30 +236,35 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
     return {inEth: inEth, inUsd: inUsd}
   }
 
-  const [ usdOfComp, setUsdOfComp ] = useState({...defBala});
+  const usdOfComp = (type:number) => {
+    const inUsd = usdInflow[type].totalAmt - usdOutflow[type].totalAmt;
+    return inUsd;    
+  }
 
-  useEffect(()=>{
-    const getUsdOfComp = async ()=>{
-      if (!boox) return {...defBala};
+  // const [ usdOfComp, setUsdOfComp ] = useState({...defBala});
 
-      const cashier = boox[booxMap.ROI];
+  // useEffect(()=>{
+  //   const getUsdOfComp = async ()=>{
+  //     if (!boox) return {...defBala};
 
-      const opnBalaOfUsd = await balanceOfComp(cashier, opnBlkNo);
-      const endBalaOfUsd = await balanceOfComp(cashier, rptBlkNo);
+  //     const cashier = boox[booxMap.ROI];
 
-      const output:Balance = {
-        opnAmt: opnBalaOfUsd,
-        endAmt: endBalaOfUsd,
-      }
+  //     const opnBalaOfUsd = await balanceOfComp(cashier, opnBlkNo);
+  //     const endBalaOfUsd = await balanceOfComp(cashier, rptBlkNo);
 
-      return output;
-    }
+  //     const output:Balance = {
+  //       opnAmt: opnBalaOfUsd,
+  //       endAmt: endBalaOfUsd,
+  //     }
 
-    getUsdOfComp().then(
-      res => setUsdOfComp(res)
-    );
+  //     return output;
+  //   }
 
-  }, [opnBlkNo, rptBlkNo, boox]);
+  //   getUsdOfComp().then(
+  //     res => setUsdOfComp(res)
+  //   );
+
+  // }, [opnBlkNo, rptBlkNo, boox]);
 
   const [ esc, setEsc ] = useState({...defBala});
   const [ depOfUsd, setDepOfUsd ] = useState({...defBala});
@@ -586,8 +592,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
                 sx={{m:0.5, minWidth:288, justifyContent:'start'}}
               >
                 <b>Beginning Value of USDC: ({ inETH
-                    ? weiToEth9Dec(microToWei(usdOfComp.opnAmt))
-                    : showUSD(microToDust(usdOfComp.opnAmt))})</b>
+                    ? weiToEth9Dec(microToWei(usdOfComp(1)))
+                    : showUSD(microToDust(usdOfComp(1)))})</b>
               </Button>
             </Stack>
 
@@ -624,8 +630,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
               </Typography>
               <Button variant="outlined" sx={{width: '100%', m:0.5, justifyContent:'start'}} >
                 <b>USDC Of Comp: ({inETH 
-                  ? weiToEth9Dec(microToWei(usdOfComp.endAmt)) 
-                  : showUSD(microToDust(usdOfComp.endAmt))}) </b>
+                  ? weiToEth9Dec(microToWei(usdOfComp(3))) 
+                  : showUSD(microToDust(usdOfComp(3)))}) </b>
               </Button>
             </Stack>
           </Stack>
