@@ -113,8 +113,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
   } 
 
   const dep = (type:number) => {
-    const inUsd = deposits[type].totalAmt;
-    const inEth = deposits[type].sumInUsd;
+    const inEth = deposits[type].totalAmt;
+    const inUsd = deposits[type].sumInUsd;
     return {inUsd:inUsd, inEth:inEth};
   }
 
@@ -380,7 +380,6 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
                     : showUSD(weiToDust(deposits[2].custody)) }) </b>
               </Button>
             </Stack>
-
 
             <Button variant="outlined" sx={{width: '70%', m:0.5, justifyContent:'start'}} >
               <b>Deposits Balance: ({inETH 
