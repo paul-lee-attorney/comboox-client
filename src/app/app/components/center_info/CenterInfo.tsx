@@ -134,7 +134,13 @@ export function CenterInfo() {
         disabled={ !isConnected }
         variant="outlined"
         startIcon={<Settings />}
-        sx={{ m:1, width:488, height:40 }}
+        sx={{ 
+          m:1, width:488, height:40,
+          '&.Mui-disabled': {
+            backgroundColor:'primary.main',
+            color: 'primary.main',
+          },
+        }}
         onClick={ handleClick }      
       >
         Registration Center Info
@@ -153,9 +159,6 @@ export function CenterInfo() {
         <DialogContent>
 
           <Paper elevation={3} sx={{alignContent:'center', justifyContent:'center', m:1, p:1, border:1, borderColor:'divider' }} >
-            {/* <Toolbar sx={{ textDecoration:'underline' }} >
-              <h3>Management of RegCenter</h3>
-            </Toolbar> */}
             <table>
               <thead />
 

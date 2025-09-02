@@ -128,7 +128,13 @@ export function GetComp() {
 
         <Button 
           disabled={ hasError(valid) || !isConnected }
-          sx={{ m:1, ml:3, width: 218, height: 40 }} 
+          sx={{ 
+            m:1, ml:3, width: 218, height: 40,                      
+            '&.Mui-disabled': {
+              backgroundColor:'primary.main',
+              color: 'primary.main',
+            },
+          }}
           variant="outlined" 
           endIcon={ <Search /> }
           onClick={ handleClick }

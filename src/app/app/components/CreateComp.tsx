@@ -116,7 +116,13 @@ export function CreateComp() {
           aria-describedby='setBookeeper-input-helper-text'
           label='PrimeKey Of Secretary'
           error={ valid['Bookeeper']?.error }
-          sx={{ height:40 }}
+          sx={{ 
+            height:40,
+            '&.Mui-disabled': {
+              backgroundColor:'primary.main',
+              color: 'primary.main',
+            },
+          }}
           endAdornment={
             <InputAdornment position="end">
               <Tooltip title={"Create Boox"} placement='right' arrow >
