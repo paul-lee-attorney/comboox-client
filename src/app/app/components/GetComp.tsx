@@ -81,9 +81,6 @@ export function GetComp() {
       getDocByUserNo(BigInt(regNum)).then(
         (doc:Doc) => {
           if (doc.body != AddrZero) {
-            setGK(doc.body);
-            setDoc({head:doc.head, body:doc.body});
-            setOpen(false);
             if (Number(regNum) == 8) {
               getOldCompInfo(doc.body).then(
                 info => setCompInfo(info)
@@ -93,6 +90,9 @@ export function GetComp() {
                 info => setCompInfo(info)
               );
             }
+            setGK(doc.body);
+            setDoc({head:doc.head, body:doc.body});
+            setOpen(false);            
           } else {
             setDoc(undefined);
             setOpen(true);
