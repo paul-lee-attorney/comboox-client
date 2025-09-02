@@ -6,16 +6,12 @@ import { capAtDate } from "../../rom/rom";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { booxMap } from "../../../common";
 import { usePublicClient } from "wagmi";
-import { iprValueA, iprValueB, setUpDate } from "./Assets";
+import { iprValueA, setUpDate } from "./Assets";
 import { getEthGainAndLossInEquity, getOwnersEquity } from "./LiabilityAndEquity";
 
 export function EquityChangeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
   const { boox } = useComBooxContext();
-
-  // const cbpToETH = (cbp:bigint) => {
-  //   return cbp * 10000n / exRate;
-  // }
 
   const leeToWei = (cbp:bigint) => {
     return cbp * exRate * centPrice / 10n ** 22n;

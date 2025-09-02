@@ -14,7 +14,6 @@ import { booxMap } from "../../../common";
 import { capAtDate } from "../../rom/rom";
 import { UsdInflowSum } from "./Cashflow/UsdInflow";
 import { UsdOutflowSum } from "./Cashflow/UsdOutflow";
-import { ftHis } from "./Cashflow/FtCbpflow";
 
 
 export const getDeferredRevenue = (type:number, cbpInflow:CbpInflowSum[], cbpOutflow:CbpOutflowSum[], leeToWei:(cbp:bigint)=>bigint) => {
@@ -62,10 +61,6 @@ export const getOwnersEquity = (
 
 export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, rptBlkNo, display, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
-  // const cbpToETH = (cbp:bigint) => {
-  //   return cbp * 10000n / exRate;
-  // }
-
   const leeToWei = (cbp:bigint) => {
     return cbp * exRate * centPrice / 10n ** 22n;
   }
@@ -91,35 +86,7 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
   }
 
   // ==== Liabilities ====
-
-  // const [ deferredRevenue, setDeferredRevenue] = useState(0n);
-
   const client = usePublicClient();
-  // const {gk} = useComBooxContext();
-
-  // useEffect(()=>{
-  //   const getDeferredRevenue = async ()=>{
-  //     if (!gk) return 0n;
-
-  //     const cbpSupply = await getTotalSupply();
-  //     const cbpOfGK = await balanceOf(gk, rptBlkNo);
-
-  //     const cbpOfFT = await balanceOf(AddrOfTank, rptBlkNo);
-  //     // const cbpOfFTHis1 = await balanceOf(ftHis[1], rptBlkNo);
-  //     // const cbpOfFTHis2 = await balanceOf(ftHis[2], rptBlkNo);
-
-  //     const cbpOfComp = cbpOfGK + cbpOfFT;
-
-  //     const output = cbpSupply - cbpOfComp;
-
-  //     return output;
-  //   }
-
-  //   getDeferredRevenue().then(
-  //     res => setDeferredRevenue(res)
-  //   );
-
-  // }, [rptBlkNo, gk, client]);
 
   let deferredRevenue = getDeferredRevenue(3, cbpInflow, cbpOutflow, leeToWei);
 
@@ -153,8 +120,6 @@ export function LiabilyAndEquity({inETH, centPrice, exRate, startDate, endDate, 
   }, [boox, endDate, client]);
 
   // ==== Profits & Loss ====
-
-  const initContribution = getInitContribution(3, startDate, endDate);
 
   const retainedEarnings = getRetainedEarnings(3, startDate, endDate, centPrice, cbpInflow, cbpOutflow, ethInflow, ethOutflow, usdOutflow, leeToWei, weiToDust, microToWei, microToDust);
 

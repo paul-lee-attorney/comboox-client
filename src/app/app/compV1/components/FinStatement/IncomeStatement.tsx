@@ -85,10 +85,6 @@ export interface IncomeStatementProps extends AssetsProps {
 
 export function IncomeStatement({inETH, exRate, centPrice, startDate, endDate, display, ethInflow, ethOutflow, cbpInflow, cbpOutflow, usdInflow, usdOutflow}: IncomeStatementProps) {
 
-  // const cbpToEth = (cbp:bigint) => {
-  //   return cbp * 10000n / exRate;
-  // }
-
   const leeToWei = (cbp:bigint) => {
     return cbp * exRate * centPrice / 10n ** 22n;
   }
