@@ -3,7 +3,7 @@ import {
 } from "@wagmi/core";
 
 import { AddrOfRegCenter, AddrZero, Bytes32Zero, HexType, SelectorZero } from "./common";
-import { regCenterABI } from "../../../generated";
+import { bookOfDocsABI, regCenterABI } from "../../../generated";
 import { HexParser, strNumToBigInt } from "./common/toolsKit";
 import { WalletClient } from "viem";
 
@@ -367,7 +367,7 @@ export async function counterOfTypes(): Promise<number>{
 export async function counterOfVersions(typeOfDoc: bigint): Promise<number>{
   let res = await readContract({
     address: AddrOfRegCenter,
-    abi: regCenterABI,
+    abi: bookOfDocsABI,
     functionName: 'counterOfVersions',
     args: [ typeOfDoc ]
   });
