@@ -96,8 +96,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
   }, [opnBlkNo, rptBlkNo, gk, client]);
 
   const cbpOfGK = (type:number) => {
-    const inEth = cbpInflow[type].totalAmt - cbpInflow[type].totalAmt;
-    const inUsd = cbpInflow[type].sumInUsd - cbpInflow[type].sumInUsd;
+    const inEth = cbpInflow[type].totalAmt - cbpOutflow[type].totalAmt;
+    const inUsd = cbpInflow[type].sumInUsd - cbpOutflow[type].sumInUsd;
     return {inEth: inEth, inUsd: inUsd};
   }
 
