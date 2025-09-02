@@ -9,7 +9,7 @@ import { SettingsOutlined } from "@mui/icons-material";
 import { AddrZero, HexType } from "../../../common";
 
 import { ActionsOfSetting } from "./ActionsOfSetting";
-import { BookInfo, getBoox, getKeepers, nameOfBooks, titleOfKeepers } from "../../gk";
+import { BookInfo, getV1Boox, getV1Keepers, nameOfBooks, titleOfKeepers } from "../../gk";
 
 import { BooxList } from "./actions_of_setting/BooxList";
 
@@ -35,10 +35,10 @@ export function ConfigSetting({companyName, symbol, time, setTime}:ConfigSetting
 
   useEffect(() => {
     if (gk) {
-      getKeepers(gk).then(
+      getV1Keepers(gk).then(
         res => setKeepers(res)
       );
-      getBoox(gk).then(
+      getV1Boox(gk).then(
         res => setBooks(res)
       );
     }
