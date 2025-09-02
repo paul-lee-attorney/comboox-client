@@ -14,27 +14,7 @@ export function CompSymbol() {
 
   useEffect(() => {
     if (gk) {
-      if (compInfo?.regNum != 8) {
-        getBoox(gk).then(
-          (res) => {
-            setBoox(res.map(v=>(v.addr)));
-            basedOnPar(res[booxMap.ROM].addr).then(
-              flag => setOnPar(flag)
-            );
-          }
-        );
-        getKeepers(gk).then(
-          (res) => {
-            setKeepers(res.map(v=>(v.addr)));
-          }
-        );
-        if (!compInfo) {
-          getCompInfo(gk).then(
-            info => setCompInfo(info)
-          );
-        }
-
-      } else {
+      if (compInfo?.regNum == 8) {
 
         getV1Boox(gk).then(
           (res) => {
@@ -51,6 +31,26 @@ export function CompSymbol() {
         );
         if (!compInfo) {
           getOldCompInfo(gk).then(
+            info => setCompInfo(info)
+          );
+        }
+
+      } else {
+        getBoox(gk).then(
+          (res) => {
+            setBoox(res.map(v=>(v.addr)));
+            basedOnPar(res[booxMap.ROM].addr).then(
+              flag => setOnPar(flag)
+            );
+          }
+        );
+        getKeepers(gk).then(
+          (res) => {
+            setKeepers(res.map(v=>(v.addr)));
+          }
+        );
+        if (!compInfo) {
+          getCompInfo(gk).then(
             info => setCompInfo(info)
           );
         }
