@@ -119,8 +119,8 @@ export function CryptoInventory({inETH, exRate, centPrice, opnBlkNo, rptBlkNo, d
   }
 
   const getMintToOthers = (type:number) => {
-    const mintToOthers = leeToWei(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
-    const mintToOthersInUsd = leeToDust(cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost);
+    const mintToOthers = cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost;
+    const mintToOthersInUsd = cbpOutflow[type].newUserAward + cbpOutflow[type].startupCost;
 
     return {inEth: mintToOthers, inUsd: mintToOthersInUsd};
   }
