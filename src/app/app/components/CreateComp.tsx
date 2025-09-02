@@ -120,6 +120,7 @@ export function CreateComp() {
             height:40,
             '&.Mui-disabled': {
               color: 'primary.main',
+              borderColor: 'primary.main',
             },
           }}
           endAdornment={

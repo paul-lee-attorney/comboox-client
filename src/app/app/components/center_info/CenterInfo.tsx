@@ -138,6 +138,7 @@ export function CenterInfo() {
           m:1, width:488, height:40,
           '&.Mui-disabled': {
             color: 'primary.main',
+            borderColor: 'primary.main',
           },
         }}
         onClick={ handleClick }      

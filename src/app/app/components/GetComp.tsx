@@ -132,6 +132,7 @@ export function GetComp() {
             m:1, ml:3, width: 218, height: 40,                      
             '&.Mui-disabled': {
               color: 'primary.main',
+              borderColor: 'primary.main',
             },
           }}
           variant="outlined" 
