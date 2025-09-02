@@ -6,6 +6,7 @@ import { longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrSpan } from "../../../common/CopyLongStr";
 import { basedOnPar } from "../../../comp/rom/rom";
 import { booxMap } from "../../../common";
+import { getOldCompInfo, getV1Boox, getV1Keepers } from "../../../compV1/gk";
 
 export function CompSymbol() {
 
@@ -13,24 +14,48 @@ export function CompSymbol() {
 
   useEffect(() => {
     if (gk) {
-      getBoox(gk).then(
-        (res) => {
-          setBoox(res.map(v=>(v.addr)));
-          basedOnPar(res[booxMap.ROM].addr).then(
-            flag => setOnPar(flag)
+      if (compInfo?.regNum != 8) {
+        getBoox(gk).then(
+          (res) => {
+            setBoox(res.map(v=>(v.addr)));
+            basedOnPar(res[booxMap.ROM].addr).then(
+              flag => setOnPar(flag)
+            );
+          }
+        );
+        getKeepers(gk).then(
+          (res) => {
+            setKeepers(res.map(v=>(v.addr)));
+          }
+        );
+        if (!compInfo) {
+          getCompInfo(gk).then(
+            info => setCompInfo(info)
           );
         }
-      );
-      getKeepers(gk).then(
-        (res) => {
-          setKeepers(res.map(v=>(v.addr)));
-        }
-      );
-      if (!compInfo) {
-        getCompInfo(gk).then(
-          info => setCompInfo(info)
+
+      } else {
+
+        getV1Boox(gk).then(
+          (res) => {
+            setBoox(res.map(v=>(v.addr)));
+            basedOnPar(res[booxMap.ROM].addr).then(
+              flag => setOnPar(flag)
+            );
+          }
         );
+        getV1Keepers(gk).then(
+          (res) => {
+            setKeepers(res.map(v=>(v.addr)));
+          }
+        );
+        if (!compInfo) {
+          getOldCompInfo(gk).then(
+            info => setCompInfo(info)
+          );
+        }
       }
+      
     } else {
       setBoox(undefined);
       setOnPar(undefined);

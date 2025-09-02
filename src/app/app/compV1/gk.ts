@@ -47,7 +47,7 @@ export interface BookInfo {
   dk: HexType;
 }
 
-export async function getBoox(gk: HexType): Promise<BookInfo[]>{
+export async function getV1Boox(gk: HexType): Promise<BookInfo[]>{
   let books: BookInfo[] = [];
 
   books.push({
@@ -88,7 +88,7 @@ export async function getBoox(gk: HexType): Promise<BookInfo[]>{
 }
 
 
-export async function getKeepers(gk: HexType):Promise<BookInfo[]>{
+export async function getV1Keepers(gk: HexType):Promise<BookInfo[]>{
   let books: BookInfo[] = [];
 
   books.push({
