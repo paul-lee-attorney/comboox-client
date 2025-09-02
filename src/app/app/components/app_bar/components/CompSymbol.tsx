@@ -14,7 +14,7 @@ export function CompSymbol() {
 
   useEffect(() => {
     if (gk) {
-      if (compInfo?.regNum == 8) {
+      if (compInfo && compInfo.regNum == 8) {
 
         getV1Boox(gk).then(
           (res) => {
@@ -36,6 +36,7 @@ export function CompSymbol() {
         }
 
       } else {
+        
         getBoox(gk).then(
           (res) => {
             setBoox(res.map(v=>(v.addr)));
