@@ -4,16 +4,12 @@ import { baseToDollar } from "../../../common/toolsKit";
 import { FtCbpflowSum, ftHis } from "./Cashflow/FtCbpflow";
 import { IncomeStatementProps } from "./IncomeStatement";
 import { FtEthflowSum } from "./Cashflow/FtEthflow";
-import { defDepositsSum, DepositsSum } from "./Cashflow/Deposits";
+import { DepositsSum } from "./Cashflow/Deposits";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
 import { usePublicClient } from "wagmi";
 import { useEffect, useState } from "react";
-import { AddrOfTank, booxMap } from "../../../common";
 import { totalDeposits } from "../../gk";
-import { balanceOf } from "../../../rc";
 import { UsdEscrowSum } from "./Cashflow/UsdEscrow";
-import { balanceOfComp, totalEscrow, totalUsdDeposits } from "../../cashier";
-import { getUsdOfComp } from "./Assets";
 
 export interface CryptoInventoryProps extends IncomeStatementProps {
   ftCbpflow: FtCbpflowSum[],
