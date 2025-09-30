@@ -29,8 +29,8 @@ export async function fetchArbiscanData(
 ): Promise<ArbiscanData | undefined>  {
 
     const url = chainId == 42161 
-        ? `https://api.arbiscan.io/api?`
-        : `https://api-sepolia.arbiscan.io/api?`;
+        ? `https://api.etherscan.io/v2/api?chainid=42161`
+        : `https://api.etherscan.io/v2/api?chainid=421614`;
   
     const api = url + 
         `module=logs&` + 
