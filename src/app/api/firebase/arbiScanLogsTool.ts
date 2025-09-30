@@ -377,7 +377,7 @@ export async function autoUpdateLogs(chainId:number, gk:Hex, toBlk:bigint):Promi
         
         if (data) {
             let logs = data.result;
-            // console.log('get logs:', logs);
+            console.log('get logs:', logs);
 
             if (logs.length > 0) {
                 let width = info.name.length;
