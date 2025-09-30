@@ -28,7 +28,7 @@ export async function fetchArbiscanData(
     toBlock:bigint,
 ): Promise<ArbiscanData | undefined>  {
 
-    const url = `https://api.etherscan.io/v2/api?chainid=${chainId}`;
+    const url = `https://api.etherscan.io/v2/api?chainid=${chainId}&`;
   
     const api = url + 
         `module=logs&` + 
