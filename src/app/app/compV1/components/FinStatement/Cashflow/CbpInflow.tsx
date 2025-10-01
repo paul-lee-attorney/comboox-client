@@ -179,9 +179,13 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
           if (newItem.blockNumber > fixRateBlk) {
             newItem.ethPrice = exRate * 10n ** 3n;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
+
+            console.log('exRate:', exRate);          
+
           } else {
             newItem.ethPrice = 10n ** 25n / mark.centPrice;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+            console.log('newItem.ethPrice:', newItem.ethPrice);
           }
           
           arr.push(newItem);
@@ -289,7 +293,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
         
         arr = arr.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
         arr = arr.map((v, i) => ({...v, seq: i}));
-        console.log('add arr into cbpInflow:', arr);
+        console.log('sorted arr added into FinData cbpInflow:', arr);
 
         await setFinData(gk, 'cbpInflow', arr);
 
@@ -307,7 +311,7 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       if (logs && logs.length > 0) {
         logs = logs.map((v,i) => ({...v, seq:i}));
         setRecords(logs);
-        console.log('logs in cbpInflow:', logs);
+        console.log('set records of cbpInflow:', logs);
       }
       
     }
