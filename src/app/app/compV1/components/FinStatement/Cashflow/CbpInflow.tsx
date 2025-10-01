@@ -151,6 +151,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       let fromBlkNum = (await getTopBlkOf(gk, 'cbpInflow')) + 1n;
       console.log('fromBlk of CbpInflow: ', fromBlkNum);
 
+      console.log('chain ID:', client.chain.id);
+
       if (logs && client.chain.id == 42161) {
         let len = logs.length; 
         for (let i=0; i<len; i++) {
@@ -171,6 +173,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
           
           let fixRateBlk = client.chain.id == 42161
             ? 348998163n : 165090995n;
+          console.log('fixRateBlk:', fixRateBlk);
+          console.log('newItem.blockNumber:', newItem.blockNumber);
 
           if (newItem.blockNumber > fixRateBlk) {
             newItem.ethPrice = exRate * 10n ** 3n;
