@@ -80,7 +80,7 @@ export const updateFtEthflowSum = (arr: Cashflow[], startDate:number, endDate:nu
   return sum;
 }
 
-export function FtEthflow({ exRate, setRecords }:CashflowRecordsProps ) {
+export function FtEthflow({ setRecords }:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();

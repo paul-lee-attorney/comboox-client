@@ -9,6 +9,7 @@ import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated-v1";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { ftHis } from "./FtCbpflow";
+import { rate } from "../../../../fuel_tank/ft";
 
 export type CbpInflowSum = {
   totalAmt: bigint;
@@ -85,20 +86,18 @@ export const updateCbpInflowSum = (arr: Cashflow[], startDate:number, endDate:nu
 }
 
 
-export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
+export function CbpInflow({setRecords}:CashflowRecordsProps) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
 
   useEffect(()=>{
 
-    // const cbpToETH = (cbp:bigint) => {
-    //   return cbp * 10000n / exRate;
-    // }
-
     const getCbpInflow = async () => {
 
       if (!gk || !keepers ) return;
+
+      const cbpRate = await rate();
 
       const usdKeeper = keepers[keepersMap.UsdKeeper];
 
@@ -146,11 +145,11 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
       }
 
       let logs = await getFinData(gk, 'cbpInflow');
-      console.log('obtained cbpInflow logs:', logs);
+      console.log('obtained FinData of cbpInflow logs:', logs);
       
       let fromBlkNum = (await getTopBlkOf(gk, 'cbpInflow')) + 1n;
-      console.log('fromBlk of CbpInflow: ', fromBlkNum);
 
+      console.log('fromBlk of CbpInflow: ', fromBlkNum);
       console.log('chain ID:', client.chain.id);
 
       if (logs && client.chain.id == 42161) {
@@ -173,19 +172,22 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
           
           let fixRateBlk = client.chain.id == 42161
             ? 348998163n : 165090995n;
+
           console.log('fixRateBlk:', fixRateBlk);
           console.log('newItem.blockNumber:', newItem.blockNumber);
 
           if (newItem.blockNumber > fixRateBlk) {
-            newItem.ethPrice = exRate * 10n ** 3n;
+            newItem.ethPrice = cbpRate * 10n ** 3n;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
 
-            console.log('exRate:', exRate);          
+            console.log('cbpRate:', newItem.ethPrice);          
 
           } else {
+
             newItem.ethPrice = 10n ** 25n / mark.centPrice;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
-            console.log('newItem.ethPrice:', newItem.ethPrice);
+
+            console.log('ethPrice:', newItem.ethPrice);
           }
           
           arr.push(newItem);
@@ -318,8 +320,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
     if (gk && client) getCbpInflow();
 
-  // },[client, gk, keepers, exRate, setRecords]);
-  });
+  },[client, gk, keepers, setRecords]);
+  // });
 
   return (
     <></>

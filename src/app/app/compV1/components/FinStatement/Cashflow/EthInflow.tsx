@@ -102,7 +102,7 @@ interface CapLog {
   premium: bigint;  
 }
 
-export function EthInflow({exRate, setRecords}:CashflowRecordsProps ) {
+export function EthInflow({setRecords}:CashflowRecordsProps ) {
   const { gk, keepers, boox } = useComBooxContext();
   
   const client = usePublicClient();

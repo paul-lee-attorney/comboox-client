@@ -95,7 +95,7 @@ export const updateUsdEscrowSum = (arr: Cashflow[], startDate:number, endDate:nu
   return sum;
 }
 
-export function UsdEscrow({exRate, setRecords}:CashflowRecordsProps) {
+export function UsdEscrow({setRecords}:CashflowRecordsProps) {
   const { gk, boox, keepers } = useComBooxContext();
   
   const client = usePublicClient();

@@ -89,7 +89,7 @@ export const updateUsdInflowSum = (arr: Cashflow[], startDate:number, endDate:nu
   return sum;
 }
 
-export function UsdInflow({exRate, setRecords}:CashflowRecordsProps) {
+export function UsdInflow({setRecords}:CashflowRecordsProps) {
   const { gk, boox, keepers } = useComBooxContext();
   
   const client = usePublicClient();

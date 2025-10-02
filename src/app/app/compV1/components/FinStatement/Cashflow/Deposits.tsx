@@ -130,7 +130,7 @@ export const updateDepositsSum = (arr: Cashflow[], startDate:number, endDate:num
   return sum;
 }
 
-export function Deposits({ exRate, setRecords}:CashflowRecordsProps ) {
+export function Deposits({ setRecords}:CashflowRecordsProps ) {
   const { gk } = useComBooxContext();
   
   const client = usePublicClient();

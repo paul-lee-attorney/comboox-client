@@ -98,7 +98,7 @@ export const updateEthOutflowSum = (arr: Cashflow[], startDate:number, endDate:n
   return sum;
 }
 
-export function EthOutflow({ exRate, setRecords}:CashflowRecordsProps ) {
+export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();

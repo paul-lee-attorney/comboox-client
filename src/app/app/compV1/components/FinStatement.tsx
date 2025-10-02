@@ -85,7 +85,6 @@ export const defCashflowRange = {
 }
 
 export interface CashflowRecordsProps {
-  exRate: bigint;
   setRecords: Dispatch<SetStateAction<Cashflow[]>>;
 }
 
@@ -278,14 +277,14 @@ export function FinStatement() {
     const getRate = async ()=> {
       let rateOfEx = await rate();
 
-      // let fixRateBlk = client.chain.id == 42161
-      //   ? 348998163n : 165090995n;
+      let fixRateBlk = client.chain.id == 42161
+        ? 348998163n : 165090995n;
 
-      // if (rptBlkNo > fixRateBlk) {
+      if (rptBlkNo > fixRateBlk) {
         setExRate(rateOfEx);
-      // } else {
-      //   setExRate(10n ** 22n / centPrice);
-      // }
+      } else {
+        setExRate(10n ** 22n / centPrice);
+      }
 
     }
     getRate();
@@ -1490,25 +1489,25 @@ export function FinStatement() {
 
       </Stack>
 
-      <CbpInflow exRate={exRate} setRecords={setCbpInflowRecords} />
+      <CbpInflow setRecords={setCbpInflowRecords} />
 
-      <CbpOutflow exRate={exRate} setRecords={setCbpOutflowRecords} />
+      <CbpOutflow setRecords={setCbpOutflowRecords} />
 
-      <EthInflow exRate={exRate} setRecords={setEthInflowRecords} />
+      <EthInflow setRecords={setEthInflowRecords} />
 
-      <EthOutflow exRate={exRate} setRecords={setEthOutflowRecords} />
+      <EthOutflow setRecords={setEthOutflowRecords} />
 
-      <UsdInflow exRate={exRate} setRecords={setUsdInflowRecords} />
+      <UsdInflow setRecords={setUsdInflowRecords} />
 
-      <UsdOutflow exRate={exRate} setRecords={setUsdOutflowRecords} />
+      <UsdOutflow setRecords={setUsdOutflowRecords} />
 
-      <Deposits exRate={exRate} setRecords={setDepositsRecords} />
+      <Deposits setRecords={setDepositsRecords} />
 
-      <UsdEscrow exRate={exRate} setRecords={setUsdEscrowRecords} />
+      <UsdEscrow setRecords={setUsdEscrowRecords} />
 
-      <FtCbpflow exRate={exRate} setRecords={setFtCbpflowRecords} />
+      <FtCbpflow setRecords={setFtCbpflowRecords} />
 
-      <FtEthflow exRate={exRate} setRecords={setFtEthflowRecords} />
+      <FtEthflow setRecords={setFtEthflowRecords} />
 
       <CashFlowList inETH={inETH} arrSum={sumInfo} records={list} open={open} setOpen={setOpen}/>
 

@@ -8,6 +8,7 @@ import { getFinData,  setFinData, } from "../../../../../api/firebase/finInfoToo
 import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { Hex } from "viem";
+import { rate } from "../../../../fuel_tank/ft";
 
 export type FtCbpflowSum = {
   totalCbp: bigint;
@@ -99,7 +100,7 @@ export const updateFtCbpflowSum = (arr: Cashflow[], startDate:number, endDate:nu
   return sum;
 }
 
-export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
+export function FtCbpflow({setRecords}:CashflowRecordsProps ) {
   const { gk, keepers } = useComBooxContext();
   
   const client = usePublicClient();
@@ -109,6 +110,8 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
     const getFtCashflow = async ()=>{
 
       if (!gk || !keepers) return;
+
+      const cbpRate = await rate();
 
       let logs = await getFinData(gk, 'ftCbpflow');
 
@@ -123,10 +126,6 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
         if (!prices) return [];
         else return prices;
       }
-
-      // const cbpToETH = (cbp:bigint) => {
-      //   return cbp * 10000n / exRate;
-      // }
   
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
@@ -137,7 +136,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
             ? 348998163n : 165090995n;
 
           if (newItem.blockNumber > fixRateBlk) {
-            newItem.ethPrice = exRate * 10n ** 3n;
+            newItem.ethPrice = cbpRate * 10n ** 3n;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
           } else {
             newItem.ethPrice = 10n ** 25n / mark.centPrice;
@@ -377,7 +376,7 @@ export function FtCbpflow({exRate, setRecords}:CashflowRecordsProps ) {
 
     getFtCashflow();
 
-  }, [gk, client, exRate, keepers, setRecords]);
+  }, [gk, client, keepers, setRecords]);
 
   return (
   <>
