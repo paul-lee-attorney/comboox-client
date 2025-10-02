@@ -318,7 +318,8 @@ export function CbpInflow({exRate, setRecords}:CashflowRecordsProps) {
 
     if (gk && client) getCbpInflow();
 
-  },[client, gk, keepers, exRate, setRecords]);
+  // },[client, gk, keepers, exRate, setRecords]);
+  });
 
   return (
     <></>

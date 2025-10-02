@@ -278,14 +278,14 @@ export function FinStatement() {
     const getRate = async ()=> {
       let rateOfEx = await rate();
 
-      let fixRateBlk = client.chain.id == 42161
-        ? 348998163n : 165090995n;
+      // let fixRateBlk = client.chain.id == 42161
+      //   ? 348998163n : 165090995n;
 
-      if (rptBlkNo > fixRateBlk) {
+      // if (rptBlkNo > fixRateBlk) {
         setExRate(rateOfEx);
-      } else {
-        setExRate(10n ** 22n / centPrice);
-      }
+      // } else {
+      //   setExRate(10n ** 22n / centPrice);
+      // }
 
     }
     getRate();
