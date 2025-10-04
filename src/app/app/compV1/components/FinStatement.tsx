@@ -903,7 +903,7 @@ export function FinStatement() {
     let items:BtnProps[] = [
       {simbol: ' ', title: 'Sales, General & Administrative', amt: sgNa, amtInUsd: sgNaInUsd, show: ()=>{}},
       {simbol: '+', title: 'New User Awards', amt:leeToWei(cbpOutflow[type].newUserAward) , amtInUsd: leeToDust(cbpOutflow[type].newUserAward), show: ()=>showNewUserAwardRecords(type)},
-      {simbol: '+', title: 'Startup Cost', amt:leeToWei(cbpOutflow[type].startupCost) , amtInUsd: leeToDust(cbpOutflow[type].startupCostInUsd), show: ()=>showStartupCostRecords(type)},
+      {simbol: '+', title: 'Startup Cost', amt:leeToWei(cbpOutflow[type].startupCost) , amtInUsd: leeToDust(cbpOutflow[type].startupCost), show: ()=>showStartupCostRecords(type)},
       {simbol: '+', title: 'GMM Approved Cbp Expense', amt:gmmCbpExp , amtInUsd: gmmCbpExpInUsd, show: ()=>showGmmCbpPaymentRecords(type)},
       {simbol: '+', title: 'GMM Approved Eth Expense', amt:gmmEthExp , amtInUsd: gmmEthExpInUsd, show: ()=>showGmmEthPaymentRecords(type)},
       {simbol: '+', title: 'BMM Approved Cbp Expense', amt:bmmCbpExp , amtInUsd: bmmCbpExpInUsd, show: ()=>showBmmCbpPaymentRecords(type)},
