@@ -29,7 +29,7 @@ export function TitleBar() {
               </Tooltip>
 
               <Tooltip title='白皮书' >
-                <Link href={{pathname:'https://comboox.gitbook.io/whitepaper'}}>
+                <Link href={{pathname:'https://comboox.gitbook.io/whitepaper-cn'}}>
                   <IconButton sx={{mx:2, color:'#fff'}}>
                     <AutoStoriesOutlined />
                   </IconButton>
