@@ -174,11 +174,11 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+        // if (ethPrices.length < 1 || 
+        //   item.timestamp * 1000 < ethPrices[0].timestamp ) {
             ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
-        }
+        //     if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);
         cnt++;
@@ -189,8 +189,6 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
       let bmmTransferLogs = rawLogs.map(log => decodeArbiscanLog(log, abiStr) as TypeOfTransferFundLog);
 
       bmmTransferLogs = bmmTransferLogs?.filter(v => v.args.isCBP == false);
-      console.log('bmmTransferEthLogs: ', bmmTransferLogs);
-
       console.log('bmmEthTransferLogs:', bmmTransferLogs);
 
       len = bmmTransferLogs.length;
@@ -380,6 +378,7 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
       if (logs && logs.length > 0) {
         logs = logs.map((v,i) => ({...v, seq:i}));
         setRecords(logs);
+        console.log('logs in ethOutflow:', logs);
       }
       
     }
