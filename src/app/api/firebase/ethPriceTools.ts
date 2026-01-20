@@ -235,3 +235,18 @@ export function getPriceAtTimestamp(targetTimestamp: number, prices: EthPrice[])
 
   return output;
 }
+
+export async function retrieveEthPriceByTimestamp(timestamp: number): Promise<EthPrice|undefined> {
+
+  const msTimestamp = timestamp * 1000;
+  const date = new Date(msTimestamp);
+
+  const yearMonth = dateToYearMonthStr(date);
+  const prices = await getEthPrice(yearMonth);
+
+  if (!prices) return undefined;
+
+  const mark = findClosestPrice(msTimestamp, prices);
+  return mark;  
+}
+
