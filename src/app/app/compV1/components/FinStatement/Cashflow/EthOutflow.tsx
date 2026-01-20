@@ -258,11 +258,11 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+        // if (ethPrices.length < 1 || 
+        //   item.timestamp * 1000 < ethPrices[0].timestamp ) {
             ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
-        }
+            // if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);
         cnt++;
@@ -293,11 +293,11 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+        // if (ethPrices.length < 1 || 
+        //   item.timestamp * 1000 < ethPrices[0].timestamp ) {
             ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
-        }
+        //     if (ethPrices.length == 0) return;
+        // }
         
         appendItem(item, ethPrices);
         cnt++;
@@ -343,11 +343,11 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: log.args.acct ?? 0n,
         }
     
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+        // if (ethPrices.length < 1 || 
+        //   item.timestamp * 1000 < ethPrices[0].timestamp ) {
             ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
-        }
+        //     if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);
         cnt++;
