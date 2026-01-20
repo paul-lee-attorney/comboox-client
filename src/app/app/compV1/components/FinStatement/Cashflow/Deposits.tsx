@@ -202,9 +202,10 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
           acct: log.args.caller ?? 0n,
         }
     
-        if (cnt == 0) {
-          ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
+        if (ethPrices.length < 1 || 
+          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+            ethPrices = await getEthPrices(item.timestamp);
+            if (!ethPrices) return;
         }
 
         appendItem(item, ethPrices);
@@ -248,9 +249,10 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
           acct: log.args.acct ?? 0n,
         }
 
-        if (cnt == 0) {
-          ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
+        if (ethPrices.length < 1 || 
+          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+            ethPrices = await getEthPrices(item.timestamp);
+            if (!ethPrices) return;
         }
   
         appendItem(item, ethPrices);
@@ -294,9 +296,10 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
           acct: log.args.to ?? 0n,
         }
 
-        if (cnt == 0) {
-          ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
+        if (ethPrices.length < 1 || 
+          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+            ethPrices = await getEthPrices(item.timestamp);
+            if (!ethPrices) return;
         }
 
         appendItem(item, ethPrices);

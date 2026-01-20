@@ -279,10 +279,11 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
 
         }
 
-        if (cnt == 0) {
-          ethPrices = await getEthPricesForAppendRecords(item.timestamp * 1000);
-          if (!ethPrices) return;
-          else console.log('ethPrices: ', ethPrices);
+        if (ethPrices.length < 1 || 
+          item.timestamp * 1000 < ethPrices[0].timestamp ) {
+            ethPrices = await getEthPricesForAppendRecords(item.timestamp * 1000);
+            if (!ethPrices) return;
+            else console.log('ethPrices: ', ethPrices);
         }
 
         appendItem(item, ethPrices);
