@@ -174,10 +174,10 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (cnt == 0) {
+        // if (cnt == 0) {
           ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
+        //   if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);
         cnt++;
@@ -212,10 +212,10 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (cnt == 0) {
+        // if (cnt == 0) {
           ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
+        //   if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);    
         cnt++;
@@ -258,10 +258,10 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (cnt == 0) {
+        // if (cnt == 0) {
           ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
+        //   if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);
         cnt++;
@@ -292,10 +292,10 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (cnt == 0) {
+        // if (cnt == 0) {
           ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
+        //   if (ethPrices.length == 0) return;
+        // }
         
         appendItem(item, ethPrices);
         cnt++;
@@ -341,10 +341,10 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
           acct: log.args.acct ?? 0n,
         }
     
-        if (cnt == 0) {
+        // if (cnt == 0) {
           ethPrices = await getEthPrices(item.timestamp);
-          if (ethPrices.length == 0) return;
-        }
+        //   if (ethPrices.length == 0) return;
+        // }
 
         appendItem(item, ethPrices);
         cnt++;
