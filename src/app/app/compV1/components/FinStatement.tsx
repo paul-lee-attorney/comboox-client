@@ -275,20 +275,21 @@ export function FinStatement() {
 
   useEffect(()=>{
     const getRate = async ()=> {
-      let rateOfEx = await rate();
+      // let rateOfEx = await rate();
+      // let rateOfEx = 2816150000n;
 
-      let fixRateBlk = client.chain.id == 42161
-        ? 348998163n : 165090995n;
+      // let fixRateBlk = client.chain.id == 42161
+      //   ? 348998163n : 165090995n;
 
-      if (rptBlkNo > fixRateBlk) {
-        setExRate(rateOfEx);
-      } else {
+      // if (rptBlkNo < fixRateBlk) {
+      //   setExRate(rateOfEx);
+      // } else {
         setExRate(10n ** 22n / centPrice);
-      }
+      // }
 
     }
     getRate();
-  });
+  }, [centPrice]);
 
   useEffect(()=>{
 
