@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { decodeFunctionData, Hex, } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice, findClosestPrice, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated-v1";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { ftHis } from "./FtCbpflow";
@@ -103,20 +103,6 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
 
       const updateRoyaltyInfo = async (item:Cashflow) => {
         
-        // const rs = await getRoyaltySource(item.transactionHash);
-        
-        // if (rs.api != "") {
-        //   item.input = rs.input;
-        //   item.api = rs.api;
-        //   item.target = rs.target;
-        //   item.typeOfDoc = rs.typeOfDoc;
-        //   item.version = rs.version;
-  
-        //   const monthLab = getMonthLableByTimestamp(item.timestamp);
-  
-        //   await updateRoyaltyByItem(gk, monthLab, item);
-        // }
-
         let tran = await client.getTransaction({hash: item.transactionHash});
                     
         if (tran.to?.toLowerCase() == gk.toLowerCase()) {
@@ -168,7 +154,7 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
       const appendItem = (newItem: Cashflow, refPrices: EthPrice[]) => {
         if (newItem.amt > 0n && refPrices.length > 0) {
 
-          const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
+          const mark = findClosestPrice(newItem.timestamp * 1000, refPrices);
           
           let fixRateBlk = client.chain.id == 42161
             ? 348998163n : 165090995n;
@@ -184,8 +170,8 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
 
           } else {
 
-            newItem.ethPrice = 10n ** 25n / mark.centPrice;
-            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+            newItem.ethPrice = 10n ** 9n * BigInt(mark.price);
+            newItem.usd = newItem.amt * BigInt(mark.price);
 
             console.log('ethPrice:', newItem.ethPrice);
           }
@@ -280,8 +266,9 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
         }
 
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPricesForAppendRecords(item.timestamp * 1000);
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
             if (!ethPrices) return;
             else console.log('ethPrices: ', ethPrices);
         }

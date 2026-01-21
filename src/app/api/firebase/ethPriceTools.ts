@@ -166,28 +166,28 @@ export async function updateMonthlyEthPrices(): Promise<boolean> {
 
 // ==== Get ETH Prices For Append Records ====
 
-export async function getEthPricesForAppendRecords(start:number): Promise<EthPrice[]|undefined> {
-  const curTime = Date.now();
-  const monthRanges = getMonthRanges(start, curTime);
+// export async function getEthPricesForAppendRecords(start:number): Promise<EthPrice[]|undefined> {
+//   const curTime = Date.now();
+//   const monthRanges = getMonthRanges(start, curTime);
 
-  let output:EthPrice[] = [];
+//   let output:EthPrice[] = [];
 
-  for (const range of monthRanges) {
+//   for (const range of monthRanges) {
 
-    try {
-      const prices = await getEthPrice(range.month);
-      if (!prices) return undefined;
+//     try {
+//       const prices = await getEthPrice(range.month);
+//       if (!prices) return undefined;
 
-      output = output.concat(prices);
+//       output = output.concat(prices);
 
-    } catch (error:any) {
-        console.error(`Failed to get EthPrice for ${range.month}: ${error.message}`);
-    }
+//     } catch (error:any) {
+//         console.error(`Failed to get EthPrice for ${range.month}: ${error.message}`);
+//     }
 
-  }
+//   }
 
-  return output;
-}
+//   return output;
+// }
 
 export function findClosestPrice(targetTimestamp:number, data:EthPrice[]): EthPrice {
   let left = 0;
@@ -236,7 +236,7 @@ export function getPriceAtTimestamp(targetTimestamp: number, prices: EthPrice[])
   return output;
 }
 
-export async function retrieveEthPriceByTimestamp(timestamp: number): Promise<EthPrice|undefined> {
+export async function retrieveMonthlyEthPriceByTimestamp(timestamp: number): Promise<EthPrice[]|undefined> {
 
   const msTimestamp = timestamp * 1000;
   const date = new Date(msTimestamp);
@@ -244,9 +244,16 @@ export async function retrieveEthPriceByTimestamp(timestamp: number): Promise<Et
   const yearMonth = dateToYearMonthStr(date);
   const prices = await getEthPrice(yearMonth);
 
+  return prices;  
+}
+
+
+export async function retrieveEthPriceByTimestamp(timestamp: number): Promise<EthPrice|undefined> {
+
+  const prices = await retrieveMonthlyEthPriceByTimestamp(timestamp);
   if (!prices) return undefined;
 
-  const mark = findClosestPrice(msTimestamp, prices);
-  return mark;  
+  const mark = findClosestPrice(timestamp * 1000, prices);
+  return mark;
 }
 

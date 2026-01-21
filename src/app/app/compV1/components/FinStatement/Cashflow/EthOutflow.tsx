@@ -93,8 +93,6 @@ export const updateEthOutflowSum = (arr: Cashflow[], startDate:number, endDate:n
     sum[3] = sumArrayOfEthOutflow(arr.filter(v => v.timestamp <= endDate));  
   }
   
-  // console.log('ethOutflow range:', startDate, endDate);
-  // console.log('ethOutflow:', sum);
   return sum;
 }
 
@@ -117,18 +115,8 @@ export function EthOutflow({ setRecords}:CashflowRecordsProps ) {
       let arr: Cashflow[] = [];
       let ethPrice: EthPrice | undefined = undefined;
 
-      // const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
-      //   let prices = await getEthPricesForAppendRecords(timestamp * 1000);
-      //   if (!prices) return [];
-      //   else return prices;
-      // }
-
       const appendItem = (newItem: Cashflow, refPrices:EthPrice) => {
         if (newItem.amt > 0n) {
-
-          // let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-          // newItem.ethPrice = 10n ** 25n / mark.centPrice;
-          // newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
               
           newItem.ethPrice = 10n ** 9n * BigInt(refPrices.price);
           newItem.usd = newItem.amt * BigInt(refPrices.price);

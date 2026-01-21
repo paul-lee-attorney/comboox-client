@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { decodeEventLog, Hex } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice,  retrieveEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { listOfOrdersABI, registerOfSharesABI } from "../../../../../../../generated-v1";
 import { getShare, parseSnOfShare } from "../../../ros/ros";
 import { briefParser } from "../../../loe/loe";
@@ -123,24 +123,7 @@ export function EthInflow({setRecords}:CashflowRecordsProps ) {
       console.log('fromBlk of ethInflow: ', fromBlkNum);
 
       let arr: Cashflow[] = [];
-      let ethPrices: EthPrice[] = [];
-
-      const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
-        let prices = await getEthPricesForAppendRecords(timestamp * 1000);
-        if (!prices) return [];
-        else return prices;
-      }
-
-      const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
-        if (newItem.amt > 0n) {
-          let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-
-          newItem.ethPrice = 10n ** 25n / mark.centPrice;
-          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
-
-          arr.push(newItem);
-        }
-      } 
+      let ethPrice: EthPrice | undefined = undefined;
      
       const appendCapItems = async (capLog:CapLog) => {
      
@@ -154,11 +137,11 @@ export function EthInflow({setRecords}:CashflowRecordsProps ) {
           acct: capLog.acct ?? 0n,
         }
 
-        ethPrices = await getEthPrices(itemCap.timestamp);
-        let mark = getPriceAtTimestamp(itemCap.timestamp * 1000, ethPrices);
+        ethPrice = await retrieveEthPriceByTimestamp(itemCap.timestamp);
+        if (!ethPrice) return;
 
-        itemCap.ethPrice = 10n ** 25n / mark.centPrice;
-        itemCap.amt = capLog.paid * mark.centPrice / 100n; 
+        itemCap.ethPrice = 10n ** 9n * BigInt(ethPrice.price);
+        itemCap.amt = capLog.paid * 10n ** 14n / BigInt(ethPrice.price);
 
         let itemPremium:Cashflow = {...itemCap,
           typeOfIncome: 'PayInPremium',
@@ -197,26 +180,30 @@ export function EthInflow({setRecords}:CashflowRecordsProps ) {
       while (cnt < len) {
         let log = recievedCashLogs[cnt];
     
-        let item:Cashflow = { ...defaultCashflow,
-          seq:0,
-          blockNumber: BigInt(log.blockNumber),
-          timestamp: Number(log.timeStamp),
-          transactionHash: log.transactionHash ?? Bytes32Zero,
-          typeOfIncome: 'TransferIncome',
-          amt: log.args.amt ?? 0n,
-          ethPrice: 0n,
-          usd: 0n,
-          addr: log.args.from ?? AddrZero,
-          acct: 0n,
-        }
-        
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
-        }
+        if (log.args.amt > 0) {
 
-        appendItem(item, ethPrices);
+          let item:Cashflow = { ...defaultCashflow,
+            seq:0,
+            blockNumber: BigInt(log.blockNumber),
+            timestamp: Number(log.timeStamp),
+            transactionHash: log.transactionHash ?? Bytes32Zero,
+            typeOfIncome: 'TransferIncome',
+            amt: log.args.amt,
+            ethPrice: 0n,
+            usd: 0n,
+            addr: log.args.from ?? AddrZero,
+            acct: 0n,
+          }
+          
+          ethPrice = await retrieveEthPriceByTimestamp(item.timestamp);
+          if (!ethPrice) return;
+
+          item.ethPrice = 10n ** 9n * BigInt(ethPrice.price);
+          item.usd = item.amt * BigInt(ethPrice.price);
+          
+          arr.push(item);
+        }
+ 
         cnt++;
       }
 
@@ -251,26 +238,31 @@ export function EthInflow({setRecords}:CashflowRecordsProps ) {
       while (cnt < len) {
         let log = gasIncomeLogs[cnt];
     
-        let item:Cashflow = {...defaultCashflow,
-          seq:0,
-          blockNumber: BigInt(log.blockNumber),
-          timestamp: Number(log.timeStamp),
-          transactionHash: log.transactionHash ?? Bytes32Zero, 
-          typeOfIncome: 'GasIncome',
-          amt: log.args.amtOfEth ?? 0n,
-          ethPrice: 0n,
-          usd: 0n,
-          addr: log.args.buyer ?? AddrZero,
-          acct: 0n,
-        }
-        
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
+        if (log.args.amtOfEth > 0) {
+
+          let item:Cashflow = {...defaultCashflow,
+            seq:0,
+            blockNumber: BigInt(log.blockNumber),
+            timestamp: Number(log.timeStamp),
+            transactionHash: log.transactionHash ?? Bytes32Zero, 
+            typeOfIncome: 'GasIncome',
+            amt: log.args.amtOfEth ?? 0n,
+            ethPrice: 0n,
+            usd: 0n,
+            addr: log.args.buyer ?? AddrZero,
+            acct: 0n,
+          }
+
+          ethPrice = await retrieveEthPriceByTimestamp(item.timestamp);
+          if (!ethPrice) return;
+
+          item.ethPrice = 10n ** 9n * BigInt(ethPrice.price);
+          item.usd = item.amt * BigInt(ethPrice.price);
+          
+          arr.push(item);          
+
         }
 
-        appendItem(item, ethPrices);
         cnt++;
       }
 

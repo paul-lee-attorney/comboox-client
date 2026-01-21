@@ -4,7 +4,7 @@ import { AddrOfRegCenter, AddrOfTank, AddrZero, Bytes32Zero, FirstUser, keepersM
 import { usePublicClient } from "wagmi";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData, } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice, findClosestPrice, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { ftHis } from "./FtCbpflow";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { Hex } from "viem";
@@ -117,17 +117,11 @@ export function CbpOutflow({setRecords}:CashflowRecordsProps ) {
       console.log('fromBlk of CbpOutflow: ', fromBlkNum);
       
       let arr: Cashflow[] = [];
-      let ethPrices: EthPrice[] = [];
-
-      const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
-        let prices = await getEthPricesForAppendRecords(timestamp * 1000);
-        if (!prices) return [];
-        else return prices;
-      }
+      let ethPrices: EthPrice[] | undefined = [];
 
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
         if (newItem.amt > 0n) {
-          const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
+          const mark = findClosestPrice(newItem.timestamp * 1000, refPrices);
 
           let fixRateBlk = client.chain.id == 42161
             ? 348998163n : 165090995n;
@@ -136,8 +130,8 @@ export function CbpOutflow({setRecords}:CashflowRecordsProps ) {
             newItem.ethPrice = cbpRate * 10n ** 3n;
             newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;  
           } else {
-            newItem.ethPrice = 10n ** 25n / mark.centPrice;
-            newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+            newItem.ethPrice = 10n ** 9n * BigInt(mark.price);
+            newItem.usd = newItem.amt * BigInt(mark.price);
           }
           
           console.log('newItme.ethPrice', newItem.ethPrice);
@@ -196,9 +190,10 @@ export function CbpOutflow({setRecords}:CashflowRecordsProps ) {
         } 
 
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
+            if (!ethPrices) return;
         }
 
         appendItem(item, ethPrices);
@@ -251,9 +246,10 @@ export function CbpOutflow({setRecords}:CashflowRecordsProps ) {
         }
         
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
+            if (!ethPrices) return;
         }
 
         appendItem(item, ethPrices);
@@ -305,9 +301,10 @@ export function CbpOutflow({setRecords}:CashflowRecordsProps ) {
         }
         
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
+            if (!ethPrices) return;
         }
 
         appendItem(item, ethPrices);
@@ -342,9 +339,10 @@ export function CbpOutflow({setRecords}:CashflowRecordsProps ) {
         }
 
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (ethPrices.length == 0) return;
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
+            if (!ethPrices) return;
         }
 
         appendItem(item, ethPrices);

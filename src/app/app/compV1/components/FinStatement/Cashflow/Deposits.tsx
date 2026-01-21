@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice, findClosestPrice, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { Hex } from "viem";
 
@@ -147,20 +147,14 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
       console.log('fromBlk of deposits: ', fromBlkNum);
       
       let arr: Cashflow[] = [];
-      let ethPrices: EthPrice[] = [];
-
-      const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
-        let prices = await getEthPricesForAppendRecords(timestamp * 1000);
-        if (!prices) return [];
-        else return prices;
-      }
+      let ethPrices: EthPrice[] | undefined = [];
 
       const appendItem = (newItem: Cashflow, refPrices: EthPrice[]) => {
         if (newItem.amt > 0n) {
 
-          let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
-          newItem.ethPrice = 10n ** 25n / mark.centPrice;
-          newItem.usd = newItem.amt * newItem.ethPrice / 10n ** 9n;
+          let mark = findClosestPrice(newItem.timestamp * 1000, refPrices);
+          newItem.ethPrice = 10n ** 9n * BigInt(mark.price);
+          newItem.usd = newItem.amt * BigInt(mark.price);
           
           arr.push(newItem);
         }
@@ -203,9 +197,11 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
         }
     
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
             if (!ethPrices) return;
+            else console.log('ethPrices: ', ethPrices);
         }
 
         appendItem(item, ethPrices);
@@ -250,9 +246,11 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
         }
 
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
             if (!ethPrices) return;
+            else console.log('ethPrices: ', ethPrices);
         }
   
         appendItem(item, ethPrices);
@@ -297,9 +295,11 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
         }
 
         if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
+          item.timestamp * 1000 < ethPrices[0].timestamp ||
+          item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+            ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
             if (!ethPrices) return;
+            else console.log('ethPrices: ', ethPrices);
         }
 
         appendItem(item, ethPrices);

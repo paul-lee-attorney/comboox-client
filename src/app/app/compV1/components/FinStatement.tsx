@@ -14,7 +14,7 @@ import { defDepositsSumArr, Deposits, DepositsSum, updateDepositsSum } from "./F
 import { defFtEthflowSumArr, FtEthflow, FtEthflowSum, updateFtEthflowSum, } from "./FinStatement/Cashflow/FtEthflow";
 import { defFtCbpflowSumArr, FtCbpflow, FtCbpflowSum, updateFtCbpflowSum } from "./FinStatement/Cashflow/FtCbpflow";
 import { BtnProps, SGNA } from "./FinStatement/SGNA";
-import { getEthPricesForAppendRecords, getPriceAtTimestamp, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
+import { retrieveEthPriceByTimestamp, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { Assets } from "./FinStatement/Assets";
 import { LiabilyAndEquity,  } from "./FinStatement/LiabilityAndEquity";
@@ -295,12 +295,10 @@ export function FinStatement() {
     const updateCentPrice = async ()=> {
       await updateMonthlyEthPrices();
 
-      let prices = await getEthPricesForAppendRecords(endDate * 1000);
-      if (!prices) return;
+      let mark = await retrieveEthPriceByTimestamp(endDate);
+      if (!mark) return;
   
-      let mark = getPriceAtTimestamp(endDate * 1000, prices);
-  
-      setCentPrice(mark.centPrice);
+      setCentPrice( 10n ** 16n / BigInt(mark.price));
       setEthRateDate((mark.timestamp / 1000).toString());
     }
 

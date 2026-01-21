@@ -4,7 +4,7 @@ import { AddrZero, Bytes32Zero } from "../../../../common";
 import { usePublicClient } from "wagmi";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData, } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, getEthPricesForAppendRecords, getPriceAtTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice, getPriceAtTimestamp, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { ftHis } from "./FtCbpflow";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { Hex } from "viem";
@@ -97,13 +97,7 @@ export function FtEthflow({ setRecords }:CashflowRecordsProps ) {
       console.log('fromBlk of ftEthflow: ', fromBlkNum);
       
       let arr:Cashflow[] = [];
-      let ethPrices: EthPrice[] = [];
-
-      const getEthPrices = async (timestamp: number): Promise<EthPrice[]> => {
-        let prices = await getEthPricesForAppendRecords(timestamp * 1000);
-        if (!prices) return [];
-        else return prices;
-      }
+      let ethPrices: EthPrice[] | undefined = [];
 
       const appendItem = (newItem: Cashflow, refPrices:EthPrice[]) => {
 
@@ -161,13 +155,18 @@ export function FtEthflow({ setRecords }:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (!ethPrices) return;
+        if (item.amt > 0) {
+          if (ethPrices.length < 1 || 
+            item.timestamp * 1000 < ethPrices[0].timestamp ||
+            item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+              ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
+              if (!ethPrices) return;
+              else console.log('ethPrices: ', ethPrices);
+          }
+
+          appendItem(item, ethPrices);
         }
 
-        appendItem(item, ethPrices);
         cnt++;
       }
 
@@ -213,13 +212,18 @@ export function FtEthflow({ setRecords }:CashflowRecordsProps ) {
           acct: 0n,
         }
 
-        if (ethPrices.length < 1 || 
-          item.timestamp * 1000 < ethPrices[0].timestamp ) {
-            ethPrices = await getEthPrices(item.timestamp);
-            if (!ethPrices) return;
+        if (item.amt > 0) {
+          if (ethPrices.length < 1 || 
+            item.timestamp * 1000 < ethPrices[0].timestamp ||
+            item.timestamp * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+              ethPrices = await retrieveMonthlyEthPriceByTimestamp(item.timestamp);
+              if (!ethPrices) return;
+              else console.log('ethPrices: ', ethPrices);
+          }
+
+          appendItem(item, ethPrices);
         }
 
-        appendItem(item, ethPrices);    
         cnt++;
       }
 
