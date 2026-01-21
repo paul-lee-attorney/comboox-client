@@ -299,13 +299,13 @@ export function FinStatement() {
       await updateMonthlyEthPrices();
 
       if (!ethPrices || ethPrices.length < 1 || 
-        endDate < ethPrices[0].timestamp ||
-        endDate > ethPrices[ethPrices.length - 1].timestamp  ) {
-          ethPrices = await retrieveMonthlyEthPriceByTimestamp(endDate/1000);
+        endDate * 1000 < ethPrices[0].timestamp ||
+        endDate * 1000 > ethPrices[ethPrices.length - 1].timestamp  ) {
+          ethPrices = await retrieveMonthlyEthPriceByTimestamp(endDate);
           if (!ethPrices) return;
       }
 
-      let mark = getPriceAtTimestamp(endDate, ethPrices);
+      let mark = getPriceAtTimestamp(endDate * 1000, ethPrices);
       if (!mark) return;
   
       setCentPrice(mark.centPrice);
