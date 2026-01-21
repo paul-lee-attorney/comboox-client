@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { ethers } from "ethers";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, setFinData } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, findClosestPrice, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice, getPriceAtTimestamp, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { Hex } from "viem";
 
@@ -152,9 +152,9 @@ export function Deposits({ setRecords}:CashflowRecordsProps ) {
       const appendItem = (newItem: Cashflow, refPrices: EthPrice[]) => {
         if (newItem.amt > 0n) {
 
-          let mark = findClosestPrice(newItem.timestamp * 1000, refPrices);
-          newItem.ethPrice = 10n ** 9n * BigInt(mark.price);
-          newItem.usd = newItem.amt * BigInt(mark.price);
+          let mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
+          newItem.ethPrice = 10n ** 25n / mark.centPrice;
+          newItem.usd = newItem.amt * mark.centPrice / 10n ** 9n;
           
           arr.push(newItem);
         }

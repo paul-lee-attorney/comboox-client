@@ -5,7 +5,7 @@ import { usePublicClient } from "wagmi";
 import { decodeFunctionData, Hex, } from "viem";
 import { Cashflow, CashflowRecordsProps, defaultCashflow } from "../../FinStatement";
 import { getFinData, getMonthLableByTimestamp, setFinData, updateRoyaltyByItem } from "../../../../../api/firebase/finInfoTools";
-import { EthPrice, findClosestPrice, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
+import { EthPrice, getPriceAtTimestamp, retrieveMonthlyEthPriceByTimestamp } from "../../../../../api/firebase/ethPriceTools";
 import { generalKeeperABI, usdKeeperABI } from "../../../../../../../generated-v1";
 import { ArbiscanLog, decodeArbiscanLog, getNewLogs, getTopBlkOf, setTopBlkOf } from "../../../../../api/firebase/arbiScanLogsTool";
 import { ftHis } from "./FtCbpflow";
@@ -154,7 +154,7 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
       const appendItem = (newItem: Cashflow, refPrices: EthPrice[]) => {
         if (newItem.amt > 0n && refPrices.length > 0) {
 
-          const mark = findClosestPrice(newItem.timestamp * 1000, refPrices);
+          const mark = getPriceAtTimestamp(newItem.timestamp * 1000, refPrices);
           
           let fixRateBlk = client.chain.id == 42161
             ? 348998163n : 165090995n;
@@ -170,8 +170,8 @@ export function CbpInflow({setRecords}:CashflowRecordsProps) {
 
           } else {
 
-            newItem.ethPrice = 10n ** 9n * BigInt(mark.price);
-            newItem.usd = newItem.amt * BigInt(mark.price);
+            newItem.ethPrice = mark.centPrice;
+            newItem.usd = newItem.amt * mark.centPrice / 10n ** 9n;
 
             console.log('ethPrice:', newItem.ethPrice);
           }

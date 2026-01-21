@@ -14,7 +14,7 @@ import { defDepositsSumArr, Deposits, DepositsSum, updateDepositsSum } from "./F
 import { defFtEthflowSumArr, FtEthflow, FtEthflowSum, updateFtEthflowSum, } from "./FinStatement/Cashflow/FtEthflow";
 import { defFtCbpflowSumArr, FtCbpflow, FtCbpflowSum, updateFtCbpflowSum } from "./FinStatement/Cashflow/FtCbpflow";
 import { BtnProps, SGNA } from "./FinStatement/SGNA";
-import { retrieveEthPriceByTimestamp, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
+import { EthPrice, getPriceAtTimestamp, retrieveEthPriceByTimestamp, retrieveMonthlyEthPriceByTimestamp, updateMonthlyEthPrices } from "../../../api/firebase/ethPriceTools";
 import { DateTimeField } from "@mui/x-date-pickers";
 import { Assets } from "./FinStatement/Assets";
 import { LiabilyAndEquity,  } from "./FinStatement/LiabilityAndEquity";
@@ -292,13 +292,22 @@ export function FinStatement() {
 
   useEffect(()=>{
 
+    let ethPrices: EthPrice[] | undefined = [];
+
     const updateCentPrice = async ()=> {
       await updateMonthlyEthPrices();
 
-      let mark = await retrieveEthPriceByTimestamp(endDate);
+      if (!ethPrices || ethPrices.length < 1 || 
+        endDate < ethPrices[0].timestamp ||
+        endDate > ethPrices[ethPrices.length - 1].timestamp  ) {
+          ethPrices = await retrieveMonthlyEthPriceByTimestamp(endDate/1000);
+          if (!ethPrices) return;
+      }
+
+      let mark = getPriceAtTimestamp(endDate, ethPrices);
       if (!mark) return;
   
-      setCentPrice( 10n ** 16n / BigInt(mark.price));
+      setCentPrice(mark.centPrice);
       setEthRateDate((mark.timestamp / 1000).toString());
     }
 
