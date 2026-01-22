@@ -3,7 +3,7 @@ import { Paper, Stack, Typography, Divider, Button, Switch, Tooltip } from "@mui
 
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { rate } from "../../fuel_tank/ft";
-import { baseToDollar, bigIntToNum, dateParser, stampToUtc, utcToStamp } from "../../common/toolsKit";
+import { baseToDollar, bigIntToNum, bigIntToStrNum, dateParser, longDataParser, stampToUtc, utcToStamp } from "../../common/toolsKit";
 import { CbpInflow, CbpInflowSum, defCbpInflowSumArr, updateCbpInflowSum, } from "./FinStatement/Cashflow/CbpInflow";
 import { defEthInflowSumArr, EthInflow, EthInflowSum, updateEthInflowSum } from "./FinStatement/Cashflow/EthInflow";
 import { CbpOutflow, CbpOutflowSum, defCbpOutflowSumArr, updateCbpOutflowSum } from "./FinStatement/Cashflow/CbpOutflow";
@@ -22,7 +22,7 @@ import { getOpExchangeGainLoss, IncomeStatement } from "./FinStatement/IncomeSta
 import { EquityChangeStatement } from "./FinStatement/EquityChangeStatement";
 import { CryptoInventory } from "./FinStatement/CryptoInventory";
 import { CryptosFlowStatement } from "./FinStatement/CryptosFlowStatement";
-import { TipsAndUpdates } from "@mui/icons-material";
+import { TipsAndUpdates, Update } from "@mui/icons-material";
 import { usePublicClient } from "wagmi";
 import { useComBooxContext } from "../../../_providers/ComBooxContextProvider";
 import { RoyaltySource } from "../../../api/getRoyaltySource";
@@ -275,21 +275,20 @@ export function FinStatement() {
 
   useEffect(()=>{
     const getRate = async ()=> {
-      // let rateOfEx = await rate();
-      // let rateOfEx = 2816150000n;
+      let rateOfEx = await rate();
 
-      // let fixRateBlk = client.chain.id == 42161
-      //   ? 348998163n : 165090995n;
+      let fixRateBlk = client.chain.id == 42161
+        ? 348998163n : 165090995n;
 
-      // if (rptBlkNo < fixRateBlk) {
-      //   setExRate(rateOfEx);
-      // } else {
+      if (rptBlkNo < fixRateBlk) {
+        setExRate(rateOfEx);
+      } else {
         setExRate(10n ** 22n / centPrice);
-      // }
+      }
 
     }
     getRate();
-  }, [centPrice]);
+  });
 
   useEffect(()=>{
 
@@ -1444,7 +1443,11 @@ export function FinStatement() {
             <Stack direction='row' sx={{ alignItems:'center' }} >
 
               <Typography variant='body2' sx={{ m:2, my:0, textDecoration:'underline'}} >
-                {baseToDollar((10n**20n/centPrice).toString())} (USD/ETH) 
+                {baseToDollar((10n**20n/centPrice).toString())} (ETH/USD) 
+              </Typography>
+
+              <Typography variant='body2' sx={{ m:2, my:0, textDecoration:'underline'}} >
+                {longDataParser(bigIntToStrNum(exRate,6))} (CBP/USD) 
               </Typography>
 
             </Stack>
@@ -1479,16 +1482,20 @@ export function FinStatement() {
               size='small'
             />
 
-            <Button variant="contained" sx={{m:2, mt:0.8, mr:8, width:'128'}} onClick={()=>updateCashflowRange()} disabled={flags.findIndex(v => v==true) < 0 || startDate > endDate} >
-              Update Period
+            <Button 
+              variant="contained" sx={{m:2, mt:0.8, mr:8, width:'128'}} 
+              onClick={()=>updateCashflowRange()} disabled={flags.findIndex(v => v==true) < 0 || startDate > endDate} 
+              endIcon={<Update/>}
+            >
+              Update 
             </Button>
 
             {flags.map((v, i)=>(
-              <Tooltip key={i} title={tips[i]} placement='top-end' arrow >
-                <span key={i}>
-                  <TipsAndUpdates key={i} color={ v ? 'warning' : 'disabled'} sx={{m:1}} />
-                </span>
-              </Tooltip>
+                <Tooltip key={i} title={tips[i]} placement='top-end' arrow >
+                  <span key={i}>
+                    <TipsAndUpdates key={i} color={ v ? 'warning' : 'disabled'} sx={{m:1}} />
+                  </span>
+                </Tooltip>
             ))}
 
           </Stack>

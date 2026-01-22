@@ -205,7 +205,7 @@ function FuelTank() {
                 <TextField 
                   size="small"
                   variant='outlined'
-                  label='Price (USD/CBP)'
+                  label='Price (CBP/USD)'
                   inputProps={{readOnly: true}}
                   fullWidth
                   sx={{
