@@ -288,7 +288,7 @@ export function FinStatement() {
 
     }
     getRate();
-  });
+  }, [rptBlkNo, centPrice, client.chain.id, endDate]);
 
   useEffect(()=>{
 

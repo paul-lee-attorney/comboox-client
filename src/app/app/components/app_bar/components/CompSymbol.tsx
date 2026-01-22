@@ -1,21 +1,20 @@
 import { useEffect } from "react";
 import { useComBooxContext } from "../../../../_providers/ComBooxContextProvider";
-import { getBoox, getCompInfo, getKeepers } from "../../../comp/gk";
+import { getBoox, getKeepers } from "../../../comp/gk";
 import { Stack, Typography } from "@mui/material";
 import { longSnParser } from "../../../common/toolsKit";
 import { CopyLongStrSpan } from "../../../common/CopyLongStr";
 import { basedOnPar } from "../../../comp/rom/rom";
 import { booxMap } from "../../../common";
-import { getOldCompInfo, getV1Boox, getV1Keepers } from "../../../compV1/gk";
+import { getV1Boox, getV1Keepers } from "../../../compV1/gk";
 
 export function CompSymbol() {
 
   const { gk, compInfo, setBoox, setKeepers, setOnPar, setCompInfo } = useComBooxContext();
 
   useEffect(() => {
-    if (gk) {
-      if (compInfo && compInfo.regNum == 8) {
-
+    if (compInfo && gk) {
+      if (compInfo.regNum == 8) {
         getV1Boox(gk).then(
           (res) => {
             setBoox(res.map(v=>(v.addr)));
@@ -29,14 +28,7 @@ export function CompSymbol() {
             setKeepers(res.map(v=>(v.addr)));
           }
         );
-        if (!compInfo) {
-          getOldCompInfo(gk).then(
-            info => setCompInfo(info)
-          );
-        }
-
-      } else {
-        
+      } else {        
         getBoox(gk).then(
           (res) => {
             setBoox(res.map(v=>(v.addr)));
@@ -50,13 +42,7 @@ export function CompSymbol() {
             setKeepers(res.map(v=>(v.addr)));
           }
         );
-        if (!compInfo) {
-          getCompInfo(gk).then(
-            info => setCompInfo(info)
-          );
-        }
-      }
-      
+      }      
     } else {
       setBoox(undefined);
       setOnPar(undefined);

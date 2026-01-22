@@ -78,27 +78,36 @@ export function GetComp() {
         }
       )
     } else {
-      getDocByUserNo(BigInt(regNum)).then(
-        (doc:Doc) => {
-          if (doc.body != AddrZero) {
-            if (Number(regNum) == 8) {
-              getOldCompInfo(doc.body).then(
-                info => setCompInfo(info)
-              );
-            } else {
+
+      if (Number(regNum) == 8) {
+        getDocByUserNo(8n).then(
+          (doc:Doc) => {
+            getOldCompInfo(doc.body).then(
+              info => setCompInfo(info)
+            );
+            setGK(doc.body);
+            setDoc({head:doc.head, body:doc.body});
+            setOpen(false);
+        });
+      } else {
+        getDocByUserNo(BigInt(regNum)).then(
+          (doc:Doc) => {
+            if (doc.head.typeOfDoc == 40 || 
+                (doc.head.typeOfDoc > 46 && doc.head.typeOfDoc < 54)){
+                
               getCompInfo(doc.body).then(
                 info => setCompInfo(info)
               );
+              setGK(doc.body);
+              setDoc({head:doc.head, body:doc.body});
+              setOpen(false);
+            } else {
+              setDoc(undefined);
+              setOpen(true);              
             }
-            setGK(doc.body);
-            setDoc({head:doc.head, body:doc.body});
-            setOpen(false);            
-          } else {
-            setDoc(undefined);
-            setOpen(true);
-          }
-        }
-      )
+        });
+      }
+      
     }
   }
 

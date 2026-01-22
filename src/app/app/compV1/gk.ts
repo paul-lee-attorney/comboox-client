@@ -66,7 +66,7 @@ export async function getV1Boox(gk: HexType): Promise<BookInfo[]>{
         ? AddrZero
         : await getOwner(addr);
         
-    let dk = i == 12 
+    let dk = i == 12
         ? AddrZero
         : await getDK(addr);
      
@@ -106,7 +106,7 @@ export async function getV1Keepers(gk: HexType):Promise<BookInfo[]>{
     let owner = await getOwner(addr);
     let dk = AddrZero;
     
-    if (i != 16 ) dk = await getDK(addr);
+    if (i < 16 || i > 16 ) dk = await getDK(addr);
  
     let item: BookInfo = {
       title: i,
